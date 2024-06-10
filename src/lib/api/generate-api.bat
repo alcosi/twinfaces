@@ -1,0 +1,1 @@
+npx openapi-typescript http://localhost:10321/api-docs/twins-api -o ./generated/schema.d.ts
