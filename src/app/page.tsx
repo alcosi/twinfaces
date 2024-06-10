@@ -5,13 +5,15 @@ import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {DataTable, DataTableHandle} from "@/components/ui/data-table/data-table";
 import {paths, components} from "@/lib/api/generated/schema";
 import createClient from "openapi-fetch";
-import {useRef} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
-import {RefreshCw} from "lucide-react";
+import {Check, RefreshCw} from "lucide-react";
+import {TwinClass} from "@/lib/api/api-types";
+import {ClassDialog} from "@/app/class-dialog";
+import {ApiContext} from "@/lib/api/api";
+import {Input} from "@/components/ui/input";
 
-type TwinClassV1 = components["schemas"]["TwinClassV1"];
-
-const columns: ColumnDef<TwinClassV1>[] = [
+const columns: ColumnDef<TwinClass>[] = [
     {
         accessorKey: "id",
         header: "ID",
@@ -25,40 +27,30 @@ const columns: ColumnDef<TwinClassV1>[] = [
         header: "Name",
     },
     {
-        accessorKey: "createdAt",
-        header: "Created At",
-    }
+        accessorKey: "abstractClass",
+        header: "Abstract",
+        cell: (data) => <>{data.getValue() && <Check/>}</>
+    },
+    // {
+    //     accessorKey: "createdAt",
+    //     header: "Created At",
+    // }
 ]
 
 export default function Home() {
-    const domain = "9fc7e7df-db3b-4c46-9cbf-063dcdc146af";
-    const user = "608c6d7d-99c8-4d87-89c6-2f72d0f5d673";
-    const channel = "WEB";
+    const [classDialogOpen, setClassDialogOpen] = useState(false)
+    const [tableSearch, setTableSearch] = useState<string | undefined>(undefined)
+
+    const api = useContext(ApiContext)
 
     const tableRef = useRef<DataTableHandle>(null);
 
+    useEffect(() => {
+        tableRef.current?.refresh()
+    }, [tableSearch])
+
     async function fetchData(pagination: PaginationState) {
-        const client = createClient<paths>({baseUrl: 'http://localhost:10321'})
-
-        // wait a few seconds for test
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-
-        const {data, error} = await client.POST('/private/twin_class/search/v1', {
-            params: {
-                header: {
-                    DomainId: domain,
-                    AuthToken: user,
-                    Channel: channel
-                },
-                query: {
-                    showClassMode: 'DETAILED',
-                    showStatusMode: 'SHORT',
-                    limit: pagination.pageSize,
-                    offset: pagination.pageIndex * pagination.pageSize
-                }
-            },
-            body: {}
-        })
+        const {data, error} = await api.twinClass.search({pagination, search: tableSearch});
 
         if (error) {
             console.error('failed to fetch classes', error)
@@ -76,13 +68,22 @@ export default function Home() {
     }
 
     return (
-        <main className={"p-8"}>
-            <div style={{"maxWidth": 900}}>
-                <div className={"mb-2 flex justify-end space-x-2"}>
-                    <Button onClick={() => tableRef.current?.refresh()}><RefreshCw/></Button>
-                    <Button>
-                        Create class
-                    </Button>
+        <main className={"p-8 lg:flex lg:justify-center"}>
+            <div className="w-0 flex-0 lg:w-16"/>
+            <div className="flex-1">
+                <div className="mb-2 flex justify-between">
+                    <Input
+                        placeholder="Search by key..."
+                        value={tableSearch}
+                        onChange={(event) => setTableSearch(event.target.value)}
+                        className="max-w-sm"
+                    />
+                    <div className={"flex space-x-2"}>
+                        <Button onClick={() => tableRef.current?.refresh()}><RefreshCw/></Button>
+                        <Button onClick={() => setClassDialogOpen(true)}>
+                            Create class
+                        </Button>
+                    </div>
                 </div>
                 <DataTable ref={tableRef}
                            columns={columns}
@@ -90,6 +91,11 @@ export default function Home() {
                            pageSizes={[10, 20, 50]}
                 />
             </div>
+            <div className="w-0 flex-0 lg:w-16"/>
+
+            <ClassDialog open={classDialogOpen}
+                         onOpenChange={(newOpen) => setClassDialogOpen(newOpen)}
+                         onSuccess={() => tableRef.current?.refresh()}/>
         </main>
     );
 }
