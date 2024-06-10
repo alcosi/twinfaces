@@ -7,11 +7,12 @@ import {paths, components} from "@/lib/api/generated/schema";
 import createClient from "openapi-fetch";
 import {useContext, useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
-import {Check, RefreshCw} from "lucide-react";
+import {Check, RefreshCw, Search} from "lucide-react";
 import {TwinClass} from "@/lib/api/api-types";
 import {ClassDialog} from "@/app/class-dialog";
 import {ApiContext} from "@/lib/api/api";
 import {Input} from "@/components/ui/input";
+import {Separator} from "@/components/ui/separator";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
@@ -39,15 +40,15 @@ const columns: ColumnDef<TwinClass>[] = [
 
 export default function Home() {
     const [classDialogOpen, setClassDialogOpen] = useState(false)
-    const [tableSearch, setTableSearch] = useState<string | undefined>(undefined)
+    const [tableSearch, setTableSearch] = useState<string>("")
 
     const api = useContext(ApiContext)
 
     const tableRef = useRef<DataTableHandle>(null);
 
-    useEffect(() => {
-        tableRef.current?.refresh()
-    }, [tableSearch])
+    // useEffect(() => {
+    //     tableRef.current?.refresh()
+    // }, [tableSearch])
 
     async function fetchData(pagination: PaginationState) {
         const {data, error} = await api.twinClass.search({pagination, search: tableSearch});
@@ -72,14 +73,22 @@ export default function Home() {
             <div className="w-0 flex-0 lg:w-16"/>
             <div className="flex-1">
                 <div className="mb-2 flex justify-between">
-                    <Input
-                        placeholder="Search by key..."
-                        value={tableSearch}
-                        onChange={(event) => setTableSearch(event.target.value)}
-                        className="max-w-sm"
-                    />
-                    <div className={"flex space-x-2"}>
-                        <Button onClick={() => tableRef.current?.refresh()}><RefreshCw/></Button>
+                    <form className="flex flex-row space-x-1" onSubmit={(e) => {
+                        e.preventDefault();
+                        console.log('submit')
+                        tableRef.current?.refresh()
+                    }}>
+                        <Input
+                            placeholder="Search by key..."
+                            value={tableSearch}
+                            onChange={(event) => setTableSearch(event.target.value)}
+                            className="max-w-sm"
+                        />
+                        <Button variant={"ghost"} type="submit"><Search/></Button>
+                    </form>
+                    <div className={"flex space-x-4"}>
+                        <Button variant="ghost" onClick={() => tableRef.current?.refresh()}><RefreshCw/></Button>
+                        <Separator orientation={"vertical"}/>
                         <Button onClick={() => setClassDialogOpen(true)}>
                             Create class
                         </Button>
