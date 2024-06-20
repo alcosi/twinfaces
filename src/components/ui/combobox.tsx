@@ -18,7 +18,6 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import {ForwardedRef, ReactNode, useEffect, useImperativeHandle} from "react";
-import {LoadingSpinner} from "@/components/ui/loading";
 
 export type ComboboxHandle<T> = {
     getSelected: () => T | undefined;
@@ -96,7 +95,7 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
                 </Button>
             </PopoverTrigger>
             <PopoverContent className={cn(["w-full p-0", props.contentClassName])}>
-                <Command>
+                <Command shouldFilter={false}>
                     <CommandInput placeholder={props.searchPlaceholder} value={search} onValueChange={onSearchChange}
                                   loading={loadingItems}/>
                     <CommandEmpty>{props.noItemsText}</CommandEmpty>

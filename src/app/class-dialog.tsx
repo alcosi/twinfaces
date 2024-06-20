@@ -102,8 +102,6 @@ export function ClassDialog({
     async function fetchClasses(search: string) {
         const {data, error} = await api.twinClass.search({pagination: {pageIndex: 0, pageSize: 10}, search});
 
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
         if (error) {
             console.error('failed to fetch classes', error)
             throw new Error("Failed to fetch classes")

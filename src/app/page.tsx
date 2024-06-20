@@ -97,19 +97,6 @@ export default function Home() {
         }
     }
 
-    async function fetchClasses(search: string) {
-        const {data, error} = await api.twinClass.search({pagination: {pageIndex: 0, pageSize: 10}, search});
-
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        if (error) {
-            console.error('failed to fetch classes', error)
-            throw new Error("Failed to fetch classes")
-        }
-
-        return data.twinClassList ?? []
-    }
-
     return (
         <main className={"p-8 lg:flex lg:justify-center flex-col"}>
             <div className="w-0 flex-0 lg:w-16"/>
