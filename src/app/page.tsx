@@ -3,16 +3,15 @@
 import {toast} from "sonner";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {DataTable, DataTableHandle} from "@/components/ui/data-table/data-table";
-import {paths, components} from "@/lib/api/generated/schema";
-import createClient from "openapi-fetch";
 import {useContext, useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Check, RefreshCw, Search} from "lucide-react";
 import {TwinClass} from "@/lib/api/api-types";
-import {ClassDialog} from "@/app/class-dialog";
+import {ClassDialog, ClassDialogMode} from "@/app/class-dialog";
 import {ApiContext} from "@/lib/api/api";
 import {Input} from "@/components/ui/input";
 import {Separator} from "@/components/ui/separator";
+import {Combobox} from "@/components/ui/combobox";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
@@ -38,8 +37,38 @@ const columns: ColumnDef<TwinClass>[] = [
     // }
 ]
 
+interface avalue {
+    value: string,
+    label: string
+}
+
+const frameworks: avalue[] = [
+    {
+        value: "next.js",
+        label: "Next.js",
+    },
+    {
+        value: "sveltekit",
+        label: "SvelteKit",
+    },
+    {
+        value: "nuxt.js",
+        label: "Nuxt.js",
+    },
+    {
+        value: "remix",
+        label: "Remix",
+    },
+    {
+        value: "astro",
+        label: "Astro",
+    },
+]
+
 export default function Home() {
     const [classDialogOpen, setClassDialogOpen] = useState(false)
+    const [classDialogMode, setClassDialogMode] = useState<ClassDialogMode>(ClassDialogMode.Create)
+    const [selectedClass, setSelectedClass] = useState<TwinClass | undefined>(undefined)
     const [tableSearch, setTableSearch] = useState<string>("")
 
     const api = useContext(ApiContext)
@@ -68,8 +97,21 @@ export default function Home() {
         }
     }
 
+    async function fetchClasses(search: string) {
+        const {data, error} = await api.twinClass.search({pagination: {pageIndex: 0, pageSize: 10}, search});
+
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        if (error) {
+            console.error('failed to fetch classes', error)
+            throw new Error("Failed to fetch classes")
+        }
+
+        return data.twinClassList ?? []
+    }
+
     return (
-        <main className={"p-8 lg:flex lg:justify-center"}>
+        <main className={"p-8 lg:flex lg:justify-center flex-col"}>
             <div className="w-0 flex-0 lg:w-16"/>
             <div className="flex-1">
                 <div className="mb-2 flex justify-between">
@@ -89,7 +131,10 @@ export default function Home() {
                     <div className={"flex space-x-4"}>
                         <Button variant="ghost" onClick={() => tableRef.current?.refresh()}><RefreshCw/></Button>
                         <Separator orientation={"vertical"}/>
-                        <Button onClick={() => setClassDialogOpen(true)}>
+                        <Button onClick={() => {
+                            setClassDialogOpen(true);
+                            setClassDialogMode(ClassDialogMode.Create);
+                        }}>
                             Create class
                         </Button>
                     </div>
@@ -98,13 +143,40 @@ export default function Home() {
                            columns={columns}
                            fetcher={fetchData}
                            pageSizes={[10, 20, 50]}
+                           onRowClick={row => {
+                               setSelectedClass(row);
+                               setClassDialogMode(ClassDialogMode.View);
+                               setClassDialogOpen(true);
+                           }}
                 />
             </div>
             <div className="w-0 flex-0 lg:w-16"/>
 
             <ClassDialog open={classDialogOpen}
-                         onOpenChange={(newOpen) => setClassDialogOpen(newOpen)}
+                         onOpenChange={(newOpen) => {
+                             setClassDialogOpen(newOpen);
+                             if (!newOpen) {
+                                 setSelectedClass(undefined);
+                             }
+                         }}
+                         twinClass={selectedClass}
                          onSuccess={() => tableRef.current?.refresh()}/>
+
+            <Combobox<avalue> getItems={(s) => Promise.resolve(frameworks)}
+                      getItemKey={(c) => c.value}
+                      getItemLabel={(c) => c.label}
+                      selectPlaceholder={"Select framework"}
+                      searchPlaceholder={"Search framework..."}
+            />
+
+            <Combobox getItems={fetchClasses}
+                      getItemKey={(c) => c?.key?.toLowerCase() ?? ""}
+                      getItemLabel={(c) => {
+                          let label = c?.key ?? "";
+                          if (c.name) label += ` (${c.name})`
+                          return label;
+                      }}
+            />
         </main>
     );
 }

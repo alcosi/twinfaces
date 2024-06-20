@@ -19,7 +19,7 @@ import {Button} from "@/components/ui/button";
 import {PaginationState} from "@tanstack/table-core";
 import {ForwardedRef, useEffect, useImperativeHandle, useState} from "react";
 import {DataTablePagination} from "@/components/ui/data-table/data-table-pagination";
-import {fixedForwardRef} from "@/lib/utils";
+import {cn, fixedForwardRef} from "@/lib/utils";
 import {LoadingOverlay, LoadingSpinner} from "@/components/ui/loading";
 
 export type DataTableHandle = {
@@ -34,6 +34,7 @@ interface DataTableProps<TData, TValue> {
     fetcher: (pagination: PaginationState) => Promise<{ data: TData[], pageCount: number }>
     pageSizes?: number[],
     onFetchError?: (e: Error) => any;
+    onRowClick?: (row: TData) => any;
 }
 
 export const DataTable = fixedForwardRef(DataTableInternal);
@@ -42,7 +43,8 @@ export function DataTableInternal<TData, TValue>({
                                                      columns,
                                                      fetcher,
                                                      pageSizes,
-                                                     onFetchError
+                                                     onFetchError,
+                                                     onRowClick
                                                  }: DataTableProps<TData, TValue>,
                                                  ref: ForwardedRef<DataTableHandle>) {
     const [data, setData] = useState<TData[]>([]);
@@ -123,6 +125,8 @@ export function DataTableInternal<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
+                                    onClick={() => onRowClick?.(row.original)}
+                                    className={cn(onRowClick != null && "cursor-pointer")}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
