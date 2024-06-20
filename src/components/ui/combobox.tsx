@@ -25,7 +25,7 @@ export type ComboboxHandle<T> = {
 
 export interface ComboboxProps<T> {
     getItems: (search: string) => Promise<T[]>
-    getItemKey: (item: T) => string;
+    getItemKey: (item?: T) => string;
     getItemLabel: (item: T) => string;
     onSelect?: (value?: T) => any;
     renderInList?: (value: T) => ReactNode;
@@ -76,7 +76,7 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
     function onSelect(newKey: string) {
         const newItem = items.find((item) => props.getItemKey(item) === newKey)
         console.log("Selected", newKey, newItem, items)
-        setSelected(newItem === selected ? undefined : newItem)
+        setSelected(props.getItemKey(selected) === newKey ? undefined : newItem)
         props.onSelect?.(newItem)
         setOpen(false)
     }
@@ -90,7 +90,7 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
                     aria-expanded={open}
                     className={cn(["w-auto min-w-[120px] justify-between", props.buttonClassName])}
                 >
-                    {selected ? props.getItemLabel(selected) : props.selectPlaceholder}
+                    {selected ? props.getItemLabel(selected) : <span className="opacity-50">{props.selectPlaceholder}</span>}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50"/>
                 </Button>
             </PopoverTrigger>
@@ -110,7 +110,7 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
                                     <Check
                                         className={cn(
                                             "mr-2 h-4 w-4",
-                                            selected === item ? "opacity-100" : "opacity-0"
+                                            props.getItemKey(selected) === props.getItemKey(item) ? "opacity-100" : "opacity-0"
                                         )}
                                     />
                                     {props.renderInList?.(item) ?? props.getItemLabel(item)}

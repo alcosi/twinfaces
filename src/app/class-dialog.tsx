@@ -143,6 +143,9 @@ export function ClassDialog({
                                              if (c.name) label += ` (${c.name})`
                                              return label;
                                          }}
+                                         selectPlaceholder={"Select head class"}
+                                         searchPlaceholder={"Search head class..."}
+                                         noItemsText={"No classes found"}
                     />
 
                     <MyComboboxFormField control={form.control} name="extendsTwinClassId" label="Extends"
@@ -153,6 +156,9 @@ export function ClassDialog({
                                              if (c.name) label += ` (${c.name})`
                                              return label;
                                          }}
+                                         selectPlaceholder={"Select extends class"}
+                                         searchPlaceholder={"Search extends class..."}
+                                         noItemsText={"No classes found"}
                     />
 
                     {error && <Alert variant="destructive">
