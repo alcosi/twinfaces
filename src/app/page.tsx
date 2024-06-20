@@ -161,22 +161,6 @@ export default function Home() {
                          }}
                          twinClass={selectedClass}
                          onSuccess={() => tableRef.current?.refresh()}/>
-
-            <Combobox<avalue> getItems={(s) => Promise.resolve(frameworks)}
-                      getItemKey={(c) => c.value}
-                      getItemLabel={(c) => c.label}
-                      selectPlaceholder={"Select framework"}
-                      searchPlaceholder={"Search framework..."}
-            />
-
-            <Combobox getItems={fetchClasses}
-                      getItemKey={(c) => c?.key?.toLowerCase() ?? ""}
-                      getItemLabel={(c) => {
-                          let label = c?.key ?? "";
-                          if (c.name) label += ` (${c.name})`
-                          return label;
-                      }}
-            />
         </main>
     );
 }
