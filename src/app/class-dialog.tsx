@@ -6,9 +6,9 @@ import {
     DialogHeader,
     DialogTitle, DialogTrigger
 } from "@/components/ui/dialog";
-import {TwinClass} from "@/lib/api/api-types";
+import {TwinClass, TwinClassCreateRequestBody} from "@/lib/api/api-types";
 import {Button} from "@/components/ui/button";
-import {z} from "zod";
+import {z, ZodType} from "zod";
 import {Control, useForm, FieldValues, FieldPath} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Input} from "@/components/ui/input";
@@ -41,9 +41,17 @@ const classSchema = z.object({
     name: z.string().min(0).max(100),
     description: z.string(),
     abstractClass: z.boolean(),
-    headTwinClassId: z.string().optional(),
-    extendsTwinClassId: z.string().optional()
-});
+    headTwinClassId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
+    extendsTwinClassId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
+    logo: z.string().url().optional().or(z.literal('').transform(() => undefined)),
+    permissionSchemaSpace: z.boolean(),
+    twinflowSchemaSpace: z.boolean(),
+    twinClassSchemaSpace: z.boolean(),
+    aliasSpace: z.boolean(),
+    markerDataListId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
+    tagDataListId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
+    viewPermissionId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
+}) satisfies ZodType<TwinClassCreateRequestBody>;
 
 export function ClassDialog({
                                 open,
@@ -62,13 +70,24 @@ export function ClassDialog({
             key: "",
             name: "",
             description: "",
-            abstractClass: false
+            abstractClass: false,
+            headTwinClassId: "",
+            extendsTwinClassId: "",
+            logo: "",
+            permissionSchemaSpace: false,
+            twinflowSchemaSpace: false,
+            twinClassSchemaSpace: false,
+            aliasSpace: false,
+            markerDataListId: "",
+            tagDataListId: "",
+            viewPermissionId: "",
         }
     })
 
 
     function onOpenInternal() {
         form.reset();
+        setError(null);
     }
 
     useEffect(() => {
@@ -90,8 +109,9 @@ export function ClassDialog({
         const {data: response, error} = await api.twinClass.create({body: data});
 
         if (error) {
-            console.error('failed to create class', error);
-            setError("Failed to create class: " + error);
+            console.error('failed to create class', error, typeof error);
+            const errorMessage = error.msg;
+            setError("Failed to create class: " + errorMessage ?? error);
             return;
         }
 
@@ -111,7 +131,7 @@ export function ClassDialog({
     }
 
     return <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
             <DialogTrigger asChild>
                 Open
             </DialogTrigger>
@@ -134,6 +154,8 @@ export function ClassDialog({
                     <MyTextAreaFormField control={form.control} name="description" label="Description"/>
 
                     <MyCheckboxFormField control={form.control} name="abstractClass" label="Is abstract"/>
+
+                    <MyTextFormField control={form.control} name="logo" label="Logo URL"/>
 
                     <MyComboboxFormField control={form.control} name="headTwinClassId" label="Head"
                                          getItems={fetchClasses}
@@ -160,6 +182,20 @@ export function ClassDialog({
                                          searchPlaceholder={"Search extends class..."}
                                          noItemsText={"No classes found"}
                     />
+
+                    <MyCheckboxFormField control={form.control} name="permissionSchemaSpace" label="Permission schema space"/>
+
+                    <MyCheckboxFormField control={form.control} name="twinflowSchemaSpace" label="Twinflow schema space"/>
+
+                    <MyCheckboxFormField control={form.control} name="twinClassSchemaSpace" label="Twin class schema space"/>
+
+                    <MyCheckboxFormField control={form.control} name="aliasSpace" label="Alias space"/>
+
+                    <MyTextFormField control={form.control} name="markerDataListId" label="Marker data list ID"/>
+
+                    <MyTextFormField control={form.control} name="tagDataListId" label="Tag data list ID"/>
+
+                    <MyTextFormField control={form.control} name="viewPermissionId" label="View permission ID"/>
 
                     {error && <Alert variant="destructive">
                         {error}
@@ -225,7 +261,7 @@ function MyTextFormField<T extends FieldValues>({
                           <FormItem>
                               {label && <FormLabel>{label}</FormLabel>}
                               <FormControl>
-                                  <Input placeholder={placeholder} {...field} autoFocus={true}/>
+                                  <Input placeholder={placeholder} {...field}/>
                               </FormControl>
                               {description && <FormDescription>{description}</FormDescription>}
                               <FormMessage/>

@@ -19,6 +19,17 @@ const columns: ColumnDef<TwinClass>[] = [
         header: "ID",
     },
     {
+        accessorKey: "logo",
+        header: "Logo",
+        cell: (data) => {
+            const value = data.row.original.logo;
+            if (value == null) {
+                return null;
+            }
+            return <img src={value as string} alt={value as string} width={32} height={32}/>;
+        }
+    },
+    {
         accessorKey: "key",
         header: "Key",
     },
