@@ -25,7 +25,7 @@ export type ComboboxHandle<T> = {
 
 export interface ComboboxProps<T> {
     getItems: (search: string) => Promise<T[]>
-    getItemKey: (item?: T) => string;
+    getItemKey: (item: T) => string;
     getItemLabel: (item: T) => string;
     onSelect?: (value?: T) => any;
     renderInList?: (value: T) => ReactNode;
@@ -76,8 +76,18 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
     function onSelect(newKey: string) {
         const newItem = items.find((item) => props.getItemKey(item) === newKey)
         console.log("Selected", newKey, newItem, items)
-        setSelected(props.getItemKey(selected) === newKey ? undefined : newItem)
-        props.onSelect?.(newItem)
+        let newSelected = newItem
+        if (!selected) {
+            setSelected(newItem)
+        } else {
+            if (props.getItemKey(selected) === newKey) {
+                setSelected(undefined);
+                newSelected = undefined;
+            } else {
+                setSelected(newItem)
+            }
+        }
+        props.onSelect?.(newSelected)
         setOpen(false)
     }
 
@@ -110,7 +120,7 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
                                     <Check
                                         className={cn(
                                             "mr-2 h-4 w-4",
-                                            props.getItemKey(selected) === props.getItemKey(item) ? "opacity-100" : "opacity-0"
+                                            (selected && props.getItemKey(selected) === props.getItemKey(item)) ? "opacity-100" : "opacity-0"
                                         )}
                                     />
                                     {props.renderInList?.(item) ?? props.getItemLabel(item)}

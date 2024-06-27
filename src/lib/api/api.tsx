@@ -5,9 +5,11 @@ import {createTwinClassApi, TwinClassApi} from "@/lib/api/twin-class-api";
 import createClient from "openapi-fetch";
 import {paths} from "@/lib/api/generated/schema";
 import {env} from "next-runtime-env";
+import {createTwinStatusApi, TwinStatusApi} from "@/lib/api/twin-status-api";
 
 interface ApiContextProps {
-    twinClass: TwinClassApi
+    twinClass: TwinClassApi,
+    twinStatus: TwinStatusApi
 }
 
 export const ApiContext = createContext<ApiContextProps>({} as ApiContextProps);
@@ -27,7 +29,6 @@ export function getApiDomainHeaders(settings: ApiSettings) {
     }
 }
 
-
 export function ApiContextProvider({children}: { children: React.ReactNode }) {
     const settings: ApiSettings = {
         domain: env('NEXT_PUBLIC_DOMAIN') ?? "",
@@ -37,7 +38,8 @@ export function ApiContextProvider({children}: { children: React.ReactNode }) {
     }
 
     return <ApiContext.Provider value={{
-        twinClass: createTwinClassApi(settings)
+        twinClass: createTwinClassApi(settings),
+        twinStatus: createTwinStatusApi(settings)
     }}>
         {children}
     </ApiContext.Provider>

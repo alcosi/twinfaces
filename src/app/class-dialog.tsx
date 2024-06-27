@@ -20,6 +20,12 @@ import {Alert} from "@/components/ui/alert";
 import {ApiContext} from "@/lib/api/api";
 import {Combobox, ComboboxProps} from "@/components/ui/combobox";
 import {cn} from "@/lib/utils";
+import {
+    CheckboxFormField,
+    ComboboxFormField,
+    TextAreaFormField,
+    TextFormField
+} from "@/components/ui/form-fields";
 
 interface ClassDialogProps {
     open: boolean,
@@ -147,55 +153,55 @@ export function ClassDialog({
             </DialogHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <MyTextFormField control={form.control} name="key" label="Key"/>
+                    <TextFormField control={form.control} name="key" label="Key"/>
 
-                    <MyTextFormField control={form.control} name="name" label="Name"/>
+                    <TextFormField control={form.control} name="name" label="Name"/>
 
-                    <MyTextAreaFormField control={form.control} name="description" label="Description"/>
+                    <TextAreaFormField control={form.control} name="description" label="Description"/>
 
-                    <MyCheckboxFormField control={form.control} name="abstractClass" label="Is abstract"/>
+                    <CheckboxFormField control={form.control} name="abstractClass" label="Is abstract"/>
 
-                    <MyTextFormField control={form.control} name="logo" label="Logo URL"/>
+                    <TextFormField control={form.control} name="logo" label="Logo URL"/>
 
-                    <MyComboboxFormField control={form.control} name="headTwinClassId" label="Head"
-                                         getItems={fetchClasses}
-                                         getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-                                         getItemLabel={(c) => {
+                    <ComboboxFormField control={form.control} name="headTwinClassId" label="Head"
+                                       getItems={fetchClasses}
+                                       getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
+                                       getItemLabel={(c) => {
                                              let label = c?.key ?? "";
                                              if (c.name) label += ` (${c.name})`
                                              return label;
                                          }}
-                                         selectPlaceholder={"Select head class"}
-                                         searchPlaceholder={"Search head class..."}
-                                         noItemsText={"No classes found"}
+                                       selectPlaceholder={"Select head class"}
+                                       searchPlaceholder={"Search head class..."}
+                                       noItemsText={"No classes found"}
                     />
 
-                    <MyComboboxFormField control={form.control} name="extendsTwinClassId" label="Extends"
-                                         getItems={fetchClasses}
-                                         getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-                                         getItemLabel={(c) => {
+                    <ComboboxFormField control={form.control} name="extendsTwinClassId" label="Extends"
+                                       getItems={fetchClasses}
+                                       getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
+                                       getItemLabel={(c) => {
                                              let label = c?.key ?? "";
                                              if (c.name) label += ` (${c.name})`
                                              return label;
                                          }}
-                                         selectPlaceholder={"Select extends class"}
-                                         searchPlaceholder={"Search extends class..."}
-                                         noItemsText={"No classes found"}
+                                       selectPlaceholder={"Select extends class"}
+                                       searchPlaceholder={"Search extends class..."}
+                                       noItemsText={"No classes found"}
                     />
 
-                    <MyCheckboxFormField control={form.control} name="permissionSchemaSpace" label="Permission schema space"/>
+                    <CheckboxFormField control={form.control} name="permissionSchemaSpace" label="Permission schema space"/>
 
-                    <MyCheckboxFormField control={form.control} name="twinflowSchemaSpace" label="Twinflow schema space"/>
+                    <CheckboxFormField control={form.control} name="twinflowSchemaSpace" label="Twinflow schema space"/>
 
-                    <MyCheckboxFormField control={form.control} name="twinClassSchemaSpace" label="Twin class schema space"/>
+                    <CheckboxFormField control={form.control} name="twinClassSchemaSpace" label="Twin class schema space"/>
 
-                    <MyCheckboxFormField control={form.control} name="aliasSpace" label="Alias space"/>
+                    <CheckboxFormField control={form.control} name="aliasSpace" label="Alias space"/>
 
-                    <MyTextFormField control={form.control} name="markerDataListId" label="Marker data list ID"/>
+                    <TextFormField control={form.control} name="markerDataListId" label="Marker data list ID"/>
 
-                    <MyTextFormField control={form.control} name="tagDataListId" label="Tag data list ID"/>
+                    <TextFormField control={form.control} name="tagDataListId" label="Tag data list ID"/>
 
-                    <MyTextFormField control={form.control} name="viewPermissionId" label="View permission ID"/>
+                    <TextFormField control={form.control} name="viewPermissionId" label="View permission ID"/>
 
                     {error && <Alert variant="destructive">
                         {error}
@@ -230,7 +236,7 @@ function ViewOrEditText<T extends FieldValues>({
     const [editMode, setEditMode] = useState(false);
 
     if (editMode) {
-        return <MyTextFormField control={control} name={name} label={label}/>
+        return <TextFormField control={control} name={name} label={label}/>
     }
 
     return <FormItem onClick={() => setEditMode(true)}>
@@ -239,102 +245,4 @@ function ViewOrEditText<T extends FieldValues>({
             <div>{value}</div>
         </div>
     </FormItem>
-}
-
-interface MyFormFieldProps<T extends FieldValues> {
-    name: FieldPath<T>;
-    control: Control<T>;
-    label?: ReactNode;
-    placeholder?: string;
-    description?: ReactNode;
-}
-
-function MyTextFormField<T extends FieldValues>({
-                                                    name,
-                                                    control,
-                                                    label,
-                                                    placeholder,
-                                                    description
-                                                }: MyFormFieldProps<T>) {
-    return <FormField control={control} name={name}
-                      render={({field}) => (
-                          <FormItem>
-                              {label && <FormLabel>{label}</FormLabel>}
-                              <FormControl>
-                                  <Input placeholder={placeholder} {...field}/>
-                              </FormControl>
-                              {description && <FormDescription>{description}</FormDescription>}
-                              <FormMessage/>
-                          </FormItem>
-                      )}/>
-}
-
-function MyTextAreaFormField<T extends FieldValues>({
-                                                        name,
-                                                        control,
-                                                        label,
-                                                        placeholder,
-                                                        description
-                                                    }: MyFormFieldProps<T>) {
-    return <FormField control={control} name={name}
-                      render={({field}) => (
-                          <FormItem>
-                              {label && <FormLabel>{label}</FormLabel>}
-                              <FormControl>
-                                  <Textarea placeholder={placeholder} {...field} />
-                              </FormControl>
-                              {description && <FormDescription>{description}</FormDescription>}
-                              <FormMessage/>
-                          </FormItem>
-                      )}/>
-}
-
-function MyCheckboxFormField<T extends FieldValues>({
-                                                        name,
-                                                        control,
-                                                        label,
-                                                        description
-                                                    }: MyFormFieldProps<T>) {
-    return <FormField control={control} name={name}
-                      render={({field}) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                              <FormControl>
-                                  <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
-                                  />
-                              </FormControl>
-                              <div className="space-y-1 leading-none">
-                                  {label && <FormLabel>{label}</FormLabel>}
-                                  {description && <FormDescription>{description}</FormDescription>}
-                              </div>
-                          </FormItem>
-                      )}/>
-}
-
-function MyComboboxFormField<T extends FieldValues, K>({
-                                                           name,
-                                                           control,
-                                                           label,
-                                                           description,
-                                                           buttonClassName,
-                                                           ...props
-                                                       }: MyFormFieldProps<T> & ComboboxProps<K>) {
-    return <FormField control={control} name={name}
-                      render={({field}) => {
-                          return (
-                              <FormItem>
-                                  {label && <FormLabel>{label}</FormLabel>}
-                                  <FormControl>
-                                      <div>
-                                          <Combobox onSelect={(val) => field.onChange(val && props.getItemKey(val))}
-                                                    buttonClassName={cn(["w-full", buttonClassName])}
-                                                    {...props}/>
-                                      </div>
-                                  </FormControl>
-                                  {description && <FormDescription>{description}</FormDescription>}
-                                  <FormMessage/>
-                              </FormItem>
-                          );
-                      }}/>
 }

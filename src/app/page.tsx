@@ -11,7 +11,10 @@ import {ClassDialog, ClassDialogMode} from "@/app/class-dialog";
 import {ApiContext} from "@/lib/api/api";
 import {Input} from "@/components/ui/input";
 import {Separator} from "@/components/ui/separator";
-import {Combobox} from "@/components/ui/combobox";
+import Image from "next/image"
+import {useRouter} from "next/navigation";
+import Link from "next/link";
+import {ExternalLinkIcon} from "@radix-ui/react-icons";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
@@ -23,10 +26,10 @@ const columns: ColumnDef<TwinClass>[] = [
         header: "Logo",
         cell: (data) => {
             const value = data.row.original.logo;
-            if (value == null) {
+            if (!value) {
                 return null;
             }
-            return <img src={value as string} alt={value as string} width={32} height={32}/>;
+            return <Image  src={value as string} alt={value as string} width={32} height={32}/>;
         }
     },
     {
@@ -42,38 +45,18 @@ const columns: ColumnDef<TwinClass>[] = [
         header: "Abstract",
         cell: (data) => <>{data.getValue() && <Check/>}</>
     },
+    {
+        header: "Actions",
+        cell: (data) => {
+            return <Link href={`/twinclass/${data.row.original.key}`} target='_blank'>
+                <span className="inline-flex items-center"><ExternalLinkIcon className="mx-1"/> View</span>
+            </Link>
+        }
+    }
     // {
     //     accessorKey: "createdAt",
     //     header: "Created At",
     // }
-]
-
-interface avalue {
-    value: string,
-    label: string
-}
-
-const frameworks: avalue[] = [
-    {
-        value: "next.js",
-        label: "Next.js",
-    },
-    {
-        value: "sveltekit",
-        label: "SvelteKit",
-    },
-    {
-        value: "nuxt.js",
-        label: "Nuxt.js",
-    },
-    {
-        value: "remix",
-        label: "Remix",
-    },
-    {
-        value: "astro",
-        label: "Astro",
-    },
 ]
 
 export default function Home() {
@@ -85,10 +68,6 @@ export default function Home() {
     const api = useContext(ApiContext)
 
     const tableRef = useRef<DataTableHandle>(null);
-
-    // useEffect(() => {
-    //     tableRef.current?.refresh()
-    // }, [tableSearch])
 
     async function fetchData(pagination: PaginationState) {
         const {data, error} = await api.twinClass.search({pagination, search: tableSearch});
@@ -141,11 +120,6 @@ export default function Home() {
                            columns={columns}
                            fetcher={fetchData}
                            pageSizes={[10, 20, 50]}
-                           onRowClick={row => {
-                               setSelectedClass(row);
-                               setClassDialogMode(ClassDialogMode.View);
-                               setClassDialogOpen(true);
-                           }}
                 />
             </div>
             <div className="w-0 flex-0 lg:w-16"/>
@@ -159,6 +133,7 @@ export default function Home() {
                          }}
                          twinClass={selectedClass}
                          onSuccess={() => tableRef.current?.refresh()}/>
+
         </main>
     );
 }
