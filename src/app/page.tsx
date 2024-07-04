@@ -5,21 +5,19 @@ import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {DataTable, DataTableHandle} from "@/components/ui/data-table/data-table";
 import {useContext, useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
-import {Check, RefreshCw, Search} from "lucide-react";
+import {Check, LinkIcon, RefreshCw, Search} from "lucide-react";
 import {TwinClass} from "@/lib/api/api-types";
 import {ClassDialog, ClassDialogMode} from "@/app/class-dialog";
 import {ApiContext} from "@/lib/api/api";
 import {Input} from "@/components/ui/input";
 import {Separator} from "@/components/ui/separator";
 import Image from "next/image"
-import {useRouter} from "next/navigation";
 import Link from "next/link";
-import {ExternalLinkIcon} from "@radix-ui/react-icons";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
         accessorKey: "id",
-        header: "ID",
+        header: "ID"
     },
     {
         accessorKey: "logo",
@@ -27,9 +25,9 @@ const columns: ColumnDef<TwinClass>[] = [
         cell: (data) => {
             const value = data.row.original.logo;
             if (!value) {
-                return null;
+                return <></>;
             }
-            return <Image  src={value as string} alt={value as string} width={32} height={32}/>;
+            return <Image src={value as string} alt={value as string} width={32} height={32} className="text-[0]"/>;
         }
     },
     {
@@ -48,21 +46,16 @@ const columns: ColumnDef<TwinClass>[] = [
     {
         header: "Actions",
         cell: (data) => {
-            return <Link href={`/twinclass/${data.row.original.key}`} target='_blank'>
-                <span className="inline-flex items-center"><ExternalLinkIcon className="mx-1"/> View</span>
+            return <Link href={`/twinclass/${data.row.original.key}`}>
+                <span className="inline-flex items-center"><LinkIcon className="mx-1"/> View</span>
             </Link>
         }
     }
-    // {
-    //     accessorKey: "createdAt",
-    //     header: "Created At",
-    // }
 ]
 
 export default function Home() {
     const [classDialogOpen, setClassDialogOpen] = useState(false)
-    const [classDialogMode, setClassDialogMode] = useState<ClassDialogMode>(ClassDialogMode.Create)
-    const [selectedClass, setSelectedClass] = useState<TwinClass | undefined>(undefined)
+    // const [selectedClass, setSelectedClass] = useState<TwinClass | undefined>(undefined)
     const [tableSearch, setTableSearch] = useState<string>("")
 
     const api = useContext(ApiContext)
@@ -70,21 +63,34 @@ export default function Home() {
     const tableRef = useRef<DataTableHandle>(null);
 
     async function fetchData(pagination: PaginationState) {
-        const {data, error} = await api.twinClass.search({pagination, search: tableSearch});
+        try {
+            const {data, error} = await api.twinClass.search({pagination, search: tableSearch});
+            if (error) {
+                console.error('failed to fetch classes', error)
+                toast.error("Failed to fetch classes")
+                return {
+                    data: [],
+                    pageCount: 0
+                }
+            }
 
-        if (error) {
-            console.error('failed to fetch classes', error)
+            return {
+                data: data.twinClassList ?? [],
+                pageCount: Math.ceil((data.pagination?.total ?? 0) / pagination.pageSize)
+            }
+        } catch(e) {
+            console.error('Exception when fetching classes', e)
             toast.error("Failed to fetch classes")
             return {
                 data: [],
                 pageCount: 0
             }
         }
+    }
 
-        return {
-            data: data.twinClassList ?? [],
-            pageCount: Math.ceil((data.pagination?.total ?? 0) / pagination.pageSize)
-        }
+    function openCreateClass() {
+        // setSelectedClass(undefined)
+        setClassDialogOpen(true)
     }
 
     return (
@@ -108,16 +114,14 @@ export default function Home() {
                     <div className={"flex space-x-4"}>
                         <Button variant="ghost" onClick={() => tableRef.current?.refresh()}><RefreshCw/></Button>
                         <Separator orientation={"vertical"}/>
-                        <Button onClick={() => {
-                            setClassDialogOpen(true);
-                            setClassDialogMode(ClassDialogMode.Create);
-                        }}>
+                        <Button onClick={openCreateClass}>
                             Create class
                         </Button>
                     </div>
                 </div>
                 <DataTable ref={tableRef}
                            columns={columns}
+                           getRowId={(row) => row.key!}
                            fetcher={fetchData}
                            pageSizes={[10, 20, 50]}
                 />
@@ -127,11 +131,8 @@ export default function Home() {
             <ClassDialog open={classDialogOpen}
                          onOpenChange={(newOpen) => {
                              setClassDialogOpen(newOpen);
-                             if (!newOpen) {
-                                 setSelectedClass(undefined);
-                             }
                          }}
-                         twinClass={selectedClass}
+                         // twinClass={selectedClass}
                          onSuccess={() => tableRef.current?.refresh()}/>
 
         </main>

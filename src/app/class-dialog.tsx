@@ -6,7 +6,7 @@ import {
     DialogHeader,
     DialogTitle, DialogTrigger
 } from "@/components/ui/dialog";
-import {TwinClass, TwinClassCreateRequestBody} from "@/lib/api/api-types";
+import {Featurer, FeaturerParam, TwinClass, TwinClassCreateRq} from "@/lib/api/api-types";
 import {Button} from "@/components/ui/button";
 import {z, ZodType} from "zod";
 import {Control, useForm, FieldValues, FieldPath} from "react-hook-form";
@@ -22,15 +22,15 @@ import {Combobox, ComboboxProps} from "@/components/ui/combobox";
 import {cn} from "@/lib/utils";
 import {
     CheckboxFormField,
-    ComboboxFormField,
+    ComboboxFormField, FormFieldProps,
     TextAreaFormField,
     TextFormField
-} from "@/components/ui/form-fields";
+} from "@/components/form-fields";
+import {FeaturerInput, FeaturerValue} from "@/components/FeaturerInput";
 
 interface ClassDialogProps {
     open: boolean,
     onOpenChange?: (open: boolean) => any,
-    mode?: ClassDialogMode,
     twinClass?: TwinClass,
     // On create or on edit success
     onSuccess?: () => any
@@ -38,7 +38,6 @@ interface ClassDialogProps {
 
 export enum ClassDialogMode {
     Create,
-    View,
     Edit
 }
 
@@ -47,6 +46,7 @@ const classSchema = z.object({
     name: z.string().min(0).max(100),
     description: z.string(),
     abstractClass: z.boolean(),
+    // headHunterFeaturerId: z.string().min(1, 'Head hunter featurer ID is required'),
     headTwinClassId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
     extendsTwinClassId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
     logo: z.string().url().optional().or(z.literal('').transform(() => undefined)),
@@ -57,16 +57,18 @@ const classSchema = z.object({
     markerDataListId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
     tagDataListId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
     viewPermissionId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
-}) satisfies ZodType<TwinClassCreateRequestBody>;
+})
 
 export function ClassDialog({
                                 open,
                                 onOpenChange,
-                                mode = ClassDialogMode.Create,
                                 twinClass,
                                 onSuccess
                             }: ClassDialogProps) {
     const [error, setError] = useState<string | null>(null)
+    const [featurer, setFeaturer] = useState<FeaturerValue | null>(null)
+
+    const mode = twinClass ? ClassDialogMode.Edit : ClassDialogMode.Create;
 
     const api = useContext(ApiContext)
 
@@ -77,6 +79,7 @@ export function ClassDialog({
             name: "",
             description: "",
             abstractClass: false,
+            // headHunterFeaturerId: "",
             headTwinClassId: "",
             extendsTwinClassId: "",
             logo: "",
@@ -112,7 +115,27 @@ export function ClassDialog({
     async function onSubmit(data: z.infer<typeof classSchema>) {
         setError(null);
 
-        const {data: response, error} = await api.twinClass.create({body: data});
+        if (!featurer) {
+            setError("Please select a featurer");
+            return;
+        }
+
+        const requestBody: TwinClassCreateRq = {
+            ...data,
+            // headHunterFeaturerId: parseInt(data.headHunterFeaturerId ?? ''),
+            headHunterFeaturerId: featurer.featurer.id,
+            headHunterParams: featurer.params,
+            nameI18n: {
+                translationInCurrentLocale: data.name,
+                translations: {}
+            },
+            descriptionI18n: {
+                translationInCurrentLocale: data.description,
+                translations: {}
+            },
+        }
+
+        const {data: response, error} = await api.twinClass.create({body: requestBody});
 
         if (error) {
             console.error('failed to create class', error, typeof error);
@@ -144,7 +167,6 @@ export function ClassDialog({
             <DialogHeader>
                 <DialogTitle>
                     {mode === ClassDialogMode.Create && "Create new class"}
-                    {mode === ClassDialogMode.View && "Class " + twinClass?.key}
                     {mode === ClassDialogMode.Edit && "Edit class " + twinClass?.key}
                 </DialogTitle>
                 <DialogDescription>
@@ -163,14 +185,19 @@ export function ClassDialog({
 
                     <TextFormField control={form.control} name="logo" label="Logo URL"/>
 
+                    <FeaturerInput onChange={(val) => {
+                        console.log('new featurer', val)
+                        setFeaturer(val)
+                    }}/>
+
                     <ComboboxFormField control={form.control} name="headTwinClassId" label="Head"
                                        getItems={fetchClasses}
                                        getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
                                        getItemLabel={(c) => {
-                                             let label = c?.key ?? "";
-                                             if (c.name) label += ` (${c.name})`
-                                             return label;
-                                         }}
+                                           let label = c?.key ?? "";
+                                           if (c.name) label += ` (${c.name})`
+                                           return label;
+                                       }}
                                        selectPlaceholder={"Select head class"}
                                        searchPlaceholder={"Search head class..."}
                                        noItemsText={"No classes found"}
@@ -180,20 +207,22 @@ export function ClassDialog({
                                        getItems={fetchClasses}
                                        getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
                                        getItemLabel={(c) => {
-                                             let label = c?.key ?? "";
-                                             if (c.name) label += ` (${c.name})`
-                                             return label;
-                                         }}
+                                           let label = c?.key ?? "";
+                                           if (c.name) label += ` (${c.name})`
+                                           return label;
+                                       }}
                                        selectPlaceholder={"Select extends class"}
                                        searchPlaceholder={"Search extends class..."}
                                        noItemsText={"No classes found"}
                     />
 
-                    <CheckboxFormField control={form.control} name="permissionSchemaSpace" label="Permission schema space"/>
+                    <CheckboxFormField control={form.control} name="permissionSchemaSpace"
+                                       label="Permission schema space"/>
 
                     <CheckboxFormField control={form.control} name="twinflowSchemaSpace" label="Twinflow schema space"/>
 
-                    <CheckboxFormField control={form.control} name="twinClassSchemaSpace" label="Twin class schema space"/>
+                    <CheckboxFormField control={form.control} name="twinClassSchemaSpace"
+                                       label="Twin class schema space"/>
 
                     <CheckboxFormField control={form.control} name="aliasSpace" label="Alias space"/>
 
@@ -217,6 +246,8 @@ export function ClassDialog({
         </DialogContent>
     </Dialog>
 }
+
+
 
 interface ViewOrEditTextProps<T extends FieldValues> {
     name: FieldPath<T>;

@@ -7,8 +7,9 @@ import {Combobox, ComboboxProps} from "@/components/ui/combobox";
 import {cn} from "@/lib/utils";
 import {ReactNode} from "react";
 import {ColorPicker} from "@/components/ui/color-picker";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
-interface MyFormFieldProps<T extends FieldValues> {
+export interface FormFieldProps<T extends FieldValues> {
     name: FieldPath<T>;
     control: Control<T>;
     label?: ReactNode;
@@ -17,12 +18,12 @@ interface MyFormFieldProps<T extends FieldValues> {
 }
 
 export function TextFormField<T extends FieldValues>({
-                                                    name,
-                                                    control,
-                                                    label,
-                                                    placeholder,
-                                                    description
-                                                }: MyFormFieldProps<T>) {
+                                                         name,
+                                                         control,
+                                                         label,
+                                                         placeholder,
+                                                         description
+                                                     }: FormFieldProps<T>) {
     return <FormField control={control} name={name}
                       render={({field}) => (
                           <FormItem>
@@ -37,12 +38,12 @@ export function TextFormField<T extends FieldValues>({
 }
 
 export function TextAreaFormField<T extends FieldValues>({
-                                                        name,
-                                                        control,
-                                                        label,
-                                                        placeholder,
-                                                        description
-                                                    }: MyFormFieldProps<T>) {
+                                                             name,
+                                                             control,
+                                                             label,
+                                                             placeholder,
+                                                             description
+                                                         }: FormFieldProps<T>) {
     return <FormField control={control} name={name}
                       render={({field}) => (
                           <FormItem>
@@ -57,11 +58,11 @@ export function TextAreaFormField<T extends FieldValues>({
 }
 
 export function CheckboxFormField<T extends FieldValues>({
-                                                        name,
-                                                        control,
-                                                        label,
-                                                        description
-                                                    }: MyFormFieldProps<T>) {
+                                                             name,
+                                                             control,
+                                                             label,
+                                                             description
+                                                         }: FormFieldProps<T>) {
     return <FormField control={control} name={name}
                       render={({field}) => (
                           <FormItem className="flex flex-row items-start space-x-3 space-y-0">
@@ -79,14 +80,55 @@ export function CheckboxFormField<T extends FieldValues>({
                       )}/>
 }
 
+interface SelectFormFieldProps<T extends FieldValues, K> extends FormFieldProps<T> {
+    placeholder?: string;
+    values: K[];
+    getItemKey: (item: K) => string;
+    getItemLabel: (item: K) => string;
+}
+
+export function SelectFormField<T extends FieldValues, K>({
+                                                              name,
+                                                              control,
+                                                              label,
+                                                              description,
+                                                              placeholder,
+                                                              values,
+                                                              getItemKey,
+                                                              getItemLabel
+                                                          }: SelectFormFieldProps<T, K>) {
+    return <FormField control={control} name={name}
+                      render={({field}) => (
+                          <FormItem>
+                              {label && <FormLabel>{label}</FormLabel>}
+                              <FormControl>
+                                  <Select value={field.value} onValueChange={field.onChange}>
+                                      <SelectTrigger className="w-[180px]">
+                                          <SelectValue placeholder={placeholder}/>
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                          {values.map((value) => (
+                                              <SelectItem key={getItemKey(value)} value={getItemKey(value)}>
+                                                  {getItemLabel(value)}
+                                              </SelectItem>
+                                          ))}
+                                      </SelectContent>
+                                  </Select>
+                              </FormControl>
+                              {description && <FormDescription>{description}</FormDescription>}
+                              <FormMessage/>
+                          </FormItem>
+                      )}/>
+}
+
 export function ComboboxFormField<T extends FieldValues, K>({
-                                                           name,
-                                                           control,
-                                                           label,
-                                                           description,
-                                                           buttonClassName,
-                                                           ...props
-                                                       }: MyFormFieldProps<T> & ComboboxProps<K>) {
+                                                                name,
+                                                                control,
+                                                                label,
+                                                                description,
+                                                                buttonClassName,
+                                                                ...props
+                                                            }: FormFieldProps<T> & ComboboxProps<K>) {
     return <FormField control={control} name={name}
                       render={({field}) => {
                           return (
@@ -107,11 +149,11 @@ export function ComboboxFormField<T extends FieldValues, K>({
 }
 
 export function ColorPickerFormField<T extends FieldValues>({
-                                                           name,
-                                                           control,
-                                                           label,
-                                                           description
-                                                       }: MyFormFieldProps<T>) {
+                                                                name,
+                                                                control,
+                                                                label,
+                                                                description
+                                                            }: FormFieldProps<T>) {
     return <FormField control={control} name={name}
                       render={({field}) => (
                           <FormItem>

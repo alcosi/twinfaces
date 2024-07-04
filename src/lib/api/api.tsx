@@ -1,15 +1,17 @@
 'use client';
 
 import {createContext} from "react";
-import {createTwinClassApi, TwinClassApi} from "@/lib/api/twin-class-api";
+import {createTwinClassApi, TwinClassApi} from "@/lib/api/api-groups/twin-class-api";
 import createClient from "openapi-fetch";
 import {paths} from "@/lib/api/generated/schema";
 import {env} from "next-runtime-env";
-import {createTwinStatusApi, TwinStatusApi} from "@/lib/api/twin-status-api";
+import {createTwinStatusApi, TwinStatusApi} from "@/lib/api/api-groups/twin-status-api";
+import {createFeaturerApi, FeaturerApi} from "@/lib/api/api-groups/featurer-api";
 
 interface ApiContextProps {
     twinClass: TwinClassApi,
-    twinStatus: TwinStatusApi
+    twinStatus: TwinStatusApi,
+    featurer: FeaturerApi
 }
 
 export const ApiContext = createContext<ApiContextProps>({} as ApiContextProps);
@@ -39,7 +41,8 @@ export function ApiContextProvider({children}: { children: React.ReactNode }) {
 
     return <ApiContext.Provider value={{
         twinClass: createTwinClassApi(settings),
-        twinStatus: createTwinStatusApi(settings)
+        twinStatus: createTwinStatusApi(settings),
+        featurer: createFeaturerApi(settings)
     }}>
         {children}
     </ApiContext.Provider>

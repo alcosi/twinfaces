@@ -31,6 +31,7 @@ export type DataTableHandle = {
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
+    getRowId: (row: TData, index: number) => string;
     fetcher: (pagination: PaginationState) => Promise<{ data: TData[], pageCount: number }>
     pageSizes?: number[],
     onFetchError?: (e: Error) => any;
@@ -41,6 +42,7 @@ export const DataTable = fixedForwardRef(DataTableInternal);
 
 export function DataTableInternal<TData, TValue>({
                                                      columns,
+                                                     getRowId,
                                                      fetcher,
                                                      pageSizes,
                                                      onFetchError,
@@ -55,6 +57,7 @@ export function DataTableInternal<TData, TValue>({
     const table = useReactTable({
         data,
         columns,
+        getRowId: getRowId,
         enableRowSelection: false,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),

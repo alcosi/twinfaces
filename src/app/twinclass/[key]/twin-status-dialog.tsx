@@ -1,8 +1,8 @@
 import {
-    TwinClassCreateRequestBody,
+    TwinClassCreateRq,
     TwinClassStatus,
-    TwinClassStatusCreateRequestBody,
-    TwinClassStatusUpdateRequestBody
+    TwinClassStatusCreateRq,
+    TwinClassStatusUpdateRq
 } from "@/lib/api/api-types";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {z} from "zod";
@@ -11,7 +11,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {Form} from "@/components/ui/form";
-import {ColorPickerFormField, TextAreaFormField, TextFormField} from "@/components/ui/form-fields";
+import {ColorPickerFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
 import {Alert} from "@/components/ui/alert";
 import {Button} from "@/components/ui/button";
 import {Text} from "lucide-react";
@@ -55,14 +55,18 @@ export default function CreateEditTwinStatusDialog({
     }
 
     useEffect(() => {
-        if (open && status) {
-            form.reset({
-                key: status.key,
-                name: status.name,
-                description: status.description,
-                logo: status.logo,
-                color: status.color
-            })
+        if (open) {
+            if (status) {
+                form.reset({
+                    key: status.key,
+                    name: status.name,
+                    description: status.description,
+                    logo: status.logo,
+                    color: status.color
+                })
+            } else {
+                form.reset()
+            }
         }
     }, [open])
 
@@ -81,7 +85,7 @@ export default function CreateEditTwinStatusDialog({
         console.log('CreateEditTwinStatusDialog onSubmit', formValues)
         setError(null);
 
-        const data: TwinClassStatusCreateRequestBody | TwinClassStatusUpdateRequestBody = {
+        const data: TwinClassStatusCreateRq | TwinClassStatusUpdateRq = {
             key: formValues.key,
             nameI18n: {
                 translationInCurrentLocale: formValues.name,

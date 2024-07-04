@@ -19,6 +19,12 @@ export interface paths {
     /** Update twin status */
     put: operations["twinStatusUpdateV1"];
   };
+  "/private/twin_class/{twinClassId}/v1": {
+    /** Returns twin class by id */
+    get: operations["twinClassViewV1"];
+    /** Update twin class by id */
+    put: operations["twinClassUpdateV1"];
+  };
   "/private/twin/{twinId}/v1": {
     /**
      * Returns twin data by id
@@ -272,10 +278,6 @@ export interface paths {
     /** Get valid heads of given class */
     get: operations["twinClassValidHeadV1"];
   };
-  "/private/twin_class/{twinClassId}/v1": {
-    /** Returns twin class by id */
-    get: operations["twinClassViewV1"];
-  };
   "/private/twin_class/{twinClassId}/starred/v1": {
     /** Return list of starred twins of given class */
     get: operations["twinStarredListV1"];
@@ -465,157 +467,79 @@ export interface components {
        */
       color?: string;
     };
-    /** @description Attachments for adding */
-    AttachmentAddV1: {
-      /**
-       * @description External storage link
-       * @example https://test.filestorage.by/JFUjEFWksfqwf
-       */
-      storageLink?: string;
-      /**
-       * @description External id
-       * @example JD999weqw9f
-       */
-      externalId?: string;
-      /**
-       * @description Title
-       * @example cert.pdf
-       */
-      title?: string;
-      /**
-       * @description Description
-       * @example cert.pdf
-       */
-      description?: string;
+    /** @description [optional] should be filled on change extends twins class id */
+    BasicUpdateOperationDTOv1: {
       /**
        * Format: uuid
-       * @description link to the field to which attachment was added (if any)
+       * @description new id. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
        */
-      twinClassFieldId?: string;
+      newId?: string;
       /**
-       * Format: uuid
-       * @description link to the comment to which attachment was added (if any)
+       * @description what should be done with old values, if no replacement was given
+       * @enum {string}
        */
-      commentId?: string;
-    };
-    /** @description Attachments add/update/delete operations */
-    AttachmentCudV1: {
-      /** @description Attachments for adding */
-      create?: components["schemas"]["AttachmentAddV1"][];
-      /** @description Attachments for updating */
-      update?: components["schemas"]["AttachmentUpdateV1"][];
-      /** @description Attachments id list for deleting */
-      delete?: string[];
-    };
-    /** @description Attachments for updating */
-    AttachmentUpdateV1: {
-      /**
-       * @description External storage link
-       * @example https://test.filestorage.by/JFUjEFWksfqwf
-       */
-      storageLink?: string;
-      /**
-       * @description External id
-       * @example JD999weqw9f
-       */
-      externalId?: string;
-      /**
-       * @description Title
-       * @example cert.pdf
-       */
-      title?: string;
-      /**
-       * @description Description
-       * @example cert.pdf
-       */
-      description?: string;
-      /**
-       * Format: uuid
-       * @description id
-       */
-      id?: string;
-    };
-    /** @description TwinLinks for adding */
-    TwinLinkAddV1: {
-      /**
-       * Format: uuid
-       * @description Link id
-       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
-       */
-      linkId?: string;
-      /**
-       * Format: uuid
-       * @description Destination twin id
-       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
-       */
-      dstTwinId?: string;
-    };
-    /** @description TwinLinks for updating */
-    TwinLinkUpdateV1: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @description Destination twin id
-       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
-       */
-      dstTwinId?: string;
-    };
-    /** @description TwinTags for updating */
-    TwinTagManageV1: {
-      /**
-       * @description add already existing tags by their ids
-       * @example cf8b1aec-c07c-4131-b834-8024462cfc93
-       */
-      existingTags?: string[];
-      /** @description add new tags by name (in current locale). If tag with given name is already exist, it will be used */
-      newTags?: string[];
-      /**
-       * @description delete already existing tags by their ids
-       * @example cf8b1aec-c07c-4131-b834-8024462cfc93
-       */
-      deleteTags?: string[];
-    };
-    TwinUpdateRqV1: {
-      /**
-       * Format: uuid
-       * @description Head twin id, if selected class had to be linked to some head twin
-       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-       */
-      headTwinId?: string;
-      /**
-       * @description name
-       * @example Oak
-       */
-      name?: string;
-      /**
-       * Format: uuid
-       * @description assigner user id
-       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-       */
-      assignerUserId?: string;
-      /**
-       * @description description
-       * @example The biggest tree
-       */
-      description?: string;
-      /** @description fields */
-      fields?: {
+      onUnreplacedStrategy?: "delete" | "restrict";
+      /** @description map [old_id -> new_id] */
+      replaceMap?: {
         [key: string]: string;
       };
-      attachments?: components["schemas"]["AttachmentCudV1"];
-      /** @description TwinLinks for adding */
-      twinLinksAdd?: components["schemas"]["TwinLinkAddV1"][];
-      /** @description TwinLinks id list for deleting */
-      twinLinksDelete?: string[];
-      /** @description TwinLinks for updating */
-      twinLinksUpdate?: components["schemas"]["TwinLinkUpdateV1"][];
-      tagsUpdate?: components["schemas"]["TwinTagManageV1"];
-      comment?: string;
+    };
+    TwinClassUpdateRqV1: {
+      /**
+       * @description unique key within the domain
+       * @example TOOL
+       */
+      key?: string;
+      nameI18n?: components["schemas"]["I18nV1"];
+      descriptionI18n?: components["schemas"]["I18nV1"];
+      /**
+       * Format: int32
+       * @description [optional] an id of head hunter featurer. The field has a sense only if headTwinClassId filled
+       */
+      headHunterFeaturerId?: number;
+      /** @description [optional] head hunter featurer params */
+      headHunterParams?: {
+        [key: string]: string;
+      };
+      /**
+       * @description [optional] if true, then not twin of given class can be created. Abstract classes must be extended
+       * @example false
+       */
+      abstractClass?: boolean;
+      /**
+       * @description [optional] url for class UI logo
+       * @example https://twins.org/img/twin_class_default.png
+       */
+      logo?: string;
+      /**
+       * @description [optional] if true then twins of current class can have own permission_schema and this schema will cover children twins
+       * @example false
+       */
+      permissionSchemaSpace?: boolean;
+      /**
+       * @description [optional] if true then twins of current class can have own twinflow_schema and this schema will cover children twins
+       * @example false
+       */
+      twinflowSchemaSpace?: boolean;
+      /**
+       * @description [optional] if true then twins of current class can have own twin_class_schema and this schema will cover children twins
+       * @example false
+       */
+      twinClassSchemaSpace?: boolean;
+      /**
+       * @description [optional] if true then twins of current class must have own alias key and this key will be used to generate alias for children twins
+       * @example false
+       */
+      aliasSpace?: boolean;
+      /**
+       * Format: uuid
+       * @description [optional] this field helps to set extra permission, needed by users to view twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      viewPermissionId?: string;
+      markerDataListUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
+      tagDataListUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
+      extendsTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
+      headTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
     };
     /** @description attachments */
     AttachmentViewV1: {
@@ -1281,6 +1205,21 @@ export interface components {
        */
       type?: "ManyToOne" | "ManyToMany" | "OneToOne";
     };
+    TwinClassRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description request processing status description
+       * @example success
+       */
+      msg?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      twinClass?: components["schemas"]["TwinClassV1"];
+    };
     /** @description class */
     TwinClassV1: {
       /**
@@ -1425,21 +1364,6 @@ export interface components {
       link?: components["schemas"]["TwinClassLinkV1"];
       dstTwin?: components["schemas"]["TwinBaseV2"];
     };
-    TwinRsV2: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description request processing status description
-       * @example success
-       */
-      msg?: string;
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      twin?: components["schemas"]["TwinV2"];
-    };
     /**
      * @description related statuses map
      * @example {twin map}
@@ -1573,6 +1497,173 @@ export interface components {
        * @example http://twins.org/a/avatar/carkikrefmkawfwfwg.png
        */
       avatar?: string;
+    };
+    /** @description Attachments for adding */
+    AttachmentAddV1: {
+      /**
+       * @description External storage link
+       * @example https://test.filestorage.by/JFUjEFWksfqwf
+       */
+      storageLink?: string;
+      /**
+       * @description External id
+       * @example JD999weqw9f
+       */
+      externalId?: string;
+      /**
+       * @description Title
+       * @example cert.pdf
+       */
+      title?: string;
+      /**
+       * @description Description
+       * @example cert.pdf
+       */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description link to the field to which attachment was added (if any)
+       */
+      twinClassFieldId?: string;
+      /**
+       * Format: uuid
+       * @description link to the comment to which attachment was added (if any)
+       */
+      commentId?: string;
+    };
+    /** @description Attachments add/update/delete operations */
+    AttachmentCudV1: {
+      /** @description Attachments for adding */
+      create?: components["schemas"]["AttachmentAddV1"][];
+      /** @description Attachments for updating */
+      update?: components["schemas"]["AttachmentUpdateV1"][];
+      /** @description Attachments id list for deleting */
+      delete?: string[];
+    };
+    /** @description Attachments for updating */
+    AttachmentUpdateV1: {
+      /**
+       * @description External storage link
+       * @example https://test.filestorage.by/JFUjEFWksfqwf
+       */
+      storageLink?: string;
+      /**
+       * @description External id
+       * @example JD999weqw9f
+       */
+      externalId?: string;
+      /**
+       * @description Title
+       * @example cert.pdf
+       */
+      title?: string;
+      /**
+       * @description Description
+       * @example cert.pdf
+       */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+    };
+    /** @description TwinLinks for adding */
+    TwinLinkAddV1: {
+      /**
+       * Format: uuid
+       * @description Link id
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       */
+      linkId?: string;
+      /**
+       * Format: uuid
+       * @description Destination twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      dstTwinId?: string;
+    };
+    /** @description TwinLinks for updating */
+    TwinLinkUpdateV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description Destination twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      dstTwinId?: string;
+    };
+    /** @description TwinTags for updating */
+    TwinTagManageV1: {
+      /**
+       * @description add already existing tags by their ids
+       * @example cf8b1aec-c07c-4131-b834-8024462cfc93
+       */
+      existingTags?: string[];
+      /** @description add new tags by name (in current locale). If tag with given name is already exist, it will be used */
+      newTags?: string[];
+      /**
+       * @description delete already existing tags by their ids
+       * @example cf8b1aec-c07c-4131-b834-8024462cfc93
+       */
+      deleteTags?: string[];
+    };
+    TwinUpdateRqV1: {
+      /**
+       * Format: uuid
+       * @description Head twin id, if selected class had to be linked to some head twin
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      headTwinId?: string;
+      /**
+       * @description name
+       * @example Oak
+       */
+      name?: string;
+      /**
+       * Format: uuid
+       * @description assigner user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      assignerUserId?: string;
+      /**
+       * @description description
+       * @example The biggest tree
+       */
+      description?: string;
+      /** @description fields */
+      fields?: {
+        [key: string]: string;
+      };
+      attachments?: components["schemas"]["AttachmentCudV1"];
+      /** @description TwinLinks for adding */
+      twinLinksAdd?: components["schemas"]["TwinLinkAddV1"][];
+      /** @description TwinLinks id list for deleting */
+      twinLinksDelete?: string[];
+      /** @description TwinLinks for updating */
+      twinLinksUpdate?: components["schemas"]["TwinLinkUpdateV1"][];
+      tagsUpdate?: components["schemas"]["TwinTagManageV1"];
+      comment?: string;
+    };
+    TwinRsV2: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description request processing status description
+       * @example success
+       */
+      msg?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      twin?: components["schemas"]["TwinV2"];
     };
     /** @description twin */
     TwinBaseV1: {
@@ -1931,47 +2022,23 @@ export interface components {
        */
       newKey?: string;
     };
-    TwinClassRsV1: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description request processing status description
-       * @example success
-       */
-      msg?: string;
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      twinClass?: components["schemas"]["TwinClassV1"];
-    };
     TwinClassCreateRqV1: {
       /**
        * @description unique key within the domain
        * @example TOOL
        */
       key?: string;
+      nameI18n?: components["schemas"]["I18nV1"];
+      descriptionI18n?: components["schemas"]["I18nV1"];
       /**
-       * @description name
-       * @example Tool
+       * Format: int32
+       * @description [optional] an id of head hunter featurer. The field has a sense only if headTwinClassId filled
        */
-      name?: string;
-      /**
-       * @description [optional] description
-       * @example Professional tool class
-       */
-      description?: string;
-      /**
-       * Format: uuid
-       * @description [optional] link to head (parent) class. It should be used in case, when twins of some class can not exist without some parent twin. Example: Task and Sub-task
-       */
-      headTwinClassId?: string;
-      /**
-       * Format: uuid
-       * @description [optional] link to extends class. All fields and links will be valid for current class.
-       */
-      extendsTwinClassId?: string;
+      headHunterFeaturerId?: number;
+      /** @description [optional] head hunter featurer params */
+      headHunterParams?: {
+        [key: string]: string;
+      };
       /**
        * @description [optional] if true, then not twin of given class can be created. Abstract classes must be extended
        * @example false
@@ -2004,19 +2071,29 @@ export interface components {
       aliasSpace?: boolean;
       /**
        * Format: uuid
-       * @description [optional] id of linked marker list. Markers in some cases similar to secondary statuses
+       * @description [optional] this field helps to set extra permission, needed by users to view twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      viewPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description [optional] link to extends class. All fields and links will be valid for current class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      extendsTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description [optional] link to head (parent) class. It should be used in case, when twins of some class can not exist without some parent twin. Example: Task and Sub-task. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      headTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description [optional] id of linked marker list. Markers in some cases similar to secondary statuses. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
        */
       markerDataListId?: string;
       /**
        * Format: uuid
-       * @description [optional] id of linked tags cloud. Tags differ from markers in that new tags can be added to the cloud by the users themselves. And the list of markers is configured only by the domain manager
+       * @description [optional] id of linked tags cloud. Tags differ from markers in that new tags can be added to the cloud by the users themselves. And the list of markers is configured only by the domain manager. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
        */
       tagDataListId?: string;
-      /**
-       * Format: uuid
-       * @description [optional] this field helps to set extra permission, needed by users to view twins of given class
-       */
-      viewPermissionId?: string;
     };
     TwinClassCreateRsV1: {
       /**
@@ -3779,6 +3856,97 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinStatusUpdateRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns twin class by id */
+  twinClassViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showClassMode?: "HIDE" | "SHORT" | "DETAILED";
+        showClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+        showClassStatusMode?: "HIDE" | "SHOW";
+        showClassMarkerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showClassTagMode?: "HIDE" | "SHORT" | "DETAILED";
+        showLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showHeadClassMode?: "HIDE" | "SHOW";
+        showExtendsClassMode?: "HIDE" | "SHOW";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        twinClassId: string;
+      };
+    };
+    responses: {
+      /** @description Twin class prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinClassRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Update twin class by id */
+  twinClassUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showClassMode?: "HIDE" | "SHORT" | "DETAILED";
+        showClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+        showClassStatusMode?: "HIDE" | "SHOW";
+        showClassMarkerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showClassTagMode?: "HIDE" | "SHORT" | "DETAILED";
+        showLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showHeadClassMode?: "HIDE" | "SHOW";
+        showExtendsClassMode?: "HIDE" | "SHOW";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        twinClassId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TwinClassUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Twin class prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinClassRsV1"];
         };
       };
       /** @description Access is denied */
@@ -6360,49 +6528,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinSearchRsV2"];
-        };
-      };
-      /** @description Access is denied */
-      401: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  /** Returns twin class by id */
-  twinClassViewV1: {
-    parameters: {
-      query?: {
-        lazyRelation?: boolean;
-        showClassMode?: "HIDE" | "SHORT" | "DETAILED";
-        showClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
-        showClassStatusMode?: "HIDE" | "SHOW";
-        showClassMarkerMode?: "HIDE" | "SHORT" | "DETAILED";
-        showClassTagMode?: "HIDE" | "SHORT" | "DETAILED";
-        showLinkMode?: "HIDE" | "SHORT" | "DETAILED";
-        showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showHeadClassMode?: "HIDE" | "SHOW";
-        showExtendsClassMode?: "HIDE" | "SHOW";
-      };
-      header: {
-        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-        DomainId: string;
-        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-        AuthToken: string;
-        /** @example WEB */
-        Channel: string;
-      };
-      path: {
-        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
-        twinClassId: string;
-      };
-    };
-    responses: {
-      /** @description Twin class prepared */
-      200: {
-        content: {
-          "application/json": components["schemas"]["TwinClassRsV1"];
         };
       };
       /** @description Access is denied */
