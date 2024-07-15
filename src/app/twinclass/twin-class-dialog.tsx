@@ -9,7 +9,7 @@ import {
 import {Featurer, FeaturerParam, TwinClass, TwinClassCreateRq} from "@/lib/api/api-types";
 import {Button} from "@/components/ui/button";
 import {z, ZodType} from "zod";
-import {Control, useForm, FieldValues, FieldPath} from "react-hook-form";
+import {Control, useForm, FieldValues, FieldPath, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Input} from "@/components/ui/input";
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
@@ -26,7 +26,7 @@ import {
     TextAreaFormField,
     TextFormField
 } from "@/components/form-fields";
-import {FeaturerInput, FeaturerValue} from "@/components/FeaturerInput";
+import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/FeaturerInput";
 
 interface ClassDialogProps {
     open: boolean,
@@ -59,12 +59,12 @@ const classSchema = z.object({
     viewPermissionId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
 })
 
-export function ClassDialog({
-                                open,
-                                onOpenChange,
-                                twinClass,
-                                onSuccess
-                            }: ClassDialogProps) {
+export function TwinClassDialog({
+                                    open,
+                                    onOpenChange,
+                                    twinClass,
+                                    onSuccess
+                                }: ClassDialogProps) {
     const [error, setError] = useState<string | null>(null)
     const [featurer, setFeaturer] = useState<FeaturerValue | null>(null)
 
@@ -93,6 +93,18 @@ export function ClassDialog({
         }
     })
 
+    const headTwinClassId = useWatch({
+        control: form.control,
+        name: 'headTwinClassId',
+        defaultValue: ''
+    })
+
+    useEffect(() => {
+        console.log('headTwinClassId changed', headTwinClassId)
+        if (!headTwinClassId) {
+            setFeaturer(null);
+        }
+    }, [headTwinClassId])
 
     function onOpenInternal() {
         form.reset();
@@ -115,22 +127,23 @@ export function ClassDialog({
     async function onSubmit(data: z.infer<typeof classSchema>) {
         setError(null);
 
-        if (!featurer) {
+        if (data.headTwinClassId && !featurer) {
             setError("Please select a featurer");
             return;
         }
 
+        const {name, description, ...withoutI18} = data;
+
         const requestBody: TwinClassCreateRq = {
-            ...data,
-            // headHunterFeaturerId: parseInt(data.headHunterFeaturerId ?? ''),
-            headHunterFeaturerId: featurer.featurer.id,
-            headHunterParams: featurer.params,
+            ...withoutI18,
+            headHunterFeaturerId: featurer?.featurer.id,
+            headHunterParams: featurer?.params,
             nameI18n: {
-                translationInCurrentLocale: data.name,
+                translationInCurrentLocale: name,
                 translations: {}
             },
             descriptionI18n: {
-                translationInCurrentLocale: data.description,
+                translationInCurrentLocale: description,
                 translations: {}
             },
         }
@@ -185,11 +198,6 @@ export function ClassDialog({
 
                     <TextFormField control={form.control} name="logo" label="Logo URL"/>
 
-                    <FeaturerInput onChange={(val) => {
-                        console.log('new featurer', val)
-                        setFeaturer(val)
-                    }}/>
-
                     <ComboboxFormField control={form.control} name="headTwinClassId" label="Head"
                                        getItems={fetchClasses}
                                        getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
@@ -202,6 +210,13 @@ export function ClassDialog({
                                        searchPlaceholder={"Search head class..."}
                                        noItemsText={"No classes found"}
                     />
+
+                    {headTwinClassId && <>
+                        <FeaturerInput typeId={FeaturerTypes.headHunter} onChange={(val) => {
+                            console.log('new featurer', val)
+                            setFeaturer(val)
+                        }}/>
+                    </>}
 
                     <ComboboxFormField control={form.control} name="extendsTwinClassId" label="Extends"
                                        getItems={fetchClasses}
@@ -246,7 +261,6 @@ export function ClassDialog({
         </DialogContent>
     </Dialog>
 }
-
 
 
 interface ViewOrEditTextProps<T extends FieldValues> {

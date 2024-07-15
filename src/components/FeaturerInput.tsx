@@ -6,12 +6,22 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {FormItem, FormLabel} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 
+export const FeaturerTypes = {
+    fieldTyper: 13,
+    headHunter: 26,
+}
+
 export interface FeaturerValue {
     featurer: Featurer,
     params: { [key: string]: string }
 }
 
-export function FeaturerInput({onChange}: { onChange: (value: FeaturerValue | null) => void }) {
+interface FeaturerInputProps {
+    typeId: number,
+    onChange: (value: FeaturerValue | null) => any
+}
+
+export function FeaturerInput({typeId, onChange}: FeaturerInputProps) {
     const api = useContext(ApiContext)
 
     const [selected, setSelected] = useState<Featurer | undefined>(undefined);
@@ -21,8 +31,8 @@ export function FeaturerInput({onChange}: { onChange: (value: FeaturerValue | nu
         const response = await api.featurer.search({
             pagination: {pageIndex: 0, pageSize: 10},
             options: {
-                typeIdList: [26],
-                // nameLikeList: [search]
+                typeIdList: [typeId],
+                nameLikeList: [search ? '%' + search + '%' : '%']
             }
         })
 

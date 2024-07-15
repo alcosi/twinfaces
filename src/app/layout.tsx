@@ -4,9 +4,11 @@ import "../styles/globals.css";
 import {cn} from "@/lib/utils";
 import {ThemeProvider} from "@/components/ThemeProvider";
 import {Toaster} from "sonner";
-import {MainLayout} from "@/components/ui/main-layout";
+import {MainLayout} from "@/components/layout/main-layout";
 import {PublicEnvScript} from "next-runtime-env";
 import {ApiContextProvider} from "@/lib/api/api";
+
+import favicon from "@/assets/img/face.svg";
 
 const fontSans = Inter({
     subsets: ["latin"],
@@ -27,6 +29,8 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
         <head>
             <PublicEnvScript/>
+            <link rel="icon" type="image/svg+xml" href={'/favicon.svg'}/>
+            {/*<link rel="icon" type="image/png" href={favicon}/>*/}
         </head>
         <body className={cn(
             "min-h-screen fontSans font-sans antialiased",

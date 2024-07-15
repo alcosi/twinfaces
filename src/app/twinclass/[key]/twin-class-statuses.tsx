@@ -30,8 +30,10 @@ export function TwinClassStatuses({twinClass}: { twinClass: TwinClass }) {
         setLoading(true);
         api.twinClass.getById({
             id: twinClass.id, query: {
-                showClassStatusMode: 'SHOW',
-                showStatusMode: 'DETAILED'
+                showTwinClassMode: 'SHORT',
+                // showTwin2TwinClassMode: 'SHORT',
+                showTwin2StatusMode: 'DETAILED',
+                showTwinClass2StatusMode: 'DETAILED'
             }
         }).then((response) => {
             const data = response.data;

@@ -7,10 +7,11 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {Form} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
-import {SelectFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
+import {CheckboxFormField, SelectFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
 import {Alert} from "@/components/ui/alert";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
+import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/FeaturerInput";
 
 
 interface CreateEditTwinFieldDialogProps {
@@ -25,10 +26,10 @@ const twinFieldSchema = z.object({
     key: z.string().min(1).max(100).regex(/^[a-zA-Z0-9_-]+$/, 'Key can only contain latin letters, numbers, underscores and dashes'),
     name: z.string().min(0).max(100),
     description: z.string(),
-    descriptor: z.object({
-        fieldType: z.string()
-
-    })
+    required: z.boolean()
+    // descriptor: z.object({
+    //     fieldType: z.string()
+    // })
 })
 
 export default function CreateEditTwinFieldDialog({
@@ -39,6 +40,7 @@ export default function CreateEditTwinFieldDialog({
                                                       onSuccess
                                                   }: CreateEditTwinFieldDialogProps) {
 
+    const [featurer, setFeaturer] = useState<FeaturerValue | null>(null)
     const [error, setError] = useState<string | null>(null)
 
     const api = useContext(ApiContext)
@@ -61,7 +63,8 @@ export default function CreateEditTwinFieldDialog({
                 key: field.key,
                 name: field.name,
                 description: field.description,
-                descriptor: field.descriptor
+                required: field.required
+                // descriptor: field.descriptor
             }, {keepDefaultValues: true})
         } else {
             console.log('CreateEditTwinFieldDialog useEffect reset', form.formState.defaultValues)
@@ -75,17 +78,34 @@ export default function CreateEditTwinFieldDialog({
             key: "",
             name: "",
             description: "",
-            descriptor: {
-                fieldType: ""
-            }
+            required: false
+            // descriptor: {
+            //     fieldType: ""
+            // }
         }
     })
 
     async function onSubmit(formValues: z.infer<typeof twinFieldSchema>) {
         console.log('CreateEditTwinFieldDialog onSubmit', formValues)
+        setError(null);
+
+        if (!featurer) {
+            setError("Featurer is required")
+            return;
+        }
+
+        const {name, description, ...withoutI18} = formValues;
 
         const requestBody: TwinClassFieldCreateRq = {
-            ...formValues
+            nameI18n: {
+                translationInCurrentLocale: name
+            },
+            descriptionI18n: {
+                translationInCurrentLocale: description
+            },
+            fieldTyperFeaturerId: featurer?.featurer.id,
+            fieldTyperParams: featurer?.params,
+            ...withoutI18
         }
 
         if (!field) {
@@ -112,22 +132,6 @@ export default function CreateEditTwinFieldDialog({
         onSuccess?.();
     }
 
-    interface FieldType {
-        fieldType: string,
-        label: string
-    }
-
-    const fieldTypes: FieldType[] = [
-        {
-            fieldType: "textV1",
-            label: "Text"
-        },
-        {
-            fieldType: "numericFieldDescriptorV1",
-            label: "Number"
-        }
-    ]
-
     return <Dialog open={open} onOpenChange={onOpenChangeInternal}>
         <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
             <DialogTrigger asChild>
@@ -148,13 +152,20 @@ export default function CreateEditTwinFieldDialog({
 
                     <TextAreaFormField control={form.control} name="description" label="Description"/>
 
-                    <SelectFormField<z.infer<typeof twinFieldSchema>, FieldType>
-                        control={form.control} name="descriptor.fieldType"
-                        label="Type"
-                        values={fieldTypes}
-                        getItemLabel={(option) => option.label}
-                        getItemKey={(option) => option.fieldType}
-                    />
+                    <CheckboxFormField control={form.control} name="required" label="Required"/>
+
+                    <FeaturerInput typeId={FeaturerTypes.fieldTyper} onChange={(val) => {
+                        console.log('new featurer', val)
+                        setFeaturer(val)
+                    }}/>
+
+                    {/*<SelectFormField<z.infer<typeof twinFieldSchema>, FieldType>*/}
+                    {/*    control={form.control} name="descriptor.fieldType"*/}
+                    {/*    label="Type"*/}
+                    {/*    values={fieldTypes}*/}
+                    {/*    getItemLabel={(option) => option.label}*/}
+                    {/*    getItemKey={(option) => option.fieldType}*/}
+                    {/*/>*/}
 
                     {error && <Alert variant="destructive">
                         {error}

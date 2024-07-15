@@ -70,7 +70,8 @@ export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
         api.twinClass.getByKey({
             key: key,
             query: {
-                showClassMode: 'DETAILED'
+                showTwinClassMode: 'DETAILED',
+                showTwin2TwinClassMode: 'DETAILED',
             }
         }).then((response) => {
             const data = response.data;

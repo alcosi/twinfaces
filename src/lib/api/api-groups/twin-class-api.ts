@@ -10,14 +10,14 @@ export function createTwinClassApi(settings: ApiSettings) {
             params: {
                 header: getApiDomainHeaders(settings),
                 query: {
-                    showClassMode: 'DETAILED',
-                    showStatusMode: 'SHORT',
+                    showTwinClassMode: 'DETAILED',
                     limit: pagination.pageSize,
                     offset: pagination.pageIndex * pagination.pageSize
                 }
             },
             body: {
-                twinClassKeyLikeList: search ? ['%' + search + '%'] : undefined
+                twinClassKeyLikeList: search ? ['%' + search + '%'] : undefined,
+                ownerType: 'DOMAIN'
             }
         })
     }
@@ -47,7 +47,8 @@ export function createTwinClassApi(settings: ApiSettings) {
             params: {
                 header: getApiDomainHeaders(settings),
                 query: {
-                    showClassFieldMode: "DETAILED"
+                    showTwinClassFieldMode: "DETAILED",
+                    showTwinClass2TwinClassFieldMode: "DETAILED"
                 },
                 path: {twinClassId: id}
             }

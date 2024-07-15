@@ -6,7 +6,6 @@ import {LoadingOverlay} from "@/components/ui/loading";
 import {Button} from "@/components/ui/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Edit2Icon} from "lucide-react";
-import CreateEditTwinStatusDialog from "@/app/twinclass/[key]/twin-status-dialog";
 import CreateEditTwinFieldDialog from "@/app/twinclass/[key]/twin-field-dialog";
 
 export function TwinClassFields({twinClass}: { twinClass: TwinClass }) {
