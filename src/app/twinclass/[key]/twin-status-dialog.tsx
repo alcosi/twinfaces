@@ -4,18 +4,18 @@ import {
     TwinClassStatusCreateRq,
     TwinClassStatusUpdateRq
 } from "@/lib/api/api-types";
-import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/base/dialog";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
-import {Form} from "@/components/ui/form";
+import {Form} from "@/components/base/form";
 import {ColorPickerFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
-import {Alert} from "@/components/ui/alert";
-import {Button} from "@/components/ui/button";
+import {Alert} from "@/components/base/alert";
+import {Button} from "@/components/base/button";
 import {Text} from "lucide-react";
-import {Input} from "@/components/ui/input";
+import {Input} from "@/components/base/input";
 
 interface CreateEditTwinStatusDialogProps {
     open: boolean,

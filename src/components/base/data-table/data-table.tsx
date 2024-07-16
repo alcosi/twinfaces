@@ -14,13 +14,13 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import {Button} from "@/components/ui/button";
+} from "@/components/base/table"
+import {Button} from "@/components/base/button";
 import {PaginationState} from "@tanstack/table-core";
 import {ForwardedRef, useEffect, useImperativeHandle, useState} from "react";
-import {DataTablePagination} from "@/components/ui/data-table/data-table-pagination";
+import {DataTablePagination} from "@/components/base/data-table/data-table-pagination";
 import {cn, fixedForwardRef} from "@/lib/utils";
-import {LoadingOverlay, LoadingSpinner} from "@/components/ui/loading";
+import {LoadingOverlay, LoadingSpinner} from "@/components/base/loading";
 
 export type DataTableHandle = {
     refresh: () => void;

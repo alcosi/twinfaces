@@ -2,22 +2,24 @@
 
 import {toast} from "sonner";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
-import {DataTable, DataTableHandle} from "@/components/ui/data-table/data-table";
+import {DataTable, DataTableHandle} from "@/components/base/data-table/data-table";
 import {useContext, useEffect, useRef, useState} from "react";
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/base/button";
 import {Check, LinkIcon, RefreshCw, Search} from "lucide-react";
 import {TwinClass} from "@/lib/api/api-types";
 import {TwinClassDialog, ClassDialogMode} from "@/app/twinclass/twin-class-dialog";
 import {ApiContext} from "@/lib/api/api";
-import {Input} from "@/components/ui/input";
-import {Separator} from "@/components/ui/separator";
+import {Input} from "@/components/base/input";
+import {Separator} from "@/components/base/separator";
 import Image from "next/image"
 import Link from "next/link";
+import {ShortGuidWithCopy} from "@/components/base/short-guid";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
         accessorKey: "id",
-        header: "ID"
+        header: "ID",
+        cell: (data) => <ShortGuidWithCopy value={data.row.original.id}/>
     },
     {
         accessorKey: "logo",

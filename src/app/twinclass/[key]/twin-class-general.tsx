@@ -1,5 +1,5 @@
 import {TwinClass} from "@/lib/api/api-types";
-import {Table, TableCell, TableRow} from "@/components/ui/table";
+import {Table, TableCell, TableRow} from "@/components/base/table";
 
 export function TwinClassGeneral({twinClass}: { twinClass: TwinClass }) {
 

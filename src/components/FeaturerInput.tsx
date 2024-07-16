@@ -1,10 +1,11 @@
 import {Featurer, FeaturerParam} from "@/lib/api/api-types";
-import {useContext, useEffect, useState} from "react";
+import {ForwardedRef, LegacyRef, useContext, useEffect, useImperativeHandle, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
-import {Combobox} from "@/components/ui/combobox";
-import {Checkbox} from "@/components/ui/checkbox";
-import {FormItem, FormLabel} from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
+import {Combobox} from "@/components/base/combobox";
+import {Checkbox} from "@/components/base/checkbox";
+import {FormControl, FormDescription, FormItem, FormLabel} from "@/components/base/form";
+import {Input} from "@/components/base/input";
+
 
 export const FeaturerTypes = {
     fieldTyper: 13,
@@ -18,14 +19,66 @@ export interface FeaturerValue {
 
 interface FeaturerInputProps {
     typeId: number,
+    defaultId?: number
+    defaultParams?: object
     onChange: (value: FeaturerValue | null) => any
 }
 
-export function FeaturerInput({typeId, onChange}: FeaturerInputProps) {
+export function FeaturerInput({typeId, defaultId, defaultParams, onChange}: FeaturerInputProps) {
     const api = useContext(ApiContext)
 
     const [selected, setSelected] = useState<Featurer | undefined>(undefined);
     const [params, setParams] = useState<{ [key: string]: string }>({})
+
+    useEffect(() => {
+        console.log('FeaturerInputInternal on mount', defaultId);
+
+
+        return () => {
+            console.log('FeaturerInputInternal on unmount');
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log('FeaturerInputInternal on defaultId change', selected, defaultId);
+        if (!selected && defaultId) {
+            setById(defaultId, defaultParams);
+        }
+    }, [defaultId, defaultParams]);
+
+    async function setById(id: number, params?: any) {
+        console.log('setById', id, params)
+        try {
+            const response = await api.featurer.search({
+                pagination: {pageIndex: 0, pageSize: 10},
+                options: {
+                    typeIdList: [typeId],
+                    idList: [id]
+                }
+            })
+
+            if (response.data?.featurerList?.length != 1) {
+                console.error('featurer not found by id', id)
+                return;
+            }
+
+            const featurer = response.data.featurerList[0];
+            setSelected(featurer);
+            if (!params) return;
+            for (const param of featurer?.params ?? []) {
+                const key = param.key;
+                if (!key) continue;
+                if (params[key]) {
+                    setParams(old => {
+                        return {...old, [key!]: params[key]}
+                    })
+                }
+            }
+        } catch (e) {
+            console.error('failed to fetch featurer by id', id, e)
+            return;
+        }
+    }
 
     async function fetchHeadHunterFeaturers(search: string): Promise<Featurer[]> {
         const response = await api.featurer.search({
@@ -40,16 +93,21 @@ export function FeaturerInput({typeId, onChange}: FeaturerInputProps) {
     }
 
     function onSelect(newFeaturer?: Featurer) {
+        console.log('onSelect', newFeaturer)
         setSelected(newFeaturer);
         setParams({})
     }
 
     function onParamChange(key: string, value?: string) {
-        setParams({...params, [key]: value!})
+        console.log('onParamChange', key, value)
+        setParams(old => {
+            return {...old, [key]: value!}
+        })
     }
 
     useEffect(() => {
         onChange(selected ? {featurer: selected, params} : null)
+        console.log('onChange', selected, params)
     }, [selected, params])
 
     return <>
@@ -64,31 +122,72 @@ export function FeaturerInput({typeId, onChange}: FeaturerInputProps) {
                 if (c.name) label += ` (${c.name})`
                 return label;
             }}
+            value={selected}
             onSelect={onSelect}
         />
 
         {selected?.params?.map(param => {
-            return <FeaturerParamInput key={param.key} param={param} onChange={onParamChange}/>
+            let value: string = '';
+            if (params && param.key) {
+                value = params[param.key] ?? '';
+            }
+            return <FeaturerParamInput key={param.key} param={param} value={value} onChange={onParamChange}/>
         })}
     </>
 }
 
 interface FeaturerParamInputProps {
     param: FeaturerParam,
+    value: string,
     onChange: (key: string, value: string) => void
 }
 
-function FeaturerParamInput({param, onChange}: FeaturerParamInputProps) {
-    const [value, setValue] = useState<string>('');
+const ParamTypes = {
+    boolean: 'BOOLEAN',
+    string: 'STRING'
+}
 
-    useEffect(() => onChange(param.key!, value), [])
-    useEffect(() => onChange(param.key!, value), [value])
+function FeaturerParamInput({param, value, onChange}: FeaturerParamInputProps) {
+    // const [value, setValue] = useState<string>('');
+
+    useEffect(() => {
+        // TODO remove hardcoded decimalSeparator default value when there are default values in the API
+        if (param.key === 'decimalSeparator') {
+            // setValue('.')
+            onChange(param.key!, '.');
+            return;
+        }
+
+        onChange(param.key!, value);
+    }, [])
+
+    useEffect(() => {
+        onChange(param.key!, value);
+    }, [value])
+
+    function setValue(newValue: string) {
+        onChange(param.key!, newValue);
+    }
+
+    if (param.type === ParamTypes.boolean) {
+        return <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+            <FormControl>
+                <Checkbox
+                    checked={value === 'true'} className={'ml-3'}
+                    onCheckedChange={newChecked => setValue(newChecked ? 'true' : 'false')}
+                />
+            </FormControl>
+            <div className="space-y-1 leading-none">
+                {param.name && <FormLabel>{param.name}</FormLabel>}
+                {param.description && <FormDescription>{param.description}</FormDescription>}
+            </div>
+        </FormItem>
+    }
 
     function renderInput() {
         switch (param.type) {
-            case 'BOOLEAN':
-                return <Checkbox checked={value === 'true'}
-                                 onCheckedChange={newChecked => setValue(newChecked ? 'true' : 'false')}/>
+            // TODO Support other parameter types
+            case ParamTypes.string:
             default:
                 return <div>
                     {/*<p>Unknown type {param.type}</p>*/}
@@ -101,5 +200,6 @@ function FeaturerParamInput({param, onChange}: FeaturerParamInputProps) {
     return <FormItem>
         <FormLabel>{param.name}</FormLabel>
         {renderInput()}
+        {param.description && <FormDescription>{param.description}</FormDescription>}
     </FormItem>
 }

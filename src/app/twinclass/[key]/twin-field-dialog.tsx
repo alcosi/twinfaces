@@ -1,15 +1,15 @@
 import {TwinClassField, TwinClassFieldCreateRq} from "@/lib/api/api-types";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
-import {Form} from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/base/dialog";
+import {Form} from "@/components/base/form";
+import {Input} from "@/components/base/input";
 import {CheckboxFormField, SelectFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
-import {Alert} from "@/components/ui/alert";
-import {Button} from "@/components/ui/button";
+import {Alert} from "@/components/base/alert";
+import {Button} from "@/components/base/button";
 import {toast} from "sonner";
 import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/FeaturerInput";
 
@@ -72,6 +72,7 @@ export default function CreateEditTwinFieldDialog({
         }
         setError(null)
     }, [open])
+
     const form = useForm<z.infer<typeof twinFieldSchema>>({
         resolver: zodResolver(twinFieldSchema),
         defaultValues: {
@@ -123,9 +124,25 @@ export default function CreateEditTwinFieldDialog({
                 return;
             }
         } else {
-            // TODO: implement update
-            toast.error("Update field is not implemented")
-            return;
+            if (!field.id) {
+                console.error('CRITICAL: Field ID is missing on update method!', field)
+                setError("Something went wrong, please try again later.")
+                return
+            }
+
+            try {
+                const {data: response, error} = await api.twinClass.updateField({fieldId: field.id, body: requestBody})
+                if (error) {
+                    console.error('failed to update field', error)
+                    const errorMessage = error?.msg;
+                    setError("Failed to update field: " + errorMessage ?? error)
+                    return;
+                }
+            } catch (e) {
+                console.error('exception while updating field', e)
+                toast.error("Failed to update field")
+                return;
+            }
         }
 
         onOpenChange?.(false);
@@ -154,10 +171,13 @@ export default function CreateEditTwinFieldDialog({
 
                     <CheckboxFormField control={form.control} name="required" label="Required"/>
 
-                    <FeaturerInput typeId={FeaturerTypes.fieldTyper} onChange={(val) => {
-                        console.log('new featurer', val)
-                        setFeaturer(val)
-                    }}/>
+                    <FeaturerInput typeId={FeaturerTypes.fieldTyper}
+                                    defaultId={field?.fieldTyperFeaturerId}
+                                    defaultParams={field?.fieldTyperParams}
+                                   onChange={(val) => {
+                                       console.log('new featurer', val)
+                                       setFeaturer(val)
+                                   }}/>
 
                     {/*<SelectFormField<z.infer<typeof twinFieldSchema>, FieldType>*/}
                     {/*    control={form.control} name="descriptor.fieldType"*/}

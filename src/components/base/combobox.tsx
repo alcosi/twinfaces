@@ -4,19 +4,19 @@ import * as React from "react"
 import {Check, ChevronsUpDown} from "lucide-react"
 
 import {cn, fixedForwardRef} from "@/lib/utils"
-import {Button} from "@/components/ui/button"
+import {Button} from "@/components/base/button"
 import {
     Command,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem, CommandList,
-} from "@/components/ui/command"
+} from "@/components/base/command"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/base/popover"
 import {ForwardedRef, ReactNode, useEffect, useImperativeHandle} from "react";
 
 export type ComboboxHandle<T> = {
@@ -27,6 +27,7 @@ export interface ComboboxProps<T> {
     getItems: (search: string) => Promise<T[]>
     getItemKey: (item: T) => string;
     getItemLabel: (item: T) => string;
+    value?: T;
     onSelect?: (value?: T) => any;
     renderInList?: (value: T) => ReactNode;
     renderSelected?: (value: T) => ReactNode;
@@ -61,10 +62,17 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
         })
     }, [open, search])
 
+    useEffect(() => {
+        setSelected(props.value)
+    }, [props.value]);
+
     useImperativeHandle(ref, () => {
         return {
             getSelected() {
                 return selected;
+            },
+            setSelect(value: T) {
+                setSelected(value)
             }
         }
     });

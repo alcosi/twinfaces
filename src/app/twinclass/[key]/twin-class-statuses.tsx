@@ -3,10 +3,11 @@ import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {toast} from "sonner";
 import Image from "next/image";
-import {Button} from "@/components/ui/button";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Button} from "@/components/base/button";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/base/table";
 import {Edit2Icon} from "lucide-react";
 import CreateEditTwinStatusDialog from "@/app/twinclass/[key]/twin-status-dialog";
+import {ShortGuidWithCopy} from "@/components/base/short-guid";
 
 export function TwinClassStatuses({twinClass}: { twinClass: TwinClass }) {
     const api = useContext(ApiContext);
@@ -92,7 +93,7 @@ export function TwinClassStatuses({twinClass}: { twinClass: TwinClass }) {
             <TableBody>
                 {Object.values(statusesMap).map((status) => {
                     return <TableRow key={status.id}>
-                        <TableCell>{status.id}</TableCell>
+                        <TableCell><ShortGuidWithCopy value={status.id}/></TableCell>
                         <TableCell>{status.key}</TableCell>
                         <TableCell>{status.name}</TableCell>
                         <TableCell>{status.description}</TableCell>

@@ -9,6 +9,7 @@ import {PublicEnvScript} from "next-runtime-env";
 import {ApiContextProvider} from "@/lib/api/api";
 
 import favicon from "@/assets/img/face.svg";
+import {TooltipProvider} from "@/components/base/tooltip";
 
 const fontSans = Inter({
     subsets: ["latin"],
@@ -42,9 +43,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange>
             <ApiContextProvider>
-                <MainLayout>
-                    {children}
-                </MainLayout>
+                <TooltipProvider>
+                    <MainLayout>
+                        {children}
+                    </MainLayout>
+                </TooltipProvider>
             </ApiContextProvider>
 
             <Toaster/>

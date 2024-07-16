@@ -1,13 +1,13 @@
 import {Control, FieldPath, FieldValues} from "react-hook-form";
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
-import {Textarea} from "@/components/ui/textarea";
-import {Checkbox} from "@/components/ui/checkbox";
-import {Combobox, ComboboxProps} from "@/components/ui/combobox";
+import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/base/form";
+import {Input} from "@/components/base/input";
+import {Textarea} from "@/components/base/textarea";
+import {Checkbox} from "@/components/base/checkbox";
+import {Combobox, ComboboxProps} from "@/components/base/combobox";
 import {cn} from "@/lib/utils";
 import {ReactNode} from "react";
-import {ColorPicker} from "@/components/ui/color-picker";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {ColorPicker} from "@/components/base/color-picker";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/base/select";
 
 export interface FormFieldProps<T extends FieldValues> {
     name: FieldPath<T>;

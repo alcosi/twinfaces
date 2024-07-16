@@ -2,11 +2,12 @@ import {TwinClass, TwinClassField} from "@/lib/api/api-types";
 import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {toast} from "sonner";
-import {LoadingOverlay} from "@/components/ui/loading";
-import {Button} from "@/components/ui/button";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {Edit2Icon} from "lucide-react";
+import {LoadingOverlay} from "@/components/base/loading";
+import {Button} from "@/components/base/button";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/base/table";
+import {Check, Edit2Icon} from "lucide-react";
 import CreateEditTwinFieldDialog from "@/app/twinclass/[key]/twin-field-dialog";
+import {ShortGuidWithCopy} from "@/components/base/short-guid";
 
 export function TwinClassFields({twinClass}: { twinClass: TwinClass }) {
     const api = useContext(ApiContext);
@@ -69,7 +70,7 @@ export function TwinClassFields({twinClass}: { twinClass: TwinClass }) {
                     <TableHead>Name</TableHead>
                     <TableHead>Description</TableHead>
                     <TableHead>Required</TableHead>
-                    <TableHead>Type</TableHead>
+                    {/*<TableHead>Type</TableHead>*/}
                     <TableHead>Actions</TableHead>
                 </TableRow>
             </TableHeader>
@@ -86,12 +87,12 @@ export function TwinClassFields({twinClass}: { twinClass: TwinClass }) {
 
 function FieldTableRow({field, onEdit}: { field: TwinClassField, onEdit: (field: TwinClassField) => void }) {
     return <TableRow>
-        <TableCell>{field.id}</TableCell>
+        <TableCell><ShortGuidWithCopy value={field.id}/></TableCell>
         <TableCell>{field.key}</TableCell>
         <TableCell>{field.name}</TableCell>
         <TableCell>{field.description}</TableCell>
-        <TableCell>{field.required}</TableCell>
-        <TableCell>{field.descriptor?.fieldType}</TableCell>
+        <TableCell>{field.required && <Check/>}</TableCell>
+        {/*<TableCell>{field.descriptor?.fieldType}</TableCell>*/}
 
         <TableCell>
             <Button variant="ghost" size="iconTiny" onClick={() => onEdit(field)}><Edit2Icon/></Button>

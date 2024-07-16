@@ -14,7 +14,7 @@ export function createFeaturerApi(settings: ApiSettings) {
                     limit: pagination.pageSize,
                     offset: pagination.pageIndex * pagination.pageSize,
                     showFeaturerMode: 'DETAILED',
-                    showFeaturerParamMode: 'SHOW'
+                    showFeaturerParamMode: 'SHOW',
                 }
             },
             body: options

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {ThemeToggle} from "@/components/ThemeToggle";
-import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
-import {Button} from "@/components/ui/button";
+import {Sheet, SheetContent, SheetTrigger} from "@/components/base/sheet";
+import {Button} from "@/components/base/button";
 import {Menu} from "lucide-react";
 import TwinFace from '@/assets/img/face.svg'
 import {PathLink} from "@/components/layout/layout-link"

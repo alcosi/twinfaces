@@ -5,20 +5,20 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle, DialogTrigger
-} from "@/components/ui/dialog";
+} from "@/components/base/dialog";
 import {Featurer, FeaturerParam, TwinClass, TwinClassCreateRq} from "@/lib/api/api-types";
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/base/button";
 import {z, ZodType} from "zod";
 import {Control, useForm, FieldValues, FieldPath, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Input} from "@/components/ui/input";
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {Textarea} from "@/components/ui/textarea";
-import {Checkbox} from "@/components/ui/checkbox";
+import {Input} from "@/components/base/input";
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/base/form";
+import {Textarea} from "@/components/base/textarea";
+import {Checkbox} from "@/components/base/checkbox";
 import {ReactNode, useContext, useEffect, useState} from "react";
-import {Alert} from "@/components/ui/alert";
+import {Alert} from "@/components/base/alert";
 import {ApiContext} from "@/lib/api/api";
-import {Combobox, ComboboxProps} from "@/components/ui/combobox";
+import {Combobox, ComboboxProps} from "@/components/base/combobox";
 import {cn} from "@/lib/utils";
 import {
     CheckboxFormField,

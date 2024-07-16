@@ -3,14 +3,14 @@
 import {ForwardedRef, forwardRef, useMemo, useState} from 'react';
 import {HexColorPicker} from 'react-colorful';
 import {cn, fixedForwardRef} from '@/lib/utils';
-import type {ButtonProps} from '@/components/ui/button';
-import {Button} from '@/components/ui/button';
+import type {ButtonProps} from '@/components/base/button';
+import {Button} from '@/components/base/button';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@/components/ui/popover';
-import {Input} from '@/components/ui/input';
+} from '@/components/base/popover';
+import {Input} from '@/components/base/input';
 
 interface ColorPickerProps {
     value: string;
