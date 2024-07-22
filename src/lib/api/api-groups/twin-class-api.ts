@@ -48,7 +48,7 @@ export function createTwinClassApi(settings: ApiSettings) {
                 header: getApiDomainHeaders(settings),
                 query: {
                     showTwinClassFieldMode: "MANAGED",
-                    showTwinClass2TwinClassFieldMode: "MANAGED"
+                    showTwinClass2TwinClassFieldMode: "MANAGED",
                 },
                 path: {twinClassId: id}
             }

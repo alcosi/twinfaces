@@ -93,14 +93,14 @@ export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
         {loading && <LoadingOverlay/>}
 
         {/*<div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">*/}
-        <div className="mx-auto w-full max-w-6xl flex md:flex-row flex-col gap-4">
+        <div className="mx-auto w-full flex md:flex-row flex-col gap-4">
             <nav
-                className="flex-1 grid gap-4 text-sm text-muted-foreground auto-rows-max"
+                className="flex-1 grid gap-4 text-sm text-muted-foreground auto-rows-max md:max-w-60"
             >
                 {sections.map((section) => {
                     const isSelected = section.key === selectedSection?.key;
                     return <Link href={`#${section.key}`} key={section.key}
-                                 className={cn(isSelected && 'font-semibold', "text-primary")}>
+                                 className={cn(isSelected && 'font-semibold', "text-primary text-lg")}>
                         {section.label}
                     </Link>;
                 })}
@@ -108,7 +108,7 @@ export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
 
             <Separator className="h-auto" orientation='vertical'/>
 
-            <div className="flex-[4] pl-4">
+            <div className="flex-[4] pl-4 2xl:max-w-screen-xl mx-auto">
                 {selectedSection?.key === 'general' && twinClass && <TwinClassGeneral twinClass={twinClass}/>}
                 {selectedSection?.key === 'fields' && twinClass && <TwinClassFields twinClass={twinClass}/>}
                 {selectedSection?.key === 'statuses' && twinClass && <TwinClassStatuses twinClass={twinClass}/>}

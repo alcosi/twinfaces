@@ -1,5 +1,5 @@
-import {TwinClass, TwinClassField} from "@/lib/api/api-types";
-import {useContext, useEffect, useState} from "react";
+import {TwinClass, TwinClassField, TwinClassStatus} from "@/lib/api/api-types";
+import {useContext, useEffect, useRef, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {toast} from "sonner";
 import {LoadingOverlay} from "@/components/base/loading";
@@ -8,40 +8,72 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Check, Edit2Icon} from "lucide-react";
 import CreateEditTwinFieldDialog from "@/app/twinclass/[key]/twin-field-dialog";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
+import {ColumnDef, PaginationState} from "@tanstack/table-core";
+import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
+import {DataTableHandle} from "@/components/base/data-table/data-table";
 
 export function TwinClassFields({twinClass}: { twinClass: TwinClass }) {
     const api = useContext(ApiContext);
+    const tableRef = useRef<DataTableHandle>(null);
 
-    const [fields, setFields] = useState<TwinClassField[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
     const [createEditFieldDialogOpen, setCreateEditFieldDialogOpen] = useState<boolean>(false);
     const [editedField, setEditedField] = useState<TwinClassField | null>(null);
 
-    useEffect(() => {
-        fetchData();
-    }, [])
+    const columns: ColumnDef<TwinClassField>[] = [
+        {
+            accessorKey: "id",
+            header: "ID",
+            cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()}/>
+        },
+        {
+            accessorKey: "key",
+            header: "Key",
+        },
+        {
+            accessorKey: "name",
+            header: "Name",
+        },
+        // {
+        //     accessorKey: "description",
+        //     header: "Description",
+        // },
+        {
+            accessorKey: "required",
+            header: "Required",
+            cell: (data) => <>{data.getValue() && <Check/>}</>
+        },
+        {
+            header: "Actions",
+            cell: (data) => {
+                return <Button variant="ghost" size="iconTiny" onClick={() => editField(data.row.original)}><Edit2Icon/></Button>
+            }
+        }
+    ]
 
-    function fetchData() {
+    async function fetchFields(_: PaginationState, filters: FiltersState) {
         if (!twinClass.id) {
             toast.error("Twin class ID is missing");
-            return;
+            return {data: [], pageCount: 0};
         }
 
-        setLoading(true);
-        api.twinClass.getFields({id: twinClass.id}).then((response) => {
+        try {
+            const response = await api.twinClass.getFields({id: twinClass.id});
             const data = response.data;
             if (!data || data.status != 0) {
                 console.error('failed to fetch twin class fields', data)
                 let message = "Failed to load twin class fields";
                 if (data?.msg) message += `: ${data.msg}`;
                 toast.error(message);
-                return;
+                return {data: [], pageCount: 0};
             }
-            setFields(data.twinClassFieldList ?? []);
-        }).catch((e) => {
+            // setFields(data.twinClassFieldList ?? []);
+            return {data: data.twinClassFieldList ?? [], pageCount: 0};
+        } catch (e) {
             console.error('exception while fetching twin class fields', e)
             toast.error("Failed to fetch twin class fields")
-        }).finally(() => setLoading(false))
+            return {data: [], pageCount: 0};
+        }
+
     }
 
     function createField() {
@@ -55,47 +87,22 @@ export function TwinClassFields({twinClass}: { twinClass: TwinClass }) {
     }
 
     return <>
-        {loading && <LoadingOverlay/>}
-        <h2>
-            Fields
-            <Button onClick={createField} className="ml-4">
-                Create field
-            </Button>
-        </h2>
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Key</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Required</TableHead>
-                    {/*<TableHead>Type</TableHead>*/}
-                    <TableHead>Actions</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {fields.map((field) => <FieldTableRow key={field.key} field={field} onEdit={editField}/>)}
-            </TableBody>
-        </Table>
+        <CrudDataTable
+            ref={tableRef}
+            title='Fields'
+            columns={columns}
+            getRowId={(row) => row.key!}
+            fetcher={fetchFields}
+            createButton={{
+                enabled: true,
+                onClick: createField,
+            }}
+            disablePagination={true}
+            pageSizes={[10, 20, 50]}
+        />
 
         <CreateEditTwinFieldDialog open={createEditFieldDialogOpen} twinClassId={twinClass.id!} field={editedField}
-                                    onOpenChange={setCreateEditFieldDialogOpen}
-                                    onSuccess={fetchData}/>
+                                   onOpenChange={setCreateEditFieldDialogOpen}
+                                   onSuccess={tableRef.current?.refresh}/>
     </>
-}
-
-function FieldTableRow({field, onEdit}: { field: TwinClassField, onEdit: (field: TwinClassField) => void }) {
-    return <TableRow>
-        <TableCell><ShortGuidWithCopy value={field.id}/></TableCell>
-        <TableCell>{field.key}</TableCell>
-        <TableCell>{field.name}</TableCell>
-        <TableCell>{field.description}</TableCell>
-        <TableCell>{field.required && <Check/>}</TableCell>
-        {/*<TableCell>{field.descriptor?.fieldType}</TableCell>*/}
-
-        <TableCell>
-            <Button variant="ghost" size="iconTiny" onClick={() => onEdit(field)}><Edit2Icon/></Button>
-        </TableCell>
-    </TableRow>
 }

@@ -29,10 +29,11 @@ export type DataTableHandle = {
     // setFilterValues: (values?: PaginatedTableFilterValues) => any;
 };
 
-interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     getRowId: (row: TData, index: number) => string;
     fetcher: (pagination: PaginationState) => Promise<{ data: TData[], pageCount: number }>
+    disablePagination?: boolean,
     pageSizes?: number[],
     onFetchError?: (e: Error) => any;
     onRowClick?: (row: TData) => any;
@@ -44,6 +45,7 @@ export function DataTableInternal<TData, TValue>({
                                                      columns,
                                                      getRowId,
                                                      fetcher,
+                                                     disablePagination,
                                                      pageSizes,
                                                      onFetchError,
                                                      onRowClick
@@ -149,7 +151,7 @@ export function DataTableInternal<TData, TValue>({
                 </Table>
                 {loading && <LoadingOverlay/>}
             </div>
-            <DataTablePagination table={table} pageSizes={pageSizes}/>
+            {!disablePagination && <DataTablePagination table={table} pageSizes={pageSizes}/>}
         </div>
     )
 }
