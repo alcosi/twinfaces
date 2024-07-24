@@ -4,10 +4,10 @@ import {DataTable, DataTableHandle, DataTableProps} from "@/components/base/data
 import {Button} from "@/components/base/button";
 import {RefreshCw, Search} from "lucide-react";
 import {Separator} from "@/components/base/separator";
-import {ForwardedRef, useImperativeHandle, useRef, useState} from "react";
+import {ForwardedRef, useEffect, useImperativeHandle, useRef, useState} from "react";
 import {Input} from "@/components/base/input";
 import {PaginationState} from "@tanstack/table-core";
-import {fixedForwardRef} from "@/lib/utils";
+import {cn, fixedForwardRef} from "@/lib/utils";
 
 export interface FiltersState {
     search?: string
@@ -29,7 +29,8 @@ interface CrudDataTableProps<TData, TValue> extends Omit<DataTableProps<TData, T
     title?: string
     createButton?: CrudDataTableCreateButtonProps
     search?: CrudDataTableSearchProps
-    hideRefresh?: boolean
+    hideRefresh?: boolean,
+    className?: string
 }
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -39,18 +40,20 @@ function CrudDataTableInternal<TData, TValue>({
                                                   createButton,
                                                   search,
                                                   hideRefresh,
+                                                  className,
+                                                  fetcher,
                                                   ...props
                                               }: CrudDataTableProps<TData, TValue>,
                                               ref: ForwardedRef<DataTableHandle>) {
     const [tableSearch, setTableSearch] = useState<string>("")
     const tableRef = useRef<DataTableHandle>(null);
-    useImperativeHandle(ref, () => tableRef.current!, []);
+    useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
     function fetchWrapper(pagination: PaginationState) {
-        return props.fetcher(pagination, {search: tableSearch})
+        return fetcher(pagination, {search: tableSearch})
     }
 
-    return <div className="flex-1">
+    return <div className={cn("flex-1", className)}>
         <div className="mb-2 flex justify-between">
             <div className={"flex items-center"}>
                 {title && <div className='text-lg'>{title}</div>}

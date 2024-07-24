@@ -43,8 +43,8 @@ export enum ClassDialogMode {
 
 const classSchema = z.object({
     key: z.string().min(1).max(100).regex(/^[a-zA-Z0-9_-]+$/, 'Key can only contain latin letters, numbers, underscores and dashes'),
-    name: z.string().min(0).max(100),
-    description: z.string(),
+    name: z.string().min(1).max(100),
+    description: z.string().optional().or(z.literal('').transform(() => undefined)),
     abstractClass: z.boolean(),
     // headHunterFeaturerId: z.string().min(1, 'Head hunter featurer ID is required'),
     headTwinClassId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
@@ -142,10 +142,10 @@ export function TwinClassDialog({
                 translationInCurrentLocale: name,
                 translations: {}
             },
-            descriptionI18n: {
+            descriptionI18n: description ? {
                 translationInCurrentLocale: description,
                 translations: {}
-            },
+            } : undefined,
         }
 
         const {data: response, error} = await api.twinClass.create({body: requestBody});
@@ -171,6 +171,15 @@ export function TwinClassDialog({
 
         return data.twinClassList ?? []
     }
+
+    async function findClassById(id: string) {
+        const response = await api.twinClass.getById({id, query: {
+                showTwinClassMode: 'DETAILED',
+                showTwin2TwinClassMode: 'SHORT'
+            }})
+        return response.data?.twinClass;
+    }
+
 
     return <Dialog open={open} onOpenChange={onOpenChangeInternal}>
         <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
@@ -199,6 +208,7 @@ export function TwinClassDialog({
                     <TextFormField control={form.control} name="logo" label="Logo URL"/>
 
                     <ComboboxFormField control={form.control} name="headTwinClassId" label="Head"
+                                       getById={findClassById}
                                        getItems={fetchClasses}
                                        getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
                                        getItemLabel={(c) => {
@@ -219,6 +229,7 @@ export function TwinClassDialog({
                     </>}
 
                     <ComboboxFormField control={form.control} name="extendsTwinClassId" label="Extends"
+                                       getById={findClassById}
                                        getItems={fetchClasses}
                                        getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
                                        getItemLabel={(c) => {

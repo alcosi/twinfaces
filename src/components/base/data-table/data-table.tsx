@@ -17,7 +17,7 @@ import {
 } from "@/components/base/table"
 import {Button} from "@/components/base/button";
 import {PaginationState} from "@tanstack/table-core";
-import {ForwardedRef, useEffect, useImperativeHandle, useState} from "react";
+import {ForwardedRef, useEffect, useImperativeHandle, useRef, useState} from "react";
 import {DataTablePagination} from "@/components/base/data-table/data-table-pagination";
 import {cn, fixedForwardRef} from "@/lib/utils";
 import {LoadingOverlay, LoadingSpinner} from "@/components/base/loading";

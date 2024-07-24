@@ -11,6 +11,9 @@ export type TwinClassFieldUpdateRq = components["schemas"]["TwinClassFieldUpdate
 export type TwinClassStatus = components["schemas"]["TwinStatusV1"];
 export type TwinClassStatusCreateRq = components["schemas"]["TwinStatusCreateRqV1"];
 export type TwinClassStatusUpdateRq = components["schemas"]["TwinStatusUpdateRqV1"];
+export type TwinFlow = components["schemas"]["TwinflowBaseV3"]
+export type TwinFlowTransition = components["schemas"]["TwinflowTransitionBaseV2"]
+export type TwinFlowTransitionCreateRq = components["schemas"]["TwinflowTransitionCreateRqV1"]
 
 export type Featurer = components["schemas"]["FeaturerV1"];
 export type FeaturerParam = components["schemas"]["FeaturerParamV1"];

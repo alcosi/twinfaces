@@ -7,7 +7,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/base/dialog";
 import {Form} from "@/components/base/form";
 import {Input} from "@/components/base/input";
-import {CheckboxFormField, SelectFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
+import {CheckboxFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
 import {Alert} from "@/components/base/alert";
 import {Button} from "@/components/base/button";
 import {toast} from "sonner";
@@ -151,9 +151,6 @@ export default function CreateEditTwinFieldDialog({
 
     return <Dialog open={open} onOpenChange={onOpenChangeInternal}>
         <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
-            <DialogTrigger asChild>
-                Open
-            </DialogTrigger>
             <DialogHeader>
                 <DialogTitle>
                     {field ? "Edit field" : "Create field"}

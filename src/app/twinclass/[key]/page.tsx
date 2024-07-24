@@ -17,6 +17,7 @@ import {Edit2Icon, EditIcon} from "lucide-react";
 import {TwinClassStatuses} from "@/app/twinclass/[key]/twin-class-statuses";
 import {TwinClassGeneral} from "@/app/twinclass/[key]/twin-class-general";
 import {TwinClassFields} from "@/app/twinclass/[key]/twin-class-fields";
+import {TwinClassTwinflow} from "@/app/twinclass/[key]/twin-class-twinflow";
 
 interface TwinClassPageProps {
     params: {
@@ -42,6 +43,10 @@ const sections: Section[] = [
         key: 'statuses',
         label: 'Statuses',
     },
+    {
+        key: 'twinflow',
+        label: 'Twinflow',
+    },
     // {
     //     key: 'transitions',
     //     label: 'Transitions',
@@ -59,9 +64,7 @@ export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
     useEffect(() => {
         // check if pathname ends with any #section and set section accordingly
         const hash = window.location.hash.replace('#', '');
-        console.log('hash', hash)
         const section = sections.find((section) => section.key === hash);
-        console.log('section', section)
         setSelectedSection(section ?? sections[0]);
     }, [params])
 
@@ -112,6 +115,7 @@ export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
                 {selectedSection?.key === 'general' && twinClass && <TwinClassGeneral twinClass={twinClass}/>}
                 {selectedSection?.key === 'fields' && twinClass && <TwinClassFields twinClass={twinClass}/>}
                 {selectedSection?.key === 'statuses' && twinClass && <TwinClassStatuses twinClass={twinClass}/>}
+                {selectedSection?.key === 'twinflow' && twinClass && <TwinClassTwinflow twinClass={twinClass}/>}
             </div>
         </div>
     </div>

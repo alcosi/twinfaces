@@ -56,7 +56,7 @@ export function TwinClassStatuses({twinClass}: { twinClass: TwinClass }) {
         {
             header: "Actions",
             cell: (data) => {
-                <Button variant="ghost" size="iconTiny"
+                return <Button variant="ghost" size="iconTiny"
                         onClick={() => editStatus(data.row.original)}><Edit2Icon/>
                 </Button>
             }

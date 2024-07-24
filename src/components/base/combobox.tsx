@@ -21,6 +21,7 @@ import {ForwardedRef, ReactNode, useEffect, useImperativeHandle} from "react";
 
 export type ComboboxHandle<T> = {
     getSelected: () => T | undefined;
+    setSelected: (newSelected?: T) => any;
 };
 
 export interface ComboboxProps<T> {
@@ -71,7 +72,7 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
             getSelected() {
                 return selected;
             },
-            setSelect(value: T) {
+            setSelected(value: T | undefined) {
                 setSelected(value)
             }
         }
@@ -108,7 +109,8 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
                     aria-expanded={open}
                     className={cn(["w-auto min-w-[120px] justify-between", props.buttonClassName])}
                 >
-                    {selected ? props.getItemLabel(selected) : <span className="opacity-50">{props.selectPlaceholder}</span>}
+                    {selected ? props.getItemLabel(selected) :
+                        <span className="opacity-50">{props.selectPlaceholder}</span>}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50"/>
                 </Button>
             </PopoverTrigger>

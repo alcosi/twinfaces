@@ -1,55 +1,80 @@
-import {Control, FieldPath, FieldValues} from "react-hook-form";
+import {Control, ControllerRenderProps, FieldPath, FieldValues, Path} from "react-hook-form";
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/base/form";
-import {Input} from "@/components/base/input";
-import {Textarea} from "@/components/base/textarea";
+import {Input, InputProps} from "@/components/base/input";
+import {Textarea, TextareaProps} from "@/components/base/textarea";
 import {Checkbox} from "@/components/base/checkbox";
-import {Combobox, ComboboxProps} from "@/components/base/combobox";
+import {Combobox, ComboboxHandle, ComboboxProps} from "@/components/base/combobox";
 import {cn} from "@/lib/utils";
-import {ReactNode} from "react";
+import {ReactNode, useEffect, useRef} from "react";
 import {ColorPicker} from "@/components/base/color-picker";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/base/select";
 
 export interface FormFieldProps<T extends FieldValues> {
     name: FieldPath<T>;
     control: Control<T>;
+    idPrefix?: string,
     label?: ReactNode;
     placeholder?: string;
     description?: ReactNode;
+    required?: boolean;
+}
+
+export interface TextFormFieldProps {
+    suggestions?: string[]
 }
 
 export function TextFormField<T extends FieldValues>({
                                                          name,
                                                          control,
+                                                         idPrefix,
                                                          label,
                                                          placeholder,
-                                                         description
-                                                     }: FormFieldProps<T>) {
+                                                         description,
+                                                         suggestions,
+                                                         ...props
+                                                     }: FormFieldProps<T> & TextFormFieldProps & InputProps) {
+    const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
     return <FormField control={control} name={name}
-                      render={({field}) => (
-                          <FormItem>
+                      render={({field}) => {
+                          const value = field.value.toLowerCase();
+                          let currentSuggestions = undefined;
+                          if (suggestions) {
+                              currentSuggestions = value ? suggestions.filter(s => s.toLowerCase().includes(value)) : suggestions;
+                          }
+                          const suggestionsId = idPrefix ? `${idPrefix}-${name}-suggestions` : undefined;
+
+                          return <FormItem>
                               {label && <FormLabel>{label}</FormLabel>}
                               <FormControl>
-                                  <Input placeholder={placeholder} {...field}/>
+                                  <Input id={idPrefix && inputId} list={suggestionsId}
+                                         placeholder={placeholder} {...field} {...props} />
                               </FormControl>
+                              {currentSuggestions && <datalist id={suggestionsId} >
+                                  {currentSuggestions.map((s, i) => <option key={i} value={s}/>)}
+                              </datalist>}
                               {description && <FormDescription>{description}</FormDescription>}
                               <FormMessage/>
                           </FormItem>
-                      )}/>
+                      }}/>
 }
 
 export function TextAreaFormField<T extends FieldValues>({
                                                              name,
                                                              control,
+                                                             idPrefix,
                                                              label,
                                                              placeholder,
-                                                             description
-                                                         }: FormFieldProps<T>) {
+                                                             description,
+                                                             suggestions,
+                                                             ...props
+                                                         }: FormFieldProps<T> & TextFormFieldProps & TextareaProps) {
+    const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
     return <FormField control={control} name={name}
                       render={({field}) => (
                           <FormItem>
                               {label && <FormLabel>{label}</FormLabel>}
                               <FormControl>
-                                  <Textarea placeholder={placeholder} {...field} />
+                                  <Textarea id={idPrefix && inputId} placeholder={placeholder} {...field} {...props} />
                               </FormControl>
                               {description && <FormDescription>{description}</FormDescription>}
                               <FormMessage/>
@@ -87,6 +112,8 @@ interface SelectFormFieldProps<T extends FieldValues, K> extends FormFieldProps<
     getItemLabel: (item: K) => string;
 }
 
+
+// TODO update to get value by id the same way as combobox
 export function SelectFormField<T extends FieldValues, K>({
                                                               name,
                                                               control,
@@ -121,31 +148,95 @@ export function SelectFormField<T extends FieldValues, K>({
                       )}/>
 }
 
-export function ComboboxFormField<T extends FieldValues, K>({
-                                                                name,
-                                                                control,
-                                                                label,
-                                                                description,
-                                                                buttonClassName,
-                                                                ...props
-                                                            }: FormFieldProps<T> & ComboboxProps<K>) {
+interface ComboboxFormFieldProps<T> {
+    getById: (id: string) => Promise<T | undefined>;
+}
+
+export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>(
+    {
+        name,
+        control,
+        label,
+        description,
+        required,
+        buttonClassName,
+        ...props
+    }: FormFieldProps<TFormModel> & ComboboxFormFieldProps<TFieldModel> & ComboboxProps<TFieldModel>) {
     return <FormField control={control} name={name}
-                      render={({field}) => {
-                          return (
-                              <FormItem>
-                                  {label && <FormLabel>{label}</FormLabel>}
-                                  <FormControl>
-                                      <div>
-                                          <Combobox onSelect={(val) => field.onChange(val && props.getItemKey(val))}
-                                                    buttonClassName={cn(["w-full", buttonClassName])}
-                                                    {...props}/>
-                                      </div>
-                                  </FormControl>
-                                  {description && <FormDescription>{description}</FormDescription>}
-                                  <FormMessage/>
-                              </FormItem>
-                          );
-                      }}/>
+                      render={({field}) => <ComboboxFieldRender
+                          field={field}
+                          label={label}
+                          description={description}
+                          required={required}
+                          buttonClassName={buttonClassName}
+                          {...props}
+                      />}
+    />
+}
+
+function ComboboxFieldRender<TFormModel extends FieldValues, TFieldModel>(
+    {
+        field,
+        getById,
+        label,
+        description,
+        required,
+        buttonClassName,
+        ...props
+    }: ComboboxProps<TFieldModel> & ComboboxFormFieldProps<TFieldModel> & {
+        field: ControllerRenderProps<TFormModel, Path<TFormModel>>,
+        label?: ReactNode,
+        description?: ReactNode,
+        required?: boolean
+    }) {
+    const comboboxRef = useRef(null);
+
+    useEffect(() => {
+        setValueByKey(field.value).catch(e => {
+            console.error('failed to set combobox field value by key', e)
+        })
+    }, [field.value])
+
+    async function setValueByKey(id?: string) {
+        if (!id) {
+            console.log('setting id to null');
+            (comboboxRef.current as unknown as ComboboxHandle<TFieldModel>).setSelected(undefined);
+            return;
+        }
+        try {
+            const selected = (comboboxRef.current as unknown as ComboboxHandle<TFieldModel>).getSelected();
+            console.log('current selected', selected)
+            if (!selected || props.getItemKey(selected) !== id) {
+                console.log('searching combobox field value by id')
+                const value = await getById(id);
+                (comboboxRef.current as unknown as ComboboxHandle<TFieldModel>).setSelected(value);
+                console.log('found combobox field value by id', value, selected)
+            }
+        } catch (e) {
+            console.error('failed to search combobox field value by id', e)
+        }
+    }
+
+    function onChange(val?: TFieldModel) {
+        field.onChange(val && props.getItemKey(val));
+    }
+
+    return <FormItem>
+        {label && <FormLabel>
+            {label} {required && <span className="text-red-500">*</span>}
+        </FormLabel>}
+        <FormControl>
+            <div>
+                <Combobox<TFieldModel>
+                    ref={comboboxRef}
+                    onSelect={onChange}
+                    buttonClassName={cn(["w-full", buttonClassName])}
+                    {...props}/>
+            </div>
+        </FormControl>
+        {description && <FormDescription>{description}</FormDescription>}
+        <FormMessage/>
+    </FormItem>
 }
 
 export function ColorPickerFormField<T extends FieldValues>({
