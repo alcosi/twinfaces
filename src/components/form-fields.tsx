@@ -36,9 +36,9 @@ export function TextFormField<T extends FieldValues>({
     const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
     return <FormField control={control} name={name}
                       render={({field}) => {
-                          const value = field.value.toLowerCase();
                           let currentSuggestions = undefined;
                           if (suggestions) {
+                              const value = field.value?.toLowerCase();
                               currentSuggestions = value ? suggestions.filter(s => s.toLowerCase().includes(value)) : suggestions;
                           }
                           const suggestionsId = idPrefix ? `${idPrefix}-${name}-suggestions` : undefined;
