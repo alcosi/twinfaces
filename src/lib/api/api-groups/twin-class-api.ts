@@ -1,6 +1,12 @@
 import {ApiSettings, getApiDomainHeaders} from "@/lib/api/api";
 import {PaginationState} from "@tanstack/table-core";
-import {TwinClassCreateRq, TwinClassField, TwinClassFieldCreateRq, TwinClassFieldUpdateRq} from "@/lib/api/api-types";
+import {
+    TwinClassCreateRq,
+    TwinClassField,
+    TwinClassFieldCreateRq,
+    TwinClassFieldUpdateRq,
+    TwinClassUpdateRq
+} from "@/lib/api/api-types";
 import {operations} from "@/lib/api/generated/schema";
 
 export function createTwinClassApi(settings: ApiSettings) {
@@ -64,6 +70,16 @@ export function createTwinClassApi(settings: ApiSettings) {
         })
     }
 
+    function update({id, body}: { id: string, body: TwinClassUpdateRq }) {
+        return settings.client.PUT('/private/twin_class/{twinClassId}/v1', {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {twinClassId: id}
+            },
+            body: body
+        })
+    }
+
     function createField({id, body}: { id: string, body: TwinClassFieldCreateRq }) {
         return settings.client.POST(`/private/twin_class/{twinClassId}/field/v1`, {
             params: {
@@ -86,7 +102,7 @@ export function createTwinClassApi(settings: ApiSettings) {
         })
     }
 
-    return {search, getByKey, getById, getFields, create, createField, updateField}
+    return {search, getByKey, getById, getFields, create, update, createField, updateField}
 }
 
 export type TwinClassApi = ReturnType<typeof createTwinClassApi>;

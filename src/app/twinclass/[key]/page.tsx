@@ -2,18 +2,13 @@
 
 import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
-import {TwinClass, TwinClassField, TwinClassStatus} from "@/lib/api/api-types";
+import {TwinClass} from "@/lib/api/api-types";
 import {toast} from "sonner";
 import {LoadingOverlay} from "@/components/base/loading";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
-import {useParams, usePathname} from "next/navigation";
-import {Button} from "@/components/base/button";
-import CreateEditTwinStatusDialog from "@/app/twinclass/[key]/twin-status-dialog";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/base/table";
+import {useParams} from "next/navigation";
 import {Separator} from "@/components/base/separator";
-import Image from "next/image";
-import {Edit2Icon, EditIcon} from "lucide-react";
 import {TwinClassStatuses} from "@/app/twinclass/[key]/twin-class-statuses";
 import {TwinClassGeneral} from "@/app/twinclass/[key]/twin-class-general";
 import {TwinClassFields} from "@/app/twinclass/[key]/twin-class-fields";
@@ -46,11 +41,7 @@ const sections: Section[] = [
     {
         key: 'twinflow',
         label: 'Twinflow',
-    },
-    // {
-    //     key: 'transitions',
-    //     label: 'Transitions',
-    // },
+    }
 ]
 
 export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
@@ -69,12 +60,18 @@ export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
     }, [params])
 
     useEffect(() => {
+        fetchClassData()
+    }, [])
+
+    function fetchClassData() {
         setLoading(true);
         api.twinClass.getByKey({
             key: key,
             query: {
-                showTwinClassMode: 'DETAILED',
-                showTwin2TwinClassMode: 'DETAILED',
+                showTwinClassMode: 'MANAGED',
+                showTwin2TwinClassMode: 'MANAGED',
+                showTwinClassHead2TwinClassMode: 'MANAGED',
+
             }
         }).then((response) => {
             const data = response.data;
@@ -90,12 +87,11 @@ export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
             console.error('exception while fetching twin class', e)
             toast.error("Failed to fetch twin class")
         }).finally(() => setLoading(false))
-    }, [])
+    }
 
     return <div>
         {loading && <LoadingOverlay/>}
 
-        {/*<div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">*/}
         <div className="mx-auto w-full flex md:flex-row flex-col gap-4">
             <nav
                 className="flex-1 grid gap-4 text-sm text-muted-foreground auto-rows-max md:max-w-60"
@@ -112,7 +108,8 @@ export default function TwinClassPage({params: {key}}: TwinClassPageProps) {
             <Separator className="h-auto" orientation='vertical'/>
 
             <div className="flex-[4] pl-4 2xl:max-w-screen-xl mx-auto">
-                {selectedSection?.key === 'general' && twinClass && <TwinClassGeneral twinClass={twinClass}/>}
+                {selectedSection?.key === 'general' && twinClass &&
+                    <TwinClassGeneral twinClass={twinClass} onChange={fetchClassData}/>}
                 {selectedSection?.key === 'fields' && twinClass && <TwinClassFields twinClass={twinClass}/>}
                 {selectedSection?.key === 'statuses' && twinClass && <TwinClassStatuses twinClass={twinClass}/>}
                 {selectedSection?.key === 'twinflow' && twinClass && <TwinClassTwinflow twinClass={twinClass}/>}

@@ -11,11 +11,11 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {Form} from "@/components/base/form";
-import {ColorPickerFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
 import {Alert} from "@/components/base/alert";
 import {Button} from "@/components/base/button";
-import {Text} from "lucide-react";
 import {Input} from "@/components/base/input";
+import {TextAreaFormField, TextFormField} from "@/components/form-fields/text-form-field";
+import {ColorPickerFormField} from "@/components/form-fields/color-form-field";
 
 interface CreateEditTwinStatusDialogProps {
     open: boolean,

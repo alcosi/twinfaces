@@ -45,7 +45,7 @@ export function TwinClassFields({twinClass}: { twinClass: TwinClass }) {
         {
             header: "Actions",
             cell: (data) => {
-                return <Button variant="ghost" size="iconTiny" onClick={() => editField(data.row.original)}><Edit2Icon/></Button>
+                return <Button variant="ghost" size="iconS6" onClick={() => editField(data.row.original)}><Edit2Icon/></Button>
             }
         }
     ]

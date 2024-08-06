@@ -1,10 +1,10 @@
 import {
     TwinClass,
     TwinClassField,
-    TwinClassStatus,
+    TwinClassStatus, TwinClassUpdateRq,
     TwinFlow,
     TwinFlowTransition,
-    TwinFlowTransitionCreateRq
+    TwinFlowTransitionCreateRq, TwinFlowUpdateRq
 } from "@/lib/api/api-types";
 import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
@@ -23,8 +23,11 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form} from "@/components/base/form";
 import {Input} from "@/components/base/input";
-import {ComboboxFormField, TextFormField} from "@/components/form-fields";
 import {Alert} from "@/components/base/alert";
+import {AutoEditDialogSettings, AutoDialog} from "@/components/AutoDialog";
+import {AutoFormValueType} from "@/components/AutoField";
+import {ComboboxFormField} from "@/components/form-fields/combobox-form-field";
+import {TextFormField} from "@/components/form-fields/text-form-field";
 
 export function TwinClassTwinflow({twinClass}: { twinClass: TwinClass }) {
     const api = useContext(ApiContext);
@@ -54,9 +57,9 @@ export function TwinClassTwinflow({twinClass}: { twinClass: TwinClass }) {
         }
     }
 
-    async function fetchDialogTwinflow() {
+    async function fetchTwinflow(id: string) {
         try {
-            const response = await api.twinflow.getById({twinFlowId: createEditDialogTwinflow!.id!})
+            const response = await api.twinflow.getById({twinFlowId: id})
             if (!response.data?.twinflow) {
                 toast.warning("Failed to fetch updated twinflow");
                 return;
@@ -99,6 +102,7 @@ export function TwinClassTwinflow({twinClass}: { twinClass: TwinClass }) {
             return <TwinflowView key={twinflow.id!} twinflow={twinflow}
                                  onCreate={() => openCreateTransitionDialog(twinflow)}
                                  onEdit={(transition) => openEditTransitionDialog(twinflow, transition)}
+                                 onChange={() => fetchTwinflow(twinflow.id!)}
             />
         })}
         {loading && <LoadingSpinner/>}
@@ -110,16 +114,19 @@ export function TwinClassTwinflow({twinClass}: { twinClass: TwinClass }) {
             twinFlow={createEditDialogTwinflow ?? undefined}
             transition={editedTransition}
             onOpenChange={setCreateEditTransitionDialogOpen}
-            onSuccess={fetchDialogTwinflow}
+            onSuccess={() => fetchTwinflow(createEditDialogTwinflow!.id!)}
         />
     </>
 }
 
-function TwinflowView({twinflow, onCreate, onEdit}: {
+function TwinflowView({twinflow, onCreate, onEdit, onChange}: {
     twinflow: TwinFlow,
     onCreate?: () => any,
     onEdit?: (transition: TwinFlowTransition) => any
+    onChange?: () => any;
 }) {
+    const [statuses, setStatuses] = useState<TwinClassStatus[]>([])
+
     const tableRef = useRef<DataTableHandle>(null);
 
     const columns: ColumnDef<TwinFlowTransition>[] = [
@@ -153,10 +160,49 @@ function TwinflowView({twinflow, onCreate, onEdit}: {
         {
             header: "Actions",
             cell: (data) => {
-                return <Button variant="ghost" size="iconTiny" onClick={() => onEdit?.(data.row.original)}><Edit2Icon/></Button>
+                return <Button variant="ghost" size="iconS6" onClick={() => onEdit?.(data.row.original)}><Edit2Icon/></Button>
             }
         }
     ]
+
+    useEffect(() => {
+        fetchStatuses()
+    }, [twinflow]);
+
+    async function fetchStatuses() {
+        const response = await api.twinClass.getById({
+            id: twinflow.twinClassId!, query: {
+                showTwinClassMode: 'SHORT',
+                // showTwin2TwinClassMode: 'SHORT',
+                // showTwin2StatusMode: 'SHORT',
+                showTwinClass2StatusMode: 'DETAILED'
+            }
+        });
+
+        const data = response.data;
+        if (!data || data.status != 0) {
+            console.error('failed to fetch twin class fields', data)
+            let message = "Failed to load twin class fields";
+            if (data?.msg) message += `: ${data.msg}`;
+            toast.error(message);
+            return {data: [], pageCount: 0};
+        }
+
+        const values = Object.values(data.twinClass?.statusMap ?? {});
+        setStatuses(values);
+    }
+
+    async function getStatusesBySearch(search: string) {
+        return statuses.filter(status =>
+            (status.name ?? '').toLowerCase().includes(search.toLowerCase()) ||
+            (status.key ?? '').toLowerCase().includes(search.toLowerCase())
+        );
+    }
+
+    async function findStatusById(id: string) {
+        console.log('findStatusById', id, statuses)
+        return statuses.find(x => x.id === id);
+    }
 
     useEffect(() => {
         getTransitionsRef.current = getTransitions;
@@ -167,7 +213,88 @@ function TwinflowView({twinflow, onCreate, onEdit}: {
         return Promise.resolve({data: Object.values(twinflow.transitions ?? {}), pageCount: 0});
     }
 
-    const getTransitionsRef = useRef(getTransitions);
+    const getTransitionsRef = useRef(getTransitions);    const api = useContext(ApiContext);
+
+    const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
+    const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] = useState<AutoEditDialogSettings | undefined>(undefined);
+
+    async function updateTwinFlow(newFlow: TwinFlowUpdateRq) {
+        try {
+            await api.twinflow.update({id: twinflow.id!, body: newFlow});
+            console.log('updated');
+            onChange?.();
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
+
+    const settings: { [key: string]: AutoEditDialogSettings } = {
+        // key: {
+        //     name: "Key",
+        //     value: {"key": twinClass.key},
+        //     title: 'Update key',
+        //     onSubmit: (values) => {
+        //         return updateTwinClass({key: values.key})
+        //     },
+        //     valuesInfo: {
+        //         "key": {
+        //             type: AutoFormValueType.uuid
+        //         }
+        //     }
+        // },
+        name: {
+            value: {"name": twinflow.name},
+            title: 'Update name',
+            onSubmit: (values) => {
+                return updateTwinFlow({nameI18n: {translationInCurrentLocale: values.name}})
+            },
+            valuesInfo: {
+                "name": {
+                    type: AutoFormValueType.string, label: "Name"
+                }
+            }
+        },
+        description: {
+            value: {"description": twinflow.description},
+            title: 'Update description',
+            onSubmit: (values) => {
+                return updateTwinFlow({descriptionI18n: {translationInCurrentLocale: values.description}})
+            },
+            valuesInfo: {
+                "description": {
+                    type: AutoFormValueType.string, label: "Description"
+                }
+            }
+        },
+        initialStatusId: {
+            value: {"initialStatusId": twinflow.initialStatusId},
+            title: 'Update initial status',
+            onSubmit: (values) => {
+                return updateTwinFlow({initialStatusId: values.initialStatusId})
+            },
+            valuesInfo: {
+                "initialStatusId": {
+                    type: AutoFormValueType.combobox,
+                    label: "Initial status",
+                    getItems: getStatusesBySearch,
+                    getItemKey: (c) => c?.id?.toLowerCase() ?? "",
+                    getItemLabel: (c) => {
+                        let label = c?.key ?? "";
+                        if (c.name) label += ` (${c.name})`
+                        return label;
+                    },
+                    getById: findStatusById,
+                    selectPlaceholder: "Select status...",
+                }
+            }
+        }
+    }
+
+    function openWithSettings(settings: AutoEditDialogSettings) {
+        setCurrentAutoEditDialogSettings(settings)
+        setEditFieldDialogOpen(true)
+    }
 
     return <div className="p-4 border rounded">
         <h1 className="text-xl font-bold">{twinflow.name}</h1>
@@ -177,17 +304,17 @@ function TwinflowView({twinflow, onCreate, onEdit}: {
                     <TableCell>ID</TableCell>
                     <TableCell>{twinflow.id}</TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow className="cursor-pointer" onClick={() => openWithSettings(settings.name!)}>
                     <TableCell>Name</TableCell>
                     <TableCell>{twinflow.name}</TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow className="cursor-pointer" onClick={() => openWithSettings(settings.description!)}>
                     <TableCell>Description</TableCell>
                     <TableCell>{twinflow.description}</TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow className="cursor-pointer" onClick={() => openWithSettings(settings.initialStatusId!)}>
                     <TableCell>Initial status</TableCell>
-                    <TableCell>{twinflow.initialStatus?.name}</TableCell>
+                    <TableCell>{twinflow.initialStatus?.name ?? twinflow.initialStatus?.key}</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>Created at</TableCell>
@@ -208,6 +335,11 @@ function TwinflowView({twinflow, onCreate, onEdit}: {
             fetcher={() => getTransitionsRef.current()}
             disablePagination={true}
         />
+
+        <AutoDialog
+            open={editFieldDialogOpen}
+            onOpenChange={setEditFieldDialogOpen}
+            settings={currentAutoEditDialogSettings}/>
     </div>
 }
 

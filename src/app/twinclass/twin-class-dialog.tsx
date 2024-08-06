@@ -1,32 +1,23 @@
 import {
-    Dialog, DialogClose,
-    DialogContent,
+    Dialog, DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle, DialogTrigger
 } from "@/components/base/dialog";
-import {Featurer, FeaturerParam, TwinClass, TwinClassCreateRq} from "@/lib/api/api-types";
+import {TwinClass, TwinClassCreateRq} from "@/lib/api/api-types";
 import {Button} from "@/components/base/button";
-import {z, ZodType} from "zod";
+import {z} from "zod";
 import {Control, useForm, FieldValues, FieldPath, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Input} from "@/components/base/input";
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/base/form";
-import {Textarea} from "@/components/base/textarea";
-import {Checkbox} from "@/components/base/checkbox";
+import {Form, FormItem, FormLabel} from "@/components/base/form";
 import {ReactNode, useContext, useEffect, useState} from "react";
 import {Alert} from "@/components/base/alert";
 import {ApiContext} from "@/lib/api/api";
-import {Combobox, ComboboxProps} from "@/components/base/combobox";
-import {cn} from "@/lib/utils";
-import {
-    CheckboxFormField,
-    ComboboxFormField, FormFieldProps,
-    TextAreaFormField,
-    TextFormField
-} from "@/components/form-fields";
 import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/FeaturerInput";
+import {TextAreaFormField, TextFormField} from "@/components/form-fields/text-form-field";
+import {ComboboxFormField} from "@/components/form-fields/combobox-form-field";
+import {CheckboxFormField} from "@/components/form-fields/checkbox-form-field";
 
 interface ClassDialogProps {
     open: boolean,
@@ -173,10 +164,12 @@ export function TwinClassDialog({
     }
 
     async function findClassById(id: string) {
-        const response = await api.twinClass.getById({id, query: {
+        const response = await api.twinClass.getById({
+            id, query: {
                 showTwinClassMode: 'DETAILED',
                 showTwin2TwinClassMode: 'SHORT'
-            }})
+            }
+        })
         return response.data?.twinClass;
     }
 

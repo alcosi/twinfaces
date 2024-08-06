@@ -1,5 +1,5 @@
 import {ApiSettings, getApiDomainHeaders} from "@/lib/api/api";
-import {TwinClassStatusCreateRq, TwinClassStatusUpdateRq, TwinFlowTransitionCreateRq} from "@/lib/api/api-types";
+import {TwinFlowTransitionCreateRq, TwinFlowUpdateRq} from "@/lib/api/api-types";
 
 export function createTwinflowApi(settings: ApiSettings) {
     // function create({twinClassId, data}: { twinClassId: string, data: TwinClassStatusCreateRq }) {
@@ -40,6 +40,16 @@ export function createTwinflowApi(settings: ApiSettings) {
         })
     }
 
+    function update({id, body}: {id: string, body: TwinFlowUpdateRq}) {
+        return settings.client.PUT("/private/twinflow/{twinflowId}/v1", {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {twinflowId: id}
+            },
+            body
+        })
+    }
+
     function getById({twinFlowId}: {twinFlowId: string}) {
         return settings.client.GET("/private/twinflow/{twinflowId}/v1", {
             params: {
@@ -70,7 +80,7 @@ export function createTwinflowApi(settings: ApiSettings) {
     // }
 
     // return {create, update}
-    return {search,getById, createTransition}
+    return {search,getById, update, createTransition}
 }
 
 export type TwinflowApi = ReturnType<typeof createTwinflowApi>;

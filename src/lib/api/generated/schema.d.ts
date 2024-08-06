@@ -180,19 +180,23 @@ export interface paths {
     /** Count twins by frontendId */
     post: operations["twinSearchCountV1"];
   };
-  "/private/transition_by_alias/{transitionAlias}/v1": {
+  "/private/transition_by_alias/{transitionAlias}/perform/v1": {
     /** Perform twin transition by alias. An alias can be useful for performing transitions for twin from different statuses. For incoming twin, the appropriate transition will be selected based on its current status. */
     post: operations["twinTransitionByAliasPerformV1"];
   };
-  "/private/transition_by_alias/{transitionAlias}/batch/v1": {
+  "/private/transition_by_alias/{transitionAlias}/perform/batch/v1": {
     /** Perform transition for batch of twins by alias. An alias can be useful for performing transitions for twins from different statuses. For each incoming twin, the appropriate transition will be selected based on its current status. */
     post: operations["twinTransitionByAliasPerformBatchV1"];
   };
   "/private/transition/{transitionId}/v1": {
+    /** Update transition by id */
+    post: operations["transitionUpdateV1"];
+  };
+  "/private/transition/{transitionId}/perform/v1": {
     /** Perform twin transition by transition id. Transition will be performed only if current twin status is correct for given transition */
     post: operations["twinTransitionPerformV1"];
   };
-  "/private/transition/{transitionId}/batch/v1": {
+  "/private/transition/{transitionId}/perform/batch/v1": {
     /** Perform transition for batch of twins by transition id. Transition will be performed only if current twin status is correct for given transition */
     post: operations["twinTransitionPerformBatchV1"];
   };
@@ -498,6 +502,30 @@ export interface components {
       /** @description if true, take the permission scheme in space */
       permissionSchemaSpace?: boolean;
       aliasSpace?: boolean;
+      /**
+       * Format: int32
+       * @description head hunter featurer id
+       */
+      headHunterFeaturerId?: number;
+      /** @description head hunter featurer params */
+      headHunterParams?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: uuid
+       * @description view permission id
+       */
+      viewPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description uuid of name in I18n table
+       */
+      nameI18nId?: string;
+      /**
+       * Format: uuid
+       * @description uuid of description in I18n table
+       */
+      descriptionI18nId?: string;
     };
     TwinflowBaseV1: {
       /**
@@ -1146,6 +1174,30 @@ export interface components {
       /** @description if true, take the permission scheme in space */
       permissionSchemaSpace?: boolean;
       aliasSpace?: boolean;
+      /**
+       * Format: int32
+       * @description head hunter featurer id
+       */
+      headHunterFeaturerId?: number;
+      /** @description head hunter featurer params */
+      headHunterParams?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: uuid
+       * @description view permission id
+       */
+      viewPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description uuid of name in I18n table
+       */
+      nameI18nId?: string;
+      /**
+       * Format: uuid
+       * @description uuid of description in I18n table
+       */
+      descriptionI18nId?: string;
       /** @description Class fields list */
       fields?: components["schemas"]["TwinClassFieldV1"][];
       /** @description Class fields id list */
@@ -2086,7 +2138,9 @@ export interface components {
       domainId?: string;
       user?: components["schemas"]["UserV1"];
     };
-    TwinflowTransitionCreateRqV1: {
+    TransitionCreateRqV1: {
+      nameI18n?: components["schemas"]["I18nV1"];
+      descriptionI18n?: components["schemas"]["I18nV1"];
       /**
        * Format: uuid
        * @description [optional] src status id. if null - from any status transition
@@ -2115,8 +2169,36 @@ export interface components {
        * @example abdeef68-7d6d-4385-9906-e3b701d2c503
        */
       permissionId?: string;
+      /**
+       * Format: uuid
+       * @description Inbuilt TwinFactory Id
+       */
+      inbuiltTtwinFactoryId?: string;
+      /**
+       * Format: uuid
+       * @description Drafting TwinFactory Id
+       */
+      draftingTwinFactoryId?: string;
     };
-    TwinStatusCreateRsV1: {
+    /** @description permission details */
+    PermissionV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      id?: string;
+      /** @description key */
+      key?: string;
+      /**
+       * @description name
+       * @example Manager
+       */
+      name?: string;
+      /** @description description */
+      description?: string;
+    };
+    TransitionCreateRsV1: {
       /**
        * Format: int32
        * @description request processing status (see ErrorCode enum)
@@ -2128,13 +2210,68 @@ export interface components {
        * @example success
        */
       msg?: string;
-      twinStatus?: components["schemas"]["TwinStatusV1"];
+      transition?: components["schemas"]["TwinflowTransitionBaseV2"];
+    };
+    /** @description transitions map */
+    TwinflowTransitionBaseV2: {
+      /**
+       * Format: uuid
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      dstTwinStatusId?: string;
+      dstTwinStatus?: components["schemas"]["TwinStatusV1"];
+      /** @description name */
+      name?: string;
+      /**
+       * @description alias
+       * @example start
+       */
+      alias?: string;
+      allowComment?: boolean;
+      allowAttachments?: boolean;
+      allowLinks?: boolean;
+      /**
+       * Format: uuid
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      srcTwinStatusId?: string;
+      srcTwinStatus?: components["schemas"]["TwinStatusV1"];
+      /**
+       * Format: uuid
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      permission?: components["schemas"]["PermissionV1"];
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      createdByUser?: components["schemas"]["UserV1"];
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
     };
     TwinflowListRqV1: {
       /** @description twin class id list */
       twinClassIdList?: string[];
       /** @description twin class id exclude list */
       twinClassIdExcludeList?: string[];
+      /** @description name i18n keyword list(AND) */
+      nameI18nLikeList?: string[];
+      /** @description name i18n keyword exclude list(OR) */
+      nameI18nNotLikeList?: string[];
+      /** @description description i18n keyword list(AND) */
+      descriptionI18nLikeList?: string[];
+      /** @description description i18n exclude keyword list(OR) */
+      descriptionI18nNotLikeList?: string[];
       /** @description initial status id list */
       initialStatusIdList?: string[];
       /** @description initial status id exclude list */
@@ -2160,24 +2297,6 @@ export interface components {
        * @example 100
        */
       total?: number;
-    };
-    /** @description permission details */
-    PermissionV1: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-       */
-      id?: string;
-      /** @description key */
-      key?: string;
-      /**
-       * @description name
-       * @example Manager
-       */
-      name?: string;
-      /** @description description */
-      description?: string;
     };
     /** @description twinflow details */
     TwinflowBaseV3: {
@@ -2241,53 +2360,6 @@ export interface components {
       /** @description results - twinflow list */
       twinflowList?: components["schemas"]["TwinflowBaseV3"][];
     };
-    /** @description transitions map */
-    TwinflowTransitionBaseV2: {
-      /**
-       * Format: uuid
-       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
-       */
-      dstTwinStatusId?: string;
-      dstTwinStatus?: components["schemas"]["TwinStatusV1"];
-      /** @description name */
-      name?: string;
-      /**
-       * @description alias
-       * @example start
-       */
-      alias?: string;
-      allowComment?: boolean;
-      allowAttachments?: boolean;
-      allowLinks?: boolean;
-      /**
-       * Format: uuid
-       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
-       */
-      srcTwinStatusId?: string;
-      srcTwinStatus?: components["schemas"]["TwinStatusV1"];
-      /**
-       * Format: uuid
-       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-       */
-      permissionId?: string;
-      permission?: components["schemas"]["PermissionV1"];
-      /**
-       * Format: date-time
-       * @description created at
-       */
-      createdAt?: string;
-      createdByUser?: components["schemas"]["UserV1"];
-      /**
-       * Format: uuid
-       * @description createdByUserId
-       */
-      createdByUserId?: string;
-    };
     TwinflowCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
       descriptionI18n?: components["schemas"]["I18nV1"];
@@ -2331,6 +2403,20 @@ export interface components {
        * @example #ff00ff
        */
       color?: string;
+    };
+    TwinStatusCreateRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description request processing status description
+       * @example success
+       */
+      msg?: string;
+      twinStatus?: components["schemas"]["TwinStatusV1"];
     };
     TwinClassFieldCreateRqV1: {
       /**
@@ -2456,6 +2542,14 @@ export interface components {
       twinClassIdExcludeList?: string[];
       /** @description twin class key list */
       twinClassKeyLikeList?: string[];
+      /** @description name i18n keyword list(AND) */
+      nameI18nLikeList?: string[];
+      /** @description name i18n keyword exclude list(OR) */
+      nameI18nNotLikeList?: string[];
+      /** @description description i18n keyword list(AND) */
+      descriptionI18nLikeList?: string[];
+      /** @description description i18n exclude keyword list(OR) */
+      descriptionI18nNotLikeList?: string[];
       /** @description head twin class id list */
       headTwinClassIdList?: string[];
       /** @description head twin class id exclude list */
@@ -3112,6 +3206,62 @@ export interface components {
       twinIdList?: string[];
       batchComment?: string;
       batchContext?: components["schemas"]["TwinTransitionContextV1"];
+    };
+    TransitionUpdateRqV1: {
+      nameI18n?: components["schemas"]["I18nV1"];
+      descriptionI18n?: components["schemas"]["I18nV1"];
+      /**
+       * Format: uuid
+       * @description [optional] src status id. if null - from any status transition
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      srcStatusId?: string;
+      /**
+       * Format: uuid
+       * @description dst status is required
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      dstStatusId?: string;
+      /**
+       * @description [optional] name
+       * @example To Do
+       */
+      name?: string;
+      /**
+       * @description [optional] uniq alias inside twinflow
+       * @example start
+       */
+      alias?: string;
+      /**
+       * Format: uuid
+       * @description [optional] some permission required to run transition
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description Inbuilt TwinFactory Id
+       */
+      inbuiltTtwinFactoryId?: string;
+      /**
+       * Format: uuid
+       * @description Drafting TwinFactory Id
+       */
+      draftingTwinFactoryId?: string;
+    };
+    TwinflowTransitionUpdateRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description request processing status description
+       * @example success
+       */
+      msg?: string;
+      transition?: components["schemas"]["TwinflowTransitionBaseV2"];
     };
     UserRefSpaceRoleSearchV1: {
       /**
@@ -4951,20 +5101,20 @@ export interface operations {
         Channel: string;
       };
       path: {
-        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        /** @example 34618b09-e8dc-4712-a433-2e18915ee70d */
         twinflowId: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["TwinflowTransitionCreateRqV1"];
+        "application/json": components["schemas"]["TransitionCreateRqV1"];
       };
     };
     responses: {
-      /** @description Twin status data */
+      /** @description Transition data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinStatusCreateRsV1"];
+          "application/json": components["schemas"]["TransitionCreateRsV1"];
         };
       };
       /** @description Access is denied */
@@ -6247,6 +6397,48 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Update transition by id */
+  transitionUpdateV1: {
+    parameters: {
+      query?: {
+        showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example f6606fa2-c047-4ba9-a92c-84051df681ab */
+        transitionId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TransitionUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Transition prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinflowTransitionUpdateRsV1"];
         };
       };
       /** @description Access is denied */

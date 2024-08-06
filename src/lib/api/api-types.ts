@@ -2,6 +2,7 @@ import {components, paths} from "@/lib/api/generated/schema";
 
 export type TwinClass = components["schemas"]["TwinClassV1"];
 export type TwinClassCreateRq = paths['/private/twin_class/v1']['post']['requestBody']['content']["application/json"]
+export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"]
 
 export type TwinClassField = components["schemas"]["TwinClassFieldV1"];
 export type TwinClassFieldDescriptor = components["schemas"]["TwinClassFieldDescriptorDTO"];
@@ -12,8 +13,9 @@ export type TwinClassStatus = components["schemas"]["TwinStatusV1"];
 export type TwinClassStatusCreateRq = components["schemas"]["TwinStatusCreateRqV1"];
 export type TwinClassStatusUpdateRq = components["schemas"]["TwinStatusUpdateRqV1"];
 export type TwinFlow = components["schemas"]["TwinflowBaseV3"]
+export type TwinFlowUpdateRq =  components["schemas"]["TwinflowUpdateRqV1"]
 export type TwinFlowTransition = components["schemas"]["TwinflowTransitionBaseV2"]
-export type TwinFlowTransitionCreateRq = components["schemas"]["TwinflowTransitionCreateRqV1"]
+export type TwinFlowTransitionCreateRq = components["schemas"]["TransitionCreateRqV1"]
 
 export type Featurer = components["schemas"]["FeaturerV1"];
 export type FeaturerParam = components["schemas"]["FeaturerParamV1"];

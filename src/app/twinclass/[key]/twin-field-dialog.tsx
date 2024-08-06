@@ -7,11 +7,12 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/base/dialog";
 import {Form} from "@/components/base/form";
 import {Input} from "@/components/base/input";
-import {CheckboxFormField, TextAreaFormField, TextFormField} from "@/components/form-fields";
 import {Alert} from "@/components/base/alert";
 import {Button} from "@/components/base/button";
 import {toast} from "sonner";
 import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/FeaturerInput";
+import {TextAreaFormField, TextFormField} from "@/components/form-fields/text-form-field";
+import {CheckboxFormField} from "@/components/form-fields/checkbox-form-field";
 
 
 interface CreateEditTwinFieldDialogProps {
