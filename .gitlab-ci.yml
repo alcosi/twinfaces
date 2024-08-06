@@ -1,0 +1,101 @@
+stages:
+  - dockerize-twinfaces
+  - build-twins
+  - dockerize-twins
+  - prepare-dc
+  - deploy
+
+dockerize-twinfaces:
+  stage: dockerize-twinfaces
+  variables:
+    IMAGE_NAME: twinfaces
+    DOCKER_FILE: Dockerfile
+  script:
+    - docker build -t $HARBOR_HOST/$HARBOR_PROJECT/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA -f $DOCKER_FILE .
+    - docker push $HARBOR_HOST/$HARBOR_PROJECT/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  tags:
+    - $GENERAL_RUNNER_TAG
+
+build-twins-jar:
+  image: gradle:7.6-jdk17
+  stage: build-twins
+  script:
+    - git clone https://github.com/alcosi/twins.git
+    - cd twins
+    - gradle build -Pdocker.image.version=1.0.0 -Pdocker.work.dir=  -Pdocker.host= -Pdocker.repo= -Pprofile=$TMP_VAR_ENVIRONMENT
+    - rm -rf core/build/libs/*-plain.jar
+    - ls -la core/build/libs/
+  artifacts:
+    expire_in: 20m
+    paths:
+      - twins/core/build/libs/*.jar
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  tags:
+    - $SAST_RUNNER_TAG
+
+dockerize-twins:
+  stage: dockerize-twins
+  variables:
+    DOCKER_FILE: twins.Dockerfile
+    IMAGE_NAME: twins-main
+  script:
+    - docker build -t $HARBOR_HOST/$HARBOR_PROJECT/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA -f $DOCKER_FILE .
+    - docker push $HARBOR_HOST/$HARBOR_PROJECT/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  tags:
+    - $GENERAL_RUNNER_TAG
+  artifacts:
+    expire_in: 1h
+    paths:
+      - $DOCKER_FILE
+
+prepare-dc:
+  stage: prepare-dc
+  variables:
+    IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+    IMAGE_NAME_TWINFACES: twinfaces
+    IMAGE_NAME_TWINS: twins-main
+    JAVA_DEBUG: FALSE
+  script:
+    - envsubst < docker-compose.yml > docker-compose.yml_deploy
+    - mv docker-compose.yml_deploy docker-compose.yml
+  artifacts:
+    expire_in: 20m
+    paths:
+      - docker-compose.yml
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      variables:
+        DEPLOY_SERVER_IP: $DEPLOY_SERVER_IP_DEV
+  tags:
+    - $GENERAL_RUNNER_TAG
+
+deploy:
+  stage: deploy
+  variables:
+    PATH_TO_DEPLOY: /opt/twinfaces
+  script:
+    # SSH preparations
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOY_SERVER_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    # Deploy process
+    - ssh $DEPLOY_SERVER_USER@$DEPLOY_SERVER_IP "docker login -u $HARBOR_USERNAME -p $HARBOR_PASSWORD $HARBOR_HOST"
+    - ssh $DEPLOY_SERVER_USER@$DEPLOY_SERVER_IP "sudo mkdir -p $PATH_TO_DEPLOY"
+    - ssh $DEPLOY_SERVER_USER@$DEPLOY_SERVER_IP "sudo chown -R $DEPLOY_SERVER_USER:$DEPLOY_SERVER_USER $PATH_TO_DEPLOY"
+    - ssh $DEPLOY_SERVER_USER@$DEPLOY_SERVER_IP "cd $PATH_TO_DEPLOY && if [ -f docker-compose.yml ]; then docker compose down; else echo 'Docker compose down skipped, empty folder'; fi"
+    - scp docker-compose.yml $DEPLOY_SERVER_USER@$DEPLOY_SERVER_IP:$PATH_TO_DEPLOY
+    - ssh $DEPLOY_SERVER_USER@$DEPLOY_SERVER_IP "cd $PATH_TO_DEPLOY && docker compose up -d"
+    - ssh $DEPLOY_SERVER_USER@$DEPLOY_SERVER_IP "docker logout"
+  tags:
+    - $GENERAL_RUNNER_TAG
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+      variables:
+        DEPLOY_SERVER_IP: $DEPLOY_SERVER_IP_DEV
