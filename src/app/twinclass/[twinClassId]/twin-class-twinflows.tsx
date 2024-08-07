@@ -34,7 +34,7 @@ const columns: ColumnDef<TwinFlow>[] = [
 ]
 
 export function TwinClassTwinflows({twinClass}: { twinClass: TwinClass }) {
-    const [twinflowDialogOpen, setTwinflowDialogOpen] = useState(false)
+    // const [twinflowDialogOpen, setTwinflowDialogOpen] = useState(false)
     const api = useContext(ApiContext);
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
@@ -65,9 +65,9 @@ export function TwinClassTwinflows({twinClass}: { twinClass: TwinClass }) {
         }
     }
 
-    function openCreateTwinflow() {
-        setTwinflowDialogOpen(true);
-    }
+    // function openCreateTwinflow() {
+    //     setTwinflowDialogOpen(true);
+    // }
 
     return <CrudDataTable
         ref={tableRef}
@@ -76,7 +76,7 @@ export function TwinClassTwinflows({twinClass}: { twinClass: TwinClass }) {
         fetcher={fetchTwinflows}
         pageSizes={[10, 20, 50]}
         onRowClick={(row) => router.push(`/twinclass/${row.twinClassId}/twinflow/${row.id}`)}
-        createButton={{enabled: true, onClick: openCreateTwinflow, text: 'Create Twinflow'}}
+        // createButton={{enabled: true, onClick: openCreateTwinflow, text: 'Create Twinflow'}}
         // search={{enabled: true, placeholder: 'Search by key...'}}
     />
 
