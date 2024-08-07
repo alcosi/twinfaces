@@ -26,7 +26,7 @@ export function CopyButton({textToCopy, onClick, onCopy, copiedText, ...props}: 
     return <>
         <Tooltip open={copied}>
             <TooltipTrigger asChild>
-                <Button onClick={onClickInternal} size='iconTiny' variant='ghost' {...props}>
+                <Button onClick={onClickInternal} size='iconS6' variant='ghost' {...props}>
                     {!copied && <Copy/>}
                     {copied && <Check/>}
                 </Button>
