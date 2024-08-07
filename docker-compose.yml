@@ -21,7 +21,7 @@ services:
       - spring.datasource.password=twins_pass
       - spring.datasource.driverClassName=org.postgresql.Driver
     volumes:
-      - ./logs:/opt/tins/logs
+      - ./logs:/opt/twins/logs
     ports:
       - "10321:10321"
     restart: always
