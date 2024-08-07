@@ -1,5 +1,6 @@
 import {ApiSettings, getApiDomainHeaders} from "@/lib/api/api";
 import {TwinFlowTransitionCreateRq, TwinFlowUpdateRq} from "@/lib/api/api-types";
+import {PaginationState} from "@tanstack/table-core";
 
 export function createTwinflowApi(settings: ApiSettings) {
     // function create({twinClassId, data}: { twinClassId: string, data: TwinClassStatusCreateRq }) {
@@ -22,7 +23,7 @@ export function createTwinflowApi(settings: ApiSettings) {
     //     })
     // }
 
-    function search({twinClassId, offset}: {twinClassId: string, offset: number}) {
+    function search({twinClassId, pagination}: {twinClassId: string, pagination: PaginationState}) {
         return settings.client.POST("/private/twinflow/search/v1", {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -31,7 +32,8 @@ export function createTwinflowApi(settings: ApiSettings) {
                     showTwinflow2TransitionMode: 'DETAILED',
                     showTransition2StatusMode: 'SHORT',
                     showTwinflowInitStatus2StatusMode: 'SHORT',
-                    offset: offset
+                    offset: pagination.pageIndex * pagination.pageSize,
+                    limit: pagination.pageSize
                 }
             },
             body: {

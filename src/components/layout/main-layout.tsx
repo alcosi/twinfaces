@@ -5,7 +5,7 @@ import {Button} from "@/components/base/button";
 import {Menu} from "lucide-react";
 import TwinFace from '@/assets/img/face.svg'
 import {PathLink} from "@/components/layout/layout-link"
-import {PathLinkMode} from "@/components/layout/layoutlink.common.ts";
+import {PathLinkMode} from "@/components/layout/layoutlink.common";
 import Link from "next/link";
 
 const links = [

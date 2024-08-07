@@ -30,6 +30,10 @@ interface CrudDataTableProps<TData, TValue> extends Omit<DataTableProps<TData, T
     createButton?: CrudDataTableCreateButtonProps
     search?: CrudDataTableSearchProps
     hideRefresh?: boolean,
+    refresh?: {
+        enabled: boolean,
+        before?: () => Promise<any>
+    }
     className?: string
 }
 
@@ -42,6 +46,7 @@ function CrudDataTableInternal<TData, TValue>({
                                                   hideRefresh,
                                                   className,
                                                   fetcher,
+                                                  refresh: refreshOptions,
                                                   ...props
                                               }: CrudDataTableProps<TData, TValue>,
                                               ref: ForwardedRef<DataTableHandle>) {
@@ -51,6 +56,13 @@ function CrudDataTableInternal<TData, TValue>({
 
     function fetchWrapper(pagination: PaginationState) {
         return fetcher(pagination, {search: tableSearch})
+    }
+
+    async function refresh() {
+        if (refreshOptions?.before) {
+            await refreshOptions.before();
+        }
+        tableRef.current?.refresh()
     }
 
     return <div className={cn("flex-1", className)}>
@@ -75,7 +87,7 @@ function CrudDataTableInternal<TData, TValue>({
             </div>
             <div className={"flex space-x-4"}>
                 {!hideRefresh && <>
-                    <Button variant="ghost" onClick={() => tableRef.current?.refresh()}><RefreshCw/></Button>
+                    <Button variant="ghost" onClick={refresh}><RefreshCw/></Button>
                     <Separator orientation={"vertical"}/>
                 </>}
                 {createButton?.enabled && <Button onClick={createButton?.onClick}>

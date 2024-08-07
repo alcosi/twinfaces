@@ -4,7 +4,7 @@ import {ApiContext} from "@/lib/api/api";
 import {toast} from "sonner";
 import {Button} from "@/components/base/button";
 import {Edit2Icon, Unplug} from "lucide-react";
-import CreateEditTwinStatusDialog from "@/app/twinclass/[key]/twin-status-dialog";
+import CreateEditTwinStatusDialog from "@/app/twinclass/[twinClassId]/twin-status-dialog";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {ImageWithFallback} from "@/components/ImageWithFallback";

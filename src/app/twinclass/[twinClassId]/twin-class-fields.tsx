@@ -6,7 +6,7 @@ import {LoadingOverlay} from "@/components/base/loading";
 import {Button} from "@/components/base/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/base/table";
 import {Check, Edit2Icon} from "lucide-react";
-import CreateEditTwinFieldDialog from "@/app/twinclass/[key]/twin-field-dialog";
+import CreateEditTwinFieldDialog from "@/app/twinclass/[twinClassId]/twin-field-dialog";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";

@@ -15,6 +15,7 @@ export function CopyButton({textToCopy, onClick, onCopy, copiedText, ...props}: 
     const [copied, setCopied] = useState<boolean>(false);
 
     function onClickInternal(e: any) {
+        e.stopPropagation();
         navigator.clipboard.writeText(textToCopy).then(() => {
             setCopied(true)
             setTimeout(() => setCopied(false), 2000)

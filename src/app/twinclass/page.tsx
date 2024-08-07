@@ -12,6 +12,7 @@ import Link from "next/link";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {ImageWithFallback} from "@/components/ImageWithFallback";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
+import {useRouter} from "next/navigation";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
@@ -41,21 +42,21 @@ const columns: ColumnDef<TwinClass>[] = [
         header: "Abstract",
         cell: (data) => <>{data.getValue() && <Check/>}</>
     },
-    {
-        header: "Actions",
-        cell: (data) => {
-            return <Link href={`/twinclass/${data.row.original.key}`}>
-                <span className="inline-flex items-center"><LinkIcon className="mx-1"/> View</span>
-            </Link>
-        }
-    }
+    // {
+    //     header: "Actions",
+    //     cell: (data) => {
+    //         return <Link href={`/twinclass/${data.row.original.key}`}>
+    //             <span className="inline-flex items-center"><LinkIcon className="mx-1"/> View</span>
+    //         </Link>
+    //     }
+    // }
 ]
 
 export default function TwinClasses() {
     const [classDialogOpen, setClassDialogOpen] = useState(false)
 
     const api = useContext(ApiContext)
-
+    const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
 
     async function fetchData(pagination: PaginationState, filters: FiltersState) {
@@ -95,9 +96,10 @@ export default function TwinClasses() {
             <CrudDataTable
                 ref={tableRef}
                 columns={columns}
-                getRowId={(row) => row.key!}
+                getRowId={(row) => row.id!}
                 fetcher={fetchData}
                 pageSizes={[10, 20, 50]}
+                onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
                 createButton={{enabled: true, onClick: openCreateClass, text: 'Create Class'}}
                 search={{enabled: true, placeholder: 'Search by key...'}}
             />
