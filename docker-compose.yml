@@ -20,6 +20,7 @@ services:
       - spring.datasource.username=twins_user
       - spring.datasource.password=twins_pass
       - spring.datasource.driverClassName=org.postgresql.Driver
+      - spring.flyway.placeholder-replacement=false
     volumes:
       - ./logs:/opt/twins/logs
     ports:
