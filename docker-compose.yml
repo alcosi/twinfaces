@@ -5,10 +5,10 @@ services:
     image: $HARBOR_HOST/$HARBOR_PROJECT/$IMAGE_NAME_TWINFACES:${IMAGE_TAG}
     ports:
       - "10322:80"
-    environment: 
+    environment:
       NEXT_PUBLIC_TWINS_API_URL: "http://localhost:10321"
     restart: always
-  
+
   twins:
     image: $HARBOR_HOST/$HARBOR_PROJECT/$IMAGE_NAME_TWINS:${IMAGE_TAG}
     container_name: twins-core
@@ -20,7 +20,15 @@ services:
       - spring.datasource.username=twins_user
       - spring.datasource.password=twins_pass
       - spring.datasource.driverClassName=org.postgresql.Driver
+      - spring.flyway.enabled=true
       - spring.flyway.placeholder-replacement=false
+      - spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+      - spring.jpa.hibernate.ddl-auto=validate
+      - spring.jpa.properties.hibernate.default_schema=public
+      - spring.jpa.properties.hibernate.format_sql=true
+      - spring.jpa.properties.hibernate.jdbc.batch_size=10
+      - spring.jpa.properties.hibernate.order_inserts=true
+      - spring.main.allow-circular-references=true
     volumes:
       - ./logs:/opt/twins/logs
     ports:
@@ -28,7 +36,7 @@ services:
     restart: always
 
   database:
-    image: postgres:15.5-alpine
+    image: postgres:16.3
     ports:
       - "10320:5432"
     restart: always
