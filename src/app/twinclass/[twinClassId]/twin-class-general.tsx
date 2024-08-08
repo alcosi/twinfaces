@@ -5,6 +5,7 @@ import {useContext, useState} from "react";
 import {AutoFormValueInfo, AutoFormValueType} from "@/components/AutoField";
 import {ApiContext} from "@/lib/api/api";
 import {z} from "zod";
+import {FeaturerTypes} from "@/components/FeaturerInput";
 
 export function TwinClassGeneral({twinClass, onChange}: { twinClass: TwinClass, onChange?: () => any }) {
     const api = useContext(ApiContext);
@@ -100,13 +101,15 @@ export function TwinClassGeneral({twinClass, onChange}: { twinClass: TwinClass, 
         head: {
             value: {
                 "headClassId": twinClass.headClassId,
-                "headHunterFeaturerId": twinClass.headHunterFeaturerId
+                "headHunterFeaturerId": twinClass.headHunterFeaturerId,
+                "headHunterParams": twinClass.headHunterParams
             },
             title: 'Update head',
             onSubmit: (values) => {
                 return updateTwinClass({
                     headTwinClassUpdate: {newId: values.headClassId},
-                    headHunterFeaturerId: values.headHunterFeaturerId
+                    headHunterFeaturerId: values.headHunterFeaturerId,
+                    headHunterParams: values.headHunterParams
                 })
             },
             valuesInfo: {
@@ -124,7 +127,9 @@ export function TwinClassGeneral({twinClass, onChange}: { twinClass: TwinClass, 
                 },
                 "headHunterFeaturerId": {
                     type: AutoFormValueType.featurer,
-                    label: "Head hunter featurer"
+                    label: "Head hunter featurer",
+                    paramsName: "headHunterParams",
+                    typeId: FeaturerTypes.headHunter
                 }
             }
         },

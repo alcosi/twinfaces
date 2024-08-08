@@ -11,6 +11,7 @@ import {
 } from "@/components/form-fields/combobox-form-field";
 import {ComboboxProps} from "@/components/base/combobox";
 import {CheckboxFormField} from "@/components/form-fields/checkbox-form-field";
+import {FeaturerFormField, FeaturerFormItem} from "@/components/form-fields/featurer-form-field";
 
 
 export enum AutoFormValueType {
@@ -43,7 +44,8 @@ export interface AutoFormComboboxValueInfo extends ComboboxFormFieldProps<any>, 
 
 export interface AutoFormFeaturerValueInfo {
     type: AutoFormValueType.featurer,
-
+    typeId: number,
+    paramsName?: FieldPath<any>
 }
 
 export interface AutoFormSelectValueInfo {
@@ -84,7 +86,12 @@ export function AutoField({info, value, onChange, name, control}: AutoFormFieldP
         return name && control ?
             <ComboboxFormField name={name} control={control} {...info}/>
             : <ComboboxFormItem value={value} onChange={onChange} description={info.description} {...info}/>
-    } else {
+    } else if (info.type === AutoFormValueType.featurer) {
+        return name && control && info.paramsName ?
+            <FeaturerFormField name={name} control={control} paramsName={info.paramsName} {...info}/>
+            : <FeaturerFormItem {...info}/>
+    }
+    else {
         return name && control ? <TextFormField {...info} name={name} control={control}/> :
             <TextFormItem {...info} value={value} onChange={(e) => setValue(e?.target.value)}/>
     }

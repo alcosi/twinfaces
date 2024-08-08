@@ -1,15 +1,11 @@
-import {TwinClassTwinflow} from "@/app/twinclass/[twinClassId]/twin-class-twinflow";
 import {TwinClass, TwinFlow} from "@/lib/api/api-types";
-import {useContext, useRef, useState} from "react";
+import {useContext, useRef} from "react";
 import {toast} from "sonner";
 import {ApiContext} from "@/lib/api/api";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
-import {router} from "next/client";
 import {useRouter} from "next/navigation";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
-import {ImageWithFallback} from "@/components/ImageWithFallback";
-import {Check, Unplug} from "lucide-react";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
 
 const columns: ColumnDef<TwinFlow>[] = [

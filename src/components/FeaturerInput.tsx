@@ -17,14 +17,28 @@ export interface FeaturerValue {
     params: { [key: string]: string }
 }
 
-interface FeaturerInputProps {
+export interface FeaturerInputProps {
     typeId: number,
     defaultId?: number
     defaultParams?: object
-    onChange: (value: FeaturerValue | null) => any
+    onChange?: (value: FeaturerValue | null) => any
+    buttonClassName?: string;
+    selectPlaceholder?: string
+    searchPlaceholder?: string
+    noItemsText?: string
 }
 
-export function FeaturerInput({typeId, defaultId, defaultParams, onChange}: FeaturerInputProps) {
+export function FeaturerInput(
+    {
+        typeId,
+        defaultId,
+        defaultParams,
+        onChange,
+        buttonClassName,
+        selectPlaceholder,
+        searchPlaceholder,
+        noItemsText
+    }: FeaturerInputProps) {
     const api = useContext(ApiContext)
 
     const [selected, setSelected] = useState<Featurer | undefined>(undefined);
@@ -106,15 +120,15 @@ export function FeaturerInput({typeId, defaultId, defaultParams, onChange}: Feat
     }
 
     useEffect(() => {
-        onChange(selected ? {featurer: selected, params} : null)
+        onChange?.(selected ? {featurer: selected, params} : null)
         console.log('onChange', selected, params)
     }, [selected, params])
 
     return <>
         <Combobox<Featurer>
-            selectPlaceholder={"Select head hunter featurer"}
-            searchPlaceholder={"Search head hunter featurer..."}
-            noItemsText={"No featurers found"}
+            selectPlaceholder={selectPlaceholder ?? "Select featurer"}
+            searchPlaceholder={searchPlaceholder ?? "Search featurer..."}
+            noItemsText={noItemsText ?? "No featurers found"}
             getItems={fetchHeadHunterFeaturers}
             getItemKey={(c) => c.id!.toString()}
             getItemLabel={(c) => {
@@ -124,6 +138,7 @@ export function FeaturerInput({typeId, defaultId, defaultParams, onChange}: Feat
             }}
             value={selected}
             onSelect={onSelect}
+            buttonClassName={buttonClassName}
         />
 
         {selected?.params?.map(param => {
@@ -168,6 +183,8 @@ function FeaturerParamInput({param, value, onChange}: FeaturerParamInputProps) {
     function setValue(newValue: string) {
         onChange(param.key!, newValue);
     }
+
+
 
     if (param.type === ParamTypes.boolean) {
         return <FormItem className="flex flex-row items-start space-x-3 space-y-0">

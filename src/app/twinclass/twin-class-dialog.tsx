@@ -18,6 +18,7 @@ import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/Featurer
 import {TextAreaFormField, TextFormField} from "@/components/form-fields/text-form-field";
 import {ComboboxFormField} from "@/components/form-fields/combobox-form-field";
 import {CheckboxFormField} from "@/components/form-fields/checkbox-form-field";
+import {FeaturerFormField} from "@/components/form-fields/featurer-form-field";
 
 interface ClassDialogProps {
     open: boolean,
@@ -37,7 +38,8 @@ const classSchema = z.object({
     name: z.string().min(1).max(100),
     description: z.string().optional().or(z.literal('').transform(() => undefined)),
     abstractClass: z.boolean(),
-    // headHunterFeaturerId: z.string().min(1, 'Head hunter featurer ID is required'),
+    headHunterFeaturerId: z.number(),
+    headHunterParams: z.record(z.string(), z.any()).optional(),
     headTwinClassId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
     extendsTwinClassId: z.string().uuid().optional().or(z.literal('').transform(() => undefined)),
     logo: z.string().url().optional().or(z.literal('').transform(() => undefined)),
@@ -70,7 +72,8 @@ export function TwinClassDialog({
             name: "",
             description: "",
             abstractClass: false,
-            // headHunterFeaturerId: "",
+            headHunterFeaturerId: 0,
+            headHunterParams: {},
             headTwinClassId: "",
             extendsTwinClassId: "",
             logo: "",
@@ -118,17 +121,20 @@ export function TwinClassDialog({
     async function onSubmit(data: z.infer<typeof classSchema>) {
         setError(null);
 
-        if (data.headTwinClassId && !featurer) {
-            setError("Please select a featurer");
-            return;
-        }
+        // if (data.headTwinClassId && !featurer) {
+        //     setError("Please select a featurer");
+        //     return;
+        // }
+
+        // console.log(data);
+        // return;
 
         const {name, description, ...withoutI18} = data;
 
         const requestBody: TwinClassCreateRq = {
             ...withoutI18,
-            headHunterFeaturerId: featurer?.featurer.id,
-            headHunterParams: featurer?.params,
+            // headHunterFeaturerId: featurer?.featurer.id,
+            // headHunterParams: featurer?.params,
             nameI18n: {
                 translationInCurrentLocale: name,
                 translations: {}
@@ -215,10 +221,17 @@ export function TwinClassDialog({
                     />
 
                     {headTwinClassId && <>
-                        <FeaturerInput typeId={FeaturerTypes.headHunter} onChange={(val) => {
-                            console.log('new featurer', val)
-                            setFeaturer(val)
-                        }}/>
+                        <FeaturerFormField
+                            control={form.control}
+                            name={"headHunterFeaturerId"}
+                            paramsName={"headHunterParams"}
+                            typeId={FeaturerTypes.headHunter}
+                            label={"Head Hunter"}
+                        />
+                        {/*<FeaturerInput typeId={FeaturerTypes.headHunter} onChange={(val) => {*/}
+                        {/*    console.log('new featurer', val)*/}
+                        {/*    setFeaturer(val)*/}
+                        {/*}}/>*/}
                     </>}
 
                     <ComboboxFormField control={form.control} name="extendsTwinClassId" label="Extends"
