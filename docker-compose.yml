@@ -6,7 +6,7 @@ services:
     ports:
       - "10322:80"
     environment:
-      NEXT_PUBLIC_TWINS_API_URL: "http://localhost:10321"
+      NEXT_PUBLIC_TWINS_API_URL: "https://https://dev-twinfaces.80lvl.build/api"
     restart: always
 
   twins:
