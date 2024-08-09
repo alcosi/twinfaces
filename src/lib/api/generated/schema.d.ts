@@ -48,13 +48,13 @@ export interface paths {
     /** Delete twin by id */
     delete: operations["twinDeleteV1"];
   };
-  "/private/twin/{twinId}/unstar/v1": {
-    /** Unmark given twin as starred for user */
-    put: operations["markTwinAsUnstarredV1"];
+  "/private/twin/{twinId}/untouch/{touchId}/v1": {
+    /** Unmark twin as touched for user */
+    put: operations["twinUntouchV1"];
   };
-  "/private/twin/{twinId}/star/v1": {
-    /** Mark given twin as starred for user */
-    put: operations["markTwinAsStarredV1"];
+  "/private/twin/{twinId}/touch/{touchId}/v1": {
+    /** Mark twin as touched for user */
+    put: operations["twinTouchV1"];
   };
   "/private/comment/{commentId}/v1": {
     /** Returns comment by comment id */
@@ -293,10 +293,6 @@ export interface paths {
   "/private/twin_class/{twinClassId}/valid_heads/v1": {
     /** Get valid heads of given class */
     get: operations["twinClassValidHeadV1"];
-  };
-  "/private/twin_class/{twinClassId}/starred/v1": {
-    /** Return list of starred twins of given class */
-    get: operations["twinStarredListV1"];
   };
   "/private/twin_class/{twinClassId}/link/v1": {
     /** Returns twin class link list */
@@ -1606,6 +1602,8 @@ export interface components {
       dstTwinStatus?: components["schemas"]["TwinStatusV1"];
       /** @description name */
       name?: string;
+      /** @description description */
+      description?: string;
       /**
        * @description alias
        * @example start
@@ -1716,6 +1714,8 @@ export interface components {
       dstTwinStatus?: components["schemas"]["TwinStatusV1"];
       /** @description name */
       name?: string;
+      /** @description description */
+      description?: string;
       /**
        * @description alias
        * @example start
@@ -1947,7 +1947,7 @@ export interface components {
        */
       authorUserId?: string;
     };
-    TwinStarredRsV1: {
+    TwinTouchRsV1: {
       /**
        * Format: int32
        * @description request processing status (see ErrorCode enum)
@@ -1959,10 +1959,10 @@ export interface components {
        * @example success
        */
       msg?: string;
-      twinStarred?: components["schemas"]["TwinStarredV1"];
+      twinTouch?: components["schemas"]["TwinTouchV1"];
     };
-    /** @description starred twins data */
-    TwinStarredV1: {
+    /** @description twin touch */
+    TwinTouchV1: {
       /**
        * Format: uuid
        * @description id
@@ -1975,6 +1975,12 @@ export interface components {
        * @example 1b2091e3-971a-41bc-b343-1f980227d02f
        */
       twinId?: string;
+      /**
+       * @description touchId
+       * @example WATCHED
+       * @enum {string}
+       */
+      touchId?: "WATCHED" | "STARRED" | "REVIEWED";
       /**
        * Format: date-time
        * @description created at
@@ -2227,6 +2233,8 @@ export interface components {
       dstTwinStatus?: components["schemas"]["TwinStatusV1"];
       /** @description name */
       name?: string;
+      /** @description description */
+      description?: string;
       /**
        * @description alias
        * @example start
@@ -3000,6 +3008,10 @@ export interface components {
       extendsTwinClassIdList?: string[];
       /** @description Head twin class list ids */
       headTwinClassIdList?: string[];
+      /** @description Twin touch list ids */
+      touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+      /** @description Twin touch exclude list ids */
+      touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
     };
     /** @description search narrowing */
     TwinSearchWithHeadV: {
@@ -3045,6 +3057,10 @@ export interface components {
       extendsTwinClassIdList?: string[];
       /** @description Head twin class list ids */
       headTwinClassIdList?: string[];
+      /** @description Twin touch list ids */
+      touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+      /** @description Twin touch exclude list ids */
+      touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
       headSearch?: components["schemas"]["TwinSearchV1"];
     };
     TwinSearchRsV2: {
@@ -3130,6 +3146,10 @@ export interface components {
       extendsTwinClassIdList?: string[];
       /** @description Head twin class list ids */
       headTwinClassIdList?: string[];
+      /** @description Twin touch list ids */
+      touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+      /** @description Twin touch exclude list ids */
+      touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
       headSearch?: components["schemas"]["TwinSearchV1"];
     };
     TwinSearchBatchRqV1: {
@@ -3152,6 +3172,23 @@ export interface components {
         [key: string]: components["schemas"]["TwinSearchRqV1"];
       };
     };
+    /** @description list of basic twin fields */
+    TwinBasicFieldsV1: {
+      /**
+       * Format: uuid
+       * @description assignee user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      assigneeUserId?: string;
+      /**
+       * Format: uuid
+       * @description created by user_id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      createdByUserId?: string;
+      name?: string;
+      description?: string;
+    };
     /** @description TwinLinks for create/update/delete */
     TwinLinkCudV1: {
       /** @description TwinLinks for adding */
@@ -3171,6 +3208,7 @@ export interface components {
       twinLinks?: components["schemas"]["TwinLinkCudV1"];
       /** @description list of twins, that must be created during transition */
       newTwins?: components["schemas"]["TwinCreateRqV2"][];
+      basics?: components["schemas"]["TwinBasicFieldsV1"];
     };
     TwinTransitionPerformRqV1: {
       /**
@@ -3750,21 +3788,6 @@ export interface components {
        * @example Details
        */
       name?: string;
-    };
-    TwinStarredListRsV1: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description request processing status description
-       * @example success
-       */
-      msg?: string;
-      /** @description starred twins data */
-      starredTwins?: components["schemas"]["TwinStarredV1"][];
     };
     TwinClassLinkListRsV1: {
       /**
@@ -4704,8 +4727,8 @@ export interface operations {
       };
     };
   };
-  /** Unmark given twin as starred for user */
-  markTwinAsUnstarredV1: {
+  /** Unmark twin as touched for user */
+  twinUntouchV1: {
     parameters: {
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -4718,6 +4741,8 @@ export interface operations {
       path: {
         /** @example 1b2091e3-971a-41bc-b343-1f980227d02f */
         twinId: string;
+        /** @example WATCHED */
+        touchId: "WATCHED" | "STARRED" | "REVIEWED";
       };
     };
     responses: {
@@ -4735,12 +4760,12 @@ export interface operations {
       };
     };
   };
-  /** Mark given twin as starred for user */
-  markTwinAsStarredV1: {
+  /** Mark twin as touched for user */
+  twinTouchV1: {
     parameters: {
       query?: {
-        showStarredMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTouch2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTouchMode?: "HIDE" | "SHORT" | "DETAILED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -4753,13 +4778,15 @@ export interface operations {
       path: {
         /** @example 1b2091e3-971a-41bc-b343-1f980227d02f */
         twinId: string;
+        /** @example WATCHED */
+        touchId: string;
       };
     };
     responses: {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinStarredRsV1"];
+          "application/json": components["schemas"]["TwinTouchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -5129,8 +5156,6 @@ export interface operations {
   twinflowSearchV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5140,6 +5165,9 @@ export interface operations {
         showTwinflow2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflowInitStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -5420,8 +5448,6 @@ export interface operations {
   twinClassSearchV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5440,6 +5466,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -5855,8 +5884,6 @@ export interface operations {
   twinSearchByAliasV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5889,6 +5916,9 @@ export interface operations {
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -5959,8 +5989,6 @@ export interface operations {
   twinSearchByIdV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5993,6 +6021,9 @@ export interface operations {
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6031,8 +6062,6 @@ export interface operations {
   twinSearchV3: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6065,6 +6094,9 @@ export interface operations {
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6099,8 +6131,6 @@ export interface operations {
   twinSearchV2: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6133,6 +6163,9 @@ export interface operations {
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6167,8 +6200,6 @@ export interface operations {
   twinSearchV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6203,6 +6234,9 @@ export interface operations {
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6595,11 +6629,12 @@ export interface operations {
   spaceRoleWithinUsersMapV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showSpace2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6679,11 +6714,12 @@ export interface operations {
   featurerListV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showFeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showFeaturerParamMode?: "HIDE" | "SHOW";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6917,9 +6953,6 @@ export interface operations {
   twinCommentListV1: {
     parameters: {
       query?: {
-        sortDirection?: "ASC" | "DESC";
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6928,6 +6961,9 @@ export interface operations {
         showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -7408,8 +7444,6 @@ export interface operations {
   twinClassValidHeadV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7442,6 +7476,9 @@ export interface operations {
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -7461,41 +7498,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinSearchRsV2"];
-        };
-      };
-      /** @description Access is denied */
-      401: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  /** Return list of starred twins of given class */
-  twinStarredListV1: {
-    parameters: {
-      query?: {
-        showStarredMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
-      };
-      header: {
-        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-        DomainId: string;
-        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-        AuthToken: string;
-        /** @example WEB */
-        Channel: string;
-      };
-      path: {
-        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
-        twinClassId: string;
-      };
-    };
-    responses: {
-      /** @description Twin data */
-      200: {
-        content: {
-          "application/json": components["schemas"]["TwinStarredListRsV1"];
         };
       };
       /** @description Access is denied */
@@ -7632,8 +7634,6 @@ export interface operations {
   twinClassListV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7652,6 +7652,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -7881,9 +7884,6 @@ export interface operations {
     parameters: {
       query?: {
         childDepth?: number;
-        sortDirection?: "ASC" | "DESC";
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showHistory2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showHistory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7904,6 +7904,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -7994,11 +7997,12 @@ export interface operations {
   spaceRoleWithinAllUsersMapV1: {
     parameters: {
       query?: {
-        offset?: number;
-        limit?: number;
         lazyRelation?: boolean;
         showSpace2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -8068,9 +8072,10 @@ export interface operations {
   domainListV1: {
     parameters: {
       query?: {
+        showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
         offset?: number;
         limit?: number;
-        showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
+        sortAsc?: boolean;
       };
       header: {
         /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */

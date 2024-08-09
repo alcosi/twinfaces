@@ -1,5 +1,5 @@
 import {ApiSettings, getApiDomainHeaders} from "@/lib/api/api";
-import {TwinFlowTransitionCreateRq, TwinFlowUpdateRq} from "@/lib/api/api-types";
+import {TwinFlowTransitionCreateRq, TwinFlowTransitionUpdateRq, TwinFlowUpdateRq} from "@/lib/api/api-types";
 import {PaginationState} from "@tanstack/table-core";
 
 export function createTwinflowApi(settings: ApiSettings) {
@@ -77,12 +77,22 @@ export function createTwinflowApi(settings: ApiSettings) {
         })
     }
 
+    function updateTransition({transitionId, data}: { transitionId: string, data: TwinFlowTransitionUpdateRq }) {
+        return settings.client.POST("/private/transition/{transitionId}/v1", {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {transitionId}
+            },
+            body: data
+        })
+    }
+
     // function create({}: {data: }) {
     //
     // }
 
     // return {create, update}
-    return {search,getById, update, createTransition}
+    return {search,getById, update, createTransition, updateTransition}
 }
 
 export type TwinflowApi = ReturnType<typeof createTwinflowApi>;
