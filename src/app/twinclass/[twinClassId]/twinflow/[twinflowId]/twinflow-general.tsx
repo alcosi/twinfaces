@@ -1,9 +1,9 @@
 import {TwinClassStatus, TwinFlow, TwinFlowUpdateRq} from "@/lib/api/api-types";
 import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
-import {AutoDialog, AutoEditDialogSettings} from "@/components/AutoDialog";
+import {AutoDialog, AutoEditDialogSettings} from "@/components/auto-dialog";
 import {toast} from "sonner";
-import {AutoFormValueType} from "@/components/AutoField";
+import {AutoFormValueType} from "@/components/auto-field";
 import {Table, TableBody, TableCell, TableRow} from "@/components/base/table";
 
 export function TwinflowGeneral({twinflow, onChange}: { twinflow: TwinFlow, onChange: () => any }) {

@@ -3,7 +3,7 @@ import {FormFieldProps} from "@/components/form-fields/form-fields-common";
 import {ComboboxProps} from "@/components/base/combobox";
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/base/form";
 import {ComboboxFormItem} from "@/components/form-fields/combobox-form-field";
-import {FeaturerInput, FeaturerInputProps, FeaturerValue} from "@/components/FeaturerInput";
+import {FeaturerInput, FeaturerInputProps, FeaturerValue} from "@/components/featurer-input";
 import {ReactNode, useEffect} from "react";
 import {cn} from "@/lib/utils";
 

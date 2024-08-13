@@ -1,23 +1,30 @@
 import {TwinClass, TwinClassUpdateRq} from "@/lib/api/api-types";
 import {Table, TableBody, TableCell, TableRow} from "@/components/base/table";
-import {AutoEditDialogSettings, AutoDialog} from "@/components/AutoDialog";
+import {AutoEditDialogSettings, AutoDialog} from "@/components/auto-dialog";
 import {useContext, useState} from "react";
-import {AutoFormValueInfo, AutoFormValueType} from "@/components/AutoField";
+import {AutoFormValueInfo, AutoFormValueType} from "@/components/auto-field";
 import {ApiContext} from "@/lib/api/api";
 import {z} from "zod";
-import {FeaturerTypes} from "@/components/FeaturerInput";
+import {FeaturerTypes} from "@/components/featurer-input";
+import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
 
-export function TwinClassGeneral({twinClass, onChange}: { twinClass: TwinClass, onChange?: () => any }) {
+export function TwinClassGeneral() {
     const api = useContext(ApiContext);
+    const {twinClass, fetchClassData} = useContext(TwinClassContext);
 
     const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
     const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] = useState<AutoEditDialogSettings | undefined>(undefined);
 
     async function updateTwinClass(newClass: TwinClassUpdateRq) {
+        if (!twinClass) {
+            console.error('updateTwinClass: no twin class');
+            return;
+        }
+
         try {
             await api.twinClass.update({id: twinClass.id!, body: newClass});
             console.log('updated');
-            onChange?.();
+            fetchClassData()
         } catch (e) {
             console.error(e);
             throw e;
@@ -43,6 +50,11 @@ export function TwinClassGeneral({twinClass, onChange}: { twinClass: TwinClass, 
             }
         })
         return response.data?.twinClass;
+    }
+
+    if (!twinClass) {
+        console.error('TwinClassGeneral: no twin class');
+        return;
     }
 
     const classValues: { [key: string]: AutoEditDialogSettings } = {

@@ -14,7 +14,7 @@ import {Form, FormItem, FormLabel} from "@/components/base/form";
 import {ReactNode, useContext, useEffect, useState} from "react";
 import {Alert} from "@/components/base/alert";
 import {ApiContext} from "@/lib/api/api";
-import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/FeaturerInput";
+import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/featurer-input";
 import {TextAreaFormField, TextFormField} from "@/components/form-fields/text-form-field";
 import {ComboboxFormField} from "@/components/form-fields/combobox-form-field";
 import {CheckboxFormField} from "@/components/form-fields/checkbox-form-field";

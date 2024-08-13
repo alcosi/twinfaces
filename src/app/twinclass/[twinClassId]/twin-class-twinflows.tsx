@@ -8,6 +8,7 @@ import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
 import CreateTwinflowDialog from "@/app/twinclass/[twinClassId]/twin-class-twinflow-dialog";
+import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
 
 const columns: ColumnDef<TwinFlow>[] = [
     {
@@ -30,13 +31,19 @@ const columns: ColumnDef<TwinFlow>[] = [
     }
 ]
 
-export function TwinClassTwinflows({twinClass}: { twinClass: TwinClass }) {
+export function TwinClassTwinflows() {
     const [twinflowDialogOpen, setTwinflowDialogOpen] = useState(false)
     const api = useContext(ApiContext);
+    const {twinClass} = useContext(TwinClassContext);
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
 
     async function fetchTwinflows(pagination: PaginationState, filters: FiltersState) {
+        if (!twinClass?.id) {
+            toast.error("Twin class ID is missing");
+            return {data: [], pageCount: 0};
+        }
+
         try {
             const {data, error} = await api.twinflow.search({twinClassId: twinClass.id!, pagination})
             if (error) {
@@ -64,6 +71,11 @@ export function TwinClassTwinflows({twinClass}: { twinClass: TwinClass }) {
 
     function openCreateTwinflow() {
         setTwinflowDialogOpen(true);
+    }
+
+    if (!twinClass) {
+        console.error('TwinClassFields: no twin class')
+        return;
     }
 
     return <>

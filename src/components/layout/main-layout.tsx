@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {ThemeToggle} from "@/components/ThemeToggle";
+import {ThemeToggle} from "@/components/theme-toggle";
 import {Sheet, SheetContent, SheetTrigger} from "@/components/base/sheet";
 import {Button} from "@/components/base/button";
 import {Menu} from "lucide-react";

@@ -1,6 +1,6 @@
 'use client'
 
-import {Section, SideNavLayout} from "@/components/SideNavLayout";
+import {Section, SideNavLayout} from "@/components/layout/side-nav-layout";
 import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {
     TwinFlow,

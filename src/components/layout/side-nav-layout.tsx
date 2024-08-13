@@ -64,7 +64,8 @@ export function SideNavLayout({sections, defaultSectionKey, children, returnOpti
             {sections.map((section) => {
                 const isSelected = section.key === selectedSection?.key;
                 return <Link href={`#${section.key}`} key={section.key}>
-                    <Button variant='ghost' size='sm' className={cn(isSelected && 'font-semibold bg-accent', 'w-full justify-start')}>
+                    <Button variant='ghost' size='sm'
+                            className={cn(isSelected && 'font-semibold bg-accent', 'w-full justify-start')}>
                         {section.label}
                     </Button>
                 </Link>;
@@ -75,7 +76,10 @@ export function SideNavLayout({sections, defaultSectionKey, children, returnOpti
 
         <div className="flex-[4] pl-4 2xl:max-w-screen-xl mx-auto">
             {children}
-            {sections.map(section => section.key == selectedSection?.key && section.content)}
+            {sections.map(section => section.key == selectedSection?.key &&
+                <div key={section.key}>
+                    {section.content}
+                </div>)}
             {/*{selectedSection?.key === 'general' && twinClass &&*/}
             {/*    <TwinClassGeneral twinClass={twinClass} onChange={fetchClassData}/>}*/}
             {/*{selectedSection?.key === 'fields' && twinClass && <TwinClassFields twinClass={twinClass}/>}*/}

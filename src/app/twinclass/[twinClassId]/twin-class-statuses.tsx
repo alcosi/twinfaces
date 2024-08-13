@@ -7,13 +7,15 @@ import {Edit2Icon, Unplug} from "lucide-react";
 import CreateEditTwinStatusDialog from "@/app/twinclass/[twinClassId]/twin-status-dialog";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
-import {ImageWithFallback} from "@/components/ImageWithFallback";
+import {ImageWithFallback} from "@/components/image-with-fallback";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/base/tooltip";
+import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
 
-export function TwinClassStatuses({twinClass}: { twinClass: TwinClass }) {
+export function TwinClassStatuses() {
     const api = useContext(ApiContext);
+    const {twinClass} = useContext(TwinClassContext);
     const tableRef = useRef<DataTableHandle>(null);
     const [createEditStatusDialogOpen, setCreateEditStatusDialogOpen] = useState<boolean>(false);
     const [editedStatus, setEditedStatus] = useState<TwinClassStatus | null>(null);
@@ -64,7 +66,7 @@ export function TwinClassStatuses({twinClass}: { twinClass: TwinClass }) {
     ]
 
     async function fetchStatuses(_: PaginationState, filters: FiltersState) {
-        if (!twinClass.id) {
+        if (!twinClass?.id) {
             toast.error("Twin class ID is missing");
             return {data: [], pageCount: 0}
         }
@@ -108,6 +110,11 @@ export function TwinClassStatuses({twinClass}: { twinClass: TwinClass }) {
     function editStatus(status: TwinClassStatus) {
         setEditedStatus(status);
         setCreateEditStatusDialogOpen(true);
+    }
+
+    if (!twinClass) {
+        console.error('TwinClassFields: no twin class')
+        return;
     }
 
     return <>

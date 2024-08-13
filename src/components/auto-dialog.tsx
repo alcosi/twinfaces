@@ -4,7 +4,7 @@ import {Alert} from "@/components/base/alert";
 import {Button} from "@/components/base/button";
 import {useEffect, useMemo, useState} from "react";
 import {useForm} from "react-hook-form";
-import {AutoField, AutoFormValueInfo} from "@/components/AutoField";
+import {AutoField, AutoFormValueInfo} from "@/components/auto-field";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 
@@ -61,9 +61,11 @@ export function AutoDialog({open, onOpenChange, settings}: EditFieldDialogProps)
         if (!info) {
             return null
         }
-        return <AutoField info={info}
-                          onChange={(newFieldValue) => console.log('updateValueOfField', key, newFieldValue)}
-                          name={key} control={form.control}/>
+        return <AutoField
+            key={key}
+            info={info}
+            onChange={(newFieldValue) => console.log('updateValueOfField', key, newFieldValue)}
+            name={key} control={form.control}/>
     }
 
     async function internalSubmit(newValue: object) {

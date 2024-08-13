@@ -10,7 +10,7 @@ import {TwinClassDialog, ClassDialogMode} from "@/app/twinclass/twin-class-dialo
 import {ApiContext} from "@/lib/api/api";
 import Link from "next/link";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
-import {ImageWithFallback} from "@/components/ImageWithFallback";
+import {ImageWithFallback} from "@/components/image-with-fallback";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {useRouter} from "next/navigation";
 

@@ -9,8 +9,9 @@ import {useParams} from "next/navigation";
 import {TwinClassStatuses} from "@/app/twinclass/[twinClassId]/twin-class-statuses";
 import {TwinClassGeneral} from "@/app/twinclass/[twinClassId]/twin-class-general";
 import {TwinClassFields} from "@/app/twinclass/[twinClassId]/twin-class-fields";
-import {Section, SideNavLayout} from "@/components/SideNavLayout";
+import {Section, SideNavLayout} from "@/components/layout/side-nav-layout";
 import {TwinClassTwinflows} from "@/app/twinclass/[twinClassId]/twin-class-twinflows";
+import {TwinClassContextProvider} from "@/app/twinclass/[twinClassId]/twin-class-context";
 
 interface TwinClassPageProps {
     params: {
@@ -19,66 +20,68 @@ interface TwinClassPageProps {
 }
 
 export default function TwinClassPage({params: {twinClassId}}: TwinClassPageProps) {
-    const api = useContext(ApiContext);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [twinClass, setTwinClass] = useState<TwinClass | undefined>(undefined);
+    // const api = useContext(ApiContext);
+    // const [loading, setLoading] = useState<boolean>(false);
+    // const [twinClass, setTwinClass] = useState<TwinClass | undefined>(undefined);
 
-    useEffect(() => {
-        fetchClassData()
-    }, [])
+    // useEffect(() => {
+    //     fetchClassData()
+    // }, [])
 
-    const sections: Section[] = twinClass ? [
+    const sections: Section[] = [
         {
             key: 'general',
             label: 'General',
-            content: <TwinClassGeneral twinClass={twinClass} onChange={fetchClassData}/>
+            content: <TwinClassGeneral/>
         },
         {
             key: 'fields',
             label: 'Fields',
-            content: <TwinClassFields twinClass={twinClass}/>
+            content: <TwinClassFields/>
         },
         {
             key: 'statuses',
             label: 'Statuses',
-            content: <TwinClassStatuses twinClass={twinClass}/>
+            content: <TwinClassStatuses/>
         },
         {
             key: 'twinflows',
             label: 'Twinflows',
-            content: <TwinClassTwinflows twinClass={twinClass}/>
+            content: <TwinClassTwinflows/>
         }
-    ] : []
+    ]
 
-    function fetchClassData() {
-        setLoading(true);
-        api.twinClass.getById({
-            id: twinClassId,
-            query: {
-                showTwinClassMode: 'MANAGED',
-                showTwin2TwinClassMode: 'MANAGED',
-                showTwinClassHead2TwinClassMode: 'MANAGED',
-
-            }
-        }).then((response) => {
-            const data = response.data;
-            if (!data || data.status != 0) {
-                console.error('failed to fetch twin class', data)
-                let message = "Failed to load twin class";
-                if (data?.msg) message += `: ${data.msg}`;
-                toast.error(message);
-                return;
-            }
-            setTwinClass(data.twinClass);
-        }).catch((e) => {
-            console.error('exception while fetching twin class', e)
-            toast.error("Failed to fetch twin class")
-        }).finally(() => setLoading(false))
-    }
+    // function fetchClassData() {
+    //     setLoading(true);
+    //     api.twinClass.getById({
+    //         id: twinClassId,
+    //         query: {
+    //             showTwinClassMode: 'MANAGED',
+    //             showTwin2TwinClassMode: 'MANAGED',
+    //             showTwinClassHead2TwinClassMode: 'MANAGED',
+    //
+    //         }
+    //     }).then((response) => {
+    //         const data = response.data;
+    //         if (!data || data.status != 0) {
+    //             console.error('failed to fetch twin class', data)
+    //             let message = "Failed to load twin class";
+    //             if (data?.msg) message += `: ${data.msg}`;
+    //             toast.error(message);
+    //             return;
+    //         }
+    //         setTwinClass(data.twinClass);
+    //     }).catch((e) => {
+    //         console.error('exception while fetching twin class', e)
+    //         toast.error("Failed to fetch twin class")
+    //     }).finally(() => setLoading(false))
+    // }
 
     return <div>
-        {loading && <LoadingOverlay/>}
-        {twinClass && <SideNavLayout sections={sections}/>}
+        <TwinClassContextProvider twinClassId={twinClassId}>
+            {/*{twinClass && <SideNavLayout sections={sections}/>}*/}
+            <SideNavLayout sections={sections}/>
+        </TwinClassContextProvider>
     </div>
 }
 
