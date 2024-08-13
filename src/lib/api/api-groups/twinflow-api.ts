@@ -1,5 +1,10 @@
 import {ApiSettings, getApiDomainHeaders} from "@/lib/api/api";
-import {TwinFlowTransitionCreateRq, TwinFlowTransitionUpdateRq, TwinFlowUpdateRq} from "@/lib/api/api-types";
+import {
+    TwinFlowCreateRq,
+    TwinFlowTransitionCreateRq,
+    TwinFlowTransitionUpdateRq,
+    TwinFlowUpdateRq
+} from "@/lib/api/api-types";
 import {PaginationState} from "@tanstack/table-core";
 
 export function createTwinflowApi(settings: ApiSettings) {
@@ -23,7 +28,7 @@ export function createTwinflowApi(settings: ApiSettings) {
     //     })
     // }
 
-    function search({twinClassId, pagination}: {twinClassId: string, pagination: PaginationState}) {
+    function search({twinClassId, pagination}: { twinClassId: string, pagination: PaginationState }) {
         return settings.client.POST("/private/twinflow/search/v1", {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -42,7 +47,17 @@ export function createTwinflowApi(settings: ApiSettings) {
         })
     }
 
-    function update({id, body}: {id: string, body: TwinFlowUpdateRq}) {
+    function create({twinClassId, body}: { twinClassId: string, body: TwinFlowCreateRq }) {
+        return settings.client.POST("/private/twin_class/{twinClassId}/twinflow/v1", {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {twinClassId}
+            },
+            body: body
+        })
+    }
+
+    function update({id, body}: { id: string, body: TwinFlowUpdateRq }) {
         return settings.client.PUT("/private/twinflow/{twinflowId}/v1", {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -52,7 +67,7 @@ export function createTwinflowApi(settings: ApiSettings) {
         })
     }
 
-    function getById({twinFlowId}: {twinFlowId: string}) {
+    function getById({twinFlowId}: { twinFlowId: string }) {
         return settings.client.GET("/private/twinflow/{twinflowId}/v1", {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -87,12 +102,7 @@ export function createTwinflowApi(settings: ApiSettings) {
         })
     }
 
-    // function create({}: {data: }) {
-    //
-    // }
-
-    // return {create, update}
-    return {search,getById, update, createTransition, updateTransition}
+    return {search, getById, create, update, createTransition, updateTransition}
 }
 
 export type TwinflowApi = ReturnType<typeof createTwinflowApi>;

@@ -2179,7 +2179,7 @@ export interface components {
        * Format: uuid
        * @description Inbuilt TwinFactory Id
        */
-      inbuiltTtwinFactoryId?: string;
+      inbuiltTwinFactoryId?: string;
       /**
        * Format: uuid
        * @description Drafting TwinFactory Id
@@ -3280,7 +3280,7 @@ export interface components {
        * Format: uuid
        * @description Inbuilt TwinFactory Id
        */
-      inbuiltTtwinFactoryId?: string;
+      inbuiltTwinFactoryId?: string;
       /**
        * Format: uuid
        * @description Drafting TwinFactory Id

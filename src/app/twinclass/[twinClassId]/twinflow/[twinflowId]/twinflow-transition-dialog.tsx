@@ -18,6 +18,7 @@ import {ComboboxFormField} from "@/components/form-fields/combobox-form-field";
 import {TextAreaFormField, TextFormField} from "@/components/form-fields/text-form-field";
 import {Alert} from "@/components/base/alert";
 import {Button} from "@/components/base/button";
+import {useClassStatuses} from "@/lib/useClassStatuses";
 
 export interface TwinflowTransitionCreateEditDialogProps {
     open: boolean,
@@ -49,7 +50,7 @@ export function TwinflowTransitionCreateEditDialog({
 
     const [error, setError] = useState<string | null>(null)
 
-    const [statuses, setStatuses] = useState<TwinClassStatus[]>([])
+    const {getStatusesBySearch, findStatusById} = useClassStatuses({twinClassId})
 
     const existingAliases = useMemo(() => {
         if (!twinFlow) return [];
@@ -164,47 +165,8 @@ export function TwinflowTransitionCreateEditDialog({
         onSuccess?.();
     }
 
-    useEffect(() => {
-        fetchStatuses()
-    }, [twinClassId]);
-
     if (!twinFlow?.id) {
         return;
-    }
-
-    async function fetchStatuses() {
-        const response = await api.twinClass.getById({
-            id: twinClassId, query: {
-                showTwinClassMode: 'SHORT',
-                // showTwin2TwinClassMode: 'SHORT',
-                // showTwin2StatusMode: 'SHORT',
-                showTwinClass2StatusMode: 'DETAILED'
-            }
-        });
-
-        const data = response.data;
-        if (!data || data.status != 0) {
-            console.error('failed to fetch twin class fields', data)
-            let message = "Failed to load twin class fields";
-            if (data?.msg) message += `: ${data.msg}`;
-            toast.error(message);
-            return {data: [], pageCount: 0};
-        }
-
-        const values = Object.values(data.twinClass?.statusMap ?? {});
-        setStatuses(values);
-    }
-
-    async function getStatusesBySearch(search: string) {
-        return statuses.filter(status =>
-            (status.name ?? '').toLowerCase().includes(search.toLowerCase()) ||
-            (status.key ?? '').toLowerCase().includes(search.toLowerCase())
-        );
-    }
-
-    async function findStatusById(id: string) {
-        console.log('findStatusById', id, statuses)
-        return statuses.find(x => x.id === id);
     }
 
     return <Dialog open={open} onOpenChange={onOpenChangeInternal}>

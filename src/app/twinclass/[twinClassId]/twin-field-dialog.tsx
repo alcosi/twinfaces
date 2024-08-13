@@ -28,9 +28,6 @@ const twinFieldSchema = z.object({
     name: z.string().min(0).max(100),
     description: z.string(),
     required: z.boolean()
-    // descriptor: z.object({
-    //     fieldType: z.string()
-    // })
 })
 
 export default function CreateEditTwinFieldDialog({
@@ -81,9 +78,6 @@ export default function CreateEditTwinFieldDialog({
             name: "",
             description: "",
             required: false
-            // descriptor: {
-            //     fieldType: ""
-            // }
         }
     })
 

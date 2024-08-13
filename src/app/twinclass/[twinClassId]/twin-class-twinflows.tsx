@@ -1,5 +1,5 @@
 import {TwinClass, TwinFlow} from "@/lib/api/api-types";
-import {useContext, useRef} from "react";
+import {useContext, useRef, useState} from "react";
 import {toast} from "sonner";
 import {ApiContext} from "@/lib/api/api";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
@@ -7,6 +7,7 @@ import {useRouter} from "next/navigation";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
+import CreateTwinflowDialog from "@/app/twinclass/[twinClassId]/twin-class-twinflow-dialog";
 
 const columns: ColumnDef<TwinFlow>[] = [
     {
@@ -30,7 +31,7 @@ const columns: ColumnDef<TwinFlow>[] = [
 ]
 
 export function TwinClassTwinflows({twinClass}: { twinClass: TwinClass }) {
-    // const [twinflowDialogOpen, setTwinflowDialogOpen] = useState(false)
+    const [twinflowDialogOpen, setTwinflowDialogOpen] = useState(false)
     const api = useContext(ApiContext);
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
@@ -61,19 +62,26 @@ export function TwinClassTwinflows({twinClass}: { twinClass: TwinClass }) {
         }
     }
 
-    // function openCreateTwinflow() {
-    //     setTwinflowDialogOpen(true);
-    // }
+    function openCreateTwinflow() {
+        setTwinflowDialogOpen(true);
+    }
 
-    return <CrudDataTable
-        ref={tableRef}
-        columns={columns}
-        getRowId={(row) => row.id!}
-        fetcher={fetchTwinflows}
-        pageSizes={[10, 20, 50]}
-        onRowClick={(row) => router.push(`/twinclass/${row.twinClassId}/twinflow/${row.id}`)}
-        // createButton={{enabled: true, onClick: openCreateTwinflow, text: 'Create Twinflow'}}
-        // search={{enabled: true, placeholder: 'Search by key...'}}
-    />
+    return <>
+        <CrudDataTable
+            ref={tableRef}
+            columns={columns}
+            getRowId={(row) => row.id!}
+            fetcher={fetchTwinflows}
+            pageSizes={[10, 20, 50]}
+            onRowClick={(row) => router.push(`/twinclass/${row.twinClassId}/twinflow/${row.id}`)}
+            createButton={{enabled: true, onClick: openCreateTwinflow, text: 'Create Twinflow'}}
+            // search={{enabled: true, placeholder: 'Search by key...'}}
+        />
+        <CreateTwinflowDialog open={twinflowDialogOpen}
+                              onOpenChange={setTwinflowDialogOpen}
+                              twinClassId={twinClass.id!}
+                              onSuccess={tableRef.current?.refresh}
+        />
+    </>
 
 }
