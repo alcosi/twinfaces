@@ -189,6 +189,8 @@ export interface paths {
     post: operations["twinTransitionByAliasPerformBatchV1"];
   };
   "/private/transition/{transitionId}/v1": {
+    /** Returns transition details */
+    get: operations["transitionViewV1"];
     /** Update transition by id */
     post: operations["transitionUpdateV1"];
   };
@@ -2218,7 +2220,7 @@ export interface components {
       msg?: string;
       transition?: components["schemas"]["TwinflowTransitionBaseV2"];
     };
-    /** @description transitions map */
+    /** @description result - twinflow transition */
     TwinflowTransitionBaseV2: {
       /**
        * Format: uuid
@@ -2306,6 +2308,30 @@ export interface components {
        */
       total?: number;
     };
+    /** @description triggers */
+    TriggerV1: {
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /**
+       * Format: int32
+       * @description trigger featurer id
+       */
+      triggerFeaturerId?: number;
+      /** @description featurer params */
+      triggerParams?: {
+        [key: string]: string;
+      };
+      /** @description active */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+    };
     /** @description twinflow details */
     TwinflowBaseV3: {
       /**
@@ -2348,7 +2374,7 @@ export interface components {
       createdByUser?: components["schemas"]["UserV1"];
       /** @description transitions map */
       transitions?: {
-        [key: string]: components["schemas"]["TwinflowTransitionBaseV2"];
+        [key: string]: components["schemas"]["TwinflowTransitionBaseV3"];
       };
     };
     TwinflowListRsV1: {
@@ -2367,6 +2393,85 @@ export interface components {
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - twinflow list */
       twinflowList?: components["schemas"]["TwinflowBaseV3"][];
+    };
+    /** @description transitions map */
+    TwinflowTransitionBaseV3: {
+      /**
+       * Format: uuid
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      dstTwinStatusId?: string;
+      dstTwinStatus?: components["schemas"]["TwinStatusV1"];
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * @description alias
+       * @example start
+       */
+      alias?: string;
+      allowComment?: boolean;
+      allowAttachments?: boolean;
+      allowLinks?: boolean;
+      /**
+       * Format: uuid
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      srcTwinStatusId?: string;
+      srcTwinStatus?: components["schemas"]["TwinStatusV1"];
+      /**
+       * Format: uuid
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      permission?: components["schemas"]["PermissionV1"];
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      createdByUser?: components["schemas"]["UserV1"];
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /** @description validators */
+      validators?: components["schemas"]["ValidatorV1"][];
+      /** @description triggers */
+      triggers?: components["schemas"]["TriggerV1"][];
+    };
+    /** @description validators */
+    ValidatorV1: {
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /**
+       * Format: int32
+       * @description validator featurer id
+       */
+      validatorFeaturerId?: number;
+      /** @description featurer params */
+      validatorParams?: {
+        [key: string]: string;
+      };
+      /** @description invert */
+      invert?: boolean;
+      /** @description active */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
     };
     TwinflowCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
@@ -3286,6 +3391,116 @@ export interface components {
        * @description Drafting TwinFactory Id
        */
       draftingTwinFactoryId?: string;
+      validators?: components["schemas"]["ValidatorCudV1"];
+      triggers?: components["schemas"]["TriggerCudV1"];
+    };
+    /** @description triggers create list */
+    TriggerCreateV1: {
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /**
+       * Format: int32
+       * @description trigger featurer id
+       */
+      triggerFeaturerId?: number;
+      /** @description featurer params */
+      triggerParams?: {
+        [key: string]: string;
+      };
+      /** @description active */
+      active?: boolean;
+    };
+    /** @description triggers cud operations */
+    TriggerCudV1: {
+      /** @description triggers create list */
+      create?: components["schemas"]["TriggerCreateV1"][];
+      /** @description triggers update list */
+      update?: components["schemas"]["TriggerUpdateV1"][];
+      /** @description triggers ids list to deletes */
+      delete?: string[];
+    };
+    /** @description triggers update list */
+    TriggerUpdateV1: {
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /**
+       * Format: int32
+       * @description trigger featurer id
+       */
+      triggerFeaturerId?: number;
+      /** @description featurer params */
+      triggerParams?: {
+        [key: string]: string;
+      };
+      /** @description active */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+    };
+    /** @description validators create list */
+    ValidatorCreateV1: {
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /**
+       * Format: int32
+       * @description validator featurer id
+       */
+      validatorFeaturerId?: number;
+      /** @description featurer params */
+      validatorParams?: {
+        [key: string]: string;
+      };
+      /** @description invert */
+      invert?: boolean;
+      /** @description active */
+      active?: boolean;
+    };
+    /** @description validators cud operations */
+    ValidatorCudV1: {
+      /** @description validators create list */
+      create?: components["schemas"]["ValidatorCreateV1"][];
+      /** @description validators update list */
+      update?: components["schemas"]["ValidatorUpdateV1"][];
+      /** @description validators ids list to deletes */
+      delete?: string[];
+    };
+    /** @description validators update list */
+    ValidatorUpdateV1: {
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /**
+       * Format: int32
+       * @description validator featurer id
+       */
+      validatorFeaturerId?: number;
+      /** @description featurer params */
+      validatorParams?: {
+        [key: string]: string;
+      };
+      /** @description invert */
+      invert?: boolean;
+      /** @description active */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
     };
     TwinflowTransitionUpdateRsV1: {
       /**
@@ -4226,7 +4441,7 @@ export interface operations {
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinflow2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinflow2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflowInitStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -4564,13 +4779,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -4631,13 +4846,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -4801,7 +5016,7 @@ export interface operations {
   twinCommentV1: {
     parameters: {
       query?: {
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -4841,7 +5056,7 @@ export interface operations {
   twinCommentUpdateV1: {
     parameters: {
       query?: {
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5117,7 +5332,7 @@ export interface operations {
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -5160,7 +5375,7 @@ export interface operations {
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinflow2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinflow2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflowInitStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5586,13 +5801,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5885,13 +6100,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5990,13 +6205,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6063,13 +6278,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6132,13 +6347,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6201,13 +6416,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6304,14 +6519,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6375,14 +6590,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6441,6 +6656,44 @@ export interface operations {
       };
     };
   };
+  /** Returns transition details */
+  transitionViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example f6606fa2-c047-4ba9-a92c-84051df681ab */
+        transitionId: string;
+      };
+    };
+    responses: {
+      /** @description Transition details prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinflowViewRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Update transition by id */
   transitionUpdateV1: {
     parameters: {
@@ -6448,7 +6701,7 @@ export interface operations {
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6488,14 +6741,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6559,14 +6812,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6954,7 +7207,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7445,13 +7698,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7685,13 +7938,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7752,13 +8005,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7819,13 +8072,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8207,7 +8460,7 @@ export interface operations {
   attachmentViewV1: {
     parameters: {
       query?: {
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showAttachmentMode?: "HIDE" | "SHORT" | "DETAILED";

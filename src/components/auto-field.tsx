@@ -1,7 +1,3 @@
-import {useEffect} from "react";
-import {FormControl, FormDescription, FormItem, FormLabel} from "@/components/base/form";
-import {Checkbox} from "@/components/base/checkbox";
-import {Input} from "@/components/base/input";
 import {Control, FieldPath} from "react-hook-form";
 import {TextFormField, TextFormItem} from "@/components/form-fields/text-form-field";
 import {
@@ -10,7 +6,7 @@ import {
     ComboboxFormItem
 } from "@/components/form-fields/combobox-form-field";
 import {ComboboxProps} from "@/components/base/combobox";
-import {CheckboxFormField} from "@/components/form-fields/checkbox-form-field";
+import {CheckboxFormField, CheckboxFormItem} from "@/components/form-fields/checkbox-form-field";
 import {FeaturerFormField, FeaturerFormItem} from "@/components/form-fields/featurer-form-field";
 
 
@@ -26,15 +22,21 @@ export enum AutoFormValueType {
 
 export type AutoFormValueInfo =
     AutoFormCommonInfo
-    & (AutoFormSimpleValueInfo | AutoFormComboboxValueInfo | AutoFormFeaturerValueInfo | AutoFormSelectValueInfo)
+    & (AutoFormSimpleValueInfo | AutoFormCheckboxValueInfo | AutoFormComboboxValueInfo | AutoFormFeaturerValueInfo | AutoFormSelectValueInfo)
 
 export interface AutoFormCommonInfo {
     label: string
     description?: string
+    defaultValue?: any
 }
 
 export interface AutoFormSimpleValueInfo {
-    type: AutoFormValueType.string | AutoFormValueType.boolean | AutoFormValueType.number | AutoFormValueType.uuid
+    type: AutoFormValueType.string | AutoFormValueType.number | AutoFormValueType.uuid
+}
+
+export interface AutoFormCheckboxValueInfo {
+    type: AutoFormValueType.boolean,
+    hasIndeterminate?: boolean
 }
 
 export interface AutoFormComboboxValueInfo extends ComboboxFormFieldProps<any>, ComboboxProps<any> {
@@ -70,17 +72,7 @@ export function AutoField({info, value, onChange, name, control}: AutoFormFieldP
     if (info.type === AutoFormValueType.boolean) {
         return name && control ?
             <CheckboxFormField {...info} name={name} control={control}/> :
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                    <Checkbox
-                        checked={value} className={'ml-3'}
-                        onCheckedChange={newChecked => setValue(newChecked)}/>
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                    <FormLabel>{info.label}</FormLabel>
-                    {info.description && <FormDescription>{info.description}</FormDescription>}
-                </div>
-            </FormItem>
+            <CheckboxFormItem {...info} fieldValue={value} onChange={(x) => setValue(x)}/>
     } else if (info.type === AutoFormValueType.combobox) {
         console.log('Combobox', info, value, onChange)
         return name && control ?
@@ -94,25 +86,6 @@ export function AutoField({info, value, onChange, name, control}: AutoFormFieldP
     else {
         return name && control ? <TextFormField {...info} name={name} control={control}/> :
             <TextFormItem {...info} value={value} onChange={(e) => setValue(e?.target.value)}/>
+        // return <TextItem {...info} value={value} onChange={(e) => setValue(e?.target.value)}/>
     }
-
-    // function renderInput() {
-    //     switch (info.type) {
-    //         // TODO Support other parameter types
-    //         case AutoFormValueType.string:
-    //         default:
-    //             return <>
-    //                 {name && control ?
-    //                     <TextFormField name={name} control={control}/> :
-    //                     <Input value={value} onChange={(e) => setValue(e.target.value)}/>
-    //                 }
-    //             </>
-    //     }
-    // }
-    //
-    // return <FormItem>
-    //     <FormLabel>{info.label}</FormLabel>
-    //     {renderInput()}
-    //     {info.description && <FormDescription>{info.description}</FormDescription>}
-    // </FormItem>
 }

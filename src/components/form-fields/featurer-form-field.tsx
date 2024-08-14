@@ -1,11 +1,12 @@
 import {FieldValues, Path, PathValue, useFormContext} from "react-hook-form";
-import {FormFieldProps} from "@/components/form-fields/form-fields-common";
+import {FormFieldProps, FormItemDescription, FormItemLabel} from "@/components/form-fields/form-fields-common";
 import {ComboboxProps} from "@/components/base/combobox";
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/base/form";
 import {ComboboxFormItem} from "@/components/form-fields/combobox-form-field";
 import {FeaturerInput, FeaturerInputProps, FeaturerValue} from "@/components/featurer-input";
 import {ReactNode, useEffect} from "react";
 import {cn} from "@/lib/utils";
+import * as React from "react";
 
 export interface FeaturerFormFieldProps<TFormModel extends FieldValues> extends FeaturerInputProps {
     paramsName: Path<TFormModel>;
@@ -53,6 +54,7 @@ export function FeaturerFormField<TFormModel extends FieldValues>(
                           label={label}
                           description={description}
                           required={required}
+                          inForm={true}
                           {...props}
                       />}
     />
@@ -67,6 +69,7 @@ export function FeaturerFormItem({
                               description,
                               required,
                               buttonClassName,
+                                     inForm,
                               ...props
                           }: Omit<FeaturerInputProps, 'defaultId' | 'defaultParams' | 'onChange'> & {
     typeId: number,
@@ -76,11 +79,12 @@ export function FeaturerFormItem({
     label?: ReactNode,
     description?: ReactNode,
     required?: boolean,
+    inForm?: boolean
 }) {
     return <FormItem>
-        {label && <FormLabel>
+        {label && <FormItemLabel>
             {label} {required && <span className="text-red-500">*</span>}
-        </FormLabel>}
+        </FormItemLabel>}
         <FeaturerInput
             typeId={typeId}
             defaultId={fieldValue}
@@ -89,33 +93,8 @@ export function FeaturerFormItem({
             buttonClassName={cn('w-full', buttonClassName)}
             {...props}
         />
-        {description && <FormDescription>{description}</FormDescription>}
-        <FormMessage/>
+
+        {description && <FormItemDescription inForm={inForm}>{description}</FormItemDescription>}
+        {inForm && <FormMessage/>}
     </FormItem>
-    // return <FormItem>
-    {/*{label && <FormLabel>*/
-    }
-    {/*    {label} {required && <span className="text-red-500">*</span>}*/
-    }
-    {/*</FormLabel>}*/
-    }
-    {/*<FormControl>*/
-    }
-    {/*<div>*/
-    }
-    // <FeaturerInput
-    //     typeId={typeId}
-    //     defaultId={fieldValue}
-    //     defaultParams={paramsValue}
-    //     onChange={onChange}
-    // />
-    {/*</div>*/
-    }
-    {/*</FormControl>*/
-    }
-    {/*{description && <FormDescription>{description}</FormDescription>}*/
-    }
-    {/*<FormMessage/>*/
-    }
-    /*</FormItem>*/
 }

@@ -15,7 +15,7 @@ export type TwinClassStatusUpdateRq = components["schemas"]["TwinStatusUpdateRqV
 export type TwinFlow = components["schemas"]["TwinflowBaseV3"]
 export type TwinFlowCreateRq = components["schemas"]["TwinflowCreateRqV1"]
 export type TwinFlowUpdateRq =  components["schemas"]["TwinflowUpdateRqV1"]
-export type TwinFlowTransition = components["schemas"]["TwinflowTransitionBaseV2"]
+export type TwinFlowTransition = components["schemas"]["TwinflowTransitionBaseV3"]
 export type TwinFlowTransitionCreateRq = components["schemas"]["TransitionCreateRqV1"]
 export type TwinFlowTransitionUpdateRq = components["schemas"]["TransitionUpdateRqV1"]
 

@@ -11,7 +11,17 @@ import {operations} from "@/lib/api/generated/schema";
 
 export function createTwinClassApi(settings: ApiSettings) {
 
-    function search({pagination, search}: { pagination: PaginationState, search?: string }) {
+    function search({pagination, search, nameFilter, abstractFilter}: {
+        pagination: PaginationState,
+        search?: string,
+        nameFilter?: string,
+        abstractFilter?: boolean
+    }) {
+        var abstract: "ANY" | "ONLY" | "ONLY_NOT" = "ANY";
+        if (abstractFilter !== undefined) {
+            abstract = abstractFilter ? "ONLY" : "ONLY_NOT";
+        }
+
         return settings.client.POST('/private/twin_class/search/v1', {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -23,12 +33,19 @@ export function createTwinClassApi(settings: ApiSettings) {
             },
             body: {
                 twinClassKeyLikeList: search ? ['%' + search + '%'] : undefined,
-                ownerType: 'DOMAIN'
-            }
-        })
+                nameI18nLikeList: nameFilter ? ['%' + nameFilter + '%'] : undefined,
+                abstractt: abstract,
+                ownerType
+    :
+        'DOMAIN'
+    }
+    })
     }
 
-    function getByKey({key, query = {}}: { key: string, query: operations['twinClassViewByKeyV1']['parameters']['query'] }) {
+    function getByKey({key, query = {}}: {
+        key: string,
+        query: operations['twinClassViewByKeyV1']['parameters']['query']
+    }) {
         return settings.client.GET(`/private/twin_class_by_key/{twinClassKey}/v1`, {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -92,7 +109,7 @@ export function createTwinClassApi(settings: ApiSettings) {
         })
     }
 
-    function updateField({fieldId, body}: { fieldId: string, body: TwinClassFieldUpdateRq}) {
+    function updateField({fieldId, body}: { fieldId: string, body: TwinClassFieldUpdateRq }) {
         return settings.client.PUT('/private/twin_class_field/{twinClassFieldId}/v1', {
             params: {
                 header: getApiDomainHeaders(settings),

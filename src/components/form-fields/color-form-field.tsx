@@ -1,8 +1,9 @@
 import {FieldValues} from "react-hook-form";
-import {FormFieldProps} from "@/components/form-fields/form-fields-common";
+import {FormFieldProps, FormItemDescription, FormItemLabel} from "@/components/form-fields/form-fields-common";
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/base/form";
 import {ColorPicker} from "@/components/base/color-picker";
 import {Component, ReactNode} from "react";
+import * as React from "react";
 
 
 export function ColorPickerFormField<T extends FieldValues>({
@@ -18,6 +19,7 @@ export function ColorPickerFormField<T extends FieldValues>({
                               description={description}
                               fieldValue={field.value}
                               onChange={field.onChange}
+                              inForm={true}
                           />
                       )}/>
 }
@@ -28,21 +30,23 @@ export class ColorPickerFormItem extends Component<{
     label?: ReactNode,
     description?: ReactNode,
     required?: boolean
+    inForm?: boolean
 }> {
     render() {
         let {
             fieldValue,
             onChange,
             label,
-            description
+            description,
+            inForm,
         } = this.props;
         return <FormItem>
-            {label && <FormLabel>{label}</FormLabel>}
+            {label && <FormItemLabel inForm={inForm}>{label}</FormItemLabel> }
             <FormControl>
                 <ColorPicker value={fieldValue} onChange={onChange}/>
             </FormControl>
-            {description && <FormDescription>{description}</FormDescription>}
-            <FormMessage/>
+            {description && <FormItemDescription inForm={inForm}>{description}</FormItemDescription>}
+            {inForm && <FormMessage/>}
         </FormItem>
     }
 }

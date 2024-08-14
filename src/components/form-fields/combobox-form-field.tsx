@@ -1,9 +1,10 @@
 import {ControllerRenderProps, FieldValues, Path} from "react-hook-form";
-import {FormFieldProps} from "@/components/form-fields/form-fields-common";
+import {FormFieldProps, FormItemDescription, FormItemLabel} from "@/components/form-fields/form-fields-common";
 import {Combobox, ComboboxHandle, ComboboxProps} from "@/components/base/combobox";
 import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/base/form";
 import {ReactNode, useEffect, useRef} from "react";
 import {cn} from "@/lib/utils";
+import * as React from "react";
 
 export interface ComboboxFormFieldProps<T> {
     getById: (id: string) => Promise<T | undefined>;
@@ -27,6 +28,7 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>(
                           buttonClassName={buttonClassName}
                           onChange={(val) => field.onChange(val && props.getItemKey(val))}
                           fieldValue={field.value}
+                          inForm={true}
                           {...props}
                       />}
     />
@@ -41,6 +43,7 @@ export function ComboboxFormItem<TFieldModel>(
         description,
         required,
         buttonClassName,
+        inForm,
         ...props
     }: ComboboxProps<TFieldModel> & ComboboxFormFieldProps<TFieldModel> & {
         fieldValue?: string,
@@ -48,6 +51,7 @@ export function ComboboxFormItem<TFieldModel>(
         label?: ReactNode,
         description?: ReactNode,
         required?: boolean
+        inForm?: boolean
     }) {
     const comboboxRef = useRef(null);
 
@@ -82,9 +86,9 @@ export function ComboboxFormItem<TFieldModel>(
     // }
 
     return <FormItem>
-        {label && <FormLabel>
+        {label && <FormItemLabel>
             {label} {required && <span className="text-red-500">*</span>}
-        </FormLabel>}
+        </FormItemLabel>}
         <FormControl>
             <div>
                 <Combobox<TFieldModel>
@@ -94,7 +98,7 @@ export function ComboboxFormItem<TFieldModel>(
                     {...props}/>
             </div>
         </FormControl>
-        {description && <FormDescription>{description}</FormDescription>}
-        <FormMessage/>
+        {description && <FormItemDescription inForm={inForm}>{description}</FormItemDescription>}
+        {inForm && <FormMessage/>}
     </FormItem>
 }
