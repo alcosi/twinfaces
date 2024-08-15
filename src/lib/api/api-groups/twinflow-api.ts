@@ -62,6 +62,21 @@ export function createTwinflowApi(settings: ApiSettings) {
         })
     }
 
+    function getById({twinFlowId}: { twinFlowId: string }) {
+        return settings.client.GET("/private/twinflow/{twinflowId}/v1", {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {twinflowId: twinFlowId},
+                query: {
+                    showTwinflowMode: 'DETAILED',
+                    showTwinflow2TransitionMode: 'DETAILED',
+                    showTransition2StatusMode: 'SHORT',
+                    showTwinflowInitStatus2StatusMode: 'SHORT',
+                }
+            },
+        })
+    }
+
     function create({twinClassId, body}: { twinClassId: string, body: TwinFlowCreateRq }) {
         return settings.client.POST("/private/twin_class/{twinClassId}/twinflow/v1", {
             params: {
@@ -82,17 +97,12 @@ export function createTwinflowApi(settings: ApiSettings) {
         })
     }
 
-    function getById({twinFlowId}: { twinFlowId: string }) {
-        return settings.client.GET("/private/twinflow/{twinflowId}/v1", {
+
+    function getTransitionById({transitionId}: { transitionId: string }) {
+        return settings.client.GET("/private/transition/{transitionId}/v1", {
             params: {
                 header: getApiDomainHeaders(settings),
-                path: {twinflowId: twinFlowId},
-                query: {
-                    showTwinflowMode: 'DETAILED',
-                    showTwinflow2TransitionMode: 'DETAILED',
-                    showTransition2StatusMode: 'SHORT',
-                    showTwinflowInitStatus2StatusMode: 'SHORT',
-                }
+                path: {transitionId}
             },
         })
     }
@@ -117,7 +127,7 @@ export function createTwinflowApi(settings: ApiSettings) {
         })
     }
 
-    return {search, getById, create, update, createTransition, updateTransition}
+    return {search, getById, create, update, getTransitionById, createTransition, updateTransition}
 }
 
 export type TwinflowApi = ReturnType<typeof createTwinflowApi>;

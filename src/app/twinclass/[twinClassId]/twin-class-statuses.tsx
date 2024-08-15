@@ -15,7 +15,7 @@ import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context
 
 export function TwinClassStatuses() {
     const api = useContext(ApiContext);
-    const {twinClass} = useContext(TwinClassContext);
+    const {twinClass, fetchClassData} = useContext(TwinClassContext);
     const tableRef = useRef<DataTableHandle>(null);
     const [createEditStatusDialogOpen, setCreateEditStatusDialogOpen] = useState<boolean>(false);
     const [editedStatus, setEditedStatus] = useState<TwinClassStatus | null>(null);
@@ -112,6 +112,11 @@ export function TwinClassStatuses() {
         setCreateEditStatusDialogOpen(true);
     }
 
+    function onChangeSuccess() {
+        fetchClassData()
+        tableRef.current?.refresh()
+    }
+
     if (!twinClass) {
         console.error('TwinClassFields: no twin class')
         return;
@@ -134,6 +139,6 @@ export function TwinClassStatuses() {
 
         <CreateEditTwinStatusDialog open={createEditStatusDialogOpen} twinClassId={twinClass.id!} status={editedStatus}
                                     onOpenChange={setCreateEditStatusDialogOpen}
-                                    onSuccess={tableRef.current?.refresh}/>
+                                    onSuccess={onChangeSuccess}/>
     </>
 }
