@@ -5,39 +5,13 @@ import {AutoDialog, AutoEditDialogSettings} from "@/components/auto-dialog";
 import {toast} from "sonner";
 import {AutoFormValueType} from "@/components/auto-field";
 import {Table, TableBody, TableCell, TableRow} from "@/components/base/table";
+import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
 
 export function TwinflowGeneral({twinflow, onChange}: { twinflow: TwinFlow, onChange: () => any }) {
     const api = useContext(ApiContext);
-    const [statuses, setStatuses] = useState<TwinClassStatus[]>([])
+    const {getStatusesBySearch, findStatusById} = useContext(TwinClassContext);
     const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
     const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] = useState<AutoEditDialogSettings | undefined>(undefined);
-
-    useEffect(() => {
-        fetchStatuses()
-    }, [twinflow]);
-
-    async function fetchStatuses() {
-        const response = await api.twinClass.getById({
-            id: twinflow.twinClassId!, query: {
-                showTwinClassMode: 'SHORT',
-                // showTwin2TwinClassMode: 'SHORT',
-                // showTwin2StatusMode: 'SHORT',
-                showTwinClass2StatusMode: 'DETAILED'
-            }
-        });
-
-        const data = response.data;
-        if (!data || data.status != 0) {
-            console.error('failed to fetch twin class fields', data)
-            let message = "Failed to load twin class fields";
-            if (data?.msg) message += `: ${data.msg}`;
-            toast.error(message);
-            return {data: [], pageCount: 0};
-        }
-
-        const values = Object.values(data.twinClass?.statusMap ?? {});
-        setStatuses(values);
-    }
 
     async function updateTwinFlow(newFlow: TwinFlowUpdateRq) {
         try {
@@ -48,18 +22,6 @@ export function TwinflowGeneral({twinflow, onChange}: { twinflow: TwinFlow, onCh
             console.error(e);
             throw e;
         }
-    }
-
-    async function getStatusesBySearch(search: string) {
-        return statuses.filter(status =>
-            (status.name ?? '').toLowerCase().includes(search.toLowerCase()) ||
-            (status.key ?? '').toLowerCase().includes(search.toLowerCase())
-        );
-    }
-
-    async function findStatusById(id: string) {
-        console.log('findStatusById', id, statuses)
-        return statuses.find(x => x.id === id);
     }
 
     const nameAutoDialogSettings: AutoEditDialogSettings = {

@@ -1,5 +1,4 @@
 import {
-    TwinClassCreateRq,
     TwinClassStatus,
     TwinClassStatusCreateRq,
     TwinClassStatusUpdateRq
