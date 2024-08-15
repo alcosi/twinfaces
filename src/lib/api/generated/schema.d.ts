@@ -409,10 +409,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
     };
     /** @description I18n description */
     I18nV1: {
@@ -590,10 +595,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       twinStatus?: components["schemas"]["TwinStatusV1"];
     };
     /** @description Map of statuses. Will be filled only if lazyRelations mode is true */
@@ -1007,10 +1017,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       field?: components["schemas"]["TwinClassFieldV1"];
     };
     /** @description field */
@@ -1536,10 +1551,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       twinClass?: components["schemas"]["TwinClassV1"];
     };
@@ -1887,10 +1907,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       twin?: components["schemas"]["TwinV2"];
     };
@@ -1957,10 +1982,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       twinTouch?: components["schemas"]["TwinTouchV1"];
     };
     /** @description twin touch */
@@ -2002,10 +2032,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       comment?: components["schemas"]["CommentViewV1"];
     };
     /** @description comment data */
@@ -2062,10 +2097,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description map { data list option id / data list option } */
       dataListOptionMap?: {
         [key: string]: components["schemas"]["DataListOptionV1"];
@@ -2083,10 +2123,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description results - data lists list */
       dataListList?: components["schemas"]["DataListV1"][];
     };
@@ -2102,10 +2147,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description user group list */
       userGroupList?: components["schemas"]["UserGroupV1"][];
     };
@@ -2214,10 +2264,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       transition?: components["schemas"]["TwinflowTransitionBaseV2"];
     };
     /** @description result - twinflow transition */
@@ -2385,16 +2440,21 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - twinflow list */
       twinflowList?: components["schemas"]["TwinflowBaseV3"][];
     };
-    /** @description transitions map */
+    /** @description transition details */
     TwinflowTransitionBaseV3: {
       /**
        * Format: uuid
@@ -2491,10 +2551,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       twinClass?: components["schemas"]["TwinClassV1"];
     };
@@ -2525,10 +2590,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       twinStatus?: components["schemas"]["TwinStatusV1"];
     };
     TwinClassFieldCreateRqV1: {
@@ -2714,10 +2784,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - twin class list */
@@ -2788,10 +2863,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - transfers list */
@@ -2890,10 +2970,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description id */
       twinLinkIdList?: string[];
     };
@@ -2911,10 +2996,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /**
        * Format: uuid
        * @description twinId
@@ -2938,10 +3028,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description id */
       attachmentIdList?: string[];
     };
@@ -3002,10 +3097,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /**
        * Format: uuid
        * @description new twin id
@@ -3176,10 +3276,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - transfers list */
@@ -3199,10 +3304,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description Map { frontendId / count } */
       response?: {
         [key: string]: number;
@@ -3333,10 +3443,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       /** @description list of twins from input */
       transitionedTwinList?: components["schemas"]["TwinV2"][];
@@ -3510,10 +3625,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       transition?: components["schemas"]["TwinflowTransitionBaseV2"];
     };
     UserRefSpaceRoleSearchV1: {
@@ -3545,10 +3665,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description space role list */
@@ -3579,10 +3704,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description user list */
       userList?: components["schemas"]["UserV1"][];
     };
@@ -3619,10 +3749,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description featurer list */
@@ -3775,10 +3910,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /**
        * Format: uuid
        * @description New comment id
@@ -3814,10 +3954,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description locales in domain */
       localeList?: components["schemas"]["LocaleV1"][];
     };
@@ -3829,10 +3974,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /**
        * Format: uuid
        * @description id
@@ -3849,10 +3999,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       dataList?: components["schemas"]["DataListV1"];
     };
     /** @description permission groups list */
@@ -3882,10 +4037,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description permission groups list */
       permissionGroups?: components["schemas"]["PermissionGroupWithPermissionsV1"][];
     };
@@ -3914,10 +4074,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description permission list */
       permissionList?: components["schemas"]["PermissionWithGroupV1"][];
     };
@@ -3948,10 +4113,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description locale */
       locale?: string;
     };
@@ -3963,10 +4133,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       twinflow?: components["schemas"]["TwinflowBaseV3"];
     };
@@ -3978,10 +4153,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description results - valid widget list */
       widgetList?: components["schemas"]["WidgetV1"][];
     };
@@ -4012,10 +4192,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       forwardLinkMap?: {
         [key: string]: components["schemas"]["TwinClassLinkV1"];
@@ -4032,10 +4217,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description results - twin class fields list */
       twinClassFieldList?: components["schemas"]["TwinClassFieldV1"][];
     };
@@ -4047,10 +4237,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description results - card list */
       cardList?: components["schemas"]["CardV1"][];
     };
@@ -4130,10 +4325,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       twin?: components["schemas"]["TwinV1"];
     };
@@ -4145,10 +4345,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description history list */
@@ -4193,6 +4398,26 @@ export interface components {
       changeDescription?: string;
       pagination?: components["schemas"]["PaginationV1"];
     };
+    TransitionViewRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      transition?: components["schemas"]["TwinflowTransitionBaseV3"];
+    };
     CommandRsV1: {
       /**
        * Format: int32
@@ -4201,10 +4426,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description Command for run script */
       command?: string;
     };
@@ -4216,10 +4446,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       /** @description Info attributes key/value */
       attributes?: {
         [key: string]: string;
@@ -4233,10 +4468,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       pagination?: components["schemas"]["PaginationV1"];
       /** @description domain list */
       domainList?: components["schemas"]["DomainViewRsv1"][];
@@ -4249,10 +4489,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description comment data */
@@ -4266,10 +4511,15 @@ export interface components {
        */
       status?: number;
       /**
-       * @description request processing status description
+       * @description User friendly, localized request processing status description
        * @example success
        */
       msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
       attachment?: components["schemas"]["AttachmentViewV2"];
     };
     /** @description attachment details */
@@ -6683,7 +6933,7 @@ export interface operations {
       /** @description Transition details prepared */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinflowViewRsV1"];
+          "application/json": components["schemas"]["TransitionViewRsV1"];
         };
       };
       /** @description Access is denied */

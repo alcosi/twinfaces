@@ -1,5 +1,5 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import {TwinClass} from "@/lib/api/api-types";
+import {TwinClass, TwinClassStatus} from "@/lib/api/api-types";
 import {ApiContext} from "@/lib/api/api";
 import {toast} from "sonner";
 import {LoadingOverlay} from "@/components/base/loading";
@@ -9,7 +9,10 @@ interface TwinClassContextProps {
     twinClassId: string,
     twinClass: TwinClass | undefined,
     loading: boolean,
-    fetchClassData: () => void
+    fetchClassData: () => void,
+    statuses: TwinClassStatus[],
+    getStatusesBySearch: (search: string) => Promise<TwinClassStatus[]>,
+    findStatusById: (id: string) => Promise<TwinClassStatus | undefined>
 }
 
 export const TwinClassContext = createContext<TwinClassContextProps>({} as TwinClassContextProps);
@@ -18,6 +21,7 @@ export function TwinClassContextProvider({twinClassId, children}:{twinClassId: s
     const api = useContext(ApiContext);
     const [loading, setLoading] = useState<boolean>(false);
     const [twinClass, setTwinClass] = useState<TwinClass | undefined>(undefined);
+    const [statuses, setStatuses] = useState<TwinClassStatus[]>([])
 
     useEffect(() => {
         fetchClassData()
@@ -31,6 +35,7 @@ export function TwinClassContextProvider({twinClassId, children}:{twinClassId: s
                 showTwinClassMode: 'MANAGED',
                 showTwin2TwinClassMode: 'MANAGED',
                 showTwinClassHead2TwinClassMode: 'MANAGED',
+                showTwinClass2StatusMode: 'DETAILED'
             }
         }).then((response) => {
             const data = response.data;
@@ -42,17 +47,32 @@ export function TwinClassContextProvider({twinClassId, children}:{twinClassId: s
                 return;
             }
             setTwinClass(data.twinClass);
+            setStatuses(data.twinClass?.statusMap ? Object.values(data.twinClass?.statusMap) : []);
         }).catch((e) => {
             console.error('exception while fetching twin class', e)
             toast.error("Failed to fetch twin class")
         }).finally(() => setLoading(false))
     }
 
+    async function getStatusesBySearch(search: string) {
+        return statuses.filter(status =>
+            (status.name ?? '').toLowerCase().includes(search.toLowerCase()) ||
+            (status.key ?? '').toLowerCase().includes(search.toLowerCase())
+        );
+    }
+
+    async function findStatusById(id: string) {
+        return statuses.find(x => x.id === id);
+    }
+
     return <TwinClassContext.Provider value={{
         twinClassId,
         twinClass: twinClass,
         loading,
-        fetchClassData
+        fetchClassData,
+        statuses,
+        getStatusesBySearch,
+        findStatusById
     }}>
         {loading && <LoadingOverlay/>}
         {!loading && children}
