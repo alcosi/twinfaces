@@ -24,8 +24,8 @@ export function TextFormField<T extends FieldValues>({
     const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
     return <FormField control={control} name={name}
                       render={({field}) => {
-
                           return <TextFormItem
+                              autoFocus={name === 'key'}
                               fieldValue={field.value} onChange={x => field.onChange(x)}
                               inputId={inputId} label={label} description={description}
                               suggestions={suggestions} inForm={true}/>
