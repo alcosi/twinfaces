@@ -1,24 +1,27 @@
 import {
-    Dialog, DialogContent,
+    Dialog,
+    DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
-    DialogTitle, DialogTrigger
+    DialogTitle,
+    DialogTrigger
 } from "@/components/base/dialog";
 import {TwinClass, TwinClassCreateRq} from "@/lib/api/api-types";
 import {Button} from "@/components/base/button";
 import {z} from "zod";
-import {Control, useForm, FieldValues, FieldPath, useWatch} from "react-hook-form";
+import {Control, FieldPath, FieldValues, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormItem, FormLabel} from "@/components/base/form";
 import {ReactNode, useContext, useEffect, useState} from "react";
 import {Alert} from "@/components/base/alert";
 import {ApiContext} from "@/lib/api/api";
-import {FeaturerInput, FeaturerTypes, FeaturerValue} from "@/components/featurer-input";
+import {FeaturerTypes, FeaturerValue} from "@/components/featurer-input";
 import {TextAreaFormField, TextFormField} from "@/components/form-fields/text-form-field";
 import {ComboboxFormField} from "@/components/form-fields/combobox-form-field";
 import {CheckboxFormField} from "@/components/form-fields/checkbox-form-field";
 import {FeaturerFormField} from "@/components/form-fields/featurer-form-field";
+import {Separator} from "@/components/base/separator"
 
 interface ClassDialogProps {
     open: boolean,
@@ -181,7 +184,7 @@ export function TwinClassDialog({
 
 
     return <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-        <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+        <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]" showCloseButton={false}>
             <DialogTrigger asChild>
                 Open
             </DialogTrigger>
@@ -193,86 +196,101 @@ export function TwinClassDialog({
                 <DialogDescription>
 
                 </DialogDescription>
+                <Separator className="border-t-2 border-t-[#5e5e5e]"/>
             </DialogHeader>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <TextFormField control={form.control} name="key" label="Key"/>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className="space-y-8 p-1">
+                        <TextFormField control={form.control} name="key" label="Key"/>
 
-                    <TextFormField control={form.control} name="name" label="Name"/>
+                        <TextFormField control={form.control} name="name" label="Name"/>
 
-                    <TextAreaFormField control={form.control} name="description" label="Description"/>
+                        <TextAreaFormField control={form.control} name="description" label="Description"/>
 
-                    <CheckboxFormField control={form.control} name="abstractClass" label="Is abstract"/>
+                        <CheckboxFormField control={form.control} name="abstractClass" label="Is abstract"/>
 
-                    <TextFormField control={form.control} name="logo" label="Logo URL"/>
+                        <TextFormField control={form.control} name="logo" label="Logo URL"/>
 
-                    <ComboboxFormField control={form.control} name="headTwinClassId" label="Head"
-                                       getById={findClassById}
-                                       getItems={fetchClasses}
-                                       getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-                                       getItemLabel={(c) => {
-                                           let label = c?.key ?? "";
-                                           if (c.name) label += ` (${c.name})`
-                                           return label;
-                                       }}
-                                       selectPlaceholder={"Select head class"}
-                                       searchPlaceholder={"Search head class..."}
-                                       noItemsText={"No classes found"}
-                    />
-
-                    {headTwinClassId && <>
-                        <FeaturerFormField
-                            control={form.control}
-                            name={"headHunterFeaturerId"}
-                            paramsName={"headHunterParams"}
-                            typeId={FeaturerTypes.headHunter}
-                            label={"Head Hunter"}
+                        <ComboboxFormField control={form.control} name="headTwinClassId" label="Head"
+                                           getById={findClassById}
+                                           getItems={fetchClasses}
+                                           getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
+                                           getItemLabel={(c) => {
+                                               let label = c?.key ?? "";
+                                               if (c.name) label += ` (${c.name})`
+                                               return label;
+                                           }}
+                                           selectPlaceholder={"Select head class"}
+                                           searchPlaceholder={"Search head class..."}
+                                           noItemsText={"No classes found"}
                         />
-                        {/*<FeaturerInput typeId={FeaturerTypes.headHunter} onChange={(val) => {*/}
-                        {/*    console.log('new featurer', val)*/}
-                        {/*    setFeaturer(val)*/}
-                        {/*}}/>*/}
-                    </>}
 
-                    <ComboboxFormField control={form.control} name="extendsTwinClassId" label="Extends"
-                                       getById={findClassById}
-                                       getItems={fetchClasses}
-                                       getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-                                       getItemLabel={(c) => {
-                                           let label = c?.key ?? "";
-                                           if (c.name) label += ` (${c.name})`
-                                           return label;
-                                       }}
-                                       selectPlaceholder={"Select extends class"}
-                                       searchPlaceholder={"Search extends class..."}
-                                       noItemsText={"No classes found"}
-                    />
+                        {headTwinClassId && <>
+                            <FeaturerFormField
+                                control={form.control}
+                                name={"headHunterFeaturerId"}
+                                paramsName={"headHunterParams"}
+                                typeId={FeaturerTypes.headHunter}
+                                label={"Head Hunter"}
+                            />
+                            {/*<FeaturerInput typeId={FeaturerTypes.headHunter} onChange={(val) => {*/}
+                            {/*    console.log('new featurer', val)*/}
+                            {/*    setFeaturer(val)*/}
+                            {/*}}/>*/}
+                        </>}
 
-                    <CheckboxFormField control={form.control} name="permissionSchemaSpace"
-                                       label="Permission schema space"/>
+                        <ComboboxFormField control={form.control} name="extendsTwinClassId" label="Extends"
+                                           getById={findClassById}
+                                           getItems={fetchClasses}
+                                           getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
+                                           getItemLabel={(c) => {
+                                               let label = c?.key ?? "";
+                                               if (c.name) label += ` (${c.name})`
+                                               return label;
+                                           }}
+                                           selectPlaceholder={"Select extends class"}
+                                           searchPlaceholder={"Search extends class..."}
+                                           noItemsText={"No classes found"}
+                        />
 
-                    <CheckboxFormField control={form.control} name="twinflowSchemaSpace" label="Twinflow schema space"/>
+                        <CheckboxFormField control={form.control} name="permissionSchemaSpace"
+                                           label="Permission schema space"/>
 
-                    <CheckboxFormField control={form.control} name="twinClassSchemaSpace"
-                                       label="Twin class schema space"/>
+                        <CheckboxFormField control={form.control} name="twinflowSchemaSpace"
+                                           label="Twinflow schema space"/>
 
-                    <CheckboxFormField control={form.control} name="aliasSpace" label="Alias space"/>
+                        <CheckboxFormField control={form.control} name="twinClassSchemaSpace"
+                                           label="Twin class schema space"/>
 
-                    <TextFormField control={form.control} name="markerDataListId" label="Marker data list ID"/>
+                        <CheckboxFormField control={form.control} name="aliasSpace" label="Alias space"/>
 
-                    <TextFormField control={form.control} name="tagDataListId" label="Tag data list ID"/>
+                        <TextFormField control={form.control} name="markerDataListId" label="Marker data list ID"/>
 
-                    <TextFormField control={form.control} name="viewPermissionId" label="View permission ID"/>
+                        <TextFormField control={form.control} name="tagDataListId" label="Tag data list ID"/>
 
-                    {error && <Alert variant="destructive">
-                        {error}
-                    </Alert>}
+                        <TextFormField control={form.control} name="viewPermissionId" label="View permission ID"/>
+                        {error && <Alert variant="destructive">
+                            {error}
+                        </Alert>}
 
-                    <DialogFooter className="sm:justify-end">
-                        <Button type="submit" loading={form.formState.isSubmitting}>
-                            Save
-                        </Button>
-                    </DialogFooter>
+                    </div>
+
+                    <div className="sticky bottom-0 pt-4">
+                        <Separator className="border-t-2 border-t-[#afafaf]"/>
+                        <DialogFooter className="sm:justify-end bg-white py-4">
+                            <Button type="submit" loading={form.formState.isSubmitting}>
+                                Save
+                            </Button>
+                        </DialogFooter>
+                    </div>
+
+                    {/*second option without line Separator!!!*/}
+
+                    {/*<DialogFooter className="sm:justify-end sticky bottom-0 bg-white py-6">*/}
+                    {/*    <Button type="submit" loading={form.formState.isSubmitting}>*/}
+                    {/*        Save*/}
+                    {/*    </Button>*/}
+                    {/*</DialogFooter>*/}
                 </form>
             </Form>
         </DialogContent>
