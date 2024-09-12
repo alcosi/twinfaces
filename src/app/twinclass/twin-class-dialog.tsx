@@ -201,7 +201,7 @@ export function TwinClassDialog({
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="space-y-8 p-1">
-                        <TextFormField control={form.control} name="key" label="Key"/>
+                        <TextFormField control={form.control} name="key" label="Key" autoFocus={true}/>
 
                         <TextFormField control={form.control} name="name" label="Name"/>
 
