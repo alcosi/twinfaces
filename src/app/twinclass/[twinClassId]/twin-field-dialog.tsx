@@ -184,7 +184,7 @@ export default function CreateEditTwinFieldDialog({
                             There are errors in the form
                         </Alert>}
                     </div>
-                        <div className="sticky bottom-0 bg-white">
+                        <div className="sticky bottom-0 bg-background">
                             <DialogFooter className="sm:justify-end py-4">
                                 <Button type="submit" loading={form.formState.isSubmitting}>
                                     Save

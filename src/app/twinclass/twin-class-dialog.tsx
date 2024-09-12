@@ -275,7 +275,7 @@ export function TwinClassDialog({
                     </div>
 
                     <div className="sticky bottom-0">
-                        <DialogFooter className="sm:justify-end bg-white py-4">
+                        <DialogFooter className="sm:justify-end bg-background py-4">
                             <Button type="submit" loading={form.formState.isSubmitting}>
                                 Save
                             </Button>
