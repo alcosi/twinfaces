@@ -27,11 +27,11 @@ const twinflowSchema = z.object({
 })
 
 export default function CreateTwinflowDialog({
-                                                     open,
-                                                     onOpenChange,
-                                                     twinClassId,
-                                                     onSuccess
-}: CreateEditTwinflowDialogProps) {
+                                                 open,
+                                                 onOpenChange,
+                                                 twinClassId,
+                                                 onSuccess
+                                             }: CreateEditTwinflowDialogProps) {
     const [error, setError] = useState<string | null>(null)
 
     const api = useContext(ApiContext)
@@ -96,31 +96,34 @@ export default function CreateTwinflowDialog({
             </DialogHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <div className="space-y-8 p-1">
+                        <TextFormField control={form.control} name="name" label="Name" autoFocus={true}/>
 
-                    <TextFormField control={form.control} name="name" label="Name" autoFocus={true}/>
+                        <TextAreaFormField control={form.control} name="description" label="Description"/>
 
-                    <TextAreaFormField control={form.control} name="description" label="Description"/>
+                        <ComboboxFormField control={form.control} name="initialStatusId" label="Initial status"
+                                           getById={findStatusById}
+                                           required={true}
+                                           getItems={getStatusesBySearch}
+                                           getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
+                                           getItemLabel={(c) => {
+                                               let label = c?.key ?? "";
+                                               if (c.name) label += ` (${c.name})`
+                                               return label;
+                                           }}
+                                           selectPlaceholder={"Select status..."}
+                                           searchPlaceholder={"Search status..."}
+                                           noItemsText={"No statuses found"}
+                        />
+                    </div>
 
-                    <ComboboxFormField control={form.control} name="initialStatusId" label="Initial status"
-                                       getById={findStatusById}
-                                       required={true}
-                                       getItems={getStatusesBySearch}
-                                       getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-                                       getItemLabel={(c) => {
-                                           let label = c?.key ?? "";
-                                           if (c.name) label += ` (${c.name})`
-                                           return label;
-                                       }}
-                                       selectPlaceholder={"Select status..."}
-                                       searchPlaceholder={"Search status..."}
-                                       noItemsText={"No statuses found"}
-                    />
-
-                    <DialogFooter className="sm:justify-end">
-                        <Button type="submit" loading={form.formState.isSubmitting}>
-                            Save
-                        </Button>
-                    </DialogFooter>
+                    <div className="sticky bottom-0 bg-white">
+                        <DialogFooter className="sm:justify-end py-4">
+                            <Button type="submit" loading={form.formState.isSubmitting}>
+                                Save
+                            </Button>
+                        </DialogFooter>
+                    </div>
                 </form>
             </Form>
         </DialogContent>

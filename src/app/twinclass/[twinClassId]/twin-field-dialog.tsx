@@ -153,45 +153,44 @@ export default function CreateEditTwinFieldDialog({
             </DialogHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    {field?.id && <Input value={field?.id} disabled/>}
+                    <div className="space-y-8 p-1">
+                        {field?.id && <Input value={field?.id} disabled/>}
 
-                    <TextFormField control={form.control} name="key" label="Key" autoFocus={true}/>
+                        <TextFormField control={form.control} name="key" label="Key" autoFocus={true}/>
 
-                    <TextFormField control={form.control} name="name" label="Name"/>
+                        <TextFormField control={form.control} name="name" label="Name"/>
 
-                    <TextAreaFormField control={form.control} name="description" label="Description"/>
+                        <TextAreaFormField control={form.control} name="description" label="Description"/>
 
-                    <CheckboxFormField control={form.control} name="required" label="Required"/>
+                        <CheckboxFormField control={form.control} name="required" label="Required"/>
 
-                    <FeaturerInput typeId={FeaturerTypes.fieldTyper}
-                                    defaultId={field?.fieldTyperFeaturerId}
-                                    defaultParams={field?.fieldTyperParams}
-                                   onChange={(val) => {
-                                       console.log('new featurer', val)
-                                       setFeaturer(val)
-                                   }}/>
+                        <FeaturerInput typeId={FeaturerTypes.fieldTyper}
+                                       defaultId={field?.fieldTyperFeaturerId}
+                                       defaultParams={field?.fieldTyperParams}
+                                       onChange={(val) => {
+                                           console.log('new featurer', val)
+                                           setFeaturer(val)
+                                       }}/>
 
-                    {/*<SelectFormField<z.infer<typeof twinFieldSchema>, FieldType>*/}
-                    {/*    control={form.control} name="descriptor.fieldType"*/}
-                    {/*    label="Type"*/}
-                    {/*    values={fieldTypes}*/}
-                    {/*    getItemLabel={(option) => option.label}*/}
-                    {/*    getItemKey={(option) => option.fieldType}*/}
-                    {/*/>*/}
+                        {/*<SelectFormField<z.infer<typeof twinFieldSchema>, FieldType>*/}
+                        {/*    control={form.control} name="descriptor.fieldType"*/}
+                        {/*    label="Type"*/}
+                        {/*    values={fieldTypes}*/}
+                        {/*    getItemLabel={(option) => option.label}*/}
+                        {/*    getItemKey={(option) => option.fieldType}*/}
+                        {/*/>*/}
 
-                    {error && <Alert variant="destructive">
-                        {error}
-                    </Alert>}
-
-                    {Object.values(form.formState.errors).length > 0 && <Alert variant="destructive">
-                        There are errors in the form
-                    </Alert>}
-
-                    <DialogFooter className="sm:justify-end">
-                        <Button type="submit" loading={form.formState.isSubmitting}>
-                            Save
-                        </Button>
-                    </DialogFooter>
+                        {Object.values(form.formState.errors).length > 0 && <Alert variant="destructive">
+                            There are errors in the form
+                        </Alert>}
+                    </div>
+                        <div className="sticky bottom-0 bg-white">
+                            <DialogFooter className="sm:justify-end py-4">
+                                <Button type="submit" loading={form.formState.isSubmitting}>
+                                    Save
+                                </Button>
+                            </DialogFooter>
+                        </div>
                 </form>
             </Form>
         </DialogContent>

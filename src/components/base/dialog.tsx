@@ -5,6 +5,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import {Separator} from "@/components/base/separator";
 
 const Dialog = DialogPrimitive.Root
 
@@ -72,22 +73,28 @@ DialogHeader.displayName = "DialogHeader"
 
 const DialogFooter = ({
   className,
+    showSeparator = true,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      className
-    )}
-    {...props}
-  />
+}:{showSeparator?: boolean} & React.HTMLAttributes<HTMLDivElement>) => (
+    <>
+        {showSeparator && <Separator className="border-t-2 border-t-[#afafaf] mt-4"/>}
+
+        <div
+            className={cn(
+                "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+                className
+            )}
+            {...props}
+        />
+    </>
+
 )
 DialogFooter.displayName = "DialogFooter"
 
 const DialogTitle = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Title>,
-    { showCloseButton?: boolean } &  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, showCloseButton = true, ...props }, ref) => (
+    React.ElementRef<typeof DialogPrimitive.Title>,
+{ showCloseButton?: boolean, showSeparator?: boolean } &  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, showCloseButton = true, showSeparator = true, ...props }, ref) => (
   <>
       <DialogPrimitive.Title
           ref={ref}
@@ -105,6 +112,8 @@ const DialogTitle = React.forwardRef<
               <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
       )}
+
+      {showSeparator && <Separator className="border-t-2 border-t-[#5e5e5e]"/>}
   </>
 
 ))
