@@ -196,7 +196,7 @@ export function TwinClassDialog({
                 <DialogDescription>
 
                 </DialogDescription>
-                <Separator className="border-t-2 border-t-[#5e5e5e]"/>
+                <Separator className="border-t-2 border-t-[#5e5e5e]" hidden={false}/>
             </DialogHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -276,7 +276,7 @@ export function TwinClassDialog({
                     </div>
 
                     <div className="sticky bottom-0 pt-4">
-                        <Separator className="border-t-2 border-t-[#afafaf]"/>
+                        <Separator className="border-t-2 border-t-[#afafaf]" hidden={false}/>
                         <DialogFooter className="sm:justify-end bg-white py-4">
                             <Button type="submit" loading={form.formState.isSubmitting}>
                                 Save
