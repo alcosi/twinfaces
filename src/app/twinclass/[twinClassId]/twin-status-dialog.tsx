@@ -135,27 +135,31 @@ export default function CreateEditTwinStatusDialog({
             </DialogHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    {status?.id && <Input value={status?.id} disabled/>}
+                    <div className="space-y-8 p-1">
+                        {status?.id && <Input value={status?.id} disabled/>}
 
-                    <TextFormField control={form.control} name="key" label="Key"/>
+                        <TextFormField control={form.control} name="key" label="Key" autoFocus={true}/>
 
-                    <TextFormField control={form.control} name="name" label="Name"/>
+                        <TextFormField control={form.control} name="name" label="Name"/>
 
-                    <TextAreaFormField control={form.control} name="description" label="Description"/>
+                        <TextAreaFormField control={form.control} name="description" label="Description"/>
 
-                    <TextFormField control={form.control} name="logo" label="Logo URL"/>
+                        <TextFormField control={form.control} name="logo" label="Logo URL"/>
 
-                    <ColorPickerFormField control={form.control} name="color" label="Color"/>
+                        <ColorPickerFormField control={form.control} name="color" label="Color"/>
 
-                    {error && <Alert variant="destructive">
-                        {error}
-                    </Alert>}
+                        {error && <Alert variant="destructive">
+                            {error}
+                        </Alert>}
+                    </div>
 
-                    <DialogFooter className="sm:justify-end">
-                        <Button type="submit" loading={form.formState.isSubmitting}>
-                            Save
-                        </Button>
-                    </DialogFooter>
+                    <div className="sticky bottom-0 bg-background">
+                        <DialogFooter className="sm:justify-end py-4">
+                            <Button type="submit" loading={form.formState.isSubmitting}>
+                                Save
+                            </Button>
+                        </DialogFooter>
+                    </div>
                 </form>
             </Form>
         </DialogContent>
