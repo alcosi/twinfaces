@@ -97,7 +97,7 @@ export default function CreateTwinflowDialog({
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
-                    <TextFormField control={form.control} name="name" label="Name"/>
+                    <TextFormField control={form.control} name="name" label="Name" autoFocus={true}/>
 
                     <TextAreaFormField control={form.control} name="description" label="Description"/>
 

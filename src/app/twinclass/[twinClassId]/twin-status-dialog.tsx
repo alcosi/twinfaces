@@ -137,7 +137,7 @@ export default function CreateEditTwinStatusDialog({
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     {status?.id && <Input value={status?.id} disabled/>}
 
-                    <TextFormField control={form.control} name="key" label="Key"/>
+                    <TextFormField control={form.control} name="key" label="Key" autoFocus={true}/>
 
                     <TextFormField control={form.control} name="name" label="Name"/>
 

@@ -155,7 +155,7 @@ export default function CreateEditTwinFieldDialog({
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     {field?.id && <Input value={field?.id} disabled/>}
 
-                    <TextFormField control={form.control} name="key" label="Key"/>
+                    <TextFormField control={form.control} name="key" label="Key" autoFocus={true}/>
 
                     <TextFormField control={form.control} name="name" label="Name"/>
 
