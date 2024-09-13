@@ -62,7 +62,7 @@ export default function TwinflowPage({params: {twinflowId}}: TwinflowPageProps) 
     return <div>
         {loading && <LoadingOverlay/>}
         {twinflow && <SideNavLayout sections={sections} returnOptions={{
-            path: `/twinclass/${twinflow.twinClassId}`,
+            path: `/twinclass/${twinflow.twinClassId}#twinflows`,
             label: 'Back to class'
         }}>
             <h1 className="text-xl font-bold">{twinflow.name}</h1>

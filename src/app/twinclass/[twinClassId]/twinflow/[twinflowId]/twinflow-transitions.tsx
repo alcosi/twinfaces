@@ -3,8 +3,6 @@ import {useContext, useEffect, useRef, useState} from "react";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
 import {ColumnDef} from "@tanstack/table-core";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
-import {Button} from "@/components/base/button";
-import {Edit2Icon} from "lucide-react";
 import {CrudDataTable} from "@/components/base/data-table/crud-data-table";
 import {
     TwinflowTransitionCreateEditDialog
@@ -105,6 +103,5 @@ export function TwinflowTransitions({twinflow, onChange}: {twinflow: TwinFlow, o
             onOpenChange={setCreateEditTransitionDialogOpen}
             onSuccess={onChange}
         />
-
     </>
 }

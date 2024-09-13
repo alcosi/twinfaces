@@ -9,6 +9,8 @@ import {Input} from "@/components/base/input";
 
 export const FeaturerTypes = {
     fieldTyper: 13,
+    trigger: 15,
+    validator: 16,
     headHunter: 26,
 }
 

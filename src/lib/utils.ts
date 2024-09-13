@@ -1,8 +1,6 @@
-import type React from 'react';
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import {forwardRef, ReactNode, Ref, RefAttributes} from "react";
-import { useEffect, useRef } from 'react';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -13,3 +11,5 @@ export function fixedForwardRef<T, P = {}>(
 ): (props: P & RefAttributes<T>) => ReactNode {
   return forwardRef(render) as any;
 }
+
+export const NULLIFY_UUID_VALUE: string = 'ffffffff-ffff-ffff-ffff-ffffffffffff'
