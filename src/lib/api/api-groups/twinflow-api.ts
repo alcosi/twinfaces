@@ -102,7 +102,11 @@ export function createTwinflowApi(settings: ApiSettings) {
         return settings.client.GET("/private/transition/{transitionId}/v1", {
             params: {
                 header: getApiDomainHeaders(settings),
-                path: {transitionId}
+                path: {transitionId},
+                query: {
+                    showTransitionMode: 'MANAGED',
+                    showTransition2StatusMode: 'DETAILED'
+                }
             },
         })
     }

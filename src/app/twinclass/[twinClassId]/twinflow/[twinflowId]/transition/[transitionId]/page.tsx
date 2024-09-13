@@ -5,11 +5,17 @@ import {ApiContext} from "@/lib/api/api";
 import {TwinFlow, TwinFlowTransition} from "@/lib/api/api-types";
 import {toast} from "sonner";
 import {Section, SideNavLayout} from "@/components/layout/side-nav-layout";
-import {TwinflowGeneral} from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-general";
-import {TwinflowTransitions} from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-transitions";
-import {Table, TableBody} from "@/components/base/table";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
 import {LoadingOverlay} from "@/components/base/loading";
+import {
+    TwinflowTransitionGeneral
+} from "./twinflow-transition-general";
+import {
+    TwinflowTransitionTriggers
+} from "./twinflow-transition-triggers";
+import {
+    TwinflowTransitionValidators
+} from "./twinflow-transition-validators";
 
 interface TransitionPageProps {
     params: {
@@ -28,7 +34,6 @@ export default function TransitionPage({params: {twinClassId, twinflowId, transi
     useEffect(() => {
         fetchTransitionData()
     }, [])
-
 
     function fetchTransitionData() {
         setLoading(true);
@@ -54,32 +59,27 @@ export default function TransitionPage({params: {twinClassId, twinflowId, transi
         {
             key: 'general',
             label: 'General',
-            content: <TransitionGeneral transition={transition} onChange={fetchTransitionData}/>
+            content: <TwinflowTransitionGeneral transition={transition} onChange={fetchTransitionData}/>
         },
-        // {
-        //     key: 'transitions',
-        //     label: 'Transitions',
-        //     content: <TwinflowTransitions twinflow={twinflow} onChange={fetchTwinflowData}/>
-        // }
+        {
+            key: 'triggers',
+            label: 'Triggers',
+            content: <TwinflowTransitionTriggers transition={transition} onChange={fetchTransitionData}/>
+        },
+        {
+            key: 'validators',
+            label: 'Validators',
+            content: <TwinflowTransitionValidators transition={transition} onChange={fetchTransitionData}/>
+        }
     ] : []
 
     return <div>
         {loading && <LoadingOverlay/>}
         {transition && <SideNavLayout sections={sections} returnOptions={{
-            path: `/twinclass/${twinClassId}/twinflow/${twinflowId}`,
+            path: `/twinclass/${twinClassId}/twinflow/${twinflowId}#transitions`,
             label: 'Back to class'
         }}>
             <h1 className="text-xl font-bold">Transition {transition.name ?? transition.id}</h1>
         </SideNavLayout>}
     </div>
-}
-
-function TransitionGeneral({transition, onChange}:{transition: TwinFlowTransition, onChange: () => any}) {
-    return <>
-        <Table className="mt-8">
-            <TableBody>
-
-            </TableBody>
-        </Table>
-    </>
 }

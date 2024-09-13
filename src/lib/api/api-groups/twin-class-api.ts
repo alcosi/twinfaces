@@ -35,11 +35,9 @@ export function createTwinClassApi(settings: ApiSettings) {
                 twinClassKeyLikeList: search ? ['%' + search + '%'] : undefined,
                 nameI18nLikeList: nameFilter ? ['%' + nameFilter + '%'] : undefined,
                 abstractt: abstract,
-                ownerType
-    :
-        'DOMAIN'
-    }
-    })
+                ownerType: 'DOMAIN'
+            }
+        })
     }
 
     function getByKey({key, query = {}}: {
