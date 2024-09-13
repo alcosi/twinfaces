@@ -28,7 +28,19 @@ export function createTwinflowApi(settings: ApiSettings) {
     //     })
     // }
 
-    function search({twinClassId, pagination}: { twinClassId: string, pagination: PaginationState }) {
+    function search({twinClassId, pagination, search, nameFilter, abstractFilter}: {
+        twinClassId: string,
+        pagination: PaginationState,
+        search?: string,
+        nameFilter?: string,
+        abstractFilter?: boolean
+    }) {
+
+        var abstract: "ANY" | "ONLY" | "ONLY_NOT" = "ANY";
+        if (abstractFilter !== undefined) {
+            abstract = abstractFilter ? "ONLY" : "ONLY_NOT";
+        }
+
         return settings.client.POST("/private/twinflow/search/v1", {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -42,7 +54,10 @@ export function createTwinflowApi(settings: ApiSettings) {
                 }
             },
             body: {
-                twinClassIdList: [twinClassId]
+                twinClassIdList: [twinClassId],
+                twinClassKeyLikeList: search ? ['%' + search + '%'] : undefined,
+                nameI18nLikeList: nameFilter ? ['%' + nameFilter + '%'] : undefined,
+                abstractt: abstract,
             }
         })
     }

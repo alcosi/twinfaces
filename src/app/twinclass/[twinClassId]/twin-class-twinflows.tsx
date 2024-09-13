@@ -9,6 +9,7 @@ import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
 import CreateTwinflowDialog from "@/app/twinclass/[twinClassId]/twin-class-twinflow-dialog";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
+import {AutoFormValueType} from "@/components/auto-field";
 
 const columns: ColumnDef<TwinFlow>[] = [
     {
@@ -44,8 +45,18 @@ export function TwinClassTwinflows() {
             return {data: [], pageCount: 0};
         }
 
+        const abstractFilter = filters?.filters["abstract"] === 'indeterminate' ?
+            undefined : filters?.filters["abstract"] as boolean;
+
         try {
-            const {data, error} = await api.twinflow.search({twinClassId: twinClass.id!, pagination})
+            const {data, error} = await api.twinflow.search({
+                twinClassId: twinClass.id!,
+                pagination,
+                search: filters?.search,
+                nameFilter: filters?.filters["name"] as string,
+                abstractFilter: abstractFilter
+            })
+            
             if (error) {
                 console.error('failed to fetch twinflows', error)
                 toast.error("Failed to fetch twinflows")
@@ -88,6 +99,24 @@ export function TwinClassTwinflows() {
             onRowClick={(row) => router.push(`/twinclass/${row.twinClassId}/twinflow/${row.id}`)}
             createButton={{enabled: true, onClick: openCreateTwinflow, text: 'Create Twinflow'}}
             // search={{enabled: true, placeholder: 'Search by key...'}}
+            filters={{
+                filtersInfo: {
+                    "name": {
+                        type: AutoFormValueType.string,
+                        label: "Name"
+                    },
+                    "abstract": {
+                        type: AutoFormValueType.boolean,
+                        label: "Abstract",
+                        hasIndeterminate: true,
+                        defaultValue: 'indeterminate'
+                    }
+                },
+                onChange: () => {
+                    console.log("Filters changed")
+                    return Promise.resolve()
+                }
+            }}
         />
         <CreateTwinflowDialog open={twinflowDialogOpen}
                               onOpenChange={setTwinflowDialogOpen}
