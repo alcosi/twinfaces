@@ -50,16 +50,16 @@ export function CheckboxFormItem({
         }
     }
 
-    return <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-        <FormControl>
+    return <div className="flex flex-row items-start space-x-3 space-y-0">
+        {/*<FormControl>*/}
             <Checkbox
                 checked={(hasIndeterminate && fieldValue === undefined) ? 'indeterminate' : fieldValue}
                 onCheckedChange={onCheckedChange}
             />
-        </FormControl>
+        {/*</FormControl>*/}
         <div className="space-y-1 leading-none">
             {label && <FormItemLabel inForm={inForm}>{label}</FormItemLabel>}
             {description && <FormItemDescription inForm={inForm}>{description}</FormItemDescription>}
         </div>
-    </FormItem>
+    </div>
 }

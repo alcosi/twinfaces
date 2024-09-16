@@ -128,6 +128,10 @@ export default function TwinClasses() {
                         return Promise.resolve()
                     }
                 }}
+                customizableColumns={{
+                    enabled: true,
+                    defaultVisibleKeys: ['id', 'key', 'name'],
+                }}
             />
 
             <div className="w-0 flex-0 lg:w-16"/>
