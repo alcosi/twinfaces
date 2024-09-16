@@ -28,18 +28,13 @@ export function createTwinflowApi(settings: ApiSettings) {
     //     })
     // }
 
-    function search({twinClassId, pagination, search, nameFilter, abstractFilter}: {
+    function search({twinClassId, pagination, nameFilter, descriptionFilter, initialStatusFilter}: {
         twinClassId: string,
         pagination: PaginationState,
-        search?: string,
         nameFilter?: string,
-        abstractFilter?: boolean
+        descriptionFilter?: string,
+        initialStatusFilter?: string,
     }) {
-
-        var abstract: "ANY" | "ONLY" | "ONLY_NOT" = "ANY";
-        if (abstractFilter !== undefined) {
-            abstract = abstractFilter ? "ONLY" : "ONLY_NOT";
-        }
 
         return settings.client.POST("/private/twinflow/search/v1", {
             params: {
@@ -55,9 +50,9 @@ export function createTwinflowApi(settings: ApiSettings) {
             },
             body: {
                 twinClassIdList: [twinClassId],
-                twinClassKeyLikeList: search ? ['%' + search + '%'] : undefined,
                 nameI18nLikeList: nameFilter ? ['%' + nameFilter + '%'] : undefined,
-                abstractt: abstract,
+                descriptionI18nLikeList: descriptionFilter ? ['%' + descriptionFilter + '%'] : undefined,
+                initialStatusIdList: initialStatusFilter ? [initialStatusFilter] : undefined,
             }
         })
     }

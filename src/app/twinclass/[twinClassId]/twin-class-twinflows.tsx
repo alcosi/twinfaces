@@ -10,6 +10,7 @@ import {DataTableHandle} from "@/components/base/data-table/data-table";
 import CreateTwinflowDialog from "@/app/twinclass/[twinClassId]/twin-class-twinflow-dialog";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
 import {AutoFormValueType} from "@/components/auto-field";
+import {TwinflowGeneral} from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-general";
 
 const columns: ColumnDef<TwinFlow>[] = [
     {
@@ -35,7 +36,7 @@ const columns: ColumnDef<TwinFlow>[] = [
 export function TwinClassTwinflows() {
     const [twinflowDialogOpen, setTwinflowDialogOpen] = useState(false)
     const api = useContext(ApiContext);
-    const {twinClass} = useContext(TwinClassContext);
+    const {twinClass, getStatusesBySearch, findStatusById} = useContext(TwinClassContext);
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
 
@@ -45,16 +46,13 @@ export function TwinClassTwinflows() {
             return {data: [], pageCount: 0};
         }
 
-        const abstractFilter = filters?.filters["abstract"] === 'indeterminate' ?
-            undefined : filters?.filters["abstract"] as boolean;
-
         try {
             const {data, error} = await api.twinflow.search({
                 twinClassId: twinClass.id!,
                 pagination,
-                search: filters?.search,
                 nameFilter: filters?.filters["name"] as string,
-                abstractFilter: abstractFilter
+                descriptionFilter: filters?.filters["description"] as string,
+                initialStatusFilter: filters?.filters["initialStatus"] as string,
             })
             
             if (error) {
@@ -110,6 +108,19 @@ export function TwinClassTwinflows() {
                         label: "Abstract",
                         hasIndeterminate: true,
                         defaultValue: 'indeterminate'
+                    },
+                    "initialStatusId": {
+                        type: AutoFormValueType.combobox,
+                        label: "Initial status",
+                        getItems:  getStatusesBySearch,
+                        getItemKey: (c) => c?.id?.toLowerCase() ?? "",
+                        getItemLabel: (c) => {
+                            let label = c?.key ?? "";
+                            if (c.name) label += ` (${c.name})`
+                            return label;
+                        },
+                        getById: findStatusById,
+                        selectPlaceholder: "Select status...",
                     }
                 },
                 onChange: () => {
