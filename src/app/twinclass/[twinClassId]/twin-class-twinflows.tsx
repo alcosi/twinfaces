@@ -9,6 +9,8 @@ import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
 import CreateTwinflowDialog from "@/app/twinclass/[twinClassId]/twin-class-twinflow-dialog";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
+import {AutoFormValueType} from "@/components/auto-field";
+import {TwinflowGeneral} from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-general";
 
 const columns: ColumnDef<TwinFlow>[] = [
     {
@@ -34,7 +36,7 @@ const columns: ColumnDef<TwinFlow>[] = [
 export function TwinClassTwinflows() {
     const [twinflowDialogOpen, setTwinflowDialogOpen] = useState(false)
     const api = useContext(ApiContext);
-    const {twinClass} = useContext(TwinClassContext);
+    const {twinClass, getStatusesBySearch, findStatusById} = useContext(TwinClassContext);
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
 
@@ -45,7 +47,14 @@ export function TwinClassTwinflows() {
         }
 
         try {
-            const {data, error} = await api.twinflow.search({twinClassId: twinClass.id!, pagination})
+            const {data, error} = await api.twinflow.search({
+                twinClassId: twinClass.id!,
+                pagination,
+                nameFilter: filters?.filters["name"] as string,
+                descriptionFilter: filters?.filters["description"] as string,
+                initialStatusFilter: filters?.filters["initialStatus"] as string,
+            })
+            
             if (error) {
                 console.error('failed to fetch twinflows', error)
                 toast.error("Failed to fetch twinflows")
@@ -88,6 +97,37 @@ export function TwinClassTwinflows() {
             onRowClick={(row) => router.push(`/twinclass/${row.twinClassId}/twinflow/${row.id}`)}
             createButton={{enabled: true, onClick: openCreateTwinflow, text: 'Create Twinflow'}}
             // search={{enabled: true, placeholder: 'Search by key...'}}
+            filters={{
+                filtersInfo: {
+                    "name": {
+                        type: AutoFormValueType.string,
+                        label: "Name"
+                    },
+                    "abstract": {
+                        type: AutoFormValueType.boolean,
+                        label: "Abstract",
+                        hasIndeterminate: true,
+                        defaultValue: 'indeterminate'
+                    },
+                    "initialStatusId": {
+                        type: AutoFormValueType.combobox,
+                        label: "Initial status",
+                        getItems:  getStatusesBySearch,
+                        getItemKey: (c) => c?.id?.toLowerCase() ?? "",
+                        getItemLabel: (c) => {
+                            let label = c?.key ?? "";
+                            if (c.name) label += ` (${c.name})`
+                            return label;
+                        },
+                        getById: findStatusById,
+                        selectPlaceholder: "Select status...",
+                    }
+                },
+                onChange: () => {
+                    console.log("Filters changed")
+                    return Promise.resolve()
+                }
+            }}
         />
         <CreateTwinflowDialog open={twinflowDialogOpen}
                               onOpenChange={setTwinflowDialogOpen}
