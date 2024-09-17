@@ -55,6 +55,10 @@ export function TwinflowTransitionValidators({transition, onChange}: {
             accessorKey: "featurer",
             header: "Featurer",
         },
+        {
+            accessorKey: "invert",
+            header: "Invert",
+        },
     ];
 
     return <>

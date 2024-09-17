@@ -51,7 +51,8 @@ export function TwinflowTransitionValidatorDialog({
             "order": validator?.order,
             "active": validator?.active ?? false,
             "validatorFeaturerId": validator?.validatorFeaturerId,
-            "validatorParams": validator?.validatorParams
+            "validatorParams": validator?.validatorParams,
+            "invert": validator?.invert ?? false
         },
         title: validator ? 'Update validator' : 'Create validator',
         onSubmit: (values) => {
@@ -73,6 +74,11 @@ export function TwinflowTransitionValidatorDialog({
                 label: "Featurer",
                 typeId: FeaturerTypes.validator,
                 paramsName: "validatorParams",
+            },
+            "invert": {
+                type: AutoFormValueType.boolean,
+                label: "Invert",
+                defaultValue: false
             }
         }
     }
