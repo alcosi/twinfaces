@@ -6,13 +6,14 @@ import {EyeIcon, FilterIcon, RefreshCw, Search} from "lucide-react";
 import {Separator} from "@/components/base/separator";
 import {ForwardedRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from "react";
 import {Input} from "@/components/base/input";
-import {PaginationState} from "@tanstack/table-core";
+import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {cn, fixedForwardRef} from "@/lib/utils";
 import {AutoField, AutoFormValueInfo} from "@/components/auto-field";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/base/popover";
 import {useForm} from "react-hook-form";
 import {Form} from "@/components/base/form";
 import {CheckboxFormItem} from "@/components/form-fields/checkbox-form-field";
+import {CustomizableColumnsPopover} from "@/components/base/data-table/crud-data-table-columns-popover";
 
 export interface FiltersState {
     search?: string
@@ -68,6 +69,7 @@ function CrudDataTableInternal<TData, TValue>({
     const [tableSearch, setTableSearch] = useState<string>("")
     const [tableFilters, setTableFilters] = useState<{ [key: string]: any }>({})
     const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(customizableColumns?.defaultVisibleKeys ?? []);
+    const [sortColumnKeys, setSortColumnKeys] = useState<string[]>(props.columns?.map(col => getColumnKey(col)) ?? []);
     const tableRef = useRef<DataTableHandle>(null);
     useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
@@ -84,9 +86,14 @@ function CrudDataTableInternal<TData, TValue>({
         filters?.onChange(values)
     }
 
-    function onCustomizableColumnsChange(columns: string[]) {
-        console.log('onCustomizableColumnsChange', columns)
+    function onVisibleColumnsChange(columns: string[]) {
+        console.log('onVisibleColumnsChange', columns)
         setVisibleColumnKeys(columns)
+    }
+
+    function onSortColumnsChange(columns: string[]) {
+        console.log('onSortColumnsChange', columns)
+        setSortColumnKeys(columns)
     }
 
     useEffect(() => {
@@ -101,12 +108,16 @@ function CrudDataTableInternal<TData, TValue>({
     const visibleColumns = useMemo(() => {
         return customizableColumns?.enabled ?
             props.columns.filter(column => {
-                var columnAsAny = column as any;
-                return visibleColumnKeys.includes(columnAsAny.accessorKey ?
-                    columnAsAny.accessorKey as string : column.id!);
+                return visibleColumnKeys.includes(getColumnKey(column));
+            }).sort((a, b) => {
+                return sortColumnKeys.indexOf(getColumnKey(a)) - sortColumnKeys.indexOf(getColumnKey(b))
             }) :
             props.columns
-    }, [customizableColumns, visibleColumnKeys])
+    }, [customizableColumns, visibleColumnKeys, sortColumnKeys])
+
+    function getColumnKey(column: any) {
+        return column.accessorKey ? column.accessorKey as string : column.id!;
+    }
 
     return <div className={cn("flex-1", className)}>
         <div className="mb-2 flex justify-between">
@@ -138,19 +149,23 @@ function CrudDataTableInternal<TData, TValue>({
                         var columnAsAny = column as any;
                         if (columnAsAny.accessorKey) {
                             return {
-                                key: columnAsAny.accessorKey as string,
+                                id: columnAsAny.accessorKey as string,
                                 name: column.header as string,
                                 visible: visibleColumnKeys.includes(columnAsAny.accessorKey as string)
                             };
                         } else {
                             return {
-                                key: column.id as string,
+                                id: column.id as string,
                                 name: column.header as string,
                                 visible: visibleColumnKeys.includes(column.id as string)
                             };
                         }
+                    }).sort((a, b) => {
+                        return sortColumnKeys.indexOf(a.id) - sortColumnKeys.indexOf(b.id)
                     })}
-                    onChange={onCustomizableColumnsChange}
+                    sortKeys={sortColumnKeys}
+                    onVisibleChange={onVisibleColumnsChange}
+                    onSortChange={onSortColumnsChange}
                     onReset={() => setVisibleColumnKeys(customizableColumns.defaultVisibleKeys ?? [])}
                 />}
                 {(!hideRefresh || filters) &&
@@ -237,69 +252,3 @@ function FiltersPopover({filtersInfo, onChange}: FiltersPopoverProps) {
     </Popover>
 }
 
-interface CustomizableColumn {
-    key: string,
-    name: string,
-    visible: boolean
-}
-
-interface CustomizableColumnsPopoverProps {
-    columns: CustomizableColumn[]
-    onChange: (columns: string[]) => void
-    onReset?: () => void
-}
-
-function CustomizableColumnsPopover({columns, onChange, onReset}: CustomizableColumnsPopoverProps) {
-    const [open, setOpen] = useState(false);
-
-    function onColumnChange(columnKey: string) {
-        const newColumns = columns.map(column => column.key === columnKey ? {
-            ...column,
-            visible: !column.visible
-        } : column)
-
-        onChange(newColumns.filter(column => column.visible).map(column => column.key))
-    }
-
-    function resetColumns() {
-        onReset?.()
-    }
-
-    return <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-            <Button
-                type='button'
-                className={cn('block'/*, className*/)}
-                // name={name}
-                onClick={() => {
-                    setOpen(true);
-                }}
-                variant='default'
-            >
-                <EyeIcon/>
-            </Button>
-        </PopoverTrigger>
-        <PopoverContent className='space-y-4'>
-            {/*<form className="space-y-8">*/}
-                {columns.map(column => {
-                    // return <></>
-                    // return <div key={column.key} className={"flex flex-row justify-between"}>
-                    //     <label htmlFor={column.key}>{column.name}</label>
-                    //     <input type="checkbox" id={column.key} checked={column.visible}
-                    //            onChange={() => onColumnChange(column.key)}/>
-                    // </div>
-                    return <CheckboxFormItem key={column.key} fieldValue={column.visible} onChange={() => onColumnChange(column.key)} label={column.name}/>
-                })}
-
-                {/*<div className={"flex flex-row justify-end gap-2"}>*/}
-                    <Button onClick={() => resetColumns()} type="reset" variant="outline">
-                        Reset
-                    </Button>
-                {/*    <Button onClick={() => setOpen(false)}>*/}
-                {/*        Apply*/}
-                {/*    </Button>*/}
-                {/*</div>*/}
-            {/*</form>*/}
-        </PopoverContent>
-    </Popover>
-}
