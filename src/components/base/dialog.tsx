@@ -39,7 +39,7 @@ const DialogContent = React.forwardRef<
       <DialogPrimitive.Content
           ref={ref}
           className={cn(
-              "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background px-6 py-0 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+              "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background px-9 py-0 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
               className
           )}
           {...props}
@@ -76,17 +76,17 @@ const DialogFooter = ({
     showSeparator = true,
   ...props
 }:{showSeparator?: boolean} & React.HTMLAttributes<HTMLDivElement>) => (
-    <>
-        {showSeparator && <Separator className="border-t-2 border-t-[#afafaf] mt-4"/>}
+    <div className=" sticky bottom-0 bg-background">
+        {showSeparator && <Separator className="border-t-2 border-t-[#afafaf] mb-4"/>}
 
         <div
             className={cn(
-                "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+                "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 pb-4",
                 className
             )}
             {...props}
         />
-    </>
+    </div>
 
 )
 DialogFooter.displayName = "DialogFooter"

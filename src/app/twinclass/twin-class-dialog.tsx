@@ -184,7 +184,7 @@ export function TwinClassDialog({
 
 
     return <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-        <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+        <DialogContent className="sm:max-w-lg overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
             <DialogTrigger asChild>
                 Open
             </DialogTrigger>
@@ -274,13 +274,11 @@ export function TwinClassDialog({
 
                     </div>
 
-                    <div className="sticky bottom-0">
-                        <DialogFooter className="sm:justify-end bg-background py-4">
-                            <Button type="submit" loading={form.formState.isSubmitting}>
-                                Save
-                            </Button>
-                        </DialogFooter>
-                    </div>
+                    <DialogFooter className="sm:justify-end">
+                        <Button type="submit" loading={form.formState.isSubmitting}>
+                            Save
+                        </Button>
+                    </DialogFooter>
                 </form>
             </Form>
         </DialogContent>

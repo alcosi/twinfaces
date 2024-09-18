@@ -88,7 +88,7 @@ export default function CreateTwinflowDialog({
     }
 
     return <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-        <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+        <DialogContent className="sm:max-w-lg overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
             <DialogHeader>
                 <DialogTitle>
                     {"Create Twinflow"}
