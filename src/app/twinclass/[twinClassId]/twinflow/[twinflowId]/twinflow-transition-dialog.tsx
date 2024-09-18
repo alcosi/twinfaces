@@ -177,7 +177,7 @@ export function TwinflowTransitionCreateEditDialog({
                 </DialogTitle>
             </DialogHeader>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-1">
                     {transition?.id && <Input value={transition?.id} disabled/>}
 
                     <ComboboxFormField control={form.control} name="srcStatusId" label="Source status"

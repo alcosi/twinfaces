@@ -90,7 +90,7 @@ export function AutoDialog({open, onOpenChange, settings}: EditFieldDialogProps)
                 </DialogTitle>}
             </DialogHeader>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(internalSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(internalSubmit)} className="space-y-8 p-1">
                     {settings?.value && keys.map((key) => renderField(key, settings.value[key]))}
 
                     {error && <Alert variant="destructive">
