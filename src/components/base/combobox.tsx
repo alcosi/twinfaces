@@ -37,6 +37,7 @@ export interface ComboboxProps<T> {
     noItemsText?: string;
     buttonClassName?: string;
     contentClassName?: string;
+    noDeselect?: boolean;
 }
 
 export const Combobox = fixedForwardRef(ComboboxInternal);
@@ -84,12 +85,12 @@ function ComboboxInternal<T>(props: ComboboxProps<T>, ref: ForwardedRef<Combobox
 
     function onSelect(newKey: string) {
         const newItem = items.find((item) => props.getItemKey(item) === newKey)
-        console.log("Selected", newKey, newItem, items)
+
         let newSelected = newItem
         if (!selected) {
             setSelected(newItem)
         } else {
-            if (props.getItemKey(selected) === newKey) {
+            if (props.getItemKey(selected) === newKey && !props.noDeselect) {
                 setSelected(undefined);
                 newSelected = undefined;
             } else {
