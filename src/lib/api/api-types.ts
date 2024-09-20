@@ -1,5 +1,7 @@
 import {components, paths} from "@/lib/api/generated/schema";
 
+export type DomainView = components["schemas"]["DomainViewRsv1"]
+
 export type TwinClass = components["schemas"]["TwinClassV1"];
 export type TwinClassCreateRq = paths['/private/twin_class/v1']['post']['requestBody']['content']["application/json"]
 export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"]

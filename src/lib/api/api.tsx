@@ -8,6 +8,7 @@ import {env} from "next-runtime-env";
 import {createTwinStatusApi, TwinStatusApi} from "@/lib/api/api-groups/twin-status-api";
 import {createFeaturerApi, FeaturerApi} from "@/lib/api/api-groups/featurer-api";
 import {createTwinflowApi, TwinflowApi} from "@/lib/api/api-groups/twinflow-api";
+import {createDomainApi, DomainApi} from "@/lib/api/api-groups/domain-api";
 import {createTwinApi, TwinApi} from "@/lib/api/api-groups/twin-api";
 
 export interface ApiContextProps {
@@ -15,6 +16,7 @@ export interface ApiContextProps {
     twinStatus: TwinStatusApi
     twinflow: TwinflowApi
     featurer: FeaturerApi
+    domain: DomainApi
     twin: TwinApi
 }
 
@@ -49,6 +51,7 @@ export function ApiContextProvider({children}: { children: React.ReactNode }) {
         twinflow: createTwinflowApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
+        domain: createDomainApi(settings)
     }}>
         {children}
     </ApiContext.Provider>

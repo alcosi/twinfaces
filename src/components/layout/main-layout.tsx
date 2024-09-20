@@ -2,11 +2,16 @@ import Image from "next/image";
 import {ThemeToggle} from "@/components/theme-toggle";
 import {Sheet, SheetContent, SheetTrigger} from "@/components/base/sheet";
 import {Button} from "@/components/base/button";
-import {Menu} from "lucide-react";
+import {FilterIcon, Grip, Menu} from "lucide-react";
 import TwinFace from '@/assets/img/face.svg'
 import {PathLink} from "@/components/layout/layout-link"
 import {PathLinkMode} from "@/components/layout/layoutlink.common";
 import Link from "next/link";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/base/popover";
+import {cn} from "@/lib/utils";
+import {DragHandleDots1Icon} from "@radix-ui/react-icons";
+import {Label} from "@/components/base/label";
+import {CurrentDomainSelector} from "@/components/layout/current-domain-selector";
 
 const links = [
     {
@@ -27,6 +32,8 @@ export function MainLayout({children}: { children: React.ReactNode }) {
             <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
                 <nav
                     className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 h-full">
+
+                    <MainMenuPopover/>
 
                     <Link href='/' className="flex items-center gap-2 text-xl font-semibold md:text-lg">
                         <Image src={TwinFace} alt='' className="h-6 w-6 dark:invert"/>
@@ -94,3 +101,21 @@ export function MainLayout({children}: { children: React.ReactNode }) {
     )
 }
 
+function MainMenuPopover() {
+    return <Popover>
+        <PopoverTrigger asChild>
+            <Button
+                type='button'
+                className={cn('block'/*, className*/)}
+                size='iconSm'
+                variant='ghost'
+            >
+                <Grip/>
+            </Button>
+        </PopoverTrigger>
+        <PopoverContent className=''>
+            <Label>Current domain</Label>
+            <CurrentDomainSelector className={'w-full'}/>
+        </PopoverContent>
+    </Popover>
+}

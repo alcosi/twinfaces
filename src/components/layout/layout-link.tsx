@@ -16,7 +16,7 @@ interface PathLinkProps {
 
 export function PathLink({href, children, mode, className, enabledClassName, disabledClassName}: PathLinkProps) {
     const pathname = usePathname();
-    console.log(pathname, href);
+
     let isActive = false;
     if (mode === PathLinkMode.Exact) {
         isActive = pathname === href;
