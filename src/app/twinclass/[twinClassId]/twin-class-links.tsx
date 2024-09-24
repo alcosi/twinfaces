@@ -7,6 +7,7 @@ import {TwinClassField, TwinClassLink} from "@/lib/api/api-types";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {toast} from "sonner";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
+import {LoadingOverlay} from "@/components/base/loading";
 
 export function TwinClassLinks() {
     const api = useContext(ApiContext);
@@ -26,6 +27,7 @@ export function TwinClassLinks() {
         {
             accessorKey: "dstTwinClassId",
             header: "Destination Twin Class",
+            cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()}/>
         },
         {
             accessorKey: "name",
@@ -48,7 +50,7 @@ export function TwinClassLinks() {
         }
 
         try {
-            const response = await api.twinflow.getLinks({ twinClassId: twinClass.id });
+            const response = await api.twinClass.getLinks({ twinClassId: twinClass.id });
             const data = response.data;
 
             if (!data || data.status != 0) {
@@ -83,7 +85,7 @@ export function TwinClassLinks() {
     }
 
     if (!twinClass) {
-        return <div>Loading...</div>;
+        return <LoadingOverlay/>;
     }
 
     return (
@@ -101,6 +103,10 @@ export function TwinClassLinks() {
                     }}
                     disablePagination={true}
                     pageSizes={[10, 20, 50]}
+                    customizableColumns={{
+                        enabled: true,
+                        defaultVisibleKeys: ['id', 'linkStrengthId', 'name'],
+                    }}
                 />
             </div>
 
@@ -116,9 +122,12 @@ export function TwinClassLinks() {
                 }}
                 disablePagination={true}
                 pageSizes={[10, 20, 50]}
+                customizableColumns={{
+                    enabled: true,
+                    defaultVisibleKeys: ['id', 'linkStrengthId', 'name'],
+                }}
             />
 
-            {/* Диалог для создания/редактирования */}
             {/*    <CreateEditTwinFieldDialog*/}
             {/*open={createEditFieldDialogOpen}*/}
             {/*twinClassId={twinClass.id!}*/}
