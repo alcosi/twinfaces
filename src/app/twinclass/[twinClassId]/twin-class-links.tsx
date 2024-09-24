@@ -105,7 +105,7 @@ export function TwinClassLinks() {
                     pageSizes={[10, 20, 50]}
                     customizableColumns={{
                         enabled: true,
-                        defaultVisibleKeys: ['id', 'linkStrengthId', 'name'],
+                        defaultVisibleKeys: ['id', 'linkStrengthId', 'name', 'type', 'dstTwinClassId'],
                     }}
                 />
             </div>
@@ -124,7 +124,7 @@ export function TwinClassLinks() {
                 pageSizes={[10, 20, 50]}
                 customizableColumns={{
                     enabled: true,
-                    defaultVisibleKeys: ['id', 'linkStrengthId', 'name'],
+                    defaultVisibleKeys: ['id', 'linkStrengthId', 'name', 'type', 'dstTwinClassId'],
                 }}
             />
 
