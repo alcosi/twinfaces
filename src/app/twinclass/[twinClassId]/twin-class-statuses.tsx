@@ -12,9 +12,11 @@ import {DataTableHandle} from "@/components/base/data-table/data-table";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/base/tooltip";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
+import {useRouter} from "next/navigation";
 
 export function TwinClassStatuses() {
     const api = useContext(ApiContext);
+    const router = useRouter()
     const {twinClass, fetchClassData} = useContext(TwinClassContext);
     const tableRef = useRef<DataTableHandle>(null);
     const [createEditStatusDialogOpen, setCreateEditStatusDialogOpen] = useState<boolean>(false);
@@ -55,14 +57,14 @@ export function TwinClassStatuses() {
                                           width={32} height={32} className="text-[0]"/>;
             }
         },
-        {
-            header: "Actions",
-            cell: (data) => {
-                return <Button variant="ghost" size="iconS6"
-                        onClick={() => editStatus(data.row.original)}><Edit2Icon/>
-                </Button>
-            }
-        }
+        // {
+        //     header: "Actions",
+        //     cell: (data) => {
+        //         return <Button variant="ghost" size="iconS6"
+        //                 onClick={() => editStatus(data.row.original)}><Edit2Icon/>
+        //         </Button>
+        //     }
+        // }
     ]
 
     async function fetchStatuses(_: PaginationState, filters: FiltersState) {
@@ -135,6 +137,7 @@ export function TwinClassStatuses() {
             }}
             disablePagination={true}
             pageSizes={[10, 20, 50]}
+            onRowClick={(row) => router.push(`/twinclass/${twinClass!.id!}/twinStatus/${row.id}`)}
         />
 
         <CreateEditTwinStatusDialog open={createEditStatusDialogOpen} twinClassId={twinClass.id!} status={editedStatus}
