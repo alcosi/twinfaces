@@ -12,11 +12,13 @@ import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
+import {useRouter} from "next/navigation";
 
 export function TwinClassFields() {
     const api = useContext(ApiContext);
     const {twinClass} = useContext(TwinClassContext);
     const tableRef = useRef<DataTableHandle>(null);
+    const router = useRouter()
 
     const [createEditFieldDialogOpen, setCreateEditFieldDialogOpen] = useState<boolean>(false);
     const [editedField, setEditedField] = useState<TwinClassField | null>(null);
@@ -44,12 +46,12 @@ export function TwinClassFields() {
             header: "Required",
             cell: (data) => <>{data.getValue() && <Check/>}</>
         },
-        {
-            header: "Actions",
-            cell: (data) => {
-                return <Button variant="ghost" size="iconS6" onClick={() => editField(data.row.original)}><Edit2Icon/></Button>
-            }
-        }
+        // {
+        //     header: "Actions",
+        //     cell: (data) => {
+        //         return <Button variant="ghost" size="iconS6" onClick={() => editField(data.row.original)}><Edit2Icon/></Button>
+        //     }
+        // }
     ]
 
     async function fetchFields(_: PaginationState, filters: FiltersState) {
@@ -92,7 +94,6 @@ export function TwinClassFields() {
         console.error('TwinClassFields: no twin class')
         return;
     }
-
     return <>
         <CrudDataTable
             ref={tableRef}
@@ -106,6 +107,7 @@ export function TwinClassFields() {
             }}
             disablePagination={true}
             pageSizes={[10, 20, 50]}
+            onRowClick={(row) => router.push(`/twinclass/${twinClass!.id!}/twinField/${row.id}`)}
         />
 
         <CreateEditTwinFieldDialog open={createEditFieldDialogOpen} twinClassId={twinClass.id!} field={editedField}

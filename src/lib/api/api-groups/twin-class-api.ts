@@ -117,7 +117,36 @@ export function createTwinClassApi(settings: ApiSettings) {
         })
     }
 
-    return {search, getByKey, getById, getFields, create, update, createField, updateField}
+    function getFieldById({fieldId}: { fieldId: string }) {
+        return settings.client.GET("/private/twin_class_field/{twinClassFieldId}/v1", {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {twinClassFieldId: fieldId},
+                query: {
+                    showLinkDst2TwinClassMode: "MANAGED",
+                    showTwin2StatusMode: "DETAILED",
+                    showTwin2TwinClassMode: "MANAGED",
+                    showTwin2UserMode: "DETAILED",
+                    showTwinAliasMode: "DETAILED",
+                    showTwinByHeadMode: "WHITE",
+                    showTwinClass2LinkMode: "DETAILED",
+                    showTwinClass2StatusMode: "DETAILED",
+                    showTwinClass2TwinClassFieldMode: "MANAGED",
+                    showTwinClassExtends2TwinClassMode: "MANAGED",
+                    showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
+                    showTwinClassFieldDescriptor2TwinMode: "DETAILED",
+                    showTwinClassFieldDescriptor2UserMode: "DETAILED",
+                    showTwinClassFieldMode: "MANAGED",
+                    showTwinClassHead2TwinClassMode: "MANAGED",
+                    showTwinClassMarker2DataListOptionMode: "DETAILED",
+                    showTwinClassMode: "MANAGED",
+                    showTwinClassTag2DataListOptionMode: "DETAILED"
+                }
+            }
+        })
+    }
+
+    return {search, getByKey, getById, getFields, create, update, createField, updateField, getFieldById}
 }
 
 export type TwinClassApi = ReturnType<typeof createTwinClassApi>;
