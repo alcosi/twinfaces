@@ -4,6 +4,7 @@ import {ApiContext} from "@/lib/api/api";
 import {AutoDialog, AutoEditDialogSettings} from "@/components/auto-dialog";
 import {AutoFormValueType} from "@/components/auto-field";
 import {Table, TableBody, TableCell, TableRow} from "@/components/base/table";
+import {ColorPicker} from "@/components/base/color-picker";
 
 export function TwinStatusGeneral({status, onChange}: {
     status: TwinClassStatus,
@@ -12,6 +13,7 @@ export function TwinStatusGeneral({status, onChange}: {
     const api = useContext(ApiContext);
     const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
     const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] = useState<AutoEditDialogSettings | undefined>(undefined);
+    const [color, setColor] = useState(status.color || '#FFFFFF');
 
     function openWithSettings(settings: AutoEditDialogSettings) {
         setCurrentAutoEditDialogSettings(settings)
@@ -54,6 +56,11 @@ export function TwinStatusGeneral({status, onChange}: {
         }
     }
 
+    const handleColorChange = async (newColor: string) => {
+        setColor(newColor);
+        await updateStatus({color: newColor});
+    };
+
 
     return <>
         <Table className="mt-8">
@@ -76,10 +83,9 @@ export function TwinStatusGeneral({status, onChange}: {
                     <TableCell>Description</TableCell>
                     <TableCell>{status.description}</TableCell>
                 </TableRow>
-                <TableRow className="cursor-pointer"
-                          onClick={() => {}}>
+                <TableRow className="cursor-pointer">
                     <TableCell>Color</TableCell>
-                    <TableCell>{status.color}</TableCell>
+                    <TableCell><ColorPicker value={color} onChange={handleColorChange}/></TableCell>
                 </TableRow>
             </TableBody>
         </Table>
