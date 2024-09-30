@@ -117,7 +117,20 @@ export function createTwinClassApi(settings: ApiSettings) {
         })
     }
 
-    return {search, getByKey, getById, getFields, create, update, createField, updateField}
+    function getLinks({twinClassId}: { twinClassId: string}) {
+        return settings.client.GET("/private/twin_class/{twinClassId}/link/v1", {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {twinClassId},
+                query: {
+                    showLinkDst2TwinClassMode: 'MANAGED',
+                    showLinkMode: 'DETAILED',
+                }
+            }
+        });
+    }
+
+    return {search, getByKey, getById, getFields, create, update, createField, updateField, getLinks}
 }
 
 export type TwinClassApi = ReturnType<typeof createTwinClassApi>;
