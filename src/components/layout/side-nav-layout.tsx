@@ -14,14 +14,16 @@ export interface Section {
     content: ReactNode;
 }
 
+export interface ReturnOptions {
+    path: string
+    label: string
+}
+
 export interface SideNavLayoutProps {
     sections: Section[]
     defaultSectionKey?: string
     children?: ReactNode
-    returnOptions?: {
-        path: string
-        label: string
-    }
+    returnOptions?: ReturnOptions[]
 }
 
 
@@ -54,12 +56,14 @@ export function SideNavLayout({sections, defaultSectionKey, children, returnOpti
         <nav
             className="flex-1 grid text-sm text-muted-foreground auto-rows-max md:max-w-60"
         >
-            {returnOptions && <div>
-                <Link href={returnOptions.path}>
-                    <Button variant='secondary' size='sm' className={'w-full justify-start mb-1'}>
-                        <ChevronLeft/> {returnOptions.label}
-                    </Button>
-                </Link>
+            {returnOptions && <div className="mb-2">
+                {returnOptions.map((option, index) => (
+                    <Link href={option.path} key={index}>
+                        <Button variant="secondary" size="sm" className="w-full justify-start mb-1">
+                            <ChevronLeft/> {option.label}
+                        </Button>
+                    </Link>
+                ))}
             </div>}
             {sections.map((section) => {
                 const isSelected = section.key === selectedSection?.key;

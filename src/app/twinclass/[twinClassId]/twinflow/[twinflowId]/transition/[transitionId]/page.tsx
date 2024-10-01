@@ -4,7 +4,7 @@ import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {TwinFlow, TwinFlowTransition} from "@/lib/api/api-types";
 import {toast} from "sonner";
-import {Section, SideNavLayout} from "@/components/layout/side-nav-layout";
+import {ReturnOptions, Section, SideNavLayout} from "@/components/layout/side-nav-layout";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
 import {LoadingOverlay} from "@/components/base/loading";
 import {
@@ -73,12 +73,20 @@ export default function TransitionPage({params: {twinClassId, twinflowId, transi
         }
     ] : []
 
-    return <div>
-        {loading && <LoadingOverlay/>}
-        {transition && <SideNavLayout sections={sections} returnOptions={{
+    const returnOptions: ReturnOptions[] = [
+        {
             path: `/twinclass/${twinClassId}/twinflow/${twinflowId}#transitions`,
             label: 'Back to class'
-        }}>
+        },
+        {
+            path: `/twinclass/${twinClassId}/#twinflow/`,
+            label: 'Back to twinflow'
+        }
+    ]
+
+    return <div>
+        {loading && <LoadingOverlay/>}
+        {transition && <SideNavLayout sections={sections} returnOptions={returnOptions}>
             <h1 className="text-xl font-bold">Transition {transition.name ?? transition.id}</h1>
         </SideNavLayout>}
     </div>
