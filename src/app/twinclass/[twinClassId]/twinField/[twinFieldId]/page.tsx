@@ -1,6 +1,6 @@
 'use client'
 
-import {Section, SideNavLayout} from "@/components/layout/side-nav-layout";
+import {ReturnOptions, Section, SideNavLayout} from "@/components/layout/side-nav-layout";
 import {LoadingOverlay} from "@/components/base/loading";
 import {useContext, useEffect, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
@@ -56,12 +56,16 @@ export default function TwinClassPage({params: {twinFieldId}}: TwinFieldPageProp
         },
     ] : []
 
-    return <div>
-        {loading && <LoadingOverlay/>}
-        {twinField && <SideNavLayout sections={sections} returnOptions={{
+    const returnOptions: ReturnOptions[] = [
+        {
             path: `/twinclass/${twinClass?.id}#fields`,
             label: 'Back to class'
-        }}>
+        }
+    ]
+
+    return <div>
+        {loading && <LoadingOverlay/>}
+        {twinField && <SideNavLayout sections={sections} returnOptions={returnOptions}>
             <h1 className="text-xl font-bold">{twinField.name}</h1>
         </SideNavLayout>}
     </div>
