@@ -1,6 +1,6 @@
 'use client'
 
-import {Section, SideNavLayout} from "@/components/layout/side-nav-layout";
+import {ReturnOptions, Section, SideNavLayout} from "@/components/layout/side-nav-layout";
 import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {
     TwinFlow,
@@ -59,12 +59,16 @@ export default function TwinflowPage({params: {twinflowId}}: TwinflowPageProps) 
         }
     ] : []
 
-    return <div>
-        {loading && <LoadingOverlay/>}
-        {twinflow && <SideNavLayout sections={sections} returnOptions={{
+    const returnOptions: ReturnOptions[] = twinflow ? [
+        {
             path: `/twinclass/${twinflow.twinClassId}#twinflows`,
             label: 'Back to class'
-        }}>
+        }
+    ] : [];
+
+    return <div>
+        {loading && <LoadingOverlay/>}
+        {twinflow && <SideNavLayout sections={sections} returnOptions={returnOptions}>
             <h1 className="text-xl font-bold">{twinflow.name}</h1>
         </SideNavLayout>}
     </div>
