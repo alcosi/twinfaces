@@ -58,10 +58,10 @@ export default function TwinClassPage({params: {twinStatusId}}: TwinStatusPagePr
 
     return <div>
         {loading && <LoadingOverlay/>}
-        {twinStatus && <SideNavLayout sections={sections} returnOptions={{
+        {twinStatus && <SideNavLayout sections={sections} returnOptions={[{
             path: `/twinclass/${twinClass?.id}#statuses`,
             label: 'Back to class'
-        }}>
+        }]}>
             <h1 className="text-xl font-bold">{twinStatus.name}</h1>
         </SideNavLayout>}
     </div>
