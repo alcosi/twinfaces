@@ -8,6 +8,7 @@ import {
 import {ComboboxProps} from "@/components/base/combobox";
 import {CheckboxFormField, CheckboxFormItem} from "@/components/form-fields/checkbox-form-field";
 import {FeaturerFormField, FeaturerFormItem} from "@/components/form-fields/featurer-form-field";
+import {ColorPickerFormField, ColorPickerFormItem} from "@/components/form-fields/color-form-field";
 
 
 export enum AutoFormValueType {
@@ -18,11 +19,12 @@ export enum AutoFormValueType {
     combobox = 'combobox',
     featurer = 'featurer',
     select = 'select',
+    color = 'color',
 }
 
 export type AutoFormValueInfo =
     AutoFormCommonInfo
-    & (AutoFormSimpleValueInfo | AutoFormCheckboxValueInfo | AutoFormComboboxValueInfo | AutoFormFeaturerValueInfo | AutoFormSelectValueInfo)
+    & (AutoFormSimpleValueInfo | AutoFormCheckboxValueInfo | AutoFormComboboxValueInfo | AutoFormFeaturerValueInfo | AutoFormSelectValueInfo | AutoFormColorValueInfo)
 
 export interface AutoFormCommonInfo {
     label: string
@@ -63,6 +65,11 @@ export interface AutoFormFieldProps {
     control?: Control<any>;
 }
 
+export interface AutoFormColorValueInfo {
+    type: AutoFormValueType.color;
+}
+
+
 export function AutoField({info, value, onChange, name, control}: AutoFormFieldProps) {
     function setValue(newValue: any) {
         onChange?.(newValue);
@@ -82,8 +89,11 @@ export function AutoField({info, value, onChange, name, control}: AutoFormFieldP
         return name && control && info.paramsName ?
             <FeaturerFormField name={name} control={control} paramsName={info.paramsName} {...info}/>
             : <FeaturerFormItem {...info}/>
-    }
-    else {
+    }  else if (info.type === AutoFormValueType.color) {
+        return name && control ?
+            <ColorPickerFormField name={name} control={control} {...info}/>
+            : <ColorPickerFormItem fieldValue={value} {...info}/>
+    } else {
         return name && control ? <TextFormField {...info} name={name} control={control}/> :
             <TextFormItem {...info} value={value} onChange={(e) => setValue(e?.target.value)}/>
         // return <TextItem {...info} value={value} onChange={(e) => setValue(e?.target.value)}/>
