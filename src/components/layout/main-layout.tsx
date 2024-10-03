@@ -12,6 +12,10 @@ const links = [
     {
         href: '/twinclass',
         name: 'Classes'
+    },
+    {
+        href: '/twin',
+        name: 'Twins'
     }
 ]
 
