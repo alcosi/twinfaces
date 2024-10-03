@@ -10,15 +10,11 @@ import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {useRouter} from "next/navigation";
 import {buildFilters, FilterFields, FILTERS} from "@/entities/twin"
-import {useTwinList} from "@/shared/hooks/useTwinList";
-import {components} from "@/lib/api/generated/schema";
 
 type FetchDataResponse = {
     data: TwinBase[],
     pageCount: number
 };
-
-type TwinList = components['schemas']['TwinSearchRsV2']['twinList']
 
 const columns: ColumnDef<TwinBase>[] = [
     {
@@ -57,14 +53,6 @@ export default function Twin() {
     const api = useContext(ApiContext)
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
-    const {data} = useTwinList<{ twinList: TwinList }>(api);
-    const twinIds: string[] = data?.twinList
-        ? data.twinList?.map(i => i.id ?? 'N/A')
-        : []
-    const twinIdOptions = twinIds.map(id => ({
-        id,
-        name: id.length > 12 ? `${id.slice(0, 12)}...` : id
-    }))
 
     async function fetchData(pagination: PaginationState, filters: FiltersState): Promise<FetchDataResponse> {
         try {
@@ -143,27 +131,3 @@ export default function Twin() {
         </main>
     );
 }
-
-// filters: {
-//     twinIdList: filters?.filters['id'] ? [filters?.filters['id']] : [],
-//     twinNameLikeList: filters?.filters['name'] ? [`%${filters?.filters['name']}%`] : [],
-//     twinClassIdList: filters?.filters['twinClassId'] ? [filters?.filters['twinClassId']] : [],
-//     assignerUserIdList: filters?.filters['assignerUserId'] ? [filters?.filters['assignerUserId']] : [],
-// },
-
-// "id": {
-//     type: AutoFormValueType.string,
-//     label: "Id"
-// },
-// "name": {
-//     type: AutoFormValueType.string,
-//     label: "Name"
-// },
-// "twinClassId": {
-//     type: AutoFormValueType.string,
-//     label: "Twin Class Id"
-// },
-// "assignerUserId": {
-//     type: AutoFormValueType.string,
-//     label: "Assigner User Id"
-// },
