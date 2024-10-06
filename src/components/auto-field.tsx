@@ -9,6 +9,8 @@ import {ComboboxProps} from "@/components/base/combobox";
 import {CheckboxFormField, CheckboxFormItem} from "@/components/form-fields/checkbox-form-field";
 import {FeaturerFormField, FeaturerFormItem} from "@/components/form-fields/featurer-form-field";
 import {ColorPickerFormField, ColorPickerFormItem} from "@/components/form-fields/color-form-field";
+import { MultiSelect } from "./base/multi-select";
+import { MultiSelectFormField } from "./form-fields/multi-select-form-field";
 
 
 export enum AutoFormValueType {
@@ -19,12 +21,21 @@ export enum AutoFormValueType {
     combobox = 'combobox',
     featurer = 'featurer',
     select = 'select',
+    multiSelect = 'multiSelect',
     color = 'color',
 }
 
 export type AutoFormValueInfo =
     AutoFormCommonInfo
-    & (AutoFormSimpleValueInfo | AutoFormCheckboxValueInfo | AutoFormComboboxValueInfo | AutoFormFeaturerValueInfo | AutoFormSelectValueInfo | AutoFormColorValueInfo)
+    & (
+        | AutoFormSimpleValueInfo
+        | AutoFormCheckboxValueInfo
+        | AutoFormComboboxValueInfo
+        | AutoFormFeaturerValueInfo
+        | AutoFormSelectValueInfo
+        | AutoFormMultiSelectValueInfo
+        | AutoFormColorValueInfo
+    )
 
 export interface AutoFormCommonInfo {
     label: string
@@ -55,6 +66,11 @@ export interface AutoFormFeaturerValueInfo {
 export interface AutoFormSelectValueInfo {
     type: AutoFormValueType.select,
     options: string[]
+}
+
+export interface AutoFormMultiSelectValueInfo {
+    type: AutoFormValueType.multiSelect,
+    options: { id: string, name: string }[];
 }
 
 export interface AutoFormFieldProps {
@@ -89,7 +105,18 @@ export function AutoField({info, value, onChange, name, control}: AutoFormFieldP
         return name && control && info.paramsName ?
             <FeaturerFormField name={name} control={control} paramsName={info.paramsName} {...info}/>
             : <FeaturerFormItem {...info}/>
-    }  else if (info.type === AutoFormValueType.color) {
+    }  else if (info.type === AutoFormValueType.multiSelect) {
+        return name && control ?
+            <MultiSelectFormField
+                name={name}
+                control={control}
+                values={info.options}
+                getItemKey={(item) => item.id}
+                getItemLabel={(item) => item.name}
+                {...info}
+            />
+            : null
+    } else if (info.type === AutoFormValueType.color) {
         return name && control ?
             <ColorPickerFormField name={name} control={control} {...info}/>
             : <ColorPickerFormItem fieldValue={value} {...info}/>

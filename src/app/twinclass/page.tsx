@@ -12,8 +12,9 @@ import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {ImageWithFallback} from "@/components/image-with-fallback";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {useRouter} from "next/navigation";
-import {AutoFormValueType} from "@/components/auto-field";
-import { mapToChoice } from "@/shared/helpers";
+import type {components} from "@/lib/api/generated/schema";
+import {useTwinClassList} from "@/shared/hooks/useTwinClassList";
+import {buildFilters, FilterFields, FILTERS} from "@/entities/twinClass";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
@@ -63,29 +64,30 @@ const columns: ColumnDef<TwinClass>[] = [
     // }
 ]
 
+type TwinClassList = components['schemas']['TwinClassListRsV1']['twinClassList']
+
 export default function TwinClasses() {
     const [classDialogOpen, setClassDialogOpen] = useState(false)
 
     const api = useContext(ApiContext)
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
+    const { data } = useTwinClassList<{twinClassList: TwinClassList}>(api);
+    const twinClassIds: string[] = data?.twinClassList
+        ? data.twinClassList?.map(i => i.id ?? 'N/A')
+        : []
+    const twinClassIdOptions = twinClassIds.map(id => ({
+        id,
+        name: id.length > 12 ? `${id.slice(0, 12)}...` : id
+    }))
 
     async function fetchData(pagination: PaginationState, filters: FiltersState) {
         try {
             console.log('filters', filters)
             const {data, error} = await api.twinClass.search({
                 pagination,
-                filters: {
-                    twinClassIdList: filters?.filters['id'] ? [filters?.filters['id']] : [],
-                    twinClassKeyLikeList: filters?.filters['key'] ? [`%${filters?.filters['key']}%`] : undefined,
-                    nameI18nLikeList: filters?.filters['name'] ? [`%${filters?.filters['name']}%`] : [],
-                    descriptionI18nLikeList: filters?.filters['description'] ? [`%${filters?.filters['description']}%`] : [],
-                    twinflowSchemaSpace: mapToChoice(filters?.filters['twinflow']),
-                    twinClassSchemaSpace: mapToChoice(filters?.filters['twinclass']),
-                    permissionSchemaSpace: mapToChoice(filters?.filters['permission']),
-                    aliasSpace: mapToChoice(filters?.filters['alias']),
-                    abstractt: mapToChoice(filters?.filters["abstract"])
-                }
+                search: filters?.search,
+                filters: buildFilters(filters)
             });
             if (error) {
                 console.error('failed to fetch classes', error)
@@ -128,52 +130,27 @@ export default function TwinClasses() {
                 createButton={{enabled: true, onClick: openCreateClass, text: 'Create Class'}}
                 filters={{
                     filtersInfo: {
-                        "id": {
-                            type: AutoFormValueType.string,
-                            label: "Id"
+                        [FilterFields.twinClassIdList]: {
+                            ...FILTERS.twinClassIdList,
+                            options: twinClassIdOptions,
                         },
-                        "key": {
-                            type: AutoFormValueType.string,
-                            label: "Key"
+                        [FilterFields.twinClassKeyLikeList]: FILTERS.twinClassKeyLikeList,
+                        [FilterFields.nameI18nLikeList]: FILTERS.nameI18nLikeList,
+                        [FilterFields.descriptionI18nLikeList]: FILTERS.descriptionI18nLikeList,
+                        [FilterFields.headTwinClassIdList]: {
+                            ...FILTERS.headTwinClassIdList,
+                            options: twinClassIdOptions,
                         },
-                        "name": {
-                            type: AutoFormValueType.string,
-                            label: "Name"
+                        [FilterFields.extendsTwinClassIdList]: {
+                            ...FILTERS.extendsTwinClassIdList,
+                            options: twinClassIdOptions,
                         },
-                        "description": {
-                            type: AutoFormValueType.string,
-                            label: "Description"
-                        },
-                        "twinflow": {
-                            type: AutoFormValueType.boolean,
-                            label: "Twinflow schema space",
-                            hasIndeterminate: true,
-                            defaultValue: 'indeterminate'
-                        },
-                        "twinclass": {
-                            type: AutoFormValueType.boolean,
-                            label: "Twinclass schema space",
-                            hasIndeterminate: true,
-                            defaultValue: 'indeterminate'
-                        },
-                        'permission': {
-                            type: AutoFormValueType.boolean,
-                            label: "Permission schema space",
-                            hasIndeterminate: true,
-                            defaultValue: 'indeterminate'
-                        },
-                        "alias": {
-                            type: AutoFormValueType.boolean,
-                            label: "Alias space",
-                            hasIndeterminate: true,
-                            defaultValue: 'indeterminate'
-                        },
-                        "abstract": {
-                            type: AutoFormValueType.boolean,
-                            label: "Abstract",
-                            hasIndeterminate: true,
-                            defaultValue: 'indeterminate'
-                        }
+                        [FilterFields.ownerTypeList]: FILTERS.ownerTypeList,
+                        [FilterFields.twinflowSchemaSpace]: FILTERS.twinflowSchemaSpace,
+                        [FilterFields.twinClassSchemaSpace]: FILTERS.twinClassSchemaSpace,
+                        [FilterFields.permissionSchemaSpace]: FILTERS.permissionSchemaSpace,
+                        [FilterFields.aliasSpace]: FILTERS.aliasSpace,
+                        [FilterFields.abstractt]: FILTERS.abstractt
                     },
                     onChange: () => {
                         console.log("Filters changed")
