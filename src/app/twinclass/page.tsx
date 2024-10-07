@@ -38,6 +38,16 @@ const columns: ColumnDef<TwinClass>[] = [
         header: "Name",
     },
     {
+        accessorKey: "headClassId",
+        header: "Head",
+        cell: (data) => <ShortGuidWithCopy value={data.row.original.headClassId}/>
+    },
+    {
+        accessorKey: 'extendsClass.id',
+        header: "Extends",
+        cell: (data) => <ShortGuidWithCopy value={data.row.original.extendsClass?.id}/>
+    },
+    {
         accessorKey: "abstractClass",
         header: "Abstract",
         cell: (data) => <>{data.getValue() && <Check/>}</>
@@ -130,7 +140,14 @@ export default function TwinClasses() {
                 }}
                 customizableColumns={{
                     enabled: true,
-                    defaultVisibleKeys: ['id', 'key', 'name'],
+                    defaultVisibleKeys: [
+                        'id',
+                        'key',
+                        'name',
+                        'headClassId',
+                        'extendsClass.id',
+                        'abstractClass'
+                    ],
                 }}
             />
 

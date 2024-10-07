@@ -41,7 +41,7 @@ export interface DataTableProps<TData, TValue> {
 
 export const DataTable = fixedForwardRef(DataTableInternal);
 
-export function DataTableInternal<TData, TValue>({
+function DataTableInternal<TData, TValue>({
                                                      columns,
                                                      getRowId,
                                                      fetcher,
