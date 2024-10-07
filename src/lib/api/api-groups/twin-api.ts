@@ -1,80 +1,40 @@
 import {ApiSettings, getApiDomainHeaders} from "@/lib/api/api";
+import {PaginationState} from "@tanstack/table-core";
+import {components} from "@/lib/api/generated/schema";
+
+type TwinSearchApiFilters = Partial<Pick<components["schemas"]["TwinSearchRqV1"],
+    | 'twinIdList'
+    | 'twinNameLikeList'
+    | 'twinClassIdList'
+    | 'assignerUserIdList'
+>>
 
 export function createTwinApi(settings: ApiSettings) {
 
-    function search() {
+    function search({pagination, search, filters}: {
+        pagination: PaginationState,
+        search?: string,
+        filters?: TwinSearchApiFilters
+    }) {
+        console.log("createTwinApi", search);
         return settings.client.POST('/private/twin/search/v3', {
             params: {
                 header: getApiDomainHeaders(settings),
                 query: {
+                    showTwinMode: "DETAILED",
                     showTwinClassMode: "DETAILED",
-                    limit: 6,
-                    offset: 0
+                    offset: pagination.pageIndex * pagination.pageSize,
+                    limit: pagination.pageSize,
+                    sortAsc: false
                 },
             },
             body: [{
-                // twinClassIdList: search ? ['%' + search + '%'] : undefined,
+                ...filters,
             }]
         });
     }
-
-
 
     return {search}
 }
 
 export type TwinApi = ReturnType<typeof createTwinApi>;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// lazyRelation: true,
-//                 // showAttachment2TransitionMode:"MANAGED",
-//                 // showAttachment2UserMode: "DETAILED",
-//                 // showLinkDst2TwinClassMode: "MANAGED",
-//                 // showTwin2AttachmentCollectionMode: "DIRECT",
-//                 // showTwin2AttachmentMode: "DETAILED",
-//                 // showTwin2StatusMode: "DETAILED",
-//                 // showTwin2TransitionMode: "MANAGED",
-//                 // showTwin2TwinClassMode: "MANAGED",
-//                 // showTwin2TwinLinkMode: "DETAILED",
-//                 // showTwin2UserMode: "DETAILED",
-//                 // showTwinActionMode: "SHOW",
-//                 // showTwinAliasMode: "DETAILED",
-//                 // showTwinAttachmentCountMode: "DETAILED",
-//                 // showTwinByHeadMode: "WHITE",
-//                 // showTwinByLinkMode: "WHITE",
-//                 // showTwinClass2LinkMode: "DETAILED",
-//                 // showTwinClass2StatusMode: "DETAILED",
-//                 // showTwinClass2TwinClassFieldMode: "MANAGED",
-//                 // showTwinClassExtends2TwinClassMode: "MANAGED",
-//                 // showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
-//                 // showTwinClassFieldDescriptor2TwinMode: "DETAILED",
-//                 // showTwinClassFieldDescriptor2UserMode: "DETAILED",
-//                 // showTwinClassHead2TwinClassMode: "MANAGED",
-//                 // showTwinClassMarker2DataListOptionMode: "DETAILED",
-//                 showTwinClassMode: "MANAGED",
-//                 // showTwinClassTag2DataListOptionMode: "DETAILED",
-//                 // showTwinFieldCollectionMode: "ALL_FIELDS",
-//                 // showTwinLink2LinkMode: "DETAILED",
-//                 // showTwinLink2UserMode: "DETAILED",
-//                 // showTwinMarker2DataListOptionMode: "DETAILED",
-//                 // showTwinMode: "DETAILED",
-//                 // showTwinTag2DataListOptionMode: "DETAILED",
-//                 offset: 0,
-//                 limit: 10,
-//                 // sortAsc: false,

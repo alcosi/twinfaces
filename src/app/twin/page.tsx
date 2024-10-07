@@ -4,46 +4,72 @@ import {toast} from "sonner";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
 import {useContext, useEffect, useRef, useState} from "react";
-import {Twin} from "@/lib/api/api-types";
+import {TwinBase} from "@/lib/api/api-types";
 import {ApiContext} from "@/lib/api/api";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {useRouter} from "next/navigation";
+import {AutoFormValueType} from "@/components/auto-field";
 
 type FetchDataResponse = {
-    data: Twin[],
+    data: TwinBase[],
     pageCount: number
 };
 
-const columns: ColumnDef<Twin>[] = [
+const columns: ColumnDef<TwinBase>[] = [
     {
         accessorKey: "id",
         header: "ID",
         cell: (data) => <ShortGuidWithCopy value={data.row.original.id}/>
     },
+    {
+        accessorKey: "createdAt",
+        header: "Created at",
+    },
+    {
+        accessorKey: "authorUserId",
+        header: "Author User Id",
+        cell: (data) => <ShortGuidWithCopy value={data.row.original.authorUserId}/>
+    },
+    {
+        accessorKey: "name",
+        header: "Name",
+    },
+    {
+        accessorKey: "assignerUserId",
+        header: "Assigner User Id",
+        cell: (data) => <ShortGuidWithCopy value={data.row.original.assignerUserId}/>
+    },
+    {
+        accessorKey: "twinClassId",
+        header: "Twin Class Id",
+        cell: (data) => <ShortGuidWithCopy value={data.row.original.twinClassId}/>
+    },
 ]
 
-export default function TwinClasses() {
+export default function Twin() {
     const [classDialogOpen, setClassDialogOpen] = useState(false)
 
     const api = useContext(ApiContext)
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
 
-    useEffect(() => {
-        api.twin.search()
-            .then(
-                res => console.log(res),
-            )
-    })
-
-
     async function fetchData(pagination: PaginationState, filters: FiltersState): Promise<FetchDataResponse> {
         try {
-            const {data, error} = await api.twin.search();
+            const {data, error} = await api.twin.search({
+                pagination,
+                search: filters?.search,
+                filters: {
+                    twinIdList: filters?.filters['id'] ? [filters?.filters['id']] : [],
+                    twinNameLikeList: filters?.filters['name'] ? [`%${filters?.filters['name']}%`] : [],
+                    twinClassIdList: filters?.filters['twinClassId'] ? [filters?.filters['twinClassId']] : [],
+                    assignerUserIdList: filters?.filters['assignerUserId'] ? [filters?.filters['assignerUserId']] : [],
+                }
+            });
+
             if (error) {
-                console.error('failed to fetch classes', error)
-                toast.error("Failed to fetch classes")
+                console.error('failed to fetch twins', error)
+                toast.error("Failed to fetch twins")
                 return {
                     data: [],
                     pageCount: 0
@@ -51,12 +77,12 @@ export default function TwinClasses() {
             }
 
             return {
-                data: data as any ?? [],
+                data: data?.twinList ?? [],
                 pageCount: Math.ceil((data.pagination?.total ?? 0) / pagination.pageSize)
             }
         } catch (e) {
-            console.error('Exception when fetching classes', e)
-            toast.error("Failed to fetch classes")
+            console.error('Exception when fetching twins', e)
+            toast.error("Failed to fetch twins")
             return {
                 data: [],
                 pageCount: 0
@@ -79,30 +105,36 @@ export default function TwinClasses() {
                 fetcher={fetchData}
                 pageSizes={[10, 20, 50]}
                 // onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
-                // createButton={{enabled: true, onClick: openCreateClass, text: 'Create Class'}}
+                createButton={{enabled: true, onClick: openCreateClass, text: 'Create Class'}}
                 // search={{enabled: true, placeholder: 'Search by key...'}}
-                // filters={{
-                //     filtersInfo: {
-                //         "name": {
-                //             type: AutoFormValueType.string,
-                //             label: "Name"
-                //         },
-                //         "abstract": {
-                //             type: AutoFormValueType.boolean,
-                //             label: "Abstract",
-                //             hasIndeterminate: true,
-                //             defaultValue: 'indeterminate'
-                //         }
-                //     },
-                //     onChange: () => {
-                //         console.log("Filters changed")
-                //         return Promise.resolve()
-                //     }
-                // }}
-                // customizableColumns={{
-                //     enabled: true,
-                //     defaultVisibleKeys: ['id'],
-                // }}
+                filters={{
+                    filtersInfo: {
+                        "id": {
+                            type: AutoFormValueType.string,
+                            label: "Id"
+                        },
+                        "name": {
+                            type: AutoFormValueType.string,
+                            label: "Name"
+                        },
+                        "twinClassId": {
+                            type: AutoFormValueType.string,
+                            label: "Twin Class Id"
+                        },
+                        "assignerUserId": {
+                            type: AutoFormValueType.string,
+                            label: "Assigner User Id"
+                        },
+                    },
+                    onChange: () => {
+                        console.log("Filters changed")
+                        return Promise.resolve()
+                    }
+                }}
+                customizableColumns={{
+                    enabled: true,
+                    defaultVisibleKeys: ['id', 'createdAt', 'authorUserId', 'name', 'assignerUserId', 'twinClassId'],
+                }}
             />
 
             <div className="w-0 flex-0 lg:w-16"/>
