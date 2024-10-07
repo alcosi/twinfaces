@@ -24,10 +24,13 @@ export type TwinFlowTransitionTriggerUpdate = components["schemas"]["TriggerUpda
 export type TwinFlowTransitionValidator = components["schemas"]["ValidatorV1"]
 export type TwinFlowTransitionValidatorCud = components["schemas"]["ValidatorCudV1"]
 export type TwinFlowTransitionValidatorUpdate = components["schemas"]["ValidatorUpdateV1"]
+
 export type TwinClassLink = components["schemas"]["TwinClassLinkV1"];
 export type TwinBase = components["schemas"]["TwinBaseV1"];
 export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
 
+// export type TwinLinkAddV1 = components["schemas"]["TwinLinkAddV1"];
+export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];
 
 export type Featurer = components["schemas"]["FeaturerV1"];
 export type FeaturerParam = components["schemas"]["FeaturerParamV1"];

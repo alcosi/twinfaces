@@ -3,11 +3,12 @@ import {useContext, useRef, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
-import {TwinClassField, TwinClassLink} from "@/lib/api/api-types";
+import {TwinClassLink} from "@/lib/api/api-types";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {toast} from "sonner";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {LoadingOverlay} from "@/components/base/loading";
+import {TwinLinkDialog} from "@/entities/twinLink/components/twin-link-dialog";
 
 export function TwinClassLinks() {
     const api = useContext(ApiContext);
@@ -15,8 +16,7 @@ export function TwinClassLinks() {
     const tableRefForward = useRef<DataTableHandle>(null);
     const tableRefBackward = useRef<DataTableHandle>(null);
 
-    const [createEditLinkDialogOpen, setCreateEditLinkDialogOpen] = useState<boolean>(false);
-    const [editedLink, setEditedLink] = useState<TwinClassLink | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const columns: ColumnDef<TwinClassLink>[] = [
         {
@@ -50,7 +50,7 @@ export function TwinClassLinks() {
         }
 
         try {
-            const response = await api.twinClass.getLinks({ twinClassId: twinClass.id });
+            const response = await api.twinLinks.getLinks({ twinClassId: twinClass.id });
             const data = response.data;
 
             if (!data || data.status != 0) {
@@ -74,51 +74,22 @@ export function TwinClassLinks() {
         }
     }
 
-    function createLink() {
-        setEditedLink(null);
-        setCreateEditLinkDialogOpen(true);
-    }
-
-    function editLink(field: TwinClassField) {
-        setEditedLink(field);
-        setCreateEditLinkDialogOpen(true);
-    }
-
     if (!twinClass) {
         return <LoadingOverlay/>;
     }
 
     return (
         <>
-            <div className="mb-10">
-                <CrudDataTable
-                    ref={tableRefForward}
-                    title="Forward Links"
-                    columns={columns}
-                    getRowId={(row) => row.id!}
-                    fetcher={(paginationState, filters) => fetchLinks('forward', paginationState, filters)}
-                    createButton={{
-                        enabled: true,
-                        onClick: createLink,
-                    }}
-                    disablePagination={true}
-                    pageSizes={[10, 20, 50]}
-                    customizableColumns={{
-                        enabled: true,
-                        defaultVisibleKeys: ['id', 'linkStrengthId', 'name', 'type', 'dstTwinClassId'],
-                    }}
-                />
-            </div>
-
             <CrudDataTable
-                ref={tableRefBackward}
-                title="Backward Links"
+                className="mb-10"
+                ref={tableRefForward}
+                title="Forward Links"
                 columns={columns}
                 getRowId={(row) => row.id!}
-                fetcher={(paginationState, filters) => fetchLinks('backward', paginationState, filters)}
+                fetcher={(paginationState, filters) => fetchLinks('forward', paginationState, filters)}
                 createButton={{
                     enabled: true,
-                    onClick: createLink,
+                    onClick: () => setDialogOpen(true),
                 }}
                 disablePagination={true}
                 pageSizes={[10, 20, 50]}
@@ -128,13 +99,35 @@ export function TwinClassLinks() {
                 }}
             />
 
-            {/*    <CreateEditTwinFieldDialog*/}
-            {/*open={createEditFieldDialogOpen}*/}
-            {/*twinClassId={twinClass.id!}*/}
-            {/*field={editedField}*/}
-            {/*onOpenChange={setCreateEditFieldDialogOpen}*/}
-            {/*onSuccess={tableRefForward.current?.refresh}*/}
-            {/*/>*/}
+            <CrudDataTable
+                ref={tableRefBackward}
+                title="Backward Links"
+                columns={columns}
+                getRowId={(row) => row.id!}
+                fetcher={(paginationState, filters) => fetchLinks('backward', paginationState, filters)}
+                createButton={{
+                    enabled: true,
+                    onClick: () => setDialogOpen(true),
+                }}
+                disablePagination={true}
+                pageSizes={[10, 20, 50]}
+                customizableColumns={{
+                    enabled: true,
+                    defaultVisibleKeys: ['id', 'linkStrengthId', 'name', 'type', 'dstTwinClassId'],
+                }}
+            />
+
+            {twinClass?.id && (
+                <TwinLinkDialog
+                    open={dialogOpen}
+                    onOpenChange={setDialogOpen}
+                    twinId={twinClass?.id}
+                    // link={null} // null for new link, pass existing link for editing
+                    onSuccess={() => {
+                        // Refresh the links or table after successful submission
+                    }}
+                />
+            )}
         </>
     );
 }
