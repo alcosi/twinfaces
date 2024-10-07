@@ -65,7 +65,6 @@ export default function TwinClasses() {
             console.log('filters', filters)
             const {data, error} = await api.twinClass.search({
                 pagination,
-                search: filters?.search,
                 filters: {
                     twinClassIdList: filters?.filters['id'] ? [filters?.filters['id']] : [],
                     twinClassKeyLikeList: filters?.filters['key'] ? [`%${filters?.filters['key']}%`] : undefined,
@@ -117,7 +116,6 @@ export default function TwinClasses() {
                 pageSizes={[10, 20, 50]}
                 onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
                 createButton={{enabled: true, onClick: openCreateClass, text: 'Create Class'}}
-                search={{enabled: true, placeholder: 'Search by key...'}}
                 filters={{
                     filtersInfo: {
                         "id": {
