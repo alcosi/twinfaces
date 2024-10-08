@@ -18,7 +18,6 @@ type FetchDataResponse = {
     pageCount: number
 };
 
-// type TwinClassList = components['schemas']['TwinClassListRsV1']['twinClassList']
 type TwinList = components['schemas']['TwinSearchRsV2']['twinList']
 
 const columns: ColumnDef<TwinBase>[] = [
@@ -58,7 +57,7 @@ export default function Twin() {
     const api = useContext(ApiContext)
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
-    const { data } = useTwinList<{twinList: TwinList}>(api);
+    const {data} = useTwinList<{ twinList: TwinList }>(api);
     const twinIds: string[] = data?.twinList
         ? data.twinList?.map(i => i.id ?? 'N/A')
         : []
@@ -117,29 +116,10 @@ export default function Twin() {
                 // search={{enabled: true, placeholder: 'Search by key...'}}
                 filters={{
                     filtersInfo: {
-                        [FilterFields.twinIdList]: FILTERS[FilterFields.twinIdList]
-                            // {
-                            //         type: AutoFormValueType.string,
-                            //         label: "Id"
-                            //     },
-
-
-                        // "id": {
-                        //     type: AutoFormValueType.string,
-                        //     label: "Id"
-                        // },
-                        // "name": {
-                        //     type: AutoFormValueType.string,
-                        //     label: "Name"
-                        // },
-                        // "twinClassId": {
-                        //     type: AutoFormValueType.string,
-                        //     label: "Twin Class Id"
-                        // },
-                        // "assignerUserId": {
-                        //     type: AutoFormValueType.string,
-                        //     label: "Assigner User Id"
-                        // },
+                        [FilterFields.twinIdList]: FILTERS[FilterFields.twinIdList],
+                        [FilterFields.twinNameLikeList]: FILTERS[FilterFields.twinNameLikeList],
+                        [FilterFields.twinClassIdList]: FILTERS[FilterFields.twinClassIdList],
+                        [FilterFields.assignerUserIdList]: FILTERS[FilterFields.assignerUserIdList],
                     },
                     onChange: () => {
                         console.log("Filters changed")
@@ -169,4 +149,21 @@ export default function Twin() {
 //     twinNameLikeList: filters?.filters['name'] ? [`%${filters?.filters['name']}%`] : [],
 //     twinClassIdList: filters?.filters['twinClassId'] ? [filters?.filters['twinClassId']] : [],
 //     assignerUserIdList: filters?.filters['assignerUserId'] ? [filters?.filters['assignerUserId']] : [],
+// },
+
+// "id": {
+//     type: AutoFormValueType.string,
+//     label: "Id"
+// },
+// "name": {
+//     type: AutoFormValueType.string,
+//     label: "Name"
+// },
+// "twinClassId": {
+//     type: AutoFormValueType.string,
+//     label: "Twin Class Id"
+// },
+// "assignerUserId": {
+//     type: AutoFormValueType.string,
+//     label: "Assigner User Id"
 // },
