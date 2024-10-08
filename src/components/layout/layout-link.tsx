@@ -21,7 +21,11 @@ export function PathLink({href, children, mode, className, enabledClassName, dis
     if (mode === PathLinkMode.Exact) {
         isActive = pathname === href;
     } else if (mode === PathLinkMode.StartsWith) {
-        isActive = pathname.startsWith(href);
+        const startsWithHref = pathname.startsWith(href);
+        const nextChar = pathname[href.length];
+        const isBoundary = !nextChar || nextChar === '/';
+
+        isActive = startsWithHref && isBoundary;
     }
 
     return <Link href={href} className={cn(className, isActive && enabledClassName, !isActive && disabledClassName)}>
