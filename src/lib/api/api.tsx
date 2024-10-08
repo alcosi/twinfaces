@@ -10,7 +10,7 @@ import {createFeaturerApi, FeaturerApi} from "@/lib/api/api-groups/featurer-api"
 import {createTwinflowApi, TwinflowApi} from "@/lib/api/api-groups/twinflow-api";
 import {createTwinApi, TwinApi} from "@/lib/api/api-groups/twin-api";
 
-interface ApiContextProps {
+export interface ApiContextProps {
     twinClass: TwinClassApi
     twinStatus: TwinStatusApi
     twinflow: TwinflowApi

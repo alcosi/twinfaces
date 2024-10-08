@@ -3,18 +3,23 @@
 import {toast} from "sonner";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
 import {DataTableHandle} from "@/components/base/data-table/data-table";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useRef, useState} from "react";
 import {TwinBase} from "@/lib/api/api-types";
 import {ApiContext} from "@/lib/api/api";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {useRouter} from "next/navigation";
-import {AutoFormValueType} from "@/components/auto-field";
+import {buildFilters, FilterFields, FILTERS} from "@/entities/twin"
+import {useTwinList} from "@/shared/hooks/useTwinList";
+import {components} from "@/lib/api/generated/schema";
 
 type FetchDataResponse = {
     data: TwinBase[],
     pageCount: number
 };
+
+// type TwinClassList = components['schemas']['TwinClassListRsV1']['twinClassList']
+type TwinList = components['schemas']['TwinSearchRsV2']['twinList']
 
 const columns: ColumnDef<TwinBase>[] = [
     {
@@ -53,18 +58,21 @@ export default function Twin() {
     const api = useContext(ApiContext)
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
+    const { data } = useTwinList<{twinList: TwinList}>(api);
+    const twinIds: string[] = data?.twinList
+        ? data.twinList?.map(i => i.id ?? 'N/A')
+        : []
+    const twinIdOptions = twinIds.map(id => ({
+        id,
+        name: id.length > 12 ? `${id.slice(0, 12)}...` : id
+    }))
 
     async function fetchData(pagination: PaginationState, filters: FiltersState): Promise<FetchDataResponse> {
         try {
             const {data, error} = await api.twin.search({
                 pagination,
                 search: filters?.search,
-                filters: {
-                    twinIdList: filters?.filters['id'] ? [filters?.filters['id']] : [],
-                    twinNameLikeList: filters?.filters['name'] ? [`%${filters?.filters['name']}%`] : [],
-                    twinClassIdList: filters?.filters['twinClassId'] ? [filters?.filters['twinClassId']] : [],
-                    assignerUserIdList: filters?.filters['assignerUserId'] ? [filters?.filters['assignerUserId']] : [],
-                }
+                filters: buildFilters(filters),
             });
 
             if (error) {
@@ -109,22 +117,29 @@ export default function Twin() {
                 // search={{enabled: true, placeholder: 'Search by key...'}}
                 filters={{
                     filtersInfo: {
-                        "id": {
-                            type: AutoFormValueType.string,
-                            label: "Id"
-                        },
-                        "name": {
-                            type: AutoFormValueType.string,
-                            label: "Name"
-                        },
-                        "twinClassId": {
-                            type: AutoFormValueType.string,
-                            label: "Twin Class Id"
-                        },
-                        "assignerUserId": {
-                            type: AutoFormValueType.string,
-                            label: "Assigner User Id"
-                        },
+                        [FilterFields.twinIdList]: FILTERS[FilterFields.twinIdList]
+                            // {
+                            //         type: AutoFormValueType.string,
+                            //         label: "Id"
+                            //     },
+
+
+                        // "id": {
+                        //     type: AutoFormValueType.string,
+                        //     label: "Id"
+                        // },
+                        // "name": {
+                        //     type: AutoFormValueType.string,
+                        //     label: "Name"
+                        // },
+                        // "twinClassId": {
+                        //     type: AutoFormValueType.string,
+                        //     label: "Twin Class Id"
+                        // },
+                        // "assignerUserId": {
+                        //     type: AutoFormValueType.string,
+                        //     label: "Assigner User Id"
+                        // },
                     },
                     onChange: () => {
                         console.log("Filters changed")
@@ -148,3 +163,10 @@ export default function Twin() {
         </main>
     );
 }
+
+// filters: {
+//     twinIdList: filters?.filters['id'] ? [filters?.filters['id']] : [],
+//     twinNameLikeList: filters?.filters['name'] ? [`%${filters?.filters['name']}%`] : [],
+//     twinClassIdList: filters?.filters['twinClassId'] ? [filters?.filters['twinClassId']] : [],
+//     assignerUserIdList: filters?.filters['assignerUserId'] ? [filters?.filters['assignerUserId']] : [],
+// },
