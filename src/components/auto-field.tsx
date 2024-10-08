@@ -19,13 +19,12 @@ export enum AutoFormValueType {
     combobox = 'combobox',
     featurer = 'featurer',
     select = 'select',
-    multiSelect = 'multiSelect',
     color = 'color',
 }
 
 export type AutoFormValueInfo =
     AutoFormCommonInfo
-    & (AutoFormSimpleValueInfo | AutoFormCheckboxValueInfo | AutoFormComboboxValueInfo | AutoFormFeaturerValueInfo | AutoFormSelectValueInfo | AutoFormMultiSelectValueInfo | AutoFormColorValueInfo)
+    & (AutoFormSimpleValueInfo | AutoFormCheckboxValueInfo | AutoFormComboboxValueInfo | AutoFormFeaturerValueInfo | AutoFormSelectValueInfo | AutoFormColorValueInfo)
 
 export interface AutoFormCommonInfo {
     label: string
@@ -69,12 +68,6 @@ export interface AutoFormFieldProps {
 export interface AutoFormColorValueInfo {
     type: AutoFormValueType.color;
 }
-
-export interface AutoFormMultiSelectValueInfo {
-    type: AutoFormValueType.multiSelect,
-    options: { id: string, name: string }[];
-}
-
 
 export function AutoField({info, value, onChange, name, control}: AutoFormFieldProps) {
     function setValue(newValue: any) {

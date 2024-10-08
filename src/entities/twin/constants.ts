@@ -1,4 +1,4 @@
-import {AutoFormValueType} from "@/components/auto-field";
+import {AutoFormValueInfo, AutoFormValueType} from "@/components/auto-field";
 
 const OWNER_TYPES = [
     "SYSTEM",
@@ -11,35 +11,35 @@ const OWNER_TYPES = [
 ] as const;
 
 export enum FilterFields {
-    twinClassIdList = "twinClassIdList",
-    twinClassIdExcludeList = "twinClassIdExcludeList",
-    twinNameLikeList = "twinNameLikeList",
-    headTwinIdList = "headTwinIdList",
     twinIdList = "id",
-    twinIdExcludeList = "twinIdExcludeList",
-    statusIdList = "statusIdList",
-    assignerUserIdList = "assignerUserIdList",
-    assignerUserIdExcludeList = "assignerUserIdExcludeList",
-    createdByUserIdList = "createdByUserIdList",
-    createdByUserIdExcludeList = "createdByUserIdList",
-    linksAnyOfList = "linksAnyOfList",
-    linksNoAnyOfList = "linksNoAnyOfList",
-    linksAllOfList = "linksAllOfList",
-    linksNoAllOfList = "linksNoAllOfList",
-    hierarchyTreeContainsIdList = "hierarchyTreeContainsIdList",
-    statusIdExcludeList = "statusIdExcludeList",
-    tagDataListOptionIdList = "tagDataListOptionIdList",
-    tagDataListOptionIdExcludeList = "tagDataListOptionIdList",
-    markerDataListOptionIdList = "markerDataListOptionIdList",
-    markerDataListOptionIdExcludeList = "markerDataListOptionIdExcludeList",
-    extendsTwinClassIdList = "extendsTwinClassIdList",
-    headTwinClassIdList = "headTwinClassIdList",
-    touchList = "touchList",
-    touchExcludeList = "touchExcludeList",
-    headSearch = "headSearch",
+    twinClassIdList = "twinClassId",
+    twinNameLikeList = "name",
+    assignerUserIdList = "assignerUserId",
+    // twinClassIdExcludeList = "twinClassIdExcludeList",
+    // headTwinIdList = "headTwinIdList",
+    // twinIdExcludeList = "twinIdExcludeList",
+    // statusIdList = "statusIdList",
+    // assignerUserIdExcludeList = "assignerUserIdExcludeList",
+    // createdByUserIdList = "createdByUserIdList",
+    // createdByUserIdExcludeList = "createdByUserIdList",
+    // linksAnyOfList = "linksAnyOfList",
+    // linksNoAnyOfList = "linksNoAnyOfList",
+    // linksAllOfList = "linksAllOfList",
+    // linksNoAllOfList = "linksNoAllOfList",
+    // hierarchyTreeContainsIdList = "hierarchyTreeContainsIdList",
+    // statusIdExcludeList = "statusIdExcludeList",
+    // tagDataListOptionIdList = "tagDataListOptionIdList",
+    // tagDataListOptionIdExcludeList = "tagDataListOptionIdList",
+    // markerDataListOptionIdList = "markerDataListOptionIdList",
+    // markerDataListOptionIdExcludeList = "markerDataListOptionIdExcludeList",
+    // extendsTwinClassIdList = "extendsTwinClassIdList",
+    // headTwinClassIdList = "headTwinClassIdList",
+    // touchList = "touchList",
+    // touchExcludeList = "touchExcludeList",
+    // headSearch = "headSearch",
 }
 
-export const FILTERS = {
+export const FILTERS: Record<FilterFields, AutoFormValueInfo>  = {
     [FilterFields.twinIdList]: {
         type: AutoFormValueType.string,
         label: "Id"
@@ -57,3 +57,4 @@ export const FILTERS = {
         label: "Assigner User Id"
     },
 }
+
