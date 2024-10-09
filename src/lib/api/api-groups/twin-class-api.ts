@@ -27,6 +27,7 @@ export function createTwinClassApi(settings: ApiSettings) {
                 header: getApiDomainHeaders(settings),
                 query: {
                     showTwinClassMode: 'DETAILED',
+                    showTwinClassExtends2TwinClassMode: 'SHORT',
                     limit: pagination.pageSize,
                     offset: pagination.pageIndex * pagination.pageSize
                 }
