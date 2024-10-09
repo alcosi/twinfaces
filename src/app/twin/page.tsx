@@ -107,6 +107,7 @@ export default function Twin() {
                         [FilterFields.twinIdList]: FILTERS[FilterFields.twinIdList],
                         [FilterFields.twinNameLikeList]: FILTERS[FilterFields.twinNameLikeList],
                         [FilterFields.assignerUserIdList]: FILTERS[FilterFields.assignerUserIdList],
+                        [FilterFields.twinClassIdList]: FILTERS[FilterFields.twinClassIdList],
                     },
                     onChange: () => {
                         console.log("Filters changed")
