@@ -162,7 +162,7 @@ export function TwinClassDialog({
     }
 
     async function fetchClasses(search: string) {
-        const {data, error} = await api.twinClass.search({pagination: {pageIndex: 0, pageSize: 10}, search});
+        const {data, error} = await api.twinClass.search({pagination: {pageIndex: 0, pageSize: 10}, filters: {nameI18nLikeList: ['%' + search + '%']}});
 
         if (error) {
             console.error('failed to fetch classes', error)
