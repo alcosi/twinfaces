@@ -13,6 +13,7 @@ import {ImageWithFallback} from "@/components/image-with-fallback";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {useRouter} from "next/navigation";
 import {AutoFormValueType} from "@/components/auto-field";
+import { mapToChoice } from "@/shared/helpers";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
@@ -70,15 +71,21 @@ export default function TwinClasses() {
     const tableRef = useRef<DataTableHandle>(null);
 
     async function fetchData(pagination: PaginationState, filters: FiltersState) {
-        const abstractFilter = filters?.filters["abstract"] === 'indeterminate' ?
-            undefined : filters?.filters["abstract"] as boolean;
         try {
             console.log('filters', filters)
             const {data, error} = await api.twinClass.search({
                 pagination,
-                search: filters?.search,
-                nameFilter: filters?.filters["name"] as string,
-                abstractFilter: abstractFilter
+                filters: {
+                    twinClassIdList: filters?.filters['id'] ? [filters?.filters['id']] : [],
+                    twinClassKeyLikeList: filters?.filters['key'] ? [`%${filters?.filters['key']}%`] : undefined,
+                    nameI18nLikeList: filters?.filters['name'] ? [`%${filters?.filters['name']}%`] : [],
+                    descriptionI18nLikeList: filters?.filters['description'] ? [`%${filters?.filters['description']}%`] : [],
+                    twinflowSchemaSpace: mapToChoice(filters?.filters['twinflow']),
+                    twinClassSchemaSpace: mapToChoice(filters?.filters['twinclass']),
+                    permissionSchemaSpace: mapToChoice(filters?.filters['permission']),
+                    aliasSpace: mapToChoice(filters?.filters['alias']),
+                    abstractt: mapToChoice(filters?.filters["abstract"])
+                }
             });
             if (error) {
                 console.error('failed to fetch classes', error)
@@ -119,12 +126,47 @@ export default function TwinClasses() {
                 pageSizes={[10, 20, 50]}
                 onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
                 createButton={{enabled: true, onClick: openCreateClass, text: 'Create Class'}}
-                search={{enabled: true, placeholder: 'Search by key...'}}
                 filters={{
                     filtersInfo: {
+                        "id": {
+                            type: AutoFormValueType.string,
+                            label: "Id"
+                        },
+                        "key": {
+                            type: AutoFormValueType.string,
+                            label: "Key"
+                        },
                         "name": {
                             type: AutoFormValueType.string,
                             label: "Name"
+                        },
+                        "description": {
+                            type: AutoFormValueType.string,
+                            label: "Description"
+                        },
+                        "twinflow": {
+                            type: AutoFormValueType.boolean,
+                            label: "Twinflow schema space",
+                            hasIndeterminate: true,
+                            defaultValue: 'indeterminate'
+                        },
+                        "twinclass": {
+                            type: AutoFormValueType.boolean,
+                            label: "Twinclass schema space",
+                            hasIndeterminate: true,
+                            defaultValue: 'indeterminate'
+                        },
+                        'permission': {
+                            type: AutoFormValueType.boolean,
+                            label: "Permission schema space",
+                            hasIndeterminate: true,
+                            defaultValue: 'indeterminate'
+                        },
+                        "alias": {
+                            type: AutoFormValueType.boolean,
+                            label: "Alias space",
+                            hasIndeterminate: true,
+                            defaultValue: 'indeterminate'
                         },
                         "abstract": {
                             type: AutoFormValueType.boolean,

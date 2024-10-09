@@ -7,21 +7,31 @@ import {
     TwinClassFieldUpdateRq,
     TwinClassUpdateRq
 } from "@/lib/api/api-types";
-import {operations} from "@/lib/api/generated/schema";
+import {components, operations} from "@/lib/api/generated/schema";
+
+type TwinClassApiFilters = Partial<Pick<components["schemas"]["TwinClassListRqV1"],
+    | 'twinClassIdList'
+    | 'twinClassKeyLikeList'
+    | 'nameI18nLikeList'
+    | 'descriptionI18nLikeList'
+    | 'twinflowSchemaSpace'
+    | 'twinClassSchemaSpace'
+    | 'permissionSchemaSpace'
+    | 'aliasSpace'
+    | 'abstractt'
+>>
 
 export function createTwinClassApi(settings: ApiSettings) {
 
-    function search({pagination, search, nameFilter, abstractFilter}: {
+    function search({
+        pagination,
+        search, 
+        filters,
+    }: {
         pagination: PaginationState,
         search?: string,
-        nameFilter?: string,
-        abstractFilter?: boolean
+        filters: TwinClassApiFilters
     }) {
-        var abstract: "ANY" | "ONLY" | "ONLY_NOT" = "ANY";
-        if (abstractFilter !== undefined) {
-            abstract = abstractFilter ? "ONLY" : "ONLY_NOT";
-        }
-
         return settings.client.POST('/private/twin_class/search/v1', {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -34,8 +44,7 @@ export function createTwinClassApi(settings: ApiSettings) {
             },
             body: {
                 twinClassKeyLikeList: search ? ['%' + search + '%'] : undefined,
-                nameI18nLikeList: nameFilter ? ['%' + nameFilter + '%'] : undefined,
-                abstractt: abstract,
+                ...filters,
                 ownerType: 'DOMAIN'
             }
         })
