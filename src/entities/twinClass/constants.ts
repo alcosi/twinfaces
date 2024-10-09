@@ -1,4 +1,4 @@
-import {AutoFormValueType} from "@/components/auto-field";
+import {AutoFormValueInfo, AutoFormValueType} from "@/components/auto-field";
 
 const OWNER_TYPES = [
     "SYSTEM",
@@ -25,11 +25,11 @@ export enum FilterFields {
     abstractt = "abstractt",
 }
 
+// export const FILTERS: Record<FilterFields, AutoFormValueInfo> = {
 export const FILTERS = {
     [FilterFields.twinClassIdList]: {
-        type: AutoFormValueType.multiSelect,
+        type: AutoFormValueType.uuid,
         label: "Id",
-        defaultValue: [],
     },
     [FilterFields.twinClassKeyLikeList]: {
         type: AutoFormValueType.string,
@@ -44,20 +44,23 @@ export const FILTERS = {
         label: "Description",
     },
     [FilterFields.headTwinClassIdList]: {
-        type: AutoFormValueType.multiSelect,
-        label: "Head twins",
-        defaultValue: [],
+        type: AutoFormValueType.multiCombobox,
+        label: "Head",
     },
     [FilterFields.extendsTwinClassIdList]: {
-        type: AutoFormValueType.multiSelect,
-        label: "Extends twins",
-        defaultValue: [],
+        type: AutoFormValueType.multiCombobox,
+        label: "Extends",
     },
     [FilterFields.ownerTypeList]: {
-        type: AutoFormValueType.multiSelect,
+        type: AutoFormValueType.multiCombobox,
         label: "Owner types",
-        options: OWNER_TYPES?.map(type => ({ id: type, name: type })),
-        defaultValue: [],
+        getById: async (key: string) => OWNER_TYPES?.find(o => o === key),
+        getItems: async (needle: string) => {
+            return OWNER_TYPES?.filter(type => type.toLowerCase().includes(needle.toLowerCase()))
+        },
+        getItemKey: (o: string) => o,
+        getItemLabel: (o: string) => o,
+        multi: true
     },
     [FilterFields.twinflowSchemaSpace]: {
         type: AutoFormValueType.boolean,

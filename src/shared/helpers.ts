@@ -6,3 +6,8 @@ export const mapToChoice = (input?: TriStateFlag | undefined): ChoiceType => {
 
     return input ? "ONLY" : "ONLY_NOT";
 }
+
+export const toArray = <T>(value: T | T[] | undefined | null): T[] => {
+    if (Array.isArray(value)) return value;
+    return value ? [value] : [];
+};

@@ -1,16 +1,16 @@
-import {Control, FieldPath} from "react-hook-form";
-import {TextFormField, TextFormItem} from "@/components/form-fields/text-form-field";
+import { ComboboxProps } from "@/components/base/combobox";
+import { CheckboxFormField, CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
+import { ColorPickerFormField, ColorPickerFormItem } from "@/components/form-fields/color-form-field";
 import {
     ComboboxFormField,
     ComboboxFormFieldProps,
     ComboboxFormItem
 } from "@/components/form-fields/combobox-form-field";
-import {ComboboxProps} from "@/components/base/combobox";
-import {CheckboxFormField, CheckboxFormItem} from "@/components/form-fields/checkbox-form-field";
-import {FeaturerFormField, FeaturerFormItem} from "@/components/form-fields/featurer-form-field";
-import {ColorPickerFormField, ColorPickerFormItem} from "@/components/form-fields/color-form-field";
-import { MultiSelect } from "./base/multi-select";
-import { MultiSelectFormField } from "./form-fields/multi-select-form-field";
+import { FeaturerFormField, FeaturerFormItem } from "@/components/form-fields/featurer-form-field";
+import { TextFormField, TextFormItem } from "@/components/form-fields/text-form-field";
+import { Control, FieldPath } from "react-hook-form";
+import { MultiComboboxProps } from "./base/combobox/multi-combobox/multi-combobox";
+import { MultiComboboxFormField, MultiComboboxFormFieldProps } from "./form-fields/multi-combobox-form-field";
 
 
 export enum AutoFormValueType {
@@ -21,11 +21,11 @@ export enum AutoFormValueType {
     combobox = 'combobox',
     featurer = 'featurer',
     select = 'select',
-    multiSelect = 'multiSelect',
+    multiCombobox = 'multiCombobox',
     color = 'color',
 }
 
-export type AutoFormValueInfo =
+export type AutoFormValueInfo<T = any> =
     AutoFormCommonInfo
     & (
         | AutoFormSimpleValueInfo
@@ -33,7 +33,7 @@ export type AutoFormValueInfo =
         | AutoFormComboboxValueInfo
         | AutoFormFeaturerValueInfo
         | AutoFormSelectValueInfo
-        | AutoFormMultiSelectValueInfo
+        | AutoFormMultiComboboxValueInfo<T>
         | AutoFormColorValueInfo
     )
 
@@ -68,10 +68,12 @@ export interface AutoFormSelectValueInfo {
     options: string[]
 }
 
-export interface AutoFormMultiSelectValueInfo {
-    type: AutoFormValueType.multiSelect,
-    options: { id: string, name: string }[];
-}
+export type AutoFormMultiComboboxValueInfo<T> =
+    & MultiComboboxFormFieldProps<T>
+    & Pick<MultiComboboxProps<T>, 'getItems' | 'getItemKey' | 'getItemLabel'>
+    & {
+        type: AutoFormValueType.multiCombobox,
+    } 
 
 export interface AutoFormFieldProps {
     info: AutoFormValueInfo
@@ -101,21 +103,18 @@ export function AutoField({info, value, onChange, name, control}: AutoFormFieldP
         return name && control ?
             <ComboboxFormField name={name} control={control} {...info}/>
             : <ComboboxFormItem value={value} onChange={onChange} description={info.description} {...info}/>
+    } else if (info.type === AutoFormValueType.multiCombobox) {
+        return name && control
+            ? <MultiComboboxFormField
+                name={name}
+                control={control}
+                {...info}
+            />
+            : null
     } else if (info.type === AutoFormValueType.featurer) {
         return name && control && info.paramsName ?
             <FeaturerFormField name={name} control={control} paramsName={info.paramsName} {...info}/>
             : <FeaturerFormItem {...info}/>
-    }  else if (info.type === AutoFormValueType.multiSelect) {
-        return name && control ?
-            <MultiSelectFormField
-                name={name}
-                control={control}
-                values={info.options}
-                getItemKey={(item) => item.id}
-                getItemLabel={(item) => item.name}
-                {...info}
-            />
-            : null
     } else if (info.type === AutoFormValueType.color) {
         return name && control ?
             <ColorPickerFormField name={name} control={control} {...info}/>

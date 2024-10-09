@@ -1,34 +1,32 @@
 'use client'
 
-import {toast} from "sonner";
-import {ColumnDef, PaginationState} from "@tanstack/table-core";
-import {DataTableHandle} from "@/components/base/data-table/data-table";
-import {useContext, useRef, useState} from "react";
-import {Check, Unplug} from "lucide-react";
-import {TwinClass} from "@/lib/api/api-types";
-import {TwinClassDialog} from "@/app/twinclass/twin-class-dialog";
-import {ApiContext} from "@/lib/api/api";
-import {ShortGuidWithCopy} from "@/components/base/short-guid";
-import {ImageWithFallback} from "@/components/image-with-fallback";
-import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
-import {useRouter} from "next/navigation";
-import type {components} from "@/lib/api/generated/schema";
-import {useTwinClassList} from "@/shared/hooks/useTwinClassList";
-import {buildFilters, FilterFields, FILTERS} from "@/entities/twinClass";
+import { toast } from "sonner";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { useCallback, useContext, useRef, useState } from "react";
+import { Check, Unplug } from "lucide-react";
+import { TwinClass } from "@/lib/api/api-types";
+import { TwinClassDialog } from "@/app/twinclass/twin-class-dialog";
+import { ApiContext } from "@/lib/api/api";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { ImageWithFallback } from "@/components/image-with-fallback";
+import { CrudDataTable, FiltersState } from "@/components/base/data-table/crud-data-table";
+import { useRouter } from "next/navigation";
+import { buildFilters, FilterFields, FILTERS } from "@/entities/twinClass";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
         accessorKey: "id",
         header: "ID",
-        cell: (data) => <ShortGuidWithCopy value={data.row.original.id}/>
+        cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />
     },
     {
         accessorKey: "logo",
         header: "Logo",
         cell: (data) => {
             const value = data.row.original.logo;
-            return <ImageWithFallback src={value as string} alt={value as string} fallbackContent={<Unplug/>} width={32}
-                                      height={32} className="text-[0]"/>;
+            return <ImageWithFallback src={value as string} alt={value as string} fallbackContent={<Unplug />} width={32}
+                height={32} className="text-[0]" />;
         }
     },
     {
@@ -52,7 +50,7 @@ const columns: ColumnDef<TwinClass>[] = [
     {
         accessorKey: "abstractClass",
         header: "Abstract",
-        cell: (data) => <>{data.getValue() && <Check/>}</>
+        cell: (data) => <>{data.getValue() && <Check />}</>
     },
     // {
     //     header: "Actions",
@@ -64,86 +62,100 @@ const columns: ColumnDef<TwinClass>[] = [
     // }
 ]
 
-type TwinClassList = components['schemas']['TwinClassListRsV1']['twinClassList']
-
 export default function TwinClasses() {
     const [classDialogOpen, setClassDialogOpen] = useState(false)
 
     const api = useContext(ApiContext)
     const router = useRouter()
     const tableRef = useRef<DataTableHandle>(null);
-    const { data } = useTwinClassList<{twinClassList: TwinClassList}>(api);
-    const twinClassIds: string[] = data?.twinClassList
-        ? data.twinClassList?.map(i => i.id ?? 'N/A')
-        : []
-    const twinClassIdOptions = twinClassIds.map(id => ({
-        id,
-        name: id.length > 12 ? `${id.slice(0, 12)}...` : id
-    }))
 
-    async function fetchData(pagination: PaginationState, filters: FiltersState) {
+    const findTwinClassById = useCallback(async (id: string) => {
         try {
-            console.log('filters', filters)
-            const {data, error} = await api.twinClass.search({
-                pagination,
-                search: filters?.search,
-                filters: buildFilters(filters)
+            const { data } = await api.twinClass.getById({
+                id,
+                query: {
+                    showTwinClassMode: "DETAILED",
+                    showTwin2TwinClassMode: "SHORT",
+                },
             });
-            if (error) {
-                console.error('failed to fetch classes', error)
-                toast.error("Failed to fetch classes")
-                return {
-                    data: [],
-                    pageCount: 0
-                }
-            }
-
-            return {
-                data: data.twinClassList ?? [],
-                pageCount: Math.ceil((data.pagination?.total ?? 0) / pagination.pageSize)
-            }
-        } catch (e) {
-            console.error('Exception when fetching classes', e)
-            toast.error("Failed to fetch classes")
-            return {
-                data: [],
-                pageCount: 0
-            }
+            return data?.twinClass;
+        } catch (error) {
+            console.error(`Failed to find twin class by ID: ${id}`, error);
+            throw new Error(`Failed to find twin class with ID ${id}`);
         }
-    }
+    }, [api]);
 
-    function openCreateClass() {
-        setClassDialogOpen(true)
-    }
+    const fetchTwinClasses = useCallback(
+        async ({
+            search,
+            pagination,
+            filters,
+        }: {
+            search?: string,
+            pagination?: PaginationState,
+            filters?: FiltersState
+        }) => {
+            const _pagination = pagination || { pageIndex: 0, pageSize: 10 };
+            const _filters = buildFilters(filters ?? { filters: {} });
+
+            try {
+                const { data, error } = await api.twinClass.search({
+                    search,
+                    pagination: _pagination,
+                    filters: _filters
+                });
+
+                if (error) {
+                    throw new Error("Failed to fetch classes", error);
+                }
+
+                return {
+                    data: data.twinClassList ?? [],
+                    pageCount: Math.ceil((data.pagination?.total ?? 0) / _pagination.pageSize),
+                };
+            } catch (error) {
+                console.error("Exception in fetchTwinClasses", error);
+                toast.error("Failed to fetch twin classes data");
+                return { data: [], pageCount: 0 };
+            }
+        },
+        [api]
+    );
 
     return (
         <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
-            <div className="w-0 flex-0 lg:w-16"/>
-
             <CrudDataTable
                 ref={tableRef}
                 columns={columns}
                 getRowId={(row) => row.id!}
-                fetcher={fetchData}
+                fetcher={(pagination, filters) => fetchTwinClasses({ pagination, filters })}
                 pageSizes={[10, 20, 50]}
                 onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
-                createButton={{enabled: true, onClick: openCreateClass, text: 'Create Class'}}
+                createButton={{
+                    enabled: true,
+                    onClick: () => setClassDialogOpen(true),
+                    text: 'Create Class'
+                }}
+                search={{ enabled: true, placeholder: 'Search by key...' }}
                 filters={{
                     filtersInfo: {
-                        [FilterFields.twinClassIdList]: {
-                            ...FILTERS.twinClassIdList,
-                            options: twinClassIdOptions,
-                        },
+                        [FilterFields.twinClassIdList]: FILTERS.twinClassIdList,
                         [FilterFields.twinClassKeyLikeList]: FILTERS.twinClassKeyLikeList,
                         [FilterFields.nameI18nLikeList]: FILTERS.nameI18nLikeList,
                         [FilterFields.descriptionI18nLikeList]: FILTERS.descriptionI18nLikeList,
                         [FilterFields.headTwinClassIdList]: {
                             ...FILTERS.headTwinClassIdList,
-                            options: twinClassIdOptions,
+                            getById: findTwinClassById,
+                            getItems: async (search) => (await fetchTwinClasses({ search })).data,
+                            getItemKey: (item) => item?.id,
+                            getItemLabel: ({ key = '', name }) => `${key}${name ? ` (${name})` : ''}`,
                         },
                         [FilterFields.extendsTwinClassIdList]: {
                             ...FILTERS.extendsTwinClassIdList,
-                            options: twinClassIdOptions,
+                            getById: findTwinClassById,
+                            getItems: async (search) => (await fetchTwinClasses({ search })).data,
+                            getItemKey: (item) => item?.id,
+                            getItemLabel: ({ key = '', name }) => `${key}${name ? ` (${name})` : ''}`,
                         },
                         [FilterFields.ownerTypeList]: FILTERS.ownerTypeList,
                         [FilterFields.twinflowSchemaSpace]: FILTERS.twinflowSchemaSpace,
@@ -170,13 +182,12 @@ export default function TwinClasses() {
                 }}
             />
 
-            <div className="w-0 flex-0 lg:w-16"/>
-
             <TwinClassDialog open={classDialogOpen}
-                             onOpenChange={(newOpen) => {
-                                 setClassDialogOpen(newOpen);
-                             }}
-                             onSuccess={() => tableRef.current?.refresh()}/>
+                onOpenChange={(newOpen) => {
+                    setClassDialogOpen(newOpen);
+                }}
+                onSuccess={() => tableRef.current?.refresh()}
+            />
 
         </main>
     );
