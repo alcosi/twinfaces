@@ -6,11 +6,12 @@ import { mapToChoice, toArray } from "@/shared/helpers";
 // List of filter keys for string-like filtering
 const stringLikeFilters = [
     FilterFields.twinNameLikeList,
-    FilterFields.assignerUserIdList,
 ];
 
 const arrayLikeFilters = [
     FilterFields.twinIdList,
+    FilterFields.assignerUserIdList,
+    FilterFields.twinClassIdList,
 ];
 
 // List of filter keys for choice-mapping
