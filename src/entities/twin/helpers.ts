@@ -1,14 +1,16 @@
 import { FiltersState } from "@/components/base/data-table/crud-data-table";
 import { FilterFields, FILTERS } from "./constants";
-import { mapToChoice } from "@/shared/helpers";
+import { mapToChoice, toArray } from "@/shared/helpers";
 
 
 // List of filter keys for string-like filtering
 const stringLikeFilters = [
-    FilterFields.twinIdList,
     FilterFields.twinNameLikeList,
-    FilterFields.twinClassIdList,
     FilterFields.assignerUserIdList,
+];
+
+const arrayLikeFilters = [
+    FilterFields.twinIdList,
 ];
 
 // List of filter keys for choice-mapping
@@ -22,6 +24,8 @@ export const buildFilters = (filters: FiltersState): Record<string, any> => {
 
         if (stringLikeFilters.includes(filterKey as FilterFields)) {
             acc[filterKey] = filterValue ? [`%${filterValue}%`] : [];
+        } else if (arrayLikeFilters.includes(filterKey as FilterFields)) {
+            acc[filterKey] = toArray(filterValue);
         }
         else if (choiceMappingFilters.includes(filterKey as FilterFields)) {
             acc[filterKey] = mapToChoice(filterValue);

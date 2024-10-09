@@ -11,8 +11,7 @@ const OWNER_TYPES = [
 ] as const;
 
 export enum FilterFields {
-    twinIdList = "id",
-    twinClassIdList = "twinClassId",
+    twinIdList = "twinIdList",
     twinNameLikeList = "name",
     assignerUserIdList = "assignerUserId",
     // twinClassIdExcludeList = "twinClassIdExcludeList",
@@ -47,10 +46,6 @@ export const FILTERS: Record<FilterFields, AutoFormValueInfo>  = {
     [FilterFields.twinNameLikeList]: {
         type: AutoFormValueType.string,
         label: "Name"
-    },
-    [FilterFields.twinClassIdList]: {
-        type: AutoFormValueType.string,
-        label: "Twin Class Id"
     },
     [FilterFields.assignerUserIdList]: {
         type: AutoFormValueType.string,
