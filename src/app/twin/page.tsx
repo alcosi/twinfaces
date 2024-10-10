@@ -99,7 +99,7 @@ export default function Twin() {
                 getRowId={(row) => row.id!}
                 fetcher={fetchData}
                 pageSizes={[10, 20, 50]}
-                // onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
+                onRowClick={(row) => router.push(`/twin/${row.id}`)}
                 createButton={{enabled: true, onClick: openCreateClass, text: 'Create Class'}}
                 // search={{enabled: true, placeholder: 'Search by key...'}}
                 filters={{
