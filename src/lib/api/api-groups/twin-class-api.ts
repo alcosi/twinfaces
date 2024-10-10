@@ -2,7 +2,6 @@ import {ApiSettings, getApiDomainHeaders} from "@/lib/api/api";
 import {PaginationState} from "@tanstack/table-core";
 import {
     TwinClassCreateRq,
-    TwinClassField,
     TwinClassFieldCreateRq,
     TwinClassFieldUpdateRq,
     TwinClassUpdateRq
@@ -14,6 +13,9 @@ type TwinClassApiFilters = Partial<Pick<components["schemas"]["TwinClassListRqV1
     | 'twinClassKeyLikeList'
     | 'nameI18nLikeList'
     | 'descriptionI18nLikeList'
+    | 'headTwinClassIdList'
+    | 'extendsTwinClassIdList'
+    | 'ownerTypeList'
     | 'twinflowSchemaSpace'
     | 'twinClassSchemaSpace'
     | 'permissionSchemaSpace'
@@ -45,7 +47,6 @@ export function createTwinClassApi(settings: ApiSettings) {
             body: {
                 twinClassKeyLikeList: search ? ['%' + search + '%'] : undefined,
                 ...filters,
-                ownerType: 'DOMAIN'
             }
         })
     }

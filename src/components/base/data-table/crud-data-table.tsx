@@ -230,9 +230,9 @@ function FiltersPopover({filtersInfo, onChange}: FiltersPopoverProps) {
                 <FilterIcon/>
             </Button>
         </PopoverTrigger>
-        <PopoverContent className=''>
+        <PopoverContent className='max-h-[80vh] overflow-y-auto'>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(internalSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(internalSubmit)} className="space-y-4">
                     {keys.map(filterKey => {
                         return <AutoField key={filterKey} info={filtersInfo[filterKey]!}
                                           name={filterKey} control={form.control}/>

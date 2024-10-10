@@ -90,13 +90,12 @@ export function ComboboxFormItem<TFieldModel>(
             {label} {required && <span className="text-red-500">*</span>}
         </FormItemLabel>}
         <FormControl>
-            <div>
-                <Combobox<TFieldModel>
-                    ref={comboboxRef}
-                    onSelect={onChange}
-                    buttonClassName={cn(["w-full", buttonClassName])}
-                    {...props}/>
-            </div>
+            <Combobox<TFieldModel>
+                ref={comboboxRef}
+                onSelect={onChange}
+                buttonClassName={cn(["w-full", buttonClassName])}
+                {...props}
+            />
         </FormControl>
         {description && <FormItemDescription inForm={inForm}>{description}</FormItemDescription>}
         {inForm && <FormMessage/>}
