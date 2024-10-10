@@ -69,7 +69,6 @@ export interface AutoFormColorValueInfo {
     type: AutoFormValueType.color;
 }
 
-
 export function AutoField({info, value, onChange, name, control}: AutoFormFieldProps) {
     function setValue(newValue: any) {
         onChange?.(newValue);
@@ -89,7 +88,7 @@ export function AutoField({info, value, onChange, name, control}: AutoFormFieldP
         return name && control && info.paramsName ?
             <FeaturerFormField name={name} control={control} paramsName={info.paramsName} {...info}/>
             : <FeaturerFormItem {...info}/>
-    }  else if (info.type === AutoFormValueType.color) {
+    } else if (info.type === AutoFormValueType.color) {
         return name && control ?
             <ColorPickerFormField name={name} control={control} {...info}/>
             : <ColorPickerFormItem fieldValue={value} {...info}/>
