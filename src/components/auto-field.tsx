@@ -10,7 +10,7 @@ import { FeaturerFormField, FeaturerFormItem } from "@/components/form-fields/fe
 import { TextFormField, TextFormItem } from "@/components/form-fields/text-form-field";
 import { Control, FieldPath } from "react-hook-form";
 import { MultiComboboxProps } from "./base/combobox/multi-combobox/multi-combobox";
-import { MultiComboboxFormField, MultiComboboxFormFieldProps } from "./form-fields/multi-combobox-form-field";
+import { MultiComboboxFormField, MultiComboboxFormFieldProps, MultiComboboxFormItem } from "./form-fields/multi-combobox-form-field";
 
 
 export enum AutoFormValueType {
@@ -104,13 +104,16 @@ export function AutoField({info, value, onChange, name, control}: AutoFormFieldP
             <ComboboxFormField name={name} control={control} {...info}/>
             : <ComboboxFormItem value={value} onChange={onChange} description={info.description} {...info}/>
     } else if (info.type === AutoFormValueType.multiCombobox) {
-        return name && control
-            ? <MultiComboboxFormField
-                name={name}
-                control={control}
-                {...info}
-            />
-            : null
+        return name && control ? (
+          <MultiComboboxFormField name={name} control={control} {...info} />
+        ) : (
+          <MultiComboboxFormItem
+            fieldValue={value}
+            onSelect={onChange}
+            description={info.description}
+            {...info}
+          />
+        );
     } else if (info.type === AutoFormValueType.featurer) {
         return name && control && info.paramsName ?
             <FeaturerFormField name={name} control={control} paramsName={info.paramsName} {...info}/>

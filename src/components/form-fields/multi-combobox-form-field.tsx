@@ -53,7 +53,7 @@ export function MultiComboboxFormField<
   );
 }
 
-function MultiComboboxFormItem<TFieldModel>({
+export function MultiComboboxFormItem<TFieldModel>({
   fieldValue = [],
   onSelect,
   getById,

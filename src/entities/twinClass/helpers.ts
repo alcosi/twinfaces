@@ -26,12 +26,14 @@ const choiceMappingFilters = [
 
 // Warning: temp solution
 // TODO: Find better solution
-const toArrayOfString = <T extends { id?: string }>(input: T[] | string[]): string[] => {
-    if (input.every(item => typeof item === 'string')) {
-        return input as string[];
-    }
+const toArrayOfString = <T extends { id?: string }>(
+  input: T[] | string[]
+): string[] => {
+  if (input.every((item) => typeof item === "string")) {
+    return input as string[];
+  }
 
-    return (input as T[]).map(item => item.id || '').filter(Boolean);
+  return (input as T[]).map((item) => item.id || "").filter((id) => id !== "");
 };
 
 export const buildFilters = (filters: FiltersState): Record<string, any> => {
