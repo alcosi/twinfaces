@@ -1,6 +1,7 @@
 import {ApiSettings, getApiDomainHeaders} from "@/lib/api/api";
 import {PaginationState} from "@tanstack/table-core";
-import {components} from "@/lib/api/generated/schema";
+import {components, operations} from "@/lib/api/generated/schema";
+import {TwinUpdateRq} from "@/lib/api/api-types";
 
 type TwinSearchApiFilters = Partial<Pick<components["schemas"]["TwinSearchRqV1"],
     | 'twinIdList'
@@ -16,7 +17,6 @@ export function createTwinApi(settings: ApiSettings) {
         search?: string,
         filters?: TwinSearchApiFilters
     }) {
-        console.log("createTwinApi", search);
         return settings.client.POST('/private/twin/search/v3', {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -34,7 +34,27 @@ export function createTwinApi(settings: ApiSettings) {
         });
     }
 
-    return {search}
+    function getById({id, query = {}}: { id: string, query: operations['twinViewV2']['parameters']['query'] }) {
+        return settings.client.GET('/private/twin/{twinId}/v2', {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {twinId: id},
+                query: query
+            }
+        })
+    }
+
+    function update({id, body}: { id: string, body: TwinUpdateRq }) {
+        return settings.client.PUT('/private/twin/{twinId}/v1', {
+            params: {
+                header: getApiDomainHeaders(settings),
+                path: {twinId: id}
+            },
+            body: body
+        })
+    }
+
+    return {search, getById, update}
 }
 
 export type TwinApi = ReturnType<typeof createTwinApi>;
