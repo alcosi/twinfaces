@@ -1,24 +1,27 @@
 'use client'
 
-import { toast } from "sonner";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { useCallback, useContext, useRef, useState } from "react";
-import { Check, Unplug } from "lucide-react";
-import { TwinClass } from "@/lib/api/api-types";
 import { TwinClassDialog } from "@/app/twinclass/twin-class-dialog";
-import { ApiContext } from "@/lib/api/api";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { ImageWithFallback } from "@/components/image-with-fallback";
 import { CrudDataTable, FiltersState } from "@/components/base/data-table/crud-data-table";
+import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { ImageWithFallback } from "@/components/image-with-fallback";
+import { buildFilters, FilterFields, FILTERS, TwinClassResourceLink } from "@/entities/twinClass";
+import { ApiContext } from "@/lib/api/api";
+import { TwinClass } from "@/lib/api/api-types";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { Check, Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { buildFilters, FilterFields, FILTERS } from "@/entities/twinClass";
+import { useCallback, useContext, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const columns: ColumnDef<TwinClass>[] = [
     {
         accessorKey: "id",
         header: "ID",
-        cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />
+        cell: ({row: {original}}) => (
+            <div className="max-w-48 inline-flex">
+                <TwinClassResourceLink data={original} withTooltip />
+            </div>
+        )
     },
     {
         accessorKey: "logo",
@@ -40,12 +43,22 @@ const columns: ColumnDef<TwinClass>[] = [
     {
         accessorKey: "headClassId",
         header: "Head",
-        cell: (data) => <ShortGuidWithCopy value={data.row.original.headClassId}/>
+        cell: ({row: { original }}) => original.headClassId
+            ? (
+                <div className="max-w-48 inline-flex">
+                    <TwinClassResourceLink data={{ id: original.headClassId }} withTooltip />
+                </div>
+            ) : null
     },
     {
         accessorKey: 'extendsClass.id',
         header: "Extends",
-        cell: (data) => <ShortGuidWithCopy value={data.row.original.extendsClass?.id}/>
+        cell: ({row: { original }}) => original.extendsClass
+        ? (
+            <div className="max-w-48 inline-flex">
+                <TwinClassResourceLink data={{ ...original.extendsClass }} withTooltip  />
+            </div>
+        ) : null
     },
     {
         accessorKey: "abstractClass",
@@ -188,7 +201,6 @@ export default function TwinClasses() {
                 }}
                 onSuccess={() => tableRef.current?.refresh()}
             />
-
         </main>
     );
 }
