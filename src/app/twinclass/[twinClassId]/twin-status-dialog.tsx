@@ -30,7 +30,8 @@ const twinStatusSchema = z.object({
     name: z.string().min(0).max(100),
     description: z.string(),
     logo: z.string().url().optional().or(z.literal('').transform(() => undefined)),
-    color: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Color must be a hex color code').optional().or(z.literal('').transform(() => undefined)),
+    backgroundColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Color must be a hex color code').optional().or(z.literal('').transform(() => undefined)),
+    fontColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Color must be a hex color code').optional().or(z.literal('').transform(() => undefined)),
 })
 
 export default function CreateEditTwinStatusDialog({
@@ -61,7 +62,8 @@ export default function CreateEditTwinStatusDialog({
                     name: status.name,
                     description: status.description,
                     logo: status.logo,
-                    color: status.color
+                    backgroundColor: status.backgroundColor,
+                    fontColor: status.fontColor
                 })
             } else {
                 form.reset()
@@ -76,7 +78,8 @@ export default function CreateEditTwinStatusDialog({
             name: "",
             description: "",
             logo: "",
-            color: "#000000"
+            backgroundColor: "#000000",
+            fontColor: "#000000",
         }
     })
 
@@ -95,7 +98,8 @@ export default function CreateEditTwinStatusDialog({
                 translations: {}
             },
             logo: formValues.logo,
-            color: formValues.color
+            backgroundColor: formValues.backgroundColor,
+            fontColor: formValues.fontColor
         }
 
         if (!status) {
@@ -145,7 +149,9 @@ export default function CreateEditTwinStatusDialog({
 
                         <TextFormField control={form.control} name="logo" label="Logo URL"/>
 
-                        <ColorPickerFormField control={form.control} name="color" label="Color"/>
+                        <ColorPickerFormField control={form.control} name="backgroundColor" label="Background color"/>
+
+                        <ColorPickerFormField control={form.control} name="fontColor" label="Font color"/>
 
                         {error && <Alert variant="destructive">
                             {error}

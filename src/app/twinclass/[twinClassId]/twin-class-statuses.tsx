@@ -1,9 +1,8 @@
-import {TwinClass, TwinClassStatus} from "@/lib/api/api-types";
-import {useContext, useEffect, useRef, useState} from "react";
+import {TwinClassStatus} from "@/lib/api/api-types";
+import {useContext, useRef, useState} from "react";
 import {ApiContext} from "@/lib/api/api";
 import {toast} from "sonner";
-import {Button} from "@/components/base/button";
-import {Edit2Icon, Unplug} from "lucide-react";
+import {Unplug} from "lucide-react";
 import CreateEditTwinStatusDialog from "@/app/twinclass/[twinClassId]/twin-status-dialog";
 import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {ColumnDef, PaginationState} from "@tanstack/table-core";
@@ -37,8 +36,20 @@ export function TwinClassStatuses() {
             header: "Name",
         },
         {
-            accessorKey: "color",
-            header: "Color",
+            accessorKey: "backgroundColor",
+            header: "Background Color",
+            cell: (data) => {
+                return <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div className="w-4 h-4 rounded" style={{backgroundColor: data.getValue<string>()}}/>
+                    </TooltipTrigger>
+                    <TooltipContent>{data.getValue<string>()}</TooltipContent>
+                </Tooltip>
+            }
+        },
+        {
+            accessorKey: "fontColor",
+            header: "Font Color",
             cell: (data) => {
                 return <Tooltip>
                     <TooltipTrigger asChild>
