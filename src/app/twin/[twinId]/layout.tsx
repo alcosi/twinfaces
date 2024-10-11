@@ -1,13 +1,14 @@
 "use client";
+"use client";
 
 import { TwinContextProvider } from "@/app/twin/[twinId]/twin-context";
-import { ReactNode } from "react";
+import React from "react";
 
 interface TwinLayoutProps {
   params: {
     twinId: string;
   };
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export default function TwinLayout({

@@ -1,10 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { TwinBase } from "@/lib/api/api-types";
 import { ApiContext } from "@/lib/api/api";
 import { LoadingOverlay } from "@/components/base/loading";
@@ -25,12 +19,15 @@ export function TwinContextProvider({
   children,
 }: {
   twinId: string;
-  children: ReactNode;
+  children: React.ReactNode;
 }) {
   const api = useContext(ApiContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [twin, setTwin] = useState<TwinBase | undefined>(undefined);
 
+  useEffect(() => {
+    fetchTwinData();
+  }, []);
   useEffect(() => {
     fetchTwinData();
   }, []);
