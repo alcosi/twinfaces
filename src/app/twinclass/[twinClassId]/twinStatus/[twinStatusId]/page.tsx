@@ -7,7 +7,7 @@ import {ApiContext} from "@/lib/api/api";
 import {toast} from "sonner";
 import {TwinClassStatus} from "@/lib/api/api-types";
 import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
-import {TwinStatusGeneral} from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twinStatus-general";
+import {TwinStatusGeneral} from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twin-status-general";
 
 interface TwinStatusPageProps {
     params: {
