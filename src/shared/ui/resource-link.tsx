@@ -1,45 +1,59 @@
-import React, { ReactNode } from "react";
-import Link from "next/link";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
 } from "@/components/base/tooltip";
-
-type Props<T> = {
-  icon: ReactNode;
-  data: T;
-  renderTooltip: (data: T) => ReactNode;
-  getDisplayName: (data: T) => string;
-  getLink: (data: T) => string;
-};
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { ReactNode } from "react";
 
 type ResourceLinkContentProps = {
   icon: ReactNode;
   link: string;
   displayName: string;
+  disabled?: boolean;
 };
+
+type ResourceLinkProps<T> = {
+  data: T;
+  renderTooltip?: (data: T) => ReactNode;
+  getDisplayName: (data: T) => string;
+  getLink: (data: T) => string;
+} & Pick<ResourceLinkContentProps, 'icon' | 'disabled'>;
 
 const ResourceLinkContent = ({
   icon,
   link,
   displayName,
+  disabled,
 }: ResourceLinkContentProps) => {
+  const content = (
+    <span
+      className={cn(
+        "inline-flex items-center h-6 max-w-full bg-white border border-gray-300 rounded-lg p-2 transition-colors hover:border-[#0052CC]}",
+        disabled ? "cursor-not-allowed" : "cursor-pointer"
+      )}
+    >
+      {icon}
+      <span className="ml-2 text-[#0052CC] text-sm font-medium truncate">
+        {displayName}
+      </span>
+    </span>
+  );
   return (
     <TooltipTrigger asChild>
-      <Link
-        href={link}
-        className="max-w-full"
-        passHref
-        onClick={(e) => e.stopPropagation()}
-      >
-        <span className="inline-flex items-center h-6 max-w-full bg-white border border-gray-300 rounded-lg p-2 cursor-pointer transition-colors hover:border-[#0052CC]">
-          {icon}
-          <span className="ml-2 text-[#0052CC] text-sm font-medium truncate">
-            {displayName}
-          </span>
-        </span>
-      </Link>
+      {disabled ? (
+        content
+      ) : (
+        <Link
+          href={link}
+          className="max-w-full"
+          passHref
+          onClick={(e) => e.stopPropagation()}
+        >
+          {content}
+        </Link>
+      )}
     </TooltipTrigger>
   );
 };
@@ -50,15 +64,22 @@ export const ResourceLink = <T,>({
   renderTooltip,
   getDisplayName,
   getLink,
-}: Props<T>) => {
+  disabled,
+}: ResourceLinkProps<T>) => {
   const displayName = getDisplayName(data);
   const link = getLink(data);
-  const tooltipContent = renderTooltip(data);
 
   return (
     <Tooltip>
-      <ResourceLinkContent icon={icon} link={link} displayName={displayName} />
-      {tooltipContent && <TooltipContent side="left">{renderTooltip(data)}</TooltipContent>}
+      <ResourceLinkContent
+        icon={icon}
+        link={link}
+        displayName={displayName}
+        disabled={disabled}
+      />
+      {renderTooltip && (
+        <TooltipContent side="left">{renderTooltip(data)}</TooltipContent>
+      )}
     </Tooltip>
   );
 };

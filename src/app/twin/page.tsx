@@ -10,6 +10,8 @@ import {ShortGuidWithCopy} from "@/components/base/short-guid";
 import {CrudDataTable, FiltersState} from "@/components/base/data-table/crud-data-table";
 import {useRouter} from "next/navigation";
 import {buildFilters, FilterFields, FILTERS} from "@/entities/twin"
+import { TwinResourceLink } from "@/entities/twin/components/resource-link/resource-link";
+import { TwinClassResourceLink } from "@/entities/twinClass";
 
 type FetchDataResponse = {
     data: TwinBase[],
@@ -17,35 +19,49 @@ type FetchDataResponse = {
 };
 
 const columns: ColumnDef<TwinBase>[] = [
-    {
-        accessorKey: "id",
-        header: "ID",
-        cell: (data) => <ShortGuidWithCopy value={data.row.original.id}/>
-    },
-    {
-        accessorKey: "createdAt",
-        header: "Created at",
-    },
-    {
-        accessorKey: "authorUserId",
-        header: "Author User Id",
-        cell: (data) => <ShortGuidWithCopy value={data.row.original.authorUserId}/>
-    },
-    {
-        accessorKey: "name",
-        header: "Name",
-    },
-    {
-        accessorKey: "assignerUserId",
-        header: "Assigner User Id",
-        cell: (data) => <ShortGuidWithCopy value={data.row.original.assignerUserId}/>
-    },
-    {
-        accessorKey: "twinClassId",
-        header: "Twin Class Id",
-        cell: (data) => <ShortGuidWithCopy value={data.row.original.twinClassId}/>
-    },
-]
+  {
+    accessorKey: "id",
+    header: "ID",
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <TwinResourceLink data={original} withTooltip />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created at",
+  },
+  {
+    accessorKey: "authorUserId",
+    header: "Author User Id",
+    cell: (data) => (
+      <ShortGuidWithCopy value={data.row.original.authorUserId} />
+    ),
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "assignerUserId",
+    header: "Assigner User Id",
+    cell: (data) => (
+      <ShortGuidWithCopy value={data.row.original.assignerUserId} />
+    ),
+  },
+  {
+    accessorKey: "twinClassId",
+    header: "Twin Class Id",
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        {/* TODO: fix `src/app/twinclass/[twinClassId]/page.tsx` to remove `disabled`
+        Currently fetching `twinClass` data by id is not supported */}
+        <TwinClassResourceLink data={original} disabled withTooltip />
+      </div>
+    ),
+  },
+];
 
 export default function Twin() {
     const [classDialogOpen, setClassDialogOpen] = useState(false)

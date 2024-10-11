@@ -5,15 +5,22 @@ import { TwinClassResourceTooltip } from "./tooltip";
 
 type Props = {
     data: TwinClass;
+    disabled?: boolean;
+
     withTooltip?: boolean;
 }
 
-export const TwinClassResourceLink = ({ data, withTooltip }: Props) => {
+export const TwinClassResourceLink = ({ data, disabled, withTooltip }: Props) => {
     return (
       <ResourceLink
         icon={<LayoutTemplate />}
         data={data}
-        renderTooltip={(data) => withTooltip ? <TwinClassResourceTooltip data={data} /> : null}
+        disabled={disabled}
+        renderTooltip={
+          withTooltip
+            ? (data) => <TwinClassResourceTooltip data={data} />
+            : undefined
+        }
         getDisplayName={(data) => data.id ?? ""}
         getLink={(data) => `/twinclass/${data.id}`}
       />
