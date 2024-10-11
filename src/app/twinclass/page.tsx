@@ -149,7 +149,6 @@ export default function TwinClasses() {
                     onClick: () => setClassDialogOpen(true),
                     text: 'Create Class'
                 }}
-                search={{ enabled: true, placeholder: 'Search by key...' }}
                 filters={{
                     filtersInfo: {
                         [FilterFields.twinClassIdList]: FILTERS.twinClassIdList,
