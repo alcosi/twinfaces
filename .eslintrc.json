@@ -4,5 +4,13 @@
     "next/core-web-vitals",
     "eslint:recommended",
     "plugin:prettier/recommended"
+  ],
+  "overrides": [
+    {
+      "files": ["src/app/**/*"],
+      "rules": {
+        "no-unused-vars": "warn"
+      }
+    }
   ]
 }

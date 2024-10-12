@@ -1,112 +1,141 @@
-import {TwinClassStatus, TwinFlow, TwinFlowUpdateRq} from "@/lib/api/api-types";
-import {useContext, useEffect, useState} from "react";
-import {ApiContext} from "@/lib/api/api";
-import {AutoDialog, AutoEditDialogSettings} from "@/components/auto-dialog";
-import {toast} from "sonner";
-import {AutoFormValueType} from "@/components/auto-field";
-import {Table, TableBody, TableCell, TableRow} from "@/components/base/table";
-import {TwinClassContext} from "@/app/twinclass/[twinClassId]/twin-class-context";
+import {
+  TwinClassStatus,
+  TwinFlow,
+  TwinFlowUpdateRq,
+} from "@/lib/api/api-types";
+import { useContext, useEffect, useState } from "react";
+import { ApiContext } from "@/lib/api/api";
+import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
+import { toast } from "sonner";
+import { AutoFormValueType } from "@/components/auto-field";
+import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 
-export function TwinflowGeneral({twinflow, onChange}: { twinflow: TwinFlow, onChange: () => any }) {
-    const api = useContext(ApiContext);
-    const {getStatusesBySearch, findStatusById} = useContext(TwinClassContext);
-    const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
-    const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] = useState<AutoEditDialogSettings | undefined>(undefined);
+export function TwinflowGeneral({
+  twinflow,
+  onChange,
+}: {
+  twinflow: TwinFlow;
+  onChange: () => any;
+}) {
+  const api = useContext(ApiContext);
+  const { getStatusesBySearch, findStatusById } = useContext(TwinClassContext);
+  const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
+  const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
+    useState<AutoEditDialogSettings | undefined>(undefined);
 
-    async function updateTwinFlow(newFlow: TwinFlowUpdateRq) {
-        try {
-            await api.twinflow.update({id: twinflow.id!, body: newFlow});
-            console.log('updated');
-            onChange?.();
-        } catch (e) {
-            console.error(e);
-            throw e;
-        }
+  async function updateTwinFlow(newFlow: TwinFlowUpdateRq) {
+    try {
+      await api.twinflow.update({ id: twinflow.id!, body: newFlow });
+      console.log("updated");
+      onChange?.();
+    } catch (e) {
+      console.error(e);
+      throw e;
     }
+  }
 
-    const nameAutoDialogSettings: AutoEditDialogSettings = {
-        value: {"name": twinflow.name},
-        title: 'Update name',
-        onSubmit: (values) => {
-            return updateTwinFlow({nameI18n: {translationInCurrentLocale: values.name}})
+  const nameAutoDialogSettings: AutoEditDialogSettings = {
+    value: { name: twinflow.name },
+    title: "Update name",
+    onSubmit: (values) => {
+      return updateTwinFlow({
+        nameI18n: { translationInCurrentLocale: values.name },
+      });
+    },
+    valuesInfo: {
+      name: {
+        type: AutoFormValueType.string,
+        label: "Name",
+      },
+    },
+  };
+  const descriptionAutoDialogSettings: AutoEditDialogSettings = {
+    value: { description: twinflow.description },
+    title: "Update description",
+    onSubmit: (values) => {
+      return updateTwinFlow({
+        descriptionI18n: { translationInCurrentLocale: values.description },
+      });
+    },
+    valuesInfo: {
+      description: {
+        type: AutoFormValueType.string,
+        label: "Description",
+      },
+    },
+  };
+  const initialStatusIdAutoDialogSettings: AutoEditDialogSettings = {
+    value: { initialStatusId: twinflow.initialStatusId },
+    title: "Update initial status",
+    onSubmit: (values) => {
+      return updateTwinFlow({ initialStatusId: values.initialStatusId });
+    },
+    valuesInfo: {
+      initialStatusId: {
+        type: AutoFormValueType.combobox,
+        label: "Initial status",
+        getItems: getStatusesBySearch,
+        getItemKey: (c) => c?.id?.toLowerCase() ?? "",
+        getItemLabel: (c) => {
+          let label = c?.key ?? "";
+          if (c.name) label += ` (${c.name})`;
+          return label;
         },
-        valuesInfo: {
-            "name": {
-                type: AutoFormValueType.string, label: "Name"
-            }
-        }
-    };
-    const descriptionAutoDialogSettings: AutoEditDialogSettings = {
-        value: {"description": twinflow.description},
-        title: 'Update description',
-        onSubmit: (values) => {
-            return updateTwinFlow({descriptionI18n: {translationInCurrentLocale: values.description}})
-        },
-        valuesInfo: {
-            "description": {
-                type: AutoFormValueType.string, label: "Description"
-            }
-        }
-    }
-    const initialStatusIdAutoDialogSettings: AutoEditDialogSettings = {
-        value: {"initialStatusId": twinflow.initialStatusId},
-        title: 'Update initial status',
-        onSubmit: (values) => {
-            return updateTwinFlow({initialStatusId: values.initialStatusId})
-        },
-        valuesInfo: {
-            "initialStatusId": {
-                type: AutoFormValueType.combobox,
-                label: "Initial status",
-                getItems: getStatusesBySearch,
-                getItemKey: (c) => c?.id?.toLowerCase() ?? "",
-                getItemLabel: (c) => {
-                    let label = c?.key ?? "";
-                    if (c.name) label += ` (${c.name})`
-                    return label;
-                },
-                getById: findStatusById,
-                selectPlaceholder: "Select status...",
-            }
-        }
-    }
+        getById: findStatusById,
+        selectPlaceholder: "Select status...",
+      },
+    },
+  };
 
-    function openWithSettings(settings: AutoEditDialogSettings) {
-        setCurrentAutoEditDialogSettings(settings)
-        setEditFieldDialogOpen(true)
-    }
+  function openWithSettings(settings: AutoEditDialogSettings) {
+    setCurrentAutoEditDialogSettings(settings);
+    setEditFieldDialogOpen(true);
+  }
 
-    return <>
-        <Table className="mt-8">
-            <TableBody>
-                <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>{twinflow.id}</TableCell>
-                </TableRow>
-                <TableRow className="cursor-pointer" onClick={() => openWithSettings(nameAutoDialogSettings)}>
-                    <TableCell>Name</TableCell>
-                    <TableCell>{twinflow.name}</TableCell>
-                </TableRow>
-                <TableRow className="cursor-pointer" onClick={() => openWithSettings(descriptionAutoDialogSettings)}>
-                    <TableCell>Description</TableCell>
-                    <TableCell>{twinflow.description}</TableCell>
-                </TableRow>
-                <TableRow className="cursor-pointer"
-                          onClick={() => openWithSettings(initialStatusIdAutoDialogSettings)}>
-                    <TableCell>Initial status</TableCell>
-                    <TableCell>{twinflow.initialStatus?.name ?? twinflow.initialStatus?.key}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell>Created at</TableCell>
-                    <TableCell>{twinflow.createdAt}</TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+  return (
+    <>
+      <Table className="mt-8">
+        <TableBody>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>{twinflow.id}</TableCell>
+          </TableRow>
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(nameAutoDialogSettings)}
+          >
+            <TableCell>Name</TableCell>
+            <TableCell>{twinflow.name}</TableCell>
+          </TableRow>
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(descriptionAutoDialogSettings)}
+          >
+            <TableCell>Description</TableCell>
+            <TableCell>{twinflow.description}</TableCell>
+          </TableRow>
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(initialStatusIdAutoDialogSettings)}
+          >
+            <TableCell>Initial status</TableCell>
+            <TableCell>
+              {twinflow.initialStatus?.name ?? twinflow.initialStatus?.key}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Created at</TableCell>
+            <TableCell>{twinflow.createdAt}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
 
-        <AutoDialog
-            open={editFieldDialogOpen}
-            onOpenChange={setEditFieldDialogOpen}
-            settings={currentAutoEditDialogSettings}/>
+      <AutoDialog
+        open={editFieldDialogOpen}
+        onOpenChange={setEditFieldDialogOpen}
+        settings={currentAutoEditDialogSettings}
+      />
     </>
+  );
 }
-
