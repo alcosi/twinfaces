@@ -19,7 +19,6 @@ import { ReactNode, useEffect, useRef } from "react";
 import { FieldValues } from "react-hook-form";
 
 export interface ComboboxFormFieldProps<T> {
-  // eslint-disable-next-line no-unused-vars
   getById: (id: string) => Promise<T | undefined>;
 }
 
@@ -67,7 +66,6 @@ export function ComboboxFormItem<TFieldModel>({
 }: ComboboxProps<TFieldModel> &
   ComboboxFormFieldProps<TFieldModel> & {
     fieldValue?: string;
-    // eslint-disable-next-line no-unused-vars
     onChange?: (value?: TFieldModel) => any;
     label?: ReactNode;
     description?: ReactNode;

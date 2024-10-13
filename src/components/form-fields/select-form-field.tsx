@@ -20,9 +20,7 @@ interface SelectFormFieldProps<T extends FieldValues, K>
   extends FormFieldProps<T> {
   placeholder?: string;
   values: K[];
-  // eslint-disable-next-line no-unused-vars
   getItemKey: (item: K) => string;
-  // eslint-disable-next-line no-unused-vars
   getItemLabel: (item: K) => string;
 }
 

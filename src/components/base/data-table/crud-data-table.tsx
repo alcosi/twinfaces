@@ -47,7 +47,6 @@ interface CrudDataTableSearchProps {
 
 interface CrudDataTableFiltersProps {
   filtersInfo: { [key: string]: AutoFormValueInfo };
-  // eslint-disable-next-line no-unused-vars
   onChange: (values: { [key: string]: any }) => Promise<any>;
 }
 
@@ -59,9 +58,7 @@ interface CrudDataTableCustomizableColumnsProps {
 interface CrudDataTableProps<TData, TValue>
   extends Omit<DataTableProps<TData, TValue>, "fetcher"> {
   fetcher: (
-    // eslint-disable-next-line no-unused-vars
     pagination: PaginationState,
-    // eslint-disable-next-line no-unused-vars
     filters: FiltersState
   ) => Promise<{ data: TData[]; pageCount: number }>;
   title?: string;
@@ -250,7 +247,6 @@ function CrudDataTableInternal<TData, TValue>(
 
 interface FiltersPopoverProps {
   filtersInfo: { [key: string]: AutoFormValueInfo };
-  // eslint-disable-next-line no-unused-vars
   onChange: (values: { [key: string]: any }) => Promise<any>;
 }
 

@@ -27,7 +27,6 @@ export interface FeaturerInputProps {
   typeId: number;
   defaultId?: number;
   defaultParams?: object;
-  // eslint-disable-next-line no-unused-vars
   onChange?: (value: FeaturerValue | null) => any;
   buttonClassName?: string;
   selectPlaceholder?: string;
@@ -172,7 +171,6 @@ export function FeaturerInput({
 interface FeaturerParamInputProps {
   param: FeaturerParam;
   value: string;
-  // eslint-disable-next-line no-unused-vars
   onChange: (key: string, value: string) => void;
 }
 

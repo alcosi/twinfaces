@@ -31,17 +31,13 @@ export type DataTableHandle = {
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  // eslint-disable-next-line no-unused-vars
   getRowId: (row: TData, index: number) => string;
   fetcher: (
-    // eslint-disable-next-line no-unused-vars
     pagination: PaginationState
   ) => Promise<{ data: TData[]; pageCount: number }>;
   disablePagination?: boolean;
   pageSizes?: number[];
-  // eslint-disable-next-line no-unused-vars
   onFetchError?: (e: Error) => any;
-  // eslint-disable-next-line no-unused-vars
   onRowClick?: (row: TData) => any;
 }
 

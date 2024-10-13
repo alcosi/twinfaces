@@ -96,7 +96,6 @@ export type AutoFormMultiComboboxValueInfo<T> = MultiComboboxFormFieldProps<T> &
 export interface AutoFormFieldProps {
   info: AutoFormValueInfo;
   value?: any;
-  // eslint-disable-next-line no-unused-vars
   onChange?: (value: any) => any;
   name?: FieldPath<any>;
   control?: Control<any>;

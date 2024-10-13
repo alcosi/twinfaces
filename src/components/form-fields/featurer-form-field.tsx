@@ -86,7 +86,6 @@ export function FeaturerFormItem({
   typeId: number;
   fieldValue?: number;
   paramsValue?: object;
-  // eslint-disable-next-line no-unused-vars
   onChange?: (value: FeaturerValue | null) => any;
   label?: ReactNode;
   description?: ReactNode;

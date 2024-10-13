@@ -58,7 +58,6 @@ export function TextFormItem<T extends FieldValues>({
 }: TextFormFieldProps &
   InputProps & {
     fieldValue?: string;
-    // eslint-disable-next-line no-unused-vars
     onChange?: (value?: T) => any;
     label?: ReactNode;
     description?: ReactNode;
@@ -142,7 +141,6 @@ export function TextAreaFormItem<T extends FieldValues>({
   ...props
 }: TextareaProps & {
   fieldValue?: string;
-  // eslint-disable-next-line no-unused-vars
   onChange?: (value?: T) => any;
   label?: ReactNode;
   description?: ReactNode;
