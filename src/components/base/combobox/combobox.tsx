@@ -22,23 +22,16 @@ import { ForwardedRef, ReactNode, useEffect, useImperativeHandle } from "react";
 
 export type ComboboxHandle<T> = {
   getSelected: () => T | undefined;
-  // eslint-disable-next-line no-unused-vars
   setSelected: (newSelected?: T) => any;
 };
 
 export interface ComboboxProps<T> {
-  // eslint-disable-next-line no-unused-vars
   getItems: (search: string) => Promise<T[]>;
-  // eslint-disable-next-line no-unused-vars
   getItemKey: (item: T) => string;
-  // eslint-disable-next-line no-unused-vars
   getItemLabel: (item: T) => string;
   value?: T;
-  // eslint-disable-next-line no-unused-vars
   onSelect?: (value?: T) => any;
-  // eslint-disable-next-line no-unused-vars
   renderInList?: (value: T) => ReactNode;
-  // eslint-disable-next-line no-unused-vars
   renderSelected?: (value: T) => ReactNode;
   selectPlaceholder?: string;
   searchPlaceholder?: string;

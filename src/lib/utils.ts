@@ -6,7 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/* eslint-disable no-unused-vars */
 export function fixedForwardRef<T, P = {}>(
   render: (props: P, ref: Ref<T>) => ReactNode
 ): (props: P & RefAttributes<T>) => ReactNode {

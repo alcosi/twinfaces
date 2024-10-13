@@ -42,7 +42,6 @@ export function CheckboxFormItem({
   hasIndeterminate,
 }: {
   fieldValue?: boolean | "indeterminate";
-  // eslint-disable-next-line no-unused-vars
   onChange?: (value: boolean | "indeterminate") => any;
   label?: ReactNode;
   description?: ReactNode;

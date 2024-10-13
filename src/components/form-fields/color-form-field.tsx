@@ -38,7 +38,6 @@ export function ColorPickerFormField<T extends FieldValues>({
 
 export class ColorPickerFormItem extends Component<{
   fieldValue: string;
-  // eslint-disable-next-line no-unused-vars
   onChange?: (value: string) => any;
   label?: ReactNode;
   description?: ReactNode;

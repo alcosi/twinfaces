@@ -25,9 +25,7 @@ export interface CustomizableColumn {
 export interface CustomizableColumnsPopoverProps {
   columns: CustomizableColumn[];
   sortKeys: string[];
-  // eslint-disable-next-line no-unused-vars
   onVisibleChange: (columns: string[]) => void;
-  // eslint-disable-next-line no-unused-vars
   onSortChange: (columns: string[]) => void;
   onReset?: () => void;
 }

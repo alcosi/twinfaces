@@ -19,14 +19,12 @@ export interface AutoEditDialogSettings {
   title: string;
   value: { [key: string]: any };
   valuesInfo: { [key: string]: AutoFormValueInfo };
-  // eslint-disable-next-line no-unused-vars
   onSubmit: (values: { [key: string]: any }) => Promise<any>;
   schema?: z.ZodObject<{ [key: string]: z.ZodType<any, any> }>;
 }
 
 export interface EditFieldDialogProps {
   open: boolean;
-  // eslint-disable-next-line no-unused-vars
   onOpenChange?: (open: boolean) => any;
   settings?: AutoEditDialogSettings;
 }
@@ -67,7 +65,6 @@ export function AutoDialog({
     return { keys: Object.keys(settings?.value ?? {}) };
   }, [settings?.value]);
 
-  // eslint-disable-next-line no-unused-vars
   function renderField(key: string, value: any) {
     if (!settings?.valuesInfo) return null;
     const info = settings.valuesInfo[key];

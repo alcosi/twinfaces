@@ -14,7 +14,6 @@ import { HexColorPicker } from "react-colorful";
 
 interface ColorPickerProps {
   value: string;
-  // eslint-disable-next-line no-unused-vars
   onChange?: (value: string) => void;
   onBlur?: () => void;
 }
