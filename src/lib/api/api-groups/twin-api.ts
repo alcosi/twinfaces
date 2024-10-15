@@ -65,7 +65,7 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update };
+    return {search, getById, update}
 }
 
 export type TwinApi = ReturnType<typeof createTwinApi>;
