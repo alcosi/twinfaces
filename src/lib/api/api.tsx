@@ -9,7 +9,7 @@ import {createTwinStatusApi, TwinStatusApi} from "@/lib/api/api-groups/twin-stat
 import {createFeaturerApi, FeaturerApi} from "@/lib/api/api-groups/featurer-api";
 import {createTwinflowApi, TwinflowApi} from "@/lib/api/api-groups/twinflow-api";
 import {createTwinApi, TwinApi} from "@/lib/api/api-groups/twin-api";
-import { createTwinLinksApi, TwinLinkApi } from "@/lib/api/api-groups/twin-links-api";
+import { createTwinClassLinksApi, TwinClassLinkApi } from "@/lib/api/api-groups/twin-class-links-api";
 
 export interface ApiContextProps {
     twinClass: TwinClassApi
@@ -17,7 +17,7 @@ export interface ApiContextProps {
     twinflow: TwinflowApi
     featurer: FeaturerApi
     twin: TwinApi
-    twinLinks: TwinLinkApi
+    twinClassLink: TwinClassLinkApi
 }
 
 export const ApiContext = createContext<ApiContextProps>({} as ApiContextProps);
@@ -51,7 +51,7 @@ export function ApiContextProvider({children}: { children: React.ReactNode }) {
         twinflow: createTwinflowApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
-        twinLinks: createTwinLinksApi(settings),
+        twinClassLink: createTwinClassLinksApi(settings),
     }}>
         {children}
     </ApiContext.Provider>
