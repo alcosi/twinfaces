@@ -26,17 +26,17 @@ export function TwinLinks() {
         },
         {
             accessorKey: "linkId",
-            header: "Link ID",
+            header: "Link Id",
             cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()}/>
         },
         {
             accessorKey: "dstTwinId",
-            header: "dstTwinId",
+            header: "Dst twin Id",
             cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()}/>
         },
         {
             accessorKey: "createdByUserId",
-            header: "createdByUserId",
+            header: "Created by user Id",
             cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()}/>
         },
         {
