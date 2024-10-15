@@ -2,6 +2,7 @@
 
 import {Section, SideNavLayout} from "@/components/layout/side-nav-layout";
 import {TwinGeneral} from "@/app/twin/[twinId]/twin-general";
+import {TwinLinks} from "@/app/twin/[twinId]/twin-links";
 
 export default function TwinPage() {
 
@@ -10,6 +11,11 @@ export default function TwinPage() {
             key: 'general',
             label: 'General',
             content: <TwinGeneral/>
+        },
+        {
+            key: 'links',
+            label: 'Links',
+            content: <TwinLinks/>
         },
     ]
 
