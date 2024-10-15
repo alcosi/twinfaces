@@ -64,11 +64,7 @@ export function createTwinApi(settings: ApiSettings) {
                     limit: 10,
                 }
             },
-            body: [
-                {
-                    twinIdList: ["1fc37cd5-3a6e-4529-8ef3-e196242b1c38"]
-                }
-            ]
+            body: [{}]
         })
     }
 
