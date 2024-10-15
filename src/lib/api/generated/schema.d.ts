@@ -596,10 +596,15 @@ export interface components {
        */
       logo?: string;
       /**
-       * @description [optional] color hex
+       * @description [optional] background color hex
        * @example #ff00ff
        */
-      color?: string;
+      backgroundColor?: string;
+      /**
+       * @description [optional] font color hex
+       * @example #ff00ff
+       */
+      fontColor?: string;
     };
     TwinStatusUpdateRsV1: {
       /**
@@ -640,10 +645,15 @@ export interface components {
        */
       logo?: string;
       /**
-       * @description color hex
+       * @description background color hex
        * @example #ff00ff
        */
-      color?: string;
+      backgroundColor?: string;
+      /**
+       * @description font color hex
+       * @example #ff00ff
+       */
+      fontColor?: string;
     };
     TwinClassFieldUpdateRqV1: {
       /**
@@ -858,13 +868,18 @@ export interface components {
     /** @description On of values */
     TwinClassFieldDescriptorDTO: {
       fieldType: string;
-    } & (components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"]);
+    } & (components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"]);
     TwinClassFieldDescriptorDateScrollV1: {
       fieldType: "dateScrollV1";
     } & Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
       fieldType?: string;
       /** @description Date pattern */
       pattern?: string;
+    };
+    TwinClassFieldDescriptorImmutableV1: {
+      fieldType: "immutableV1";
+    } & Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+      fieldType?: string;
     };
     TwinClassFieldDescriptorLinkLongV1: {
       fieldType: "selectLinkLongV1";
@@ -2119,6 +2134,8 @@ export interface components {
       changedAt?: string;
       /** @description attachments */
       attachments?: components["schemas"]["AttachmentViewV1"][];
+      /** @description comment actions */
+      commentActions?: ("EDIT" | "DELETE" | "PIN" | "UNPIN" | "VOTE" | "REACT" | "HIDE" | "UNHIDE")[];
     };
     BusinessAccountUpdateRqV1: {
       /**
@@ -2625,10 +2642,15 @@ export interface components {
        */
       logo?: string;
       /**
-       * @description [optional] color hex
+       * @description [optional] background color hex
        * @example #ff00ff
        */
-      color?: string;
+      backgroundColor?: string;
+      /**
+       * @description [optional] font color hex
+       * @example #ff00ff
+       */
+      fontColor?: string;
     };
     TwinStatusCreateRsV1: {
       /**
@@ -5451,6 +5473,7 @@ export interface operations {
         showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCommentActionMode?: "HIDE" | "SHOW";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -5491,6 +5514,7 @@ export interface operations {
         showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCommentActionMode?: "HIDE" | "SHOW";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6146,6 +6170,7 @@ export interface operations {
   permissonCheckOverviewV1: {
     parameters: {
       query?: {
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6153,6 +6178,22 @@ export interface operations {
         showSpaceRoleUserGroup2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRoleUserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRoleUserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showUserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
       };
       header: {
@@ -7767,6 +7808,7 @@ export interface operations {
         showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCommentActionMode?: "HIDE" | "SHOW";
         offset?: number;
         limit?: number;
         sortAsc?: boolean;

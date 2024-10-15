@@ -13,7 +13,8 @@ export function TwinStatusGeneral({status, onChange}: {
     const api = useContext(ApiContext);
     const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
     const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] = useState<AutoEditDialogSettings | undefined>(undefined);
-    const [color, setColor] = useState(status.color || '#FFFFFF');
+    const [backgroundColor, setBackgroundColor] = useState(status.backgroundColor || '#FFFFFF');
+    const [fontColor, setFontColor] = useState(status.fontColor || '#FFFFFF');
 
     function openWithSettings(settings: AutoEditDialogSettings) {
         setCurrentAutoEditDialogSettings(settings)
@@ -22,7 +23,7 @@ export function TwinStatusGeneral({status, onChange}: {
 
     async function updateStatus(newStatus: TwinClassStatusUpdateRq) {
         try {
-            await api.twinClass.update({id: status.id!, body: newStatus});
+            await api.twinStatus.update({statusId: status.id!, data: newStatus});
             onChange?.();
         } catch (e) {
             console.error(e);
@@ -56,9 +57,14 @@ export function TwinStatusGeneral({status, onChange}: {
         }
     }
 
-    const handleColorChange = async (newColor: string) => {
-        setColor(newColor);
-        await updateStatus({color: newColor});
+    const handleBackgroundColorChange = async (newColor: string) => {
+        setBackgroundColor(newColor);
+        await updateStatus({backgroundColor: newColor});
+    };
+
+    const handleFontColorChange = async (newColor: string) => {
+        setFontColor(newColor);
+        await updateStatus({fontColor: newColor});
     };
 
 
@@ -84,8 +90,12 @@ export function TwinStatusGeneral({status, onChange}: {
                     <TableCell>{status.description}</TableCell>
                 </TableRow>
                 <TableRow className="cursor-pointer">
-                    <TableCell>Color</TableCell>
-                    <TableCell><ColorPicker value={color} onChange={handleColorChange}/></TableCell>
+                    <TableCell>Background Color</TableCell>
+                    <TableCell><ColorPicker value={backgroundColor} onChange={handleBackgroundColorChange}/></TableCell>
+                </TableRow>
+                <TableRow className="cursor-pointer">
+                    <TableCell>Font Color</TableCell>
+                    <TableCell><ColorPicker value={fontColor} onChange={handleFontColorChange}/></TableCell>
                 </TableRow>
             </TableBody>
         </Table>
