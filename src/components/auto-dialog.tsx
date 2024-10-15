@@ -97,7 +97,7 @@ export function AutoDialog({open, onOpenChange, settings}: EditFieldDialogProps)
                         {error}
                     </Alert>}
 
-                    <DialogFooter className="sm:justify-end pb-4">
+                    <DialogFooter className="sm:justify-end pb-6">
                         <Button type="submit" loading={form.formState.isSubmitting}>
                             Save
                         </Button>
