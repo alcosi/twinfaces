@@ -27,6 +27,7 @@ export type TwinFlowTransitionValidatorUpdate = components["schemas"]["Validator
 export type TwinClassLink = components["schemas"]["TwinClassLinkV1"];
 export type TwinBase = components["schemas"]["TwinBaseV1"];
 export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
+export type TwinLinkView = components["schemas"]["TwinLinkViewV1"];
 
 
 export type Featurer = components["schemas"]["FeaturerV1"];
