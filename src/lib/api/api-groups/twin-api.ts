@@ -64,8 +64,21 @@ export function createTwinApi(settings: ApiSettings) {
       body: body,
     });
   }
+    function searchLinks() {
+        return settings.client.POST('/private/twin/search/v3', {
+            params: {
+                header: getApiDomainHeaders(settings),
+                query: {
+                    showTwin2TwinLinkMode: "DETAILED",
+                    offset: 0,
+                    limit: 10,
+                }
+            },
+            body: [{}]
+        })
+    }
 
-    return {search, getById, update}
+    return {search, getById, update, searchLinks}
 }
 
 export type TwinApi = ReturnType<typeof createTwinApi>;
