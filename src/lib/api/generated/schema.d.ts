@@ -58,6 +58,10 @@ export interface paths {
     /** Mark twin as touched for user */
     put: operations["twinTouchV1"];
   };
+  "/private/link/{linkId}/v1": {
+    /** Update link by id */
+    put: operations["linkUpdateV1"];
+  };
   "/private/comment/{commentId}/v1": {
     /** Returns comment by comment id */
     get: operations["twinCommentV1"];
@@ -223,6 +227,10 @@ export interface paths {
   "/private/space/{spaceId}/role/{roleId}/users/manage/v1": {
     /** Adding/removing a user to the space by role */
     post: operations["spaceRoleUserManageV1"];
+  };
+  "/private/link/v1": {
+    /** Create new link */
+    post: operations["linkCreateV1"];
   };
   "/private/featurer/v1": {
     /** Featurer search */
@@ -727,6 +735,37 @@ export interface components {
         [key: string]: string;
       };
     };
+    LinkV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      dstTwinClassId?: string;
+      dstTwinClass?: components["schemas"]["TwinClassBaseV1"];
+      /**
+       * @description name
+       * @example Serial number
+       */
+      name?: string;
+      /**
+       * @description Ling strength id
+       * @example OPTIONAL
+       * @enum {string}
+       */
+      linkStrengthId?: "MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE";
+      /**
+       * @description link type
+       * @example ManyToOne
+       * @enum {string}
+       */
+      type?: "ManyToOne" | "ManyToMany" | "OneToOne";
+    };
     /** @description aliases */
     TwinAliasV1: {
       /**
@@ -1118,37 +1157,6 @@ export interface components {
        */
       editPermissionId?: string;
     };
-    TwinClassLinkV1: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-       */
-      dstTwinClassId?: string;
-      dstTwinClass?: components["schemas"]["TwinClassBaseV1"];
-      /**
-       * @description name
-       * @example Serial number
-       */
-      name?: string;
-      /**
-       * @description Ling strength id
-       * @example OPTIONAL
-       * @enum {string}
-       */
-      linkStrengthId?: "MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE";
-      /**
-       * @description link type
-       * @example ManyToOne
-       * @enum {string}
-       */
-      type?: "ManyToOne" | "ManyToMany" | "OneToOne";
-    };
     /** @description class */
     TwinClassV1: {
       /**
@@ -1251,10 +1259,10 @@ export interface components {
       /** @description List of tag id. Will be filled only in lazyRelations mode is false */
       tagList?: string[];
       forwardLinkMap?: {
-        [key: string]: components["schemas"]["TwinClassLinkV1"];
+        [key: string]: components["schemas"]["LinkV1"];
       };
       backwardLinkMap?: {
-        [key: string]: components["schemas"]["TwinClassLinkV1"];
+        [key: string]: components["schemas"]["LinkV1"];
       };
       /** @description Map of statuses. Will be filled only if lazyRelations mode is true */
       statusMap?: {
@@ -1668,7 +1676,7 @@ export interface components {
        */
       createdByUserId?: string;
       createdByUser?: components["schemas"]["UserV1"];
-      link?: components["schemas"]["TwinClassLinkV1"];
+      link?: components["schemas"]["LinkV1"];
       dstTwin?: components["schemas"]["TwinBaseV2"];
     };
     /** @description Transition list. Will be filled only if lazyRelations mode is true */
@@ -1778,7 +1786,7 @@ export interface components {
       /** @description Tag list. Will be filled only if lazyRelations mode is true */
       tags?: components["schemas"]["DataListOptionV1"][];
       /** @description Suitable actions list */
-      actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "ATTACHMENT_DELETE")[];
+      actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "ATTACHMENT_DELETE" | "HISTORY_VIEW")[];
       /** @description fields */
       fields?: {
         [key: string]: string;
@@ -2082,6 +2090,106 @@ export interface components {
        */
       createdAt?: string;
       twin?: components["schemas"]["TwinBaseV1"];
+    };
+    LinkUpdateV1: {
+      /**
+       * Format: uuid
+       * @description Source twin class id
+       */
+      srcTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description Destination twin class id
+       */
+      dstTwinClassId?: string;
+      forwardNameI18n?: components["schemas"]["I18nV1"];
+      backwardNameI18n?: components["schemas"]["I18nV1"];
+      /**
+       * @description Link type (Many-to-one, Many-to-many, One-to-one)
+       * @enum {string}
+       */
+      type?: "ManyToOne" | "ManyToMany" | "OneToOne";
+      /**
+       * @description Link strength (MANDATORY, OPTIONAL, OPTIONAL_BUT_DELETE_CASCADE)
+       * @enum {string}
+       */
+      linkStrength?: "MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE";
+    };
+    LinkUpdateRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      link?: components["schemas"]["LinkV3"];
+    };
+    /** @description link */
+    LinkV3: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      dstTwinClassId?: string;
+      dstTwinClass?: components["schemas"]["TwinClassBaseV1"];
+      /**
+       * @description name
+       * @example Serial number
+       */
+      name?: string;
+      /**
+       * @description Ling strength id
+       * @example OPTIONAL
+       * @enum {string}
+       */
+      linkStrengthId?: "MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE";
+      /**
+       * @description link type
+       * @example ManyToOne
+       * @enum {string}
+       */
+      type?: "ManyToOne" | "ManyToMany" | "OneToOne";
+      /**
+       * Format: uuid
+       * @description Source twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      srcTwinClassId?: string;
+      /**
+       * @description Backward name
+       * @example dst -> src
+       */
+      backwardName?: string;
+      /**
+       * Format: uuid
+       * @description Creator user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description Creation timestamp
+       */
+      createdAt?: string;
+      srcTwinClass?: components["schemas"]["TwinClassBaseV1"];
+      createdByUser?: components["schemas"]["UserV1"];
     };
     CommentUpdateRqV1: {
       text?: string;
@@ -2608,7 +2716,48 @@ export interface components {
        */
       initialStatusId?: string;
     };
-    TwinClassCreateRsV1: {
+    /** @description results - twin class */
+    TwinflowBaseV2: {
+      /**
+       * Format: uuid
+       * @example 34618b09-e8dc-4712-a433-2e18915ee70d
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      twinClassId?: string;
+      /**
+       * @description name
+       * @example Project
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Projects business objects
+       */
+      description?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /**
+       * Format: uuid
+       * @description initialStatusId
+       */
+      initialStatusId?: string;
+      twinClass?: components["schemas"]["TwinClassBaseV1"];
+      initialStatus?: components["schemas"]["TwinStatusV1"];
+      createdByUser?: components["schemas"]["UserV1"];
+    };
+    TwinflowCreateRsV1: {
       /**
        * Format: int32
        * @description request processing status (see ErrorCode enum)
@@ -2626,7 +2775,7 @@ export interface components {
        */
       statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      twinClass?: components["schemas"]["TwinClassV1"];
+      twinflow?: components["schemas"]["TwinflowBaseV2"];
     };
     TwinStatusCreateRqV1: {
       /**
@@ -2788,6 +2937,26 @@ export interface components {
        */
       tagDataListId?: string;
     };
+    TwinClassCreateRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      twinClass?: components["schemas"]["TwinClassV1"];
+    };
     TwinClassListRqV1: {
       /** @description twin class id list */
       twinClassIdList?: string[];
@@ -2845,6 +3014,10 @@ export interface components {
        * @enum {string}
        */
       aliasSpace?: "ONLY" | "ONLY_NOT" | "ANY";
+      /** @description permission id list */
+      viewPermissionIdList?: string[];
+      /** @description permission id exclude list */
+      viewPermissionIdExcludeList?: string[];
     };
     TwinClassListRsV1: {
       /**
@@ -2897,7 +3070,7 @@ export interface components {
        */
       hex?: string;
     };
-    /** @description On of values */
+    /** @description One of values */
     TwinFieldValueDTO: {
       valueType: string;
     } & (components["schemas"]["TwinFieldValueTextV1"] | components["schemas"]["TwinFieldValueColorHexV1"] | components["schemas"]["TwinFieldValueDateV1"] | components["schemas"]["TwinFieldValueDataListOptionsV1"]);
@@ -3025,7 +3198,7 @@ export interface components {
       /** @description Tag list. Will be filled only if lazyRelations mode is true */
       tags?: components["schemas"]["DataListOptionV1"][];
       /** @description Suitable actions list */
-      actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "ATTACHMENT_DELETE")[];
+      actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "ATTACHMENT_DELETE" | "HISTORY_VIEW")[];
       /** @description fields */
       fields?: components["schemas"]["TwinFieldV1"][];
     };
@@ -3223,12 +3396,77 @@ export interface components {
       /** @description Links list */
       links?: components["schemas"]["TwinLinkAddV1"][];
     };
+    /** @description One of values */
+    TwinFieldSearchDTOv1: {
+      type: string;
+    } & (components["schemas"]["TwinFieldSearchTextV1"] | components["schemas"]["TwinFieldSearchNumberV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchDataListOptionsV1"]);
+    TwinFieldSearchDataListOptionsV1: {
+      type: "searchListOptionsV1";
+    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+      type?: string;
+      /** @description Include options with given ids. AND join */
+      optionsAllOfList?: string[];
+      /** @description Include options with given ids. OR join */
+      optionsAnyOfList?: string[];
+      /** @description Exclude options with given ids. AND join */
+      optionsNoAllOfList?: string[];
+      /** @description Exclude options with given ids. OR join */
+      optionsNoAnyOfList?: string[];
+    };
+    /** @description (less & more connected with AND) and after connected to equals with OR and to emty with OR */
+    TwinFieldSearchDateV1: {
+      type: "searchDateValueV1";
+    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+      type?: string;
+      /**
+       * Format: date-time
+       * @description Twin field date less then given date
+       */
+      lessThen?: string;
+      /**
+       * Format: date-time
+       * @description Twin field date greater then given date
+       */
+      moreThen?: string;
+      /**
+       * Format: date-time
+       * @description Twin field date equals to given date
+       */
+      equals?: string;
+      /** @description include entities with empty or null values to result */
+      empty?: boolean;
+    };
+    /** @description (less & more connected with AND) and after connected to equals with OR */
+    TwinFieldSearchNumberV1: {
+      type: "searchNumberValueV1";
+    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+      type?: string;
+      /** @description Twin field numeric value less then given */
+      lessThen?: string;
+      /** @description Twin field numeric value greater then given */
+      moreThen?: string;
+      /** @description Twin field numeric value equals to given */
+      equals?: string;
+    };
+    TwinFieldSearchTextV1: {
+      type: "searchTextValueV1";
+    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+      type?: string;
+      /** @description Include like given strings. AND join. Add % symbols manual to use LIKE features. */
+      valueLikeAllOfList?: string[];
+      /** @description Include like given strings. OR join. Add % symbols manual to use LIKE features. */
+      valueLikeAnyOfList?: string[];
+      /** @description Exclude like given strings. AND join. Add % symbols manual to use LIKE features. */
+      valueLikeNoAllOfList?: string[];
+      /** @description Exclude like given strings. OR join. Add % symbols manual to use LIKE features. */
+      valueLikeNoAnyOfList?: string[];
+    };
     TwinSearchByAliasRqV1: {
       /** @description Search named params values */
       params?: {
         [key: string]: string;
       };
-      narrow?: components["schemas"]["TwinSearchWithHeadV"];
+      narrow?: components["schemas"]["TwinSearchExtendedV1"];
     };
     /** @description Exclude dst twins with given links. AND join */
     TwinSearchByLinkV1: {
@@ -3240,7 +3478,66 @@ export interface components {
       /** @description Twin dest ids for in(ex)clude from search */
       dstTwinIdList?: string[];
     };
-    /** @description Head twin sub-search */
+    /** @description search narrowing */
+    TwinSearchExtendedV1: {
+      /** @description Twin class id list */
+      twinClassIdList?: string[];
+      /** @description Twin class exclude list */
+      twinClassIdExcludeList?: string[];
+      /** @description Twin name like list */
+      twinNameLikeList?: string[];
+      /** @description Head twin id list */
+      headTwinIdList?: string[];
+      /** @description Twin id list */
+      twinIdList?: string[];
+      /** @description Twin id exclude list */
+      twinIdExcludeList?: string[];
+      /** @description Status id list */
+      statusIdList?: string[];
+      /** @description Assigner id list */
+      assignerUserIdList?: string[];
+      /** @description Assigner id exclude list */
+      assignerUserIdExcludeList?: string[];
+      /** @description Reporter id list */
+      createdByUserIdList?: string[];
+      /** @description Reporter id exclude list */
+      createdByUserIdExcludeList?: string[];
+      /** @description Include dst twins with given links. OR join */
+      linksAnyOfList?: components["schemas"]["TwinSearchByLinkV1"][];
+      /** @description Exclude dst twins with given links. OR join */
+      linksNoAnyOfList?: components["schemas"]["TwinSearchByLinkV1"][];
+      /** @description Include dst twins with given links. AND join */
+      linksAllOfList?: components["schemas"]["TwinSearchByLinkV1"][];
+      /** @description Exclude dst twins with given links. AND join */
+      linksNoAllOfList?: components["schemas"]["TwinSearchByLinkV1"][];
+      /** @description Hierarchy ids filter */
+      hierarchyTreeContainsIdList?: string[];
+      /** @description Twin status exclude list */
+      statusIdExcludeList?: string[];
+      /** @description Twin tag list(data list options ids) */
+      tagDataListOptionIdList?: string[];
+      /** @description Twin tag exclude list(data list options ids) */
+      tagDataListOptionIdExcludeList?: string[];
+      /** @description Twin marker list(data list options ids) */
+      markerDataListOptionIdList?: string[];
+      /** @description Twin marker exclude list(data list options ids) */
+      markerDataListOptionIdExcludeList?: string[];
+      /** @description Twin extends by twin class list ids */
+      extendsTwinClassIdList?: string[];
+      /** @description Head twin class list ids */
+      headTwinClassIdList?: string[];
+      /** @description Twin touch list ids */
+      touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+      /** @description Twin touch exclude list ids */
+      touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+      /** @description Twin Field Search. Key TwinClassField id. */
+      fields?: {
+        [key: string]: components["schemas"]["TwinFieldSearchDataListOptionsV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumberV1"] | components["schemas"]["TwinFieldSearchTextV1"];
+      };
+      headSearch?: components["schemas"]["TwinSearchV1"];
+      childrenSearch?: components["schemas"]["TwinSearchV1"];
+    };
+    /** @description Children twin sub-search */
     TwinSearchV1: {
       /** @description Twin class id list */
       twinClassIdList?: string[];
@@ -3292,60 +3589,10 @@ export interface components {
       touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
       /** @description Twin touch exclude list ids */
       touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
-    };
-    /** @description search narrowing */
-    TwinSearchWithHeadV: {
-      /** @description Twin class id list */
-      twinClassIdList?: string[];
-      /** @description Twin class exclude list */
-      twinClassIdExcludeList?: string[];
-      /** @description Twin name like list */
-      twinNameLikeList?: string[];
-      /** @description Head twin id list */
-      headTwinIdList?: string[];
-      /** @description Twin id list */
-      twinIdList?: string[];
-      /** @description Twin id exclude list */
-      twinIdExcludeList?: string[];
-      /** @description Status id list */
-      statusIdList?: string[];
-      /** @description Assigner id list */
-      assignerUserIdList?: string[];
-      /** @description Assigner id exclude list */
-      assignerUserIdExcludeList?: string[];
-      /** @description Reporter id list */
-      createdByUserIdList?: string[];
-      /** @description Reporter id exclude list */
-      createdByUserIdExcludeList?: string[];
-      /** @description Include dst twins with given links. OR join */
-      linksAnyOfList?: components["schemas"]["TwinSearchByLinkV1"][];
-      /** @description Exclude dst twins with given links. OR join */
-      linksNoAnyOfList?: components["schemas"]["TwinSearchByLinkV1"][];
-      /** @description Include dst twins with given links. AND join */
-      linksAllOfList?: components["schemas"]["TwinSearchByLinkV1"][];
-      /** @description Exclude dst twins with given links. AND join */
-      linksNoAllOfList?: components["schemas"]["TwinSearchByLinkV1"][];
-      /** @description Hierarchy ids filter */
-      hierarchyTreeContainsIdList?: string[];
-      /** @description Twin status exclude list */
-      statusIdExcludeList?: string[];
-      /** @description Twin tag list(data list options ids) */
-      tagDataListOptionIdList?: string[];
-      /** @description Twin tag exclude list(data list options ids) */
-      tagDataListOptionIdExcludeList?: string[];
-      /** @description Twin marker list(data list options ids) */
-      markerDataListOptionIdList?: string[];
-      /** @description Twin marker exclude list(data list options ids) */
-      markerDataListOptionIdExcludeList?: string[];
-      /** @description Twin extends by twin class list ids */
-      extendsTwinClassIdList?: string[];
-      /** @description Head twin class list ids */
-      headTwinClassIdList?: string[];
-      /** @description Twin touch list ids */
-      touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
-      /** @description Twin touch exclude list ids */
-      touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
-      headSearch?: components["schemas"]["TwinSearchV1"];
+      /** @description Twin Field Search. Key TwinClassField id. */
+      fields?: {
+        [key: string]: components["schemas"]["TwinFieldSearchDataListOptionsV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumberV1"] | components["schemas"]["TwinFieldSearchTextV1"];
+      };
     };
     TwinSearchRsV2: {
       /**
@@ -3448,7 +3695,12 @@ export interface components {
       touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
       /** @description Twin touch exclude list ids */
       touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+      /** @description Twin Field Search. Key TwinClassField id. */
+      fields?: {
+        [key: string]: components["schemas"]["TwinFieldSearchDataListOptionsV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumberV1"] | components["schemas"]["TwinFieldSearchTextV1"];
+      };
       headSearch?: components["schemas"]["TwinSearchV1"];
+      childrenSearch?: components["schemas"]["TwinSearchV1"];
     };
     TwinSearchBatchRqV1: {
       /**
@@ -3860,6 +4112,50 @@ export interface components {
     SpaceRoleUserRqV1: {
       spaceRoleUserEnterList?: string[];
       spaceRoleUserExitList?: string[];
+    };
+    LinkCreateV1: {
+      /**
+       * Format: uuid
+       * @description Source twin class id
+       */
+      srcTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description Destination twin class id
+       */
+      dstTwinClassId?: string;
+      forwardNameI18n?: components["schemas"]["I18nV1"];
+      backwardNameI18n?: components["schemas"]["I18nV1"];
+      /**
+       * @description Link type (Many-to-one, Many-to-many, One-to-one)
+       * @enum {string}
+       */
+      type?: "ManyToOne" | "ManyToMany" | "OneToOne";
+      /**
+       * @description Link strength (MANDATORY, OPTIONAL, OPTIONAL_BUT_DELETE_CASCADE)
+       * @enum {string}
+       */
+      linkStrength?: "MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE";
+    };
+    LinkCreateRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      link?: components["schemas"]["LinkV3"];
     };
     FeaturerSearchRqV1: {
       /** @description ids list */
@@ -4367,10 +4663,10 @@ export interface components {
       statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       forwardLinkMap?: {
-        [key: string]: components["schemas"]["TwinClassLinkV1"];
+        [key: string]: components["schemas"]["LinkV1"];
       };
       backwardLinkMap?: {
-        [key: string]: components["schemas"]["TwinClassLinkV1"];
+        [key: string]: components["schemas"]["LinkV1"];
       };
     };
     TwinClassFieldListRsV1: {
@@ -5015,7 +5311,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -5066,7 +5362,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -5123,7 +5419,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -5174,7 +5470,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -5242,7 +5538,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -5256,7 +5552,7 @@ export interface operations {
         showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5310,7 +5606,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -5322,7 +5618,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -5452,6 +5748,49 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinTouchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Update link by id */
+  linkUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showLinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showLinkSrc2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example f6606fa2-c047-4ba9-a92c-84051df681ab */
+        linkId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LinkUpdateV1"];
+      };
+    };
+    responses: {
+      /** @description Updated link */
+      200: {
+        content: {
+          "application/json": components["schemas"]["LinkUpdateRsV1"];
         };
       };
       /** @description Access is denied */
@@ -5897,7 +6236,7 @@ export interface operations {
       /** @description Twinflow data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinClassCreateRsV1"];
+          "application/json": components["schemas"]["TwinflowCreateRsV1"];
         };
       };
       /** @description Access is denied */
@@ -5957,7 +6296,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6014,7 +6353,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6070,7 +6409,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6122,7 +6461,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6183,7 +6522,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6285,7 +6624,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6297,7 +6636,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6383,7 +6722,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6585,7 +6924,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6597,7 +6936,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6691,7 +7030,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6703,7 +7042,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6765,7 +7104,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6777,7 +7116,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6835,7 +7174,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6847,7 +7186,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -6905,7 +7244,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -6919,7 +7258,7 @@ export interface operations {
         showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7042,7 +7381,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -7054,7 +7393,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7114,7 +7453,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -7126,7 +7465,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7266,7 +7605,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -7278,7 +7617,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7338,7 +7677,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -7350,7 +7689,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -7547,6 +7886,45 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["UserListRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Create new link */
+  linkCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showLinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showLinkSrc2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LinkCreateV1"];
+      };
+    };
+    responses: {
+      /** @description Created link */
+      200: {
+        content: {
+          "application/json": components["schemas"]["LinkCreateRsV1"];
         };
       };
       /** @description Access is denied */
@@ -8217,7 +8595,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8308,7 +8686,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8320,7 +8698,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8363,7 +8741,7 @@ export interface operations {
       query?: {
         lazyRelation?: boolean;
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showLinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -8403,7 +8781,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8490,7 +8868,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8549,7 +8927,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8563,7 +8941,7 @@ export interface operations {
         showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8617,7 +8995,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8631,7 +9009,7 @@ export interface operations {
         showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8685,7 +9063,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8697,7 +9075,7 @@ export interface operations {
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8745,7 +9123,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
