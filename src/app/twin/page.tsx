@@ -55,9 +55,12 @@ const columns: ColumnDef<TwinBase>[] = [
     header: "Twin Class Id",
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
-        {/* TODO: fix `src/app/twinclass/[twinClassId]/page.tsx` to remove `disabled`
-        Currently fetching `twinClass` data by id is not supported */}
-        <TwinClassResourceLink data={original} disabled withTooltip />
+        <TwinClassResourceLink
+          data={{
+            id: original.twinClassId,
+          }}
+          withTooltip
+        />
       </div>
     ),
   },

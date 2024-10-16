@@ -5,10 +5,10 @@ import {
 } from "@/components/base/tooltip";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ElementType, ReactNode } from "react";
 
 type ResourceLinkContentProps = {
-  icon: ReactNode;
+  IconComponent: ElementType;
   link: string;
   displayName: string;
   disabled?: boolean;
@@ -19,10 +19,21 @@ type ResourceLinkProps<T> = {
   renderTooltip?: (data: T) => ReactNode;
   getDisplayName: (data: T) => string;
   getLink: (data: T) => string;
-} & Pick<ResourceLinkContentProps, "icon" | "disabled">;
+} & Pick<ResourceLinkContentProps, "IconComponent" | "disabled">;
+
+const COLORS = {
+  light: {
+    disabled: "[#091e4224]",
+    active: "[#0c66e4]",
+  },
+  dark: {
+    disabled: "[#a6c5e229]",
+    active: "[#579dff]",
+  },
+};
 
 const ResourceLinkContent = ({
-  icon,
+  IconComponent,
   link,
   displayName,
   disabled,
@@ -31,17 +42,29 @@ const ResourceLinkContent = ({
     <span
       className={cn(
         "inline-flex items-center h-6 max-w-full border rounded-lg p-2 transition-colors} bg-transparent",
-        "border-[#091e4224] hover:border-[#0c66e4]",
-        "dark:border-[#a6c5e229] dark:hover:border-[#579dff]",
-        disabled ? "cursor-not-allowed" : "cursor-pointer"
+        `border-${COLORS.light.disabled} hover:border-${COLORS.light.active}`,
+        `dark:border-${COLORS.dark.disabled} dark:hover:border-${COLORS.dark.active}`,
+        disabled
+          ? `cursor-not-allowed hover:border-${COLORS.light.disabled} dark:hover:border-${COLORS.dark.disabled}`
+          : "cursor-pointer"
       )}
     >
-      {icon}
+      <span
+        className={
+          disabled
+            ? `text-${COLORS.light.disabled} dark:text-${COLORS.dark.disabled}`
+            : `text-${COLORS.light.active} dark:text-${COLORS.dark.active}`
+        }
+      >
+        <IconComponent className="h-4 w-4" />
+      </span>
+
       <span
         className={cn(
           "ml-2 text-sm font-medium truncate",
-          "text-[#0c66e4]",
-          "dark:text-[#579dff]"
+          disabled
+            ? `text-${COLORS.light.disabled} dark:text-${COLORS.dark.disabled}`
+            : `text-${COLORS.light.active} dark:text-${COLORS.dark.active}`
         )}
       >
         {displayName}
@@ -67,7 +90,7 @@ const ResourceLinkContent = ({
 };
 
 export const ResourceLink = <T,>({
-  icon,
+  IconComponent,
   data,
   renderTooltip,
   getDisplayName,
@@ -80,7 +103,7 @@ export const ResourceLink = <T,>({
   return (
     <Tooltip>
       <ResourceLinkContent
-        icon={icon}
+        IconComponent={IconComponent}
         link={link}
         displayName={displayName}
         disabled={disabled}
