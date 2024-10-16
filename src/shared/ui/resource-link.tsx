@@ -1,7 +1,7 @@
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/components/base/tooltip";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -19,7 +19,7 @@ type ResourceLinkProps<T> = {
   renderTooltip?: (data: T) => ReactNode;
   getDisplayName: (data: T) => string;
   getLink: (data: T) => string;
-} & Pick<ResourceLinkContentProps, 'icon' | 'disabled'>;
+} & Pick<ResourceLinkContentProps, "icon" | "disabled">;
 
 const ResourceLinkContent = ({
   icon,
@@ -30,12 +30,20 @@ const ResourceLinkContent = ({
   const content = (
     <span
       className={cn(
-        "inline-flex items-center h-6 max-w-full bg-white border border-gray-300 rounded-lg p-2 transition-colors hover:border-[#0052CC]}",
+        "inline-flex items-center h-6 max-w-full border rounded-lg p-2 transition-colors} bg-transparent",
+        "border-[#091e4224] hover:border-[#0c66e4]",
+        "dark:border-[#a6c5e229] dark:hover:border-[#579dff]",
         disabled ? "cursor-not-allowed" : "cursor-pointer"
       )}
     >
       {icon}
-      <span className="ml-2 text-[#0052CC] text-sm font-medium truncate">
+      <span
+        className={cn(
+          "ml-2 text-sm font-medium truncate",
+          "text-[#0c66e4]",
+          "dark:text-[#579dff]"
+        )}
+      >
         {displayName}
       </span>
     </span>
