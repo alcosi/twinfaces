@@ -1,25 +1,27 @@
-import { components } from "@/lib/api/generated/schema";
-import { TwinClassLinkTypes } from "./types";
-
-type TwinClassLink = components["schemas"]["TwinClassLinkV1"];
+import {
+  LinkStrength,
+  LinkStrengthEnum,
+  LinkTypes,
+  LinkTypesEnum,
+} from "./types";
 
 export const TWIN_CLASS_LINK_TYPES: Array<{
-  id: NonNullable<TwinClassLink["type"]>;
+  id: LinkTypes;
   label: string;
 }> = [
-  { id: TwinClassLinkTypes.OneToOne, label: "OneToOne" },
-  { id: TwinClassLinkTypes.ManyToMany, label: "ManyToMany" },
-  { id: TwinClassLinkTypes.ManyToOne, label: "ManyToOne" },
+  { id: LinkTypesEnum.OneToOne, label: "OneToOne" },
+  { id: LinkTypesEnum.ManyToMany, label: "ManyToMany" },
+  { id: LinkTypesEnum.ManyToOne, label: "ManyToOne" },
 ] as const;
 
 export const TWIN_CLASS_LINK_STRENGTH: Array<{
-  id: NonNullable<TwinClassLink["linkStrengthId"]>;
+  id: LinkStrength;
   label: string;
 }> = [
-  { id: "MANDATORY", label: "Mandatory" },
-  { id: "OPTIONAL", label: "Optional" },
+  { id: LinkStrengthEnum.MANDATORY, label: "Mandatory" },
+  { id: LinkStrengthEnum.OPTIONAL, label: "Optional" },
   {
-    id: "OPTIONAL_BUT_DELETE_CASCADE",
+    id: LinkStrengthEnum.OPTIONAL_BUT_DELETE_CASCADE,
     label: "Optional but Delete Cascade",
   },
 ] as const;

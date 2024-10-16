@@ -10,13 +10,13 @@ import { Form } from "@/components/base/form";
 import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
 import { TextFormField } from "@/components/form-fields/text-form-field";
 import {
+  CreateLinkRequestBody,
+  LinkStrengthEnum,
+  LinkTypesEnum,
   TWIN_CLASS_LINK_STRENGTH,
   TWIN_CLASS_LINK_TYPES,
-  TwinClassLinkStrength,
-  TwinClassLinkTypes,
 } from "@/entities/twinClassLink";
 import { ApiContext } from "@/lib/api/api";
-import { CreateTwinClassLinkRequestBody } from "@/lib/api/api-groups/twin-class-links-api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -34,11 +34,21 @@ interface TwinLinkDialogProps {
 const twinLinkSchema = z.object({
   twinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
   nameI18n: z.string().min(1, "Name must not be empty"),
-  type: z.string({ message: "Invalid type" }),
-  linkStrength: z.string({ message: "Invalid link strength" }),
+  type: z.enum(
+    [LinkTypesEnum.ManyToMany, LinkTypesEnum.ManyToOne, LinkTypesEnum.OneToOne],
+    { message: "Invalid type" }
+  ),
+  linkStrength: z.enum(
+    [
+      LinkStrengthEnum.MANDATORY,
+      LinkStrengthEnum.OPTIONAL,
+      LinkStrengthEnum.OPTIONAL_BUT_DELETE_CASCADE,
+    ],
+    { message: "Invalid link strength" }
+  ),
 });
 
-export const TwinLinkDialog = ({
+export const TwinClassLinkDialog = ({
   open,
   srcTwinClassId,
   dstTwinClassId,
@@ -64,15 +74,15 @@ export const TwinLinkDialog = ({
   const form = useForm<z.infer<typeof twinLinkSchema>>({
     resolver: zodResolver(twinLinkSchema),
     defaultValues: {
-      twinClassId: "0637c76e-8e6e-466c-9e39-d97d7e1955d5",
-      nameI18n: "ssss",
-      type: TwinClassLinkTypes.OneToOne,
-      linkStrength: TwinClassLinkStrength.MANDATORY,
+      twinClassId: "",
+      nameI18n: "",
+      type: LinkTypesEnum.OneToOne,
+      linkStrength: LinkStrengthEnum.MANDATORY,
     },
   });
 
   async function onSubmit(formValues: z.infer<typeof twinLinkSchema>) {
-    const body: CreateTwinClassLinkRequestBody = {
+    const body: CreateLinkRequestBody = {
       srcTwinClassId: srcTwinClassId ?? formValues.twinClassId,
       dstTwinClassId: dstTwinClassId ?? formValues.twinClassId,
       forwardNameI18n: {
@@ -133,7 +143,7 @@ export const TwinLinkDialog = ({
                   TWIN_CLASS_LINK_TYPES.find((i) => i.id === id)
                 }
                 getItems={async () => TWIN_CLASS_LINK_TYPES}
-                getItemKey={({ id }) => id.toLowerCase()}
+                getItemKey={({ id }) => id}
                 getItemLabel={({ label }) => label}
                 selectPlaceholder={"Select..."}
                 searchPlaceholder={"Search..."}
@@ -147,7 +157,7 @@ export const TwinLinkDialog = ({
                   return TWIN_CLASS_LINK_STRENGTH.find((i) => i.id === id);
                 }}
                 getItems={async () => TWIN_CLASS_LINK_STRENGTH}
-                getItemKey={({ id }) => id.toLowerCase()}
+                getItemKey={({ id }) => id}
                 getItemLabel={({ label }) => label}
                 selectPlaceholder={"Select..."}
                 searchPlaceholder={"Search..."}

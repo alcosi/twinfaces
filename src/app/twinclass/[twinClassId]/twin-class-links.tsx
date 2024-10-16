@@ -6,7 +6,7 @@ import {
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { LoadingOverlay } from "@/components/base/loading";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { TwinLinkDialog } from "@/entities/twinLink/components/twin-link-dialog";
+import { TwinClassLinkDialog } from "@/entities/twinClassLink/components/twin-link-dialog";
 import { ApiContext } from "@/lib/api/api";
 import { TwinClassLink } from "@/lib/api/api-types";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -160,7 +160,7 @@ export function TwinClassLinks() {
       />
 
       {twinClass?.id && (
-        <TwinLinkDialog
+        <TwinClassLinkDialog
           open={dialogState.isOpen}
           onOpenChange={(open) => {
             setDialogState({ isOpen: open });

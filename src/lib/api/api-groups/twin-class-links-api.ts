@@ -1,17 +1,5 @@
+import { CreateLinkRequestBody } from "@/entities/twinClassLink";
 import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
-
-export type CreateTwinClassLinkRequestBody = {
-  srcTwinClassId: string;
-  dstTwinClassId: string;
-  forwardNameI18n: {
-    translations: Record<string, string>;
-  };
-  backwardNameI18n: {
-    translations: Record<string, string>;
-  };
-  type: string;
-  linkStrength: string;
-};
 
 export function createTwinClassLinksApi(settings: ApiSettings) {
   const getLinks = async ({ twinClassId }: { twinClassId: string }) => {
@@ -27,8 +15,7 @@ export function createTwinClassLinksApi(settings: ApiSettings) {
     });
   };
 
-  async function create({ body }: { body: CreateTwinClassLinkRequestBody }) {
-    // @ts-ignore: Remove after 'schema' is updated
+  async function create({ body }: { body: CreateLinkRequestBody }) {
     return settings.client.POST("/private/link/v1", {
       params: {
         header: getApiDomainHeaders(settings),
