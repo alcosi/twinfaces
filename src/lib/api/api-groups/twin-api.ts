@@ -54,7 +54,7 @@ export function createTwinApi(settings: ApiSettings) {
         })
     }
 
-    function searchLinks() {
+    function searchLinks({twinId}: { twinId: string }) {
         return settings.client.POST('/private/twin/search/v3', {
             params: {
                 header: getApiDomainHeaders(settings),
@@ -64,7 +64,9 @@ export function createTwinApi(settings: ApiSettings) {
                     limit: 10,
                 }
             },
-            body: [{}]
+            body: [{
+                twinIdList: [twinId]
+            }]
         })
     }
 

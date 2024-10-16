@@ -52,7 +52,7 @@ export function TwinLinks() {
         }
 
         try {
-            const response = await api.twin.searchLinks();
+            const response = await api.twin.searchLinks({twinId: twin.id});
             const data = response.data;
 
             if (!data || data.status != 0) {
