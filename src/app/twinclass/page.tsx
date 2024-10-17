@@ -6,9 +6,13 @@ import {
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { ImageWithFallback } from "@/components/image-with-fallback";
-import { buildFilters, FilterFields, FILTERS } from "@/entities/twinClass";
+import {
+  buildFilters,
+  FilterFields,
+  FILTERS,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import { ApiContext } from "@/lib/api/api";
 import { TwinClass } from "@/lib/api/api-types";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -21,7 +25,11 @@ const columns: ColumnDef<TwinClass>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <TwinClassResourceLink data={original} withTooltip />
+      </div>
+    ),
   },
   {
     accessorKey: "logo",
@@ -44,7 +52,6 @@ const columns: ColumnDef<TwinClass>[] = [
     accessorKey: "key",
     header: "Key",
   },
-
   {
     accessorKey: "name",
     header: "Name",
@@ -52,15 +59,28 @@ const columns: ColumnDef<TwinClass>[] = [
   {
     accessorKey: "headClassId",
     header: "Head",
-
-    cell: (data) => <ShortGuidWithCopy value={data.row.original.headClassId} />,
+    cell: ({ row: { original } }) =>
+      original.headClassId ? (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink
+            data={{ id: original.headClassId }}
+            withTooltip
+          />
+        </div>
+      ) : null,
   },
   {
     accessorKey: "extendsClass.id",
     header: "Extends",
-    cell: (data) => (
-      <ShortGuidWithCopy value={data.row.original.extendsClass?.id} />
-    ),
+    cell: ({ row: { original } }) =>
+      original.extendsClass ? (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink
+            data={{ ...original.extendsClass }}
+            withTooltip
+          />
+        </div>
+      ) : null,
   },
   {
     accessorKey: "abstractClass",
@@ -158,7 +178,6 @@ export default function TwinClasses() {
           onClick: () => setClassDialogOpen(true),
           text: "Create Class",
         }}
-        search={{ enabled: true, placeholder: "Search by key..." }}
         filters={{
           filtersInfo: {
             [FilterFields.twinClassIdList]: FILTERS.twinClassIdList,
