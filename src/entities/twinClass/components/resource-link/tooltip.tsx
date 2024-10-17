@@ -27,7 +27,6 @@ export const TwinClassResourceTooltip = ({ data }: Props) => {
         setLoading(true);
         try {
           const fetchedData = await fetchTwinClassById(data.id);
-          console.log("foobar DATA", fetchedData);
           setTwinClassData((prev) => fetchedData ?? prev);
         } catch (error) {
           console.error("Error fetching twin class data:", error);
