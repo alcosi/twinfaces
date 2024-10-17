@@ -3,41 +3,41 @@ import { PaginationState } from "@tanstack/table-core";
 import { components, operations } from "@/lib/api/generated/schema";
 import { TwinUpdateRq } from "@/lib/api/api-types";
 
-type TwinSearchApiFilters = Partial<
-  Pick<
-    components["schemas"]["TwinSearchRqV1"],
-    "twinIdList" | "twinNameLikeList" | "twinClassIdList" | "assignerUserIdList"
-  >
->;
+type TwinSearchApiFilters = Partial<Pick<components["schemas"]["TwinSearchRqV1"],
+    | 'twinIdList'
+    | 'twinNameLikeList'
+    | 'twinClassIdList'
+    | 'assignerUserIdList'
+>>
 
 export function createTwinApi(settings: ApiSettings) {
-  function search({
-    pagination,
-    search,
-    filters,
-  }: {
-    pagination: PaginationState;
-    search?: string;
-    filters?: TwinSearchApiFilters;
-  }) {
-    return settings.client.POST("/private/twin/search/v3", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        query: {
-          showTwinMode: "DETAILED",
-          showTwinClassMode: "DETAILED",
-          offset: pagination.pageIndex * pagination.pageSize,
-          limit: pagination.pageSize,
-          sortAsc: false,
-        },
-      },
-      body: [
-        {
-          ...filters,
-        },
-      ],
-    });
-  }
+    function search({
+                        pagination,
+                        search,
+                        filters,
+                    }: {
+        pagination: PaginationState;
+        search?: string;
+        filters?: TwinSearchApiFilters;
+    }) {
+        return settings.client.POST("/private/twin/search/v3", {
+            params: {
+                header: getApiDomainHeaders(settings),
+                query: {
+                    showTwinMode: "DETAILED",
+                    showTwinClassMode: "DETAILED",
+                    offset: pagination.pageIndex * pagination.pageSize,
+                    limit: pagination.pageSize,
+                    sortAsc: false,
+                },
+            },
+            body: [
+                {
+                    ...filters,
+                },
+            ],
+        });
+    }
 
   function getById({
     id,
@@ -64,6 +64,7 @@ export function createTwinApi(settings: ApiSettings) {
       body: body,
     });
   }
+
     function searchLinks({twinId}: { twinId: string }) {
         return settings.client.POST('/private/twin/search/v3', {
             params: {

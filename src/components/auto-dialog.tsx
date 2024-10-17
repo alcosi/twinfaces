@@ -36,10 +36,10 @@ export function AutoDialog({
 }: EditFieldDialogProps) {
   const [error, setError] = useState<string | null>(null);
 
-  function onOpenChangeInternal(newOpen: boolean) {
-    console.log("EditFieldDialog onOpenChangeInternal", newOpen);
-    onOpenChange?.(newOpen);
-  }
+    function onOpenChangeInternal(newOpen: boolean) {
+        console.log('EditFieldDialog onOpenChangeInternal', newOpen)
+        onOpenChange?.(newOpen)
+    }
 
   useEffect(() => {
     if (open) {
