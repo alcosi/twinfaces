@@ -1,4 +1,4 @@
 export enum PathLinkMode {
-    Exact,
-    StartsWith
+  Exact,
+  StartsWith,
 }

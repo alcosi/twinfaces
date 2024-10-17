@@ -1,1 +1,1 @@
-export * from './twin-link-dialog';
+export * from "./twin-link-dialog";

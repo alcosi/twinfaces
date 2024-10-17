@@ -3,7 +3,12 @@ import {
   MultiComboboxHandle,
   MultiComboboxProps,
 } from "@/components/base/combobox";
-import { FormControl, FormField, FormItem, FormMessage } from "@/components/base/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/base/form";
 import {
   FormFieldProps,
   FormItemDescription,
@@ -17,13 +22,13 @@ export interface MultiComboboxFormFieldProps<T> {
   getById: (id: string) => Promise<T | undefined>;
 }
 
-type Props<T extends FieldValues, K> = FormFieldProps<T>
-  & MultiComboboxFormFieldProps<K>
-  & MultiComboboxProps<K>
+type Props<T extends FieldValues, K> = FormFieldProps<T> &
+  MultiComboboxFormFieldProps<K> &
+  MultiComboboxProps<K>;
 
 export function MultiComboboxFormField<
   TFormModel extends FieldValues,
-  TFieldModel
+  TFieldModel,
 >({
   name,
   control,
@@ -72,12 +77,13 @@ export function MultiComboboxFormItem<TFieldModel>({
     required?: boolean;
     inForm?: boolean;
   }) {
-  const multiComboboxRef = useRef<MultiComboboxHandle<TFieldModel> | null>(null);
+  const multiComboboxRef = useRef<MultiComboboxHandle<TFieldModel> | null>(
+    null
+  );
 
   useEffect(() => {
-    applySelectedValues(fieldValue)
+    applySelectedValues(fieldValue);
   }, [fieldValue]);
-
 
   function applySelectedValues(values: TFieldModel[]) {
     if (!values?.length) return;
@@ -104,7 +110,9 @@ export function MultiComboboxFormItem<TFieldModel>({
           {...props}
         />
       </FormControl>
-      {description && <FormItemDescription inForm={inForm}>{description}</FormItemDescription>}
+      {description && (
+        <FormItemDescription inForm={inForm}>{description}</FormItemDescription>
+      )}
       {inForm && <FormMessage />}
     </FormItem>
   );
