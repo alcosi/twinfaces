@@ -21,17 +21,6 @@ type ResourceLinkProps<T> = {
   getLink: (data: T) => string;
 } & Pick<ResourceLinkContentProps, "IconComponent" | "disabled">;
 
-const COLORS = {
-  light: {
-    disabled: "[#091e4224]",
-    active: "[#0c66e4]",
-  },
-  dark: {
-    disabled: "[#a6c5e229]",
-    active: "[#579dff]",
-  },
-};
-
 const ResourceLinkContent = ({
   IconComponent,
   link,
@@ -42,18 +31,18 @@ const ResourceLinkContent = ({
     <span
       className={cn(
         "inline-flex items-center h-6 max-w-full border rounded-lg p-2 transition-colors} bg-transparent",
-        `border-${COLORS.light.disabled} hover:border-${COLORS.light.active}`,
-        `dark:border-${COLORS.dark.disabled} dark:hover:border-${COLORS.dark.active}`,
+        "border-link-light-disabled hover:border-link-light-active",
+        "dark:border-link-dark-disabled dark:hover:border-link-dark-active",
         disabled
-          ? `cursor-not-allowed hover:border-${COLORS.light.disabled} dark:hover:border-${COLORS.dark.disabled}`
+          ? "cursor-not-allowed hover:border-linklight-disabled dark:hover:border-link-dark-disabled"
           : "cursor-pointer"
       )}
     >
       <span
         className={
           disabled
-            ? `text-${COLORS.light.disabled} dark:text-${COLORS.dark.disabled}`
-            : `text-${COLORS.light.active} dark:text-${COLORS.dark.active}`
+            ? "text-link-light-disabled dark:text-link-dark-disabled"
+            : "text-link-light-active dark:text-link-dark-active"
         }
       >
         <IconComponent className="h-4 w-4" />
@@ -63,8 +52,8 @@ const ResourceLinkContent = ({
         className={cn(
           "ml-2 text-sm font-medium truncate",
           disabled
-            ? `text-${COLORS.light.disabled} dark:text-${COLORS.dark.disabled}`
-            : `text-${COLORS.light.active} dark:text-${COLORS.dark.active}`
+            ? "text-link-light-disabled dark:text-link-dark-disabled"
+            : "text-link-light-active dark:text-link-dark-active"
         )}
       >
         {displayName}

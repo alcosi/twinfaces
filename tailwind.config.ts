@@ -56,6 +56,16 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        link: {
+          light: {
+            disabled: "#091e4224",
+            active: "#0c66e4",
+          },
+          dark: {
+            disabled: "#a6c5e229",
+            active: "#579dff",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

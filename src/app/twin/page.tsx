@@ -13,6 +13,8 @@ import {
 } from "@/components/base/data-table/crud-data-table";
 import { useRouter } from "next/navigation";
 import { buildFilters, FilterFields, FILTERS } from "@/entities/twin";
+import { TwinResourceLink } from "@/entities/twin/components/resource-link/resource-link";
+import { TwinClassResourceLink } from "@/entities/twinClass";
 
 type FetchDataResponse = {
   data: TwinBase[];
@@ -23,7 +25,11 @@ const columns: ColumnDef<TwinBase>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <TwinResourceLink data={original} withTooltip />
+      </div>
+    ),
   },
   {
     accessorKey: "createdAt",
@@ -50,7 +56,16 @@ const columns: ColumnDef<TwinBase>[] = [
   {
     accessorKey: "twinClassId",
     header: "Twin Class Id",
-    cell: (data) => <ShortGuidWithCopy value={data.row.original.twinClassId} />,
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <TwinClassResourceLink
+          data={{
+            id: original.twinClassId,
+          }}
+          withTooltip
+        />
+      </div>
+    ),
   },
 ];
 
