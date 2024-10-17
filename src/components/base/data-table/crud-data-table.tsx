@@ -282,27 +282,37 @@ function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
     }
   }
 
-    return <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-            <Button
-                type='button'
-                className={cn('block'/*, className*/)}
-                // name={name}
-                onClick={() => {
-                    setOpen(true);
-                }}
-                variant='default'
-            >
-                <FilterIcon/>
-            </Button>
-        </PopoverTrigger>
-        <PopoverContent className='max-h-[80vh] overflow-y-auto'>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(internalSubmit)} className="space-y-4">
-                    {keys.map(filterKey => {
-                        return <AutoField key={filterKey} info={filtersInfo[filterKey]!}
-                                          name={filterKey} control={form.control}/>
-                    })}
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          type="button"
+          className={cn("block" /*, className*/)}
+          // name={name}
+          onClick={() => {
+            setOpen(true);
+          }}
+          variant="default"
+        >
+          <FilterIcon />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="max-h-[80vh] overflow-y-auto">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(internalSubmit)}
+            className="space-y-4"
+          >
+            {keys.map((filterKey) => {
+              return (
+                <AutoField
+                  key={filterKey}
+                  info={filtersInfo[filterKey]!}
+                  name={filterKey}
+                  control={form.control}
+                />
+              );
+            })}
 
             <div className={"flex flex-row justify-end gap-2"}>
               <Button

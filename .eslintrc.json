@@ -7,21 +7,9 @@
   ],
   "overrides": [
     {
-      "files": ["src/app/**/*"],
+      "files": ["src/**/*"],
       "rules": {
         "no-unused-vars": "warn"
-      }
-    },
-    {
-      "files": ["src/components/**/*", "src/lib/utils.ts"],
-      "rules": {
-        "no-unused-vars": [
-          1,
-          {
-            // "vars": "all"
-            "args": "after-used"
-          }
-        ]
       }
     }
   ]
