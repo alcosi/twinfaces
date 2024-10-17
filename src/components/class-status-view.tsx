@@ -18,10 +18,10 @@ export function ClassStatusView({ status }: TwinflowStatusViewProps) {
         <TooltipTrigger asChild>
           <div
             className="w-4 h-4 rounded"
-            style={{ backgroundColor: status.color }}
+            style={{ backgroundColor: status.backgroundColor }}
           />
         </TooltipTrigger>
-        <TooltipContent>{status.color}</TooltipContent>
+        <TooltipContent>{status.backgroundColor}</TooltipContent>
       </Tooltip>
       {status.name ?? status.key}
     </div>

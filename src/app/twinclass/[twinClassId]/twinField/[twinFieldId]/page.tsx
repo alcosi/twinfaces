@@ -90,8 +90,3 @@ export default function TwinClassPage({
     </div>
   );
 }
-
-
-
-
-
