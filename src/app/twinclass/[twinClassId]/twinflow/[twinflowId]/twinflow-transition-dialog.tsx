@@ -212,9 +212,7 @@ export function TwinflowTransitionCreateEditDialog({
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
       <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
         <DialogHeader>
-          <DialogTitle>
-            {transition ? "Edit transition" : "Create transition"}
-          </DialogTitle>
+          <DialogTitle>{transition ? "Edit" : "Create"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

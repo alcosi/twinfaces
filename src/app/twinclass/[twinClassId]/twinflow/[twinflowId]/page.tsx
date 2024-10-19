@@ -1,17 +1,13 @@
 "use client";
 
-import {
-  ReturnOptions,
-  Section,
-  SideNavLayout,
-} from "@/components/layout/side-nav-layout";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { TwinFlow } from "@/lib/api/api-types";
-import { ApiContext } from "@/lib/api/api";
-import { toast } from "sonner";
-import { LoadingOverlay } from "@/components/base/loading";
 import { TwinflowGeneral } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-general";
 import { TwinflowTransitions } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-transitions";
+import { LoadingOverlay } from "@/components/base/loading";
+import { ApiContext } from "@/lib/api/api";
+import { TwinFlow } from "@/lib/api/api-types";
+import { ReturnOptions, Section, SideNavLayout } from "@/widgets/layouts";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface TwinflowPageProps {
   params: {
@@ -80,7 +76,7 @@ export default function TwinflowPage({
     ? [
         {
           path: `/twinclass/${twinflow.twinClassId}#twinflows`,
-          label: "Back to class",
+          label: "Back",
         },
       ]
     : [];

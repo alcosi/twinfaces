@@ -1,8 +1,8 @@
 import { TooltipProvider } from "@/components/base/tooltip";
-import { MainLayout } from "@/components/layout/main-layout";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ApiContextProvider } from "@/lib/api/api";
 import { cn } from "@/lib/utils";
+import { MainLayout } from "@/widgets/layouts";
 import type { Metadata } from "next";
 import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";

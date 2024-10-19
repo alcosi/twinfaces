@@ -165,7 +165,7 @@ export default function CreateEditTwinStatusDialog({
       <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
         <DialogTrigger asChild>Open</DialogTrigger>
         <DialogHeader>
-          <DialogTitle>{status ? "Edit status" : "Create status"}</DialogTitle>
+          <DialogTitle>{status ? "Edit" : "Create"}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

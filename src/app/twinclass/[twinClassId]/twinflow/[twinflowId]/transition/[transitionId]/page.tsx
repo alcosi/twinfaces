@@ -1,16 +1,12 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { TwinFlow, TwinFlowTransition } from "@/lib/api/api-types";
-import { toast } from "sonner";
-import {
-  ReturnOptions,
-  Section,
-  SideNavLayout,
-} from "@/components/layout/side-nav-layout";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { LoadingOverlay } from "@/components/base/loading";
+import { ApiContext } from "@/lib/api/api";
+import { TwinFlowTransition } from "@/lib/api/api-types";
+import { ReturnOptions, Section, SideNavLayout } from "@/widgets/layouts";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { TwinflowTransitionGeneral } from "./twinflow-transition-general";
 import { TwinflowTransitionTriggers } from "./twinflow-transition-triggers";
 import { TwinflowTransitionValidators } from "./twinflow-transition-validators";
@@ -99,7 +95,7 @@ export default function TransitionPage({
   const returnOptions: ReturnOptions[] = [
     {
       path: `/twinclass/${twinClassId}/twinflow/${twinflowId}#transitions`,
-      label: "Back to class",
+      label: "Back",
     },
     {
       path: `/twinclass/${twinClassId}/#twinflow/`,

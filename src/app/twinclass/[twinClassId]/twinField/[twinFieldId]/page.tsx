@@ -1,17 +1,13 @@
 "use client";
 
-import {
-  ReturnOptions,
-  Section,
-  SideNavLayout,
-} from "@/components/layout/side-nav-layout";
-import { LoadingOverlay } from "@/components/base/loading";
-import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { toast } from "sonner";
-import { TwinFieldGeneral } from "@/app/twinclass/[twinClassId]/twinField/[twinFieldId]/twin-field-general";
-import { TwinClassField } from "@/lib/api/api-types";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { TwinFieldGeneral } from "@/app/twinclass/[twinClassId]/twinField/[twinFieldId]/twin-field-general";
+import { LoadingOverlay } from "@/components/base/loading";
+import { ApiContext } from "@/lib/api/api";
+import { TwinClassField } from "@/lib/api/api-types";
+import { ReturnOptions, Section, SideNavLayout } from "@/widgets/layouts";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface TwinFieldPageProps {
   params: {
@@ -75,7 +71,7 @@ export default function TwinClassPage({
   const returnOptions: ReturnOptions[] = [
     {
       path: `/twinclass/${twinClass?.id}#fields`,
-      label: "Back to class",
+      label: "Back",
     },
   ];
 

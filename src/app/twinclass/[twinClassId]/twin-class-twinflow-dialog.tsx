@@ -108,7 +108,7 @@ export default function CreateTwinflowDialog({
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
       <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
         <DialogHeader>
-          <DialogTitle>{"Create Twinflow"}</DialogTitle>
+          <DialogTitle>Create</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

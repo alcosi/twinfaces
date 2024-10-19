@@ -176,7 +176,7 @@ export default function TwinClasses() {
         createButton={{
           enabled: true,
           onClick: () => setClassDialogOpen(true),
-          text: "Create Class",
+          text: "Create",
         }}
         filters={{
           filtersInfo: {

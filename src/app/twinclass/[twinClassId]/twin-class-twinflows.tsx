@@ -110,7 +110,7 @@ export function TwinClassTwinflows() {
         createButton={{
           enabled: true,
           onClick: openCreateTwinflow,
-          text: "Create Twinflow",
+          text: "Create",
         }}
         // search={{enabled: true, placeholder: 'Search by key...'}}
         filters={{

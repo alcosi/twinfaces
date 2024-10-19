@@ -1,14 +1,18 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { Badge } from "@/components/base/badge";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { LoadingOverlay } from "@/components/base/loading";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { TwinClassLinkDialog } from "@/entities/twinClassLink/components/twin-link-dialog";
+import { TwinClassResourceLink } from "@/entities/twinClass";
+import {
+  TwinClassLinkDialog,
+  TwinClassLinkResourceLink,
+} from "@/entities/twinClassLink/components";
 import { ApiContext } from "@/lib/api/api";
-import { TwinClassLink } from "@/lib/api/api-types";
+import { TwinClass, TwinClassLink } from "@/lib/api/api-types";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -29,30 +33,50 @@ export function TwinClassLinks() {
     isOpen: false,
   });
 
-  const columns: ColumnDef<TwinClassLink>[] = [
-    {
+  const columnsMap: Record<
+    Exclude<keyof TwinClassLink, "dstTwinClass">,
+    ColumnDef<TwinClassLink>
+  > = {
+    id: {
       accessorKey: "id",
       header: "Id",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: ({ row: { original } }) => (
+        <div className="max-w-48 inline-flex">
+          <TwinClassLinkResourceLink data={original} withTooltip />
+        </div>
+      ),
     },
-    {
+    dstTwinClassId: {
       accessorKey: "dstTwinClassId",
       header: "Destination Twin Class",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: ({ row: { original } }) => (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink
+            data={original.dstTwinClass as TwinClass}
+            withTooltip
+          />
+        </div>
+      ),
     },
-    {
+    name: {
       accessorKey: "name",
       header: "Name",
     },
-    {
+    type: {
       accessorKey: "type",
       header: "Type",
+      cell: ({ row: { original } }) => (
+        <Badge variant="outline">{original.type}</Badge>
+      ),
     },
-    {
+    linkStrengthId: {
       accessorKey: "linkStrengthId",
       header: "Link Strength",
+      cell: ({ row: { original } }) => (
+        <Badge variant="outline">{original.linkStrengthId}</Badge>
+      ),
     },
-  ];
+  };
 
   async function fetchLinks(
     type: "forward" | "backward",
@@ -110,11 +134,17 @@ export function TwinClassLinks() {
         className="mb-10"
         ref={tableRefForward}
         title="Forward Links"
-        columns={columns}
-        getRowId={(row) => row.id!}
+        columns={[
+          columnsMap.id,
+          columnsMap.dstTwinClassId,
+          columnsMap.name,
+          columnsMap.type,
+          columnsMap.linkStrengthId,
+        ]}
         fetcher={(paginationState, filters) =>
           fetchLinks("forward", paginationState, filters)
         }
+        getRowId={(row) => row.id!}
         createButton={{
           enabled: true,
           onClick: () => handleCreateLink(true),
@@ -136,11 +166,17 @@ export function TwinClassLinks() {
       <CrudDataTable
         ref={tableRefBackward}
         title="Backward Links"
-        columns={columns}
-        getRowId={(row) => row.id!}
+        columns={[
+          columnsMap.id,
+          { ...columnsMap.dstTwinClassId, header: "Source Twin Class" },
+          columnsMap.name,
+          columnsMap.type,
+          columnsMap.linkStrengthId,
+        ]}
         fetcher={(paginationState, filters) =>
           fetchLinks("backward", paginationState, filters)
         }
+        getRowId={(row) => row.id!}
         createButton={{
           enabled: true,
           onClick: () => handleCreateLink(false),

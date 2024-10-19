@@ -1,11 +1,11 @@
 "use client";
 
-import { TwinClassStatuses } from "@/app/twinclass/[twinClassId]/twin-class-statuses";
-import { TwinClassGeneral } from "@/app/twinclass/[twinClassId]/twin-class-general";
 import { TwinClassFields } from "@/app/twinclass/[twinClassId]/twin-class-fields";
-import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
-import { TwinClassTwinflows } from "@/app/twinclass/[twinClassId]/twin-class-twinflows";
+import { TwinClassGeneral } from "@/app/twinclass/[twinClassId]/twin-class-general";
 import { TwinClassLinks } from "@/app/twinclass/[twinClassId]/twin-class-links";
+import { TwinClassStatuses } from "@/app/twinclass/[twinClassId]/twin-class-statuses";
+import { TwinClassTwinflows } from "@/app/twinclass/[twinClassId]/twin-class-twinflows";
+import { Section, SideNavLayout } from "@/widgets/layouts";
 
 export default function TwinClassPage() {
   const sections: Section[] = [

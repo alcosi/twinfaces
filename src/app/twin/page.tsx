@@ -130,7 +130,7 @@ export default function Twin() {
         createButton={{
           enabled: true,
           onClick: openCreateClass,
-          text: "Create Class",
+          text: "Create",
         }}
         // search={{enabled: true, placeholder: 'Search by key...'}}
         filters={{
