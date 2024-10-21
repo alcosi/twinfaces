@@ -118,7 +118,7 @@ export const TwinClassLinkDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%] scrollbar-hide">
         <DialogHeader>
           <DialogTitle>Create Link</DialogTitle>
         </DialogHeader>

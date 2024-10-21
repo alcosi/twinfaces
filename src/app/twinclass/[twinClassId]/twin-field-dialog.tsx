@@ -176,7 +176,7 @@ export default function CreateEditTwinFieldDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%] scrollbar-hide">
         <DialogHeader>
           <DialogTitle>{field ? "Edit field" : "Create field"}</DialogTitle>
         </DialogHeader>
