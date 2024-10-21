@@ -1,13 +1,13 @@
 "use client";
 
-import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
-import { LoadingOverlay } from "@/components/base/loading";
-import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { toast } from "sonner";
-import { TwinClassStatus } from "@/lib/api/api-types";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { TwinStatusGeneral } from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twin-status-general";
+import { LoadingOverlay } from "@/components/base/loading";
+import { ApiContext } from "@/lib/api/api";
+import { TwinClassStatus } from "@/lib/api/api-types";
+import { Section, SideNavLayout } from "@/widgets/layouts";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface TwinStatusPageProps {
   params: {
@@ -80,7 +80,7 @@ export default function TwinClassPage({
           returnOptions={[
             {
               path: `/twinclass/${twinClass?.id}#statuses`,
-              label: "Back to class",
+              label: "Back",
             },
           ]}
         >

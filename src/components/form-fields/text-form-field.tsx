@@ -38,6 +38,7 @@ export function TextFormField<T extends FieldValues>({
             description={description}
             suggestions={suggestions}
             inForm={true}
+            disabled={props.disabled}
           />
         );
       }}

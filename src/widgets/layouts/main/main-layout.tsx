@@ -1,13 +1,11 @@
-import TwinFace from "@/assets/img/face.svg";
 import { Button } from "@/components/base/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/base/sheet";
-import { PathLink } from "@/components/layout/layout-link";
-import { PathLinkMode } from "@/components/layout/layoutlink.common";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Menu } from "lucide-react";
-import Image from "next/image";
+import { Menu, Smile } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { PathLink } from "./layout-link";
+import { PathLinkMode } from "./layoutlink.common";
 
 const links = [
   {
@@ -29,7 +27,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             href="/"
             className="flex items-center gap-2 text-xl font-semibold md:text-lg"
           >
-            <Image src={TwinFace} alt="" className="h-6 w-6 dark:invert" />
+            <Smile className="h-6 w-6 text-primary" />
             Twin Faces
           </Link>
 
@@ -65,7 +63,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 href="/"
                 className="flex items-center gap-2 text-xl font-semibold md:text-lg"
               >
-                <Image src={TwinFace} alt="" className="h-6 w-6 dark:invert" />
+                {/* <Image src={TwinFace} alt="" className="h-6 w-6 dark:invert" /> */}
                 Twin Faces
               </Link>
 
@@ -89,6 +87,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
         <ThemeToggle />
       </header>
+
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
         {children}
       </main>
