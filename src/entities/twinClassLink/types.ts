@@ -17,3 +17,4 @@ export const LinkStrengthEnum = createEnum<LinkStrength>([
 ] as const);
 
 export type CreateLinkRequestBody = components["schemas"]["LinkCreateV1"];
+export type UpdateLinkRequestBody = components["schemas"]["LinkUpdateV1"];
