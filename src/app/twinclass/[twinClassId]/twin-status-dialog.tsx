@@ -162,7 +162,7 @@ export default function CreateEditTwinStatusDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%] scrollbar-hide">
         <DialogTrigger asChild>Open</DialogTrigger>
         <DialogHeader>
           <DialogTitle>{status ? "Edit status" : "Create status"}</DialogTitle>
