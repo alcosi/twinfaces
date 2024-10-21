@@ -1,1 +1,1 @@
-export { TwinClassLinkPage } from "./twinClassLink";
+export { TwinClassLinkPage } from "./twin-class-link";

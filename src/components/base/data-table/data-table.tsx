@@ -38,7 +38,7 @@ export interface DataTableProps<TData, TValue> {
   disablePagination?: boolean;
   pageSizes?: number[];
   onFetchError?: (e: Error) => any;
-  onRowClick?: (row: TData) => any;
+  onRowClick?: (row: TData) => void;
 }
 
 export const DataTable = fixedForwardRef(DataTableInternal);
