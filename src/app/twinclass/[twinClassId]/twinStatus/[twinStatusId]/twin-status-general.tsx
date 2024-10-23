@@ -15,8 +15,10 @@ export function TwinStatusGeneral({
 }) {
   const api = useContext(ApiContext);
   const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
+
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
+
   const [backgroundColor, setBackgroundColor] = useState(
     status.backgroundColor || "#FFFFFF"
   );
@@ -69,14 +71,40 @@ export function TwinStatusGeneral({
     },
   };
 
-  const handleBackgroundColorChange = async (newColor: string) => {
-    setBackgroundColor(newColor);
-    await updateStatus({ backgroundColor: newColor });
+  const backgroundColorAutoDialogSettings: AutoEditDialogSettings = {
+    value: { backgroundColor: status.backgroundColor },
+    title: "Update background color",
+    onSubmit: (values) => {
+      setBackgroundColor(values.backgroundColor);
+
+      return updateStatus({
+        backgroundColor: values.backgroundColor,
+      });
+    },
+    valuesInfo: {
+      backgroundColor: {
+        type: AutoFormValueType.color,
+        label: "Background Color",
+      },
+    },
   };
 
-  const handleFontColorChange = async (newColor: string) => {
-    setFontColor(newColor);
-    await updateStatus({ fontColor: newColor });
+  const fontColorAutoDialogSettings: AutoEditDialogSettings = {
+    value: { fontColor: status.fontColor },
+    title: "Update font Color",
+    onSubmit: (values) => {
+      setFontColor(values.fontColor);
+
+      return updateStatus({
+        fontColor: values.fontColor,
+      });
+    },
+    valuesInfo: {
+      fontColor: {
+        type: AutoFormValueType.color,
+        label: "Font Color",
+      },
+    },
   };
 
   return (
@@ -87,10 +115,12 @@ export function TwinStatusGeneral({
             <TableCell>ID</TableCell>
             <TableCell>{status.id}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Key</TableCell>
             <TableCell>{status.key}</TableCell>
           </TableRow>
+
           <TableRow
             className="cursor-pointer"
             onClick={() => openWithSettings(nameAutoDialogSettings)}
@@ -98,6 +128,7 @@ export function TwinStatusGeneral({
             <TableCell>Name</TableCell>
             <TableCell>{status.name}</TableCell>
           </TableRow>
+
           <TableRow
             className="cursor-pointer"
             onClick={() => openWithSettings(descriptionAutoDialogSettings)}
@@ -105,19 +136,24 @@ export function TwinStatusGeneral({
             <TableCell>Description</TableCell>
             <TableCell>{status.description}</TableCell>
           </TableRow>
-          <TableRow className="cursor-pointer">
+
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(backgroundColorAutoDialogSettings)}
+          >
             <TableCell>Background Color</TableCell>
             <TableCell>
-              <ColorPicker
-                value={backgroundColor}
-                onChange={handleBackgroundColorChange}
-              />
+              <ColorPicker value={backgroundColor} />
             </TableCell>
           </TableRow>
-          <TableRow className="cursor-pointer">
+
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(fontColorAutoDialogSettings)}
+          >
             <TableCell>Font Color</TableCell>
             <TableCell>
-              <ColorPicker value={fontColor} onChange={handleFontColorChange} />
+              <ColorPicker value={fontColor} />
             </TableCell>
           </TableRow>
         </TableBody>
