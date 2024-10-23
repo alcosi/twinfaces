@@ -1,6 +1,7 @@
 import { LoadingOverlay } from "@/components/base/loading";
+import { TwinClass } from "@/entities/twinClass";
 import { ApiContext } from "@/lib/api/api";
-import { TwinClass, TwinClassStatus } from "@/lib/api/api-types";
+import { TwinClassStatus } from "@/lib/api/api-types";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -43,6 +44,7 @@ export function TwinClassContextProvider({
           showTwinClassMode: "MANAGED",
           showTwin2TwinClassMode: "MANAGED",
           showTwinClassHead2TwinClassMode: "MANAGED",
+          showTwinClassExtends2TwinClassMode: "DETAILED",
           showTwinClass2StatusMode: "DETAILED",
         },
       })

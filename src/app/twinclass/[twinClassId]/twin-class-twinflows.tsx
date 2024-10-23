@@ -1,19 +1,18 @@
-import { TwinClass, TwinFlow } from "@/lib/api/api-types";
-import { useContext, useRef, useState } from "react";
-import { toast } from "sonner";
-import { ApiContext } from "@/lib/api/api";
+import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import CreateTwinflowDialog from "@/app/twinclass/[twinClassId]/twin-class-twinflow-dialog";
+import { AutoFormValueType } from "@/components/auto-field";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
-import { useRouter } from "next/navigation";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import CreateTwinflowDialog from "@/app/twinclass/[twinClassId]/twin-class-twinflow-dialog";
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { AutoFormValueType } from "@/components/auto-field";
-import { TwinflowGeneral } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-general";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { ApiContext } from "@/lib/api/api";
+import { TwinFlow } from "@/lib/api/api-types";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useContext, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const columns: ColumnDef<TwinFlow>[] = [
   {

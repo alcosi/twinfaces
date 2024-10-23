@@ -1,6 +1,6 @@
 import { TwinClassLink } from "@/lib/api/api-types";
 import { components } from "@/lib/api/generated/schema";
-import { createEnum } from "@/shared/helpers";
+import { createEnum } from "@/shared/libs";
 
 export type LinkTypes = NonNullable<TwinClassLink["type"]>;
 export const LinkTypesEnum = createEnum<LinkTypes>([

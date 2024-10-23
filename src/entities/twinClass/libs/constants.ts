@@ -1,4 +1,4 @@
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+import { AutoFormValueType } from "@/components/auto-field";
 
 const OWNER_TYPES = [
   "SYSTEM",

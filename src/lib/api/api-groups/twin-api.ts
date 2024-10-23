@@ -13,7 +13,6 @@ type TwinSearchApiFilters = Partial<
 export function createTwinApi(settings: ApiSettings) {
   function search({
     pagination,
-    search,
     filters,
   }: {
     pagination: PaginationState;
@@ -24,8 +23,10 @@ export function createTwinApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
+          lazyRelation: false,
           showTwinMode: "DETAILED",
           showTwinClassMode: "DETAILED",
+          showTwin2TwinClassMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

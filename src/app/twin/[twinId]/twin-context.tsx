@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { TwinBase } from "@/lib/api/api-types";
-import { ApiContext } from "@/lib/api/api";
 import { LoadingOverlay } from "@/components/base/loading";
+import { TwinBase } from "@/entities/twin";
+import { ApiContext } from "@/lib/api/api";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface TwinContextProps {

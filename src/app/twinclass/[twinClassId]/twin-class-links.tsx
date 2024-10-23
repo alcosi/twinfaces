@@ -6,6 +6,10 @@ import {
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { LoadingOverlay } from "@/components/base/loading";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import { TwinClassLinkDialog } from "@/entities/twinClassLink/components/twin-link-dialog";
 import { ApiContext } from "@/lib/api/api";
 import { TwinClassLink } from "@/lib/api/api-types";
@@ -38,7 +42,14 @@ export function TwinClassLinks() {
     {
       accessorKey: "dstTwinClassId",
       header: "Destination Twin Class",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: ({ row: { original } }) => (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink
+            data={original.dstTwinClass as TwinClass_DETAILED}
+            withTooltip
+          />
+        </div>
+      ),
     },
     {
       accessorKey: "name",
