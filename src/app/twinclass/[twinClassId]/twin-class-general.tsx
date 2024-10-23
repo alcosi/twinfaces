@@ -1,12 +1,17 @@
-import { TwinClass, TwinClassUpdateRq } from "@/lib/api/api-types";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
-import { AutoEditDialogSettings, AutoDialog } from "@/components/auto-dialog";
-import { useContext, useState } from "react";
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import { ApiContext } from "@/lib/api/api";
-import { z } from "zod";
-import { FeaturerTypes } from "@/components/featurer-input";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
+import { AutoFormValueType } from "@/components/auto-field";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { FeaturerTypes } from "@/components/featurer-input";
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
+import { ApiContext } from "@/lib/api/api";
+import { TwinClassUpdateRq } from "@/lib/api/api-types";
+import { useContext, useState } from "react";
+import { z } from "zod";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
@@ -172,7 +177,9 @@ export function TwinClassGeneral() {
         <TableBody>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>{twinClass.id}</TableCell>
+            <TableCell>
+              <ShortGuidWithCopy value={twinClass.id} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Key</TableCell>
@@ -204,7 +211,14 @@ export function TwinClassGeneral() {
             onClick={() => openWithSettings(classValues.head!)}
           >
             <TableCell>Head</TableCell>
-            <TableCell>{twinClass.headClassId}</TableCell>
+            <TableCell>
+              {twinClass.headClass && (
+                <TwinClassResourceLink
+                  data={twinClass.headClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              )}
+            </TableCell>
           </TableRow>
           <TableRow
             className={"cursor-pointer"}
@@ -215,7 +229,14 @@ export function TwinClassGeneral() {
           </TableRow>
           <TableRow>
             <TableCell>Extends</TableCell>
-            <TableCell>{twinClass.extendsClassId}</TableCell>
+            <TableCell>
+              {twinClass.extendsClass && (
+                <TwinClassResourceLink
+                  data={twinClass.extendsClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              )}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Created at</TableCell>

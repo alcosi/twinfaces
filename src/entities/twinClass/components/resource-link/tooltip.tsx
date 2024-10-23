@@ -1,116 +1,117 @@
-import { Separator } from "@/components/base/separator";
-import { TwinClass } from "@/lib/api/api-types";
-import {
-  Check,
-  Clock,
-  Copy,
-  LayoutTemplate,
-  Link,
-  LoaderCircle,
-} from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/base/button";
+import { isFullString, stopPropagation } from "@/shared/libs";
+import { Avatar } from "@/shared/ui";
+import { Check, Copy, LayoutTemplate, Link, X } from "lucide-react";
+import React from "react";
 import { toast } from "sonner";
-import { useFetchTwinClassById } from "../../hooks";
+import { TwinClass_DETAILED } from "../../libs";
+import { TwinClassResourceLink } from "./resource-link";
 
 type Props = {
-  data: TwinClass;
+  data: TwinClass_DETAILED;
 };
 
 export const TwinClassResourceTooltip = ({ data }: Props) => {
-  const { fetchTwinClassById } = useFetchTwinClassById();
-  const [twinClassData, setTwinClassData] = useState<TwinClass>(data);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (data.id && !data.key) {
-        setLoading(true);
-        try {
-          const fetchedData = await fetchTwinClassById(data.id);
-          setTwinClassData((prev) => fetchedData ?? prev);
-        } catch (error) {
-          console.error("Error fetching twin class data:", error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchData();
-  }, [data.id, data.key, fetchTwinClassById]);
-
-  const handleCopyUUID = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  function handleCopyUUID(e: React.MouseEvent) {
+    stopPropagation(e);
     navigator.clipboard.writeText(data.id ?? "").then(() => {
       toast.message("UUID is copied");
     });
-  };
+  }
 
-  const handleCopyLink = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  function handleCopyLink(e: React.MouseEvent) {
+    stopPropagation(e);
     const baseUrl = window?.location.origin ?? "";
     const link = `${baseUrl}/twinclass/${data.id}`;
 
     navigator.clipboard.writeText(link).then(() => {
       toast.message("Link is copied");
     });
-  };
+  }
 
   return (
-    <div className="p-2 text-sm">
-      {loading ? (
-        <div className="flex justify-center items-center">
-          <LoaderCircle className="animate-spin" />
+    <div
+      className="text-sm w-96 p-6 space-y-4"
+      onClick={stopPropagation}
+      // TODO: refactor
+      style={{
+        background:
+          "linear-gradient(to bottom, #3b82f6 96px, transparent 96px)",
+      }}
+    >
+      <header className="flex h-24 gap-x-4 text-primary-foreground">
+        <div className="h-24 w-24 rounded-full bg-muted text-link-light-active dark:text-link-dark-active flex justify-center items-center">
+          {data.logo ? (
+            <Avatar url={data.logo} alt={data.name ?? "Logo"} size="xlg" />
+          ) : (
+            <LayoutTemplate className="w-16 h-16" />
+          )}
         </div>
-      ) : (
-        <>
-          <div className="space-y-1">
-            <div className="flex flex-row gap-2 items-center">
-              <LayoutTemplate className="h-4 w-4" />
-              {twinClassData.name
-                ? twinClassData.name
-                : (twinClassData.key ?? "N/A")}
-              {twinClassData.abstractClass && <Check className="h-4 w-4" />}
-            </div>
-            {twinClassData.description && <p>{twinClassData.description}</p>}
-            {twinClassData.extendsClass && (
-              <div>
-                <strong>Extends: </strong>
-                {twinClassData.extendsClass.key}
-              </div>
-            )}
-            {twinClassData.headClassId && (
-              <div>
-                <strong>Head Class ID: </strong>
-                {twinClassData.headClassId}
-              </div>
-            )}
-            {twinClassData.createdAt && (
-              <div className="flex flex-row gap-2 items-center">
-                <Clock className="h-4 w-4" />
-                {new Date(twinClassData.createdAt).toLocaleDateString()}
-              </div>
-            )}
+
+        <div className="flex flex-col justify-end h-16">
+          <div className="font-semibold text-lg">
+            {isFullString(data.name) ? data.name : "N/A"}
           </div>
+          <div className="text-sm">{data.key}</div>
+        </div>
+      </header>
 
-          <Separator className="my-2" />
+      <main className="space-y-2 text-base">
+        {data.description && <p>{data.description}</p>}
+        <div className="flex flex-row gap-2 items-center font-semibold">
+          <strong>Abstract: </strong>
+          {data.abstractClass ? (
+            <Check className="h-4 w-4" />
+          ) : (
+            <X className="h-4 w-4" />
+          )}
+        </div>
+        {/* // TODO: re-thinkg typing approach here (maybe use type guard) */}
+        {data.extendsClass?.key && (
+          <div className="flex gap-2">
+            <strong>Extends:</strong>
+            <TwinClassResourceLink
+              data={data.extendsClass as TwinClass_DETAILED}
+            />
+          </div>
+        )}
+        {/* // TODO: re-thinkg typing approach here (maybe use type guard) */}
+        {data.headClass?.key && (
+          <div className="flex gap-2">
+            <strong>Head:</strong>
+            <TwinClassResourceLink
+              data={data.headClass as TwinClass_DETAILED}
+            />
+          </div>
+        )}
+        {data.createdAt && (
+          <div className="flex flex-row gap-2 items-center">
+            <strong>Created at:</strong>
+            {new Date(data.createdAt).toLocaleDateString()}
+          </div>
+        )}
+      </main>
 
-          <button
-            className="flex flex-row gap-2 items-center hover:bg-secondary w-full p-0.5"
-            onClick={handleCopyUUID}
-          >
-            <Copy className="h-4 w-4" />
-            Copy UUID
-          </button>
-          <button
-            className="flex flex-row gap-2 items-center hover:bg-secondary w-full p-0.5"
-            onClick={handleCopyLink}
-          >
-            <Link className="h-4 w-4" />
-            Copy Link
-          </button>
-        </>
-      )}
+      <footer className="flex gap-x-2 justify-between">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex flex-row gap-2 items-center hover:bg-secondary w-full p-0.5"
+          onClick={handleCopyUUID}
+        >
+          <Copy className="h-4 w-4" />
+          Copy UUID
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex flex-row gap-2 items-center hover:bg-secondary w-full p-0.5"
+          onClick={handleCopyLink}
+        >
+          <Link className="h-4 w-4" />
+          Copy Link
+        </Button>
+      </footer>
     </div>
   );
 };
