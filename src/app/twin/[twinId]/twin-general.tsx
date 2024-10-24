@@ -11,6 +11,7 @@ import {
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { User, UserResourceLink } from "@/entities/user";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);
@@ -81,8 +82,10 @@ export function TwinGeneral() {
             <TableCell>{twin.createdAt}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Author User ID</TableCell>
-            <TableCell>{twin.authorUserId}</TableCell>
+            <TableCell>Author User</TableCell>
+            <TableCell>
+              <UserResourceLink data={twin.authorUser as User} />
+            </TableCell>
           </TableRow>
           <TableRow
             className={"cursor-pointer"}
@@ -92,8 +95,10 @@ export function TwinGeneral() {
             <TableCell>{twin.name}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Assigner User ID</TableCell>
-            <TableCell>{twin.assignerUserId}</TableCell>
+            <TableCell>Assigner User</TableCell>
+            <TableCell>
+              <UserResourceLink data={twin.assignerUser as User} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Twin Class ID</TableCell>

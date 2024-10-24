@@ -5,7 +5,6 @@ import {
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   buildFilters,
   FilterFields,
@@ -15,6 +14,7 @@ import {
   TwinResourceLink,
 } from "@/entities/twin";
 import { TwinClassResourceLink } from "@/entities/twinClass";
+import { User, UserResourceLink } from "@/entities/user";
 import { ApiContext } from "@/lib/api/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
@@ -42,25 +42,27 @@ const columns: ColumnDef<Twin>[] = [
   },
   {
     accessorKey: "authorUserId",
-    header: "Author User Id",
-    cell: (data) => (
-      <ShortGuidWithCopy value={data.row.original.authorUserId} />
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
+    header: "Author",
+    cell: ({ row: { original } }) =>
+      original.authorUser && (
+        <div className="max-w-48 inline-flex">
+          <UserResourceLink data={original.authorUser as User} withTooltip />
+        </div>
+      ),
   },
   {
     accessorKey: "assignerUserId",
-    header: "Assigner User Id",
-    cell: (data) => (
-      <ShortGuidWithCopy value={data.row.original.assignerUserId} />
-    ),
+    header: "Assigner",
+    cell: ({ row: { original } }) =>
+      original.assignerUser && (
+        <div className="max-w-48 inline-flex">
+          <UserResourceLink data={original.assignerUser as User} withTooltip />
+        </div>
+      ),
   },
   {
     accessorKey: "twinClassId",
-    header: "Twin Class Id",
+    header: "Twin Class",
     cell: ({ row: { original } }) =>
       original.twinClass && (
         <div className="max-w-48 inline-flex">
@@ -150,7 +152,6 @@ export default function TwinsPage() {
             "id",
             "createdAt",
             "authorUserId",
-            "name",
             "assignerUserId",
             "twinClassId",
           ],
