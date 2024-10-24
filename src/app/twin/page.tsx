@@ -15,6 +15,10 @@ import {
   TwinResourceLink,
 } from "@/entities/twin";
 import { TwinClassResourceLink } from "@/entities/twinClass";
+import {
+  TwinClassStatus,
+  TwinClassStatusResourceLink,
+} from "@/entities/twinClassStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { ApiContext } from "@/lib/api/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -47,6 +51,19 @@ const columns: ColumnDef<Twin>[] = [
     header: "Description",
   },
   {
+    accessorKey: "statusId",
+    header: "Status",
+    cell: ({ row: { original } }) =>
+      original.status && (
+        <div className="max-w-48 inline-flex">
+          <TwinClassStatusResourceLink
+            data={original.status as TwinClassStatus}
+            withTooltip
+          />
+        </div>
+      ),
+  },
+  {
     accessorKey: "authorUserId",
     header: "Author",
     cell: ({ row: { original } }) =>
@@ -75,6 +92,14 @@ const columns: ColumnDef<Twin>[] = [
           <TwinClassResourceLink data={original.twinClass} withTooltip />
         </div>
       ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created at",
+    cell: ({ row: { original } }) =>
+      original.createdAt
+        ? new Date(original.createdAt).toLocaleDateString()
+        : "",
   },
   {
     accessorKey: "createdAt",
@@ -131,9 +156,7 @@ export default function TwinsPage() {
   }
 
   return (
-    <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
-      <div className="w-0 flex-0 lg:w-16" />
-
+    <main className="p-8 lg:flex lg:justify-center flex-col mx-auto">
       <CrudDataTable
         ref={tableRef}
         columns={columns}
@@ -150,6 +173,7 @@ export default function TwinsPage() {
             [FilterFields.twinIdList]: FILTERS[FilterFields.twinIdList],
             [FilterFields.twinNameLikeList]:
               FILTERS[FilterFields.twinNameLikeList],
+            [FilterFields.statusIdList]: FILTERS[FilterFields.statusIdList],
             [FilterFields.assignerUserIdList]:
               FILTERS[FilterFields.assignerUserIdList],
             [FilterFields.twinClassIdList]:
@@ -164,6 +188,7 @@ export default function TwinsPage() {
           enabled: true,
           defaultVisibleKeys: [
             "name",
+            "statusId",
             "authorUserId",
             "assignerUserId",
             "twinClassId",

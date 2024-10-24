@@ -3,14 +3,16 @@ import { FilterFields, FILTERS } from "./constants";
 import { mapToChoice, toArray } from "@/shared/libs";
 import { RelatedObjects } from "@/lib/api/api-types";
 import { Twin, TwinBase } from "./types";
-import { TwinClass_DETAILED } from "../twinClass";
-import { User } from "../user";
+import { TwinClass_DETAILED } from "../../twinClass";
+import { User } from "../../user";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
 
 // List of filter keys for string-like filtering
 const stringLikeFilters = [FilterFields.twinNameLikeList];
 
 const arrayLikeFilters = [
   FilterFields.twinIdList,
+  FilterFields.statusIdList,
   FilterFields.assignerUserIdList,
   FilterFields.twinClassIdList,
 ];
@@ -47,6 +49,10 @@ export const hydrateTwinFromMap = (
   const twin: Twin = Object.assign({}, twinDTO) as Twin;
 
   if (!relatedObjects?.twinClassMap) return twin;
+
+  if (twinDTO.statusId && relatedObjects.statusMap) {
+    twin.status = relatedObjects.statusMap[twinDTO.statusId] as TwinClassStatus;
+  }
 
   if (twinDTO.twinClassId) {
     twin.twinClass = relatedObjects.twinClassMap[

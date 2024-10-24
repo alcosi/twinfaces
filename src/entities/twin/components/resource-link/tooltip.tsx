@@ -1,4 +1,5 @@
 import { Button } from "@/components/base/button";
+import { TwinClassStatusResourceLink } from "@/entities/twinClassStatus";
 import { UserResourceLink } from "@/entities/user";
 import { isFullString, stopPropagation } from "@/shared/libs";
 import { Braces, Copy, Link } from "lucide-react";
@@ -52,6 +53,13 @@ export function TwinResourceTooltip({ data }: Props) {
 
       <main className="space-y-2 text-base">
         {data.description && <p>{data.description}</p>}
+
+        {data.status && (
+          <div className="flex gap-2">
+            <strong>Status:</strong>
+            <TwinClassStatusResourceLink data={data.status} />
+          </div>
+        )}
 
         {data.authorUser && (
           <div className="flex gap-2">
