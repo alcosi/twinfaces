@@ -4,6 +4,7 @@ import { mapToChoice, toArray } from "@/shared/libs";
 import { RelatedObjects } from "@/lib/api/api-types";
 import { Twin, TwinBase } from "./types";
 import { TwinClass_DETAILED } from "../twinClass";
+import { User } from "../user";
 
 // List of filter keys for string-like filtering
 const stringLikeFilters = [FilterFields.twinNameLikeList];
@@ -51,6 +52,14 @@ export const hydrateTwinFromMap = (
     twin.twinClass = relatedObjects.twinClassMap[
       twinDTO.twinClassId
     ] as TwinClass_DETAILED;
+  }
+
+  if (twinDTO.authorUserId && relatedObjects.userMap) {
+    twin.authorUser = relatedObjects.userMap[twinDTO.authorUserId] as User;
+  }
+
+  if (twinDTO.assignerUserId && relatedObjects.userMap) {
+    twin.assignerUser = relatedObjects.userMap[twinDTO.assignerUserId] as User;
   }
 
   return twin;
