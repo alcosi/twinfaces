@@ -40,6 +40,7 @@ export function TwinContextProvider({
         query: {
           showTwinMode: "DETAILED",
           showTwinClassMode: "DETAILED",
+          showTwin2TwinClassMode: "DETAILED",
         },
       })
       .then((response) => {

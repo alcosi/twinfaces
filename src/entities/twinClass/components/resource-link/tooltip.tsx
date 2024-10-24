@@ -12,14 +12,14 @@ type Props = {
 };
 
 export const TwinClassResourceTooltip = ({ data }: Props) => {
-  const handleCopyUUID = (e: React.MouseEvent) => {
+  function handleCopyUUID(e: React.MouseEvent) {
     stopPropagation(e);
     navigator.clipboard.writeText(data.id ?? "").then(() => {
       toast.message("UUID is copied");
     });
-  };
+  }
 
-  const handleCopyLink = (e: React.MouseEvent) => {
+  function handleCopyLink(e: React.MouseEvent) {
     stopPropagation(e);
     const baseUrl = window?.location.origin ?? "";
     const link = `${baseUrl}/twinclass/${data.id}`;
@@ -27,7 +27,7 @@ export const TwinClassResourceTooltip = ({ data }: Props) => {
     navigator.clipboard.writeText(link).then(() => {
       toast.message("Link is copied");
     });
-  };
+  }
 
   return (
     <div
