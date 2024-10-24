@@ -5,6 +5,7 @@ import {
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   buildFilters,
   FilterFields,
@@ -30,6 +31,11 @@ const columns: ColumnDef<Twin>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
         <TwinResourceLink data={original} withTooltip />
@@ -37,8 +43,8 @@ const columns: ColumnDef<Twin>[] = [
     ),
   },
   {
-    accessorKey: "createdAt",
-    header: "Created at",
+    accessorKey: "description",
+    header: "Description",
   },
   {
     accessorKey: "authorUserId",
@@ -69,6 +75,14 @@ const columns: ColumnDef<Twin>[] = [
           <TwinClassResourceLink data={original.twinClass} withTooltip />
         </div>
       ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created at",
+    cell: ({ row: { original } }) =>
+      original.createdAt
+        ? new Date(original.createdAt).toLocaleDateString()
+        : "",
   },
 ];
 
@@ -149,8 +163,7 @@ export default function TwinsPage() {
         customizableColumns={{
           enabled: true,
           defaultVisibleKeys: [
-            "id",
-            "createdAt",
+            "name",
             "authorUserId",
             "assignerUserId",
             "twinClassId",
