@@ -1,4 +1,7 @@
-import { CreateLinkRequestBody } from "@/entities/twinClassLink";
+import {
+  CreateLinkRequestBody,
+  UpdateLinkRequestBody,
+} from "@/entities/twinClassLink";
 import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
 
 export function createTwinClassLinksApi(settings: ApiSettings) {
@@ -24,7 +27,23 @@ export function createTwinClassLinksApi(settings: ApiSettings) {
     });
   }
 
-  return { getLinks, create };
+  async function update({
+    linkId,
+    body,
+  }: {
+    linkId: string;
+    body: UpdateLinkRequestBody;
+  }) {
+    return settings.client.PUT("/private/link/{linkId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { linkId },
+      },
+      body: body,
+    });
+  }
+
+  return { getLinks, create, update };
 }
 
 export type TwinClassLinkApi = ReturnType<typeof createTwinClassLinksApi>;
