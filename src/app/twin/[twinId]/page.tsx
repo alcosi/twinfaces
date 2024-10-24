@@ -1,8 +1,8 @@
 "use client";
 
-import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
 import { TwinGeneral } from "@/app/twin/[twinId]/twin-general";
 import { TwinLinks } from "@/app/twin/[twinId]/twin-links";
+import { Section, SideNavLayout } from "@/widgets/layouts";
 
 export default function TwinPage() {
   const sections: Section[] = [

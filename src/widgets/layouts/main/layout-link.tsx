@@ -1,6 +1,6 @@
 "use client";
 
-import { PathLinkMode } from "@/components/layout/layoutlink.common";
+import { PathLinkMode } from "./layoutlink.common";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -25,6 +25,15 @@ export function PathLink({
 }: PathLinkProps) {
   const pathname = usePathname();
   console.log(pathname, href);
+
+  if (!pathname) {
+    return (
+      <Link href={href} className={cn(className, disabledClassName)}>
+        {children}
+      </Link>
+    );
+  }
+
   let isActive = false;
   if (mode === PathLinkMode.Exact) {
     isActive = pathname === href;
