@@ -50,7 +50,7 @@ export function TwinClassContextProvider({
     fetchClassData();
   }, [twinClassId]);
 
-  const fetchClassData = async () => {
+  async function fetchClassData() {
     setLoading(true);
     try {
       const response = await api.twinClass.getById({
@@ -88,7 +88,7 @@ export function TwinClassContextProvider({
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   async function getStatusesBySearch(search: string) {
     return statuses.filter(

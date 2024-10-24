@@ -5,7 +5,7 @@ import { ReturnOptions, Section, SideNavLayout } from "@/widgets/layouts";
 import { useContext } from "react";
 import { GeneralSection } from "./views/general-section";
 
-export const TwinClassLinkPage = () => {
+export function TwinClassLinkPage() {
   const { twinClassId } = useContext(TwinClassContext);
 
   const sections: Section[] = [
@@ -24,4 +24,4 @@ export const TwinClassLinkPage = () => {
   ];
 
   return <SideNavLayout sections={sections} returnOptions={returnOptions} />;
-};
+}

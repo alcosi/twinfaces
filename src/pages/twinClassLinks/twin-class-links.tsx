@@ -39,13 +39,13 @@ const twinLinkSchema = z.object({
   ),
 });
 
-const mapLinkToFormPayload = (
+function mapLinkToFormPayload(
   link: TwinClassLink,
   options: {
     twinClassId: string;
     isBackward?: boolean;
   }
-): CreateLinkRequestBody | UpdateLinkRequestBody => {
+): CreateLinkRequestBody | UpdateLinkRequestBody {
   return {
     ...link,
     linkStrength: link.linkStrengthId,
@@ -56,7 +56,7 @@ const mapLinkToFormPayload = (
       ? options.twinClassId
       : link.dstTwinClassId,
   };
-};
+}
 
 export function TwinClassLinks() {
   const api = useContext(ApiContext);
@@ -176,9 +176,9 @@ export function TwinClassLinks() {
     return <LoadingOverlay />;
   }
 
-  const handleOnCreateSubmit = async (
+  async function handleOnCreateSubmit(
     formValues: z.infer<typeof twinLinkSchema>
-  ) => {
+  ) {
     const body: CreateLinkRequestBody = {
       forwardNameI18n: {
         translations: {
@@ -198,12 +198,12 @@ export function TwinClassLinks() {
       throw error;
     }
     toast.success("Link created successfully!");
-  };
+  }
 
-  const handleOnUpdateSubmit = async (
+  async function handleOnUpdateSubmit(
     linkId: string,
     formValues: z.infer<typeof twinLinkSchema>
-  ) => {
+  ) {
     const body: UpdateLinkRequestBody = {
       forwardNameI18n: {
         translations: {
@@ -222,7 +222,7 @@ export function TwinClassLinks() {
       throw error;
     }
     toast.success("Link updated successfully!");
-  };
+  }
 
   return (
     <>

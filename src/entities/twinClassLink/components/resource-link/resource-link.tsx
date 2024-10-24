@@ -11,11 +11,11 @@ type Props = {
   withTooltip?: boolean;
 };
 
-export const TwinClassLinkResourceLink = ({
+export function TwinClassLinkResourceLink({
   data,
   disabled,
   withTooltip,
-}: Props) => {
+}: Props) {
   const { twinClassId } = useContext(TwinClassContext);
 
   return (
@@ -37,4 +37,4 @@ export const TwinClassLinkResourceLink = ({
       getLink={(data) => `/twinclass/${twinClassId}/link/${data.id}`}
     />
   );
-};
+}

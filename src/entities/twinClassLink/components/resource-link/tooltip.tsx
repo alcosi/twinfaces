@@ -10,7 +10,7 @@ type Props = {
   twinClassId: string;
 };
 
-export const TwinClassLinkResourceTooltip = ({ data, twinClassId }: Props) => {
+export function TwinClassLinkResourceTooltip({ data, twinClassId }: Props) {
   const handleCopyUUID = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigator.clipboard.writeText(data.id ?? "").then(() => {
@@ -67,4 +67,4 @@ export const TwinClassLinkResourceTooltip = ({ data, twinClassId }: Props) => {
       </button>
     </>
   );
-};
+}
