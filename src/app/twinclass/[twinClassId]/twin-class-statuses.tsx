@@ -1,24 +1,25 @@
-import { TwinClassStatus } from "@/lib/api/api-types";
-import { useContext, useRef, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { toast } from "sonner";
-import { Unplug } from "lucide-react";
+import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import CreateEditTwinStatusDialog from "@/app/twinclass/[twinClassId]/twin-status-dialog";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { ImageWithFallback } from "@/components/image-with-fallback";
+import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import {
-  CrudDataTable,
-  FiltersState,
-} from "@/components/base/data-table/crud-data-table";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/base/tooltip";
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { ImageWithFallback } from "@/components/image-with-fallback";
+import {
+  TwinClassStatus,
+  TwinClassStatusResourceLink,
+} from "@/entities/twinClassStatus";
+import { ApiContext } from "@/lib/api/api";
+import { ColorTile } from "@/shared/ui";
+import { ColumnDef } from "@tanstack/table-core";
+import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useContext, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export function TwinClassStatuses() {
   const api = useContext(ApiContext);
@@ -32,53 +33,6 @@ export function TwinClassStatuses() {
   );
 
   const columns: ColumnDef<TwinClassStatus>[] = [
-    {
-      accessorKey: "id",
-      header: "ID",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
-    },
-    {
-      accessorKey: "key",
-      header: "Key",
-    },
-    {
-      accessorKey: "name",
-      header: "Name",
-    },
-    {
-      accessorKey: "backgroundColor",
-      header: "Background Color",
-      cell: (data) => {
-        return (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div
-                className="w-4 h-4 rounded"
-                style={{ backgroundColor: data.getValue<string>() }}
-              />
-            </TooltipTrigger>
-            <TooltipContent>{data.getValue<string>()}</TooltipContent>
-          </Tooltip>
-        );
-      },
-    },
-    {
-      accessorKey: "fontColor",
-      header: "Font Color",
-      cell: (data) => {
-        return (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div
-                className="w-4 h-4 rounded"
-                style={{ backgroundColor: data.getValue<string>() }}
-              />
-            </TooltipTrigger>
-            <TooltipContent>{data.getValue<string>()}</TooltipContent>
-          </Tooltip>
-        );
-      },
-    },
     {
       accessorKey: "logo",
       header: "Logo",
@@ -96,17 +50,55 @@ export function TwinClassStatuses() {
         );
       },
     },
-    // {
-    //     header: "Actions",
-    //     cell: (data) => {
-    //         return <Button variant="ghost" size="iconS6"
-    //                 onClick={() => editStatus(data.row.original)}><Edit2Icon/>
-    //         </Button>
-    //     }
-    // }
+    {
+      accessorKey: "id",
+      header: "ID",
+      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    },
+    {
+      accessorKey: "key",
+      header: "Key",
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: ({ row: { original } }) => (
+        <div className="max-w-48 inline-flex">
+          <TwinClassStatusResourceLink data={original} withTooltip />
+        </div>
+      ),
+    },
+    {
+      accessorKey: "backgroundColor",
+      header: "Background Color",
+      cell: (data) => {
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <ColorTile color={data.getValue<string>()} />
+            </TooltipTrigger>
+            <TooltipContent>{data.getValue<string>()}</TooltipContent>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      accessorKey: "fontColor",
+      header: "Font Color",
+      cell: (data) => {
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <ColorTile color={data.getValue<string>()} />
+            </TooltipTrigger>
+            <TooltipContent>{data.getValue<string>()}</TooltipContent>
+          </Tooltip>
+        );
+      },
+    },
   ];
 
-  async function fetchStatuses(_: PaginationState, filters: FiltersState) {
+  async function fetchStatuses() {
     if (!twinClass?.id) {
       toast.error("Twin class ID is missing");
       return { data: [], pageCount: 0 };
@@ -146,11 +138,6 @@ export function TwinClassStatuses() {
 
   function createStatus() {
     setEditedStatus(null);
-    setCreateEditStatusDialogOpen(true);
-  }
-
-  function editStatus(status: TwinClassStatus) {
-    setEditedStatus(status);
     setCreateEditStatusDialogOpen(true);
   }
 

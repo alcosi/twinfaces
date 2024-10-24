@@ -1,15 +1,10 @@
-import {
-  TwinClassStatus,
-  TwinFlow,
-  TwinFlowUpdateRq,
-} from "@/lib/api/api-types";
-import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
+import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
-import { toast } from "sonner";
 import { AutoFormValueType } from "@/components/auto-field";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { ApiContext } from "@/lib/api/api";
+import { TwinFlow, TwinFlowUpdateRq } from "@/lib/api/api-types";
+import { useContext, useState } from "react";
 
 export function TwinflowGeneral({
   twinflow,

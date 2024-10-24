@@ -12,7 +12,6 @@ export type TwinClassFieldCreateRq =
 export type TwinClassFieldUpdateRq =
   components["schemas"]["TwinClassFieldUpdateRqV1"];
 // export type TwinClassFieldUpdateRq = components["schemas"]["TwinClassField"];
-export type TwinClassStatus = components["schemas"]["TwinStatusV1"];
 export type TwinClassStatusCreateRq =
   components["schemas"]["TwinStatusCreateRqV1"];
 export type TwinClassStatusUpdateRq =

@@ -1,5 +1,4 @@
 import {
-  TwinClassStatus,
   TwinClassStatusCreateRq,
   TwinClassStatusUpdateRq,
 } from "@/lib/api/api-types";
@@ -25,6 +24,7 @@ import {
   TextFormField,
 } from "@/components/form-fields/text-form-field";
 import { ColorPickerFormField } from "@/components/form-fields/color-form-field";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
 
 interface CreateEditTwinStatusDialogProps {
   open: boolean;

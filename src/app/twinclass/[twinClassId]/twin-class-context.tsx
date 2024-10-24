@@ -1,7 +1,7 @@
 import { LoadingOverlay } from "@/components/base/loading";
 import { TwinClass } from "@/entities/twinClass";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
 import { ApiContext } from "@/lib/api/api";
-import { TwinClassStatus } from "@/lib/api/api-types";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
