@@ -6,13 +6,13 @@ import {
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
   buildFilters,
   FilterFields,
   FILTERS,
   hydrateTwinClassFromMap,
-  TwinClass,
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
@@ -43,6 +43,15 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
   },
   {
     accessorKey: "id",
+    header: "Id",
+    cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
+  },
+  {
+    accessorKey: "key",
+    header: "Key",
+  },
+  {
+    accessorKey: "name",
     header: "Name",
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
@@ -207,7 +216,7 @@ export default function TwinClasses() {
         customizableColumns={{
           enabled: true,
           defaultVisibleKeys: [
-            "id",
+            "name",
             "headClassId",
             "extendsClass.id",
             "abstractClass",
