@@ -12,8 +12,8 @@ import {
   FILTERS,
   hydrateTwinFromMap,
   Twin,
+  TwinResourceLink,
 } from "@/entities/twin";
-import { TwinResourceLink } from "@/entities/twin/components/resource-link/resource-link";
 import { TwinClassResourceLink } from "@/entities/twinClass";
 import { ApiContext } from "@/lib/api/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";

@@ -5,9 +5,9 @@ import { LoadingOverlay } from "@/components/base/loading";
 import { useContext, useEffect, useState } from "react";
 import { ApiContext } from "@/lib/api/api";
 import { toast } from "sonner";
-import { TwinClassStatus } from "@/lib/api/api-types";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { TwinStatusGeneral } from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twin-status-general";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
 
 interface TwinStatusPageProps {
   params: {
