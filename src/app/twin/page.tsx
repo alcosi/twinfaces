@@ -1,27 +1,32 @@
 "use client";
 
-import { toast } from "sonner";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { useContext, useRef, useState } from "react";
-import { TwinBase } from "@/lib/api/api-types";
-import { ApiContext } from "@/lib/api/api";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
-import { useRouter } from "next/navigation";
-import { buildFilters, FilterFields, FILTERS } from "@/entities/twin";
+import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import {
+  buildFilters,
+  FilterFields,
+  FILTERS,
+  hydrateTwinFromMap,
+  Twin,
+} from "@/entities/twin";
 import { TwinResourceLink } from "@/entities/twin/components/resource-link/resource-link";
 import { TwinClassResourceLink } from "@/entities/twinClass";
+import { ApiContext } from "@/lib/api/api";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useContext, useRef } from "react";
+import { toast } from "sonner";
 
 type FetchDataResponse = {
-  data: TwinBase[];
+  data: Twin[];
   pageCount: number;
 };
 
-const columns: ColumnDef<TwinBase>[] = [
+const columns: ColumnDef<Twin>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -56,22 +61,16 @@ const columns: ColumnDef<TwinBase>[] = [
   {
     accessorKey: "twinClassId",
     header: "Twin Class Id",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinClassResourceLink
-          data={{
-            id: original.twinClassId,
-          }}
-          withTooltip
-        />
-      </div>
-    ),
+    cell: ({ row: { original } }) =>
+      original.twinClass && (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink data={original.twinClass} withTooltip />
+        </div>
+      ),
   },
 ];
 
-export default function Twin() {
-  const [classDialogOpen, setClassDialogOpen] = useState(false);
-
+export default function TwinsPage() {
   const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
@@ -97,7 +96,10 @@ export default function Twin() {
       }
 
       return {
-        data: data?.twinList ?? [],
+        data:
+          data?.twinList?.map((dto) =>
+            hydrateTwinFromMap(dto, data.relatedObjects)
+          ) ?? [],
         pageCount: Math.ceil(
           (data.pagination?.total ?? 0) / pagination.pageSize
         ),
@@ -110,10 +112,6 @@ export default function Twin() {
         pageCount: 0,
       };
     }
-  }
-
-  function openCreateClass() {
-    setClassDialogOpen(true);
   }
 
   return (
@@ -129,10 +127,8 @@ export default function Twin() {
         onRowClick={(row) => router.push(`/twin/${row.id}`)}
         createButton={{
           enabled: true,
-          onClick: openCreateClass,
-          text: "Create Class",
+          text: "Create",
         }}
-        // search={{enabled: true, placeholder: 'Search by key...'}}
         filters={{
           filtersInfo: {
             [FilterFields.twinIdList]: FILTERS[FilterFields.twinIdList],
@@ -160,14 +156,6 @@ export default function Twin() {
           ],
         }}
       />
-
-      <div className="w-0 flex-0 lg:w-16" />
-
-      {/*<TwinClassDialog open={classDialogOpen}*/}
-      {/*                 onOpenChange={(newOpen) => {*/}
-      {/*                     setClassDialogOpen(newOpen);*/}
-      {/*                 }}*/}
-      {/*                 onSuccess={() => tableRef.current?.refresh()}/>*/}
     </main>
   );
 }

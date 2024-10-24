@@ -40,8 +40,10 @@ export function createTwinClassApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
-          showTwinClassMode: "DETAILED",
-          showTwinClassExtends2TwinClassMode: "SHORT",
+          lazyRelation: false,
+          showTwinClassMode: "MANAGED",
+          showTwinClassHead2TwinClassMode: "DETAILED",
+          showTwinClassExtends2TwinClassMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

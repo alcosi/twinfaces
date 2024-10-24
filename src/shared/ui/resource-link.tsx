@@ -9,7 +9,6 @@ import { ElementType, ReactNode } from "react";
 
 type ResourceLinkContentProps = {
   IconComponent: ElementType;
-  link: string;
   displayName: string;
   disabled?: boolean;
 };
@@ -23,11 +22,10 @@ type ResourceLinkProps<T> = {
 
 const ResourceLinkContent = ({
   IconComponent,
-  link,
   displayName,
   disabled,
 }: ResourceLinkContentProps) => {
-  const content = (
+  return (
     <span
       className={cn(
         "inline-flex items-center h-6 max-w-full border rounded-lg p-2 transition-colors} bg-transparent",
@@ -60,22 +58,6 @@ const ResourceLinkContent = ({
       </span>
     </span>
   );
-  return (
-    <TooltipTrigger asChild>
-      {disabled ? (
-        content
-      ) : (
-        <Link
-          href={link}
-          className="max-w-full"
-          passHref
-          onClick={(e) => e.stopPropagation()}
-        >
-          {content}
-        </Link>
-      )}
-    </TooltipTrigger>
-  );
 };
 
 export const ResourceLink = <T,>({
@@ -89,17 +71,33 @@ export const ResourceLink = <T,>({
   const displayName = getDisplayName(data);
   const link = getLink(data);
 
-  return (
-    <Tooltip>
+  const ResourceLinkWrapper = disabled ? (
+    <ResourceLinkContent
+      IconComponent={IconComponent}
+      displayName={displayName}
+      disabled={disabled}
+    />
+  ) : (
+    <Link
+      href={link}
+      className="max-w-full"
+      passHref
+      onClick={(e) => e.stopPropagation()}
+    >
       <ResourceLinkContent
         IconComponent={IconComponent}
-        link={link}
         displayName={displayName}
         disabled={disabled}
       />
-      {renderTooltip && (
-        <TooltipContent side="left">{renderTooltip(data)}</TooltipContent>
-      )}
+    </Link>
+  );
+
+  return renderTooltip ? (
+    <Tooltip>
+      <TooltipTrigger asChild>{ResourceLinkWrapper}</TooltipTrigger>
+      <TooltipContent className="p-0">{renderTooltip(data)}</TooltipContent>
     </Tooltip>
+  ) : (
+    ResourceLinkWrapper
   );
 };

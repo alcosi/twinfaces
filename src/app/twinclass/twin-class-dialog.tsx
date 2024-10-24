@@ -18,8 +18,9 @@ import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
+import { TwinClass } from "@/entities/twinClass";
 import { ApiContext } from "@/lib/api/api";
-import { TwinClass, TwinClassCreateRq } from "@/lib/api/api-types";
+import { TwinClassCreateRq } from "@/lib/api/api-types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import {

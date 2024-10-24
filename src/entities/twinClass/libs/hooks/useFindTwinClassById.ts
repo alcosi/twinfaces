@@ -1,6 +1,6 @@
-import { useCallback, useContext } from "react";
 import { ApiContext } from "@/lib/api/api";
-import { TwinClass } from "@/lib/api/api-types";
+import { useCallback, useContext } from "react";
+import { TwinClass } from "../types";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinClassById = () => {

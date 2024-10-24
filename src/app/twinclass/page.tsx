@@ -6,31 +6,24 @@ import {
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
   buildFilters,
   FilterFields,
   FILTERS,
+  hydrateTwinClassFromMap,
+  TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { ApiContext } from "@/lib/api/api";
-import { TwinClass } from "@/lib/api/api-types";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useRef, useState } from "react";
 import { toast } from "sonner";
 
-const columns: ColumnDef<TwinClass>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinClassResourceLink data={original} withTooltip />
-      </div>
-    ),
-  },
+const columns: ColumnDef<TwinClass_DETAILED>[] = [
   {
     accessorKey: "logo",
     header: "Logo",
@@ -49,21 +42,31 @@ const columns: ColumnDef<TwinClass>[] = [
     },
   },
   {
+    accessorKey: "id",
+    header: "Id",
+    cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
+  },
+  {
     accessorKey: "key",
     header: "Key",
   },
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <TwinClassResourceLink data={original} withTooltip />
+      </div>
+    ),
   },
   {
     accessorKey: "headClassId",
     header: "Head",
     cell: ({ row: { original } }) =>
-      original.headClassId ? (
+      original.headClass ? (
         <div className="max-w-48 inline-flex">
           <TwinClassResourceLink
-            data={{ id: original.headClassId }}
+            data={original.headClass as TwinClass_DETAILED}
             withTooltip
           />
         </div>
@@ -76,7 +79,7 @@ const columns: ColumnDef<TwinClass>[] = [
       original.extendsClass ? (
         <div className="max-w-48 inline-flex">
           <TwinClassResourceLink
-            data={{ ...original.extendsClass }}
+            data={original.extendsClass as TwinClass_DETAILED}
             withTooltip
           />
         </div>
@@ -87,14 +90,6 @@ const columns: ColumnDef<TwinClass>[] = [
     header: "Abstract",
     cell: (data) => <>{data.getValue() && <Check />}</>,
   },
-  // {
-  //     header: "Actions",
-  //     cell: (data) => {
-  //         return <Link href={`/twinclass/${data.row.original.key}`}>
-  //             <span className="inline-flex items-center"><LinkIcon className="mx-1"/> View</span>
-  //         </Link>
-  //     }
-  // }
 ];
 
 export default function TwinClasses() {
@@ -148,7 +143,10 @@ export default function TwinClasses() {
         }
 
         return {
-          data: data.twinClassList ?? [],
+          data:
+            data.twinClassList?.map((dto) =>
+              hydrateTwinClassFromMap(dto, data.relatedObjects)
+            ) ?? [],
           pageCount: Math.ceil(
             (data.pagination?.total ?? 0) / _pagination.pageSize
           ),
@@ -218,8 +216,6 @@ export default function TwinClasses() {
         customizableColumns={{
           enabled: true,
           defaultVisibleKeys: [
-            "id",
-            "key",
             "name",
             "headClassId",
             "extendsClass.id",

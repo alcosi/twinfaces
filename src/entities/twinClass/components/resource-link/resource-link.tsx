@@ -1,10 +1,11 @@
-import { TwinClass } from "@/lib/api/api-types";
-import { ResourceLink } from "@/shared/ui";
+import { isFullString } from "@/shared/libs";
+import { Avatar, ResourceLink } from "@/shared/ui";
 import { LayoutTemplate } from "lucide-react";
+import { TwinClass_DETAILED } from "../../libs";
 import { TwinClassResourceTooltip } from "./tooltip";
 
 type Props = {
-  data: TwinClass;
+  data: TwinClass_DETAILED;
   disabled?: boolean;
   withTooltip?: boolean;
 };
@@ -16,7 +17,9 @@ export const TwinClassResourceLink = ({
 }: Props) => {
   return (
     <ResourceLink
-      IconComponent={LayoutTemplate}
+      IconComponent={
+        data.logo ? () => <Avatar url={data.logo} size="sm" /> : LayoutTemplate
+      }
       data={data}
       disabled={disabled}
       renderTooltip={
@@ -24,7 +27,9 @@ export const TwinClassResourceLink = ({
           ? (data) => <TwinClassResourceTooltip data={data} />
           : undefined
       }
-      getDisplayName={(data) => data.id ?? ""}
+      getDisplayName={(data) =>
+        isFullString(data.name) ? data.name : data.key
+      }
       getLink={(data) => `/twinclass/${data.id}`}
     />
   );
