@@ -48,3 +48,5 @@ export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];
 
 export type Featurer = components["schemas"]["FeaturerV1"];
 export type FeaturerParam = components["schemas"]["FeaturerParamV1"];
+
+export type RelatedObjects = components["schemas"]["RelatedObjectsV1"];

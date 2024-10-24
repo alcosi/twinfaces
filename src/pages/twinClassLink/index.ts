@@ -1,0 +1,1 @@
+export { TwinClassLinkPage } from "./twinClassLink";

@@ -98,7 +98,7 @@ export const ResourceLink = <T,>({
         disabled={disabled}
       />
       {renderTooltip && (
-        <TooltipContent side="left">{renderTooltip(data)}</TooltipContent>
+        <TooltipContent className="p-0">{renderTooltip(data)}</TooltipContent>
       )}
     </Tooltip>
   );

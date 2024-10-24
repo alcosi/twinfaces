@@ -7,6 +7,7 @@ import {
   CreateLinkRequestBody,
   LinkStrengthEnum,
   LinkTypesEnum,
+  TwinClassLinkResourceLink,
   UpdateLinkRequestBody,
 } from "@/entities/twinClassLink";
 import { ApiContext } from "@/lib/api/api";
@@ -73,14 +74,26 @@ export function TwinClassLinks() {
       header: "Id",
       cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
     },
-    dstTwinClassId: {
-      accessorKey: "dstTwinClassId",
-      header: "Destination Twin Class",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
-    },
     name: {
       accessorKey: "name",
       header: "Name",
+      cell: ({ row: { original } }) => (
+        <div className="max-w-48 inline-flex">
+          <TwinClassLinkResourceLink data={original} withTooltip />
+        </div>
+      ),
+    },
+    dstTwinClassId: {
+      accessorKey: "dstTwinClassId",
+      header: "Destination Twin Class",
+      cell: ({ row: { original } }) => (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink
+            data={original.dstTwinClass as TwinClass}
+            withTooltip
+          />
+        </div>
+      ),
     },
     type: {
       accessorKey: "type",
@@ -221,8 +234,8 @@ export function TwinClassLinks() {
         title="Forward Links"
         columns={[
           columnsMap.id,
-          columnsMap.dstTwinClassId,
           columnsMap.name,
+          columnsMap.dstTwinClassId,
           columnsMap.type,
           columnsMap.linkStrengthId,
         ]}
@@ -233,7 +246,6 @@ export function TwinClassLinks() {
         customizableColumns={{
           enabled: true,
           defaultVisibleKeys: [
-            "id",
             "linkStrengthId",
             "name",
             "type",
@@ -253,8 +265,8 @@ export function TwinClassLinks() {
         title="Backward Links"
         columns={[
           columnsMap.id,
-          { ...columnsMap.dstTwinClassId, header: "Source Twin Class" },
           columnsMap.name,
+          { ...columnsMap.dstTwinClassId, header: "Source Twin Class" },
           columnsMap.type,
           columnsMap.linkStrengthId,
         ]}
@@ -265,7 +277,6 @@ export function TwinClassLinks() {
         customizableColumns={{
           enabled: true,
           defaultVisibleKeys: [
-            "id",
             "linkStrengthId",
             "name",
             "type",
