@@ -6,28 +6,23 @@ import { TwinLinks } from "@/app/twin/[twinId]/twin-links";
 import { TwinFields } from "@/app/twin/[twinId]/twin-fields";
 
 export default function TwinPage() {
-
-    const sections: Section[] = [
-        {
-            key: 'general',
-            label: 'General',
-            content: <TwinGeneral/>
-        },
-        {
-            key: 'fields',
-            label: 'Fields',
-            content: <TwinFields/>
-        },
-        {
-            key: 'links',
-            label: 'Links',
-            content: <TwinLinks/>
-        },
-    ]
+  const sections: Section[] = [
+    {
+      key: "general",
+      label: "General",
+      content: <TwinGeneral />,
+    },
+    {
+      key: "fields",
+      label: "Fields",
+      content: <TwinFields />,
+    },
+    {
+      key: "links",
+      label: "Links",
+      content: <TwinLinks />,
+    },
+  ];
 
   return <SideNavLayout sections={sections} />;
 }
-
-
-
-
