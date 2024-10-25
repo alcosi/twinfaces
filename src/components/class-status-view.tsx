@@ -1,9 +1,10 @@
-import { TwinClassStatus } from "@/lib/api/api-types";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/base/tooltip";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { ColorTile } from "@/shared/ui";
 
 export interface TwinflowStatusViewProps {
   status?: TwinClassStatus;
@@ -16,10 +17,7 @@ export function ClassStatusView({ status }: TwinflowStatusViewProps) {
     <div className="flex flex-row gap-2 items-center">
       <Tooltip>
         <TooltipTrigger asChild>
-          <div
-            className="w-4 h-4 rounded"
-            style={{ backgroundColor: status.backgroundColor }}
-          />
+          <ColorTile color={status.backgroundColor} />
         </TooltipTrigger>
         <TooltipContent>{status.backgroundColor}</TooltipContent>
       </Tooltip>

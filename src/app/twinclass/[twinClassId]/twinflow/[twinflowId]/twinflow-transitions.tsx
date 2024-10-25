@@ -1,6 +1,5 @@
 import {
   TwinClassField,
-  TwinClassStatus,
   TwinFlow,
   TwinFlowTransition,
 } from "@/lib/api/api-types";
@@ -12,6 +11,7 @@ import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
 import { TwinflowTransitionCreateEditDialog } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-transition-dialog";
 import { useRouter } from "next/navigation";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
 
 export function TwinflowTransitions({
   twinflow,

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { TwinClassStatus } from "@/lib/api/api-types";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
 import { toast } from "sonner";
 import { ApiContext } from "@/lib/api/api";
 

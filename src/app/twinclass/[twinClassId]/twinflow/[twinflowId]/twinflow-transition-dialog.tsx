@@ -1,5 +1,4 @@
 import {
-  TwinClassStatus,
   TwinFlow,
   TwinFlowTransition,
   TwinFlowTransitionCreateRq,

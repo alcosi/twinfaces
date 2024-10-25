@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
-import { TwinClassStatus, TwinClassStatusUpdateRq } from "@/lib/api/api-types";
+import { TwinClassStatusUpdateRq } from "@/lib/api/api-types";
 import { ApiContext } from "@/lib/api/api";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 import { ColorPicker } from "@/components/base/color-picker";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
 
 export function TwinStatusGeneral({
   status,
@@ -113,7 +115,9 @@ export function TwinStatusGeneral({
         <TableBody>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>{status.id}</TableCell>
+            <TableCell>
+              <ShortGuidWithCopy value={status.id} />
+            </TableCell>
           </TableRow>
 
           <TableRow>
