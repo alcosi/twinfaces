@@ -5,6 +5,7 @@ import {
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   buildFilters,
   FilterFields,
@@ -14,6 +15,10 @@ import {
   TwinResourceLink,
 } from "@/entities/twin";
 import { TwinClassResourceLink } from "@/entities/twinClass";
+import {
+  TwinClassStatus,
+  TwinClassStatusResourceLink,
+} from "@/entities/twinClassStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { ApiContext } from "@/lib/api/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -30,6 +35,11 @@ const columns: ColumnDef<Twin>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
         <TwinResourceLink data={original} withTooltip />
@@ -37,8 +47,21 @@ const columns: ColumnDef<Twin>[] = [
     ),
   },
   {
-    accessorKey: "createdAt",
-    header: "Created at",
+    accessorKey: "description",
+    header: "Description",
+  },
+  {
+    accessorKey: "statusId",
+    header: "Status",
+    cell: ({ row: { original } }) =>
+      original.status && (
+        <div className="max-w-48 inline-flex">
+          <TwinClassStatusResourceLink
+            data={original.status as TwinClassStatus}
+            withTooltip
+          />
+        </div>
+      ),
   },
   {
     accessorKey: "authorUserId",
@@ -69,6 +92,22 @@ const columns: ColumnDef<Twin>[] = [
           <TwinClassResourceLink data={original.twinClass} withTooltip />
         </div>
       ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created at",
+    cell: ({ row: { original } }) =>
+      original.createdAt
+        ? new Date(original.createdAt).toLocaleDateString()
+        : "",
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created at",
+    cell: ({ row: { original } }) =>
+      original.createdAt
+        ? new Date(original.createdAt).toLocaleDateString()
+        : "",
   },
 ];
 
@@ -117,9 +156,7 @@ export default function TwinsPage() {
   }
 
   return (
-    <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
-      <div className="w-0 flex-0 lg:w-16" />
-
+    <main className="p-8 lg:flex lg:justify-center flex-col mx-auto">
       <CrudDataTable
         ref={tableRef}
         columns={columns}
@@ -136,6 +173,7 @@ export default function TwinsPage() {
             [FilterFields.twinIdList]: FILTERS[FilterFields.twinIdList],
             [FilterFields.twinNameLikeList]:
               FILTERS[FilterFields.twinNameLikeList],
+            [FilterFields.statusIdList]: FILTERS[FilterFields.statusIdList],
             [FilterFields.assignerUserIdList]:
               FILTERS[FilterFields.assignerUserIdList],
             [FilterFields.twinClassIdList]:
@@ -149,8 +187,8 @@ export default function TwinsPage() {
         customizableColumns={{
           enabled: true,
           defaultVisibleKeys: [
-            "id",
-            "createdAt",
+            "name",
+            "statusId",
             "authorUserId",
             "assignerUserId",
             "twinClassId",

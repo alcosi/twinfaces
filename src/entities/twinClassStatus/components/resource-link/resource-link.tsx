@@ -12,11 +12,11 @@ type Props = {
   withTooltip?: boolean;
 };
 
-export const TwinClassStatusResourceLink = ({
+export function TwinClassStatusResourceLink({
   data,
   disabled,
   withTooltip,
-}: Props) => {
+}: Props) {
   const { twinClassId } = useContext(TwinClassContext);
 
   return (
@@ -35,10 +35,8 @@ export const TwinClassStatusResourceLink = ({
           ? (data) => <TwinClassStatusResourceTooltip data={data} />
           : undefined
       }
-      getDisplayName={(data) =>
-        isFullString(data.name) ? data.name : data.key!
-      }
+      getDisplayName={(data) => (isFullString(data.name) ? data.name : "N/A")}
       getLink={(data) => `/twinclass/${twinClassId}/twinStatus/${data.id}`}
     />
   );
-};
+}
