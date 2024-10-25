@@ -19,3 +19,7 @@ export const createEnum = <T extends string>(values: T[]): { [K in T]: K } => {
     return acc;
   }, Object.create(null));
 };
+
+export function isFullString(str: unknown): str is string {
+  return typeof str === "string" && str.trim().length > 0;
+}
