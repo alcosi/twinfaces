@@ -1,6 +1,6 @@
 import { Button } from "@/components/base/button";
 import { TwinClassLink } from "@/lib/api/api-types";
-import { isFullString } from "@/shared/helpers";
+import { isFullString } from "@/shared/libs/helpers";
 import { Copy, Link, Link2 } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";

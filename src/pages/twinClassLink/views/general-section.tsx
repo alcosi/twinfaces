@@ -1,7 +1,10 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { Badge } from "@/components/base/badge";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
-import { TwinClassResourceLink } from "@/entities/twinClass";
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 import { TwinClassLink } from "@/lib/api/api-types";
 import { useContext } from "react";
@@ -38,7 +41,9 @@ export function GeneralSection() {
                 {/* <TwinClassResourceLink data={destTwinClass} withTooltip /> */}
                 <TwinClassResourceLink
                   data={
-                    relatedObjects?.twinClassMap?.[link.dstTwinClassId] || {
+                    (relatedObjects?.twinClassMap?.[
+                      link.dstTwinClassId
+                    ] as TwinClass_DETAILED) || {
                       id: link.dstTwinClassId,
                     }
                   }

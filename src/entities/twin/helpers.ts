@@ -1,6 +1,9 @@
 import { FiltersState } from "@/components/base/data-table/crud-data-table";
 import { FilterFields, FILTERS } from "./constants";
-import { mapToChoice, toArray } from "@/shared/helpers";
+import { mapToChoice, toArray } from "@/shared/libs";
+import { RelatedObjects } from "@/lib/api/api-types";
+import { Twin, TwinBase } from "./types";
+import { TwinClass_DETAILED } from "../twinClass";
 
 // List of filter keys for string-like filtering
 const stringLikeFilters = [FilterFields.twinNameLikeList];
@@ -34,4 +37,21 @@ export const buildFilters = (filters: FiltersState): Record<string, any> => {
     },
     {}
   );
+};
+
+export const hydrateTwinFromMap = (
+  twinDTO: TwinBase,
+  relatedObjects?: RelatedObjects
+): Twin => {
+  const twin: Twin = Object.assign({}, twinDTO) as Twin;
+
+  if (!relatedObjects?.twinClassMap) return twin;
+
+  if (twinDTO.twinClassId) {
+    twin.twinClass = relatedObjects.twinClassMap[
+      twinDTO.twinClassId
+    ] as TwinClass_DETAILED;
+  }
+
+  return twin;
 };

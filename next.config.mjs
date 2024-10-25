@@ -1,15 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: "standalone",
-    images: {
-        remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: '**',
-                pathname: '**'
-            }
-        ]
-    }
+  output: "standalone",
+  useFileSystemPublicRoutes: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+        pathname: "**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

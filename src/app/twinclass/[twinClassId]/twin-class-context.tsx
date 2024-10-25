@@ -1,10 +1,6 @@
 import { LoadingOverlay } from "@/components/base/loading";
 import { ApiContext } from "@/lib/api/api";
-import {
-  RelatedObjects,
-  TwinClass,
-  TwinClassStatus,
-} from "@/lib/api/api-types";
+import { RelatedObjects, TwinClassStatus } from "@/lib/api/api-types";
 import React, {
   createContext,
   PropsWithChildren,
@@ -13,6 +9,7 @@ import React, {
   useState,
 } from "react";
 import { toast } from "sonner";
+import { TwinClass } from "@/entities/twinClass";
 
 interface TwinClassContextProps {
   twinClassId: string;
@@ -50,7 +47,7 @@ export function TwinClassContextProvider({
     fetchClassData();
   }, [twinClassId]);
 
-  const fetchClassData = async () => {
+  async function fetchClassData() {
     setLoading(true);
     try {
       const response = await api.twinClass.getById({
@@ -59,6 +56,7 @@ export function TwinClassContextProvider({
           showTwinClassMode: "MANAGED",
           showTwin2TwinClassMode: "MANAGED",
           showTwinClassHead2TwinClassMode: "MANAGED",
+          showTwinClassExtends2TwinClassMode: "DETAILED",
           showTwinClass2StatusMode: "DETAILED",
           showTwinClass2LinkMode: "DETAILED",
           showLinkDst2TwinClassMode: "DETAILED",
@@ -88,7 +86,7 @@ export function TwinClassContextProvider({
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   async function getStatusesBySearch(search: string) {
     return statuses.filter(

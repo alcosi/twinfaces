@@ -1,6 +1,5 @@
 import { components, paths } from "@/lib/api/generated/schema";
 
-export type TwinClass = components["schemas"]["TwinClassV1"];
 export type TwinClassCreateRq =
   paths["/private/twin_class/v1"]["post"]["requestBody"]["content"]["application/json"];
 export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"];
@@ -39,7 +38,6 @@ export type TwinFlowTransitionValidatorUpdate =
   components["schemas"]["ValidatorUpdateV1"];
 
 export type TwinClassLink = components["schemas"]["LinkV1"];
-export type TwinBase = components["schemas"]["TwinBaseV1"];
 export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
 export type TwinLinkView = components["schemas"]["TwinLinkViewV1"];
 

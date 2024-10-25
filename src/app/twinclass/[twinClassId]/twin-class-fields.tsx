@@ -1,32 +1,18 @@
-import {
-  TwinClass,
-  TwinClassField,
-  TwinClassStatus,
-} from "@/lib/api/api-types";
-import { useContext, useEffect, useRef, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { toast } from "sonner";
-import { LoadingOverlay } from "@/components/base/loading";
-import { Button } from "@/components/base/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/base/table";
-import { Check, Edit2Icon } from "lucide-react";
+import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import CreateEditTwinFieldDialog from "@/app/twinclass/[twinClassId]/twin-field-dialog";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { ApiContext } from "@/lib/api/api";
+import { TwinClassField } from "@/lib/api/api-types";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useContext, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export function TwinClassFields() {
   const api = useContext(ApiContext);

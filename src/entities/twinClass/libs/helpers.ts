@@ -1,6 +1,8 @@
 import { FiltersState } from "@/components/base/data-table/crud-data-table";
-import { mapToChoice, toArray } from "@/shared/helpers";
+import { mapToChoice, toArray, toArrayOfString } from "@/shared/libs";
 import { FilterFields, FILTERS } from "./constants";
+import { TwinClass, TwinClass_DETAILED } from "./types";
+import { RelatedObjects } from "@/lib/api/api-types";
 
 const stringLikeFilters = [
   FilterFields.twinClassKeyLikeList,
@@ -23,18 +25,6 @@ const choiceMappingFilters = [
   FilterFields.abstractt,
 ];
 
-// Warning: temp solution
-// TODO: Find better solution
-const toArrayOfString = <T extends { id?: string }>(
-  input: T[] | string[]
-): string[] => {
-  if (input.every((item) => typeof item === "string")) {
-    return input as string[];
-  }
-
-  return (input as T[]).map((item) => item.id || "").filter((id) => id !== "");
-};
-
 export const buildFilters = (filters: FiltersState): Record<string, any> => {
   return Object.entries(FILTERS).reduce<Record<string, any>>(
     (acc, [filterKey, _]) => {
@@ -55,4 +45,27 @@ export const buildFilters = (filters: FiltersState): Record<string, any> => {
     },
     {}
   );
+};
+
+export const hydrateTwinClassFromMap = (
+  twinClassDTO: TwinClass,
+  relatedObjects?: RelatedObjects
+): TwinClass_DETAILED => {
+  const twinClass: TwinClass_DETAILED = Object.assign(
+    {},
+    twinClassDTO
+  ) as TwinClass_DETAILED;
+
+  if (!relatedObjects?.twinClassMap) return twinClass;
+
+  if (twinClassDTO.headClassId) {
+    twinClass.headClass = relatedObjects.twinClassMap[twinClassDTO.headClassId];
+  }
+
+  if (twinClassDTO.extendsClassId) {
+    twinClass.extendsClass =
+      relatedObjects.twinClassMap[twinClassDTO.extendsClassId];
+  }
+
+  return twinClass;
 };

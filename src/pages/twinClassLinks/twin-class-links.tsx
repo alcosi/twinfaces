@@ -2,7 +2,10 @@ import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-conte
 import { Badge } from "@/components/base/badge";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { LoadingOverlay } from "@/components/base/loading";
-import { TwinClassResourceLink } from "@/entities/twinClass";
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import {
   CreateLinkRequestBody,
   LinkStrengthEnum,
@@ -11,7 +14,7 @@ import {
   UpdateLinkRequestBody,
 } from "@/entities/twinClassLink";
 import { ApiContext } from "@/lib/api/api";
-import { TwinClass, TwinClassLink } from "@/lib/api/api-types";
+import { TwinClassLink } from "@/lib/api/api-types";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -89,7 +92,7 @@ export function TwinClassLinks() {
       cell: ({ row: { original } }) => (
         <div className="max-w-48 inline-flex">
           <TwinClassResourceLink
-            data={original.dstTwinClass as TwinClass}
+            data={original.dstTwinClass as TwinClass_DETAILED}
             withTooltip
           />
         </div>

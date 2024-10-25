@@ -6,6 +6,11 @@ import { AutoFormValueType } from "@/components/auto-field";
 import { ApiContext } from "@/lib/api/api";
 import { z } from "zod";
 import { TwinContext } from "@/app/twin/[twinId]/twin-context";
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);
@@ -67,7 +72,9 @@ export function TwinGeneral() {
         <TableBody>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>{twin.id}</TableCell>
+            <TableCell>
+              <ShortGuidWithCopy value={twin.id} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Created at</TableCell>
@@ -90,7 +97,14 @@ export function TwinGeneral() {
           </TableRow>
           <TableRow>
             <TableCell>Twin Class ID</TableCell>
-            <TableCell>{twin.twinClassId}</TableCell>
+            <TableCell>
+              {twin.twinClass && (
+                <TwinClassResourceLink
+                  data={twin.twinClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              )}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

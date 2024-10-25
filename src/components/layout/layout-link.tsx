@@ -29,8 +29,8 @@ export function PathLink({
   if (mode === PathLinkMode.Exact) {
     isActive = pathname === href;
   } else if (mode === PathLinkMode.StartsWith) {
-    const startsWithHref = pathname.startsWith(href);
-    const nextChar = pathname[href.length];
+    const startsWithHref = pathname?.startsWith(href) ?? false;
+    const nextChar = pathname?.[href.length] ?? false;
     const isBoundary = !nextChar || nextChar === "/";
 
     isActive = startsWithHref && isBoundary;
