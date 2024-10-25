@@ -10,7 +10,6 @@ import {
   CreateLinkRequestBody,
   LinkStrengthEnum,
   LinkTypesEnum,
-  TwinClassLinkResourceLink,
   UpdateLinkRequestBody,
 } from "@/entities/twinClassLink";
 import { ApiContext } from "@/lib/api/api";
@@ -24,6 +23,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { TwinClassLinkFormFields } from "./form-fields";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 
 const twinLinkSchema = z.object({
   srcTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
@@ -237,6 +237,7 @@ export function TwinClassLinks() {
         title="Forward Links"
         columns={[
           columnsMap.id,
+          columnsMap.dstTwinClassId,
           columnsMap.name,
           columnsMap.dstTwinClassId,
           columnsMap.type,
@@ -249,6 +250,7 @@ export function TwinClassLinks() {
         customizableColumns={{
           enabled: true,
           defaultVisibleKeys: [
+            "id",
             "linkStrengthId",
             "name",
             "type",
@@ -280,6 +282,7 @@ export function TwinClassLinks() {
         customizableColumns={{
           enabled: true,
           defaultVisibleKeys: [
+            "id",
             "linkStrengthId",
             "name",
             "type",
