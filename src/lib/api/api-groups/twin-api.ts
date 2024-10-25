@@ -85,19 +85,19 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-    function getFieldById({fieldId}: { fieldId: string }) {
-        return settings.client.GET('/private/twin/{twinId}/v2', {
-            params: {
-                header: getApiDomainHeaders(settings),
-                path: {twinId: fieldId},
-                query: {
-                    showTwinFieldCollectionMode: "ALL_FIELDS",
-                }
-            },
-        })
-    }
+  function getFieldById({ fieldId }: { fieldId: string }) {
+    return settings.client.GET("/private/twin/{twinId}/v2", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { twinId: fieldId },
+        query: {
+          showTwinFieldCollectionMode: "ALL_FIELDS",
+        },
+      },
+    });
+  }
 
-    return {search, getById, update, searchLinks, getFieldById}
+  return { search, getById, update, searchLinks, getFieldById };
 }
 
 export type TwinApi = ReturnType<typeof createTwinApi>;
