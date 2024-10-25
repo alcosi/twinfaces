@@ -41,6 +41,7 @@ export function TwinContextProvider({
           showTwinMode: "DETAILED",
           showTwinClassMode: "DETAILED",
           showTwin2TwinClassMode: "DETAILED",
+          showTwin2UserMode: "DETAILED",
         },
       })
       .then((response) => {
