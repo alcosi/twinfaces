@@ -165,7 +165,7 @@ function CrudDataTableInternal<TData extends Identifiable, TValue>(
     dialogForm?.reset();
   }
 
-  const onSubmit = async (formValues: unknown) => {
+  async function onSubmit(formValues: unknown) {
     try {
       if (dialogState.selectedRowId) {
         await onUpdateSubmit?.(dialogState.selectedRowId, formValues);
@@ -181,7 +181,27 @@ function CrudDataTableInternal<TData extends Identifiable, TValue>(
       console.error("Action failed:", error);
       toast.error("Action failed");
     }
-  };
+  }
+
+  const handleOnCreateClick = onCreateSubmit
+    ? () => {
+        dialogForm?.reset(defaultValues);
+        setDialogState({
+          open: true,
+          selectedRowId: null,
+        });
+      }
+    : undefined;
+
+  const handleOnRowClick = onUpdateSubmit
+    ? (row: TData) => {
+        dialogForm?.reset(row);
+        setDialogState({
+          open: true,
+          selectedRowId: row.id ?? "",
+        });
+      }
+    : undefined;
 
   return (
     <div className={cn("flex-1", className)}>
@@ -204,13 +224,7 @@ function CrudDataTableInternal<TData extends Identifiable, TValue>(
         setVisibleColumnKeys={setVisibleColumnKeys}
         sortColumnKeys={sortColumnKeys}
         setSortColumnKeys={setSortColumnKeys}
-        onCreateClick={() => {
-          dialogForm?.reset(defaultValues);
-          setDialogState({
-            open: true,
-            selectedRowId: null,
-          });
-        }}
+        onCreateClick={handleOnCreateClick}
       />
 
       <DataTable
@@ -218,14 +232,7 @@ function CrudDataTableInternal<TData extends Identifiable, TValue>(
         {...props}
         columns={visibleColumns}
         fetcher={fetchWrapper}
-        onRowClick={(row) => {
-          console.log("foobar onRowClick", row);
-          dialogForm?.reset(row);
-          setDialogState({
-            open: true,
-            selectedRowId: row.id ?? "",
-          });
-        }}
+        onRowClick={handleOnRowClick}
       />
 
       {dialogForm && (

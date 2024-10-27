@@ -18,6 +18,10 @@ const links = [
     href: "/twin",
     name: "Twins",
   },
+  {
+    href: "/permission",
+    name: "Permissions",
+  },
 ];
 
 export function MainLayout({ children }: { children: React.ReactNode }) {

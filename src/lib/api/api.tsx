@@ -25,6 +25,7 @@ import {
   createTwinClassLinksApi,
   TwinClassLinkApi,
 } from "@/lib/api/api-groups/twin-class-links-api";
+import { createPermissionApi, PermissionApi } from "@/entities/permission";
 
 export interface ApiContextProps {
   twinClass: TwinClassApi;
@@ -33,6 +34,7 @@ export interface ApiContextProps {
   featurer: FeaturerApi;
   twin: TwinApi;
   twinClassLink: TwinClassLinkApi;
+  permission: PermissionApi;
 }
 
 export const ApiContext = createContext<ApiContextProps>({} as ApiContextProps);
@@ -73,6 +75,7 @@ export function ApiContextProvider({
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
         twinClassLink: createTwinClassLinksApi(settings),
+        permission: createPermissionApi(settings),
       }}
     >
       {children}
