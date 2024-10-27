@@ -32,7 +32,7 @@ interface CrudDataTableHeaderProps {
   setVisibleColumnKeys: (columns: string[]) => void;
   sortColumnKeys: string[];
   setSortColumnKeys: (columns: string[]) => void;
-  onCreateClick: () => void;
+  onCreateClick?: () => void;
 }
 
 export function CrudDataTableHeader({
@@ -103,8 +103,12 @@ export function CrudDataTableHeader({
             }
           />
         )}
-        <Separator orientation="vertical" />
-        <Button onClick={onCreateClick}>Create</Button>
+        {onCreateClick && (
+          <>
+            <Separator orientation="vertical" />
+            <Button onClick={onCreateClick}>Create</Button>
+          </>
+        )}
       </div>
     </div>
   );

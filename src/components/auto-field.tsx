@@ -41,7 +41,7 @@ export enum AutoFormValueType {
 }
 /* eslint-enable no-unused-vars */
 
-export type AutoFormValueInfo<T = any> = AutoFormCommonInfo &
+export type AutoFormValueInfo<T = unknown> = AutoFormCommonInfo &
   (
     | AutoFormSimpleValueInfo
     | AutoFormCheckboxValueInfo

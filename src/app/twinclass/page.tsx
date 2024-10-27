@@ -1,6 +1,7 @@
 "use client";
 
 import { TwinClassDialog } from "@/app/twinclass/twin-class-dialog";
+import { AutoFormValueInfo } from "@/components/auto-field";
 import {
   CrudDataTable,
   FiltersState,
@@ -177,6 +178,7 @@ export default function TwinClasses() {
           text: "Create Class",
         }}
         filters={{
+          // TODO: Fix typing by removing `any`
           filtersInfo: {
             [FilterFields.twinClassIdList]: FILTERS.twinClassIdList,
             [FilterFields.twinClassKeyLikeList]: FILTERS.twinClassKeyLikeList,
@@ -188,8 +190,8 @@ export default function TwinClasses() {
               getById: findTwinClassById,
               getItems: async (search) =>
                 (await fetchTwinClasses({ search })).data,
-              getItemKey: (item) => item?.id,
-              getItemLabel: ({ key = "", name }) =>
+              getItemKey: (item: any) => item?.id,
+              getItemLabel: ({ key = "", name }: any) =>
                 `${key}${name ? ` (${name})` : ""}`,
             },
             [FilterFields.extendsTwinClassIdList]: {
@@ -197,11 +199,11 @@ export default function TwinClasses() {
               getById: findTwinClassById,
               getItems: async (search) =>
                 (await fetchTwinClasses({ search })).data,
-              getItemKey: (item) => item?.id,
-              getItemLabel: ({ key = "", name }) =>
+              getItemKey: (item: any) => item?.id,
+              getItemLabel: ({ key = "", name }: any) =>
                 `${key}${name ? ` (${name})` : ""}`,
             },
-            [FilterFields.ownerTypeList]: FILTERS.ownerTypeList,
+            [FilterFields.ownerTypeList]: FILTERS.ownerTypeList as any,
             [FilterFields.twinflowSchemaSpace]: FILTERS.twinflowSchemaSpace,
             [FilterFields.twinClassSchemaSpace]: FILTERS.twinClassSchemaSpace,
             [FilterFields.permissionSchemaSpace]: FILTERS.permissionSchemaSpace,
