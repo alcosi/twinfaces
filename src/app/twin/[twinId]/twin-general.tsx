@@ -69,14 +69,17 @@ export function TwinGeneral() {
             <TableCell>ID</TableCell>
             <TableCell>{twin.id}</TableCell>
           </TableRow>
+
           <TableRow>
-            <TableCell>Created at</TableCell>
-            <TableCell>{twin.createdAt}</TableCell>
+            <TableCell>Twin Class</TableCell>
+            <TableCell>{twin.twinClassId}</TableCell>
           </TableRow>
+
           <TableRow>
-            <TableCell>Author User ID</TableCell>
-            <TableCell>{twin.authorUserId}</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>{twin.statusId}</TableCell>
           </TableRow>
+
           <TableRow
             className={"cursor-pointer"}
             onClick={() => openWithSettings(classValues.name!)}
@@ -84,13 +87,49 @@ export function TwinGeneral() {
             <TableCell>Name</TableCell>
             <TableCell>{twin.name}</TableCell>
           </TableRow>
+
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(classValues.description!)}
+          >
+            <TableCell>Description</TableCell>
+            <TableCell>{twin.description}</TableCell>
+          </TableRow>
+
           <TableRow>
-            <TableCell>Assigner User ID</TableCell>
+            <TableCell>Author</TableCell>
+            <TableCell>{twin.authorUserId}</TableCell>
+          </TableRow>
+
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(classValues.assignerUserId!)}
+          >
+            <TableCell>Assigner</TableCell>
             <TableCell>{twin.assignerUserId}</TableCell>
           </TableRow>
+
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(classValues.head!)}
+          >
+            <TableCell>Head</TableCell>
+            <TableCell>{twin.headTwinId}</TableCell>
+          </TableRow>
+
           <TableRow>
-            <TableCell>Twin Class ID</TableCell>
-            <TableCell>{twin.twinClassId}</TableCell>
+            <TableCell>Tags</TableCell>
+            <TableCell>{twin.tagIdList}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Markers</TableCell>
+            <TableCell>{twin.markerIdList}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Created at</TableCell>
+            <TableCell>{twin.createdAt}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
