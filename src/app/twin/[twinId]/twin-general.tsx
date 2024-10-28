@@ -77,16 +77,23 @@ export function TwinGeneral() {
               <ShortGuidWithCopy value={twin.id} />
             </TableCell>
           </TableRow>
+
           <TableRow>
-            <TableCell>Created at</TableCell>
-            <TableCell>{twin.createdAt}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Author User</TableCell>
-            <TableCell>
-              <UserResourceLink data={twin.authorUser as User} />
+            <TableCell>Twin Class</TableCell>
+            <TableCell>{twin.twinClass && (
+              <TwinClassResourceLink
+                data={twin.twinClass as TwinClass_DETAILED}
+                withTooltip
+              />
+            )}
             </TableCell>
           </TableRow>
+
+          <TableRow>
+            <TableCell>Status</TableCell>
+            <TableCell>{twin.statusId}</TableCell>
+          </TableRow>
+
           <TableRow
             className={"cursor-pointer"}
             onClick={() => openWithSettings(classValues.name!)}
@@ -94,22 +101,53 @@ export function TwinGeneral() {
             <TableCell>Name</TableCell>
             <TableCell>{twin.name}</TableCell>
           </TableRow>
+
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(classValues.description!)}
+          >
+            <TableCell>Description</TableCell>
+            <TableCell>{twin.description}</TableCell>
+          </TableRow>
+
           <TableRow>
-            <TableCell>Assigner User</TableCell>
+            <TableCell>Author</TableCell>
+            <TableCell>
+              <UserResourceLink data={twin.authorUser as User} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(classValues.assignerUserId!)}
+          >
+            <TableCell>Assigner</TableCell>
             <TableCell>
               <UserResourceLink data={twin.assignerUser as User} />
             </TableCell>
           </TableRow>
+
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(classValues.head!)}
+          >
+            <TableCell>Head</TableCell>
+            <TableCell>{twin.headTwinId}</TableCell>
+          </TableRow>
+
           <TableRow>
-            <TableCell>Twin Class ID</TableCell>
-            <TableCell>
-              {twin.twinClass && (
-                <TwinClassResourceLink
-                  data={twin.twinClass as TwinClass_DETAILED}
-                  withTooltip
-                />
-              )}
-            </TableCell>
+            <TableCell>Tags</TableCell>
+            <TableCell>{twin.tagIdList}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Markers</TableCell>
+            <TableCell>{twin.markerIdList}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Created at</TableCell>
+            <TableCell>{twin.createdAt}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
