@@ -12,13 +12,13 @@ import {
 import { Form, FormItem, FormLabel } from "@/components/base/form";
 import { FeaturerTypes, FeaturerValue } from "@/components/featurer-input";
 import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
-import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
 import { FeaturerFormField } from "@/components/form-fields/featurer-form-field";
 import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
-import { TwinClass } from "@/entities/twinClass";
+import { TwinClass, useTwinClassSearchV1 } from "@/entities/twinClass";
+import { TwinClassSelectField } from "@/features/twinClass";
 import { ApiContext } from "@/lib/api/api";
 import { TwinClassCreateRq } from "@/lib/api/api-types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -106,6 +106,7 @@ export function TwinClassDialog({
 }: ClassDialogProps) {
   const [error, setError] = useState<string | null>(null);
   const [featurer, setFeaturer] = useState<FeaturerValue | null>(null);
+  const { searchTwinClasses } = useTwinClassSearchV1();
 
   const mode = twinClass ? ClassDialogMode.Edit : ClassDialogMode.Create;
 
@@ -209,17 +210,12 @@ export function TwinClassDialog({
   }
 
   async function fetchClasses(search: string) {
-    const { data, error } = await api.twinClass.search({
+    const { data } = await searchTwinClasses({
       pagination: { pageIndex: 0, pageSize: 10 },
-      filters: { nameI18nLikeList: ["%" + search + "%"] },
+      filters: { filters: { nameI18nLikeList: ["%" + search + "%"] } },
     });
 
-    if (error) {
-      console.error("failed to fetch classes", error);
-      throw new Error("Failed to fetch classes");
-    }
-
-    return data.twinClassList ?? [];
+    return data ?? [];
   }
 
   async function findClassById(id: string) {
@@ -274,21 +270,10 @@ export function TwinClassDialog({
                 label="Logo URL"
               />
 
-              <ComboboxFormField
+              <TwinClassSelectField
                 control={form.control}
                 name="headTwinClassId"
                 label="Head"
-                getById={findClassById}
-                getItems={fetchClasses}
-                getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-                getItemLabel={(c) => {
-                  let label = c?.key ?? "";
-                  if (c.name) label += ` (${c.name})`;
-                  return label;
-                }}
-                selectPlaceholder={"Select head class"}
-                searchPlaceholder={"Search head class..."}
-                noItemsText={"No classes found"}
               />
 
               {headTwinClassId && (
@@ -307,21 +292,10 @@ export function TwinClassDialog({
                 </>
               )}
 
-              <ComboboxFormField
+              <TwinClassSelectField
                 control={form.control}
                 name="extendsTwinClassId"
                 label="Extends"
-                getById={findClassById}
-                getItems={fetchClasses}
-                getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-                getItemLabel={(c) => {
-                  let label = c?.key ?? "";
-                  if (c.name) label += ` (${c.name})`;
-                  return label;
-                }}
-                selectPlaceholder={"Select extends class"}
-                searchPlaceholder={"Search extends class..."}
-                noItemsText={"No classes found"}
               />
 
               <CheckboxFormField

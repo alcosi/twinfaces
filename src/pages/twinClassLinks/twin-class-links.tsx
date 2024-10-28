@@ -237,7 +237,6 @@ export function TwinClassLinks() {
         title="Forward Links"
         columns={[
           columnsMap.id,
-          columnsMap.dstTwinClassId,
           columnsMap.name,
           columnsMap.dstTwinClassId,
           columnsMap.type,
@@ -261,7 +260,10 @@ export function TwinClassLinks() {
         onCreateSubmit={handleOnCreateSubmit}
         onUpdateSubmit={handleOnUpdateSubmit}
         renderFormFields={() => (
-          <TwinClassLinkFormFields control={forwardLinkForm.control} />
+          <TwinClassLinkFormFields
+            control={forwardLinkForm.control}
+            isForward
+          />
         )}
       />
 
@@ -293,10 +295,7 @@ export function TwinClassLinks() {
         onCreateSubmit={handleOnCreateSubmit}
         onUpdateSubmit={handleOnUpdateSubmit}
         renderFormFields={() => (
-          <TwinClassLinkFormFields
-            control={backwardLinkForm.control}
-            isForward={false}
-          />
+          <TwinClassLinkFormFields control={backwardLinkForm.control} />
         )}
       />
     </>

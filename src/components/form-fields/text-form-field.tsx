@@ -20,6 +20,7 @@ export function TextFormField<T extends FieldValues>({
   label,
   description,
   suggestions,
+  disabled,
   ...props
 }: FormFieldProps<T> & TextFormFieldProps & InputProps) {
   const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
@@ -38,6 +39,7 @@ export function TextFormField<T extends FieldValues>({
             description={description}
             suggestions={suggestions}
             inForm={true}
+            disabled={disabled}
           />
         );
       }}

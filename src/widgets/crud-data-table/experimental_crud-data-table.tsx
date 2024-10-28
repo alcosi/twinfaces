@@ -219,7 +219,6 @@ function CrudDataTableInternal<TData extends Identifiable, TValue>(
         columns={visibleColumns}
         fetcher={fetchWrapper}
         onRowClick={(row) => {
-          console.log("foobar onRowClick", row);
           dialogForm?.reset(row);
           setDialogState({
             open: true,

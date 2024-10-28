@@ -1,27 +1,22 @@
 "use client";
 
 import { TwinClassDialog } from "@/app/twinclass/twin-class-dialog";
-import {
-  CrudDataTable,
-  FiltersState,
-} from "@/components/base/data-table/crud-data-table";
+import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
-  buildFilters,
   FilterFields,
   FILTERS,
-  hydrateTwinClassFromMap,
   TwinClass_DETAILED,
   TwinClassResourceLink,
+  useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { ApiContext } from "@/lib/api/api";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { ColumnDef } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useRef, useState } from "react";
-import { toast } from "sonner";
 
 const columns: ColumnDef<TwinClass_DETAILED>[] = [
   {
@@ -94,10 +89,10 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
 
 export default function TwinClasses() {
   const [classDialogOpen, setClassDialogOpen] = useState(false);
-
   const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
+  const { searchTwinClasses } = useTwinClassSearchV1();
 
   const findTwinClassById = useCallback(
     async (id: string) => {
@@ -118,48 +113,6 @@ export default function TwinClasses() {
     [api]
   );
 
-  const fetchTwinClasses = useCallback(
-    async ({
-      search,
-      pagination,
-      filters,
-    }: {
-      search?: string;
-      pagination?: PaginationState;
-      filters?: FiltersState;
-    }) => {
-      const _pagination = pagination || { pageIndex: 0, pageSize: 10 };
-      const _filters = buildFilters(filters ?? { filters: {} });
-
-      try {
-        const { data, error } = await api.twinClass.search({
-          search,
-          pagination: _pagination,
-          filters: _filters,
-        });
-
-        if (error) {
-          throw new Error("Failed to fetch classes", error);
-        }
-
-        return {
-          data:
-            data.twinClassList?.map((dto) =>
-              hydrateTwinClassFromMap(dto, data.relatedObjects)
-            ) ?? [],
-          pageCount: Math.ceil(
-            (data.pagination?.total ?? 0) / _pagination.pageSize
-          ),
-        };
-      } catch (error) {
-        console.error("Exception in fetchTwinClasses", error);
-        toast.error("Failed to fetch twin classes data");
-        return { data: [], pageCount: 0 };
-      }
-    },
-    [api]
-  );
-
   return (
     <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
       <CrudDataTable
@@ -167,7 +120,7 @@ export default function TwinClasses() {
         columns={columns}
         getRowId={(row) => row.id!}
         fetcher={(pagination, filters) =>
-          fetchTwinClasses({ pagination, filters })
+          searchTwinClasses({ pagination, filters })
         }
         pageSizes={[10, 20, 50]}
         onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
@@ -187,7 +140,7 @@ export default function TwinClasses() {
               ...FILTERS.headTwinClassIdList,
               getById: findTwinClassById,
               getItems: async (search) =>
-                (await fetchTwinClasses({ search })).data,
+                (await searchTwinClasses({ search })).data,
               getItemKey: (item) => item?.id,
               getItemLabel: ({ key = "", name }) =>
                 `${key}${name ? ` (${name})` : ""}`,
@@ -196,7 +149,7 @@ export default function TwinClasses() {
               ...FILTERS.extendsTwinClassIdList,
               getById: findTwinClassById,
               getItems: async (search) =>
-                (await fetchTwinClasses({ search })).data,
+                (await searchTwinClasses({ search })).data,
               getItemKey: (item) => item?.id,
               getItemLabel: ({ key = "", name }) =>
                 `${key}${name ? ` (${name})` : ""}`,

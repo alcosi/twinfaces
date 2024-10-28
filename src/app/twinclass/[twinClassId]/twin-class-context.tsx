@@ -1,7 +1,9 @@
 import { LoadingOverlay } from "@/components/base/loading";
+import { TwinClass } from "@/entities/twinClass";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
 import { ApiContext } from "@/lib/api/api";
-import { RelatedObjects, TwinClassStatus } from "@/lib/api/api-types";
-import React, {
+import { RelatedObjects } from "@/lib/api/api-types";
+import {
   createContext,
   PropsWithChildren,
   useContext,
@@ -9,7 +11,6 @@ import React, {
   useState,
 } from "react";
 import { toast } from "sonner";
-import { TwinClass } from "@/entities/twinClass";
 
 interface TwinClassContextProps {
   twinClassId: string;
