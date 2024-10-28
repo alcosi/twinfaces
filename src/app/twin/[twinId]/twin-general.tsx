@@ -80,12 +80,13 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Twin Class</TableCell>
-            <TableCell>{twin.twinClass && (
-              <TwinClassResourceLink
-                data={twin.twinClass as TwinClass_DETAILED}
-                withTooltip
-              />
-            )}
+            <TableCell>
+              {twin.twinClass && (
+                <TwinClassResourceLink
+                  data={twin.twinClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              )}
             </TableCell>
           </TableRow>
 

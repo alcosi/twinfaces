@@ -4,15 +4,12 @@ import { toast } from "sonner";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { useCallback, useContext, useRef } from "react";
-import { TwinBase } from "@/lib/api/api-types";
 import { ApiContext } from "@/lib/api/api";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   buildFilters,
   FilterFields,
@@ -27,11 +24,7 @@ import {
   TwinClassStatusResourceLink,
 } from "@/entities/twinClassStatus";
 import { User, UserResourceLink } from "@/entities/user";
-import { ApiContext } from "@/lib/api/api";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useContext, useRef } from "react";
-import { toast } from "sonner";
 
 type FetchDataResponse = {
   data: Twin[];
@@ -86,10 +79,6 @@ const columns: ColumnDef<Twin>[] = [
       ),
   },
   {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
     accessorKey: "assignerUserId",
     header: "Assigner",
     cell: ({ row: { original } }) =>
@@ -105,10 +94,7 @@ const columns: ColumnDef<Twin>[] = [
     cell: ({ row: { original } }) =>
       original.headTwinId ? (
         <div className="max-w-48 inline-flex">
-          <TwinClassResourceLink
-            data={{ id: original.headTwinId }}
-            withTooltip
-          />
+          <TwinResourceLink data={{ id: original.headTwinId }} withTooltip />
         </div>
       ) : null,
   },
@@ -145,7 +131,6 @@ export default function TwinsPage() {
             showTwinClassMode: "DETAILED",
             showTwinMarker2DataListOptionMode: "DETAILED",
             showTwinTag2DataListOptionMode: "DETAILED",
-            showTwin2TwinClassMode: "DETAILED",
           },
         });
 
@@ -227,8 +212,8 @@ export default function TwinsPage() {
               getById: findTwinById,
               getItems: async (search) => (await fetchTwin({ search })).data,
               getItemKey: (item) => item?.id,
-              getItemLabel: ({ twinClass = "", name }) =>
-                `${twinClass.name}${name ? ` (${name})` : ""}`,
+              getItemLabel: ({ authorUser = "", name }) =>
+                `${authorUser.fullName}${name ? ` (${name})` : ""}`,
             },
 
             [FilterFields.statusIdList]: {
@@ -236,8 +221,8 @@ export default function TwinsPage() {
               getById: findTwinById,
               getItems: async (search) => (await fetchTwin({ search })).data,
               getItemKey: (item) => item?.id,
-              getItemLabel: ({ twinClass = "", name }) =>
-                `${twinClass.name}${name ? ` (${name})` : ""}`,
+              getItemLabel: ({ authorUser = "", name }) =>
+                `${authorUser.fullName}${name ? ` (${name})` : ""}`,
             },
 
             [FilterFields.twinNameLikeList]:
@@ -254,8 +239,8 @@ export default function TwinsPage() {
               getById: findTwinById,
               getItems: async (search) => (await fetchTwin({ search })).data,
               getItemKey: (item) => item?.id,
-              getItemLabel: ({ twinClass = "", name }) =>
-                `${twinClass.name}${name ? ` (${name})` : ""}`,
+              getItemLabel: ({ authorUser = "", name }) =>
+                `${authorUser.fullName}${name ? ` (${name})` : ""}`,
             },
 
             [FilterFields.tagDataListOptionIdList]:
