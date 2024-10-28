@@ -3,7 +3,7 @@
 import { toast } from "sonner";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { useContext, useRef, useState } from "react";
+import { useCallback, useContext, useRef } from "react";
 import { TwinBase } from "@/lib/api/api-types";
 import { ApiContext } from "@/lib/api/api";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
@@ -32,30 +32,8 @@ const columns: ColumnDef<TwinBase>[] = [
     ),
   },
   {
-    accessorKey: "createdAt",
-    header: "Created at",
-  },
-  {
-    accessorKey: "authorUserId",
-    header: "Author User Id",
-    cell: (data) => (
-      <ShortGuidWithCopy value={data.row.original.authorUserId} />
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "assignerUserId",
-    header: "Assigner User Id",
-    cell: (data) => (
-      <ShortGuidWithCopy value={data.row.original.assignerUserId} />
-    ),
-  },
-  {
     accessorKey: "twinClassId",
-    header: "Twin Class Id",
+    header: "Twin Class",
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
         <TwinClassResourceLink
@@ -67,24 +45,107 @@ const columns: ColumnDef<TwinBase>[] = [
       </div>
     ),
   },
+  {
+    accessorKey: "statusId",
+    header: "Status",
+    cell: (data) => <ShortGuidWithCopy value={data.row.original.statusId} />,
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+  },
+  {
+    accessorKey: "authorUserId",
+    header: "Author",
+    cell: (data) => (
+      <ShortGuidWithCopy value={data.row.original.authorUserId} />
+    ),
+  },
+  {
+    accessorKey: "assignerUserId",
+    header: "Assigner",
+    cell: (data) => (
+      <ShortGuidWithCopy value={data.row.original.assignerUserId} />
+    ),
+  },
+  {
+    accessorKey: "headTwinId",
+    header: "Head",
+    cell: ({ row: { original } }) =>
+      original.headTwinId ? (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink
+            data={{ id: original.headTwinId }}
+            withTooltip
+          />
+        </div>
+      ) : null,
+  },
+  {
+    accessorKey: "tags",
+    header: "Tags",
+  },
+  {
+    accessorKey: "markers",
+    header: "Markers",
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created at",
+  },
 ];
 
 export default function Twin() {
-  const [classDialogOpen, setClassDialogOpen] = useState(false);
+  // const [classDialogOpen, setClassDialogOpen] = useState(false);
 
   const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
 
-  async function fetchData(
-    pagination: PaginationState,
-    filters: FiltersState
-  ): Promise<FetchDataResponse> {
+  const findTwinById = useCallback(
+    async (id: string) => {
+      try {
+        const { data } = await api.twin.getById({
+          id,
+          query: {
+            showTwinMode: "DETAILED",
+            showTwinClassMode: "DETAILED",
+            showTwinMarker2DataListOptionMode: "DETAILED",
+            showTwinTag2DataListOptionMode: "DETAILED",
+            showTwin2TwinClassMode: "DETAILED",
+          },
+        });
+
+        return data?.twin;
+      } catch (error) {
+        console.error(`Failed to find twin by ID: ${id}`, error);
+        throw new Error(`Failed to find twin with ID ${id}`);
+      }
+    },
+    [api]
+  );
+
+  async function fetchTwin({
+    search,
+    pagination,
+    filters,
+  }: {
+    search?: string;
+    pagination?: PaginationState;
+    filters?: FiltersState;
+  }): Promise<FetchDataResponse> {
+    const _pagination = pagination || { pageIndex: 0, pageSize: 10 };
+    const _filters = buildFilters(filters ?? { filters: {} });
+
     try {
       const { data, error } = await api.twin.search({
-        pagination,
-        search: filters?.search,
-        filters: buildFilters(filters),
+        pagination: _pagination,
+        search: search,
+        filters: _filters,
       });
 
       if (error) {
@@ -99,7 +160,7 @@ export default function Twin() {
       return {
         data: data?.twinList ?? [],
         pageCount: Math.ceil(
-          (data.pagination?.total ?? 0) / pagination.pageSize
+          (data.pagination?.total ?? 0) / _pagination.pageSize
         ),
       };
     } catch (e) {
@@ -112,9 +173,9 @@ export default function Twin() {
     }
   }
 
-  function openCreateClass() {
-    setClassDialogOpen(true);
-  }
+  // function openCreateClass() {
+  //   setClassDialogOpen(true);
+  // }
 
   return (
     <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
@@ -124,24 +185,60 @@ export default function Twin() {
         ref={tableRef}
         columns={columns}
         getRowId={(row) => row.id!}
-        fetcher={fetchData}
+        fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
         pageSizes={[10, 20, 50]}
         onRowClick={(row) => router.push(`/twin/${row.id}`)}
-        createButton={{
-          enabled: true,
-          onClick: openCreateClass,
-          text: "Create Class",
-        }}
+        // createButton={{
+        //   enabled: true,
+        //   onClick: openCreateClass,
+        //   text: "Create Class",
+        // }}
         // search={{enabled: true, placeholder: 'Search by key...'}}
         filters={{
           filtersInfo: {
-            [FilterFields.twinIdList]: FILTERS[FilterFields.twinIdList],
+            [FilterFields.twinIdList]: FILTERS.twinIdList,
+
+            [FilterFields.twinClassIdList]: {
+              ...FILTERS.twinClassIdList,
+              getById: findTwinById,
+              getItems: async (search) => (await fetchTwin({ search })).data,
+              getItemKey: (item) => item?.id,
+              getItemLabel: ({ twinClass = "", name }) =>
+                `${twinClass.name}${name ? ` (${name})` : ""}`,
+            },
+
+            [FilterFields.statusIdList]: {
+              ...FILTERS.statusIdList,
+              getById: findTwinById,
+              getItems: async (search) => (await fetchTwin({ search })).data,
+              getItemKey: (item) => item?.id,
+              getItemLabel: ({ twinClass = "", name }) =>
+                `${twinClass.name}${name ? ` (${name})` : ""}`,
+            },
+
             [FilterFields.twinNameLikeList]:
               FILTERS[FilterFields.twinNameLikeList],
+
+            [FilterFields.createdByUserIdList]:
+              FILTERS[FilterFields.createdByUserIdList],
+
             [FilterFields.assignerUserIdList]:
               FILTERS[FilterFields.assignerUserIdList],
-            [FilterFields.twinClassIdList]:
-              FILTERS[FilterFields.twinClassIdList],
+
+            [FilterFields.headTwinIdList]: {
+              ...FILTERS.headTwinIdList,
+              getById: findTwinById,
+              getItems: async (search) => (await fetchTwin({ search })).data,
+              getItemKey: (item) => item?.id,
+              getItemLabel: ({ twinClass = "", name }) =>
+                `${twinClass.name}${name ? ` (${name})` : ""}`,
+            },
+
+            [FilterFields.tagDataListOptionIdList]:
+              FILTERS[FilterFields.tagDataListOptionIdList],
+
+            [FilterFields.markerDataListOptionIdList]:
+              FILTERS[FilterFields.markerDataListOptionIdList],
           },
           onChange: () => {
             console.log("Filters changed");
@@ -152,11 +249,14 @@ export default function Twin() {
           enabled: true,
           defaultVisibleKeys: [
             "id",
-            "createdAt",
-            "authorUserId",
-            "name",
-            "assignerUserId",
             "twinClassId",
+            "statusId",
+            "name",
+            "description",
+            "authorUserId",
+            "assignerUserId",
+            "headTwinId",
+            "createdAt",
           ],
         }}
       />
