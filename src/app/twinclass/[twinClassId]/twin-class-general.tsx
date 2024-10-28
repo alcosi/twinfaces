@@ -7,6 +7,7 @@ import { FeaturerTypes } from "@/components/featurer-input";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
+  useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { ApiContext } from "@/lib/api/api";
 import { TwinClassUpdateRq } from "@/lib/api/api-types";
@@ -16,7 +17,7 @@ import { z } from "zod";
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
   const { twinClass, fetchClassData } = useContext(TwinClassContext);
-
+  const { searchTwinClasses } = useTwinClassSearchV1();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -38,17 +39,12 @@ export function TwinClassGeneral() {
   }
 
   async function fetchClasses(search: string) {
-    const { data, error } = await api.twinClass.search({
+    const { data } = await searchTwinClasses({
       pagination: { pageIndex: 0, pageSize: 10 },
-      filters: { nameI18nLikeList: ["%" + search + "%"] },
+      filters: { filters: { nameI18nLikeList: ["%" + search + "%"] } },
     });
 
-    if (error) {
-      console.error("failed to fetch classes", error);
-      throw new Error("Failed to fetch classes");
-    }
-
-    return data.twinClassList ?? [];
+    return data ?? [];
   }
 
   async function findClassById(id: string) {
