@@ -12,26 +12,51 @@ const OWNER_TYPES = [
 
 export enum FilterFields {
   twinIdList = "twinIdList",
-  twinNameLikeList = "twinNameLikeList",
-  assignerUserIdList = "assignerUserIdList",
   twinClassIdList = "twinClassIdList",
+  statusIdList = "statusIdList",
+  twinNameLikeList = "twinNameLikeList",
+  createdByUserIdList = "createdByUserIdList",
+  assignerUserIdList = "assignerUserIdList",
+  headTwinIdList = "headTwinIdList",
+  tagDataListOptionIdList = "tagDataListOptionIdList",
+  markerDataListOptionIdList = "markerDataListOptionIdList",
 }
 
-export const FILTERS: Record<FilterFields, AutoFormValueInfo> = {
+export const FILTERS = {
   [FilterFields.twinIdList]: {
     type: AutoFormValueType.string,
-    label: "Id",
+    label: "ID",
+  },
+  [FilterFields.twinClassIdList]: {
+    type: AutoFormValueType.multiCombobox,
+    label: "Twin Class",
+  },
+  [FilterFields.statusIdList]: {
+    type: AutoFormValueType.multiCombobox,
+    label: "Status",
   },
   [FilterFields.twinNameLikeList]: {
     type: AutoFormValueType.string,
-    label: "name",
+    label: "Name",
+  },
+  [FilterFields.createdByUserIdList]: {
+    type: AutoFormValueType.string,
+    label: "Author",
   },
   [FilterFields.assignerUserIdList]: {
     type: AutoFormValueType.string,
-    label: "assignerUserId",
+    label: "Assigner",
   },
-  [FilterFields.twinClassIdList]: {
+  [FilterFields.headTwinIdList]: {
+    type: AutoFormValueType.multiCombobox,
+    label: "Head",
+  },
+  [FilterFields.tagDataListOptionIdList]: {
     type: AutoFormValueType.string,
-    label: "twinClassId",
+    label: "Tags",
   },
-};
+  [FilterFields.markerDataListOptionIdList]: {
+    type: AutoFormValueType.string,
+    label: "Markers",
+  },
+} as const;
