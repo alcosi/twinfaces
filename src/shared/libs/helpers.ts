@@ -61,3 +61,11 @@ export function isEmptyString(str: unknown): str is string {
 export function isFullString(str: unknown): str is string {
   return typeof str === "string" && str.trim().length > 0;
 }
+
+export function isEmptyArray<T>(arr: unknown): arr is T[] {
+  return Array.isArray(arr) && arr.length === 0;
+}
+
+export function isFullArray<T>(arr: unknown): arr is T[] {
+  return Array.isArray(arr) && arr.length > 0;
+}

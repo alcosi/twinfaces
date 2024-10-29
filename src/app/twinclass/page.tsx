@@ -142,8 +142,8 @@ export default function TwinClasses() {
               getById: findTwinClassById,
               getItems: async (search) =>
                 (await searchTwinClasses({ search })).data,
-              getItemKey: (item) => item?.id,
-              getItemLabel: ({ key = "", name }) =>
+              getItemKey: (item: any) => item?.id,
+              getItemLabel: ({ key = "", name }: any) =>
                 `${key}${name ? ` (${name})` : ""}`,
             },
             [FilterFields.extendsTwinClassIdList]: {
@@ -151,8 +151,8 @@ export default function TwinClasses() {
               getById: findTwinClassById,
               getItems: async (search) =>
                 (await searchTwinClasses({ search })).data,
-              getItemKey: (item) => item?.id,
-              getItemLabel: ({ key = "", name }) =>
+              getItemKey: (item: any) => item?.id,
+              getItemLabel: ({ key = "", name }: any) =>
                 `${key}${name ? ` (${name})` : ""}`,
             },
             [FilterFields.ownerTypeList]: FILTERS.ownerTypeList as any,

@@ -3,6 +3,7 @@ import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   buildFilterFields,
+  groupPermissionsByGroupId,
   mapToPermissionApiFilters,
   type Permission,
 } from "@/entities/permission";
@@ -10,14 +11,34 @@ import { PermissionResourceLink } from "@/entities/permission/components/resourc
 import { ApiContext } from "@/lib/api/api";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
 
-const columnsMap: Record<keyof Permission, ColumnDef<Permission>> = {
+interface GroupedPermission extends Permission {
+  subRows?: Permission[];
+}
+
+const columnsMap: Record<keyof Permission, ColumnDef<GroupedPermission>> = {
   groupId: {
     accessorKey: "groupId",
-    header: "Group Id",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    header: "Group",
+    cell: (data) => {
+      const { row } = data;
+      return (
+        row.getCanExpand() && (
+          <div className="max-w-48 inline-flex">
+            <button
+              className="pointer"
+              onClick={row.getToggleExpandedHandler()}
+            >
+              {row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}
+            </button>
+            <span>{row.original.name}</span>
+          </div>
+        )
+      );
+    },
   },
   id: {
     accessorKey: "id",
@@ -31,9 +52,9 @@ const columnsMap: Record<keyof Permission, ColumnDef<Permission>> = {
   name: {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <PermissionResourceLink data={original} withTooltip />
+    cell: ({ row }) => (
+      <div className="max-w-48 column-flex space-y-2">
+        <PermissionResourceLink data={row.original} withTooltip />
       </div>
     ),
   },
@@ -70,7 +91,7 @@ export function Permissions() {
   async function fetchPermissions(
     pagination: PaginationState,
     filters: FiltersState
-  ) {
+  ): Promise<{ data: GroupedPermission[]; pageCount: number }> {
     const _filters = mapToPermissionApiFilters(filters.filters);
 
     try {
@@ -78,10 +99,15 @@ export function Permissions() {
         pagination,
         filters: _filters,
       });
-      const permissions = response.data?.permissions ?? [];
 
+      const permissions = response.data?.permissions ?? [];
       setPermissions((prev) => mergeUniquePermissions(prev, permissions));
-      return { data: permissions, pageCount: 0 };
+      const grouppedPermissions = groupPermissionsByGroupId(
+        permissions,
+        response.data?.relatedObjects?.permissionGroupMap
+      );
+
+      return { data: grouppedPermissions, pageCount: 0 };
     } catch (e) {
       console.error("Failed to fetch permissions", e);
       toast.error("Failed to fetch permissions");
@@ -91,42 +117,40 @@ export function Permissions() {
   }
 
   return (
-    <>
-      <Experimental_CrudDataTable
-        className="mb-10"
-        ref={tableRef}
-        columns={[
-          columnsMap.groupId,
-          columnsMap.id,
-          columnsMap.key,
-          columnsMap.name,
-          columnsMap.description,
-        ]}
-        fetcher={fetchPermissions}
-        getRowId={(row) => row.id!}
-        pageSizes={[10, 20, 50]}
-        filters={{
-          filtersInfo: buildFilterFields(permissions),
-          onChange: () => Promise.resolve(),
-        }}
-        customizableColumns={{
-          enabled: true,
-          defaultVisibleKeys: [
-            "groupId",
-            // "id",
-            // "key",
-            "name",
-            "description",
-          ],
-        }}
-        // NOTE: Uncomment the following lines to enable create and update actions once the backend API is available
-        // dialogForm={form}
-        // onCreateSubmit={handleCreate}
-        // onUpdateSubmit={handleUpdate}
-        // renderFormFields={() => (
-        //   <PermissionsFormFields control={form.control} />
-        // )}
-      />
-    </>
+    <Experimental_CrudDataTable
+      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
+      ref={tableRef}
+      columns={[
+        columnsMap.groupId,
+        columnsMap.id,
+        columnsMap.key,
+        columnsMap.name,
+        columnsMap.description,
+      ]}
+      fetcher={fetchPermissions}
+      getRowId={(row) => row.id!}
+      pageSizes={[10, 20, 50]}
+      filters={{
+        filtersInfo: buildFilterFields(permissions),
+        onChange: () => Promise.resolve(),
+      }}
+      customizableColumns={{
+        enabled: true,
+        defaultVisibleKeys: [
+          "groupId",
+          // "id",
+          // "key",
+          "name",
+          "description",
+        ],
+      }}
+      // NOTE: Uncomment the following lines to enable create and update actions once the backend API is available
+      // dialogForm={form}
+      // onCreateSubmit={handleCreate}
+      // onUpdateSubmit={handleUpdate}
+      // renderFormFields={() => (
+      //   <PermissionsFormFields control={form.control} />
+      // )}
+    />
   );
 }

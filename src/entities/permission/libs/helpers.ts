@@ -4,8 +4,10 @@ import {
   Permission,
   PermissionApiFilterFields,
   PermissionApiFilters,
+  PermissionGroup,
 } from "../api";
 import { FILTERS } from "./constants";
+import { RelatedObjects } from "@/lib/api/api-types";
 
 export const mapToPermissionApiFilters = (
   filters: Record<PermissionApiFilterFields, unknown>
@@ -68,4 +70,14 @@ export function buildFilterFields(
     },
     descriptionLikeList: FILTERS.descriptionLikeList,
   };
+}
+
+export function groupPermissionsByGroupId(
+  permissions: Permission[],
+  permissionGroupMap: RelatedObjects["permissionGroupMap"] = {}
+) {
+  return Object.values(permissionGroupMap).map((group) => ({
+    ...group,
+    subRows: permissions.filter((p) => p.groupId === group.id),
+  }));
 }

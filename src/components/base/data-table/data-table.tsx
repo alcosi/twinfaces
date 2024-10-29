@@ -19,8 +19,18 @@ import {
   TableRow,
 } from "@/components/base/table";
 import { cn, fixedForwardRef } from "@/lib/utils";
-import { PaginationState } from "@tanstack/table-core";
-import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
+import {
+  getExpandedRowModel,
+  PaginationState,
+  Row,
+} from "@tanstack/table-core";
+import React, {
+  ForwardedRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
+import { Identifiable, isFullArray } from "@/shared/libs";
 
 export type DataTableHandle = {
   refresh: () => void;
@@ -29,7 +39,11 @@ export type DataTableHandle = {
   // setFilterValues: (values?: PaginatedTableFilterValues) => any;
 };
 
-export interface DataTableProps<TData, TValue> {
+export interface DataTableRow<TData> extends Identifiable {
+  subRows?: TData[];
+}
+
+export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
   columns: ColumnDef<TData, TValue>[];
   getRowId: (row: TData, index: number) => string;
   fetcher: (
@@ -43,7 +57,7 @@ export interface DataTableProps<TData, TValue> {
 
 export const DataTable = fixedForwardRef(DataTableInternal);
 
-function DataTableInternal<TData, TValue>(
+function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
   {
     columns,
     getRowId,
@@ -63,7 +77,7 @@ function DataTableInternal<TData, TValue>(
   });
   const [pageCount, setPageCount] = useState<number>(0);
 
-  const table = useReactTable({
+  const table = useReactTable<TData>({
     data,
     columns,
     getRowId: getRowId,
@@ -80,6 +94,10 @@ function DataTableInternal<TData, TValue>(
         typeof updater === "function" ? updater(pagination) : updater;
       setPagination(nextState);
     },
+    // NOTE: Options for ExpandableRows
+    getSubRows: (row) => row.subRows || [],
+    getRowCanExpand: (row) => isFullArray(row.subRows),
+    getExpandedRowModel: getExpandedRowModel(),
   });
 
   useImperativeHandle(ref, () => {
@@ -110,8 +128,75 @@ function DataTableInternal<TData, TValue>(
   }
 
   useEffect(() => {
+    table.toggleAllRowsExpanded();
+  }, [table.toggleAllRowsExpanded]);
+
+  useEffect(() => {
     fetchData();
   }, [pagination]);
+
+  function renderRow(row: Row<TData>) {
+    return (
+      <TableRow
+        key={row.id}
+        data-state={row.getIsSelected() && "selected"}
+        onClick={() => onRowClick?.(row.original)}
+        className={cn(onRowClick && "cursor-pointer")}
+      >
+        {row.getVisibleCells().map((cell) => (
+          <TableCell key={cell.id}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
+      </TableRow>
+    );
+  }
+
+  function renderExpandableRows(row: Row<TData>) {
+    const mainCell = row.getVisibleCells()[0];
+    return (
+      <>
+        <TableRow
+          key={row.id}
+          data-state={row.getIsSelected() && "selected"}
+          onClick={() => onRowClick?.(row.original)}
+          className={cn(onRowClick && "cursor-pointer")}
+        >
+          <TableCell colSpan={row.getVisibleCells().length} key={mainCell?.id}>
+            {mainCell &&
+              flexRender(
+                mainCell?.column.columnDef.cell,
+                mainCell?.getContext()
+              )}
+          </TableCell>
+        </TableRow>
+
+        {row.getParentRow()?.getIsExpanded() && renderRow(row)}
+      </>
+    );
+  }
+
+  const renderTableBodyRows = () => {
+    if (!table.getRowModel().rows?.length) {
+      return (
+        <TableRow>
+          <TableCell colSpan={columns.length} className="h-24 text-center">
+            No results.
+          </TableCell>
+        </TableRow>
+      );
+    }
+
+    return table
+      .getRowModel()
+      .rows.map((row) => (
+        <React.Fragment key={row.id}>
+          {isFullArray(row.subRows)
+            ? renderExpandableRows(row)
+            : renderRow(row)}
+        </React.Fragment>
+      ));
+  };
 
   return (
     <div>
@@ -135,36 +220,7 @@ function DataTableInternal<TData, TValue>(
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => onRowClick?.(row.original)}
-                  className={cn(onRowClick && "cursor-pointer")}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+          <TableBody>{renderTableBodyRows()}</TableBody>
         </Table>
         {loading && <LoadingOverlay />}
       </div>
