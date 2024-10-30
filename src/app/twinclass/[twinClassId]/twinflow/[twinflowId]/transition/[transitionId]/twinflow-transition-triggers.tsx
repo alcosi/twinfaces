@@ -1,7 +1,7 @@
 import {
   TwinFlowTransition,
   TwinFlowTransitionTrigger,
-} from "@/lib/api/api-types";
+} from "@/entities/twinFlow";
 import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
 import { useRef, useState } from "react";
 import { DataTableHandle } from "@/components/base/data-table/data-table";

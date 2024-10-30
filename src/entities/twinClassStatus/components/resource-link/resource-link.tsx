@@ -3,7 +3,7 @@ import { isFullString } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
 import { CircleDot } from "lucide-react";
 import { useContext } from "react";
-import { TwinClassStatus } from "../../libs";
+import { TwinClassStatus } from "../../api";
 import { TwinClassStatusResourceTooltip } from "./tooltip";
 
 type Props = {

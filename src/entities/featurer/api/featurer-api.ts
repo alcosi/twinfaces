@@ -1,6 +1,6 @@
-import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
-import { operations } from "@/lib/api/generated/schema";
 
 export function createFeaturerApi(settings: ApiSettings) {
   type SearchOptions =

@@ -1,11 +1,12 @@
 import { FiltersState } from "@/components/base/data-table/crud-data-table";
-import { FilterFields, FILTERS } from "./constants";
+import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { RelatedObjects } from "@/shared/api";
 import { mapToChoice, toArray } from "@/shared/libs";
-import { RelatedObjects } from "@/lib/api/api-types";
-import { Twin, TwinBase } from "./types";
 import { TwinClass_DETAILED } from "../../twinClass";
 import { User } from "../../user";
-import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { TwinBase } from "../api";
+import { FilterFields, FILTERS } from "./constants";
+import { Twin } from "./types";
 
 // List of filter keys for string-like filtering
 const stringLikeFilters = [FilterFields.twinNameLikeList];

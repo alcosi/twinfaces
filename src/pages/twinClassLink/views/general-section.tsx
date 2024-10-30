@@ -6,7 +6,7 @@ import {
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
-import { TwinClassLink } from "@/lib/api/api-types";
+import { TwinClassLink } from "@/entities/twinClassLink";
 import { useContext } from "react";
 
 export function GeneralSection() {

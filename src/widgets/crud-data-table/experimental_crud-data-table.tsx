@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from "@/components/base/dialog";
 import { Form } from "@/components/base/form";
-import { cn, fixedForwardRef } from "@/lib/utils";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import { PaginationState } from "@tanstack/table-core";
 import {
   ForwardedRef,

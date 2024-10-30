@@ -1,4 +1,4 @@
-import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { PermissionApiFilters } from "./types";
 

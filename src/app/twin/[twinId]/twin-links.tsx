@@ -1,16 +1,17 @@
+import { TwinContext } from "@/app/twin/[twinId]/twin-context";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
-import { useContext, useRef, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { TwinClassField, TwinLinkView } from "@/lib/api/api-types";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { toast } from "sonner";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { TwinContext } from "@/app/twin/[twinId]/twin-context";
 import { LoadingOverlay } from "@/components/base/loading";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { TwinLinkView } from "@/entities/twin";
+import { TwinClassField } from "@/entities/twinClass";
+import { ApiContext } from "@/shared/api";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useContext, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export function TwinLinks() {
   const api = useContext(ApiContext);

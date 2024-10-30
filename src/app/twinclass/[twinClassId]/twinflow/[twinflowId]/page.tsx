@@ -6,8 +6,8 @@ import {
   SideNavLayout,
 } from "@/components/layout/side-nav-layout";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { TwinFlow } from "@/lib/api/api-types";
-import { ApiContext } from "@/lib/api/api";
+import { TwinFlow } from "@/entities/twinFlow";
+import { ApiContext } from "@/shared/api";
 import { toast } from "sonner";
 import { LoadingOverlay } from "@/components/base/loading";
 import { TwinflowGeneral } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-general";

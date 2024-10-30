@@ -1,11 +1,11 @@
-import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { PaginationState } from "@tanstack/table-core";
 import {
   TwinFlowCreateRq,
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionUpdateRq,
   TwinFlowUpdateRq,
-} from "@/lib/api/api-types";
-import { PaginationState } from "@tanstack/table-core";
+} from "./types";
 
 export function createTwinflowApi(settings: ApiSettings) {
   // function create({twinClassId, data}: { twinClassId: string, data: TwinClassStatusCreateRq }) {

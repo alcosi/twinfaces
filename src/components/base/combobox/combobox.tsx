@@ -17,7 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef } from "@/lib/utils";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import { ForwardedRef, ReactNode, useEffect, useImperativeHandle } from "react";
 
 export type ComboboxHandle<T> = {

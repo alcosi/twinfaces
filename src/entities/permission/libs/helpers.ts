@@ -1,13 +1,12 @@
 import { AutoFormValueInfo } from "@/components/auto-field";
+import { RelatedObjects } from "@/shared/api";
 import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
 import {
   Permission,
   PermissionApiFilterFields,
   PermissionApiFilters,
-  PermissionGroup,
 } from "../api";
 import { FILTERS } from "./constants";
-import { RelatedObjects } from "@/lib/api/api-types";
 
 export const mapToPermissionApiFilters = (
   filters: Record<PermissionApiFilterFields, unknown>

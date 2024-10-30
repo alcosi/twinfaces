@@ -7,10 +7,10 @@ import {
 } from "@/components/layout/side-nav-layout";
 import { LoadingOverlay } from "@/components/base/loading";
 import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { toast } from "sonner";
 import { TwinFieldGeneral } from "@/app/twinclass/[twinClassId]/twinField/[twinFieldId]/twin-field-general";
-import { TwinClassField } from "@/lib/api/api-types";
+import { TwinClassField } from "@/entities/twinClass";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 
 interface TwinFieldPageProps {

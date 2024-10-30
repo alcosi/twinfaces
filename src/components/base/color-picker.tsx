@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef } from "@/lib/utils";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import { ForwardedRef, useMemo, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 

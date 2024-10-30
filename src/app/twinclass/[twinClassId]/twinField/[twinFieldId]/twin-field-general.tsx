@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { TwinClassField, TwinClassFieldUpdateRq } from "@/lib/api/api-types";
-import { ApiContext } from "@/lib/api/api";
+import { TwinClassField, TwinClassFieldUpdateRq } from "@/entities/twinClass";
+import { ApiContext } from "@/shared/api";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";

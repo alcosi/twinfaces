@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { FormDescription, FormLabel } from "@/components/base/form";
 import { Label } from "@/components/base/label";
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 
 export interface FormFieldProps<T extends FieldValues> {
   name: FieldPath<T>;

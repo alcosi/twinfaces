@@ -5,7 +5,7 @@ import { isFullString, stopPropagation } from "@/shared/libs";
 import { Braces, Copy, Link } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
-import { TwinBase } from "../../libs";
+import { TwinBase } from "../../api";
 
 type Props = {
   data: TwinBase;

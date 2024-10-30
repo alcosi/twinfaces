@@ -1,7 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
 import { PaginationState } from "@tanstack/table-core";
-import { components, operations } from "@/lib/api/generated/schema";
-import { TwinUpdateRq } from "@/lib/api/api-types";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { components, operations } from "@/shared/api/generated/schema";
+import { TwinUpdateRq } from "./types";
 
 type TwinSearchApiFilters = Partial<
   Pick<

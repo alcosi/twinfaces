@@ -1,7 +1,7 @@
 "use client";
 
 import { PathLinkMode } from "@/components/layout/layoutlink.common";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";

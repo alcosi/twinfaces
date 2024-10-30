@@ -9,7 +9,7 @@ import {
   FormItemDescription,
   FormItemLabel,
 } from "@/components/form-fields/form-fields-common";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 import { ReactNode, useEffect } from "react";
 import { FieldValues, Path, useFormContext } from "react-hook-form";
 

@@ -8,7 +8,7 @@ import {
   type Permission,
 } from "@/entities/permission";
 import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { ChevronDown, ChevronRight } from "lucide-react";

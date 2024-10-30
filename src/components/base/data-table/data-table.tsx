@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/base/table";
-import { cn, fixedForwardRef } from "@/lib/utils";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import {
   getExpandedRowModel,
   PaginationState,

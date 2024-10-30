@@ -1,5 +1,5 @@
 import { FiltersState } from "@/components/base/data-table/crud-data-table";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 import { buildFilters, hydrateTwinClassFromMap } from "../helpers";

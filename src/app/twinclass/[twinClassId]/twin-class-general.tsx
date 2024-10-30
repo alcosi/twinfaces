@@ -7,10 +7,10 @@ import { FeaturerTypes } from "@/components/featurer-input";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
+  TwinClassUpdateRq,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
-import { ApiContext } from "@/lib/api/api";
-import { TwinClassUpdateRq } from "@/lib/api/api-types";
+import { ApiContext } from "@/shared/api";
 import { useContext, useState } from "react";
 import { z } from "zod";
 

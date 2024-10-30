@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/base/popover";
 import { Separator } from "@/components/base/separator";
-import { cn, fixedForwardRef } from "@/lib/utils";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import { PaginationState } from "@tanstack/table-core";
 import { FilterIcon, RefreshCw, Search } from "lucide-react";
 import {

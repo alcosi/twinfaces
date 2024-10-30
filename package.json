@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test:ts": "tsc --noEmit"
+    "test:ts": "tsc --noEmit",
+    "generate:schema": "./scripts/generate-schema.sh"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

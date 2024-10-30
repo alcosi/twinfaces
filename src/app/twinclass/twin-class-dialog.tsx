@@ -17,10 +17,13 @@ import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
-import { TwinClass, useTwinClassSearchV1 } from "@/entities/twinClass";
+import {
+  TwinClass,
+  TwinClassCreateRq,
+  useTwinClassSearchV1,
+} from "@/entities/twinClass";
 import { TwinClassSelectField } from "@/features/twinClass";
-import { ApiContext } from "@/lib/api/api";
-import { TwinClassCreateRq } from "@/lib/api/api-types";
+import { ApiContext } from "@/shared/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import {
