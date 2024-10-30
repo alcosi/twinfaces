@@ -8,7 +8,7 @@ import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
 import { Toaster } from "sonner";
-import "../styles/globals.css";
+import "./globals.css";
 
 const fontSans = Inter({
   subsets: ["latin"],
