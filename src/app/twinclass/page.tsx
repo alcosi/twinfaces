@@ -16,7 +16,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";

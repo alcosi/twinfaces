@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 import { Separator } from "@/components/base/separator";
 import { ReactNode, useEffect, useState } from "react";
 import { useParams } from "next/navigation";

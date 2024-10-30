@@ -1,8 +1,8 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { TwinFlow, TwinFlowTransition } from "@/lib/api/api-types";
+import { ApiContext } from "@/shared/api";
+import { TwinFlow, TwinFlowTransition } from "@/entities/twinFlow";
 import { toast } from "sonner";
 import {
   ReturnOptions,

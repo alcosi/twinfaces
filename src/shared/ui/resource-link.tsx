@@ -3,7 +3,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/base/tooltip";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
 

@@ -7,7 +7,7 @@ import * as React from "react";
 
 import { Dialog, DialogContent } from "@/components/base/dialog";
 import { LoadingSpinner } from "@/components/base/loading";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,

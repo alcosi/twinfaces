@@ -1,6 +1,5 @@
-import { TwinClassLink } from "@/lib/api/api-types";
-import { components } from "@/lib/api/generated/schema";
 import { createEnum } from "@/shared/libs";
+import { TwinClassLink } from "../api";
 
 export type LinkTypes = NonNullable<TwinClassLink["type"]>;
 export const LinkTypesEnum = createEnum<LinkTypes>([
@@ -15,6 +14,3 @@ export const LinkStrengthEnum = createEnum<LinkStrength>([
   "OPTIONAL",
   "OPTIONAL_BUT_DELETE_CASCADE",
 ] as const);
-
-export type CreateLinkRequestBody = components["schemas"]["LinkCreateV1"];
-export type UpdateLinkRequestBody = components["schemas"]["LinkUpdateV1"];

@@ -7,8 +7,8 @@ import {
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { ApiContext } from "@/lib/api/api";
-import { TwinFlow } from "@/lib/api/api-types";
+import { ApiContext } from "@/shared/api";
+import { TwinFlow } from "@/entities/twinFlow";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";

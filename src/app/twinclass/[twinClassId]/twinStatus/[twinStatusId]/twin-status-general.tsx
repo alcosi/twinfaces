@@ -1,12 +1,14 @@
-import React, { useContext, useState } from "react";
-import { TwinClassStatusUpdateRq } from "@/lib/api/api-types";
-import { ApiContext } from "@/lib/api/api";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 import { ColorPicker } from "@/components/base/color-picker";
-import { TwinClassStatus } from "@/entities/twinClassStatus";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import {
+  TwinClassStatus,
+  TwinClassStatusUpdateRq,
+} from "@/entities/twinClassStatus";
+import { ApiContext } from "@/shared/api";
+import { useContext, useState } from "react";
 
 export function TwinStatusGeneral({
   status,

@@ -1,12 +1,12 @@
-import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { components, operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
 import {
   TwinClassCreateRq,
   TwinClassFieldCreateRq,
   TwinClassFieldUpdateRq,
   TwinClassUpdateRq,
-} from "@/lib/api/api-types";
-import { components, operations } from "@/lib/api/generated/schema";
+} from "./types";
 
 type TwinClassApiFilters = Partial<
   Pick<

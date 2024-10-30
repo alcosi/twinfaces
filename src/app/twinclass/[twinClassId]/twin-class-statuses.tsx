@@ -13,7 +13,7 @@ import {
   TwinClassStatus,
   TwinClassStatusResourceLink,
 } from "@/entities/twinClassStatus";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { ColorTile } from "@/shared/ui";
 import { ColumnDef } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";

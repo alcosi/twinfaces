@@ -1,7 +1,7 @@
+import { TwinClassStatus } from "@/entities/twinClassStatus/api";
+import { ApiContext } from "@/shared/api";
 import { useContext, useEffect, useState } from "react";
-import { TwinClassStatus } from "@/entities/twinClassStatus";
 import { toast } from "sonner";
-import { ApiContext } from "@/lib/api/api";
 
 export function useClassStatuses({ twinClassId }: { twinClassId: string }) {
   const api = useContext(ApiContext);

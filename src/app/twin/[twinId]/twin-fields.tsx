@@ -1,6 +1,6 @@
-import { TwinClassField } from "@/lib/api/api-types";
+import { TwinClassField } from "@/entities/twinClass";
 import { useContext, useRef, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { toast } from "sonner";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import {

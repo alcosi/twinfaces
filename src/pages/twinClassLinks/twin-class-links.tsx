@@ -12,8 +12,8 @@ import {
   LinkTypesEnum,
   UpdateLinkRequestBody,
 } from "@/entities/twinClassLink";
-import { ApiContext } from "@/lib/api/api";
-import { TwinClassLink } from "@/lib/api/api-types";
+import { ApiContext } from "@/shared/api";
+import { TwinClassLink } from "@/entities/twinClassLink";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";

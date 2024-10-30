@@ -1,17 +1,15 @@
-import {
-  TwinFlow,
-  TwinFlowTransition,
-  TwinFlowTransitionUpdateRq,
-  TwinFlowUpdateRq,
-} from "@/lib/api/api-types";
-import { useContext, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 import { ClassStatusView } from "@/components/class-status-view";
-import { NULLIFY_UUID_VALUE } from "@/lib/utils";
+import {
+  TwinFlowTransition,
+  TwinFlowTransitionUpdateRq,
+} from "@/entities/twinFlow";
+import { NULLIFY_UUID_VALUE } from "@/shared/libs";
+import { ApiContext } from "@/shared/api";
+import { useContext, useState } from "react";
 
 export function TwinflowTransitionGeneral({
   transition,

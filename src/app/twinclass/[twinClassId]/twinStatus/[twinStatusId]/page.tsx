@@ -3,7 +3,7 @@
 import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
 import { LoadingOverlay } from "@/components/base/loading";
 import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { toast } from "sonner";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { TwinStatusGeneral } from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twin-status-general";

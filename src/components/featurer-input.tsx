@@ -7,8 +7,8 @@ import {
   FormLabel,
 } from "@/components/base/form";
 import { Input } from "@/components/base/input";
-import { ApiContext } from "@/lib/api/api";
-import { Featurer, FeaturerParam } from "@/lib/api/api-types";
+import { ApiContext } from "@/shared/api";
+import { Featurer, FeaturerParam } from "@/entities/featurer";
 import { useContext, useEffect, useState } from "react";
 
 export const FeaturerTypes = {

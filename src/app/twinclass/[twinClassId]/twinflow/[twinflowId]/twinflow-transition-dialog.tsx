@@ -1,15 +1,5 @@
-import {
-  TwinFlow,
-  TwinFlowTransition,
-  TwinFlowTransitionCreateRq,
-  TwinFlowTransitionUpdateRq,
-} from "@/lib/api/api-types";
-import { z } from "zod";
-import { useContext, useEffect, useMemo, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { Alert } from "@/components/base/alert";
+import { Button } from "@/components/base/button";
 import {
   Dialog,
   DialogContent,
@@ -24,9 +14,19 @@ import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
-import { Alert } from "@/components/base/alert";
-import { Button } from "@/components/base/button";
-import { useClassStatuses } from "@/lib/useClassStatuses";
+import { useClassStatuses } from "@/entities/twinClassStatus";
+import {
+  TwinFlow,
+  TwinFlowTransition,
+  TwinFlowTransitionCreateRq,
+  TwinFlowTransitionUpdateRq,
+} from "@/entities/twinFlow";
+import { ApiContext } from "@/shared/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 export interface TwinflowTransitionCreateEditDialogProps {
   open: boolean;
