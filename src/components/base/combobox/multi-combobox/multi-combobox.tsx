@@ -153,7 +153,7 @@ function ComboboxInternal<T>(
                           props.getItemKey(selectedItem) ===
                           props.getItemKey(item)
                       )
-                        ? "opacity-100"
+                        ? "opacity-100 "
                         : "opacity-0"
                     )}
                   />
