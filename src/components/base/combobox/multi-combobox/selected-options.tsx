@@ -42,11 +42,13 @@ export const SelectedOptions = <T,>({
       {selected.slice(0, MAX_COUNT).map((item, index) => (
         <Badge
           key={getItemKey(item)}
-          className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
+          className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 flex items-center"
         >
-          {getItemLabel(item)}
+          <span className="truncate max-w-[130px] mr-2">
+            {getItemLabel(item)}
+          </span>
           <XCircle
-            className="ml-2 h-4 w-4 cursor-pointer"
+            className="h-4 w-4 cursor-pointer"
             onClick={(event) => {
               event.stopPropagation();
               removeOption(index);
@@ -54,11 +56,12 @@ export const SelectedOptions = <T,>({
           />
         </Badge>
       ))}
+
       {selected.length > MAX_COUNT && (
-        <Badge className="mr-2 bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300">
-          {`+ ${selected.length - MAX_COUNT} more`}
+        <Badge className="truncate max-w-80 mr-2 bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 flex items-center">
+          <span className="truncate max-w-[100px] mr-2">{`+ ${selected.length - MAX_COUNT} more`}</span>
           <XCircle
-            className="ml-2 h-4 w-4 cursor-pointer"
+            className="h-4 w-4 cursor-pointer"
             onClick={(event) => {
               event.stopPropagation();
               clearExtraOptions();
