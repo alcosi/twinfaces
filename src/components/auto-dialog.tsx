@@ -97,22 +97,19 @@ export function AutoDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%] scrollbar-hide">
         <DialogTrigger asChild>Open</DialogTrigger>
         <DialogHeader>
           {settings?.title && <DialogTitle>{settings.title}</DialogTitle>}
         </DialogHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(internalSubmit)}
-            className="space-y-8"
-          >
+          <form onSubmit={form.handleSubmit(internalSubmit)}>
             {settings?.value &&
               keys.map((key) => renderField(key, settings.value[key]))}
 
             {error && <Alert variant="destructive">{error}</Alert>}
 
-            <DialogFooter className="sm:justify-end pb-4">
+            <DialogFooter className="sm:justify-end py-6" showSeparator={false}>
               <Button type="submit" loading={form.formState.isSubmitting}>
                 Save
               </Button>
