@@ -110,7 +110,7 @@ function ComboboxInternal<T>(
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "flex w-auto min-w-[120px] h-auto min-h-10 justify-between",
+            "flex w-auto min-w-[120px] h-auto min-h-10 justify-between truncate max-w-80",
             props.buttonClassName
           )}
         >
