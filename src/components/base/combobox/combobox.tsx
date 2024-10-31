@@ -121,7 +121,9 @@ function ComboboxInternal<T>(
           ])}
         >
           {selected ? (
-            props.getItemLabel(selected)
+            <span className="truncate max-w-80">
+              {props.getItemLabel(selected)}
+            </span>
           ) : (
             <span className="opacity-50">{props.selectPlaceholder}</span>
           )}
