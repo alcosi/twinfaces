@@ -114,16 +114,19 @@ export function Permissions() {
         filtersInfo: buildFilterFields(permissions),
         onChange: () => Promise.resolve(),
       }}
-      customizableColumns={{
-        enabled: true,
-        defaultVisibleKeys: [
-          "groupId",
-          // "id",
-          // "key",
-          "name",
-          "description",
-        ],
-      }}
+      defaultVisibleColumns={[
+        colDefs.groupId,
+        colDefs.name,
+        colDefs.description,
+      ]}
+      orderedColumns={[
+        colDefs.groupId,
+        colDefs.id,
+        colDefs.key,
+        colDefs.name,
+        colDefs.description,
+      ]}
+      groupableColumns={[colDefs.groupId, colDefs.name, colDefs.description]}
       // NOTE: Uncomment the following lines to enable create and update actions once the backend API is available
       // dialogForm={form}
       // onCreateSubmit={handleCreate}

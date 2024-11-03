@@ -8,7 +8,7 @@ import {
 } from "@/components/base/data-table/data-table";
 import { Input } from "@/components/base/input";
 import { Separator } from "@/components/base/separator";
-import { debounce, fixedForwardRef } from "@/shared/libs";
+import { debounce, fixedForwardRef, isFullArray } from "@/shared/libs";
 import { RefreshCw, Search } from "lucide-react";
 import React, { ForwardedRef, useCallback, useEffect, useReducer } from "react";
 import { getColumnKey, safeRefresh } from "../helpers";
@@ -33,10 +33,6 @@ export type CrudDataTableHeaderProps = {
     filtersInfo: { [key: string]: AutoFormValueInfo };
     onChange: (values: { [key: string]: any }) => Promise<any>;
   };
-  customizableColumns?: {
-    enabled?: boolean;
-    defaultVisibleKeys?: string[];
-  };
   hideRefresh?: boolean;
   onCreateClick?: () => void;
   onViewSettingsChange?: (data: FilterState) => void;
@@ -47,16 +43,19 @@ type Props<
   TValue,
 > = CrudDataTableHeaderProps & {
   columns: DataTableProps<TData, TValue>["columns"];
+  defaultVisibleColumns?: DataTableProps<TData, TValue>["columns"];
+  orderedColumns?: DataTableProps<TData, TValue>["columns"];
+  groupableColumns?: DataTableProps<TData, TValue>["columns"];
 };
 
 const initialSettings = <TData extends DataTableRow<TData>, TValue>(
-  columns: Props<TData, TValue>["columns"],
-  customizableColumns?: CrudDataTableHeaderProps["customizableColumns"]
+  orderedColumns: Props<TData, TValue>["orderedColumns"],
+  visibleColumns?: Props<TData, TValue>["defaultVisibleColumns"]
 ): FilterState => ({
   query: "",
   filters: {},
-  visibleKeys: customizableColumns?.defaultVisibleKeys ?? [],
-  orderKeys: columns.map((col) => getColumnKey(col)),
+  visibleKeys: visibleColumns?.map((col) => getColumnKey(col)) ?? [],
+  orderKeys: orderedColumns?.map((col) => getColumnKey(col)) ?? [],
   groupByKey: undefined,
 });
 
@@ -69,8 +68,10 @@ function CrudDataTableHeaderComponent<
     search,
     hideRefresh,
     filters,
-    customizableColumns,
     columns,
+    defaultVisibleColumns,
+    orderedColumns,
+    groupableColumns,
     onCreateClick,
     onViewSettingsChange,
   }: Props<TData, TValue>,
@@ -81,7 +82,7 @@ function CrudDataTableHeaderComponent<
       ...state,
       ...updates,
     }),
-    initialSettings(columns, customizableColumns)
+    initialSettings(orderedColumns, defaultVisibleColumns)
   );
 
   const debouncedUpdate = useCallback(
@@ -102,20 +103,18 @@ function CrudDataTableHeaderComponent<
   }
 
   const visibleOrderedColumns = columns
-    .map((column) => ({
-      id: getColumnKey(column),
-      name: column.header as string,
-      visible: viewSettings.visibleKeys.includes(getColumnKey(column)),
-    }))
+    .map((column) => {
+      return {
+        id: getColumnKey(column),
+        name: column.header as string,
+        visible: viewSettings.visibleKeys.includes(getColumnKey(column)),
+      };
+    })
     .sort(
       (a, b) =>
         viewSettings.orderKeys.indexOf(a.id) -
         viewSettings.orderKeys.indexOf(b.id)
     );
-
-  const groupByColumns = columns.filter((column) => {
-    return visibleOrderedColumns.find(({ id }) => column.id === id)?.visible;
-  });
 
   return (
     <div className="mb-2 flex justify-between">
@@ -154,7 +153,7 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {customizableColumns?.enabled && (
+        {isFullArray(defaultVisibleColumns) && (
           <CustomizableColumnsPopover
             columns={visibleOrderedColumns}
             sortKeys={viewSettings.orderKeys}
@@ -164,15 +163,15 @@ function CrudDataTableHeaderComponent<
             onSortChange={(orderKeys) => debouncedUpdate({ orderKeys })}
             onReset={() =>
               updateViewSettings({
-                visibleKeys: customizableColumns.defaultVisibleKeys ?? [],
+                visibleKeys: defaultVisibleColumns.map(getColumnKey),
               })
             }
           />
         )}
 
-        {groupByColumns.length > 0 && (
+        {isFullArray(groupableColumns) && (
           <GroupByButton
-            columns={columns}
+            columns={groupableColumns}
             onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
           />
         )}
