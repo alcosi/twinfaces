@@ -3,7 +3,6 @@ import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   buildFilterFields,
-  groupPermissionsByGroupId,
   mapToPermissionApiFilters,
   type Permission,
 } from "@/entities/permission";
@@ -11,45 +10,29 @@ import { PermissionResourceLink } from "@/entities/permission/components/resourc
 import { ApiContext } from "@/shared/api";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { ChevronDown, ChevronRight } from "lucide-react";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
 
-interface GroupedPermission extends Permission {
-  subRows?: Permission[];
-}
-
-const columnsMap: Record<keyof Permission, ColumnDef<GroupedPermission>> = {
+const colDefs: Record<keyof Permission, ColumnDef<Permission>> = {
   groupId: {
+    id: "groupId",
     accessorKey: "groupId",
     header: "Group",
-    cell: (data) => {
-      const { row } = data;
-      return (
-        row.getCanExpand() && (
-          <div className="max-w-48 inline-flex">
-            <button
-              className="pointer"
-              onClick={row.getToggleExpandedHandler()}
-            >
-              {row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}
-            </button>
-            <span>{row.original.name}</span>
-          </div>
-        )
-      );
-    },
+    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
   },
   id: {
+    id: "id",
     accessorKey: "id",
     header: "Id",
     cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
   },
   key: {
+    id: "key",
     accessorKey: "key",
     header: "Key",
   },
   name: {
+    id: "name",
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => (
@@ -59,6 +42,7 @@ const columnsMap: Record<keyof Permission, ColumnDef<GroupedPermission>> = {
     ),
   },
   description: {
+    id: "description",
     accessorKey: "description",
     header: "Description",
   },
@@ -91,7 +75,7 @@ export function Permissions() {
   async function fetchPermissions(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<{ data: GroupedPermission[]; pageCount: number }> {
+  ): Promise<{ data: Permission[]; pageCount: number }> {
     const _filters = mapToPermissionApiFilters(filters.filters);
 
     try {
@@ -102,12 +86,8 @@ export function Permissions() {
 
       const permissions = response.data?.permissions ?? [];
       setPermissions((prev) => mergeUniquePermissions(prev, permissions));
-      const grouppedPermissions = groupPermissionsByGroupId(
-        permissions,
-        response.data?.relatedObjects?.permissionGroupMap
-      );
 
-      return { data: grouppedPermissions, pageCount: 0 };
+      return { data: permissions, pageCount: 0 };
     } catch (e) {
       console.error("Failed to fetch permissions", e);
       toast.error("Failed to fetch permissions");
@@ -121,11 +101,11 @@ export function Permissions() {
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
-        columnsMap.groupId,
-        columnsMap.id,
-        columnsMap.key,
-        columnsMap.name,
-        columnsMap.description,
+        colDefs.groupId,
+        colDefs.id,
+        colDefs.key,
+        colDefs.name,
+        colDefs.description,
       ]}
       fetcher={fetchPermissions}
       getRowId={(row) => row.id!}
