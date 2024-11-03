@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/base/input";
 import { Separator } from "@/components/base/separator";
 import { debounce, fixedForwardRef, isFullArray } from "@/shared/libs";
-import { RefreshCw, Search } from "lucide-react";
+import { Plus, RefreshCw, Search } from "lucide-react";
 import React, { ForwardedRef, useCallback, useEffect, useReducer } from "react";
 import { getColumnKey, safeRefresh } from "../helpers";
 import { FiltersPopover } from "./filters-popover";
@@ -179,7 +179,9 @@ function CrudDataTableHeaderComponent<
         {onCreateClick && (
           <>
             <Separator orientation="vertical" />
-            <Button onClick={onCreateClick}>Create</Button>
+            <Button onClick={onCreateClick}>
+              <Plus />
+            </Button>
           </>
         )}
       </div>
