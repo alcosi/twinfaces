@@ -18,19 +18,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/base/table";
-import { cn, fixedForwardRef } from "@/shared/libs";
+import {
+  cn,
+  fixedForwardRef,
+  Identifiable,
+  isPopulatedArray,
+} from "@/shared/libs";
 import {
   getExpandedRowModel,
   PaginationState,
   Row,
 } from "@tanstack/table-core";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import React, {
   ForwardedRef,
   useEffect,
   useImperativeHandle,
   useState,
 } from "react";
-import { Identifiable, isPopulatedArray } from "@/shared/libs";
 
 export type DataTableHandle = {
   refresh: () => void;
@@ -39,8 +44,9 @@ export type DataTableHandle = {
   // setFilterValues: (values?: PaginatedTableFilterValues) => any;
 };
 
-export interface DataTableRow<TData> extends Identifiable {
+export interface DataTableRow<TData> extends Object, Identifiable {
   subRows?: TData[];
+  [key: string]: any; // Allow indexing by string
 }
 
 export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
@@ -153,21 +159,32 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }
 
   function renderExpandableRows(row: Row<TData>) {
-    const mainCell = row.getVisibleCells()[0];
+    const groupByCell = row.getVisibleCells().find((c) => c.getValue());
     return (
       <>
         <TableRow
           key={row.id}
           data-state={row.getIsSelected() && "selected"}
           onClick={() => onRowClick?.(row.original)}
-          className={cn(onRowClick && "cursor-pointer")}
+          className={cn(onRowClick && "cursor-pointer", "bg-accent")}
         >
-          <TableCell colSpan={row.getVisibleCells().length} key={mainCell?.id}>
-            {mainCell &&
-              flexRender(
-                mainCell?.column.columnDef.cell,
-                mainCell?.getContext()
-              )}
+          <TableCell
+            colSpan={row.getVisibleCells().length}
+            key={groupByCell?.id}
+          >
+            <div className="inline-flex items-center font-semibold">
+              <button
+                className="pointer me-2"
+                onClick={row.getToggleExpandedHandler()}
+              >
+                {row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}
+              </button>
+              {groupByCell &&
+                flexRender(
+                  groupByCell?.column.columnDef.cell,
+                  groupByCell?.getContext()
+                )}
+            </div>
           </TableCell>
         </TableRow>
 

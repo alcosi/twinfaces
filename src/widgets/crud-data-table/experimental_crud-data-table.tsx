@@ -1,6 +1,5 @@
 "use client";
 
-import { AutoFormValueInfo } from "@/components/auto-field";
 import { Button } from "@/components/base/button";
 import {
   DataTable,
@@ -24,52 +23,34 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-import { CrudDataTableHeader } from "./header";
+import {
+  CrudDataTableHeader,
+  CrudDataTableHeaderProps,
+  FilterState,
+} from "./header";
+import { getColumnKey, groupDataByKey } from "./helpers";
 
-interface FiltersState {
-  search?: string;
-  filters: { [key: string]: any };
-}
-
-interface CrudDataTableSearchProps {
-  enabled?: boolean;
-  placeholder?: string;
-}
-
-interface CrudDataTableFiltersProps {
-  filtersInfo: { [key: string]: AutoFormValueInfo };
-  onChange: (values: { [key: string]: any }) => Promise<any>;
-}
-
-interface CrudDataTableCustomizableColumnsProps {
-  enabled?: boolean;
-  defaultVisibleKeys?: string[];
-}
-
-interface CrudDataTableProps<TData extends DataTableRow<TData>, TValue>
-  extends Omit<DataTableProps<TData, TValue>, "fetcher"> {
-  fetcher: (
-    pagination: PaginationState,
-    filters: FiltersState
-  ) => Promise<{ data: TData[]; pageCount: number }>;
-  title?: string;
-  search?: CrudDataTableSearchProps;
-  filters?: CrudDataTableFiltersProps;
-  customizableColumns?: CrudDataTableCustomizableColumnsProps;
-  hideRefresh?: boolean;
-  className?: string;
-  // TODO: refactor typings
-  dialogForm?: UseFormReturn<any>;
-  onCreateSubmit?: (values: any) => Promise<void>;
-  onUpdateSubmit?: (id: string, values: any) => Promise<void>;
-  // TODO: imporove later using AutoFields
-  renderFormFields?: () => ReactNode;
-}
+type CrudDataTableProps<
+  TData extends DataTableRow<TData>,
+  TValue,
+> = CrudDataTableHeaderProps &
+  Omit<DataTableProps<TData, TValue>, "fetcher"> & {
+    fetcher: (
+      pagination: PaginationState,
+      filters: { search?: string; filters: { [key: string]: any } }
+    ) => Promise<{ data: TData[]; pageCount: number }>;
+    className?: string;
+    dialogForm?: UseFormReturn<any>;
+    onCreateSubmit?: (values: any) => Promise<void>;
+    onUpdateSubmit?: (id: string, values: any) => Promise<void>;
+    renderFormFields?: () => ReactNode;
+  };
 
 type DialogState = {
   open: boolean;
@@ -82,11 +63,6 @@ export const Experimental_CrudDataTable = fixedForwardRef(
 
 function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   {
-    title,
-    search,
-    filters,
-    customizableColumns,
-    hideRefresh,
     className,
     fetcher,
 
@@ -98,15 +74,20 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
-  const [tableSearch, setTableSearch] = useState<string>("");
-  const [tableFilters, setTableFilters] = useState<{ [key: string]: any }>({});
-  const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(
-    customizableColumns?.defaultVisibleKeys ?? []
-  );
-  const [sortColumnKeys, setSortColumnKeys] = useState<string[]>(
-    props.columns?.map((col) => getColumnKey(col)) ?? []
-  );
   const tableRef = useRef<DataTableHandle>(null);
+  const [viewSettings, updateViewSettings] = useReducer(
+    (state: FilterState, updates: Partial<FilterState>) => ({
+      ...state,
+      ...updates,
+    }),
+    {
+      query: "",
+      filters: {},
+      visibleKeys: props.customizableColumns?.defaultVisibleKeys ?? [],
+      orderKeys: props.columns?.map((col) => getColumnKey(col)) ?? [],
+      groupByKey: undefined,
+    }
+  );
   const defaultValues = useRef(dialogForm?.formState.defaultValues).current;
   const [dialogState, setDialogState] = useState<DialogState>({
     open: false,
@@ -115,58 +96,57 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
-  function fetchWrapper(pagination: PaginationState) {
-    return fetcher(pagination, { search: tableSearch, filters: tableFilters });
-  }
-
-  async function refresh() {
+  useEffect(() => {
     tableRef.current?.refresh();
-  }
+  }, [viewSettings]);
 
-  async function onFiltersChange(values: { [key: string]: any }) {
-    setTableFilters(values);
-    filters?.onChange(values);
-  }
+  const fetchWrapper = async (pagination: PaginationState) => {
+    try {
+      const response = await fetcher(pagination, {
+        search: viewSettings.query,
+        filters: viewSettings.filters,
+      });
 
-  useEffect(() => {
-    tableRef.current?.resetPage();
-    refresh();
-  }, [tableFilters]);
+      if (viewSettings.groupByKey) {
+        response.data = groupDataByKey(response.data, viewSettings.groupByKey);
+      }
 
-  useEffect(() => {
-    console.log("visibleColumns", visibleColumnKeys);
-  }, [visibleColumnKeys]);
+      return response;
+    } catch (error) {
+      console.error("Error in fetchWrapper:", error);
+      throw error;
+    }
+  };
 
   const visibleColumns = useMemo(() => {
-    return customizableColumns?.enabled
-      ? props.columns
-          .filter((column) => {
-            return visibleColumnKeys.includes(getColumnKey(column));
-          })
-          .sort((a, b) => {
-            return (
-              sortColumnKeys.indexOf(getColumnKey(a)) -
-              sortColumnKeys.indexOf(getColumnKey(b))
-            );
-          })
-      : props.columns;
-  }, [customizableColumns, visibleColumnKeys, sortColumnKeys]);
-
-  function handleOpenChange(open: boolean) {
-    if (!open && dialogForm?.formState.isSubmitting) {
-      return;
+    if (props.customizableColumns?.enabled) {
+      return props.columns
+        .filter((column) =>
+          viewSettings.visibleKeys.includes(getColumnKey(column))
+        )
+        .sort(
+          (a, b) =>
+            viewSettings.orderKeys.indexOf(getColumnKey(a)) -
+            viewSettings.orderKeys.indexOf(getColumnKey(b))
+        );
     }
 
-    setDialogState((prev) => ({
-      ...prev,
-      open,
-      isCreating: false,
-      isUpdating: false,
-    }));
+    return props.columns;
+  }, [
+    props.customizableColumns?.enabled,
+    viewSettings.visibleKeys,
+    viewSettings.orderKeys,
+    props.columns,
+  ]);
+
+  function handleOpenChange(open: boolean) {
+    if (!open && dialogForm?.formState.isSubmitting) return;
+
+    setDialogState({ open, selectedRowId: null });
     dialogForm?.reset();
   }
 
-  async function onSubmit(formValues: unknown) {
+  async function onDialogFormSubmit(formValues: unknown) {
     try {
       if (dialogState.selectedRowId) {
         await onUpdateSubmit?.(dialogState.selectedRowId, formValues);
@@ -207,25 +187,15 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   return (
     <div className={cn("flex-1", className)}>
       <CrudDataTableHeader
-        title={title}
-        search={search}
-        onSearch={(e) => {
-          e.preventDefault();
-          refresh();
-        }}
-        tableSearch={tableSearch}
-        setTableSearch={setTableSearch}
-        hideRefresh={hideRefresh}
-        filters={filters}
-        onFiltersChange={onFiltersChange}
-        refresh={refresh}
-        customizableColumns={customizableColumns}
+        ref={tableRef}
+        title={props.title}
+        search={props.search}
+        hideRefresh={props.hideRefresh}
         columns={props.columns}
-        visibleColumnKeys={visibleColumnKeys}
-        setVisibleColumnKeys={setVisibleColumnKeys}
-        sortColumnKeys={sortColumnKeys}
-        setSortColumnKeys={setSortColumnKeys}
+        filters={props.filters}
+        customizableColumns={props.customizableColumns}
         onCreateClick={handleOnCreateClick}
+        onViewSettingsChange={updateViewSettings}
       />
 
       <DataTable
@@ -247,7 +217,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
             <Form {...dialogForm}>
               <form
-                onSubmit={dialogForm.handleSubmit(onSubmit)}
+                onSubmit={dialogForm.handleSubmit(onDialogFormSubmit)}
                 className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6"
               >
                 {renderFormFields && renderFormFields()}
@@ -268,8 +238,4 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
       )}
     </div>
   );
-}
-
-function getColumnKey(column: any) {
-  return column.accessorKey ? (column.accessorKey as string) : column.id!;
 }
