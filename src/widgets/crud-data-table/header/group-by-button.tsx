@@ -46,23 +46,16 @@ export function GroupByButton<TData, TValue>({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="space-y-4">
-        {/* <header className="text-wrap w-full">
-          {Object.entries(checkedValues).map((e) => (
-            <p>{JSON.stringify(e)}</p>
-          ))}
-        </header> */}
         <div className="space-y-4">
           {columns.map((column) => {
             const key = getColumnKey(column);
             return (
-              key && (
-                <CheckboxFormItem
-                  key={key}
-                  fieldValue={checkedValues[key]}
-                  onChange={() => handleCheckboxChange(key)}
-                  label={<>{column.header}</>}
-                />
-              )
+              <CheckboxFormItem
+                key={key}
+                fieldValue={checkedValues[key]}
+                onChange={() => handleCheckboxChange(key)}
+                label={<>{column.header}</>}
+              />
             );
           })}
         </div>

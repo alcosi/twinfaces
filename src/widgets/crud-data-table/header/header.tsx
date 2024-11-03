@@ -8,8 +8,8 @@ import {
 } from "@/components/base/data-table/data-table";
 import { Input } from "@/components/base/input";
 import { Separator } from "@/components/base/separator";
-import { debounce, fixedForwardRef, isFullArray } from "@/shared/libs";
-import { RefreshCw, Search } from "lucide-react";
+import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import { Plus, RefreshCw, Search } from "lucide-react";
 import React, { ForwardedRef, useCallback, useEffect, useReducer } from "react";
 import { getColumnKey, safeRefresh } from "../helpers";
 import { FiltersPopover } from "./filters-popover";
@@ -153,7 +153,7 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {isFullArray(defaultVisibleColumns) && (
+        {isPopulatedArray(defaultVisibleColumns) && (
           <CustomizableColumnsPopover
             columns={visibleOrderedColumns}
             sortKeys={viewSettings.orderKeys}
@@ -169,7 +169,7 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {isFullArray(groupableColumns) && (
+        {isPopulatedArray(groupableColumns) && (
           <GroupByButton
             columns={groupableColumns}
             onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
@@ -179,7 +179,9 @@ function CrudDataTableHeaderComponent<
         {onCreateClick && (
           <>
             <Separator orientation="vertical" />
-            <Button onClick={onCreateClick}>Create</Button>
+            <Button onClick={onCreateClick}>
+              <Plus />
+            </Button>
           </>
         )}
       </div>
