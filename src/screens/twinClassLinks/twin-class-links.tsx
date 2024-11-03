@@ -246,16 +246,13 @@ export function TwinClassLinks() {
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
-        customizableColumns={{
-          enabled: true,
-          defaultVisibleKeys: [
-            "id",
-            "linkStrengthId",
-            "name",
-            "type",
-            "dstTwinClassId",
-          ],
-        }}
+        defaultVisibleColumns={[
+          columnsMap.id,
+          columnsMap.name,
+          columnsMap.dstTwinClassId,
+          columnsMap.type,
+          columnsMap.linkStrengthId,
+        ]}
         dialogForm={forwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         onUpdateSubmit={handleOnUpdateSubmit}
@@ -281,16 +278,13 @@ export function TwinClassLinks() {
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
-        customizableColumns={{
-          enabled: true,
-          defaultVisibleKeys: [
-            "id",
-            "linkStrengthId",
-            "name",
-            "type",
-            "dstTwinClassId",
-          ],
-        }}
+        defaultVisibleColumns={[
+          columnsMap.id,
+          columnsMap.name,
+          columnsMap.dstTwinClassId,
+          columnsMap.type,
+          columnsMap.linkStrengthId,
+        ]}
         dialogForm={backwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         onUpdateSubmit={handleOnUpdateSubmit}

@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/base/dialog";
 import { Form } from "@/components/base/form";
-import { cn, fixedForwardRef } from "@/shared/libs";
+import { cn, fixedForwardRef, isFullArray } from "@/shared/libs";
 import { PaginationState } from "@tanstack/table-core";
 import {
   ForwardedRef,
@@ -46,6 +46,9 @@ type CrudDataTableProps<
       filters: { search?: string; filters: { [key: string]: any } }
     ) => Promise<{ data: TData[]; pageCount: number }>;
     className?: string;
+    defaultVisibleColumns?: DataTableProps<TData, TValue>["columns"];
+    orderedColumns?: DataTableProps<TData, TValue>["columns"];
+    groupableColumns?: DataTableProps<TData, TValue>["columns"];
     dialogForm?: UseFormReturn<any>;
     onCreateSubmit?: (values: any) => Promise<void>;
     onUpdateSubmit?: (id: string, values: any) => Promise<void>;
@@ -83,8 +86,8 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     {
       query: "",
       filters: {},
-      visibleKeys: props.customizableColumns?.defaultVisibleKeys ?? [],
-      orderKeys: props.columns?.map((col) => getColumnKey(col)) ?? [],
+      visibleKeys: props.defaultVisibleColumns?.map(getColumnKey) ?? [],
+      orderKeys: props.orderedColumns?.map(getColumnKey) ?? [],
       groupByKey: undefined,
     }
   );
@@ -119,7 +122,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   };
 
   const visibleColumns = useMemo(() => {
-    if (props.customizableColumns?.enabled) {
+    if (isFullArray(props.defaultVisibleColumns)) {
       return props.columns
         .filter((column) =>
           viewSettings.visibleKeys.includes(getColumnKey(column))
@@ -133,10 +136,10 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
     return props.columns;
   }, [
-    props.customizableColumns?.enabled,
     viewSettings.visibleKeys,
     viewSettings.orderKeys,
     props.columns,
+    props.defaultVisibleColumns,
   ]);
 
   function handleOpenChange(open: boolean) {
@@ -192,8 +195,10 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         search={props.search}
         hideRefresh={props.hideRefresh}
         columns={props.columns}
+        defaultVisibleColumns={props.defaultVisibleColumns}
+        orderedColumns={props.orderedColumns}
+        groupableColumns={props.groupableColumns}
         filters={props.filters}
-        customizableColumns={props.customizableColumns}
         onCreateClick={handleOnCreateClick}
         onViewSettingsChange={updateViewSettings}
       />
