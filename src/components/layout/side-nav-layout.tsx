@@ -26,6 +26,7 @@ export interface SideNavLayoutProps {
   returnOptions?: ReturnOptions[];
 }
 
+// @deprecate
 export function SideNavLayout({
   sections,
   defaultSectionKey,

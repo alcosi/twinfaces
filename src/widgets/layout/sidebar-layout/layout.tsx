@@ -12,7 +12,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
           <SidebarTrigger />
           <ThemeToggle />
         </header>
-        <main className="border border-transparent rounded-lg p-4 m-4">
+        <main className="border border-transparent rounded-lg px-8 py-4">
           {children}
         </main>
       </div>

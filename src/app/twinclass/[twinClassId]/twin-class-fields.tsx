@@ -98,7 +98,6 @@ export function TwinClassFields() {
     <>
       <CrudDataTable
         ref={tableRef}
-        title="Fields"
         columns={columns}
         getRowId={(row) => row.key!}
         fetcher={fetchFields}

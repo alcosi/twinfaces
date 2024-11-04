@@ -155,7 +155,6 @@ export function TwinClassStatuses() {
     <>
       <CrudDataTable
         ref={tableRef}
-        title="Statuses"
         columns={columns}
         getRowId={(row) => row.key!}
         fetcher={fetchStatuses}

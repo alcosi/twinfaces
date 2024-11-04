@@ -4,11 +4,11 @@ import { TwinClassFields } from "@/app/twinclass/[twinClassId]/twin-class-fields
 import { TwinClassGeneral } from "@/app/twinclass/[twinClassId]/twin-class-general";
 import { TwinClassStatuses } from "@/app/twinclass/[twinClassId]/twin-class-statuses";
 import { TwinClassTwinflows } from "@/app/twinclass/[twinClassId]/twin-class-twinflows";
-import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
 import { TwinClassLinks } from "@/pages/twinClassLinks";
+import { Tab, TabsLayout } from "@/widgets";
 
 export default function TwinClassPage() {
-  const sections: Section[] = [
+  const tabs: Tab[] = [
     {
       key: "general",
       label: "General",
@@ -36,5 +36,5 @@ export default function TwinClassPage() {
     },
   ];
 
-  return <SideNavLayout sections={sections} />;
+  return <TabsLayout tabs={tabs} />;
 }

@@ -1,12 +1,12 @@
 "use client";
 
-import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
+import { TwinFields } from "@/app/twin/[twinId]/twin-fields";
 import { TwinGeneral } from "@/app/twin/[twinId]/twin-general";
 import { TwinLinks } from "@/app/twin/[twinId]/twin-links";
-import { TwinFields } from "@/app/twin/[twinId]/twin-fields";
+import { Tab, TabsLayout } from "@/widgets";
 
 export default function TwinPage() {
-  const sections: Section[] = [
+  const tabs: Tab[] = [
     {
       key: "general",
       label: "General",
@@ -24,5 +24,5 @@ export default function TwinPage() {
     },
   ];
 
-  return <SideNavLayout sections={sections} />;
+  return <TabsLayout tabs={tabs} />;
 }
