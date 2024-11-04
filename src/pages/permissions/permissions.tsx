@@ -98,7 +98,6 @@ export function Permissions() {
 
   return (
     <Experimental_CrudDataTable
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
         colDefs.groupId,

@@ -114,7 +114,7 @@ export default function TwinClasses() {
   );
 
   return (
-    <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
+    <>
       <CrudDataTable
         ref={tableRef}
         columns={columns}
@@ -185,6 +185,6 @@ export default function TwinClasses() {
         }}
         onSuccess={() => tableRef.current?.refresh()}
       />
-    </main>
+    </>
   );
 }

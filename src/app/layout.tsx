@@ -1,8 +1,8 @@
 import { TooltipProvider } from "@/components/base/tooltip";
-import { MainLayout } from "@/components/layout/main-layout";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ApiContextProvider } from "@/feature/api-context-provider";
 import { cn } from "@/shared/libs";
+import { SidebarLayout } from "@/widgets";
 import type { Metadata } from "next";
 import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
@@ -46,7 +46,7 @@ export default function RootLayout({
         >
           <ApiContextProvider>
             <TooltipProvider>
-              <MainLayout>{children}</MainLayout>
+              <SidebarLayout>{children}</SidebarLayout>
             </TooltipProvider>
           </ApiContextProvider>
 
