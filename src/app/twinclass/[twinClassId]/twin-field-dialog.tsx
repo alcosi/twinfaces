@@ -1,5 +1,5 @@
 import { TwinClassField, TwinClassFieldCreateRq } from "@/lib/api/api-types";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ApiContext } from "@/lib/api/api";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -176,69 +176,68 @@ export default function CreateEditTwinFieldDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
         <DialogHeader>
           <DialogTitle>{field ? "Edit field" : "Create field"}</DialogTitle>
         </DialogHeader>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-8 p-1">
-              {field?.id && <Input value={field?.id} disabled />}
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6"
+          >
+            {field?.id && <Input value={field?.id} disabled />}
 
-              <TextFormField
-                control={form.control}
-                name="key"
-                label="Key"
-                autoFocus={true}
-              />
+            <TextFormField
+              control={form.control}
+              name="key"
+              label="Key"
+              autoFocus={true}
+            />
 
-              <TextFormField control={form.control} name="name" label="Name" />
+            <TextFormField control={form.control} name="name" label="Name" />
 
-              <TextAreaFormField
-                control={form.control}
-                name="description"
-                label="Description"
-              />
+            <TextAreaFormField
+              control={form.control}
+              name="description"
+              label="Description"
+            />
 
-              <CheckboxFormField
-                control={form.control}
-                name="required"
-                label="Required"
-              />
+            <CheckboxFormField
+              control={form.control}
+              name="required"
+              label="Required"
+            />
 
-              <FeaturerInput
-                typeId={FeaturerTypes.fieldTyper}
-                defaultId={field?.fieldTyperFeaturerId}
-                defaultParams={field?.fieldTyperParams}
-                onChange={(val) => {
-                  console.log("new featurer", val);
-                  setFeaturer(val);
-                }}
-              />
+            <FeaturerInput
+              typeId={FeaturerTypes.fieldTyper}
+              defaultId={field?.fieldTyperFeaturerId}
+              defaultParams={field?.fieldTyperParams}
+              onChange={(val) => {
+                console.log("new featurer", val);
+                setFeaturer(val);
+              }}
+            />
 
-              {/*<SelectFormField<z.infer<typeof twinFieldSchema>, FieldType>*/}
-              {/*    control={form.control} name="descriptor.fieldType"*/}
-              {/*    label="Type"*/}
-              {/*    values={fieldTypes}*/}
-              {/*    getItemLabel={(option) => option.label}*/}
-              {/*    getItemKey={(option) => option.fieldType}*/}
-              {/*/>*/}
+            {/*<SelectFormField<z.infer<typeof twinFieldSchema>, FieldType>*/}
+            {/*    control={form.control} name="descriptor.fieldType"*/}
+            {/*    label="Type"*/}
+            {/*    values={fieldTypes}*/}
+            {/*    getItemLabel={(option) => option.label}*/}
+            {/*    getItemKey={(option) => option.fieldType}*/}
+            {/*/>*/}
 
-              {Object.values(form.formState.errors).length > 0 && (
-                <Alert variant="destructive">
-                  There are errors in the form
-                </Alert>
-              )}
-            </div>
-            <div className="sticky bottom-0 bg-background">
-              <DialogFooter className="sm:justify-end py-4">
-                <Button type="submit" loading={form.formState.isSubmitting}>
-                  Save
-                </Button>
-              </DialogFooter>
-            </div>
+            {Object.values(form.formState.errors).length > 0 && (
+              <Alert variant="destructive">There are errors in the form</Alert>
+            )}
           </form>
         </Form>
+
+        <DialogFooter className="sm:justify-end bg-background p-6">
+          <Button type="submit" loading={form.formState.isSubmitting}>
+            Save
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
