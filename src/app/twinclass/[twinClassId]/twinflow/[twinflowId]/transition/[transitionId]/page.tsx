@@ -1,16 +1,12 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/shared/api";
-import { TwinFlow, TwinFlowTransition } from "@/entities/twinFlow";
-import { toast } from "sonner";
-import {
-  ReturnOptions,
-  Section,
-  SideNavLayout,
-} from "@/components/layout/side-nav-layout";
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { LoadingOverlay } from "@/components/base/loading";
+import { TwinFlowTransition } from "@/entities/twinFlow";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { ApiContext } from "@/shared/api";
+import { Tab, TabsLayout } from "@/widgets";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { TwinflowTransitionGeneral } from "./twinflow-transition-general";
 import { TwinflowTransitionTriggers } from "./twinflow-transition-triggers";
 import { TwinflowTransitionValidators } from "./twinflow-transition-validators";
@@ -31,11 +27,26 @@ export default function TransitionPage({
   const [transition, setTransition] = useState<TwinFlowTransition | undefined>(
     undefined
   );
-  const { findStatusById } = useContext(TwinClassContext);
+  const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
     fetchTransitionData();
   }, []);
+
+  useEffect(() => {
+    setBreadcrumbs([
+      { label: "Twin Classes", href: "/twinclass" },
+      { label: "Twin Class", href: `/twinclass/${twinClassId}#twinflows` },
+      {
+        label: "Twin Flow",
+        href: `/twinclass/${twinClassId}/twinflow/${twinflowId}`,
+      },
+      {
+        label: "Transition",
+        href: `/twinclass/${twinClassId}/twinflow/${twinflowId}/transition/${transitionId}`,
+      },
+    ]);
+  }, [twinClassId, twinflowId, transitionId]);
 
   function fetchTransitionData() {
     setLoading(true);
@@ -61,7 +72,7 @@ export default function TransitionPage({
       .finally(() => setLoading(false));
   }
 
-  const sections: Section[] = transition
+  const tabs: Tab[] = transition
     ? [
         {
           key: "general",
@@ -96,27 +107,10 @@ export default function TransitionPage({
       ]
     : [];
 
-  const returnOptions: ReturnOptions[] = [
-    {
-      path: `/twinclass/${twinClassId}/twinflow/${twinflowId}#transitions`,
-      label: "Back to class",
-    },
-    {
-      path: `/twinclass/${twinClassId}/#twinflow/`,
-      label: "Back to twinflow",
-    },
-  ];
-
   return (
     <div>
       {loading && <LoadingOverlay />}
-      {transition && (
-        <SideNavLayout sections={sections} returnOptions={returnOptions}>
-          <h1 className="text-xl font-bold">
-            Transition {transition.name ?? transition.id}
-          </h1>
-        </SideNavLayout>
-      )}
+      {transition && <TabsLayout tabs={tabs} />}
     </div>
   );
 }

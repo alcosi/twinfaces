@@ -3,14 +3,15 @@
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/base/breadcrumb";
 import { SidebarProvider, SidebarTrigger } from "@/components/base/sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { cn } from "@/shared/libs";
 import { House } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 import { AppSidebar } from "./sidebar";
 
@@ -28,17 +29,22 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/">
+                  <Link href="/">
                     <House className="w-4 h-4" />
-                  </BreadcrumbLink>
+                  </Link>
                 </BreadcrumbItem>
                 {breadcrumbs.map((item, index) => (
                   <React.Fragment key={index}>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                      <BreadcrumbLink href={item.href}>
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          index === breadcrumbs.length - 1 && "font-semibold"
+                        )}
+                      >
                         {item.label}
-                      </BreadcrumbLink>
+                      </Link>
                     </BreadcrumbItem>
                   </React.Fragment>
                 ))}

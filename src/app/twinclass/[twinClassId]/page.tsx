@@ -7,7 +7,8 @@ import { TwinClassTwinflows } from "@/app/twinclass/[twinClassId]/twin-class-twi
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinClassLinks } from "@/pages/twinClassLinks";
 import { Tab, TabsLayout } from "@/widgets";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { TwinClassContext } from "./twin-class-context";
 
 const tabs: Tab[] = [
   {
@@ -39,10 +40,14 @@ const tabs: Tab[] = [
 
 export default function TwinClassPage() {
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { twinClass } = useContext(TwinClassContext);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Twin Classes", href: "/twinclass" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([
+      { label: "Twin Classes", href: `/twinclass` },
+      { label: "Twin Class", href: `/twinclass/${twinClass?.id}` },
+    ]);
+  }, [twinClass]);
 
   return <TabsLayout tabs={tabs} />;
 }

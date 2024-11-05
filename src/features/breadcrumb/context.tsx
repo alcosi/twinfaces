@@ -1,4 +1,4 @@
 import { createContext } from "react";
-import { Context } from "./types";
+import { type Context } from "./types";
 
 export const BreadcrumbContext = createContext<Context | undefined>(undefined);

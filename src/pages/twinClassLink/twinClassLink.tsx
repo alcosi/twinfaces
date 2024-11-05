@@ -1,31 +1,36 @@
 "use client";
 
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import {
-  ReturnOptions,
-  Section,
-  SideNavLayout,
-} from "@/components/layout/side-nav-layout";
-import { useContext } from "react";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { Tab, TabsLayout } from "@/widgets";
+import { useContext, useEffect } from "react";
 import { GeneralSection } from "./views/general-section";
 
-export function TwinClassLinkPage() {
+export type PageProps = {
+  params: {
+    linkId: string;
+  };
+};
+
+const tabs: Tab[] = [
+  {
+    key: "general",
+    label: "General",
+    content: <GeneralSection />,
+  },
+];
+
+export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
   const { twinClassId } = useContext(TwinClassContext);
+  const { setBreadcrumbs } = useBreadcrumbs();
 
-  const sections: Section[] = [
-    {
-      key: "general",
-      label: "General",
-      content: <GeneralSection />,
-    },
-  ];
+  useEffect(() => {
+    setBreadcrumbs([
+      { label: "Twin Classes", href: "/twinclass" },
+      { label: "Twin Class", href: `/twinclass/${twinClassId}#links` },
+      { label: "Link", href: `/twinclass/${twinClassId}/link/${linkId}` },
+    ]);
+  }, [linkId, twinClassId]);
 
-  const returnOptions: ReturnOptions[] = [
-    {
-      path: `/twinclass/${twinClassId}#links`,
-      label: "Back",
-    },
-  ];
-
-  return <SideNavLayout sections={sections} returnOptions={returnOptions} />;
+  return <TabsLayout tabs={tabs} />;
 }
