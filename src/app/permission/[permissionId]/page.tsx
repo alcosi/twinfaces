@@ -1,4 +1,4 @@
-import { UnderConstructionPage } from "@/pages/underConstruction";
+import { UnderConstructionPage } from "@/screens/underConstruction";
 
 export default function Page() {
   return <UnderConstructionPage />;

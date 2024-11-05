@@ -5,7 +5,7 @@ import { TwinClassGeneral } from "@/app/twinclass/[twinClassId]/twin-class-gener
 import { TwinClassStatuses } from "@/app/twinclass/[twinClassId]/twin-class-statuses";
 import { TwinClassTwinflows } from "@/app/twinclass/[twinClassId]/twin-class-twinflows";
 import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
-import { TwinClassLinks } from "@/pages/twinClassLinks";
+import { TwinClassLinks } from "@/screens/twinClassLinks";
 
 export default function TwinClassPage() {
   const sections: Section[] = [

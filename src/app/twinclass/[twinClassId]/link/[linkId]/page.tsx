@@ -1,4 +1,4 @@
-import { TwinClassLinkPage } from "@/pages/twinClassLink";
+import { TwinClassLinkPage } from "@/screens/twinClassLink";
 
 export default function Page() {
   return <TwinClassLinkPage />;
