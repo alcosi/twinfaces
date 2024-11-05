@@ -13,6 +13,7 @@ interface CopyButtonProps extends ButtonProps {
   textToCopy: string;
   onCopy?: () => any;
   copiedText?: string;
+  disableTooltip?: boolean;
 }
 
 export function CopyButton({
@@ -20,6 +21,7 @@ export function CopyButton({
   onClick,
   onCopy,
   copiedText,
+  disableTooltip = false,
   ...props
 }: CopyButtonProps) {
   const [copied, setCopied] = useState<boolean>(false);
@@ -34,20 +36,19 @@ export function CopyButton({
     onClick?.(e);
   }
 
-  return (
+  const trigger = (
+    <Button onClick={onClickInternal} size="iconS6" variant="ghost" {...props}>
+      {!copied && <Copy />}
+      {copied && <Check />}
+    </Button>
+  );
+
+  return disableTooltip ? (
+    trigger
+  ) : (
     <>
       <Tooltip open={copied}>
-        <TooltipTrigger asChild>
-          <Button
-            onClick={onClickInternal}
-            size="iconS6"
-            variant="ghost"
-            {...props}
-          >
-            {!copied && <Copy />}
-            {copied && <Check />}
-          </Button>
-        </TooltipTrigger>
+        <TooltipTrigger asChild>{trigger}</TooltipTrigger>
         <TooltipContent>{copiedText ?? "Copied!"}</TooltipContent>
       </Tooltip>
     </>

@@ -30,7 +30,11 @@ const columnsMap: Record<keyof Permission, ColumnDef<Permission>> = {
   name: {
     accessorKey: "name",
     header: "Name",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <PermissionResourceLink data={original} withTooltip />
+      </div>
+    ),
   },
   description: {
     accessorKey: "description",
