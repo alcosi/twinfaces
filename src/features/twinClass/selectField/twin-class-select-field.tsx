@@ -1,7 +1,11 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
 import { TextFormItem } from "@/components/form-fields/text-form-field";
-import { TwinClass_DETAILED, useTwinClassSearchV1 } from "@/entities/twinClass";
+import {
+  TwinClass_DETAILED,
+  useFetchTwinClassById,
+  useTwinClassSearchV1,
+} from "@/entities/twinClass";
 import { useContext } from "react";
 import { Control, FieldValues, Path } from "react-hook-form";
 
@@ -14,12 +18,11 @@ type Props<T extends FieldValues> = {
 
 export function TwinClassSelectField<T extends FieldValues>(props: Props<T>) {
   const { twinClass } = useContext(TwinClassContext);
+  const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwinClasses } = useTwinClassSearchV1();
 
-  // NOTE: currently this function is never called
-  // TODO: investigate in context of https://alcosi.atlassian.net/browse/TWINFACES-76
-  async function getById(): Promise<undefined> {
-    return undefined;
+  async function getById(id: string) {
+    return fetchTwinClassById(id);
   }
 
   // TODO: Add debounce-logic after https://alcosi.atlassian.net/browse/TWINFACES-77
