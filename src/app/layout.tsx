@@ -1,7 +1,7 @@
 import { TooltipProvider } from "@/components/base/tooltip";
 import { MainLayout } from "@/components/layout/main-layout";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ApiContextProvider } from "@/feature/api-context-provider";
+import { ApiContextProvider } from "@/features/api-context-provider";
 import { cn } from "@/shared/libs";
 import type { Metadata } from "next";
 import { PublicEnvScript } from "next-runtime-env";
