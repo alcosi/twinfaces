@@ -19,34 +19,38 @@ export function TwinLinks() {
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
 
-  const [createEditLinkDialogOpen, setCreateEditLinkDialogOpen] =
-    useState<boolean>(false);
-  const [editedLink, setEditedLink] = useState<any | null>(null);
+  // const [createEditLinkDialogOpen, setCreateEditLinkDialogOpen] =
+  //   useState<boolean>(false);
+  // const [editedLink, setEditedLink] = useState<any | null>(null);
 
   const columns: ColumnDef<TwinLinkView>[] = [
     {
       accessorKey: "id",
-      header: "Id",
+      header: "ID",
       cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "linkId",
-      header: "Link Id",
+      header: "Link ID",
       cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "dstTwinId",
-      header: "Dst twin Id",
+      header: "Destination Twin",
       cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "createdByUserId",
-      header: "Created by user Id",
+      header: "Created by User",
       cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "createdAt",
       header: "Created at",
+      cell: ({ row: { original } }) =>
+        original.createdAt
+          ? new Date(original.createdAt).toLocaleDateString()
+          : "",
     },
   ];
 
@@ -72,11 +76,13 @@ export function TwinLinks() {
         return { data: [], pageCount: 0 };
       }
 
-      const links =
-        data?.twinList?.[0]?.links?.[
-          type === "forward" ? "forwardLinks" : "backwardLinks"
-        ];
-      const linksData = links ? Object.values(links) : [];
+      const linksData = data?.twin?.links
+        ? Object.values(
+            data.twin.links[
+              type === "forward" ? "forwardLinks" : "backwardLinks"
+            ] || []
+          )
+        : [];
 
       return {
         data: linksData,
@@ -89,15 +95,15 @@ export function TwinLinks() {
     }
   }
 
-  function createLink() {
-    setEditedLink(null);
-    setCreateEditLinkDialogOpen(true);
-  }
+  // function createLink() {
+  //   setEditedLink(null);
+  //   setCreateEditLinkDialogOpen(true);
+  // }
 
-  function editLink(field: TwinClassField) {
-    setEditedLink(field);
-    setCreateEditLinkDialogOpen(true);
-  }
+  // function editLink(field: TwinClassField) {
+  //   setEditedLink(field);
+  //   setCreateEditLinkDialogOpen(true);
+  // }
 
   if (!twin) {
     return <LoadingOverlay />;
@@ -114,10 +120,10 @@ export function TwinLinks() {
           fetcher={(paginationState, filters) =>
             fetchLinks("forward", paginationState, filters)
           }
-          createButton={{
-            enabled: true,
-            onClick: createLink,
-          }}
+          // createButton={{
+          //   enabled: true,
+          //   onClick: createLink,
+          // }}
           disablePagination={true}
           pageSizes={[10, 20, 50]}
           customizableColumns={{
@@ -141,10 +147,10 @@ export function TwinLinks() {
         fetcher={(paginationState, filters) =>
           fetchLinks("backward", paginationState, filters)
         }
-        createButton={{
-          enabled: true,
-          onClick: createLink,
-        }}
+        // createButton={{
+        //   enabled: true,
+        //   onClick: createLink,
+        // }}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
         customizableColumns={{
