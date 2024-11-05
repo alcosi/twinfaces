@@ -5,6 +5,7 @@ import {
   buildFilterFields,
   mapToPermissionApiFilters,
   type Permission,
+  PermissionResourceLink,
 } from "@/entities/permission";
 import { ApiContext } from "@/lib/api/api";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
