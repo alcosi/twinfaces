@@ -1,4 +1,4 @@
-import { components, paths } from "@/lib/api/generated/schema";
+import { components, paths } from "@/shared/api/generated/schema";
 
 export type TwinClassCreateRq =
   paths["/private/twin_class/v1"]["post"]["requestBody"]["content"]["application/json"];
