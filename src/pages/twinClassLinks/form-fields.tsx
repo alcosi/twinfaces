@@ -4,50 +4,61 @@ import {
   TWIN_CLASS_LINK_STRENGTH,
   TWIN_CLASS_LINK_TYPES,
 } from "@/entities/twinClassLink";
+import { TwinClassSelectField } from "@/features/twinClass";
+import { Control, FieldValues, Path } from "react-hook-form";
 
-export const TwinClassLinkFormFields = ({
+export function TwinClassLinkFormFields<T extends FieldValues>({
   control,
-  isForward = true,
+  isForward,
 }: {
-  control: any;
+  control: Control<T>;
   isForward?: boolean;
-}) => (
-  <>
-    <TextFormField
-      control={control}
-      name={isForward ? "srcTwinClassId" : "dstTwinClassId"}
-      label={isForward ? "Source Twin Class ID" : "Destination Twin Class ID"}
-      disabled={isForward}
-    />
-    <TextFormField
-      control={control}
-      name={isForward ? "dstTwinClassId" : "srcTwinClassId"}
-      label={isForward ? "Destination Twin Class ID" : "Source Twin Class ID"}
-    />
-    <TextFormField control={control} name="name" label="Link Name" />
-    <ComboboxFormField
-      control={control}
-      name="type"
-      label="Link Type"
-      getById={async (id) => TWIN_CLASS_LINK_TYPES.find((i) => i.id === id)}
-      getItems={async () => TWIN_CLASS_LINK_TYPES}
-      getItemKey={({ id }) => id}
-      getItemLabel={({ label }) => label}
-      selectPlaceholder="Select..."
-      searchPlaceholder="Search..."
-      noItemsText="No data found"
-    />
-    <ComboboxFormField
-      control={control}
-      name="linkStrength"
-      label="Link Strength"
-      getById={async (id) => TWIN_CLASS_LINK_STRENGTH.find((i) => i.id === id)}
-      getItems={async () => TWIN_CLASS_LINK_STRENGTH}
-      getItemKey={({ id }) => id}
-      getItemLabel={({ label }) => label}
-      selectPlaceholder="Select..."
-      searchPlaceholder="Search..."
-      noItemsText="No data found"
-    />
-  </>
-);
+}) {
+  return (
+    <>
+      <TwinClassSelectField
+        control={control}
+        name={"srcTwinClassId" as Path<T>}
+        label="Source Twin Class"
+        disabled={isForward}
+      />
+      <TwinClassSelectField
+        control={control}
+        name={"dstTwinClassId" as Path<T>}
+        label="Destination Twin Class"
+        disabled={!isForward}
+      />
+      <TextFormField
+        control={control}
+        name={"name" as Path<T>}
+        label="Link Name"
+      />
+      <ComboboxFormField
+        control={control}
+        name={"type" as Path<T>}
+        label="Link Type"
+        getById={async (id) => TWIN_CLASS_LINK_TYPES.find((i) => i.id === id)}
+        getItems={async () => TWIN_CLASS_LINK_TYPES}
+        getItemKey={({ id }) => id}
+        getItemLabel={({ label }) => label}
+        selectPlaceholder="Select..."
+        searchPlaceholder="Search..."
+        noItemsText="No data found"
+      />
+      <ComboboxFormField
+        control={control}
+        name={"linkStrength" as Path<T>}
+        label="Link Strength"
+        getById={async (id) =>
+          TWIN_CLASS_LINK_STRENGTH.find((i) => i.id === id)
+        }
+        getItems={async () => TWIN_CLASS_LINK_STRENGTH}
+        getItemKey={({ id }) => id}
+        getItemLabel={({ label }) => label}
+        selectPlaceholder="Select..."
+        searchPlaceholder="Search..."
+        noItemsText="No data found"
+      />
+    </>
+  );
+}
