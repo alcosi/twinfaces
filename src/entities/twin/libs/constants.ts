@@ -1,14 +1,4 @@
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-
-const OWNER_TYPES = [
-  "SYSTEM",
-  "USER",
-  "BUSINESS_ACCOUNT",
-  "DOMAIN",
-  "DOMAIN_BUSINESS_ACCOUNT",
-  "DOMAIN_USER",
-  "DOMAIN_BUSINESS_ACCOUNT_USER",
-] as const;
+import { AutoFormValueType } from "@/components/auto-field";
 
 export enum FilterFields {
   twinIdList = "twinIdList",
