@@ -162,61 +162,61 @@ export default function CreateEditTwinStatusDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
         <DialogTrigger asChild>Open</DialogTrigger>
         <DialogHeader>
           <DialogTitle>{status ? "Edit status" : "Create status"}</DialogTitle>
         </DialogHeader>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-8 p-1">
-              {status?.id && <Input value={status?.id} disabled />}
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6"
+          >
+            {status?.id && <Input value={status?.id} disabled />}
 
-              <TextFormField
-                control={form.control}
-                name="key"
-                label="Key"
-                autoFocus={true}
-              />
+            <TextFormField
+              control={form.control}
+              name="key"
+              label="Key"
+              autoFocus={true}
+            />
 
-              <TextFormField control={form.control} name="name" label="Name" />
+            <TextFormField control={form.control} name="name" label="Name" />
 
-              <TextAreaFormField
-                control={form.control}
-                name="description"
-                label="Description"
-              />
+            <TextAreaFormField
+              control={form.control}
+              name="description"
+              label="Description"
+            />
 
-              <TextFormField
-                control={form.control}
-                name="logo"
-                label="Logo URL"
-              />
+            <TextFormField
+              control={form.control}
+              name="logo"
+              label="Logo URL"
+            />
 
-              <ColorPickerFormField
-                control={form.control}
-                name="backgroundColor"
-                label="Background color"
-              />
+            <ColorPickerFormField
+              control={form.control}
+              name="backgroundColor"
+              label="Background color"
+            />
 
-              <ColorPickerFormField
-                control={form.control}
-                name="fontColor"
-                label="Font color"
-              />
+            <ColorPickerFormField
+              control={form.control}
+              name="fontColor"
+              label="Font color"
+            />
 
-              {error && <Alert variant="destructive">{error}</Alert>}
-            </div>
-
-            <div className="sticky bottom-0 bg-background">
-              <DialogFooter className="sm:justify-end py-4">
-                <Button type="submit" loading={form.formState.isSubmitting}>
-                  Save
-                </Button>
-              </DialogFooter>
-            </div>
+            {error && <Alert variant="destructive">{error}</Alert>}
           </form>
         </Form>
+
+        <DialogFooter className="sm:justify-end bg-background p-6">
+          <Button type="submit" loading={form.formState.isSubmitting}>
+            Save
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

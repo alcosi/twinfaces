@@ -127,6 +127,7 @@ function CrudDataTableInternal<TData extends Identifiable, TValue>(
     setTableFilters(values);
     filters?.onChange(values);
   }
+
   useEffect(() => {
     tableRef.current?.resetPage();
     refresh();
@@ -237,7 +238,7 @@ function CrudDataTableInternal<TData extends Identifiable, TValue>(
 
       {dialogForm && (
         <Dialog open={dialogState.open} onOpenChange={handleOpenChange}>
-          <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+          <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
             <DialogHeader>
               <DialogTitle>
                 {dialogState.selectedRowId ? "Edit" : "Create"}
@@ -247,25 +248,21 @@ function CrudDataTableInternal<TData extends Identifiable, TValue>(
             <Form {...dialogForm}>
               <form
                 onSubmit={dialogForm.handleSubmit(onSubmit)}
-                className="space-y-8"
+                className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6"
               >
-                <div className="space-y-8 p-1">
-                  {renderFormFields && renderFormFields()}
-                </div>
-
-                <div className="sticky bottom-0 bg-background">
-                  <DialogFooter className="sm:justify-end py-4">
-                    <Button
-                      type="submit"
-                      loading={dialogForm.formState.isSubmitting}
-                      disabled={!dialogForm.formState.isDirty}
-                    >
-                      Save
-                    </Button>
-                  </DialogFooter>
-                </div>
+                {renderFormFields && renderFormFields()}
               </form>
             </Form>
+
+            <DialogFooter className="sm:justify-end bg-background p-6">
+              <Button
+                type="submit"
+                loading={dialogForm.formState.isSubmitting}
+                disabled={!dialogForm.formState.isDirty}
+              >
+                Save
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}

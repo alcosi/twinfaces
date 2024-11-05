@@ -102,54 +102,54 @@ export default function CreateTwinflowDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
         <DialogHeader>
           <DialogTitle>{"Create Twinflow"}</DialogTitle>
         </DialogHeader>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-8 p-1">
-              <TextFormField
-                control={form.control}
-                name="name"
-                label="Name"
-                autoFocus={true}
-              />
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6"
+          >
+            <TextFormField
+              control={form.control}
+              name="name"
+              label="Name"
+              autoFocus={true}
+            />
 
-              <TextAreaFormField
-                control={form.control}
-                name="description"
-                label="Description"
-              />
+            <TextAreaFormField
+              control={form.control}
+              name="description"
+              label="Description"
+            />
 
-              <ComboboxFormField
-                control={form.control}
-                name="initialStatusId"
-                label="Initial status"
-                getById={findStatusById}
-                required={true}
-                getItems={getStatusesBySearch}
-                getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-                getItemLabel={(c) => {
-                  let label = c?.key ?? "";
-                  if (c.name) label += ` (${c.name})`;
-                  return label;
-                }}
-                selectPlaceholder={"Select status..."}
-                searchPlaceholder={"Search status..."}
-                noItemsText={"No statuses found"}
-              />
-            </div>
-
-            <div className="sticky bottom-0 bg-background">
-              <DialogFooter className="sm:justify-end py-4">
-                <Button type="submit" loading={form.formState.isSubmitting}>
-                  Save
-                </Button>
-              </DialogFooter>
-            </div>
+            <ComboboxFormField
+              control={form.control}
+              name="initialStatusId"
+              label="Initial status"
+              getById={findStatusById}
+              required={true}
+              getItems={getStatusesBySearch}
+              getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
+              getItemLabel={(c) => {
+                let label = c?.key ?? "";
+                if (c.name) label += ` (${c.name})`;
+                return label;
+              }}
+              selectPlaceholder={"Select status..."}
+              searchPlaceholder={"Search status..."}
+              noItemsText={"No statuses found"}
+            />
           </form>
         </Form>
+
+        <DialogFooter className="sm:justify-end bg-background p-6">
+          <Button type="submit" loading={form.formState.isSubmitting}>
+            Save
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

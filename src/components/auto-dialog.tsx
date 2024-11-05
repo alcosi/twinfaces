@@ -97,28 +97,31 @@ export function AutoDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
         <DialogTrigger asChild>Open</DialogTrigger>
         <DialogHeader>
           {settings?.title && <DialogTitle>{settings.title}</DialogTitle>}
         </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(internalSubmit)}
-            className="space-y-8"
-          >
-            {settings?.value &&
-              keys.map((key) => renderField(key, settings.value[key]))}
 
-            {error && <Alert variant="destructive">{error}</Alert>}
+        <div className={"overflow-y-auto max-h-[60vh] px-4"}>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(internalSubmit)}
+              className="space-y-8 py-6"
+            >
+              {settings?.value &&
+                keys.map((key) => renderField(key, settings.value[key]))}
 
-            <DialogFooter className="sm:justify-end pb-4">
-              <Button type="submit" loading={form.formState.isSubmitting}>
-                Save
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              {error && <Alert variant="destructive">{error}</Alert>}
+            </form>
+          </Form>
+        </div>
+
+        <DialogFooter className="sm:justify-end p-6">
+          <Button type="submit" loading={form.formState.isSubmitting}>
+            Save
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

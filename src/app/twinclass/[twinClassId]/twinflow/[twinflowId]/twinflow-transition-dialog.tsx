@@ -209,14 +209,18 @@ export function TwinflowTransitionCreateEditDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
         <DialogHeader>
           <DialogTitle>
             {transition ? "Edit transition" : "Create transition"}
           </DialogTitle>
         </DialogHeader>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6"
+          >
             {transition?.id && <Input value={transition?.id} disabled />}
 
             <ComboboxFormField
@@ -282,14 +286,14 @@ export function TwinflowTransitionCreateEditDialog({
             {Object.values(form.formState.errors).length > 0 && (
               <Alert variant="destructive">There are errors in the form</Alert>
             )}
-
-            <DialogFooter className="sm:justify-end">
-              <Button type="submit" loading={form.formState.isSubmitting}>
-                Save
-              </Button>
-            </DialogFooter>
           </form>
         </Form>
+
+        <DialogFooter className="sm:justify-end bg-background p-6">
+          <Button type="submit" loading={form.formState.isSubmitting}>
+            Save
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
