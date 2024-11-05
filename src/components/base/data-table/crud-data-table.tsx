@@ -27,11 +27,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { useForm } from "react-hook-form";
+import { DefaultValues, useForm } from "react-hook-form";
 
-export interface FiltersState {
+export interface FiltersState<TFilterKeys extends string = string> {
   search?: string;
-  filters: { [key: string]: any };
+  filters: Record<TFilterKeys, any>;
 }
 
 interface CrudDataTableCreateButtonProps {
@@ -45,9 +45,9 @@ interface CrudDataTableSearchProps {
   placeholder?: string;
 }
 
-interface CrudDataTableFiltersProps {
-  filtersInfo: { [key: string]: AutoFormValueInfo };
-  onChange: (values: { [key: string]: any }) => Promise<any>;
+interface CrudDataTableFiltersProps<TFilterKeys extends string = string> {
+  filtersInfo: Record<TFilterKeys, AutoFormValueInfo>;
+  onChange: (values: Record<TFilterKeys, any>) => Promise<any>;
 }
 
 interface CrudDataTableCustomizableColumnsProps {
@@ -55,11 +55,11 @@ interface CrudDataTableCustomizableColumnsProps {
   defaultVisibleKeys?: string[];
 }
 
-interface CrudDataTableProps<TData, TValue>
+interface CrudDataTableProps<TData, TValue, TFilterKeys extends string = string>
   extends Omit<DataTableProps<TData, TValue>, "fetcher"> {
   fetcher: (
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState<TFilterKeys>
   ) => Promise<{ data: TData[]; pageCount: number }>;
   title?: string;
   createButton?: CrudDataTableCreateButtonProps;
@@ -72,7 +72,7 @@ interface CrudDataTableProps<TData, TValue>
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
 
-function CrudDataTableInternal<TData, TValue>(
+function CrudDataTableInternal<TData, TValue, TFilterKeys extends string>(
   {
     title,
     createButton,
@@ -83,11 +83,13 @@ function CrudDataTableInternal<TData, TValue>(
     className,
     fetcher,
     ...props
-  }: CrudDataTableProps<TData, TValue>,
+  }: CrudDataTableProps<TData, TValue, TFilterKeys>,
   ref: ForwardedRef<DataTableHandle>
 ) {
   const [tableSearch, setTableSearch] = useState<string>("");
-  const [tableFilters, setTableFilters] = useState<{ [key: string]: any }>({});
+  const [tableFilters, setTableFilters] = useState<Record<TFilterKeys, any>>(
+    {} as Record<TFilterKeys, any>
+  );
   const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(
     customizableColumns?.defaultVisibleKeys ?? []
   );
@@ -105,7 +107,7 @@ function CrudDataTableInternal<TData, TValue>(
     tableRef.current?.refresh();
   }
 
-  async function onFiltersChange(values: { [key: string]: any }) {
+  async function onFiltersChange(values: Record<TFilterKeys, any>) {
     setTableFilters(values);
     filters?.onChange(values);
   }
@@ -245,23 +247,26 @@ function CrudDataTableInternal<TData, TValue>(
   );
 }
 
-interface FiltersPopoverProps {
-  filtersInfo: { [key: string]: AutoFormValueInfo };
-  onChange: (values: { [key: string]: any }) => Promise<any>;
+interface FiltersPopoverProps<TFilterKeys extends string = string> {
+  filtersInfo: Record<TFilterKeys, AutoFormValueInfo>;
+  onChange: (values: Record<TFilterKeys, any>) => Promise<any>;
 }
 
-function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
+function FiltersPopover<TFilterKeys extends string = string>({
+  filtersInfo,
+  onChange,
+}: FiltersPopoverProps<TFilterKeys>) {
   const [open, setOpen] = useState(false);
 
-  const keys = Object.keys(filtersInfo);
+  const keys = Object.keys(filtersInfo) as TFilterKeys[];
 
   const form = useForm({
     defaultValues: Object.fromEntries(
       keys.map((key) => [key, filtersInfo[key]!.defaultValue ?? ""])
-    ),
+    ) as DefaultValues<Record<TFilterKeys, any>>,
   });
 
-  async function internalSubmit(newValue: object) {
+  async function internalSubmit(newValue: Record<TFilterKeys, any>) {
     console.log("submit", newValue);
     try {
       await onChange(newValue);
@@ -275,7 +280,7 @@ function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
     form.reset(undefined, { keepDefaultValues: true });
 
     try {
-      await onChange({});
+      await onChange({} as Record<TFilterKeys, any>);
       setOpen(false);
     } catch (e) {
       console.error("Failed to reset FiltersPopover", e);

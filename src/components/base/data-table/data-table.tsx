@@ -142,7 +142,7 @@ function DataTableInternal<TData, TValue>(
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => onRowClick?.(row.original)}
-                  className={cn(onRowClick != null && "cursor-pointer")}
+                  className={cn(onRowClick && "cursor-pointer")}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
