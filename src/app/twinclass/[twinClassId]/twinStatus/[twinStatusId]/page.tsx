@@ -33,14 +33,14 @@ export default function TwinClassPage({
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Twin Classes", href: "/twinclass" },
-      { label: "Twin Class", href: `/twinclass/${twinClass?.id}#statuses` },
+      { label: "Classes", href: "/twinclass" },
+      { label: twinClass?.name!, href: `/twinclass/${twinClass?.id}#statuses` },
       {
         label: "Status",
         href: `/twinclass/${twinClass?.id}/twinStatus/${twinStatusId}`,
       },
     ]);
-  }, [twinClass?.id, twinStatusId]);
+  }, [twinClass?.id, twinClass?.name, twinStatusId]);
 
   function fetchTwinClassData() {
     if (twinStatusId) {

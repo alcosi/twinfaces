@@ -97,7 +97,7 @@ export default function TwinClasses() {
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Twin Classes", href: "/twinclass" }]);
+    setBreadcrumbs([{ label: "Classes", href: "/twinclass" }]);
   }, []);
 
   const findTwinClassById = useCallback(

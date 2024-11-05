@@ -32,14 +32,17 @@ export default function TwinflowPage({
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Twin Classes", href: "/twinclass" },
-      { label: "Twin Class", href: `/twinclass/${twinClass?.id}#twinflows` },
+      { label: "Classes", href: "/twinclass" },
+      {
+        label: twinClass?.name!,
+        href: `/twinclass/${twinClass?.id}#twinflows`,
+      },
       {
         label: "Twin Flow",
         href: `/twinclass/${twinClass?.id}/twinflow/${twinflowId}`,
       },
     ]);
-  }, [twinClass?.id, twinflowId]);
+  }, [twinClass?.id, twinClass?.name, twinflowId]);
 
   function fetchTwinflowData() {
     setLoading(true);
