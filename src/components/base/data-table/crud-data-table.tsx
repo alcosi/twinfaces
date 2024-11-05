@@ -7,6 +7,7 @@ import {
   DataTable,
   DataTableHandle,
   DataTableProps,
+  DataTableRow,
 } from "@/components/base/data-table/data-table";
 import { Form } from "@/components/base/form";
 import { Input } from "@/components/base/input";
@@ -55,8 +56,11 @@ interface CrudDataTableCustomizableColumnsProps {
   defaultVisibleKeys?: string[];
 }
 
-interface CrudDataTableProps<TData, TValue, TFilterKeys extends string = string>
-  extends Omit<DataTableProps<TData, TValue>, "fetcher"> {
+interface CrudDataTableProps<
+  TData extends DataTableRow<TData>,
+  TValue,
+  TFilterKeys extends string = string,
+> extends Omit<DataTableProps<TData, TValue>, "fetcher"> {
   fetcher: (
     pagination: PaginationState,
     filters: FiltersState<TFilterKeys>
@@ -72,7 +76,11 @@ interface CrudDataTableProps<TData, TValue, TFilterKeys extends string = string>
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
 
-function CrudDataTableInternal<TData, TValue, TFilterKeys extends string>(
+function CrudDataTableInternal<
+  TData extends DataTableRow<TData>,
+  TValue,
+  TFilterKeys extends string,
+>(
   {
     title,
     createButton,

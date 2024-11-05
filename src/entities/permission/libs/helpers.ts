@@ -1,4 +1,5 @@
 import { AutoFormValueInfo } from "@/components/auto-field";
+import { RelatedObjects } from "@/shared/api";
 import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
 import {
   Permission,
@@ -68,4 +69,14 @@ export function buildFilterFields(
     },
     descriptionLikeList: FILTERS.descriptionLikeList,
   };
+}
+
+export function groupPermissionsByGroupId(
+  permissions: Permission[],
+  permissionGroupMap: RelatedObjects["permissionGroupMap"] = {}
+) {
+  return Object.values(permissionGroupMap).map((group) => ({
+    ...group,
+    subRows: permissions.filter((p) => p.groupId === group.id),
+  }));
 }

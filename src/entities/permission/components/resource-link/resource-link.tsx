@@ -1,4 +1,4 @@
-import { isFullString } from "@/shared/libs";
+import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 import { Key } from "lucide-react";
 import { Permission } from "../../api";
@@ -26,7 +26,7 @@ export const PermissionResourceLink = ({
           : undefined
       }
       getDisplayName={(data) =>
-        isFullString(data.name) ? data.name : data.key!
+        isPopulatedString(data.name) ? data.name : data.key!
       }
       getLink={() => `/permission/${data.id}`}
     />

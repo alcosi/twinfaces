@@ -1,4 +1,4 @@
-import { isFullString } from "@/shared/libs";
+import { isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
 import { User as UserIcon } from "lucide-react";
 import { User } from "../../libs";
@@ -26,7 +26,7 @@ export const UserResourceLink = ({ data, disabled, withTooltip }: Props) => {
         withTooltip ? (data) => <UserResourceTooltip data={data} /> : undefined
       }
       getDisplayName={(data) =>
-        isFullString(data.fullName) ? data.fullName : "N/A"
+        isPopulatedString(data.fullName) ? data.fullName : "N/A"
       }
       getLink={() => `/twin`}
     />

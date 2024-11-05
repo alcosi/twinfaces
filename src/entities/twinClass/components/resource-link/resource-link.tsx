@@ -1,4 +1,4 @@
-import { isFullString } from "@/shared/libs";
+import { isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
 import { LayoutTemplate } from "lucide-react";
 import { TwinClass_DETAILED } from "../../libs";
@@ -28,7 +28,7 @@ export const TwinClassResourceLink = ({
           : undefined
       }
       getDisplayName={(data) =>
-        isFullString(data.name) ? data.name : data.key
+        isPopulatedString(data.name) ? data.name : data.key
       }
       getLink={(data) => `/twinclass/${data.id}`}
     />

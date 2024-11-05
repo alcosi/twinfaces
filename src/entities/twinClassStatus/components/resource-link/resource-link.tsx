@@ -1,5 +1,5 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { isFullString } from "@/shared/libs";
+import { isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
 import { CircleDot } from "lucide-react";
 import { useContext } from "react";
@@ -35,7 +35,9 @@ export function TwinClassStatusResourceLink({
           ? (data) => <TwinClassStatusResourceTooltip data={data} />
           : undefined
       }
-      getDisplayName={(data) => (isFullString(data.name) ? data.name : "N/A")}
+      getDisplayName={(data) =>
+        isPopulatedString(data.name) ? data.name : "N/A"
+      }
       getLink={(data) => `/twinclass/${twinClassId}/twinStatus/${data.id}`}
     />
   );

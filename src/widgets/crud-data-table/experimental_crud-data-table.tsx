@@ -6,6 +6,7 @@ import {
   DataTable,
   DataTableHandle,
   DataTableProps,
+  DataTableRow,
 } from "@/components/base/data-table/data-table";
 import {
   Dialog,
@@ -29,7 +30,6 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { CrudDataTableHeader } from "./header";
-import { Identifiable } from "@/shared/libs";
 
 interface FiltersState {
   search?: string;
@@ -51,7 +51,7 @@ interface CrudDataTableCustomizableColumnsProps {
   defaultVisibleKeys?: string[];
 }
 
-interface CrudDataTableProps<TData extends Identifiable, TValue>
+interface CrudDataTableProps<TData extends DataTableRow<TData>, TValue>
   extends Omit<DataTableProps<TData, TValue>, "fetcher"> {
   fetcher: (
     pagination: PaginationState,
@@ -80,7 +80,7 @@ export const Experimental_CrudDataTable = fixedForwardRef(
   CrudDataTableInternal
 );
 
-function CrudDataTableInternal<TData extends Identifiable, TValue>(
+function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   {
     title,
     search,

@@ -1,5 +1,5 @@
 import { Button } from "@/components/base/button";
-import { isFullString, stopPropagation } from "@/shared/libs";
+import { isPopulatedString, stopPropagation } from "@/shared/libs";
 import { Avatar } from "@/shared/ui";
 import { Check, Copy, LayoutTemplate, Link, X } from "lucide-react";
 import React from "react";
@@ -50,7 +50,7 @@ export const TwinClassResourceTooltip = ({ data }: Props) => {
 
         <div className="flex flex-col justify-end h-16">
           <div className="font-semibold text-lg">
-            {isFullString(data.name) ? data.name : "N/A"}
+            {isPopulatedString(data.name) ? data.name : "N/A"}
           </div>
           <div className="text-sm">{data.key}</div>
         </div>

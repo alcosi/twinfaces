@@ -1,11 +1,7 @@
 "use client";
 
 import { TwinClassDialog } from "@/app/twinclass/twin-class-dialog";
-import { AutoFormValueInfo } from "@/components/auto-field";
-import {
-  CrudDataTable,
-  FiltersState,
-} from "@/components/base/data-table/crud-data-table";
+import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { ImageWithFallback } from "@/components/image-with-fallback";

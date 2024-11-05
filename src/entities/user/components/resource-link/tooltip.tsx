@@ -1,5 +1,5 @@
 import { Button } from "@/components/base/button";
-import { isFullString, stopPropagation } from "@/shared/libs";
+import { isPopulatedString, stopPropagation } from "@/shared/libs";
 import { Avatar } from "@/shared/ui";
 import { Copy, User as UserIcon } from "lucide-react";
 import React from "react";
@@ -42,7 +42,7 @@ export function UserResourceTooltip({ data }: Props) {
 
         <div className="flex flex-col justify-end h-16">
           <div className="font-semibold text-lg">
-            {isFullString(data.fullName) ? data.fullName : "N/A"}
+            {isPopulatedString(data.fullName) ? data.fullName : "N/A"}
           </div>
           <div className="text-sm">{data.email}</div>
         </div>

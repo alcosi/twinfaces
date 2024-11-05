@@ -1,6 +1,7 @@
 import { components } from "@/shared/api/generated/schema";
 
 export type Permission = components["schemas"]["PermissionV1"];
+export type PermissionGroup = components["schemas"]["PermissionGroupV1"];
 
 export type PermissionApiFilterFields =
   | "idList"

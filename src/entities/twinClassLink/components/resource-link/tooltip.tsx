@@ -1,6 +1,6 @@
 import { Button } from "@/components/base/button";
 import { TwinClassLink } from "@/entities/twinClassLink";
-import { isFullString } from "@/shared/libs/helpers";
+import { isPopulatedString } from "@/shared/libs";
 import { Copy, Link, Link2 } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
@@ -46,7 +46,7 @@ export function TwinClassLinkResourceTooltip({ data, twinClassId }: Props) {
 
         <div className="flex flex-col justify-end h-16">
           <div className="font-semibold text-lg">
-            {isFullString(data.name) ? data.name : "N/A"}
+            {isPopulatedString(data.name) ? data.name : "N/A"}
           </div>
         </div>
       </header>

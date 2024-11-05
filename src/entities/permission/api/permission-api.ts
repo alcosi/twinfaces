@@ -14,7 +14,8 @@ export function createPermissionApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
-          showPermission2PermissionGroupMode: "HIDE",
+          lazyRelation: false,
+          showPermission2PermissionGroupMode: "DETAILED",
           showPermissionMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,

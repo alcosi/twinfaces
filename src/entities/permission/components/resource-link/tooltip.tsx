@@ -1,6 +1,6 @@
 import { Button } from "@/components/base/button";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { isFullString, stopPropagation } from "@/shared/libs";
+import { isPopulatedString, stopPropagation } from "@/shared/libs";
 import { Copy, Key, Link } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
@@ -44,7 +44,7 @@ export function PermissionResourceTooltip({ data }: Props) {
 
         <div className="flex flex-col justify-end h-16 overflow-hidden">
           <div className="font-semibold text-lg truncate whitespace-nowrap">
-            {isFullString(data.name) ? data.name : "N/A"}
+            {isPopulatedString(data.name) ? data.name : "N/A"}
           </div>
           <div className="text-sm truncate whitespace-nowrap">{data.key}</div>
         </div>

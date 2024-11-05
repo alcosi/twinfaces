@@ -16,7 +16,6 @@ export const toArray = <T>(value: T | T[] | undefined | null): T[] => {
 
 // Warning: temp solution
 // TODO: Find better solution
-
 export const toArrayOfString = <T>(input: unknown, key?: keyof T): string[] => {
   // Check if the input is an array
   if (!Array.isArray(input)) {
@@ -52,12 +51,4 @@ export const createEnum = <T extends string>(values: T[]): { [K in T]: K } => {
 
 export function stopPropagation(e: React.MouseEvent) {
   return e.stopPropagation();
-}
-
-export function isEmptyString(str: unknown): str is string {
-  return typeof str === "string" && str.trim().length === 0;
-}
-
-export function isFullString(str: unknown): str is string {
-  return typeof str === "string" && str.trim().length > 0;
 }
