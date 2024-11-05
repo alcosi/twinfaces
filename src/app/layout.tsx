@@ -9,6 +9,7 @@ import { Inter } from "next/font/google";
 import React from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { BreadcrumbProvider } from "@/features/breadcrumb";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -46,7 +47,9 @@ export default function RootLayout({
         >
           <ApiContextProvider>
             <TooltipProvider>
-              <SidebarLayout>{children}</SidebarLayout>
+              <BreadcrumbProvider>
+                <SidebarLayout>{children}</SidebarLayout>
+              </BreadcrumbProvider>
             </TooltipProvider>
           </ApiContextProvider>
 
