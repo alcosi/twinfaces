@@ -4,6 +4,7 @@ import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
 import { TwinGeneral } from "@/app/twin/[twinId]/twin-general";
 import { TwinLinks } from "@/app/twin/[twinId]/twin-links";
 import { TwinFields } from "@/app/twin/[twinId]/twin-fields";
+import { TwinComments } from "@/app/twin/[twinId]/twin-comments ";
 
 export default function TwinPage() {
   const sections: Section[] = [
@@ -21,6 +22,11 @@ export default function TwinPage() {
       key: "links",
       label: "Links",
       content: <TwinLinks />,
+    },
+    {
+      key: "comments",
+      label: "Comments",
+      content: <TwinComments />,
     },
   ];
 
