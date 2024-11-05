@@ -1,17 +1,14 @@
-import {
-  TwinClassField,
-  TwinFlow,
-  TwinFlowTransition,
-} from "@/lib/api/api-types";
-import { useContext, useEffect, useRef, useState } from "react";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ColumnDef } from "@tanstack/table-core";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
-import { TwinflowTransitionCreateEditDialog } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-transition-dialog";
-import { useRouter } from "next/navigation";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { TwinflowTransitionCreateEditDialog } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-transition-dialog";
+import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
+import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { TwinClassField } from "@/entities/twinClass";
 import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { TwinFlow, TwinFlowTransition } from "@/entities/twinFlow";
+import { ColumnDef } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useRef, useState } from "react";
 
 export function TwinflowTransitions({
   twinflow,

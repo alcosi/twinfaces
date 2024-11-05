@@ -20,7 +20,7 @@ import {
   TwinClassStatusResourceLink,
 } from "@/entities/twinClassStatus";
 import { User, UserResourceLink } from "@/entities/user";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";

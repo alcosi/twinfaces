@@ -1,8 +1,5 @@
-import {
-  CreateLinkRequestBody,
-  UpdateLinkRequestBody,
-} from "@/entities/twinClassLink";
-import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { CreateLinkRequestBody, UpdateLinkRequestBody } from "./types";
 
 export function createTwinClassLinksApi(settings: ApiSettings) {
   const getLinks = async ({ twinClassId }: { twinClassId: string }) => {

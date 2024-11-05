@@ -6,8 +6,8 @@ import {
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { ApiContext } from "@/lib/api/api";
-import { TwinClassField } from "@/lib/api/api-types";
+import { ApiContext } from "@/shared/api";
+import { TwinClassField } from "@/entities/twinClass";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";

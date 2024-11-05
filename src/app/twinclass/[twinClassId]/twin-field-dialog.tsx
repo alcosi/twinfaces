@@ -1,9 +1,5 @@
-import { TwinClassField, TwinClassFieldCreateRq } from "@/lib/api/api-types";
-import { useContext, useEffect, useRef, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert } from "@/components/base/alert";
+import { Button } from "@/components/base/button";
 import {
   Dialog,
   DialogContent,
@@ -13,19 +9,23 @@ import {
 } from "@/components/base/dialog";
 import { Form } from "@/components/base/form";
 import { Input } from "@/components/base/input";
-import { Alert } from "@/components/base/alert";
-import { Button } from "@/components/base/button";
-import { toast } from "sonner";
 import {
   FeaturerInput,
   FeaturerTypes,
   FeaturerValue,
 } from "@/components/featurer-input";
+import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
 import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
-import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
+import { TwinClassField, TwinClassFieldCreateRq } from "@/entities/twinClass";
+import { ApiContext } from "@/shared/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 interface CreateEditTwinFieldDialogProps {
   open: boolean;

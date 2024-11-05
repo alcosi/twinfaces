@@ -1,9 +1,9 @@
-import { TwinUpdateRq } from "@/lib/api/api-types";
+import { TwinUpdateRq } from "@/entities/twin";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { useContext, useState } from "react";
 import { AutoFormValueType } from "@/components/auto-field";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { z } from "zod";
 import { TwinContext } from "@/app/twin/[twinId]/twin-context";
 import {

@@ -1,10 +1,10 @@
 import {
   TwinFlowTransitionValidator,
   TwinFlowTransitionValidatorUpdate,
-} from "@/lib/api/api-types";
+} from "@/entities/twinFlow";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { useContext } from "react";
 import { FeaturerTypes } from "@/components/featurer-input";
 import { toast } from "sonner";

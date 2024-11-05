@@ -1,14 +1,12 @@
+import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
+import { AutoFormValueType } from "@/components/auto-field";
+import { FeaturerTypes } from "@/components/featurer-input";
 import {
-  TwinFlowTransition,
   TwinFlowTransitionTrigger,
   TwinFlowTransitionTriggerUpdate,
-} from "@/lib/api/api-types";
-import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
-import { NULLIFY_UUID_VALUE } from "@/lib/utils";
-import { AutoFormValueType } from "@/components/auto-field";
-import { ApiContext } from "@/lib/api/api";
+} from "@/entities/twinFlow";
+import { ApiContext } from "@/shared/api";
 import { useContext } from "react";
-import { FeaturerTypes } from "@/components/featurer-input";
 import { toast } from "sonner";
 
 export interface TwinflowTransitionTriggerDialogProps {

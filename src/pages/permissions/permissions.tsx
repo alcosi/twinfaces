@@ -7,7 +7,7 @@ import {
   type Permission,
   PermissionResourceLink,
 } from "@/entities/permission";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef, useState } from "react";
@@ -96,11 +96,11 @@ export function Permissions() {
         className="mb-10"
         ref={tableRef}
         columns={[
-          columnsMap.groupId,
-          columnsMap.id,
-          columnsMap.key,
-          columnsMap.name,
-          columnsMap.description,
+          columnsMap.groupId!,
+          columnsMap.id!,
+          columnsMap.key!,
+          columnsMap.name!,
+          columnsMap.description!,
         ]}
         fetcher={fetchPermissions}
         getRowId={(row) => row.id!}

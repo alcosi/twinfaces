@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 import { FocusScope } from "@radix-ui/react-focus-scope";
 import { DismissableLayer } from "@radix-ui/react-dismissable-layer";
 

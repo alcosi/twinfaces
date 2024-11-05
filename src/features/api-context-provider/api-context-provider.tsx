@@ -1,31 +1,20 @@
 "use client";
 
-import React, { createContext } from "react";
-import {
-  createTwinClassApi,
-  TwinClassApi,
-} from "@/lib/api/api-groups/twin-class-api";
-import createClient from "openapi-fetch";
-import { paths } from "@/lib/api/generated/schema";
-import { env } from "next-runtime-env";
-import {
-  createTwinStatusApi,
-  TwinStatusApi,
-} from "@/lib/api/api-groups/twin-status-api";
-import {
-  createFeaturerApi,
-  FeaturerApi,
-} from "@/lib/api/api-groups/featurer-api";
-import {
-  createTwinflowApi,
-  TwinflowApi,
-} from "@/lib/api/api-groups/twinflow-api";
-import { createTwinApi, TwinApi } from "@/lib/api/api-groups/twin-api";
+import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
+import { createTwinApi, TwinApi } from "@/entities/twin";
+import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
 import {
   createTwinClassLinksApi,
   TwinClassLinkApi,
-} from "@/lib/api/api-groups/twin-class-links-api";
+} from "@/entities/twinClassLink";
+import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinClassStatus";
+import { createTwinflowApi, TwinflowApi } from "@/entities/twinFlow";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
+import { ApiContext, ApiSettings } from "@/shared/api";
+import { paths } from "@/shared/api/generated/schema";
+import { env } from "next-runtime-env";
+import createClient from "openapi-fetch";
+import React from "react";
 
 export interface ApiContextProps {
   twinClass: TwinClassApi;
@@ -35,23 +24,6 @@ export interface ApiContextProps {
   twin: TwinApi;
   twinClassLink: TwinClassLinkApi;
   permission: PermissionApi;
-}
-
-export const ApiContext = createContext<ApiContextProps>({} as ApiContextProps);
-
-export interface ApiSettings {
-  domain: string;
-  authToken: string;
-  channel: string;
-  client: ReturnType<typeof createClient<paths>>;
-}
-
-export function getApiDomainHeaders(settings: ApiSettings) {
-  return {
-    DomainId: settings.domain,
-    AuthToken: settings.authToken,
-    Channel: settings.channel,
-  };
 }
 
 export function ApiContextProvider({

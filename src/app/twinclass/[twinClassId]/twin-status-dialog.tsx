@@ -1,7 +1,7 @@
 import {
   TwinClassStatusCreateRq,
   TwinClassStatusUpdateRq,
-} from "@/lib/api/api-types";
+} from "@/entities/twinClassStatus";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import { Form } from "@/components/base/form";
 import { Alert } from "@/components/base/alert";
 import { Button } from "@/components/base/button";

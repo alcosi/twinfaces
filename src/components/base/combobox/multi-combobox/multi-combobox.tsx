@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef } from "@/lib/utils";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import { Check, ChevronsUpDown } from "lucide-react";
 import {
   ForwardedRef,

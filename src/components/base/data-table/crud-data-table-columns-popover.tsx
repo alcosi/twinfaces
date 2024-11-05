@@ -5,7 +5,7 @@ import {
   PopoverTrigger,
 } from "@/components/base/popover";
 import { CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import {
   SortableContext,

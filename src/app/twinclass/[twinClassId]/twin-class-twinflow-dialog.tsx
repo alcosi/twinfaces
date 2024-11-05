@@ -1,9 +1,4 @@
-import {
-  TwinClassField,
-  TwinClassFieldCreateRq,
-  TwinFlowCreateRq,
-} from "@/lib/api/api-types";
-import { useContext, useState } from "react";
+import { Button } from "@/components/base/button";
 import {
   Dialog,
   DialogContent,
@@ -11,19 +6,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/base/dialog";
-import { Button } from "@/components/base/button";
 import { Form } from "@/components/base/form";
-import { z } from "zod";
-import { ApiContext } from "@/lib/api/api";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
 import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
-import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
-import { useClassStatuses } from "@/lib/useClassStatuses";
+import { useClassStatuses } from "@/entities/twinClassStatus";
+import { TwinFlowCreateRq } from "@/entities/twinFlow";
+import { ApiContext } from "@/shared/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 interface CreateEditTwinflowDialogProps {
   open: boolean;

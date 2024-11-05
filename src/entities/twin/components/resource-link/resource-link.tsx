@@ -1,7 +1,7 @@
 import { ResourceLink } from "@/shared/ui";
 import { Braces } from "lucide-react";
 import { TwinResourceTooltip } from "./tooltip";
-import { TwinBase } from "../../libs";
+import { TwinBase } from "../../api";
 
 type Props = {
   data: TwinBase;

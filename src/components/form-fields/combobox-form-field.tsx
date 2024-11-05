@@ -14,7 +14,7 @@ import {
   FormItemDescription,
   FormItemLabel,
 } from "@/components/form-fields/form-fields-common";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 import { ReactNode, useEffect, useRef } from "react";
 import { FieldValues } from "react-hook-form";
 

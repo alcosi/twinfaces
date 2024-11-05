@@ -4,7 +4,7 @@ import { Avatar, ColorTile } from "@/shared/ui";
 import { CircleDot, Copy, Link } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
-import { TwinClassStatus } from "../../libs";
+import { TwinClassStatus } from "../../api";
 
 type Props = {
   data: TwinClassStatus;

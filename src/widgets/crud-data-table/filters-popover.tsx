@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs";
 import { FilterIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

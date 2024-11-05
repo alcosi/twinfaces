@@ -1,8 +1,5 @@
-import { ApiSettings, getApiDomainHeaders } from "@/lib/api/api";
-import {
-  TwinClassStatusCreateRq,
-  TwinClassStatusUpdateRq,
-} from "@/lib/api/api-types";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { TwinClassStatusCreateRq, TwinClassStatusUpdateRq } from "./types";
 
 export function createTwinStatusApi(settings: ApiSettings) {
   function create({

@@ -1,6 +1,6 @@
 import { LoadingOverlay } from "@/components/base/loading";
 import { TwinBase } from "@/entities/twin";
-import { ApiContext } from "@/lib/api/api";
+import { ApiContext } from "@/shared/api";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
