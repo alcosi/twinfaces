@@ -16,7 +16,7 @@ export const UserResourceLink = ({ data, disabled, withTooltip }: Props) => {
   return (
     <ResourceLink
       IconComponent={() =>
-        data.avatar ? (
+        data?.avatar ? (
           <Avatar url={data.avatar} size="sm" />
         ) : (
           <UserIcon className="h-4 w-4" />

@@ -5,10 +5,10 @@ import { isPopulatedString, stopPropagation } from "@/shared/libs";
 import { Braces, Copy, Link } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
-import { TwinBase } from "../../api";
+import { Twin } from "../../api";
 
 type Props = {
-  data: TwinBase;
+  data: Twin;
   withTooltip?: boolean;
 };
 

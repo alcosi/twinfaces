@@ -6,13 +6,21 @@ import { TwinUpdateRq } from "./types";
 type TwinSearchApiFilters = Partial<
   Pick<
     components["schemas"]["TwinSearchRqV1"],
-    "twinIdList" | "twinNameLikeList" | "twinClassIdList" | "assignerUserIdList"
+    | "twinIdList"
+    | "twinNameLikeList"
+    | "twinClassIdList"
+    | "assignerUserIdList"
+    | "headTwinIdList"
+    | "tagDataListOptionIdList"
+    | "markerDataListOptionIdList"
+    | "statusIdList"
   >
 >;
 
 export function createTwinApi(settings: ApiSettings) {
   function search({
     pagination,
+    search,
     filters,
   }: {
     pagination: PaginationState;
@@ -29,6 +37,8 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2TwinClassMode: "DETAILED",
           showTwin2UserMode: "DETAILED",
           showTwin2StatusMode: "DETAILED",
+          showTwinMarker2DataListOptionMode: "DETAILED",
+          showTwinTag2DataListOptionMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

@@ -1,12 +1,12 @@
 import { LoadingOverlay } from "@/components/base/loading";
-import { TwinBase } from "@/entities/twin";
+import { Twin } from "@/entities/twin";
 import { ApiContext } from "@/shared/api";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface TwinContextProps {
   twinId: string;
-  twin: TwinBase | undefined;
+  twin: Twin | undefined;
   fetchTwinData: () => void;
 }
 
@@ -23,7 +23,7 @@ export function TwinContextProvider({
 }) {
   const api = useContext(ApiContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [twin, setTwin] = useState<TwinBase | undefined>(undefined);
+  const [twin, setTwin] = useState<Twin | undefined>(undefined);
 
   useEffect(() => {
     fetchTwinData();

@@ -1,21 +1,24 @@
 import { FiltersState } from "@/components/base/data-table/crud-data-table";
 import { TwinClassStatus } from "@/entities/twinClassStatus";
 import { RelatedObjects } from "@/shared/api";
-import { mapToChoice, toArray } from "@/shared/libs";
+import { mapToChoice, toArray, toArrayOfString } from "@/shared/libs";
 import { TwinClass_DETAILED } from "../../twinClass";
 import { User } from "../../user";
-import { TwinBase } from "../api";
+import { Twin } from "../api";
 import { FilterFields, FILTERS } from "./constants";
-import { Twin } from "./types";
 
 // List of filter keys for string-like filtering
 const stringLikeFilters = [FilterFields.twinNameLikeList];
 
 const arrayLikeFilters = [
   FilterFields.twinIdList,
-  FilterFields.statusIdList,
-  FilterFields.assignerUserIdList,
   FilterFields.twinClassIdList,
+  FilterFields.statusIdList,
+  FilterFields.createdByUserIdList,
+  FilterFields.assignerUserIdList,
+  FilterFields.headTwinIdList,
+  FilterFields.tagDataListOptionIdList,
+  FilterFields.markerDataListOptionIdList,
 ];
 
 // List of filter keys for choice-mapping
@@ -30,11 +33,13 @@ export const buildFilters = (filters: FiltersState): Record<string, any> => {
       if (stringLikeFilters.includes(filterKey as FilterFields)) {
         acc[filterKey] = filterValue ? [`%${filterValue}%`] : [];
       } else if (arrayLikeFilters.includes(filterKey as FilterFields)) {
-        acc[filterKey] = toArray(filterValue);
+        acc[filterKey] = toArrayOfString(toArray(filterValue));
       } else if (choiceMappingFilters.includes(filterKey as FilterFields)) {
         acc[filterKey] = mapToChoice(filterValue);
       } else {
-        acc[filterKey] = filterValue;
+        acc[filterKey] = Array.isArray(filterValue)
+          ? toArrayOfString(filterValue)
+          : filterValue;
       }
 
       return acc;
@@ -44,7 +49,7 @@ export const buildFilters = (filters: FiltersState): Record<string, any> => {
 };
 
 export const hydrateTwinFromMap = (
-  twinDTO: TwinBase,
+  twinDTO: Twin,
   relatedObjects?: RelatedObjects
 ): Twin => {
   const twin: Twin = Object.assign({}, twinDTO) as Twin;
