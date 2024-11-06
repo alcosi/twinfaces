@@ -1,6 +1,7 @@
 "use client";
 
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
+import { createPermissionApi, PermissionApi } from "@/entities/permission";
 import { createTwinApi, TwinApi } from "@/entities/twin";
 import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
 import {
@@ -9,7 +10,6 @@ import {
 } from "@/entities/twinClassLink";
 import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinClassStatus";
 import { createTwinflowApi, TwinflowApi } from "@/entities/twinFlow";
-import { createPermissionApi, PermissionApi } from "@/entities/permission";
 import { ApiContext, ApiSettings } from "@/shared/api";
 import { paths } from "@/shared/api/generated/schema";
 import { env } from "next-runtime-env";

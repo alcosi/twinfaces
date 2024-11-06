@@ -12,11 +12,12 @@ import {
   TwinClassResourceLink,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { ColumnDef } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 const columns: ColumnDef<TwinClass_DETAILED>[] = [
   {
@@ -93,6 +94,11 @@ export default function TwinClasses() {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  useEffect(() => {
+    setBreadcrumbs([{ label: "Twin Classes", href: "/twinclass" }]);
+  }, []);
 
   const findTwinClassById = useCallback(
     async (id: string) => {
@@ -114,7 +120,7 @@ export default function TwinClasses() {
   );
 
   return (
-    <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
+    <>
       <CrudDataTable
         ref={tableRef}
         columns={columns}
@@ -185,6 +191,6 @@ export default function TwinClasses() {
         }}
         onSuccess={() => tableRef.current?.refresh()}
       />
-    </main>
+    </>
   );
 }

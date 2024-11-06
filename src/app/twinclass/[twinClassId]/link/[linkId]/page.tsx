@@ -1,5 +1,5 @@
-import { TwinClassLinkPage } from "@/screens/twinClassLink";
+import { PageProps, TwinClassLinkPage } from "@/screens/twinClassLink";
 
-export default function Page() {
-  return <TwinClassLinkPage />;
+export default function Page(props: PageProps) {
+  return <TwinClassLinkPage {...props} />;
 }

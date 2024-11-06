@@ -156,7 +156,7 @@ export default function TwinsPage() {
   }
 
   return (
-    <main className="p-8 lg:flex lg:justify-center flex-col mx-auto">
+    <>
       <CrudDataTable
         ref={tableRef}
         columns={columns}
@@ -195,6 +195,6 @@ export default function TwinsPage() {
           ],
         }}
       />
-    </main>
+    </>
   );
 }

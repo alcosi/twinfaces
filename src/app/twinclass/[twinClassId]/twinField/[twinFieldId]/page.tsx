@@ -1,17 +1,14 @@
 "use client";
 
-import {
-  ReturnOptions,
-  Section,
-  SideNavLayout,
-} from "@/components/layout/side-nav-layout";
-import { LoadingOverlay } from "@/components/base/loading";
-import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/shared/api";
-import { toast } from "sonner";
-import { TwinFieldGeneral } from "@/app/twinclass/[twinClassId]/twinField/[twinFieldId]/twin-field-general";
-import { TwinClassField } from "@/entities/twinClass";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { TwinFieldGeneral } from "@/app/twinclass/[twinClassId]/twinField/[twinFieldId]/twin-field-general";
+import { LoadingOverlay } from "@/components/base/loading";
+import { TwinClassField } from "@/entities/twinClass";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { ApiContext } from "@/shared/api";
+import { Tab, TabsLayout } from "@/widgets";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface TwinFieldPageProps {
   params: {
@@ -28,6 +25,18 @@ export default function TwinClassPage({
   const [twinField, setTwinField] = useState<TwinClassField | undefined>(
     undefined
   );
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  useEffect(() => {
+    setBreadcrumbs([
+      { label: "Twin Classes", href: "/twinclass" },
+      { label: "Twin Class", href: `/twinclass/${twinClass?.id}#fields` },
+      {
+        label: "Field",
+        href: `/twinclass/${twinClass?.id}/twinField/${twinFieldId}`,
+      },
+    ]);
+  }, [twinClass?.id, twinFieldId]);
 
   useEffect(() => {
     fetchTwinClassData();
@@ -60,7 +69,7 @@ export default function TwinClassPage({
     }
   }
 
-  const sections: Section[] = twinField
+  const tabs: Tab[] = twinField
     ? [
         {
           key: "general",
@@ -72,21 +81,10 @@ export default function TwinClassPage({
       ]
     : [];
 
-  const returnOptions: ReturnOptions[] = [
-    {
-      path: `/twinclass/${twinClass?.id}#fields`,
-      label: "Back to class",
-    },
-  ];
-
   return (
     <div>
       {loading && <LoadingOverlay />}
-      {twinField && (
-        <SideNavLayout sections={sections} returnOptions={returnOptions}>
-          <h1 className="text-xl font-bold">{twinField.name}</h1>
-        </SideNavLayout>
-      )}
+      {twinField && <TabsLayout tabs={tabs} />}
     </div>
   );
 }

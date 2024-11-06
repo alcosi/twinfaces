@@ -234,7 +234,7 @@ export function TwinClassLinks() {
       <Experimental_CrudDataTable
         className="mb-10"
         ref={tableRefForward}
-        title="Forward Links"
+        title="Forward"
         columns={[
           columnsMap.id,
           columnsMap.name,
@@ -266,7 +266,7 @@ export function TwinClassLinks() {
 
       <Experimental_CrudDataTable
         ref={tableRefBackward}
-        title="Backward Links"
+        title="Backward"
         columns={[
           columnsMap.id,
           columnsMap.name,

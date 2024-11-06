@@ -1,13 +1,14 @@
 "use client";
 
-import { Section, SideNavLayout } from "@/components/layout/side-nav-layout";
-import { LoadingOverlay } from "@/components/base/loading";
-import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/shared/api";
-import { toast } from "sonner";
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { TwinStatusGeneral } from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twin-status-general";
+import { LoadingOverlay } from "@/components/base/loading";
 import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { ApiContext } from "@/shared/api";
+import { Tab, TabsLayout } from "@/widgets";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface TwinStatusPageProps {
   params: {
@@ -24,10 +25,22 @@ export default function TwinClassPage({
   const [twinStatus, setTwinStatus] = useState<TwinClassStatus | undefined>(
     undefined
   );
+  const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
     fetchTwinClassData();
   }, [twinStatusId]);
+
+  useEffect(() => {
+    setBreadcrumbs([
+      { label: "Twin Classes", href: "/twinclass" },
+      { label: "Twin Class", href: `/twinclass/${twinClass?.id}#statuses` },
+      {
+        label: "Status",
+        href: `/twinclass/${twinClass?.id}/twinStatus/${twinStatusId}`,
+      },
+    ]);
+  }, [twinClass?.id, twinStatusId]);
 
   function fetchTwinClassData() {
     if (twinStatusId) {
@@ -56,7 +69,7 @@ export default function TwinClassPage({
     }
   }
 
-  const sections: Section[] = twinStatus
+  const tabs: Tab[] = twinStatus
     ? [
         {
           key: "general",
@@ -74,19 +87,7 @@ export default function TwinClassPage({
   return (
     <div>
       {loading && <LoadingOverlay />}
-      {twinStatus && (
-        <SideNavLayout
-          sections={sections}
-          returnOptions={[
-            {
-              path: `/twinclass/${twinClass?.id}#statuses`,
-              label: "Back to class",
-            },
-          ]}
-        >
-          <h1 className="text-xl font-bold">{twinStatus.name}</h1>
-        </SideNavLayout>
-      )}
+      {twinStatus && <TabsLayout tabs={tabs} />}
     </div>
   );
 }
