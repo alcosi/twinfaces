@@ -3,54 +3,59 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { TwinStatusGeneral } from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twin-status-general";
 import { LoadingOverlay } from "@/components/base/loading";
+import { useFetchTwinClassById } from "@/entities/twinClass";
 import { TwinClassStatus } from "@/entities/twinClassStatus";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface TwinStatusPageProps {
   params: {
+    twinClassId: string;
     twinStatusId: string;
   };
 }
 
 export default function TwinClassPage({
-  params: { twinStatusId },
+  params: { twinClassId, twinStatusId },
 }: TwinStatusPageProps) {
   const api = useContext(ApiContext);
-  const { twinClass } = useContext(TwinClassContext);
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  const { twinClass: twinClassCtx } = useContext(TwinClassContext);
+  const [twinClass, setTwinClass] = useState(twinClassCtx);
+  const { fetchTwinClassById } = useFetchTwinClassById();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [twinStatus, setTwinStatus] = useState<TwinClassStatus | undefined>(
     undefined
   );
-  const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    fetchTwinClassData();
-  }, [twinStatusId]);
+    fetchData();
+  }, [twinStatusId, twinClassId]);
 
   useEffect(() => {
     setBreadcrumbs([
       { label: "Classes", href: "/twinclass" },
       { label: twinClass?.name!, href: `/twinclass/${twinClass?.id}#statuses` },
       {
-        label: "Status",
-        href: `/twinclass/${twinClass?.id}/twinStatus/${twinStatusId}`,
+        label: twinStatus?.name!,
+        href: `/twinclass/${twinClassId}/twinStatus/${twinStatusId}`,
       },
     ]);
-  }, [twinClass?.id, twinClass?.name, twinStatusId]);
+  }, [twinClass?.name, twinStatus?.name, twinClassId, twinStatusId]);
 
-  function fetchTwinClassData() {
+  function fetchData() {
+    setLoading(true);
+    const promises = [];
+
     if (twinStatusId) {
-      setLoading(true);
-
-      api.twinClass
-        .getStatusById({
-          twinStatusId: twinStatusId,
-        })
-        .then((response) => {
+      promises.push(
+        api.twinClass.getStatusById({ twinStatusId }).then((response) => {
           const data = response.data;
           if (!data || data.status != 0) {
             console.error("failed to fetch twin class", data);
@@ -61,12 +66,19 @@ export default function TwinClassPage({
           }
           setTwinStatus(data.twinStatus);
         })
-        .catch((e) => {
-          console.error("exception while fetching twin class", e);
-          toast.error("Failed to fetch twin class");
-        })
-        .finally(() => setLoading(false));
+      );
     }
+
+    if (isUndefined(twinClassCtx)) {
+      promises.push(fetchTwinClassById(twinClassId).then(setTwinClass));
+    }
+
+    Promise.all(promises)
+      .catch((e) => {
+        console.error("exception while fetching twin class", e);
+        toast.error("Failed to fetch twin class");
+      })
+      .finally(() => setLoading(false));
   }
 
   const tabs: Tab[] = twinStatus
@@ -75,10 +87,7 @@ export default function TwinClassPage({
           key: "general",
           label: "General",
           content: (
-            <TwinStatusGeneral
-              onChange={fetchTwinClassData}
-              status={twinStatus}
-            />
+            <TwinStatusGeneral onChange={fetchData} status={twinStatus} />
           ),
         },
       ]

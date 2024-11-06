@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/base/tooltip";
 import { ImageWithFallback } from "@/components/image-with-fallback";
+import { TwinClass } from "@/entities/twinClass";
 import {
   TwinClassStatus,
   TwinClassStatusResourceLink,
