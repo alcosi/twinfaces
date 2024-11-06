@@ -17,7 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef } from "@/shared/libs";
+import { cn, fixedForwardRef, useDebouncedValue } from "@/shared/libs";
 import { ForwardedRef, ReactNode, useEffect, useImperativeHandle } from "react";
 
 export type ComboboxHandle<T> = {
@@ -38,6 +38,7 @@ export interface ComboboxProps<T> {
   noItemsText?: string;
   buttonClassName?: string;
   contentClassName?: string;
+  searchDelay?: number;
 }
 
 export const Combobox = fixedForwardRef(ComboboxInternal);
@@ -51,12 +52,13 @@ function ComboboxInternal<T>(
   const [loadingItems, setLoadingItems] = React.useState(false);
   const [selected, setSelected] = React.useState<T | undefined>(undefined);
   const [search, setSearch] = React.useState("");
+  const debouncedSearch = useDebouncedValue(search, props.searchDelay ?? 300);
 
   useEffect(() => {
     if (!open) return;
     setLoadingItems(true);
     props
-      .getItems(search)
+      .getItems(debouncedSearch)
       .then((items) => {
         console.log("Loaded items", items);
         setItems(items);
@@ -64,12 +66,12 @@ function ComboboxInternal<T>(
       })
       .catch((e) => {
         setItems([]);
-        console.error(`Failed to load items with search ${search}`, e);
+        console.error(`Failed to load items with search ${debouncedSearch}`, e);
       })
       .finally(() => {
         setLoadingItems(false);
       });
-  }, [open, search]);
+  }, [open, debouncedSearch]);
 
   useEffect(() => {
     setSelected(props.value);

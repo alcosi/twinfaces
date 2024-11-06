@@ -6,7 +6,6 @@ import { buildFilters, hydrateTwinClassFromMap } from "../helpers";
 import { TwinClass_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
-// TODO: Apply `searchTerm` debouncing - https://alcosi.atlassian.net/browse/TWINFACES-77
 export const useTwinClassSearchV1 = () => {
   const api = useContext(ApiContext);
 
