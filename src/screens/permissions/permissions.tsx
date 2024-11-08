@@ -3,17 +3,30 @@ import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   buildFilterFields,
+  CreatePermissionRequestBody,
   mapToPermissionApiFilters,
+  PERMISSION_SCHEMA,
+  PermissionFormValues,
+  UpdatePermissionRequestBody,
+  usePermissionSearchV1,
   type Permission,
 } from "@/entities/permission";
 import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { PermissionsFormFields } from "./form-fields";
 
-const colDefs: Record<keyof Permission, ColumnDef<Permission>> = {
+const colDefs: Record<
+  keyof Omit<Permission, "group">,
+  ColumnDef<Permission>
+> = {
   groupId: {
     id: "groupId",
     accessorKey: "groupId",
@@ -61,16 +74,22 @@ export function Permissions() {
   const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const [permissions, setPermissions] = useState<Permission[]>([]);
+  const { setBreadcrumbs } = useBreadcrumbs();
+  const { searchPermissions } = usePermissionSearchV1();
 
-  // NOTE: Uncomment the following lines to enable create and update actions once the backend API is available
-  // const form = useForm<PermissionFormValues>({
-  //   resolver: zodResolver(PERMISSION_SCHEMA),
-  //   defaultValues: {
-  //     key: "",
-  //     name: "",
-  //     description: "",
-  //   },
-  // });
+  useEffect(() => {
+    setBreadcrumbs([{ label: "Permissions", href: "/permission" }]);
+  }, []);
+
+  const form = useForm<PermissionFormValues>({
+    resolver: zodResolver(PERMISSION_SCHEMA),
+    defaultValues: {
+      key: "",
+      name: "",
+      description: "",
+      groupId: "",
+    },
+  });
 
   async function fetchPermissions(
     pagination: PaginationState,
@@ -79,12 +98,12 @@ export function Permissions() {
     const _filters = mapToPermissionApiFilters(filters.filters);
 
     try {
-      const response = await api.permission.search({
+      const response = await searchPermissions({
         pagination,
         filters: _filters,
       });
 
-      const permissions = response.data?.permissions ?? [];
+      const permissions = response.data ?? [];
       setPermissions((prev) => mergeUniquePermissions(prev, permissions));
 
       return { data: permissions, pageCount: 0 };
@@ -94,6 +113,59 @@ export function Permissions() {
       setPermissions([]);
       return { data: [], pageCount: 0 };
     }
+  }
+
+  async function handleCreate(formValues: z.infer<typeof PERMISSION_SCHEMA>) {
+    const body: CreatePermissionRequestBody = {
+      groupId: formValues.groupId,
+      key: formValues.key,
+      nameI18n: {
+        translations: {
+          en: formValues.name,
+        },
+      },
+      descriptionI18n: formValues.description
+        ? {
+            translations: {
+              en: formValues.description,
+            },
+          }
+        : undefined,
+    };
+
+    const { error } = await api.permission.create({ body });
+    if (error) {
+      throw error;
+    }
+    toast.success("Link created successfully!");
+  }
+
+  async function handleUpdate(
+    permissionId: string,
+    formValues: z.infer<typeof PERMISSION_SCHEMA>
+  ) {
+    const body: UpdatePermissionRequestBody = {
+      groupId: formValues.groupId,
+      key: formValues.key,
+      nameI18n: {
+        translations: {
+          en: formValues.name,
+        },
+      },
+      descriptionI18n: formValues.description
+        ? {
+            translations: {
+              en: formValues.description,
+            },
+          }
+        : undefined,
+    };
+
+    const { error } = await api.permission.update({ permissionId, body });
+    if (error) {
+      throw error;
+    }
+    toast.success("Permission updated successfully!");
   }
 
   return (
@@ -127,13 +199,10 @@ export function Permissions() {
         colDefs.description,
       ]}
       groupableColumns={[colDefs.groupId, colDefs.name, colDefs.description]}
-      // NOTE: Uncomment the following lines to enable create and update actions once the backend API is available
-      // dialogForm={form}
-      // onCreateSubmit={handleCreate}
-      // onUpdateSubmit={handleUpdate}
-      // renderFormFields={() => (
-      //   <PermissionsFormFields control={form.control} />
-      // )}
+      dialogForm={form}
+      onCreateSubmit={handleCreate}
+      onUpdateSubmit={handleUpdate}
+      renderFormFields={() => <PermissionsFormFields control={form.control} />}
     />
   );
 }

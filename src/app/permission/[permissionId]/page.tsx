@@ -1,5 +1,5 @@
-import { UnderConstructionPage } from "@/screens/underConstruction";
+import { PageProps, PermissionPage } from "@/screens/permission";
 
-export default function Page() {
-  return <UnderConstructionPage />;
+export default function Page(props: PageProps) {
+  return <PermissionPage {...props} />;
 }

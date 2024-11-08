@@ -8,6 +8,7 @@ import { ApiContext } from "@/shared/api";
 import { useContext } from "react";
 import { FeaturerTypes } from "@/components/featurer-input";
 import { toast } from "sonner";
+import { isPopulatedArray } from "@/shared/libs";
 
 export interface TwinflowTransitionValidatorDialogProps {
   open: boolean;
@@ -32,7 +33,7 @@ export function TwinflowTransitionValidatorDialog({
       const result = await api.twinflow.updateTransition({
         transitionId: transitionId,
         data: {
-          validators:
+          validatorRules:
             validator != null
               ? {
                   update: [{ ...newValidator, id: validator.id }],
@@ -60,9 +61,15 @@ export function TwinflowTransitionValidatorDialog({
     value: {
       order: validator?.order,
       active: validator?.active ?? false,
-      validatorFeaturerId: validator?.validatorFeaturerId,
-      validatorParams: validator?.validatorParams,
-      invert: validator?.invert ?? false,
+      validatorFeaturerId: isPopulatedArray(validator?.twinValidators)
+        ? validator.twinValidators[0]?.validatorFeaturerId
+        : undefined,
+      validatorParams: isPopulatedArray(validator?.twinValidators)
+        ? validator.twinValidators[0]?.validatorParams
+        : undefined,
+      invert: isPopulatedArray(validator?.twinValidators)
+        ? validator.twinValidators[0]?.invert
+        : false,
     },
     title: validator ? "Update validator" : "Create validator",
     onSubmit: (values) => {
