@@ -14,6 +14,7 @@ import {
   TwinClassStatusResourceLink,
 } from "@/entities/twinClassStatus";
 import { ApiContext } from "@/shared/api";
+import { isFalsy } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { ColumnDef } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
@@ -21,18 +22,8 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
 
-export function TwinClassStatuses() {
-  const api = useContext(ApiContext);
-  const router = useRouter();
-  const { twinClass, fetchClassData } = useContext(TwinClassContext);
-  const tableRef = useRef<DataTableHandle>(null);
-  const [createEditStatusDialogOpen, setCreateEditStatusDialogOpen] =
-    useState<boolean>(false);
-  const [editedStatus, setEditedStatus] = useState<TwinClassStatus | null>(
-    null
-  );
-
-  const columns: ColumnDef<TwinClassStatus>[] = [
+function buildColumnDefs(twinClassId: string) {
+  const colDefs: ColumnDef<TwinClassStatus>[] = [
     {
       accessorKey: "logo",
       header: "Logo",
@@ -64,7 +55,11 @@ export function TwinClassStatuses() {
       header: "Name",
       cell: ({ row: { original } }) => (
         <div className="max-w-48 inline-flex">
-          <TwinClassStatusResourceLink data={original} withTooltip />
+          <TwinClassStatusResourceLink
+            data={original}
+            twinClassId={twinClassId}
+            withTooltip
+          />
         </div>
       ),
     },
@@ -97,6 +92,20 @@ export function TwinClassStatuses() {
       },
     },
   ];
+
+  return colDefs;
+}
+
+export function TwinClassStatuses() {
+  const api = useContext(ApiContext);
+  const router = useRouter();
+  const { twinClass, fetchClassData } = useContext(TwinClassContext);
+  const tableRef = useRef<DataTableHandle>(null);
+  const [createEditStatusDialogOpen, setCreateEditStatusDialogOpen] =
+    useState<boolean>(false);
+  const [editedStatus, setEditedStatus] = useState<TwinClassStatus | null>(
+    null
+  );
 
   async function fetchStatuses() {
     if (!twinClass?.id) {
@@ -146,7 +155,7 @@ export function TwinClassStatuses() {
     tableRef.current?.refresh();
   }
 
-  if (!twinClass) {
+  if (isFalsy(twinClass)) {
     console.error("TwinClassFields: no twin class");
     return;
   }
@@ -155,7 +164,7 @@ export function TwinClassStatuses() {
     <>
       <CrudDataTable
         ref={tableRef}
-        columns={columns}
+        columns={buildColumnDefs(twinClass.id!)}
         getRowId={(row) => row.key!}
         fetcher={fetchStatuses}
         createButton={{

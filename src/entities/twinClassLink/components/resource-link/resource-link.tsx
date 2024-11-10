@@ -17,6 +17,7 @@ export function TwinClassLinkResourceLink({
   withTooltip,
 }: Props) {
   const { twinClassId } = useContext(TwinClassContext);
+  const link = `/twinclass/${twinClassId}/link/${data.id}`;
 
   return (
     <ResourceLink
@@ -25,16 +26,11 @@ export function TwinClassLinkResourceLink({
       disabled={disabled}
       renderTooltip={
         withTooltip
-          ? (data) => (
-              <TwinClassLinkResourceTooltip
-                data={data}
-                twinClassId={twinClassId}
-              />
-            )
+          ? (data) => <TwinClassLinkResourceTooltip data={data} link={link} />
           : undefined
       }
       getDisplayName={(data) => data.name ?? ""}
-      getLink={(data) => `/twinclass/${twinClassId}/link/${data.id}`}
+      link={link}
     />
   );
 }

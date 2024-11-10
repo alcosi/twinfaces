@@ -10,16 +10,20 @@ type Props = {
 };
 
 export function TwinResourceLink({ data, disabled, withTooltip }: Props) {
+  const link = `/twin/${data.id}`;
+
   return (
     <ResourceLink
       IconComponent={Braces}
       data={data}
       disabled={disabled}
       renderTooltip={
-        withTooltip ? (data) => <TwinResourceTooltip data={data} /> : undefined
+        withTooltip
+          ? (data) => <TwinResourceTooltip data={data} link={link} />
+          : undefined
       }
       getDisplayName={(data) => data.name ?? "N/A"}
-      getLink={(data) => `/twin/${data.id}`}
+      link={link}
     />
   );
 }

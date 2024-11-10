@@ -17,7 +17,7 @@ type ResourceLinkProps<T> = {
   data: T;
   renderTooltip?: (data: T) => ReactNode;
   getDisplayName: (data: T) => string;
-  getLink: (data: T) => string;
+  link: string;
 } & Pick<ResourceLinkContentProps, "IconComponent" | "disabled">;
 
 const ResourceLinkContent = ({
@@ -65,11 +65,10 @@ export const ResourceLink = <T,>({
   data,
   renderTooltip,
   getDisplayName,
-  getLink,
+  link,
   disabled,
 }: ResourceLinkProps<T>) => {
   const displayName = getDisplayName(data);
-  const link = getLink(data);
 
   const ResourceLinkWrapper = disabled ? (
     <ResourceLinkContent
