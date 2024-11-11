@@ -24,7 +24,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
       <div className="w-full">
         <header className="sticky top-0 z-10 flex justify-between items-center h-16 px-4 md:px-6 border-b bg-background">
           <div className="flex items-center space-x-4">
-            <SidebarTrigger />
+            <SidebarTrigger className="border -ml-9 mr-9 z-20 shadow bg-sidebar" />
 
             <Breadcrumb>
               <BreadcrumbList>

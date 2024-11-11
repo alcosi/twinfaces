@@ -29,6 +29,10 @@ export function isFalsy<T>(value: T | Falsy): value is Falsy {
   return !value || Number.isNaN(value as number);
 }
 
+export function isNull(value: unknown): value is null {
+  return value === null;
+}
+
 // React-specific type-checking utility functions
 
 /**
