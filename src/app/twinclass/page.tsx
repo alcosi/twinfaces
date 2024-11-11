@@ -9,6 +9,8 @@ import {
   TwinClass_DETAILED,
   TwinClassCreateRq,
   TwinClassResourceLink, useFetchTwinClassById,
+  TwinClassCreateRq,
+  TwinClassResourceLink,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
@@ -25,6 +27,13 @@ import { ApiContext } from "@/shared/api";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useCallback, useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { Experimental_CrudDataTable } from "@/widgets";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "sonner";
+import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 const colDefs: Record<
   keyof Pick<
@@ -180,10 +189,64 @@ const twinClassesSchema = z.object({
     .or(z.literal("").transform(() => undefined)),
 });
 
+const twinClassesSchema = z.object({
+  key: z
+    .string()
+    .min(1)
+    .max(100)
+    .regex(
+      /^[a-zA-Z0-9_-]+$/,
+      "Key can only contain latin letters, numbers, underscores and dashes"
+    ),
+  name: z.string().min(1).max(100),
+  description: z
+    .string()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  abstractClass: z.boolean(),
+  headHunterFeaturerId: z.number(),
+  headHunterParams: z.record(z.string(), z.any()).optional(),
+  headTwinClassId: z
+    .string()
+    .uuid()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  extendsTwinClassId: z
+    .string()
+    .uuid()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  logo: z
+    .string()
+    .url()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  permissionSchemaSpace: z.boolean(),
+  twinflowSchemaSpace: z.boolean(),
+  twinClassSchemaSpace: z.boolean(),
+  aliasSpace: z.boolean(),
+  markerDataListId: z
+    .string()
+    .uuid()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  tagDataListId: z
+    .string()
+    .uuid()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  viewPermissionId: z
+    .string()
+    .uuid()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+});
+
 export default function TwinClasses() {
   const api = useContext(ApiContext);
   const [classDialogOpen, setClassDialogOpen] = useState(false);
   const router = useRouter();
+  const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -257,6 +320,52 @@ export default function TwinClasses() {
     toast.success("Twin class created successfully!");
   };
 
+  const twinClassesForm = useForm<z.infer<typeof twinClassesSchema>>({
+    resolver: zodResolver(twinClassesSchema),
+    defaultValues: {
+      key: "",
+      name: "",
+      description: "",
+      abstractClass: false,
+      headHunterFeaturerId: 0,
+      headHunterParams: {},
+      headTwinClassId: "",
+      extendsTwinClassId: "",
+      logo: "",
+      permissionSchemaSpace: false,
+      twinflowSchemaSpace: false,
+      twinClassSchemaSpace: false,
+      aliasSpace: false,
+      markerDataListId: "",
+      tagDataListId: "",
+      viewPermissionId: "",
+    },
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof twinClassesSchema>
+  ) => {
+    const body: TwinClassCreateRq = { ...formValues };
+    const { error } = await api.twinClass.create({ body });
+
+    if (error) {
+      throw error;
+    }
+    toast.success("Twin class created successfully!");
+  };
+
+  const handleOnUpdateSubmit = async (
+    id: string,
+    formValues: z.infer<typeof twinClassesSchema>
+  ) => {
+    const body: TwinClassCreateRq = { ...formValues };
+    const { error } = await api.twinClass.update({ id, body });
+    if (error) {
+      throw error;
+    }
+    toast.success("Twin class updated successfully!");
+  };
+
   return (
     <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
       <Experimental_CrudDataTable
@@ -277,6 +386,12 @@ export default function TwinClasses() {
         ]}
         getRowId={(row) => row.id!}
         pageSizes={[10, 20, 50]}
+        onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
+        createButton={{
+          enabled: true,
+          onClick: () => setClassDialogOpen(true),
+          text: "Create Class",
+        }}
         filters={{
           // TODO: Fix typing by removing `any`
           filtersInfo: {
