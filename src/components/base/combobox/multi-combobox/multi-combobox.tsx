@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef } from "@/shared/libs";
+import { cn, fixedForwardRef, useDebouncedValue } from "@/shared/libs";
 import { Check, ChevronsUpDown } from "lucide-react";
 import {
   ForwardedRef,
@@ -41,6 +41,7 @@ export interface MultiComboboxProps<T> {
   noItemsText?: string;
   buttonClassName?: string;
   contentClassName?: string;
+  searchDelay?: number;
   multi?: boolean;
 }
 
@@ -55,12 +56,13 @@ function ComboboxInternal<T>(
   const [loadingItems, setLoadingItems] = useState(false);
   const [selected, setSelected] = useState<T[]>([]);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search, props.searchDelay ?? 300);
 
   useEffect(() => {
     if (!open) return;
     setLoadingItems(true);
     props
-      .getItems(search)
+      .getItems(debouncedSearch)
       .then((items) => {
         console.log("Loaded items", items);
         setItems(items);
@@ -68,12 +70,12 @@ function ComboboxInternal<T>(
       })
       .catch((e) => {
         setItems([]);
-        console.error(`Failed to load items with search ${search}`, e);
+        console.error(`Failed to load items with search ${debouncedSearch}`, e);
       })
       .finally(() => {
         setLoadingItems(false);
       });
-  }, [open, search]);
+  }, [open, debouncedSearch]);
 
   useImperativeHandle(ref, () => {
     return {

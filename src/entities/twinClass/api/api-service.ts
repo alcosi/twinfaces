@@ -49,8 +49,8 @@ export function createTwinClassApi(settings: ApiSettings) {
         },
       },
       body: {
-        twinClassKeyLikeList: search ? ["%" + search + "%"] : undefined,
         ...filters,
+        twinClassKeyLikeList: search ? ["%" + search + "%"] : undefined,
       },
     });
   }

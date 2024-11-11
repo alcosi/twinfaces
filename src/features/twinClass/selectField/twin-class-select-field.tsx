@@ -25,7 +25,6 @@ export function TwinClassSelectField<T extends FieldValues>(props: Props<T>) {
     return fetchTwinClassById(id);
   }
 
-  // TODO: Add debounce-logic after https://alcosi.atlassian.net/browse/TWINFACES-77
   async function getItems(search: string): Promise<TwinClass_DETAILED[]> {
     try {
       const { data } = await searchTwinClasses({ search });
