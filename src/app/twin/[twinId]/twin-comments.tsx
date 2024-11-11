@@ -1,5 +1,4 @@
 import React, { useContext, useRef, useState } from "react";
-import { ApiContext } from "@/lib/api/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import {
   CrudDataTable,
@@ -11,7 +10,7 @@ import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { Card, CardContent, CardHeader } from "@/components/base/card";
 import { Avatar } from "@/shared/ui";
-import { hydrateTwinFromMap } from "@/entities/twin";
+import { CommentView } from "@/entities/twin";
 import {
   Popover,
   PopoverContent,
@@ -19,8 +18,9 @@ import {
 } from "@/components/base/popover";
 import { Button } from "@/components/base/button";
 import { CopyButton } from "@/components/base/copy-button";
-import { CommentView } from "@/lib/api/api-types";
-import { CircleUserRound, Ellipsis, EllipsisVertical } from "lucide-react";
+
+import { CircleUserRound, EllipsisVertical } from "lucide-react";
+import { ApiContext } from "@/shared/api";
 
 const columns: ColumnDef<CommentView>[] = [
   {
