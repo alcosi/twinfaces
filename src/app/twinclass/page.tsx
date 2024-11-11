@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ApiContext } from "@/shared/api";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -135,59 +136,6 @@ const colDefs: Record<
     header: "Description",
   },
 };
-
-const twinClassesSchema = z.object({
-  key: z
-    .string()
-    .min(1)
-    .max(100)
-    .regex(
-      /^[a-zA-Z0-9_-]+$/,
-      "Key can only contain latin letters, numbers, underscores and dashes"
-    ),
-  name: z.string().min(1).max(100),
-  description: z
-    .string()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  abstractClass: z.boolean(),
-  headHunterFeaturerId: z.number(),
-  headHunterParams: z.record(z.string(), z.any()).optional(),
-  headTwinClassId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  extendsTwinClassId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  logo: z
-    .string()
-    .url()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  permissionSchemaSpace: z.boolean(),
-  twinflowSchemaSpace: z.boolean(),
-  twinClassSchemaSpace: z.boolean(),
-  aliasSpace: z.boolean(),
-  markerDataListId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  tagDataListId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  viewPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-});
 
 const twinClassesSchema = z.object({
   key: z
