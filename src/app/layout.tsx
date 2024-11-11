@@ -31,7 +31,6 @@ export default function RootLayout({
       <head>
         <PublicEnvScript />
         <link rel="icon" type="image/svg+xml" href={"/favicon.svg"} />
-        {/*<link rel="icon" type="image/png" href={favicon}/>*/}
       </head>
       <body
         className={cn(
@@ -46,11 +45,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ApiContextProvider>
-            <TooltipProvider>
-              <BreadcrumbProvider>
-                <SidebarLayout>{children}</SidebarLayout>
-              </BreadcrumbProvider>
-            </TooltipProvider>
+            <BreadcrumbProvider>
+              <SidebarLayout>
+                <TooltipProvider delayDuration={700} skipDelayDuration={0}>
+                  {children}
+                </TooltipProvider>
+              </SidebarLayout>
+            </BreadcrumbProvider>
           </ApiContextProvider>
 
           <Toaster />

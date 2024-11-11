@@ -13,40 +13,35 @@ type Props = {
 export function TwinResourceTooltip({ data, link }: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
-      <ResourceLinkTooltip.Header iconSource={Braces}>
-        <div className="font-semibold text-lg">
-          {isPopulatedString(data.name) ? data.name : "N/A"}
-        </div>
-      </ResourceLinkTooltip.Header>
+      <ResourceLinkTooltip.Header
+        title={isPopulatedString(data.name) ? data.name : "N/A"}
+        iconSource={Braces}
+      />
 
       <ResourceLinkTooltip.Main>
         {data.description && <p>{data.description}</p>}
         {data.status && (
-          <div className="flex gap-2">
-            <strong>Status:</strong>
+          <ResourceLinkTooltip.Item title="Status">
             <TwinClassStatusResourceLink
               data={data.status}
               twinClassId={data.twinClassId!}
             />
-          </div>
+          </ResourceLinkTooltip.Item>
         )}
         {data.authorUser && (
-          <div className="flex gap-2">
-            <strong>Author:</strong>
+          <ResourceLinkTooltip.Item title="Author">
             <UserResourceLink data={data.authorUser} />
-          </div>
+          </ResourceLinkTooltip.Item>
         )}
         {data.assignerUser && (
-          <div className="flex gap-2">
-            <strong>Assigner:</strong>
+          <ResourceLinkTooltip.Item title="Assigner">
             <UserResourceLink data={data.assignerUser} />
-          </div>
+          </ResourceLinkTooltip.Item>
         )}
         {data.createdAt && (
-          <div className="flex flex-row gap-2 items-center">
-            <strong>Created at:</strong>
+          <ResourceLinkTooltip.Item title="Created at">
             {new Date(data.createdAt).toLocaleDateString()}
-          </div>
+          </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>

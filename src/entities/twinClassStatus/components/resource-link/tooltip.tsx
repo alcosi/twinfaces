@@ -12,6 +12,8 @@ export const TwinClassStatusResourceTooltip = ({ data, link }: Props) => {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
+        title={isPopulatedString(data.name) ? data.name : "N/A"}
+        subTitle={data.key}
         iconSource={
           data.logo ? (
             <Avatar url={data.logo} alt={data.name ?? "Logo"} size="xlg" />
@@ -19,28 +21,21 @@ export const TwinClassStatusResourceTooltip = ({ data, link }: Props) => {
             CircleDot
           )
         }
-      >
-        <div className="font-semibold text-lg">
-          {isPopulatedString(data.name) ? data.name : "N/A"}
-        </div>
-        <div className="text-sm">{data.key}</div>
-      </ResourceLinkTooltip.Header>
+      />
 
       <ResourceLinkTooltip.Main>
         {data.description && <p>{data.description}</p>}
         {data.backgroundColor && (
-          <div className="flex flex-row gap-2 items-center">
-            <strong>Background:</strong>
+          <ResourceLinkTooltip.Item title="Background">
             <ColorTile color={data.backgroundColor} />
             {data.backgroundColor}
-          </div>
+          </ResourceLinkTooltip.Item>
         )}
         {data.fontColor && (
-          <div className="flex flex-row gap-2 items-center">
-            <strong>Font:</strong>
+          <ResourceLinkTooltip.Item title="Font">
             <ColorTile color={data.fontColor} />
             {data.fontColor}
-          </div>
+          </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
