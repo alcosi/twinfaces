@@ -21,10 +21,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 
-const columns: ColumnDef<TwinClass_DETAILED>[] = [
-  {
+const colDefs: Record<
+  keyof Pick<
+    TwinClass_DETAILED,
+    | "logo"
+    | "id"
+    | "key"
+    | "name"
+    | "headClassId"
+    | "extendsClassId"
+    | "abstractClass"
+    | "description"
+  >,
+  ColumnDef<TwinClass_DETAILED>
+> = {
+  logo: {
+    id: "logo",
     accessorKey: "logo",
     header: "Logo",
     cell: (data) => {
@@ -41,16 +55,22 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
       );
     },
   },
-  {
+
+  id: {
+    id: "id",
     accessorKey: "id",
     header: "Id",
     cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
   },
-  {
+
+  key: {
+    id: "key",
     accessorKey: "key",
     header: "Key",
   },
-  {
+
+  name: {
+    id: "name",
     accessorKey: "name",
     header: "Name",
     cell: ({ row: { original } }) => (
@@ -59,7 +79,9 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
       </div>
     ),
   },
-  {
+
+  headClassId: {
+    id: "headClassId",
     accessorKey: "headClassId",
     header: "Head",
     cell: ({ row: { original } }) =>
@@ -72,7 +94,9 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
         </div>
       ) : null,
   },
-  {
+
+  extendsClassId: {
+    id: "extendsClass.id",
     accessorKey: "extendsClass.id",
     header: "Extends",
     cell: ({ row: { original } }) =>
@@ -85,12 +109,20 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
         </div>
       ) : null,
   },
-  {
+
+  abstractClass: {
+    id: "abstractClass",
     accessorKey: "abstractClass",
     header: "Abstract",
     cell: (data) => <>{data.getValue() && <Check />}</>,
   },
-];
+
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
+  },
+};
 
 const twinClassesSchema = z.object({
   key: z
@@ -227,7 +259,16 @@ export default function TwinClasses() {
         fetcher={(pagination, filters) =>
           searchTwinClasses({ pagination, filters })
         }
-        columns={columns}
+        columns={[
+          colDefs.logo!,
+          colDefs.id!,
+          colDefs.key!,
+          colDefs.name!,
+          colDefs.headClassId!,
+          colDefs.extendsClassId!,
+          colDefs.abstractClass!,
+          colDefs.description!,
+        ]}
         getRowId={(row) => row.id!}
         pageSizes={[10, 20, 50]}
         filters={{
@@ -268,15 +309,14 @@ export default function TwinClasses() {
             return Promise.resolve();
           },
         }}
-        orderedColumns={{
-          enabled: true,
-          defaultVisibleKeys: [
-            "name",
-            "headClassId",
-            "extendsClass.id",
-            "abstractClass",
-          ],
-        }}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.key,
+          colDefs.name,
+          colDefs.headClassId,
+          colDefs.extendsClassId,
+          colDefs.abstractClass,
+        ]}
         dialogForm={twinClassesForm}
         onCreateSubmit={handleOnCreateSubmit}
         onUpdateSubmit={handleOnUpdateSubmit}
