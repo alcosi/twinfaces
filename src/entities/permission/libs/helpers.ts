@@ -3,6 +3,7 @@ import { RelatedObjects } from "@/shared/api";
 import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
 import {
   Permission,
+  Permission_DETAILED,
   PermissionApiFilterFields,
   PermissionApiFilters,
 } from "../api";
@@ -80,3 +81,22 @@ export function groupPermissionsByGroupId(
     subRows: permissions.filter((p) => p.groupId === group.id),
   }));
 }
+
+export const hydratePermissionFromMap = (
+  permissionDTO: Permission,
+  relatedObjects?: RelatedObjects
+): Permission_DETAILED => {
+  const permission: Permission_DETAILED = Object.assign(
+    {},
+    permissionDTO
+  ) as Permission_DETAILED;
+
+  if (!relatedObjects?.permissionGroupMap) return permission;
+
+  if (permissionDTO.groupId) {
+    permission.group =
+      relatedObjects.permissionGroupMap[permissionDTO.groupId]!;
+  }
+
+  return permission;
+};

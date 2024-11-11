@@ -1,6 +1,10 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { PermissionApiFilters } from "./types";
+import {
+  CreatePermissionRequestBody,
+  PermissionApiFilters,
+  UpdatePermissionRequestBody,
+} from "./types";
 
 export function createPermissionApi(settings: ApiSettings) {
   async function search({
@@ -28,7 +32,32 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  async function create({ body }: { body: CreatePermissionRequestBody }) {
+    return settings.client.POST("/private/permission/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  async function update({
+    permissionId,
+    body,
+  }: {
+    permissionId: string;
+    body: UpdatePermissionRequestBody;
+  }) {
+    return settings.client.POST("/private/permission/{permissionId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { permissionId },
+      },
+      body: body,
+    });
+  }
+
+  return { search, create, update };
 }
 
 export type PermissionApi = ReturnType<typeof createPermissionApi>;

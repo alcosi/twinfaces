@@ -1,7 +1,12 @@
 import { components } from "@/shared/api/generated/schema";
 
-export type Permission = components["schemas"]["PermissionV1"];
-export type PermissionGroup = components["schemas"]["PermissionGroupV1"];
+export type Permission = components["schemas"]["PermissionV2"];
+export type Permission_DETAILED = Required<Permission>;
+
+export type CreatePermissionRequestBody =
+  components["schemas"]["PermissionCreateRqV1"];
+export type UpdatePermissionRequestBody =
+  components["schemas"]["PermissionUpdateRqV1"];
 
 export type PermissionApiFilterFields =
   | "idList"

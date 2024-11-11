@@ -227,6 +227,14 @@ export interface paths {
     /** Adding/removing a user to the space by role */
     post: operations["spaceRoleUserManageV1"];
   };
+  "/private/permission/{permissionId}/v1": {
+    /** Update permission */
+    post: operations["permissionUpdateV1"];
+  };
+  "/private/permission/v1": {
+    /** Create permission */
+    post: operations["permissionCreateV1"];
+  };
   "/private/permission/search/v1": {
     /** Return a list of all permissions for the current domain */
     post: operations["permissionSearchListV1"];
@@ -258,6 +266,10 @@ export interface paths {
   "/private/domain/user/search/v1": {
     /** Return a list of users by current domain */
     post: operations["domainUserSearchListV1"];
+  };
+  "/private/domain/business_account/search/v1": {
+    /** Returns domain business account search result */
+    post: operations["domainBusinessAccountSearchV1"];
   };
   "/private/data_list_option/map/v1": {
     /** Returns map option id ref list data option */
@@ -450,9 +462,19 @@ export interface components {
     };
     /** @description I18n description */
     I18nV1: {
-      /** @description translation in current locale */
+      /**
+       * @description translation in current locale
+       * @example translation
+       */
       translationInCurrentLocale?: string;
-      /** @description map (locale : translate) */
+      /**
+       * @description map (locale : translate)
+       * @example {
+       *   "en": "translation",
+       *   "pl": "tłumaczenie",
+       *   "ru": "перевод"
+       * }
+       */
       translations?: {
         [key: string]: string;
       };
@@ -2709,6 +2731,34 @@ export interface components {
        */
       total?: number;
     };
+    /** @description validators */
+    TransitionValidatorRuleBaseV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /** @description active */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description grouped set of twin validators id
+       */
+      twinValidatorSetId?: string;
+      /** @description Twin validator list */
+      twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
+      twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+      /**
+       * Format: uuid
+       * @description twinflow transition id
+       */
+      twinflowTransitionId?: string;
+    };
     /** @description triggers */
     TriggerV1: {
       /**
@@ -2732,6 +2782,57 @@ export interface components {
        * @description id
        */
       id?: string;
+    };
+    /** @description Twin validator list */
+    TwinValidatorBaseV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description grouped set of twin validators id
+       */
+      twinValidatorSetId?: string;
+      /**
+       * Format: int32
+       * @description validator featurer id
+       */
+      validatorFeaturerId?: number;
+      /** @description featurer params */
+      validatorParams?: {
+        [key: string]: string;
+      };
+      /** @description invert */
+      invert?: boolean;
+      /** @description active */
+      active?: boolean;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+    };
+    /** @description grouping set of twin validator */
+    TwinValidatorSetBaseV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description domain id
+       */
+      domainId?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
     };
     /** @description twinflow details */
     TwinflowBaseV3: {
@@ -2849,35 +2950,9 @@ export interface components {
        */
       createdByUserId?: string;
       /** @description validators */
-      validators?: components["schemas"]["ValidatorV1"][];
+      validatorRules?: components["schemas"]["TransitionValidatorRuleBaseV1"][];
       /** @description triggers */
       triggers?: components["schemas"]["TriggerV1"][];
-    };
-    /** @description validators */
-    ValidatorV1: {
-      /**
-       * Format: int32
-       * @description order
-       */
-      order?: number;
-      /**
-       * Format: int32
-       * @description validator featurer id
-       */
-      validatorFeaturerId?: number;
-      /** @description featurer params */
-      validatorParams?: {
-        [key: string]: string;
-      };
-      /** @description invert */
-      invert?: boolean;
-      /** @description active */
-      active?: boolean;
-      /**
-       * Format: uuid
-       * @description id
-       */
-      id?: string;
     };
     TwinflowCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
@@ -4074,7 +4149,7 @@ export interface components {
        * @description Drafting TwinFactory Id
        */
       draftingTwinFactoryId?: string;
-      validators?: components["schemas"]["ValidatorCudV1"];
+      validatorRules?: components["schemas"]["ValidatorCudV1"];
       triggers?: components["schemas"]["TriggerCudV1"];
     };
     /** @description triggers create list */
@@ -4132,25 +4207,32 @@ export interface components {
     /** @description validators create list */
     ValidatorCreateV1: {
       /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
        * Format: int32
        * @description order
        */
       order?: number;
-      /**
-       * Format: int32
-       * @description validator featurer id
-       */
-      validatorFeaturerId?: number;
-      /** @description featurer params */
-      validatorParams?: {
-        [key: string]: string;
-      };
-      /** @description invert */
-      invert?: boolean;
       /** @description active */
       active?: boolean;
+      /**
+       * Format: uuid
+       * @description grouped set of twin validators id
+       */
+      twinValidatorSetId?: string;
+      /** @description Twin validator list */
+      twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
+      twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+      /**
+       * Format: uuid
+       * @description twinflow transition id
+       */
+      twinflowTransitionId?: string;
     };
-    /** @description validators cud operations */
+    /** @description validator rules cud operations */
     ValidatorCudV1: {
       /** @description validators create list */
       create?: components["schemas"]["ValidatorCreateV1"][];
@@ -4162,28 +4244,30 @@ export interface components {
     /** @description validators update list */
     ValidatorUpdateV1: {
       /**
-       * Format: int32
-       * @description order
-       */
-      order?: number;
-      /**
-       * Format: int32
-       * @description validator featurer id
-       */
-      validatorFeaturerId?: number;
-      /** @description featurer params */
-      validatorParams?: {
-        [key: string]: string;
-      };
-      /** @description invert */
-      invert?: boolean;
-      /** @description active */
-      active?: boolean;
-      /**
        * Format: uuid
        * @description id
        */
       id?: string;
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /** @description active */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description grouped set of twin validators id
+       */
+      twinValidatorSetId?: string;
+      /** @description Twin validator list */
+      twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
+      twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+      /**
+       * Format: uuid
+       * @description twinflow transition id
+       */
+      twinflowTransitionId?: string;
     };
     TwinflowTransitionUpdateRsV1: {
       /**
@@ -4341,6 +4425,74 @@ export interface components {
     SpaceRoleUserRqV1: {
       spaceRoleUserEnterList?: string[];
       spaceRoleUserExitList?: string[];
+    };
+    PermissionUpdateRqV1: {
+      nameI18n?: components["schemas"]["I18nV1"];
+      descriptionI18n?: components["schemas"]["I18nV1"];
+      /**
+       * @description key
+       * @example DENY_ALL
+       */
+      key?: string;
+      /**
+       * Format: uuid
+       * @description group id
+       * @example 7efd9df0-cae7-455f-a721-eaec455105a4
+       */
+      groupId?: string;
+    };
+    PermissionUpdateRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      permission?: components["schemas"]["PermissionV1"];
+    };
+    PermissionCreateRqV1: {
+      nameI18n?: components["schemas"]["I18nV1"];
+      descriptionI18n?: components["schemas"]["I18nV1"];
+      /**
+       * @description key
+       * @example DENY_ALL
+       */
+      key?: string;
+      /**
+       * Format: uuid
+       * @description group id
+       * @example 7efd9df0-cae7-455f-a721-eaec455105a4
+       */
+      groupId?: string;
+    };
+    PermissionCreateRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      permission?: components["schemas"]["PermissionV1"];
     };
     PermissionSearchRqV1: {
       /** @description user id list */
@@ -4555,6 +4707,11 @@ export interface components {
        * @example 2c618b09-e8dc-4712-a433-2e18915ee70d
        */
       twinFlowSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description Tier id.
+       */
+      tierId?: string;
     };
     DomainBusinessAccountAddV1: {
       /**
@@ -4563,6 +4720,11 @@ export interface components {
        * @example 9a3f6075-f175-41cd-a804-934201ec969c
        */
       businessAccountId?: string;
+      /**
+       * Format: uuid
+       * @description Tier id. Optional. If it’s not set then default_tier of domain will be used for new domain BA
+       */
+      tierId?: string;
     };
     DomainAddRqV1: {
       /**
@@ -4729,9 +4891,9 @@ export interface components {
       currentLocale?: {
         language?: string;
         displayName?: string;
+        script?: string;
         country?: string;
         variant?: string;
-        script?: string;
         unicodeLocaleAttributes?: string[];
         unicodeLocaleKeys?: string[];
         displayLanguage?: string;
@@ -4752,6 +4914,84 @@ export interface components {
       user?: components["schemas"]["UserV1"];
       /** @description Business account users. Will be filled only if lazyRelations mode is true */
       businessAccountUsers?: components["schemas"]["BusinessAccountUserV2"][];
+    };
+    DomainBusinessAccountSearchRqV1: {
+      /** @description business account id list */
+      businessAccountIdList?: string[];
+      /** @description business account id exclude list */
+      businessAccountIdExcludeList?: string[];
+      /** @description business account name like keyword list(AND) */
+      businessAccountNameLikeList?: string[];
+      /** @description business account name exclude like keyword list(OR) */
+      businessAccountNameNotLikeList?: string[];
+      /** @description business account permission schema id list */
+      permissionSchemaIdList?: string[];
+      /** @description business account permission schema id exclude list */
+      permissionSchemaIdExcludeList?: string[];
+      /** @description business account twinflow schema id list */
+      twinflowSchemaIdList?: string[];
+      /** @description business account twinflows chema id exclude list */
+      twinflowSchemaIdExcludeList?: string[];
+      /** @description business account twin class schema id list */
+      twinClassSchemaIdList?: string[];
+      /** @description business account twin class schema id exclude list */
+      twinClassSchemaIdExcludeList?: string[];
+    };
+    DomainBusinessAccountSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - domain business account list */
+      businessAccounts?: components["schemas"]["DomainBusinessAccountV1"][];
+    };
+    /** @description results - domain business account list */
+    DomainBusinessAccountV1: {
+      /**
+       * Format: uuid
+       * @description domain business account id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description business account id
+       */
+      businessAccountid?: string;
+      /**
+       * Format: uuid
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @example 2c618b09-e8dc-4712-a433-2e18915ee70d
+       */
+      twinflowSchemaId?: string;
+      /**
+       * Format: uuid
+       * @example 8b9ea6ad-2b9b-4a4a-8ea9-1b17da4d603b
+       */
+      twinClassSchemaId?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      businessAccount?: components["schemas"]["BusinessAccountV1"];
     };
     CommentCreateRqV1: {
       text?: string;
@@ -5551,11 +5791,24 @@ export interface operations {
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinValidator2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflow2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflowInitStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinflowTransition2TwinflowTransitionValidatorRuleMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
+        showTwinflowTransitionValidatorRule2TwinValidatorMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
+        showTwinflowTransitionValidatorRule2TwinValidatorSetMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -6838,11 +7091,24 @@ export interface operations {
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinValidator2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflow2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflowInitStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinflowTransition2TwinflowTransitionValidatorRuleMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
+        showTwinflowTransitionValidatorRule2TwinValidatorMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
+        showTwinflowTransitionValidatorRule2TwinValidatorSetMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
         offset?: number;
         limit?: number;
         sortAsc?: boolean;
@@ -8757,6 +9023,19 @@ export interface operations {
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinValidator2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinflowTransition2TwinflowTransitionValidatorRuleMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
+        showTwinflowTransitionValidatorRule2TwinValidatorMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
+        showTwinflowTransitionValidatorRule2TwinValidatorSetMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -9242,6 +9521,80 @@ export interface operations {
       };
     };
   };
+  /** Update permission */
+  permissionUpdateV1: {
+    parameters: {
+      query?: {
+        showPermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example abdeef68-7d6d-4385-9906-e3b701d2c503 */
+        permissionId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionUpdateRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Create permission */
+  permissionCreateV1: {
+    parameters: {
+      query?: {
+        showPermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionCreateRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Return a list of all permissions for the current domain */
   permissionSearchListV1: {
     parameters: {
@@ -9568,6 +9921,49 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["DomainUserSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns domain business account search result */
+  domainBusinessAccountSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showDomainBusinessAccount2BusinessAccountMode?:
+          | "HIDE"
+          | "SHORT"
+          | "DETAILED";
+        showDomainBusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DomainBusinessAccountSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Domain business account list prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainBusinessAccountSearchRsV1"];
         };
       };
       /** @description Access is denied */

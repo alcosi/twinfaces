@@ -9,12 +9,8 @@ export function PermissionsFormFields({
 }) {
   return (
     <>
-      <TextFormField
-        control={control}
-        name="id"
-        label="Permission ID"
-        disabled
-      />
+      {/* TODO: Replace with <PermissionGroupSelectField /> as per https://alcosi.atlassian.net/browse/TWINFACES-95 */}
+      <TextFormField control={control} name="groupId" label="Grouop ID" />
       <TextFormField control={control} name="key" label="Permission Key" />
       <TextFormField control={control} name="name" label="Permission Name" />
       <TextFormField control={control} name="description" label="Description" />
