@@ -15,6 +15,8 @@ export const PermissionResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
+  const link = `/permission/${data.id}`;
+
   return (
     <ResourceLink
       IconComponent={() => <Key className="h-4 w-4" />}
@@ -22,13 +24,13 @@ export const PermissionResourceLink = ({
       disabled={disabled}
       renderTooltip={
         withTooltip
-          ? (data) => <PermissionResourceTooltip data={data} />
+          ? (data) => <PermissionResourceTooltip data={data} link={link} />
           : undefined
       }
       getDisplayName={(data) =>
         isPopulatedString(data.name) ? data.name : data.key!
       }
-      getLink={() => `/permission/${data.id}`}
+      link={link}
     />
   );
 };

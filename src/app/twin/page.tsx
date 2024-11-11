@@ -38,7 +38,11 @@ const columns: ColumnDef<Twin>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <TwinResourceLink data={original} withTooltip />
+      </div>
+    ),
   },
   {
     accessorKey: "twinClassId",
@@ -61,6 +65,7 @@ const columns: ColumnDef<Twin>[] = [
         <div className="max-w-48 inline-flex">
           <TwinClassStatusResourceLink
             data={original.status as TwinClassStatus}
+            twinClassId={original.twinClassId!}
             withTooltip
           />
         </div>

@@ -15,6 +15,8 @@ export const TwinClassResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
+  const link = `/twinclass/${data.id}`;
+
   return (
     <ResourceLink
       IconComponent={
@@ -24,13 +26,13 @@ export const TwinClassResourceLink = ({
       disabled={disabled}
       renderTooltip={
         withTooltip
-          ? (data) => <TwinClassResourceTooltip data={data} />
+          ? (data) => <TwinClassResourceTooltip data={data} link={link} />
           : undefined
       }
       getDisplayName={(data) =>
         isPopulatedString(data.name) ? data.name : data.key
       }
-      getLink={(data) => `/twinclass/${data.id}`}
+      link={link}
     />
   );
 };
