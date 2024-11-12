@@ -103,25 +103,22 @@ export function AutoDialog({
           {settings?.title && <DialogTitle>{settings.title}</DialogTitle>}
         </DialogHeader>
 
-        <div className={"overflow-y-auto max-h-[60vh] px-4"}>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(internalSubmit)}
-              className="space-y-8 py-6"
-            >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(internalSubmit)}>
+            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
               {settings?.value &&
                 keys.map((key) => renderField(key, settings.value[key]))}
 
               {error && <Alert variant="destructive">{error}</Alert>}
-            </form>
-          </Form>
-        </div>
+            </div>
 
-        <DialogFooter className="sm:justify-end p-6">
-          <Button type="submit" loading={form.formState.isSubmitting}>
-            Save
-          </Button>
-        </DialogFooter>
+            <DialogFooter className="sm:justify-end p-6">
+              <Button type="submit" loading={form.formState.isSubmitting}>
+                Save
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

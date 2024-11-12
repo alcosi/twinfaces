@@ -101,18 +101,11 @@ function Component(
 
         <Form {...dialogForm}>
           <form onSubmit={dialogForm.handleSubmit(handleFormSubmit)}>
-            <div
-              className="flex-1 space-y-8 p-6 overflow-y-scroll"
-              style={{
-                // NOTE: maxHeight: 80vh minus header and footer heights (var(--header-height))
-                maxHeight:
-                  "calc(80vh - var(--header-height) - var(--header-height))",
-              }}
-            >
+            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
               {renderFormFields && renderFormFields()}
             </div>
 
-            <DialogFooter className="sm:justify-end items-center h-16 px-6">
+            <DialogFooter className="sm:justify-end bg-background p-6">
               <Button
                 type="submit"
                 loading={dialogForm.formState.isSubmitting}
