@@ -12,19 +12,17 @@ type Props = {
 export function PermissionResourceTooltip({ data, link }: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
-      <ResourceLinkTooltip.Header iconSource={Key}>
-        <div className="font-semibold text-lg truncate whitespace-nowrap">
-          {isPopulatedString(data.name) ? data.name : "N/A"}
-        </div>
-        <div className="text-sm truncate whitespace-nowrap">{data.key}</div>
-      </ResourceLinkTooltip.Header>
+      <ResourceLinkTooltip.Header
+        title={isPopulatedString(data.name) ? data.name : "N/A"}
+        subTitle={data.key}
+        iconSource={Key}
+      />
 
       <ResourceLinkTooltip.Main>
         {data.groupId && (
-          <div className="flex flex-row gap-2 items-center">
-            <strong>Group Id:</strong>
+          <ResourceLinkTooltip.Item title="Group Id">
             <ShortGuidWithCopy value={data.groupId} disableTooltip />
-          </div>
+          </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>

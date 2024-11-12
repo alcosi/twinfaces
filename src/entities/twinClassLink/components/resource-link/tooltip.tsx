@@ -13,11 +13,10 @@ export function TwinClassLinkResourceTooltip({ data, link }: Props) {
 
   return (
     <ResourceLinkTooltip uuid={data.id} link={link}>
-      <ResourceLinkTooltip.Header iconSource={Link2}>
-        <div className="font-semibold text-lg">
-          {isPopulatedString(data.name) ? data.name : "N/A"}
-        </div>
-      </ResourceLinkTooltip.Header>
+      <ResourceLinkTooltip.Header
+        title={isPopulatedString(data.name) ? data.name : "N/A"}
+        iconSource={Link2}
+      />
     </ResourceLinkTooltip>
   );
 }

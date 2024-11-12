@@ -12,6 +12,8 @@ export function UserResourceTooltip({ data, link }: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
+        title={isPopulatedString(data.fullName) ? data.fullName : "N/A"}
+        subTitle={data.email}
         iconSource={
           data.avatar ? (
             <Avatar
@@ -23,12 +25,7 @@ export function UserResourceTooltip({ data, link }: Props) {
             UserIcon
           )
         }
-      >
-        <div className="font-semibold text-lg">
-          {isPopulatedString(data.fullName) ? data.fullName : "N/A"}
-        </div>
-        <div className="text-sm">{data.email}</div>
-      </ResourceLinkTooltip.Header>
+      />
     </ResourceLinkTooltip>
   );
 }

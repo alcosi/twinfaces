@@ -39,11 +39,11 @@ export function ResourceLinkTooltip({
 
   return (
     <div
-      className="text-sm w-96 p-6 space-y-4"
+      className="text-xs w-72 py-2 px-4 space-y-1.5"
       onClick={stopPropagation}
       style={{
         background:
-          "linear-gradient(to bottom, #3b82f6 96px, transparent 96px)",
+          "linear-gradient(to bottom, #3b82f6 56px, transparent 56px)",
       }}
     >
       {children}
@@ -51,21 +51,21 @@ export function ResourceLinkTooltip({
       <footer className="flex gap-x-2 justify-between">
         <Button
           variant="outline"
-          size="sm"
-          className="flex flex-row gap-2 items-center hover:bg-secondary w-full p-0.5"
+          size="xs"
+          className="flex flex-row gap-1 items-center hover:bg-secondary w-full p-0.5"
           onClick={handleCopyUUID}
         >
-          <Copy className="h-4 w-4" />
+          <Copy className="h-3.5 w-3.5" />
           Copy UUID
         </Button>
         <Button
           variant="outline"
-          size="sm"
-          className="flex flex-row gap-2 items-center hover:bg-secondary w-full p-0.5"
+          size="xs"
+          className="flex flex-row gap-1 items-center hover:bg-secondary w-full p-0.5"
           onClick={handleCopyLink}
           disabled={!link}
         >
-          <Link className="h-4 w-4" />
+          <Link className="h-3.5 w-3.5" />
           Copy Link
         </Button>
       </footer>
@@ -73,13 +73,16 @@ export function ResourceLinkTooltip({
   );
 }
 
-type HeaderProps = PropsWithChildren<{
+type HeaderProps = {
+  title: string;
+  subTitle?: string;
   iconSource?: ReactNode | ElementType;
-}>;
+};
 
 ResourceLinkTooltip.Header = function Header({
+  title,
+  subTitle,
   iconSource,
-  children,
 }: HeaderProps) {
   const renderIcon = () => {
     if (isValidElement(iconSource)) {
@@ -88,7 +91,7 @@ ResourceLinkTooltip.Header = function Header({
 
     if (isElementType(iconSource)) {
       return createElement(iconSource, {
-        className: "w-16 h-16",
+        className: "w-8 h-8",
       });
     }
 
@@ -96,13 +99,14 @@ ResourceLinkTooltip.Header = function Header({
   };
 
   return (
-    <header className="flex h-24 gap-x-4 text-primary-foreground">
-      <div className="h-24 w-24 rounded-full bg-muted text-link-light-active dark:text-link-dark-active flex shrink-0 justify-center items-center">
+    <header className="flex text-base h-16 gap-x-4 text-primary-foreground">
+      <div className="h-16 w-16  rounded-full bg-muted text-link-light-active dark:text-link-dark-active flex shrink-0 justify-center items-center">
         {renderIcon()}
       </div>
 
-      <div className="flex flex-col justify-end h-16 overflow-hidden">
-        {children}
+      <div className="flex flex-col justify-end h-12 overflow-hidden">
+        <div className="font-semibold truncate whitespace-nowrap">{title}</div>
+        <div className="text-sm whitespace-nowrap">{subTitle}</div>
       </div>
     </header>
   );
@@ -111,5 +115,18 @@ ResourceLinkTooltip.Header = function Header({
 type MainProps = PropsWithChildren<{}>;
 
 ResourceLinkTooltip.Main = function Main({ children }: MainProps) {
-  return <main className="space-y-2 text-base">{children}</main>;
+  return <main className="space-y-1.5 py-1.5 text-xs">{children}</main>;
+};
+
+type ItemProps = PropsWithChildren<{
+  title?: string;
+}>;
+
+ResourceLinkTooltip.Item = function Item({ title, children }: ItemProps) {
+  return (
+    <div className="flex flex-row gap-2 items-center">
+      {title && <strong>{title}:</strong>}
+      {children}
+    </div>
+  );
 };
