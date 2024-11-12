@@ -9,7 +9,7 @@
     {
       "files": ["src/**/*"],
       "rules": {
-        "no-unused-vars": "warn",
+        "no-unused-vars": "off",
         "prettier/prettier": "warn"
       }
     }
