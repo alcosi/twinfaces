@@ -31,7 +31,7 @@ export function TabsLayout({ tabs }: Props) {
 
   return (
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
-      <nav className="flex w-full border-b mb-4">
+      <nav className="sticky top-0 flex w-full border-b bg-background z-10">
         <TabsList>
           {tabs.map((tab) => (
             <Link href={`#${tab.key}`} key={tab.key}>

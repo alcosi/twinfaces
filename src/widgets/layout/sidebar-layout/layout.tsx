@@ -54,7 +54,10 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
 
           <ThemeToggle />
         </header>
-        <main className="border border-transparent rounded-lg px-8 py-4">
+        <main
+          className="border border-transparent rounded-lg px-8 overflow-y-auto"
+          style={{ maxHeight: "calc(100vh - var(--header-height))" }}
+        >
           {children}
         </main>
       </div>
