@@ -5,7 +5,6 @@ import {
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import {
   buildFilters,
   FilterFields,

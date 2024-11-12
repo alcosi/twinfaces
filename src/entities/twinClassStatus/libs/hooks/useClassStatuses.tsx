@@ -1,11 +1,10 @@
+import { useFetchTwinClassById } from "@/entities/twinClass/libs";
 import { TwinClassStatus } from "@/entities/twinClassStatus/api";
-import { ApiContext } from "@/shared/api";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function useClassStatuses({ twinClassId }: { twinClassId: string }) {
-  const api = useContext(ApiContext);
-
+  const { fetchTwinClassById } = useFetchTwinClassById();
   const [statuses, setStatuses] = useState<TwinClassStatus[]>([]);
 
   useEffect(() => {
@@ -13,7 +12,7 @@ export function useClassStatuses({ twinClassId }: { twinClassId: string }) {
   }, [twinClassId]);
 
   async function fetchStatuses() {
-    const response = await api.twinClass.getById({
+    const response = await fetchTwinClassById({
       id: twinClassId,
       query: {
         showTwinClassMode: "SHORT",

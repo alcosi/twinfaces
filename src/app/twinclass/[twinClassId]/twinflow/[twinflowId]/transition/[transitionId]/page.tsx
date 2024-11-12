@@ -1,5 +1,6 @@
 "use client";
 
+import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { LoadingOverlay } from "@/components/base/loading";
 import { TwinFlowTransition } from "@/entities/twinFlow";
 import { useBreadcrumbs } from "@/features/breadcrumb";
@@ -23,6 +24,7 @@ export default function TransitionPage({
   params: { twinClassId, twinflowId, transitionId },
 }: TransitionPageProps) {
   const api = useContext(ApiContext);
+  const { twinClass } = useContext(TwinClassContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [transition, setTransition] = useState<TwinFlowTransition | undefined>(
     undefined
@@ -35,8 +37,8 @@ export default function TransitionPage({
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Twin Classes", href: "/twinclass" },
-      { label: "Twin Class", href: `/twinclass/${twinClassId}#twinflows` },
+      { label: "Classes", href: "/twinclass" },
+      { label: twinClass?.name!, href: `/twinclass/${twinClassId}#twinflows` },
       {
         label: "Twin Flow",
         href: `/twinclass/${twinClassId}/twinflow/${twinflowId}`,
@@ -46,7 +48,7 @@ export default function TransitionPage({
         href: `/twinclass/${twinClassId}/twinflow/${twinflowId}/transition/${transitionId}`,
       },
     ]);
-  }, [twinClassId, twinflowId, transitionId]);
+  }, [twinClassId, twinClass?.name, twinflowId, transitionId]);
 
   function fetchTransitionData() {
     setLoading(true);

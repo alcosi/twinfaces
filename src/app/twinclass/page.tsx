@@ -10,14 +10,14 @@ import {
   FILTERS,
   TwinClass_DETAILED,
   TwinClassResourceLink,
+  useFetchTwinClassById,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext } from "@/shared/api";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const columns: ColumnDef<TwinClass_DETAILED>[] = [
   {
@@ -90,34 +90,27 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
 
 export default function TwinClasses() {
   const [classDialogOpen, setClassDialogOpen] = useState(false);
-  const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { fetchTwinClassById } = useFetchTwinClassById();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Twin Classes", href: "/twinclass" }]);
+    setBreadcrumbs([{ label: "Classes", href: "/twinclass" }]);
   }, []);
 
-  const findTwinClassById = useCallback(
-    async (id: string) => {
-      try {
-        const { data } = await api.twinClass.getById({
-          id,
-          query: {
-            showTwinClassMode: "DETAILED",
-            showTwin2TwinClassMode: "SHORT",
-          },
-        });
-        return data?.twinClass;
-      } catch (error) {
-        console.error(`Failed to find twin class by ID: ${id}`, error);
-        throw new Error(`Failed to find twin class with ID ${id}`);
-      }
-    },
-    [api]
-  );
+  async function findById(id: string) {
+    return (
+      await fetchTwinClassById({
+        id,
+        query: {
+          showTwinClassMode: "DETAILED",
+          showTwin2TwinClassMode: "SHORT",
+        },
+      })
+    ).data?.twinClass;
+  }
 
   return (
     <>
@@ -145,7 +138,7 @@ export default function TwinClasses() {
               FILTERS.descriptionI18nLikeList,
             [FilterFields.headTwinClassIdList]: {
               ...FILTERS.headTwinClassIdList,
-              getById: findTwinClassById,
+              getById: findById,
               getItems: async (search) =>
                 (await searchTwinClasses({ search })).data,
               getItemKey: (item: any) => item?.id,
@@ -154,7 +147,7 @@ export default function TwinClasses() {
             },
             [FilterFields.extendsTwinClassIdList]: {
               ...FILTERS.extendsTwinClassIdList,
-              getById: findTwinClassById,
+              getById: findById,
               getItems: async (search) =>
                 (await searchTwinClasses({ search })).data,
               getItemKey: (item: any) => item?.id,

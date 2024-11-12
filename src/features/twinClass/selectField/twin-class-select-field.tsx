@@ -22,7 +22,8 @@ export function TwinClassSelectField<T extends FieldValues>(props: Props<T>) {
   const { searchTwinClasses } = useTwinClassSearchV1();
 
   async function getById(id: string) {
-    return fetchTwinClassById(id);
+    const { data } = await fetchTwinClassById({ id });
+    return data?.twinClass;
   }
 
   async function getItems(search: string): Promise<TwinClass_DETAILED[]> {

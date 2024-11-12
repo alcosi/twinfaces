@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import { TwinContextProvider } from "@/app/twin/[twinId]/twin-context";
 import React from "react";

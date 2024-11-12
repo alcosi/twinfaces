@@ -44,10 +44,10 @@ export default function TwinClassPage() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Twin Classes", href: `/twinclass` },
-      { label: "Twin Class", href: `/twinclass/${twinClass?.id}` },
+      { label: "Classes", href: `/twinclass` },
+      { label: twinClass?.name!, href: `/twinclass/${twinClass?.id}` },
     ]);
-  }, [twinClass]);
+  }, [twinClass?.id, twinClass?.name]);
 
   return <TabsLayout tabs={tabs} />;
 }

@@ -221,17 +221,6 @@ export function TwinClassDialog({
     return data ?? [];
   }
 
-  async function findClassById(id: string) {
-    const response = await api.twinClass.getById({
-      id,
-      query: {
-        showTwinClassMode: "DETAILED",
-        showTwin2TwinClassMode: "SHORT",
-      },
-    });
-    return response.data?.twinClass;
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
       <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">

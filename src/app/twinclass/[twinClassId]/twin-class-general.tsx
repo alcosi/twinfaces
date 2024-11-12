@@ -8,6 +8,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
   TwinClassUpdateRq,
+  useFetchTwinClassById,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { ApiContext } from "@/shared/api";
@@ -16,11 +17,13 @@ import { z } from "zod";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
-  const { twinClass, fetchClassData } = useContext(TwinClassContext);
+  const { twinClass, relatedObjects, fetchClassData } =
+    useContext(TwinClassContext);
   const { searchTwinClasses } = useTwinClassSearchV1();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
+  const { fetchTwinClassById } = useFetchTwinClassById();
 
   async function updateTwinClass(newClass: TwinClassUpdateRq) {
     if (!twinClass) {
@@ -47,15 +50,16 @@ export function TwinClassGeneral() {
     return data ?? [];
   }
 
-  async function findClassById(id: string) {
-    const response = await api.twinClass.getById({
-      id,
-      query: {
-        showTwinClassMode: "DETAILED",
-        showTwin2TwinClassMode: "SHORT",
-      },
-    });
-    return response.data?.twinClass;
+  async function findById(id: string) {
+    return (
+      await fetchTwinClassById({
+        id,
+        query: {
+          showTwinClassMode: "DETAILED",
+          showTwin2TwinClassMode: "SHORT",
+        },
+      })
+    ).data?.twinClass;
   }
 
   if (!twinClass) {
@@ -139,7 +143,7 @@ export function TwinClassGeneral() {
         headClassId: {
           type: AutoFormValueType.combobox,
           label: "Head class",
-          getById: findClassById,
+          getById: findById,
           getItems: fetchClasses,
           getItemKey: (c) => c?.id?.toLowerCase() ?? "",
           getItemLabel: (c) => {
@@ -163,6 +167,7 @@ export function TwinClassGeneral() {
     setEditFieldDialogOpen(true);
   }
 
+  console.log("foobar twinClass", twinClass);
   return (
     <>
       <Table className="mt-8">
@@ -204,9 +209,13 @@ export function TwinClassGeneral() {
           >
             <TableCell>Head</TableCell>
             <TableCell>
-              {twinClass.headClass && (
+              {twinClass.headClassId && relatedObjects?.twinClassMap && (
                 <TwinClassResourceLink
-                  data={twinClass.headClass as TwinClass_DETAILED}
+                  data={
+                    relatedObjects.twinClassMap[
+                      twinClass.headClassId
+                    ] as TwinClass_DETAILED
+                  }
                   withTooltip
                 />
               )}

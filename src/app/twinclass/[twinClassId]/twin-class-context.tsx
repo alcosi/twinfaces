@@ -1,19 +1,14 @@
 import { LoadingOverlay } from "@/components/base/loading";
-import { TwinClass } from "@/entities/twinClass";
+import { TwinClass, useFetchTwinClassById } from "@/entities/twinClass";
 import { TwinClassStatus } from "@/entities/twinClassStatus";
-import { ApiContext, RelatedObjects } from "@/shared/api";
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { RelatedObjects } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface TwinClassContextProps {
   twinClassId: string;
-  twinClass?: TwinClass;
+  twinClass: TwinClass;
   relatedObjects?: RelatedObjects;
   loading: boolean;
   fetchClassData: () => void;
@@ -35,13 +30,13 @@ export function TwinClassContextProvider({
   params: { twinClassId, ...props },
   children,
 }: TwinClassLayoutProps) {
-  const api = useContext(ApiContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [twinClass, setTwinClass] = useState<TwinClass | undefined>(undefined);
   const [relatedObjects, setRelatedObjects] = useState<
     RelatedObjects | undefined
   >(undefined);
   const [statuses, setStatuses] = useState<TwinClassStatus[]>([]);
+  const { fetchTwinClassById } = useFetchTwinClassById();
 
   useEffect(() => {
     fetchClassData();
@@ -50,7 +45,7 @@ export function TwinClassContextProvider({
   async function fetchClassData() {
     setLoading(true);
     try {
-      const response = await api.twinClass.getById({
+      const { data } = await fetchTwinClassById({
         id: twinClassId,
         query: {
           showTwinClassMode: "MANAGED",
@@ -64,19 +59,10 @@ export function TwinClassContextProvider({
         },
       });
 
-      const data = response.data;
-      if (!data || data.status != 0) {
-        console.error("failed to fetch twin class", data);
-        let message = "Failed to load twin class";
-        if (data?.msg) message += `: ${data.msg}`;
-        toast.error(message);
-        return;
-      }
-
-      setTwinClass(data.twinClass);
-      setRelatedObjects(data.relatedObjects);
+      setTwinClass(data?.twinClass);
+      setRelatedObjects(data?.relatedObjects);
       setStatuses(
-        data.twinClass?.statusMap
+        data?.twinClass?.statusMap
           ? Object.values(data.twinClass?.statusMap)
           : []
       );
@@ -99,6 +85,8 @@ export function TwinClassContextProvider({
   async function findStatusById(id: string) {
     return statuses.find((x) => x.id === id);
   }
+
+  if (isUndefined(twinClass)) return <>{loading && <LoadingOverlay />}</>;
 
   return (
     <TwinClassContext.Provider

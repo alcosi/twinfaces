@@ -9,11 +9,11 @@ import {
   TooltipTrigger,
 } from "@/components/base/tooltip";
 import { ImageWithFallback } from "@/components/image-with-fallback";
+import { useFetchTwinClassById } from "@/entities/twinClass";
 import {
   TwinClassStatus,
   TwinClassStatusResourceLink,
 } from "@/entities/twinClassStatus";
-import { ApiContext } from "@/shared/api";
 import { isFalsy } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { ColumnDef } from "@tanstack/table-core";
@@ -97,7 +97,6 @@ function buildColumnDefs(twinClassId: string) {
 }
 
 export function TwinClassStatuses() {
-  const api = useContext(ApiContext);
   const router = useRouter();
   const { twinClass, fetchClassData } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
@@ -106,6 +105,7 @@ export function TwinClassStatuses() {
   const [editedStatus, setEditedStatus] = useState<TwinClassStatus | null>(
     null
   );
+  const { fetchTwinClassById } = useFetchTwinClassById();
 
   async function fetchStatuses() {
     if (!twinClass?.id) {
@@ -114,7 +114,7 @@ export function TwinClassStatuses() {
     }
 
     try {
-      const response = await api.twinClass.getById({
+      const response = await fetchTwinClassById({
         id: twinClass.id,
         query: {
           showTwinClassMode: "SHORT",

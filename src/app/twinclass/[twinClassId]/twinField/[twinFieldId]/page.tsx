@@ -29,14 +29,14 @@ export default function TwinClassPage({
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Twin Classes", href: "/twinclass" },
-      { label: "Twin Class", href: `/twinclass/${twinClass?.id}#fields` },
+      { label: "Classes", href: "/twinclass" },
+      { label: twinClass?.name!, href: `/twinclass/${twinClass?.id}#fields` },
       {
         label: "Field",
         href: `/twinclass/${twinClass?.id}/twinField/${twinFieldId}`,
       },
     ]);
-  }, [twinClass?.id, twinFieldId]);
+  }, [twinClass?.id, twinClass?.name, twinFieldId]);
 
   useEffect(() => {
     fetchTwinClassData();
