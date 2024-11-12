@@ -127,6 +127,11 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     ? () => dialogRef.current?.open()
     : undefined;
 
+  let handleOnRowClick = onRowClick;
+  if (handleOnRowClick === undefined && onUpdateSubmit) {
+    handleOnRowClick = (row: TData) => dialogRef.current?.open(row);
+  }
+
   return (
     <div className={cn("flex-1 py-4", className)}>
       <CrudDataTableHeader
@@ -148,7 +153,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         {...props}
         columns={visibleColumns}
         fetcher={fetchWrapper}
-        onRowClick={onRowClick}
+        onRowClick={handleOnRowClick}
       />
 
       <CrudDataTableDialog
