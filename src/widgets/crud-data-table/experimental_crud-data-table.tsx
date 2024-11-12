@@ -57,6 +57,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onCreateSubmit,
     onUpdateSubmit,
     renderFormFields,
+    onRowClick,
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -126,10 +127,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     ? () => dialogRef.current?.open()
     : undefined;
 
-  const handleOnRowClick = onUpdateSubmit
-    ? (row: TData) => dialogRef.current?.open(row)
-    : undefined;
-
   return (
     <div className={cn("flex-1", className)}>
       <CrudDataTableHeader
@@ -151,7 +148,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         {...props}
         columns={visibleColumns}
         fetcher={fetchWrapper}
-        onRowClick={handleOnRowClick}
+        onRowClick={onRowClick}
       />
 
       <CrudDataTableDialog

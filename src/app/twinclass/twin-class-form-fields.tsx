@@ -16,10 +16,8 @@ import { FeaturerTypes } from "@/components/featurer-input";
 
 export function TwinClassFormFields<T extends FieldValues>({
   control,
-  isForward,
 }: {
   control: Control<T>;
-  isForward?: boolean;
 }) {
   const headTwinClassId = useWatch({
     control: control,
