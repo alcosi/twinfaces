@@ -94,21 +94,18 @@ function Component(
 
   return dialogForm ? (
     <Dialog open={dialogState.open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md overflow-y-scroll max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
         <DialogHeader>
           <DialogTitle>{dialogState.rowId ? "Edit" : "Create"}</DialogTitle>
         </DialogHeader>
 
         <Form {...dialogForm}>
-          <form
-            onSubmit={dialogForm.handleSubmit(handleFormSubmit)}
-            className="space-y-8"
-          >
-            <div className="space-y-8 p-1">
+          <form onSubmit={dialogForm.handleSubmit(handleFormSubmit)}>
+            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
               {renderFormFields && renderFormFields()}
             </div>
 
-            <DialogFooter className="sm:justify-end py-4">
+            <DialogFooter className="sm:justify-end bg-background p-6">
               <Button
                 type="submit"
                 loading={dialogForm.formState.isSubmitting}
