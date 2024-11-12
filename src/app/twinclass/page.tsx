@@ -23,6 +23,8 @@ import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
 import { useRouter } from "next/navigation";
 import { ApiContext } from "@/shared/api";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 const colDefs: Record<
   keyof Pick<
@@ -186,6 +188,7 @@ export default function TwinClasses() {
   const { searchTwinClasses } = useTwinClassSearchV1();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { fetchTwinClassById } = useFetchTwinClassById();
+  const router = useRouter();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Classes", href: "/twinclass" }]);
@@ -228,25 +231,30 @@ export default function TwinClasses() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof twinClassesSchema>
   ) => {
-    const body: TwinClassCreateRq = { ...formValues };
-    const { error } = await api.twinClass.create({ body });
+    const { name, description, ...withoutI18 } = formValues;
+
+    const requestBody: TwinClassCreateRq = {
+      ...withoutI18,
+      // headHunterFeaturerId: featurer?.featurer.id,
+      // headHunterParams: featurer?.params,
+      nameI18n: {
+        translationInCurrentLocale: name,
+        translations: {},
+      },
+      descriptionI18n: description
+        ? {
+            translationInCurrentLocale: description,
+            translations: {},
+          }
+        : undefined,
+    };
+
+    const { error } = await api.twinClass.create({ body: requestBody });
 
     if (error) {
       throw error;
     }
     toast.success("Twin class created successfully!");
-  };
-
-  const handleOnUpdateSubmit = async (
-    id: string,
-    formValues: z.infer<typeof twinClassesSchema>
-  ) => {
-    const body: TwinClassCreateRq = { ...formValues };
-    const { error } = await api.twinClass.update({ id, body });
-    if (error) {
-      throw error;
-    }
-    toast.success("Twin class updated successfully!");
   };
 
   return (
@@ -256,6 +264,7 @@ export default function TwinClasses() {
         fetcher={(pagination, filters) =>
           searchTwinClasses({ pagination, filters })
         }
+        onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
         columns={[
           colDefs.logo!,
           colDefs.id!,
@@ -316,7 +325,6 @@ export default function TwinClasses() {
         ]}
         dialogForm={twinClassesForm}
         onCreateSubmit={handleOnCreateSubmit}
-        onUpdateSubmit={handleOnUpdateSubmit}
         renderFormFields={() => (
           <TwinClassFormFields control={twinClassesForm.control} />
         )}
