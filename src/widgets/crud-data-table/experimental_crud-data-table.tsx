@@ -131,7 +131,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     : undefined;
 
   return (
-    <div className={cn("flex-1", className)}>
+    <div className={cn("flex-1 py-4", className)}>
       <CrudDataTableHeader
         ref={tableRef}
         title={props.title}

@@ -159,7 +159,7 @@ function CrudDataTableInternal<
   }
 
   return (
-    <div className={cn("flex-1", className)}>
+    <div className={cn("flex-1 py-4", className)}>
       <div className="mb-2 flex justify-between">
         <div className={"flex items-center"}>
           {title && <div className="text-lg">{title}</div>}
