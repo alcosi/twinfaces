@@ -4,8 +4,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";
 import { TwinContext } from "./twin-context";
-import { TwinFields, TwinGeneral, TwinLinks } from "./views";
-import { TwinComments } from "@/app/twin/[twinId]/twin-comments";
+import { TwinFields, TwinGeneral, TwinLinks, TwinComments } from "./views";
 
 const tabs: Tab[] = [
   {
