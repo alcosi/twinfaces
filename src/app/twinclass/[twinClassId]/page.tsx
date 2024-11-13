@@ -1,14 +1,16 @@
 "use client";
 
-import { TwinClassFields } from "@/app/twinclass/[twinClassId]/twin-class-fields";
-import { TwinClassGeneral } from "@/app/twinclass/[twinClassId]/twin-class-general";
-import { TwinClassStatuses } from "@/app/twinclass/[twinClassId]/twin-class-statuses";
-import { TwinClassTwinflows } from "@/app/twinclass/[twinClassId]/twin-class-twinflows";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinClassLinks } from "@/screens/twinClassLinks";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";
 import { TwinClassContext } from "./twin-class-context";
+import {
+  TwinClassFields,
+  TwinClassGeneral,
+  TwinClassStatuses,
+  TwinClassTwinflows,
+} from "./views";
 
 const tabs: Tab[] = [
   {

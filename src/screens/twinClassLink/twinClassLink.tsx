@@ -21,16 +21,20 @@ const tabs: Tab[] = [
 ];
 
 export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
-  const { twinClassId, twinClass } = useContext(TwinClassContext);
+  const { twinClassId, twinClass, link } = useContext(TwinClassContext);
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
     setBreadcrumbs([
       { label: "Classes", href: "/twinclass" },
-      { label: twinClass?.name!, href: `/twinclass/${twinClassId}#links` },
-      { label: "Link", href: `/twinclass/${twinClassId}/link/${linkId}` },
+      { label: twinClass?.name!, href: `/twinclass/${twinClassId}` },
+      { label: "Links", href: `/twinclass/${twinClassId}#links` },
+      {
+        label: link?.name ?? "N/A",
+        href: `/twinclass/${twinClassId}/link/${linkId}`,
+      },
     ]);
-  }, [linkId, twinClassId, twinClass?.name]);
+  }, [linkId, twinClassId, twinClass?.name, link?.name]);
 
   return <TabsLayout tabs={tabs} />;
 }

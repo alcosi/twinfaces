@@ -36,10 +36,14 @@ export default function TwinClassPage({
       { label: "Classes", href: "/twinclass" },
       {
         label: twinClass.name ?? "N/A",
+        href: `/twinclass/${twinClass?.id}`,
+      },
+      {
+        label: "Statuses",
         href: `/twinclass/${twinClass?.id}#statuses`,
       },
       {
-        label: "Status",
+        label: twinStatus?.name ?? "N/A",
         href: `/twinclass/${twinClass?.id}/twinStatus/${twinStatusId}`,
       },
     ]);

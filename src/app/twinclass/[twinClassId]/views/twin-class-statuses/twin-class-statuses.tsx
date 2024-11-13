@@ -1,5 +1,4 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import CreateEditTwinStatusDialog from "@/app/twinclass/[twinClassId]/twin-status-dialog";
 import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
@@ -21,6 +20,7 @@ import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
+import CreateEditTwinStatusDialog from "./twin-status-dialog";
 
 function buildColumnDefs(twinClassId: string) {
   const colDefs: ColumnDef<TwinClassStatus>[] = [

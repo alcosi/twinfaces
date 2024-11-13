@@ -17,7 +17,7 @@ export function SidebarLayoutHeader() {
 
   return (
     <header className="sticky top-0 z-10 flex justify-between items-center h-16 px-4 md:px-6 border-b bg-background">
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center">
         <SidebarTrigger className="border -ml-9 mr-9 z-20 shadow bg-sidebar" />
 
         <Breadcrumb>
@@ -33,7 +33,9 @@ export function SidebarLayoutHeader() {
                 <BreadcrumbItem>
                   <Link
                     href={item.href}
+                    title={item.label}
                     className={cn(
+                      "truncate max-w-24",
                       index === breadcrumbs.length - 1 && "font-semibold"
                     )}
                   >
@@ -45,6 +47,7 @@ export function SidebarLayoutHeader() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
+
       <ThemeToggle />
     </header>
   );

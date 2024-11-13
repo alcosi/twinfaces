@@ -1,12 +1,10 @@
 "use client";
 
-import { TwinFields } from "@/app/twin/[twinId]/twin-fields";
-import { TwinGeneral } from "@/app/twin/[twinId]/twin-general";
-import { TwinLinks } from "@/app/twin/[twinId]/twin-links";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";
 import { TwinContext } from "./twin-context";
+import { TwinFields, TwinGeneral, TwinLinks } from "./views";
 
 const tabs: Tab[] = [
   {
