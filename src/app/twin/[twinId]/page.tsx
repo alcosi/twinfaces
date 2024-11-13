@@ -5,6 +5,7 @@ import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";
 import { TwinContext } from "./twin-context";
 import { TwinFields, TwinGeneral, TwinLinks } from "./views";
+import { TwinComments } from "@/app/twin/[twinId]/twin-comments";
 
 const tabs: Tab[] = [
   {
@@ -21,6 +22,11 @@ const tabs: Tab[] = [
     key: "links",
     label: "Links",
     content: <TwinLinks />,
+  },
+  {
+    key: "comments",
+    label: "Comments",
+    content: <TwinComments />,
   },
 ];
 export default function TwinPage() {
