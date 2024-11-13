@@ -1,5 +1,4 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import CreateTwinflowDialog from "@/app/twinclass/[twinClassId]/twin-class-twinflow-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import {
   CrudDataTable,
@@ -7,12 +6,13 @@ import {
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { ApiContext } from "@/shared/api";
 import { TwinFlow } from "@/entities/twinFlow";
+import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
+import CreateTwinflowDialog from "./twin-class-twinflow-dialog";
 
 const columns: ColumnDef<TwinFlow>[] = [
   {

@@ -1,18 +1,18 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import CreateEditTwinFieldDialog from "@/app/twinclass/[twinClassId]/twin-field-dialog";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { ApiContext } from "@/shared/api";
 import { TwinClassField } from "@/entities/twinClass";
+import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
+import CreateEditTwinFieldDialog from "./twin-field-dialog";
 
 export function TwinClassFields() {
   const api = useContext(ApiContext);
