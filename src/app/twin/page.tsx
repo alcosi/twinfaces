@@ -22,10 +22,11 @@ import {
   TwinClassStatusResourceLink,
 } from "@/entities/twinClassStatus";
 import { User, UserResourceLink } from "@/entities/user";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 type FetchDataResponse = {
@@ -130,6 +131,11 @@ export default function TwinsPage() {
   const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  useEffect(() => {
+    setBreadcrumbs([{ label: "Twins", href: "/twin" }]);
+  }, []);
 
   const findTwinById = useCallback(
     async (id: string) => {
@@ -201,87 +207,85 @@ export default function TwinsPage() {
   }
 
   return (
-    <>
-      <CrudDataTable
-        ref={tableRef}
-        columns={columns}
-        getRowId={(row) => row.id!}
-        fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
-        pageSizes={[10, 20, 50]}
-        onRowClick={(row) => router.push(`/twin/${row.id}`)}
-        createButton={{
-          enabled: true,
-          text: "Create",
-        }}
-        filters={{
-          filtersInfo: {
-            [FilterFields.twinIdList]: FILTERS.twinIdList,
+    <CrudDataTable
+      ref={tableRef}
+      columns={columns}
+      getRowId={(row) => row.id!}
+      fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
+      pageSizes={[10, 20, 50]}
+      onRowClick={(row) => router.push(`/twin/${row.id}`)}
+      createButton={{
+        enabled: true,
+        text: "Create",
+      }}
+      filters={{
+        filtersInfo: {
+          [FilterFields.twinIdList]: FILTERS.twinIdList,
 
-            [FilterFields.twinClassIdList]: {
-              ...FILTERS.twinClassIdList,
-              getById: findTwinById,
-              getItems: async (search) => (await fetchTwin({ search })).data,
-              // TODO Find better solution than "any"
-              getItemKey: (item: any) => item?.id,
-              getItemLabel: ({ authorUser = "", name }: any) =>
-                `${authorUser.fullName}${name ? ` (${name})` : ""}`,
-            },
-
-            [FilterFields.statusIdList]: {
-              ...FILTERS.statusIdList,
-              getById: findTwinById,
-              getItems: async (search) => (await fetchTwin({ search })).data,
-              // TODO Find better solution than "any"
-              getItemKey: (item: any) => item?.id,
-              getItemLabel: ({ authorUser = "", name }: any) =>
-                `${authorUser.fullName}${name ? ` (${name})` : ""}`,
-            },
-
-            [FilterFields.twinNameLikeList]:
-              FILTERS[FilterFields.twinNameLikeList],
-
-            [FilterFields.createdByUserIdList]:
-              FILTERS[FilterFields.createdByUserIdList],
-
-            [FilterFields.assignerUserIdList]:
-              FILTERS[FilterFields.assignerUserIdList],
-
-            [FilterFields.headTwinIdList]: {
-              ...FILTERS.headTwinIdList,
-              getById: findTwinById,
-              getItems: async (search) => (await fetchTwin({ search })).data,
-              // TODO Find better solution than "any"
-              getItemKey: (item: any) => item?.id,
-              getItemLabel: ({ authorUser = "", name }: any) =>
-                `${authorUser.fullName}${name ? ` (${name})` : ""}`,
-            },
-
-            [FilterFields.tagDataListOptionIdList]:
-              FILTERS[FilterFields.tagDataListOptionIdList],
-
-            [FilterFields.markerDataListOptionIdList]:
-              FILTERS[FilterFields.markerDataListOptionIdList],
+          [FilterFields.twinClassIdList]: {
+            ...FILTERS.twinClassIdList,
+            getById: findTwinById,
+            getItems: async (search) => (await fetchTwin({ search })).data,
+            // TODO Find better solution than "any"
+            getItemKey: (item: any) => item?.id,
+            getItemLabel: ({ authorUser = "", name }: any) =>
+              `${authorUser.fullName}${name ? ` (${name})` : ""}`,
           },
-          onChange: () => {
-            console.log("Filters changed");
-            return Promise.resolve();
+
+          [FilterFields.statusIdList]: {
+            ...FILTERS.statusIdList,
+            getById: findTwinById,
+            getItems: async (search) => (await fetchTwin({ search })).data,
+            // TODO Find better solution than "any"
+            getItemKey: (item: any) => item?.id,
+            getItemLabel: ({ authorUser = "", name }: any) =>
+              `${authorUser.fullName}${name ? ` (${name})` : ""}`,
           },
-        }}
-        customizableColumns={{
-          enabled: true,
-          defaultVisibleKeys: [
-            "id",
-            "twinClassId",
-            "statusId",
-            "name",
-            "description",
-            "authorUserId",
-            "assignerUserId",
-            "headTwinId",
-            "createdAt",
-          ],
-        }}
-      />
-    </>
+
+          [FilterFields.twinNameLikeList]:
+            FILTERS[FilterFields.twinNameLikeList],
+
+          [FilterFields.createdByUserIdList]:
+            FILTERS[FilterFields.createdByUserIdList],
+
+          [FilterFields.assignerUserIdList]:
+            FILTERS[FilterFields.assignerUserIdList],
+
+          [FilterFields.headTwinIdList]: {
+            ...FILTERS.headTwinIdList,
+            getById: findTwinById,
+            getItems: async (search) => (await fetchTwin({ search })).data,
+            // TODO Find better solution than "any"
+            getItemKey: (item: any) => item?.id,
+            getItemLabel: ({ authorUser = "", name }: any) =>
+              `${authorUser.fullName}${name ? ` (${name})` : ""}`,
+          },
+
+          [FilterFields.tagDataListOptionIdList]:
+            FILTERS[FilterFields.tagDataListOptionIdList],
+
+          [FilterFields.markerDataListOptionIdList]:
+            FILTERS[FilterFields.markerDataListOptionIdList],
+        },
+        onChange: () => {
+          console.log("Filters changed");
+          return Promise.resolve();
+        },
+      }}
+      customizableColumns={{
+        enabled: true,
+        defaultVisibleKeys: [
+          "id",
+          "twinClassId",
+          "statusId",
+          "name",
+          "description",
+          "authorUserId",
+          "assignerUserId",
+          "headTwinId",
+          "createdAt",
+        ],
+      }}
+    />
   );
 }
