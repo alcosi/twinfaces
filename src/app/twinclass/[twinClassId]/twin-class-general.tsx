@@ -231,9 +231,13 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell>Extends</TableCell>
             <TableCell>
-              {twinClass.extendsClass && (
+              {twinClass.extendsClassId && relatedObjects?.twinClassMap && (
                 <TwinClassResourceLink
-                  data={twinClass.extendsClass as TwinClass_DETAILED}
+                  data={
+                    relatedObjects.twinClassMap[
+                      twinClass.extendsClassId
+                    ] as TwinClass_DETAILED
+                  }
                   withTooltip
                 />
               )}
