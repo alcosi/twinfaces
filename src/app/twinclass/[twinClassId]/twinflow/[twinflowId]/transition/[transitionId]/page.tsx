@@ -4,6 +4,7 @@ import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-conte
 import { LoadingOverlay } from "@/components/base/loading";
 import { TwinFlowTransition } from "@/entities/twinFlow";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { TwinFlowContext } from "@/features/twinFlow";
 import { ApiContext } from "@/shared/api";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
@@ -25,6 +26,7 @@ export default function TransitionPage({
 }: TransitionPageProps) {
   const api = useContext(ApiContext);
   const { twinClass } = useContext(TwinClassContext);
+  const { twinFlow } = useContext(TwinFlowContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [transition, setTransition] = useState<TwinFlowTransition | undefined>(
     undefined
@@ -38,17 +40,34 @@ export default function TransitionPage({
   useEffect(() => {
     setBreadcrumbs([
       { label: "Classes", href: "/twinclass" },
-      { label: twinClass?.name!, href: `/twinclass/${twinClassId}#twinflows` },
       {
-        label: "Twin Flow",
-        href: `/twinclass/${twinClassId}/twinflow/${twinflowId}`,
+        label: twinClass?.name!,
+        href: `/twinclass/${twinClass?.id}`,
       },
       {
-        label: "Transition",
+        label: "Twinflows",
+        href: `/twinclass/${twinClass?.id}#twinflows`,
+      },
+      {
+        label: twinFlow?.name ?? "N/A",
+        href: `/twinclass/${twinClass?.id}/twinflow/${twinflowId}`,
+      },
+      {
+        label: "Transitions",
+        href: `/twinclass/${twinClassId}/twinflow/${twinflowId}#transitions`,
+      },
+      {
+        label: transition?.name ?? "N/A",
         href: `/twinclass/${twinClassId}/twinflow/${twinflowId}/transition/${transitionId}`,
       },
     ]);
-  }, [twinClassId, twinClass?.name, twinflowId, transitionId]);
+  }, [
+    twinClassId,
+    twinClass?.name,
+    twinflowId,
+    transitionId,
+    transition?.name,
+  ]);
 
   function fetchTransitionData() {
     setLoading(true);

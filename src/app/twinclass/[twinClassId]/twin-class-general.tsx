@@ -167,7 +167,6 @@ export function TwinClassGeneral() {
     setEditFieldDialogOpen(true);
   }
 
-  console.log("foobar twinClass", twinClass);
   return (
     <>
       <Table className="mt-8">

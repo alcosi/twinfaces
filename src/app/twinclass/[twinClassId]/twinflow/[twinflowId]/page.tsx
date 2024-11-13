@@ -35,14 +35,18 @@ export default function TwinflowPage({
       { label: "Classes", href: "/twinclass" },
       {
         label: twinClass?.name!,
+        href: `/twinclass/${twinClass?.id}`,
+      },
+      {
+        label: "Twinflows",
         href: `/twinclass/${twinClass?.id}#twinflows`,
       },
       {
-        label: "Twin Flow",
+        label: twinflow?.name ?? "N/A",
         href: `/twinclass/${twinClass?.id}/twinflow/${twinflowId}`,
       },
     ]);
-  }, [twinClass?.id, twinClass?.name, twinflowId]);
+  }, [twinClass?.id, twinClass?.name, twinflowId, twinflow?.name]);
 
   function fetchTwinflowData() {
     setLoading(true);

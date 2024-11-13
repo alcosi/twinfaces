@@ -30,13 +30,17 @@ export default function TwinClassPage({
   useEffect(() => {
     setBreadcrumbs([
       { label: "Classes", href: "/twinclass" },
-      { label: twinClass?.name!, href: `/twinclass/${twinClass?.id}#fields` },
+      { label: twinClass?.name!, href: `/twinclass/${twinClass?.id}` },
       {
-        label: "Field",
+        label: "Fields",
+        href: `/twinclass/${twinClass?.id}#fields`,
+      },
+      {
+        label: twinField?.name ?? "N/A",
         href: `/twinclass/${twinClass?.id}/twinField/${twinFieldId}`,
       },
     ]);
-  }, [twinClass?.id, twinClass?.name, twinFieldId]);
+  }, [twinClass?.id, twinClass?.name, twinFieldId, twinField?.name]);
 
   useEffect(() => {
     fetchTwinClassData();
