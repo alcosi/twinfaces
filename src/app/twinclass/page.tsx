@@ -9,9 +9,8 @@ import {
   TWIN_CLASSES_SCHEMA,
   TwinClass_DETAILED,
   TwinClassCreateRq,
-  TwinClassResourceLink, useFetchTwinClassById,
-  TwinClassCreateRq,
   TwinClassResourceLink,
+  useFetchTwinClassById,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
@@ -23,19 +22,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ApiContext } from "@/shared/api";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useCallback, useContext, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { Experimental_CrudDataTable } from "@/widgets";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { toast } from "sonner";
-import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 const colDefs: Record<
   keyof Pick<
@@ -140,14 +129,11 @@ const colDefs: Record<
 
 export default function TwinClasses() {
   const api = useContext(ApiContext);
-  const [classDialogOpen, setClassDialogOpen] = useState(false);
   const router = useRouter();
-  const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { fetchTwinClassById } = useFetchTwinClassById();
-  const router = useRouter();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Classes", href: "/twinclass" }]);
@@ -216,52 +202,6 @@ export default function TwinClasses() {
     toast.success("Twin class created successfully!");
   };
 
-  const twinClassesForm = useForm<z.infer<typeof twinClassesSchema>>({
-    resolver: zodResolver(twinClassesSchema),
-    defaultValues: {
-      key: "",
-      name: "",
-      description: "",
-      abstractClass: false,
-      headHunterFeaturerId: 0,
-      headHunterParams: {},
-      headTwinClassId: "",
-      extendsTwinClassId: "",
-      logo: "",
-      permissionSchemaSpace: false,
-      twinflowSchemaSpace: false,
-      twinClassSchemaSpace: false,
-      aliasSpace: false,
-      markerDataListId: "",
-      tagDataListId: "",
-      viewPermissionId: "",
-    },
-  });
-
-  const handleOnCreateSubmit = async (
-    formValues: z.infer<typeof twinClassesSchema>
-  ) => {
-    const body: TwinClassCreateRq = { ...formValues };
-    const { error } = await api.twinClass.create({ body });
-
-    if (error) {
-      throw error;
-    }
-    toast.success("Twin class created successfully!");
-  };
-
-  const handleOnUpdateSubmit = async (
-    id: string,
-    formValues: z.infer<typeof twinClassesSchema>
-  ) => {
-    const body: TwinClassCreateRq = { ...formValues };
-    const { error } = await api.twinClass.update({ id, body });
-    if (error) {
-      throw error;
-    }
-    toast.success("Twin class updated successfully!");
-  };
-
   return (
     <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
       <Experimental_CrudDataTable
@@ -282,12 +222,6 @@ export default function TwinClasses() {
         ]}
         getRowId={(row) => row.id!}
         pageSizes={[10, 20, 50]}
-        onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
-        createButton={{
-          enabled: true,
-          onClick: () => setClassDialogOpen(true),
-          text: "Create Class",
-        }}
         filters={{
           // TODO: Fix typing by removing `any`
           filtersInfo: {
