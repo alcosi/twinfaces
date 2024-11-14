@@ -23,6 +23,7 @@ import { paths } from "@/shared/api/generated/schema";
 import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
+import { createDatalistApi, DatalistApi } from "@/entities/datalist";
 
 export interface ApiContextProps {
   twinClass: TwinClassApi;
@@ -34,6 +35,7 @@ export interface ApiContextProps {
   twinClassLink: TwinClassLinkApi;
   permission: PermissionApi;
   permissionGroup: PermissionGroupApi;
+  datalist: DatalistApi;
 }
 
 export function ApiContextProvider({
@@ -60,6 +62,7 @@ export function ApiContextProvider({
         twinClassLink: createTwinClassLinksApi(settings),
         permission: createPermissionApi(settings),
         permissionGroup: createPermissionGroupApi(settings),
+        datalist: createDatalistApi(settings),
       }}
     >
       {children}
