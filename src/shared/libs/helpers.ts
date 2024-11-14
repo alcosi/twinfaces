@@ -41,6 +41,15 @@ export function wrapWithPercent(input: string): string {
   return `%${input}%`;
 }
 
+export function mergeUniqueItems<T extends { id: string | number }>(
+  existing: T[],
+  incoming: T[]
+): T[] {
+  const existingIds = new Set(existing.map((item) => item.id));
+  const uniqueIncoming = incoming.filter((item) => !existingIds.has(item.id));
+  return [...existing, ...uniqueIncoming];
+}
+
 // Utility function to create an enum from a string union type
 export const createEnum = <T extends string>(values: T[]): { [K in T]: K } => {
   return values.reduce((acc, value) => {

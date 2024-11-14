@@ -2,6 +2,10 @@
 
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
+import {
+  createPermissionGroupApi,
+  PermissionGroupApi,
+} from "@/entities/permissionGroup";
 import { createTwinApi, TwinApi } from "@/entities/twin";
 import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
 import {
@@ -24,6 +28,7 @@ export interface ApiContextProps {
   twin: TwinApi;
   twinClassLink: TwinClassLinkApi;
   permission: PermissionApi;
+  permissionGroup: PermissionGroupApi;
 }
 
 export function ApiContextProvider({
@@ -48,6 +53,7 @@ export function ApiContextProvider({
         twin: createTwinApi(settings),
         twinClassLink: createTwinClassLinksApi(settings),
         permission: createPermissionApi(settings),
+        permissionGroup: createPermissionGroupApi(settings),
       }}
     >
       {children}
