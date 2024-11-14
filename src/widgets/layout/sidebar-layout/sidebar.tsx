@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "@/components/base/sidebar";
 import { cn } from "@/shared/libs";
-import { Braces, Key, LayoutTemplate, Smile } from "lucide-react";
+import { Braces, Key, LayoutTemplate, ListTree, Smile } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -31,6 +31,11 @@ const menuItems = [
     title: "Permissions",
     url: "/permission",
     icon: Key,
+  },
+  {
+    title: "Datalists",
+    url: "/datalists",
+    icon: ListTree,
   },
 ];
 
