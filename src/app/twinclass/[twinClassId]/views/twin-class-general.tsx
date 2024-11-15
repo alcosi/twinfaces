@@ -16,6 +16,7 @@ import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
+import {InPlaceField, InPlaceFieldProps} from "@/components/in-place-field";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
@@ -164,6 +165,20 @@ export function TwinClassGeneral() {
     },
   };
 
+  const nameSettings: InPlaceFieldProps = {
+    value: twinClass.name,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      label: "",
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateTwinClass({
+        nameI18n: { translationInCurrentLocale: value as string },
+      });
+    },
+  }
+
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
     setEditFieldDialogOpen(true);
@@ -173,22 +188,22 @@ export function TwinClassGeneral() {
     <>
       <Table className="mt-8">
         <TableBody>
-          <TableRow>
-            <TableCell>ID</TableCell>
+          <TableRow noHover>
+            <TableCell width={300}>ID</TableCell>
             <TableCell>
               <ShortGuidWithCopy value={twinClass.id} />
             </TableCell>
           </TableRow>
-          <TableRow>
+          <TableRow noHover>
             <TableCell>Key</TableCell>
             <TableCell>{twinClass.key}</TableCell>
           </TableRow>
-          <TableRow
-            className={"cursor-pointer"}
-            onClick={() => openWithSettings(classValues.name!)}
+          <TableRow noHover
+            // className={"cursor-pointer"}
+            // onClick={() => openWithSettings(classValues.name!)}
           >
             <TableCell>Name</TableCell>
-            <TableCell>{twinClass.name}</TableCell>
+            <TableCell><InPlaceField {...nameSettings}/></TableCell>
           </TableRow>
           <TableRow
             className={"cursor-pointer"}
