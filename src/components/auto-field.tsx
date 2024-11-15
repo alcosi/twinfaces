@@ -34,6 +34,7 @@ export enum AutoFormValueType {
   color = "color",
   tag = "tag",
 }
+
 /* eslint-enable no-unused-vars */
 
 export type AutoFormValueInfo = AutoFormCommonInfo &
@@ -48,7 +49,7 @@ export type AutoFormValueInfo = AutoFormCommonInfo &
   );
 
 export interface AutoFormCommonInfo {
-  label: string;
+  label?: string;
   description?: string;
   defaultValue?: any;
 }
@@ -92,6 +93,8 @@ export interface AutoFormFieldProps {
   onChange?: (value: any) => any;
   name?: FieldPath<any>;
   control?: Control<any>;
+  autoFocus?: boolean;
+  onCancel?: () => any;
 }
 
 export interface AutoFormColorValueInfo {
@@ -104,6 +107,8 @@ export function AutoField({
   onChange,
   name,
   control,
+  autoFocus,
+  onCancel,
 }: AutoFormFieldProps) {
   function setValue(newValue: any) {
     onChange?.(newValue);
@@ -111,12 +116,13 @@ export function AutoField({
 
   function renderField() {
     switch (info.type) {
-      // boolean has a different structure (label after control), so we need to handle it separately
       case AutoFormValueType.boolean:
         return name && control ? (
-          <CheckboxFormField {...info} name={name} control={control} />
+          <CheckboxFormField {...info} name={name} control={control}
+                             autoFocus={autoFocus} />
         ) : (
-          <CheckboxFormItem {...info} fieldValue={value} onChange={setValue} />
+          <CheckboxFormItem {...info} fieldValue={value} onChange={setValue}
+                            autoFocus={autoFocus} />
         );
 
       case AutoFormValueType.combobox:
@@ -159,12 +165,14 @@ export function AutoField({
 
       default:
         return name && control ? (
-          <TextFormField {...info} name={name} control={control} />
+          <TextFormField {...info} name={name} control={control}
+                         autoFocus={autoFocus} />
         ) : (
           <TextFormItem
             {...info}
             value={value}
             onChange={(e) => setValue(e?.target.value)}
+            autoFocus={autoFocus}
           />
         );
     }

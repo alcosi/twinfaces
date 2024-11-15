@@ -7,6 +7,7 @@ import {
 } from "@/components/form-fields/form-fields-common";
 import { ReactNode } from "react";
 import { FieldValues } from "react-hook-form";
+import {CheckboxProps} from "@radix-ui/react-checkbox";
 
 export function CheckboxFormField<T extends FieldValues>({
   name,
@@ -14,7 +15,11 @@ export function CheckboxFormField<T extends FieldValues>({
   label,
   description,
   hasIndeterminate,
-}: FormFieldProps<T> & { hasIndeterminate?: boolean }) {
+  ...props
+}: FormFieldProps<T> & { hasIndeterminate?: boolean } & Omit<
+    CheckboxProps,
+    "checked" | "onCheckedChange" | "type" | "onChange"
+  >) {
   return (
     <FormField
       control={control}
@@ -27,6 +32,7 @@ export function CheckboxFormField<T extends FieldValues>({
           description={description}
           hasIndeterminate={hasIndeterminate}
           inForm={true}
+          {...props}
         />
       )}
     />
@@ -40,6 +46,7 @@ export function CheckboxFormItem({
   description,
   inForm,
   hasIndeterminate,
+  ...props
 }: {
   fieldValue?: boolean | "indeterminate";
   onChange?: (value: boolean | "indeterminate") => any;
@@ -49,7 +56,7 @@ export function CheckboxFormItem({
   inputId?: string;
   inForm?: boolean;
   hasIndeterminate?: boolean;
-}) {
+} & Omit<CheckboxProps, "checked" | "onCheckedChange" | "type">) {
   function onCheckedChange(x: boolean) {
     if (hasIndeterminate && fieldValue === false && x === true) {
       onChange?.("indeterminate");
@@ -68,6 +75,7 @@ export function CheckboxFormItem({
             : fieldValue
         }
         onCheckedChange={onCheckedChange}
+        {...props}
       />
       {/*</FormControl>*/}
       <div className="space-y-1 leading-none">
