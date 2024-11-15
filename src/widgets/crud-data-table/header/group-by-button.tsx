@@ -1,13 +1,13 @@
 import { Button } from "@/components/base/button";
+import { Label } from "@/components/base/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
+import { RadioGroup, RadioGroupItem } from "@/components/base/radio-group";
 import { ColumnDef } from "@tanstack/react-table";
 import { AlignJustify } from "lucide-react";
-import { useState } from "react";
 import { getColumnKey } from "../helpers";
 
 interface GroupByButtonProps<TData, TValue> {
@@ -15,29 +15,10 @@ interface GroupByButtonProps<TData, TValue> {
   onGroupByChange: (groupBy?: string) => void;
 }
 
-function resetCheckboxes<TData, TValue>(
-  columns: ColumnDef<TData, TValue>[]
-): Record<string, boolean> {
-  return Object.fromEntries(columns.map((col) => [getColumnKey(col), false]));
-}
-
 export function GroupByButton<TData, TValue>({
   columns,
   onGroupByChange,
 }: GroupByButtonProps<TData, TValue>) {
-  const [checkedValues, setCheckedValues] = useState<Record<string, boolean>>(
-    resetCheckboxes(columns)
-  );
-
-  const handleCheckboxChange = (key: string) => {
-    setCheckedValues(() => {
-      const updatedValues = resetCheckboxes(columns);
-      updatedValues[key] = !checkedValues[key];
-      onGroupByChange(updatedValues[key] ? key : undefined);
-      return updatedValues;
-    });
-  };
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -46,19 +27,19 @@ export function GroupByButton<TData, TValue>({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="space-y-4">
-        <div className="space-y-4">
+        <RadioGroup className="space-y-4" onValueChange={onGroupByChange}>
           {columns.map((column) => {
             const key = getColumnKey(column);
             return (
-              <CheckboxFormItem
-                key={key}
-                fieldValue={checkedValues[key]}
-                onChange={() => handleCheckboxChange(key)}
-                label={<>{column.header}</>}
-              />
+              <div key={key} className="flex items-center space-x-2">
+                <RadioGroupItem value={key} id={key} />
+                <Label htmlFor={key}>
+                  <>{column.header}</>
+                </Label>
+              </div>
             );
           })}
-        </div>
+        </RadioGroup>
       </PopoverContent>
     </Popover>
   );
