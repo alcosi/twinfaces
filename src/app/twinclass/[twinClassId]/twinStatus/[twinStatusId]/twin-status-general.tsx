@@ -27,9 +27,9 @@ export function TwinStatusGeneral({
     useState<AutoEditDialogSettings | undefined>(undefined);
 
   const [backgroundColor, setBackgroundColor] = useState(
-    status.backgroundColor || "#FFFFFF"
+    status.backgroundColor
   );
-  const [fontColor, setFontColor] = useState(status.fontColor || "#FFFFFF");
+  const [fontColor, setFontColor] = useState(status.fontColor);
 
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
