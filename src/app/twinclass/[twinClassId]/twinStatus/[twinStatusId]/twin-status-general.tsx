@@ -5,10 +5,12 @@ import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 import {
   TwinClassStatus,
+  TwinClassStatusResourceLink,
   TwinClassStatusUpdateRq,
 } from "@/entities/twinClassStatus";
 import { ApiContext } from "@/shared/api";
 import { useContext, useState } from "react";
+import { TwinClassContext } from "../../twin-class-context";
 
 export function TwinStatusGeneral({
   status,
@@ -18,6 +20,7 @@ export function TwinStatusGeneral({
   onChange: () => any;
 }) {
   const api = useContext(ApiContext);
+  const { twinClassId } = useContext(TwinClassContext);
   const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
 
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
@@ -132,7 +135,12 @@ export function TwinStatusGeneral({
             onClick={() => openWithSettings(nameAutoDialogSettings)}
           >
             <TableCell>Name</TableCell>
-            <TableCell>{status.name}</TableCell>
+            <TableCell>
+              <TwinClassStatusResourceLink
+                data={status}
+                twinClassId={twinClassId}
+              />
+            </TableCell>
           </TableRow>
 
           <TableRow
