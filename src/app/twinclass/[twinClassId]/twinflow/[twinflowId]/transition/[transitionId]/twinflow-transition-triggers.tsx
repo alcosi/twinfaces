@@ -1,7 +1,7 @@
 import {
-  TwinFlowTransition,
+  TF_Transition,
   TwinFlowTransitionTrigger,
-} from "@/entities/twinFlow";
+} from "@/entities/twinFlowTransition";
 import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
 import { useRef, useState } from "react";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
@@ -13,7 +13,7 @@ export function TwinflowTransitionTriggers({
   transition,
   onChange,
 }: {
-  transition: TwinFlowTransition;
+  transition: TF_Transition;
   onChange: () => any;
 }) {
   const tableRef = useRef<DataTableHandle>(null);

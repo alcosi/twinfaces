@@ -10,6 +10,10 @@ import {
 } from "@/entities/twinClassLink";
 import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinClassStatus";
 import { createTwinflowApi, TwinflowApi } from "@/entities/twinFlow";
+import {
+  createTwinFlowTransitionApi,
+  TwinFlowTransitionApi,
+} from "@/entities/twinFlowTransition";
 import { ApiContext, ApiSettings } from "@/shared/api";
 import { paths } from "@/shared/api/generated/schema";
 import { env } from "next-runtime-env";
@@ -20,6 +24,7 @@ export interface ApiContextProps {
   twinClass: TwinClassApi;
   twinStatus: TwinStatusApi;
   twinflow: TwinflowApi;
+  twinFlowTransition: TwinFlowTransitionApi;
   featurer: FeaturerApi;
   twin: TwinApi;
   twinClassLink: TwinClassLinkApi;
@@ -44,6 +49,7 @@ export function ApiContextProvider({
         twinClass: createTwinClassApi(settings),
         twinStatus: createTwinStatusApi(settings),
         twinflow: createTwinflowApi(settings),
+        twinFlowTransition: createTwinFlowTransitionApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
         twinClassLink: createTwinClassLinksApi(settings),

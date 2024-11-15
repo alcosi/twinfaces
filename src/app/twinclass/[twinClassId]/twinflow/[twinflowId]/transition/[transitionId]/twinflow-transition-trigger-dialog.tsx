@@ -4,7 +4,7 @@ import { FeaturerTypes } from "@/components/featurer-input";
 import {
   TwinFlowTransitionTrigger,
   TwinFlowTransitionTriggerUpdate,
-} from "@/entities/twinFlow";
+} from "@/entities/twinFlowTransition";
 import { ApiContext } from "@/shared/api";
 import { useContext } from "react";
 import { toast } from "sonner";
@@ -29,9 +29,9 @@ export function TwinflowTransitionTriggerDialog({
     newTrigger: TwinFlowTransitionTriggerUpdate
   ) {
     try {
-      const result = await api.twinflow.updateTransition({
+      const result = await api.twinFlowTransition.update({
         transitionId: transitionId,
-        data: {
+        body: {
           triggers:
             trigger != null
               ? {

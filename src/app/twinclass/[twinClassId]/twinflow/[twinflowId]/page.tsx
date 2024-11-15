@@ -1,11 +1,10 @@
 "use client";
 
 import { TwinflowGeneral } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-general";
-import { TwinflowTransitions } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-transitions";
 import { LoadingOverlay } from "@/components/base/loading";
-import { TwinFlow } from "@/entities/twinFlow";
+import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twinFlow";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext } from "@/shared/api";
+import { TwinFlowTransitions } from "@/screens/twinFlowTransitions";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -20,10 +19,10 @@ interface TwinflowPageProps {
 export default function TwinflowPage({
   params: { twinflowId },
 }: TwinflowPageProps) {
-  const api = useContext(ApiContext);
   const { twinClass } = useContext(TwinClassContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [twinflow, setTwinflow] = useState<TwinFlow | undefined>(undefined);
+  const { fetchTwinFlowById } = useTwinFlowFetchByIdV1();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
@@ -50,21 +49,9 @@ export default function TwinflowPage({
 
   function fetchTwinflowData() {
     setLoading(true);
-    api.twinflow
-      .getById({
-        twinFlowId: twinflowId,
-      })
-      .then((response: any) => {
-        const data = response.data;
-        if (!data || data.status != 0) {
-          console.error("failed to fetch twin class", data);
-          let message = "Failed to load twin class";
-          if (data?.msg) message += `: ${data.msg}`;
-          toast.error(message);
-          return;
-        }
-        setTwinflow(data.twinflow);
-      })
+
+    fetchTwinFlowById(twinflowId)
+      .then(setTwinflow)
       .catch((e: any) => {
         console.error("exception while fetching twin class", e);
         toast.error("Failed to fetch twin class");
@@ -85,9 +72,9 @@ export default function TwinflowPage({
           key: "transitions",
           label: "Transitions",
           content: (
-            <TwinflowTransitions
-              twinflow={twinflow}
-              onChange={fetchTwinflowData}
+            <TwinFlowTransitions
+              twinClassId={twinClass?.id}
+              twinFlowId={twinflowId}
             />
           ),
         },

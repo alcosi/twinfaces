@@ -1,14 +1,14 @@
+import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
+import { AutoFormValueType } from "@/components/auto-field";
+import { FeaturerTypes } from "@/components/featurer-input";
 import {
   TwinFlowTransitionValidator,
   TwinFlowTransitionValidatorUpdate,
-} from "@/entities/twinFlow";
-import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
-import { AutoFormValueType } from "@/components/auto-field";
+} from "@/entities/twinFlowTransition";
 import { ApiContext } from "@/shared/api";
-import { useContext } from "react";
-import { FeaturerTypes } from "@/components/featurer-input";
-import { toast } from "sonner";
 import { isPopulatedArray } from "@/shared/libs";
+import { useContext } from "react";
+import { toast } from "sonner";
 
 export interface TwinflowTransitionValidatorDialogProps {
   open: boolean;
@@ -30,9 +30,9 @@ export function TwinflowTransitionValidatorDialog({
     newValidator: TwinFlowTransitionValidatorUpdate
   ) {
     try {
-      const result = await api.twinflow.updateTransition({
+      const result = await api.twinFlowTransition.update({
         transitionId: transitionId,
-        data: {
+        body: {
           validatorRules:
             validator != null
               ? {
