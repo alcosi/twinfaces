@@ -102,11 +102,9 @@ export function Permissions() {
         pagination,
         filters: _filters,
       });
+      setPermissions((prev) => mergeUniquePermissions(prev, response.data));
 
-      const permissions = response.data ?? [];
-      setPermissions((prev) => mergeUniquePermissions(prev, permissions));
-
-      return { data: permissions, pageCount: 0 };
+      return response;
     } catch (e) {
       console.error("Failed to fetch permissions", e);
       toast.error("Failed to fetch permissions");

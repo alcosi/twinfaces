@@ -28,7 +28,7 @@ const ResourceLinkContent = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center h-6 max-w-full border rounded-lg p-2 transition-colors} bg-transparent",
+        "inline-flex items-center h-6 max-w-full border rounded-lg px-2 transition-colors} bg-transparent",
         "border-link-light-disabled hover:border-link-light-active",
         "dark:border-link-dark-disabled dark:hover:border-link-dark-active",
         disabled
@@ -37,13 +37,14 @@ const ResourceLinkContent = ({
       )}
     >
       <span
-        className={
+        className={cn(
+          "h-4 w-4 flex items-center",
           disabled
             ? "text-link-light-disabled dark:text-link-dark-disabled"
             : "text-link-light-active dark:text-link-dark-active"
-        }
+        )}
       >
-        <IconComponent className="h-4 w-4" />
+        <IconComponent />
       </span>
 
       <span
