@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { isNull } from "../type-checkers";
+import { isNull } from "../types";
 
 export function useLocalStorage<T>(
   key: string,

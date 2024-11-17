@@ -41,14 +41,14 @@ export enum AutoFormValueType {
 }
 /* eslint-enable no-unused-vars */
 
-export type AutoFormValueInfo<T = unknown> = AutoFormCommonInfo &
+export type AutoFormValueInfo = AutoFormCommonInfo &
   (
     | AutoFormSimpleValueInfo
     | AutoFormCheckboxValueInfo
     | AutoFormComboboxValueInfo
     | AutoFormFeaturerValueInfo
     | AutoFormSelectValueInfo
-    | AutoFormMultiComboboxValueInfo<T>
+    | AutoFormMultiComboboxValueInfo
     | AutoFormColorValueInfo
   );
 
@@ -88,10 +88,14 @@ export interface AutoFormSelectValueInfo {
   options: string[];
 }
 
-export type AutoFormMultiComboboxValueInfo<T> = MultiComboboxFormFieldProps<T> &
-  Pick<MultiComboboxProps<T>, "getItems" | "getItemKey" | "getItemLabel"> & {
-    type: AutoFormValueType.multiCombobox;
-  };
+export type AutoFormMultiComboboxValueInfo<T = unknown> =
+  MultiComboboxFormFieldProps<T> &
+    Pick<
+      MultiComboboxProps<T>,
+      "getItems" | "getItemKey" | "getItemLabel" | "multi"
+    > & {
+      type: AutoFormValueType.multiCombobox;
+    };
 
 export interface AutoFormFieldProps {
   info: AutoFormValueInfo;
@@ -128,7 +132,6 @@ export function AutoField({
       />
     );
   } else if (info.type === AutoFormValueType.combobox) {
-    console.log("Combobox", info, value, onChange);
     return name && control ? (
       <ComboboxFormField name={name} control={control} {...info} />
     ) : (

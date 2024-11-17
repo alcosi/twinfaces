@@ -1,21 +1,7 @@
-import { PaginationState } from "@tanstack/table-core";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { components, operations } from "@/shared/api/generated/schema";
-import { TwinUpdateRq } from "./types";
-
-type TwinSearchApiFilters = Partial<
-  Pick<
-    components["schemas"]["TwinSearchRqV1"],
-    | "twinIdList"
-    | "twinNameLikeList"
-    | "twinClassIdList"
-    | "assignerUserIdList"
-    | "headTwinIdList"
-    | "tagDataListOptionIdList"
-    | "markerDataListOptionIdList"
-    | "statusIdList"
-  >
->;
+import { operations } from "@/shared/api/generated/schema";
+import { PaginationState } from "@tanstack/table-core";
+import { TwinFilters, TwinUpdateRq } from "./types";
 
 export function createTwinApi(settings: ApiSettings) {
   function search({
@@ -25,7 +11,7 @@ export function createTwinApi(settings: ApiSettings) {
   }: {
     pagination: PaginationState;
     search?: string;
-    filters?: TwinSearchApiFilters;
+    filters?: TwinFilters;
   }) {
     return settings.client.POST("/private/twin/search/v3", {
       params: {
