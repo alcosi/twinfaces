@@ -18,10 +18,6 @@ import { cn } from "@/shared/libs";
 import { ReactNode, useEffect, useRef } from "react";
 import { FieldValues } from "react-hook-form";
 
-export interface ComboboxFormFieldProps<T> {
-  getById: (id: string) => Promise<T | undefined>;
-}
-
 export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
   name,
   control,
@@ -30,9 +26,7 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
   required,
   buttonClassName,
   ...props
-}: FormFieldProps<TFormModel> &
-  ComboboxFormFieldProps<TFieldModel> &
-  ComboboxProps<TFieldModel>) {
+}: FormFieldProps<TFormModel> & ComboboxProps<TFieldModel>) {
   return (
     <FormField
       control={control}
@@ -56,22 +50,20 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
 export function ComboboxFormItem<TFieldModel>({
   fieldValue,
   onChange,
-  getById,
   label,
   description,
   required,
   buttonClassName,
   inForm,
   ...props
-}: ComboboxProps<TFieldModel> &
-  ComboboxFormFieldProps<TFieldModel> & {
-    fieldValue?: string;
-    onChange?: (value?: TFieldModel) => any;
-    label?: ReactNode;
-    description?: ReactNode;
-    required?: boolean;
-    inForm?: boolean;
-  }) {
+}: ComboboxProps<TFieldModel> & {
+  fieldValue?: string;
+  onChange?: (value?: TFieldModel) => any;
+  label?: ReactNode;
+  description?: ReactNode;
+  required?: boolean;
+  inForm?: boolean;
+}) {
   const comboboxRef = useRef(null);
 
   useEffect(() => {
@@ -95,7 +87,7 @@ export function ComboboxFormItem<TFieldModel>({
       console.log("current selected", selected);
       if (!selected || props.getItemKey(selected) !== id) {
         console.log("searching combobox field value by id");
-        const value = await getById(id);
+        const value = await props.getById(id);
         (
           comboboxRef.current as unknown as ComboboxHandle<TFieldModel>
         ).setSelected(value);

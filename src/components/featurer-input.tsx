@@ -138,6 +138,7 @@ export function FeaturerInput({
         selectPlaceholder={selectPlaceholder ?? "Select featurer"}
         searchPlaceholder={searchPlaceholder ?? "Search featurer..."}
         noItemsText={noItemsText ?? "No featurers found"}
+        getById={async () => undefined}
         getItems={fetchHeadHunterFeaturers}
         getItemKey={(c) => c.id!.toString()}
         getItemLabel={(c) => {

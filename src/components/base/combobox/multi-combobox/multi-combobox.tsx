@@ -16,34 +16,9 @@ import {
 } from "@/components/base/popover";
 import { cn, fixedForwardRef, useDebouncedValue } from "@/shared/libs";
 import { Check, ChevronsUpDown } from "lucide-react";
-import {
-  ForwardedRef,
-  ReactNode,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
+import { MultiComboboxHandle, MultiComboboxProps } from "../types";
 import { SelectedOptions } from "./selected-options";
-
-export type MultiComboboxHandle<T> = {
-  setSelected: (newSelected: T[]) => void;
-};
-
-export interface MultiComboboxProps<T> {
-  getItems: (search: string) => Promise<T[]>;
-  getItemKey: (item: T) => string;
-  getItemLabel: (item: T) => string;
-  onSelect?: (value?: T[]) => any;
-  renderInList?: (value: T) => ReactNode;
-  renderSelected?: (value: T) => ReactNode;
-  selectPlaceholder?: string;
-  searchPlaceholder?: string;
-  noItemsText?: string;
-  buttonClassName?: string;
-  contentClassName?: string;
-  searchDelay?: number;
-  multi?: boolean;
-}
 
 export const MultiCombobox = fixedForwardRef(ComboboxInternal);
 
