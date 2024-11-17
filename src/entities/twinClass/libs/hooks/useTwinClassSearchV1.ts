@@ -1,8 +1,8 @@
-import { FiltersState } from "@/components/base/data-table/crud-data-table";
 import { ApiContext } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { buildFilters, hydrateTwinClassFromMap } from "../helpers";
+import { TwinClassFilters } from "../../api";
+import { hydrateTwinClassFromMap } from "../helpers";
 import { TwinClass_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
@@ -13,17 +13,17 @@ export const useTwinClassSearchV1 = () => {
     async ({
       search,
       pagination = { pageIndex: 0, pageSize: 10 },
-      filters = { filters: {} },
+      filters = {},
     }: {
       search?: string;
       pagination?: PaginationState;
-      filters?: FiltersState;
+      filters?: TwinClassFilters;
     }): Promise<{ data: TwinClass_DETAILED[]; pageCount: number }> => {
       try {
         const { data, error } = await api.twinClass.search({
           search,
           pagination,
-          filters: buildFilters(filters),
+          filters,
         });
 
         if (error) {

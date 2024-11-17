@@ -6,12 +6,10 @@ import {
 } from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import {
-  buildFilters,
-  FilterFields,
-  FILTERS,
   hydrateTwinFromMap,
   Twin,
   TwinResourceLink,
+  useTwinFilters,
 } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
@@ -26,7 +24,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 type FetchDataResponse = {
@@ -131,33 +129,12 @@ export default function TwinsPage() {
   const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
+  const { buildFilterFields, mapFiltersToPayload } = useTwinFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Twins", href: "/twin" }]);
   }, []);
-
-  const findTwinById = useCallback(
-    async (id: string) => {
-      try {
-        const { data } = await api.twin.getById({
-          id,
-          query: {
-            showTwinMode: "DETAILED",
-            showTwinClassMode: "DETAILED",
-            showTwinMarker2DataListOptionMode: "DETAILED",
-            showTwinTag2DataListOptionMode: "DETAILED",
-          },
-        });
-
-        return data?.twin;
-      } catch (error) {
-        console.error(`Failed to find twin by ID: ${id}`, error);
-        throw new Error(`Failed to find twin with ID ${id}`);
-      }
-    },
-    [api]
-  );
 
   async function fetchTwin({
     search,
@@ -166,10 +143,10 @@ export default function TwinsPage() {
   }: {
     search?: string;
     pagination?: PaginationState;
-    filters?: FiltersState;
+    filters: FiltersState;
   }): Promise<FetchDataResponse> {
     const _pagination = pagination || { pageIndex: 0, pageSize: 10 };
-    const _filters = buildFilters(filters ?? { filters: {} });
+    const _filters = mapFiltersToPayload(filters.filters);
 
     try {
       const { data, error } = await api.twin.search({
@@ -215,58 +192,11 @@ export default function TwinsPage() {
       pageSizes={[10, 20, 50]}
       onRowClick={(row) => router.push(`/twin/${row.id}`)}
       createButton={{
-        enabled: true,
+        enabled: false,
         text: "Create",
       }}
       filters={{
-        filtersInfo: {
-          [FilterFields.twinIdList]: FILTERS.twinIdList,
-
-          [FilterFields.twinClassIdList]: {
-            ...FILTERS.twinClassIdList,
-            getById: findTwinById,
-            getItems: async (search) => (await fetchTwin({ search })).data,
-            // TODO Find better solution than "any"
-            getItemKey: (item: any) => item?.id,
-            getItemLabel: ({ authorUser = "", name }: any) =>
-              `${authorUser.fullName}${name ? ` (${name})` : ""}`,
-          },
-
-          [FilterFields.statusIdList]: {
-            ...FILTERS.statusIdList,
-            getById: findTwinById,
-            getItems: async (search) => (await fetchTwin({ search })).data,
-            // TODO Find better solution than "any"
-            getItemKey: (item: any) => item?.id,
-            getItemLabel: ({ authorUser = "", name }: any) =>
-              `${authorUser.fullName}${name ? ` (${name})` : ""}`,
-          },
-
-          [FilterFields.twinNameLikeList]:
-            FILTERS[FilterFields.twinNameLikeList],
-
-          [FilterFields.createdByUserIdList]:
-            FILTERS[FilterFields.createdByUserIdList],
-
-          [FilterFields.assignerUserIdList]:
-            FILTERS[FilterFields.assignerUserIdList],
-
-          [FilterFields.headTwinIdList]: {
-            ...FILTERS.headTwinIdList,
-            getById: findTwinById,
-            getItems: async (search) => (await fetchTwin({ search })).data,
-            // TODO Find better solution than "any"
-            getItemKey: (item: any) => item?.id,
-            getItemLabel: ({ authorUser = "", name }: any) =>
-              `${authorUser.fullName}${name ? ` (${name})` : ""}`,
-          },
-
-          [FilterFields.tagDataListOptionIdList]:
-            FILTERS[FilterFields.tagDataListOptionIdList],
-
-          [FilterFields.markerDataListOptionIdList]:
-            FILTERS[FilterFields.markerDataListOptionIdList],
-        },
+        filtersInfo: buildFilterFields(),
         onChange: () => {
           console.log("Filters changed");
           return Promise.resolve();
