@@ -14,7 +14,7 @@ import {
   FormItemDescription,
   FormItemLabel,
 } from "@/components/form-fields/form-fields-common";
-import { cn } from "@/shared/libs";
+import { cn, isEmptyArray } from "@/shared/libs";
 import { ReactNode, useEffect, useRef } from "react";
 import { FieldValues } from "react-hook-form";
 
@@ -85,7 +85,7 @@ export function ComboboxFormItem<TFieldModel>({
         comboboxRef.current as unknown as ComboboxHandle<TFieldModel>
       ).getSelected();
       console.log("current selected", selected);
-      if (!selected || props.getItemKey(selected) !== id) {
+      if (!selected || isEmptyArray(selected)) {
         console.log("searching combobox field value by id");
         const value = await props.getById(id);
         (

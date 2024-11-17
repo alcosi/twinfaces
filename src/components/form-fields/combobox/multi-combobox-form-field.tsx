@@ -1,6 +1,6 @@
 import {
+  ComboboxHandle,
   MultiCombobox,
-  MultiComboboxHandle,
   MultiComboboxProps,
 } from "@/components/base/combobox";
 import {
@@ -70,9 +70,7 @@ export function MultiComboboxFormItem<TFieldModel>({
   required?: boolean;
   inForm?: boolean;
 }) {
-  const multiComboboxRef = useRef<MultiComboboxHandle<TFieldModel> | null>(
-    null
-  );
+  const multiComboboxRef = useRef<ComboboxHandle<TFieldModel> | null>(null);
 
   useEffect(() => {
     applySelectedValues(fieldValue);
