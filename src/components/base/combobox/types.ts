@@ -11,6 +11,7 @@ interface BaseComboboxProps<T> extends SelectAdapter<T> {
   buttonClassName?: string;
   contentClassName?: string;
   searchDelay?: number;
+  multi?: boolean;
 }
 
 // Single Combobox
@@ -31,5 +32,4 @@ export type MultiComboboxHandle<T> = {
 
 export interface MultiComboboxProps<T> extends BaseComboboxProps<T> {
   onSelect?: (value?: T[]) => any;
-  multi?: boolean;
 }

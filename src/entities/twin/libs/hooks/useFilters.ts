@@ -21,7 +21,7 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
         label: "ID",
       },
       twinClassIdList: {
-        type: AutoFormValueType.multiCombobox,
+        type: AutoFormValueType.combobox,
         label: "Twin Class",
         getById: adapter.getById,
         getItems: adapter.getItems,
@@ -52,7 +52,7 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
         label: "Assigner ID",
       },
       headTwinIdList: {
-        type: AutoFormValueType.multiCombobox,
+        type: AutoFormValueType.combobox,
         label: "Head",
         getById: adapter.getById,
         getItems: adapter.getItems,

@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/base/dialog";
 import { Form } from "@/components/base/form";
-import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
+import { ComboboxFormField } from "@/components/form-fields/combobox";
 import {
   TextAreaFormField,
   TextFormField,

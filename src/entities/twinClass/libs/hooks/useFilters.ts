@@ -40,7 +40,7 @@ export function useTwinClassFilters(): FilterFeature<
         label: "Description",
       },
       headTwinClassIdList: {
-        type: AutoFormValueType.multiCombobox,
+        type: AutoFormValueType.combobox,
         label: "Head",
         getById,
         getItems,
@@ -50,7 +50,7 @@ export function useTwinClassFilters(): FilterFeature<
         multi: true,
       },
       extendsTwinClassIdList: {
-        type: AutoFormValueType.multiCombobox,
+        type: AutoFormValueType.combobox,
         label: "Extends",
         getById,
         getItems,
@@ -60,7 +60,7 @@ export function useTwinClassFilters(): FilterFeature<
         multi: true,
       },
       ownerTypeList: {
-        type: AutoFormValueType.multiCombobox,
+        type: AutoFormValueType.combobox,
         label: "Owner types",
         getById: async (key: string) => OWNER_TYPES?.find((o) => o === key),
         getItems: async (needle: string) => {

@@ -29,6 +29,10 @@ export function isBoolean(value: unknown): value is boolean {
   return typeof value === "boolean";
 }
 
+export function isTruthy<T>(value: T): boolean {
+  return Boolean(value);
+}
+
 export function isFalsy<T>(value: T | Falsy): value is Falsy {
   return !value || Number.isNaN(value as number);
 }
