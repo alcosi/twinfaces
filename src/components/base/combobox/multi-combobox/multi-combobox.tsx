@@ -14,55 +14,28 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef, useDebouncedValue } from "@/shared/libs";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
-import { MultiComboboxHandle, MultiComboboxProps } from "../types";
+import { ForwardedRef, useState } from "react";
+import { ComboboxHandle, MultiComboboxProps } from "../types";
+import { useComboboxLogic } from "../useComboboxLogic";
 import { SelectedOptions } from "./selected-options";
 
 export const MultiCombobox = fixedForwardRef(ComboboxInternal);
 
 function ComboboxInternal<T>(
   props: MultiComboboxProps<T>,
-  ref: ForwardedRef<MultiComboboxHandle<T>>
+  ref: ForwardedRef<ComboboxHandle<T>>
 ) {
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState<T[]>([]);
-  const [loadingItems, setLoadingItems] = useState(false);
   const [selected, setSelected] = useState<T[]>([]);
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebouncedValue(search, props.searchDelay ?? 300);
-
-  useEffect(() => {
-    if (!open) return;
-    setLoadingItems(true);
-    props
-      .getItems(debouncedSearch)
-      .then((items) => {
-        console.log("Loaded items", items);
-        setItems(items);
-        setLoadingItems(false);
-      })
-      .catch((e) => {
-        setItems([]);
-        console.error(`Failed to load items with search ${debouncedSearch}`, e);
-      })
-      .finally(() => {
-        setLoadingItems(false);
-      });
-  }, [open, debouncedSearch]);
-
-  useImperativeHandle(ref, () => {
-    return {
-      setSelected(newSelected: T[]) {
-        setSelected(newSelected);
-      },
-    };
-  }, []);
-
-  function onSearchChange(value: string) {
-    setSearch(value);
-  }
+  const { items, loadingItems, search, setSearch } = useComboboxLogic({
+    open,
+    getItems: props.getItems,
+    searchDelay: props.searchDelay ?? 300,
+    multi: true,
+    ref,
+  });
 
   function handleOnSelect(newKey: string) {
     const newItem = items.find((item) => props.getItemKey(item) === newKey);
@@ -110,7 +83,7 @@ function ComboboxInternal<T>(
           <CommandInput
             placeholder={props.searchPlaceholder}
             value={search}
-            onValueChange={onSearchChange}
+            onValueChange={setSearch}
             loading={loadingItems}
           />
           <CommandEmpty>{props.noItemsText}</CommandEmpty>

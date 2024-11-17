@@ -1,8 +1,5 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
-import * as React from "react";
-
 import { Button } from "@/components/base/button";
 import {
   Command,
@@ -17,9 +14,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef, useDebouncedValue } from "@/shared/libs";
-import { ForwardedRef, useEffect, useImperativeHandle } from "react";
+import { cn, fixedForwardRef } from "@/shared/libs";
+import { Check, ChevronsUpDown } from "lucide-react";
+import React, { ForwardedRef } from "react";
 import { ComboboxHandle, ComboboxProps } from "./types";
+import { useComboboxLogic } from "./useComboboxLogic";
 
 export const Combobox = fixedForwardRef(ComboboxInternal);
 
@@ -28,64 +27,22 @@ function ComboboxInternal<T>(
   ref: ForwardedRef<ComboboxHandle<T>>
 ) {
   const [open, setOpen] = React.useState(false);
-  const [items, setItems] = React.useState<T[]>([]);
-  const [loadingItems, setLoadingItems] = React.useState(false);
   const [selected, setSelected] = React.useState<T | undefined>(undefined);
-  const [search, setSearch] = React.useState("");
-  const debouncedSearch = useDebouncedValue(search, props.searchDelay ?? 300);
-
-  useEffect(() => {
-    if (!open) return;
-    setLoadingItems(true);
-    props
-      .getItems(debouncedSearch)
-      .then((items) => {
-        console.log("Loaded items", items);
-        setItems(items);
-        setLoadingItems(false);
-      })
-      .catch((e) => {
-        setItems([]);
-        console.error(`Failed to load items with search ${debouncedSearch}`, e);
-      })
-      .finally(() => {
-        setLoadingItems(false);
-      });
-  }, [open, debouncedSearch]);
-
-  useEffect(() => {
-    setSelected(props.value);
-  }, [props.value]);
-
-  useImperativeHandle(ref, () => {
-    return {
-      getSelected() {
-        return selected;
-      },
-      setSelected(value: T | undefined) {
-        setSelected(value);
-      },
-    };
+  const { items, loadingItems, search, setSearch } = useComboboxLogic({
+    open,
+    getItems: props.getItems,
+    searchDelay: props.searchDelay ?? 300,
+    multi: false,
+    ref,
   });
-
-  function onSearchChange(value: string) {
-    setSearch(value);
-  }
 
   function onSelect(newKey: string) {
     const newItem = items.find((item) => props.getItemKey(item) === newKey);
-    console.log("Selected", newKey, newItem, items);
     let newSelected = newItem;
-    if (!selected) {
-      setSelected(newItem);
-    } else {
-      if (props.getItemKey(selected) === newKey) {
-        setSelected(undefined);
-        newSelected = undefined;
-      } else {
-        setSelected(newItem);
-      }
+    if (selected && props.getItemKey(selected) === newKey) {
+      newSelected = undefined;
     }
+    setSelected(newSelected);
     props.onSelect?.(newSelected);
     setOpen(false);
   }
@@ -117,7 +74,7 @@ function ComboboxInternal<T>(
           <CommandInput
             placeholder={props.searchPlaceholder}
             value={search}
-            onValueChange={onSearchChange}
+            onValueChange={setSearch}
             loading={loadingItems}
           />
           <CommandEmpty>{props.noItemsText}</CommandEmpty>

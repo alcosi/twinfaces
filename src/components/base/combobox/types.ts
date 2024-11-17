@@ -14,21 +14,15 @@ interface BaseComboboxProps<T> extends SelectAdapter<T> {
   multi?: boolean;
 }
 
-// Single Combobox
 export type ComboboxHandle<T> = {
-  getSelected: () => T | undefined;
-  setSelected: (newSelected?: T) => any;
+  getSelected: () => T[];
+  setSelected: (newSelected: T | T[] | undefined) => void;
 };
 
 export interface ComboboxProps<T> extends BaseComboboxProps<T> {
   value?: T;
   onSelect?: (value?: T) => any;
 }
-
-// Multi Combobox Handle and Props
-export type MultiComboboxHandle<T> = {
-  setSelected: (newSelected: T[]) => void;
-};
 
 export interface MultiComboboxProps<T> extends BaseComboboxProps<T> {
   onSelect?: (value?: T[]) => any;
