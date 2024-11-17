@@ -9,7 +9,7 @@ import {
 } from "@/components/base/dialog";
 import { Form } from "@/components/base/form";
 import { Input } from "@/components/base/input";
-import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
+import { ComboboxFormField } from "@/components/form-fields/combobox";
 import {
   TextAreaFormField,
   TextFormField,

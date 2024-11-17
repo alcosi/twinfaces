@@ -1,5 +1,5 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
+import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { TextFormItem } from "@/components/form-fields/text-form-field";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { useContext } from "react";

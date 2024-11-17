@@ -5,17 +5,17 @@ import { PermissionApiFilterFields } from "../api";
 // NOTE: is used only in one place
 export const FILTERS: Record<PermissionApiFilterFields, any> = {
   idList: {
-    type: AutoFormValueType.multiCombobox,
+    type: AutoFormValueType.combobox,
     label: "Id",
     multi: true,
   },
   keyLikeList: {
-    type: AutoFormValueType.multiCombobox,
+    type: AutoFormValueType.combobox,
     label: "Key",
     multi: true,
   },
   nameLikeList: {
-    type: AutoFormValueType.multiCombobox,
+    type: AutoFormValueType.combobox,
     label: "Name",
     multi: true,
   },
