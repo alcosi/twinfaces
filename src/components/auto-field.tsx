@@ -1,4 +1,4 @@
-import { ComboboxProps } from "@/components/base/combobox";
+import { ComboboxProps, MultiComboboxProps } from "@/components/base/combobox";
 import {
   CheckboxFormField,
   CheckboxFormItem,
@@ -9,7 +9,6 @@ import {
 } from "@/components/form-fields/color-form-field";
 import {
   ComboboxFormField,
-  ComboboxFormFieldProps,
   ComboboxFormItem,
 } from "@/components/form-fields/combobox-form-field";
 import {
@@ -21,10 +20,8 @@ import {
   TextFormItem,
 } from "@/components/form-fields/text-form-field";
 import { Control, FieldPath } from "react-hook-form";
-import { MultiComboboxProps } from "./base/combobox/multi-combobox/multi-combobox";
 import {
   MultiComboboxFormField,
-  MultiComboboxFormFieldProps,
   MultiComboboxFormItem,
 } from "./form-fields/multi-combobox-form-field";
 
@@ -70,9 +67,7 @@ export interface AutoFormCheckboxValueInfo {
   hasIndeterminate?: boolean;
 }
 
-export interface AutoFormComboboxValueInfo
-  extends ComboboxFormFieldProps<any>,
-    ComboboxProps<any> {
+export interface AutoFormComboboxValueInfo extends ComboboxProps<any> {
   type: AutoFormValueType.combobox;
   // TODO combobox value type
 }
@@ -89,13 +84,9 @@ export interface AutoFormSelectValueInfo {
 }
 
 export type AutoFormMultiComboboxValueInfo<T = unknown> =
-  MultiComboboxFormFieldProps<T> &
-    Pick<
-      MultiComboboxProps<T>,
-      "getItems" | "getItemKey" | "getItemLabel" | "multi"
-    > & {
-      type: AutoFormValueType.multiCombobox;
-    };
+  MultiComboboxProps<T> & {
+    type: AutoFormValueType.multiCombobox;
+  };
 
 export interface AutoFormFieldProps {
   info: AutoFormValueInfo;

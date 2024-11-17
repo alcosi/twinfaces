@@ -18,28 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/base/popover";
 import { cn, fixedForwardRef, useDebouncedValue } from "@/shared/libs";
-import { ForwardedRef, ReactNode, useEffect, useImperativeHandle } from "react";
-
-export type ComboboxHandle<T> = {
-  getSelected: () => T | undefined;
-  setSelected: (newSelected?: T) => any;
-};
-
-export interface ComboboxProps<T> {
-  getItems: (search: string) => Promise<T[]>;
-  getItemKey: (item: T) => string;
-  getItemLabel: (item: T) => string;
-  value?: T;
-  onSelect?: (value?: T) => any;
-  renderInList?: (value: T) => ReactNode;
-  renderSelected?: (value: T) => ReactNode;
-  selectPlaceholder?: string;
-  searchPlaceholder?: string;
-  noItemsText?: string;
-  buttonClassName?: string;
-  contentClassName?: string;
-  searchDelay?: number;
-}
+import { ForwardedRef, useEffect, useImperativeHandle } from "react";
+import { ComboboxHandle, ComboboxProps } from "./types";
 
 export const Combobox = fixedForwardRef(ComboboxInternal);
 

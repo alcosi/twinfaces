@@ -18,12 +18,7 @@ import { cn } from "@/shared/libs";
 import React, { useEffect, useRef } from "react";
 import { FieldValues } from "react-hook-form";
 
-export interface MultiComboboxFormFieldProps<T> {
-  getById: (id: string) => Promise<T | undefined>;
-}
-
 type Props<T extends FieldValues, K> = FormFieldProps<T> &
-  MultiComboboxFormFieldProps<K> &
   MultiComboboxProps<K>;
 
 export function MultiComboboxFormField<
@@ -61,22 +56,20 @@ export function MultiComboboxFormField<
 export function MultiComboboxFormItem<TFieldModel>({
   fieldValue = [],
   onSelect,
-  getById,
   label,
   description,
   required,
   buttonClassName,
   inForm,
   ...props
-}: MultiComboboxProps<TFieldModel> &
-  MultiComboboxFormFieldProps<TFieldModel> & {
-    fieldValue?: TFieldModel[];
-    onSelect?: (value?: TFieldModel[]) => any;
-    label?: React.ReactNode;
-    description?: React.ReactNode;
-    required?: boolean;
-    inForm?: boolean;
-  }) {
+}: MultiComboboxProps<TFieldModel> & {
+  fieldValue?: TFieldModel[];
+  onSelect?: (value?: TFieldModel[]) => any;
+  label?: React.ReactNode;
+  description?: React.ReactNode;
+  required?: boolean;
+  inForm?: boolean;
+}) {
   const multiComboboxRef = useRef<MultiComboboxHandle<TFieldModel> | null>(
     null
   );
