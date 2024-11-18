@@ -14,9 +14,11 @@ import {
   FormItemDescription,
   FormItemLabel,
 } from "@/components/form-fields/form-fields-common";
-import { cn, isEmptyArray } from "@/shared/libs";
-import { ReactNode, useEffect, useRef } from "react";
+import { cn } from "@/shared/libs";
+import React, { useEffect, useRef } from "react";
 import { FieldValues } from "react-hook-form";
+
+type Props<T extends FieldValues, K> = FormFieldProps<T> & ComboboxProps<K>;
 
 export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
   name,
@@ -26,7 +28,7 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
   required,
   buttonClassName,
   ...props
-}: FormFieldProps<TFormModel> & ComboboxProps<TFieldModel>) {
+}: Props<TFormModel, TFieldModel>) {
   return (
     <FormField
       control={control}
@@ -37,7 +39,7 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
           description={description}
           required={required}
           buttonClassName={buttonClassName}
-          onChange={(val) => field.onChange(val && props.getItemKey(val))}
+          onSelect={field.onChange}
           fieldValue={field.value}
           inForm={true}
           {...props}
@@ -48,8 +50,8 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
 }
 
 export function ComboboxFormItem<TFieldModel>({
-  fieldValue,
-  onChange,
+  fieldValue = [],
+  onSelect,
   label,
   description,
   required,
@@ -57,50 +59,27 @@ export function ComboboxFormItem<TFieldModel>({
   inForm,
   ...props
 }: ComboboxProps<TFieldModel> & {
-  fieldValue?: string;
-  onChange?: (value?: TFieldModel) => any;
-  label?: ReactNode;
-  description?: ReactNode;
+  fieldValue?: TFieldModel[];
+  label?: React.ReactNode;
+  description?: React.ReactNode;
   required?: boolean;
   inForm?: boolean;
 }) {
-  const comboboxRef = useRef(null);
+  const comboboxRef = useRef<ComboboxHandle<TFieldModel> | null>(null);
 
   useEffect(() => {
-    setValueByKey(fieldValue).catch((e) => {
-      console.error("failed to set combobox field value by key", e);
-    });
+    applySelectedValues(fieldValue);
   }, [fieldValue]);
 
-  async function setValueByKey(id?: string) {
-    if (!id) {
-      console.log("setting id to null");
-      (
-        comboboxRef.current as unknown as ComboboxHandle<TFieldModel>
-      ).setSelected(undefined);
-      return;
-    }
-    try {
-      const selected = (
-        comboboxRef.current as unknown as ComboboxHandle<TFieldModel>
-      ).getSelected();
-      console.log("current selected", selected);
-      if (!selected || isEmptyArray(selected)) {
-        console.log("searching combobox field value by id");
-        const value = await props.getById(id);
-        (
-          comboboxRef.current as unknown as ComboboxHandle<TFieldModel>
-        ).setSelected(value);
-        console.log("found combobox field value by id", value, selected);
-      }
-    } catch (e) {
-      console.error("failed to search combobox field value by id", e);
+  function applySelectedValues(values: TFieldModel[]) {
+    if (!values?.length) return;
+
+    if (props.multi) {
+      comboboxRef.current?.setSelected(values);
+    } else if (values.length > 0) {
+      comboboxRef.current?.setSelected(values.slice(-1));
     }
   }
-
-  // function onChange(val?: TFieldModel) {
-  //     field.onChange(val && props.getItemKey(val));
-  // }
 
   return (
     <FormItem>
@@ -112,8 +91,8 @@ export function ComboboxFormItem<TFieldModel>({
       <FormControl>
         <Combobox<TFieldModel>
           ref={comboboxRef}
-          onSelect={onChange}
-          buttonClassName={cn(["w-full", buttonClassName])}
+          onSelect={onSelect}
+          buttonClassName={cn("w-full", buttonClassName)}
           {...props}
         />
       </FormControl>
