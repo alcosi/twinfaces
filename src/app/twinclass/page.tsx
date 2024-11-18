@@ -25,6 +25,7 @@ import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
 import { useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ApiContext } from "@/shared/api";
+import { DatalistResourceLink } from "@/entities/datalist";
 
 const colDefs: Record<
   keyof Pick<
@@ -37,6 +38,8 @@ const colDefs: Record<
     | "extendsClassId"
     | "abstractClass"
     | "description"
+    | "markersDataListId"
+    | "tagsDataListId"
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
@@ -124,6 +127,30 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+  },
+
+  markersDataListId: {
+    id: "markersDataListId",
+    accessorKey: "markersDataListId",
+    header: "Markers",
+    cell: ({ row: { original } }) =>
+      original.markerMap ? (
+        <div className="max-w-48 inline-flex">
+          <DatalistResourceLink data={original.markerMap} withTooltip />
+        </div>
+      ) : null,
+  },
+
+  tagsDataListId: {
+    id: "tagsDataListId",
+    accessorKey: "tagsDataListId",
+    header: "Tags",
+    cell: ({ row: { original } }) =>
+      original.tagMap ? (
+        <div className="max-w-48 inline-flex">
+          <DatalistResourceLink data={original.tagMap} withTooltip />
+        </div>
+      ) : null,
   },
 };
 
@@ -219,6 +246,8 @@ export default function TwinClasses() {
           colDefs.extendsClassId!,
           colDefs.abstractClass!,
           colDefs.description!,
+          colDefs.markersDataListId!,
+          colDefs.tagsDataListId!,
         ]}
         getRowId={(row) => row.id!}
         pageSizes={[10, 20, 50]}
@@ -267,6 +296,8 @@ export default function TwinClasses() {
           colDefs.headClassId,
           colDefs.extendsClassId,
           colDefs.abstractClass,
+          colDefs.markersDataListId,
+          colDefs.tagsDataListId,
         ]}
         dialogForm={twinClassesForm}
         onCreateSubmit={handleOnCreateSubmit}

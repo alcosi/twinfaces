@@ -44,6 +44,8 @@ export function createTwinClassApi(settings: ApiSettings) {
           showTwinClassMode: "MANAGED",
           showTwinClassHead2TwinClassMode: "DETAILED",
           showTwinClassExtends2TwinClassMode: "DETAILED",
+          showTwinClassMarker2DataListOptionMode: "DETAILED",
+          showTwinClassTag2DataListOptionMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
