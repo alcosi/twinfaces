@@ -40,7 +40,7 @@ export function buildFilterFields(
 > {
   return {
     aliasLikeList: {
-      type: AutoFormValueType.multiCombobox,
+      type: AutoFormValueType.combobox,
       label: "Alias",
       multi: true,
       getById: async (key: string) =>

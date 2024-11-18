@@ -19,12 +19,7 @@ import {
   TextFormField,
   TextFormItem,
 } from "@/components/form-fields/text-form-field";
-import { isTruthy } from "@/shared/libs";
 import { Control, FieldPath } from "react-hook-form";
-import {
-  MultiComboboxFormField,
-  MultiComboboxFormItem,
-} from "./form-fields/combobox/multi-combobox-form-field";
 
 export enum AutoFormValueType {
   string = "string",
@@ -117,25 +112,12 @@ export function AutoField({
       />
     );
   } else if (info.type === AutoFormValueType.combobox) {
-    if (isTruthy(info.multi)) {
-      return name && control ? (
-        <MultiComboboxFormField name={name} control={control} {...info} />
-      ) : (
-        <MultiComboboxFormItem
-          fieldValue={value}
-          onSelect={onChange}
-          description={info.description}
-          {...info}
-        />
-      );
-    }
-
     return name && control ? (
       <ComboboxFormField name={name} control={control} {...info} />
     ) : (
       <ComboboxFormItem
-        value={value}
-        onChange={onChange}
+        fieldValue={value}
+        onSelect={onChange}
         description={info.description}
         {...info}
       />

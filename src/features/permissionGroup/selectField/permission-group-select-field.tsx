@@ -1,4 +1,4 @@
-import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
+import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { TextFormItem } from "@/components/form-fields/text-form-field";
 import {
   PermissionGroup_DETAILED,
