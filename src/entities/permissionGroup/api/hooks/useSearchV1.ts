@@ -1,24 +1,26 @@
 import { ApiContext } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { hydratePermissionFromMap } from "../../libs";
-import { Permission_DETAILED, PermissionApiFilters } from "../types";
+import { hydratePermissionGroupFromMap } from "../../libs";
+import { PermissionGroup_DETAILED, PermissionGroupApiFilters } from "../types";
 
 // TODO: Apply caching-strategy
-export const usePermissionSearchV1 = () => {
+export const usePermissionGroupSearchV1 = () => {
   const api = useContext(ApiContext);
 
-  const searchPermissions = useCallback(
+  const searchPermissionGroups = useCallback(
     async ({
+      search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
     }: {
       search?: string;
       pagination?: PaginationState;
-      filters?: PermissionApiFilters;
-    }): Promise<{ data: Permission_DETAILED[]; pageCount: number }> => {
+      filters?: PermissionGroupApiFilters;
+    }): Promise<{ data: PermissionGroup_DETAILED[]; pageCount: number }> => {
       try {
-        const { data, error } = await api.permission.search({
+        const { data, error } = await api.permissionGroup.search({
+          search,
           pagination,
           filters,
         });
@@ -28,15 +30,15 @@ export const usePermissionSearchV1 = () => {
           throw new Error("Failed to fetch permissions due to API error");
         }
 
-        const permissions =
-          data.permissions?.map((dto) =>
-            hydratePermissionFromMap(dto, data.relatedObjects)
+        const permissionGroups =
+          data.permissionGroups?.map((dto) =>
+            hydratePermissionGroupFromMap(dto, data.relatedObjects)
           ) ?? [];
 
         const totalItems = data.pagination?.total ?? 0;
         const pageCount = Math.ceil(totalItems / pagination.pageSize);
 
-        return { data: permissions, pageCount };
+        return { data: permissionGroups, pageCount };
       } catch (error) {
         console.error("Failed to fetch twin classes:", error);
         throw new Error("An error occurred while fetching twin classes");
@@ -45,5 +47,5 @@ export const usePermissionSearchV1 = () => {
     [api]
   );
 
-  return { searchPermissions };
+  return { searchPermissionGroups };
 };

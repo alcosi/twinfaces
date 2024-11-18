@@ -5,6 +5,7 @@ import {
   buildFilterFields,
   CreatePermissionRequestBody,
   mapToPermissionApiFilters,
+  Permission_DETAILED,
   PERMISSION_SCHEMA,
   PermissionFormValues,
   UpdatePermissionRequestBody,
@@ -14,6 +15,7 @@ import {
 import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
+import { mergeUniqueItems } from "@/shared/libs";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -61,19 +63,10 @@ const colDefs: Record<
   },
 };
 
-function mergeUniquePermissions(
-  existing: Permission[],
-  incoming: Permission[]
-): Permission[] {
-  const existingIds = new Set(existing.map((perm) => perm.id));
-  const uniqueIncoming = incoming.filter((perm) => !existingIds.has(perm.id));
-  return [...existing, ...uniqueIncoming];
-}
-
 export function Permissions() {
   const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [permissions, setPermissions] = useState<Permission_DETAILED[]>([]);
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissions } = usePermissionSearchV1();
 
@@ -104,7 +97,7 @@ export function Permissions() {
       });
 
       const permissions = response.data ?? [];
-      setPermissions((prev) => mergeUniquePermissions(prev, permissions));
+      setPermissions((prev) => mergeUniqueItems(prev, permissions));
 
       return { data: permissions, pageCount: 0 };
     } catch (e) {

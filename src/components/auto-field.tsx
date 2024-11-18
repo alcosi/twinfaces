@@ -91,6 +91,7 @@ export interface AutoFormSelectValueInfo {
 export type AutoFormMultiComboboxValueInfo<T> = MultiComboboxFormFieldProps<T> &
   Pick<MultiComboboxProps<T>, "getItems" | "getItemKey" | "getItemLabel"> & {
     type: AutoFormValueType.multiCombobox;
+    multi?: boolean;
   };
 
 export interface AutoFormFieldProps {
