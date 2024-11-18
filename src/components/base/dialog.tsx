@@ -79,7 +79,7 @@ const DialogFooter = ({
 }: { showSeparator?: boolean } & React.HTMLAttributes<HTMLDivElement>) => (
   <>
     {showSeparator && (
-      <Separator className="border-t-2 border-t-[#afafaf] mt-0" />
+      <Separator />
     )}
 
     <div
@@ -121,7 +121,7 @@ const DialogTitle = React.forwardRef<
         </DialogPrimitive.Close>
       )}
 
-      {showSeparator && <Separator className="border-t-2 border-t-[#5e5e5e]" />}
+      {showSeparator && <Separator />}
     </>
   )
 );
