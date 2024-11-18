@@ -39,6 +39,8 @@ export function TwinClassStatusResourceLink({
         isPopulatedString(data.name) ? data.name : "N/A"
       }
       link={link}
+      backgroundColor={data.backgroundColor}
+      fontColor={data.fontColor}
     />
   );
 }

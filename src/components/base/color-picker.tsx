@@ -8,12 +8,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef } from "@/shared/libs";
-import { ForwardedRef, useMemo, useState } from "react";
+import { cn, fixedForwardRef, isUndefined } from "@/shared/libs";
+import { X } from "lucide-react";
+import { ForwardedRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
 interface ColorPickerProps {
-  value: string;
+  value?: string;
   onChange?: (value: string) => void;
   onBlur?: () => void;
 }
@@ -34,10 +35,6 @@ export function ColorPickerInternal(
 ) {
   const [open, setOpen] = useState(false);
 
-  const parsedValue = useMemo(() => {
-    return value || "#FFFFFF";
-  }, [value]);
-
   return (
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild disabled={disabled} onBlur={onBlur}>
@@ -45,31 +42,31 @@ export function ColorPickerInternal(
           <Button
             {...props}
             type="button"
-            className={cn("block", className)}
+            className={cn("flex", className)}
             name={name}
             onClick={() => {
               setOpen(true);
             }}
             size="icon"
             style={{
-              backgroundColor: parsedValue,
+              backgroundColor: value,
             }}
             variant="outline"
           >
-            <div />
+            {isUndefined(value) && <X className="h-8 w-8 text-destructive" />}
           </Button>
-          {parsedValue}
+          {value}
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-full">
-        <HexColorPicker color={parsedValue} onChange={onChange} />
+        <HexColorPicker color={value} onChange={onChange} />
         <Input
           maxLength={7}
           onChange={(e) => {
             onChange?.(e?.currentTarget?.value);
           }}
           ref={ref}
-          value={parsedValue}
+          value={value}
         />
       </PopoverContent>
     </Popover>

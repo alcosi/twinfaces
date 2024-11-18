@@ -4,6 +4,7 @@ import {
   TooltipTrigger,
 } from "@/components/base/tooltip";
 import { cn } from "@/shared/libs";
+import { css } from "@emotion/css";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
 
@@ -11,6 +12,8 @@ type ResourceLinkContentProps = {
   IconComponent: ElementType;
   displayName: string;
   disabled?: boolean;
+  backgroundColor?: string;
+  fontColor?: string;
 };
 
 type ResourceLinkProps<T> = {
@@ -18,45 +21,65 @@ type ResourceLinkProps<T> = {
   renderTooltip?: (data: T) => ReactNode;
   getDisplayName: (data: T) => string;
   link: string;
-} & Pick<ResourceLinkContentProps, "IconComponent" | "disabled">;
+} & Pick<
+  ResourceLinkContentProps,
+  "IconComponent" | "disabled" | "backgroundColor" | "fontColor"
+>;
 
 const ResourceLinkContent = ({
   IconComponent,
   displayName,
   disabled,
+  backgroundColor = "transparent",
+  fontColor,
 }: ResourceLinkContentProps) => {
+  const styles = {
+    base: "inline-flex items-center h-6 max-w-full border rounded-lg p-2 transition-colors",
+    borderColor: disabled
+      ? "border-link-light-disabled dark:border-link-dark-disabled"
+      : "",
+    hover: disabled
+      ? "hover:border-link-light-disabled dark:hover:border-link-dark-disabled"
+      : "hover:border-link-light-active dark:hover:border-link-dark-active",
+    text: disabled
+      ? "text-link-light-disabled dark:text-link-dark-disabled"
+      : "text-link-light-active dark:text-link-dark-active",
+  };
+
   return (
-    <span
+    <div
       className={cn(
-        "inline-flex items-center h-6 max-w-full border rounded-lg p-2 transition-colors} bg-transparent",
-        "border-link-light-disabled hover:border-link-light-active",
-        "dark:border-link-dark-disabled dark:hover:border-link-dark-active",
-        disabled
-          ? "cursor-not-allowed hover:border-linklight-disabled dark:hover:border-link-dark-disabled"
-          : "cursor-pointer"
+        styles.base,
+        styles.borderColor,
+        styles.hover,
+        styles.text,
+        disabled ? "cursor-not-allowed" : "cursor-pointer",
+        css`
+          background-color: ${backgroundColor};
+          &:hover {
+            border-color: ${fontColor};
+          }
+        `
       )}
     >
-      <span
-        className={
-          disabled
-            ? "text-link-light-disabled dark:text-link-dark-disabled"
-            : "text-link-light-active dark:text-link-dark-active"
-        }
+      <i
+        className={css`
+          color: ${fontColor};
+        `}
       >
         <IconComponent className="h-4 w-4" />
-      </span>
-
+      </i>
       <span
         className={cn(
           "ml-2 text-sm font-medium truncate",
-          disabled
-            ? "text-link-light-disabled dark:text-link-dark-disabled"
-            : "text-link-light-active dark:text-link-dark-active"
+          css`
+            color: ${fontColor};
+          `
         )}
       >
         {displayName}
       </span>
-    </span>
+    </div>
   );
 };
 
@@ -67,6 +90,8 @@ export const ResourceLink = <T,>({
   getDisplayName,
   link,
   disabled,
+  backgroundColor,
+  fontColor,
 }: ResourceLinkProps<T>) => {
   const displayName = getDisplayName(data);
 
@@ -75,6 +100,8 @@ export const ResourceLink = <T,>({
       IconComponent={IconComponent}
       displayName={displayName}
       disabled={disabled}
+      backgroundColor={backgroundColor}
+      fontColor={fontColor}
     />
   ) : (
     <Link
@@ -86,7 +113,8 @@ export const ResourceLink = <T,>({
       <ResourceLinkContent
         IconComponent={IconComponent}
         displayName={displayName}
-        disabled={disabled}
+        backgroundColor={backgroundColor}
+        fontColor={fontColor}
       />
     </Link>
   );
