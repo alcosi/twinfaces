@@ -1,7 +1,5 @@
-import {
-  TwinClassStatusCreateRq,
-  TwinClassStatusUpdateRq,
-} from "@/entities/twinClassStatus";
+import { Alert } from "@/components/base/alert";
+import { Button } from "@/components/base/button";
 import {
   Dialog,
   DialogContent,
@@ -10,27 +8,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/base/dialog";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useEffect, useState } from "react";
-import { ApiContext } from "@/shared/api";
 import { Form } from "@/components/base/form";
-import { Alert } from "@/components/base/alert";
-import { Button } from "@/components/base/button";
 import { Input } from "@/components/base/input";
+import { ColorPickerFormField } from "@/components/form-fields/color-form-field";
 import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
-import { ColorPickerFormField } from "@/components/form-fields/color-form-field";
-import { TwinClassStatus } from "@/entities/twinClassStatus";
+import {
+  TwinStatus,
+  TwinStatusCreateRq,
+  TwinStatusUpdateRq,
+} from "@/entities/twinStatus";
+import { ApiContext } from "@/shared/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 interface CreateEditTwinStatusDialogProps {
   open: boolean;
   onOpenChange?: (open: boolean) => any;
   twinClassId: string;
-  status: TwinClassStatus | null;
+  status: TwinStatus | null;
   onSuccess?: () => any;
 }
 
@@ -115,7 +115,7 @@ export default function CreateEditTwinStatusDialog({
     console.log("CreateEditTwinStatusDialog onSubmit", formValues);
     setError(null);
 
-    const data: TwinClassStatusCreateRq | TwinClassStatusUpdateRq = {
+    const data: TwinStatusCreateRq | TwinStatusUpdateRq = {
       key: formValues.key,
       nameI18n: {
         translationInCurrentLocale: formValues.name,

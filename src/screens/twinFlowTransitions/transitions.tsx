@@ -1,10 +1,7 @@
 import { FiltersState } from "@/components/base/data-table/crud-data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { PermissionResourceLink } from "@/entities/permission";
-import {
-  TwinClassStatus,
-  TwinClassStatusResourceLink,
-} from "@/entities/twinClassStatus";
+import { TwinStatus, TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import {
   buildFilterFields,
   mapToTwinFlowTransitionApiFilters,
@@ -91,7 +88,7 @@ function buildColumnDefs({
         original.srcTwinStatus && (
           <div className="max-w-48 inline-flex">
             <TwinClassStatusResourceLink
-              data={original.srcTwinStatus as TwinClassStatus}
+              data={original.srcTwinStatus as TwinStatus}
               twinClassId={twinClassId}
               withTooltip
             />
@@ -106,7 +103,7 @@ function buildColumnDefs({
         original.dstTwinStatus && (
           <div className="max-w-48 inline-flex">
             <TwinClassStatusResourceLink
-              data={original.dstTwinStatus as TwinClassStatus}
+              data={original.dstTwinStatus as TwinStatus}
               twinClassId={twinClassId}
               withTooltip
             />

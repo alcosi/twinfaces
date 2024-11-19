@@ -10,9 +10,11 @@ import {
   type FilterFeature,
 } from "@/shared/libs";
 import { TwinFilterKeys, TwinFilters } from "../../api";
+import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 
 export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
-  const adapter = useTwinClassSelectAdapter();
+  const tcAdapter = useTwinClassSelectAdapter();
+  const sAdapter = useTwinStatusSelectAdapter();
 
   function buildFilterFields(): Record<TwinFilterKeys, AutoFormValueInfo> {
     return {
@@ -23,19 +25,20 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
       twinClassIdList: {
         type: AutoFormValueType.combobox,
         label: "Twin Class",
-        getById: adapter.getById,
-        getItems: adapter.getItems,
-        getItemKey: (item: unknown) =>
-          adapter.getItemKey(item as TwinClass_DETAILED),
-        getItemLabel: (item: unknown) =>
-          adapter.getItemLabel(item as TwinClass_DETAILED),
+        getById: tcAdapter.getById,
+        getItems: tcAdapter.getItems,
+        getItemKey: (i) => tcAdapter.getItemKey(i as TwinClass_DETAILED),
+        getItemLabel: (i) => tcAdapter.getItemLabel(i as TwinClass_DETAILED),
         multi: true,
       },
       statusIdList: {
-        // TODO: replace with combobox
-        // in TWINFACES-117: https://alcosi.atlassian.net/browse/TWINFACES-117
-        type: AutoFormValueType.string,
-        label: "Status ID",
+        type: AutoFormValueType.combobox,
+        label: "Statuses",
+        getById: sAdapter.getById,
+        getItems: sAdapter.getItems,
+        getItemKey: (i) => sAdapter.getItemKey(i as TwinStatus),
+        getItemLabel: (i) => sAdapter.getItemLabel(i as TwinStatus),
+        multi: true,
       },
       twinNameLikeList: {
         // TODO: replace with combobox
@@ -54,12 +57,12 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
       headTwinIdList: {
         type: AutoFormValueType.combobox,
         label: "Head",
-        getById: adapter.getById,
-        getItems: adapter.getItems,
+        getById: tcAdapter.getById,
+        getItems: tcAdapter.getItems,
         getItemKey: (item: unknown) =>
-          adapter.getItemKey(item as TwinClass_DETAILED),
+          tcAdapter.getItemKey(item as TwinClass_DETAILED),
         getItemLabel: (item: unknown) =>
-          adapter.getItemLabel(item as TwinClass_DETAILED),
+          tcAdapter.getItemLabel(item as TwinClass_DETAILED),
         multi: true,
       },
       tagDataListOptionIdList: {

@@ -1,4 +1,4 @@
-import { TwinClassStatusResourceLink } from "@/entities/twinClassStatus";
+import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";

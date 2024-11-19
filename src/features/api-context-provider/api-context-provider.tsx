@@ -12,7 +12,7 @@ import {
   createTwinClassLinksApi,
   TwinClassLinkApi,
 } from "@/entities/twinClassLink";
-import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinClassStatus";
+import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinStatus";
 import { createTwinflowApi, TwinflowApi } from "@/entities/twinFlow";
 import {
   createTwinFlowTransitionApi,

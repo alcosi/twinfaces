@@ -1,4 +1,4 @@
-import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { TwinStatus } from "@/entities/twinStatus";
 import { RelatedObjects } from "@/shared/api";
 import { TwinClass_DETAILED } from "../../twinClass";
 import { User } from "../../user";
@@ -13,7 +13,7 @@ export const hydrateTwinFromMap = (
   if (!relatedObjects?.twinClassMap) return twin;
 
   if (twinDTO.statusId && relatedObjects.statusMap) {
-    twin.status = relatedObjects.statusMap[twinDTO.statusId] as TwinClassStatus;
+    twin.status = relatedObjects.statusMap[twinDTO.statusId] as TwinStatus;
   }
 
   if (twinDTO.twinClassId) {

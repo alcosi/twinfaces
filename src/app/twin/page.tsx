@@ -15,10 +15,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import {
-  TwinClassStatus,
-  TwinClassStatusResourceLink,
-} from "@/entities/twinClassStatus";
+import { TwinStatus, TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
@@ -62,7 +59,7 @@ const columns: ColumnDef<Twin>[] = [
       original.status && (
         <div className="max-w-48 inline-flex">
           <TwinClassStatusResourceLink
-            data={original.status as TwinClassStatus}
+            data={original.status as TwinStatus}
             twinClassId={original.twinClassId!}
             withTooltip
           />

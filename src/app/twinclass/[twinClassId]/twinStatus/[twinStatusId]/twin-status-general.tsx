@@ -4,10 +4,10 @@ import { ColorPicker } from "@/components/base/color-picker";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 import {
-  TwinClassStatus,
   TwinClassStatusResourceLink,
-  TwinClassStatusUpdateRq,
-} from "@/entities/twinClassStatus";
+  TwinStatus,
+  TwinStatusUpdateRq,
+} from "@/entities/twinStatus";
 import { ApiContext } from "@/shared/api";
 import { useContext, useState } from "react";
 import { TwinClassContext } from "../../twin-class-context";
@@ -16,7 +16,7 @@ export function TwinStatusGeneral({
   status,
   onChange,
 }: {
-  status: TwinClassStatus;
+  status: TwinStatus;
   onChange: () => any;
 }) {
   const api = useContext(ApiContext);
@@ -36,7 +36,7 @@ export function TwinStatusGeneral({
     setEditStatusDialogOpen(true);
   }
 
-  async function updateStatus(newStatus: TwinClassStatusUpdateRq) {
+  async function updateStatus(newStatus: TwinStatusUpdateRq) {
     try {
       await api.twinStatus.update({ statusId: status.id!, data: newStatus });
       onChange?.();

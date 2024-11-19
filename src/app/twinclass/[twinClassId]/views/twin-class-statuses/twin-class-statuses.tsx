@@ -9,10 +9,7 @@ import {
 } from "@/components/base/tooltip";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import { useFetchTwinClassById } from "@/entities/twinClass";
-import {
-  TwinClassStatus,
-  TwinClassStatusResourceLink,
-} from "@/entities/twinClassStatus";
+import { TwinStatus, TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { isFalsy } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { ColumnDef } from "@tanstack/table-core";
@@ -23,7 +20,7 @@ import { toast } from "sonner";
 import CreateEditTwinStatusDialog from "./twin-status-dialog";
 
 function buildColumnDefs(twinClassId: string) {
-  const colDefs: ColumnDef<TwinClassStatus>[] = [
+  const colDefs: ColumnDef<TwinStatus>[] = [
     {
       accessorKey: "logo",
       header: "Logo",
@@ -102,9 +99,7 @@ export function TwinClassStatuses() {
   const tableRef = useRef<DataTableHandle>(null);
   const [createEditStatusDialogOpen, setCreateEditStatusDialogOpen] =
     useState<boolean>(false);
-  const [editedStatus, setEditedStatus] = useState<TwinClassStatus | null>(
-    null
-  );
+  const [editedStatus, setEditedStatus] = useState<TwinStatus | null>(null);
   const { fetchTwinClassById } = useFetchTwinClassById();
 
   async function fetchStatuses() {
