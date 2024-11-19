@@ -2,15 +2,18 @@
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
 import { z } from "zod";
-import {ReactNode, useEffect, useState} from "react";
+import {ReactNode, useContext, useEffect, useState} from "react";
 import { Form } from "@/components/base/form";
 import { Alert } from "@/components/base/alert";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/base/button";
-import { Check, Cross, X } from "lucide-react";
+import { Check, Cross, Loader, LoaderCircle, X } from "lucide-react";
+import { LoadingSpinner } from "@/components/base/loading";
+import {InPlaceEditContext} from "@/features/inPlaceEdit/in-place-edit-context";
 
 export interface InPlaceFieldProps {
+  id: string;
   value: unknown;
   renderView?: (value: unknown) => ReactNode;
   valueInfo: AutoFormValueInfo;
@@ -19,18 +22,30 @@ export interface InPlaceFieldProps {
 }
 
 export function InPlaceField({
+  id,
   value,
   renderView,
   valueInfo,
   onSubmit,
   schema,
 }: InPlaceFieldProps) {
+  const context = useContext(InPlaceEditContext);
   const [isEdited, setIsEdited] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   function onValueClick() {
     setIsEdited(true);
+    if (context) {
+      context.setCurrent(id);
+    }
   }
+
+  useEffect(() => {
+    if (context && context.current !== id) {
+      setIsEdited(false);
+    }
+  }, [context, id, setIsEdited]);
 
   const form = useForm({
     defaultValues: {
@@ -41,54 +56,58 @@ export function InPlaceField({
 
   function cancelEdit() {
     setIsEdited(false);
-    form.reset(undefined, {keepDefaultValues: true});
+    form.reset(undefined, { keepDefaultValues: true });
   }
 
   function internalSubmit(values: { value: unknown }) {
-    console.log("internalSubmit", values);
+    setIsLoading(true);
     return onSubmit(values.value)
       .then(() => {
         setIsEdited(false);
+        setError(null);
       })
       .catch((e) => {
         setError(e.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
   useEffect(() => {
     const handleEsc = (event: any) => {
-      if (event.key === 'Escape') {
-        console.log('Close')
-        cancelEdit()
+      if (event.key === "Escape") {
+        console.log("Close");
+        cancelEdit();
       }
     };
-    window.addEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
 
     return () => {
-      window.removeEventListener('keydown', handleEsc);
+      window.removeEventListener("keydown", handleEsc);
     };
   }, []);
 
   if (!isEdited) {
     return (
-      <div onClick={onValueClick} className="hover:bg-muted/50 cursor-pointer h-full">
-        {renderView ? renderView(value) : <>{value}</>}
+      <div
+        onClick={onValueClick}
+        className="hover:bg-muted/50 cursor-pointer h-full min-h-8 flex flex-row items-center"
+      >
+        {renderView ? renderView(value) : <>{value ?? <div>Empty</div>}</>}
       </div>
     );
   } else {
     return (
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(internalSubmit)} onAbort={cancelEdit} className="max-w-80">
-          <div className="flex flex-row space-x-2">
+        <form
+          onSubmit={form.handleSubmit(internalSubmit)}
+          onAbort={cancelEdit}
+          className="max-w-80"
+        >
+          <div className="flex flex-row space-x-2 items-center">
             <AutoField
               info={valueInfo}
-              onChange={(newFieldValue) =>
-                console.log(
-                  "updateValueOfField",
-                  valueInfo.label,
-                  newFieldValue
-                )
-              }
               name={"value"}
               control={form.control}
               autoFocus
@@ -97,15 +116,17 @@ export function InPlaceField({
             />
 
             <Button
+              type="submit"
               variant="outline"
-              size="icon"
+              size="iconSm"
               onClick={form.handleSubmit(internalSubmit)}
             >
-              <Check />
+              {isLoading ? <LoadingSpinner /> : <Check />}
             </Button>
             <Button
+              type="reset"
               variant="outline"
-              size="icon"
+              size="iconSm"
               onClick={cancelEdit}
             >
               <X />

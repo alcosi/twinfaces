@@ -76,6 +76,7 @@ export function CheckboxFormItem({
         }
         onCheckedChange={onCheckedChange}
         {...props}
+        type="button"
       />
       {/*</FormControl>*/}
       <div className="space-y-1 leading-none">

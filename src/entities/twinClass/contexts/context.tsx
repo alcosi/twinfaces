@@ -56,7 +56,10 @@ export function TwinClassContextProvider({
   }, [twinClassId, linkId]);
 
   async function fetchClassData() {
-    setLoading(true);
+    // Only set loading on first load
+    if (!twinClass) {
+      setLoading(true);
+    }
     try {
       const { data } = await fetchTwinClassById({
         id: twinClassId,
