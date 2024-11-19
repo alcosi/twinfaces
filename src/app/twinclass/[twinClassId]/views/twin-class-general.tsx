@@ -16,7 +16,8 @@ import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
-import {InPlaceField, InPlaceFieldProps} from "@/components/in-place-field";
+import { InPlaceField, InPlaceFieldProps } from "@/features/inPlaceEdit/in-place-field";
+import {InPlaceEditContextProvider} from "@/features/inPlaceEdit/in-place-edit-context";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
@@ -71,35 +72,6 @@ export function TwinClassGeneral() {
   }
 
   const classValues: { [key: string]: AutoEditDialogSettings } = {
-    // key: {
-    //     name: "Key",
-    //     value: {"key": twinClass.key},
-    //     title: 'Update key',
-    //     onSubmit: (values) => {
-    //         return updateTwinClass({key: values.key})
-    //     },
-    //     valuesInfo: {
-    //         "key": {
-    //             type: AutoFormValueType.uuid
-    //         }
-    //     }
-    // },
-    name: {
-      value: { name: twinClass.name },
-      title: "Update name",
-      schema: z.object({ name: z.string().min(3) }),
-      onSubmit: (values) => {
-        return updateTwinClass({
-          nameI18n: { translationInCurrentLocale: values.name },
-        });
-      },
-      valuesInfo: {
-        name: {
-          type: AutoFormValueType.string,
-          label: "Name",
-        },
-      },
-    },
     description: {
       value: { description: twinClass.description },
       title: "Update description",
@@ -112,19 +84,6 @@ export function TwinClassGeneral() {
         description: {
           type: AutoFormValueType.string,
           label: "Description",
-        },
-      },
-    },
-    abstractClass: {
-      value: { abstractClass: twinClass.abstractClass },
-      title: "Update abstract",
-      onSubmit: (values) => {
-        return updateTwinClass({ abstractClass: values.abstractClass });
-      },
-      valuesInfo: {
-        abstractClass: {
-          type: AutoFormValueType.boolean,
-          label: "Abstract",
         },
       },
     },
@@ -166,10 +125,14 @@ export function TwinClassGeneral() {
   };
 
   const nameSettings: InPlaceFieldProps = {
+    id: "name",
     value: twinClass.name,
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
+      inputProps: {
+        fieldSize: "sm",
+      },
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
@@ -177,7 +140,41 @@ export function TwinClassGeneral() {
         nameI18n: { translationInCurrentLocale: value as string },
       });
     },
-  }
+  };
+
+  const descriptionSettings: InPlaceFieldProps = {
+    id: "description",
+    value: twinClass.description,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      inputProps: {
+        fieldSize: "sm",
+      },
+      label: "",
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateTwinClass({
+        descriptionI18n: { translationInCurrentLocale: value as string },
+      });
+    },
+  };
+
+  const abstractSettings: InPlaceFieldProps = {
+    id: "abstract",
+    value: twinClass.abstractClass,
+    valueInfo: {
+      type: AutoFormValueType.boolean,
+      label: "",
+    },
+    schema: z.boolean(),
+    renderView: (value) => (value ? "Yes" : "No"),
+    onSubmit: (value) => {
+      return updateTwinClass({
+        abstractClass: value as boolean,
+      });
+    },
+  };
 
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
@@ -185,7 +182,7 @@ export function TwinClassGeneral() {
   }
 
   return (
-    <>
+    <InPlaceEditContextProvider>
       <Table className="mt-8">
         <TableBody>
           <TableRow noHover>
@@ -198,26 +195,35 @@ export function TwinClassGeneral() {
             <TableCell>Key</TableCell>
             <TableCell>{twinClass.key}</TableCell>
           </TableRow>
-          <TableRow noHover
+          <TableRow
+            noHover
             // className={"cursor-pointer"}
             // onClick={() => openWithSettings(classValues.name!)}
           >
             <TableCell>Name</TableCell>
-            <TableCell><InPlaceField {...nameSettings}/></TableCell>
+            <TableCell>
+              <InPlaceField {...nameSettings} />
+            </TableCell>
           </TableRow>
           <TableRow
-            className={"cursor-pointer"}
-            onClick={() => openWithSettings(classValues.description!)}
+            noHover
+            // className={"cursor-pointer"}
+            // onClick={() => openWithSettings(classValues.description!)}
           >
             <TableCell>Description</TableCell>
-            <TableCell>{twinClass.description}</TableCell>
+            <TableCell>
+              <InPlaceField {...descriptionSettings} />
+            </TableCell>
           </TableRow>
           <TableRow
-            className={"cursor-pointer"}
-            onClick={() => openWithSettings(classValues.abstractClass!)}
+            noHover
+            // className={"cursor-pointer"}
+            // onClick={() => openWithSettings(classValues.abstractClass!)}
           >
             <TableCell>Abstract</TableCell>
-            <TableCell>{twinClass.abstractClass ? "Yes" : "No"}</TableCell>
+            <TableCell>
+              <InPlaceField {...abstractSettings} />
+            </TableCell>
           </TableRow>
           <TableRow
             className={"cursor-pointer"}
@@ -304,6 +310,6 @@ export function TwinClassGeneral() {
         onOpenChange={setEditFieldDialogOpen}
         settings={currentAutoEditDialogSettings}
       />
-    </>
+    </InPlaceEditContextProvider>
   );
 }

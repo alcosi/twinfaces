@@ -22,6 +22,7 @@ import { ComboboxProps } from "@/shared/ui/combobox";
 import { Control, FieldPath } from "react-hook-form";
 import { TagsFormField, TagsFormItem } from "./form-fields/tags-form-field";
 import { TagBoxProps } from "@/shared/ui";
+import { InputProps } from "@/components/base/input";
 
 export enum AutoFormValueType {
   string = "string",
@@ -40,6 +41,7 @@ export enum AutoFormValueType {
 export type AutoFormValueInfo = AutoFormCommonInfo &
   (
     | AutoFormSimpleValueInfo
+    | AutoFormTextValueInfo
     | AutoFormCheckboxValueInfo
     | AutoFormSelectValueInfo
     | AutoFormComboboxValueInfo
@@ -54,11 +56,13 @@ export interface AutoFormCommonInfo {
   defaultValue?: any;
 }
 
+export interface AutoFormTextValueInfo {
+  type: AutoFormValueType.string;
+  inputProps?: InputProps;
+}
+
 export interface AutoFormSimpleValueInfo {
-  type:
-    | AutoFormValueType.string
-    | AutoFormValueType.number
-    | AutoFormValueType.uuid;
+  type: AutoFormValueType.number | AutoFormValueType.uuid;
 }
 
 export interface AutoFormCheckboxValueInfo {
@@ -118,11 +122,19 @@ export function AutoField({
     switch (info.type) {
       case AutoFormValueType.boolean:
         return name && control ? (
-          <CheckboxFormField {...info} name={name} control={control}
-                             autoFocus={autoFocus} />
+          <CheckboxFormField
+            {...info}
+            name={name}
+            control={control}
+            autoFocus={autoFocus}
+          />
         ) : (
-          <CheckboxFormItem {...info} fieldValue={value} onChange={setValue}
-                            autoFocus={autoFocus} />
+          <CheckboxFormItem
+            {...info}
+            fieldValue={value}
+            onChange={setValue}
+            autoFocus={autoFocus}
+          />
         );
 
       case AutoFormValueType.combobox:
@@ -165,14 +177,20 @@ export function AutoField({
 
       default:
         return name && control ? (
-          <TextFormField {...info} name={name} control={control}
-                         autoFocus={autoFocus} />
+          <TextFormField
+            {...info}
+            name={name}
+            control={control}
+            autoFocus={autoFocus}
+            {...(info.type == AutoFormValueType.string ? info.inputProps : {})}
+          />
         ) : (
           <TextFormItem
             {...info}
             value={value}
             onChange={(e) => setValue(e?.target.value)}
             autoFocus={autoFocus}
+            {...(info.type == AutoFormValueType.string ? info.inputProps : {})}
           />
         );
     }
