@@ -3,19 +3,20 @@ import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 import { ClassStatusView } from "@/components/class-status-view";
+import { PermissionResourceLink } from "@/entities/permission";
 import {
-  TwinFlowTransition,
+  TF_Transition,
   TwinFlowTransitionUpdateRq,
-} from "@/entities/twinFlow";
-import { NULLIFY_UUID_VALUE } from "@/shared/libs";
+} from "@/entities/twinFlowTransition";
 import { ApiContext } from "@/shared/api";
+import { NULLIFY_UUID_VALUE } from "@/shared/libs";
 import { useContext, useState } from "react";
 
 export function TwinflowTransitionGeneral({
   transition,
   onChange,
 }: {
-  transition: TwinFlowTransition;
+  transition: TF_Transition;
   onChange: () => any;
 }) {
   const api = useContext(ApiContext);
@@ -31,9 +32,9 @@ export function TwinflowTransitionGeneral({
 
   async function updateTransition(newTransition: TwinFlowTransitionUpdateRq) {
     try {
-      await api.twinflow.updateTransition({
+      await api.twinFlowTransition.update({
         transitionId: transition.id!,
-        data: newTransition,
+        body: newTransition,
       });
       console.log("updated");
       onChange?.();
@@ -117,6 +118,28 @@ export function TwinflowTransitionGeneral({
     },
   };
 
+  //  TODO: Replace with <PermissionSelectField />
+  // as per https://alcosi.atlassian.net/browse/TWINFACES-116
+  const permissionAutoDialogSettings: AutoEditDialogSettings = {
+    value: { permissionId: transition.permissionId },
+    title: "Update permission",
+    onSubmit: (values) => {
+      return updateTransition({
+        permissionId: values.permissionId,
+      });
+    },
+    valuesInfo: {
+      permission: {
+        type: AutoFormValueType.string,
+        label: "Permission",
+      },
+      permissionId: {
+        type: AutoFormValueType.string,
+        label: "Permission",
+      },
+    },
+  };
+
   return (
     <>
       <Table className="mt-8">
@@ -155,6 +178,19 @@ export function TwinflowTransitionGeneral({
             <TableCell>Destination status</TableCell>
             <TableCell>
               <ClassStatusView status={transition.dstTwinStatus} />
+            </TableCell>
+          </TableRow>
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(permissionAutoDialogSettings)}
+          >
+            <TableCell>Permission</TableCell>
+            <TableCell>
+              {transition.permission ? (
+                <PermissionResourceLink data={transition.permission} />
+              ) : (
+                "N/A"
+              )}
             </TableCell>
           </TableRow>
           <TableRow>

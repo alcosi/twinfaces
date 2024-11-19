@@ -1,19 +1,19 @@
-import {
-  TwinFlowTransition,
-  TwinFlowTransitionValidator,
-} from "@/entities/twinFlow";
 import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
-import { useRef, useState } from "react";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ColumnDef } from "@tanstack/table-core";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import {
+  TF_Transition,
+  TwinFlowTransitionValidator,
+} from "@/entities/twinFlowTransition";
+import { ColumnDef } from "@tanstack/table-core";
+import { useRef, useState } from "react";
 import { TwinflowTransitionValidatorDialog } from "./twinflow-transition-validator-dialog";
 
 export function TwinflowTransitionValidators({
   transition,
   onChange,
 }: {
-  transition: TwinFlowTransition;
+  transition: TF_Transition;
   onChange: () => any;
 }) {
   const tableRef = useRef<DataTableHandle>(null);

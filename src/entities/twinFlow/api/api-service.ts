@@ -1,33 +1,8 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import {
-  TwinFlowCreateRq,
-  TwinFlowTransitionCreateRq,
-  TwinFlowTransitionUpdateRq,
-  TwinFlowUpdateRq,
-} from "./types";
+import { TwinFlowCreateRq, TwinFlowUpdateRq } from "./types";
 
 export function createTwinflowApi(settings: ApiSettings) {
-  // function create({twinClassId, data}: { twinClassId: string, data: TwinClassStatusCreateRq }) {
-  //     return settings.client.POST('/private/twin_class/{twinClassId}/twin_status/v1', {
-  //         params: {
-  //             header: getApiDomainHeaders(settings),
-  //             path: {twinClassId: twinClassId}
-  //         },
-  //         body: data
-  //     })
-  // }
-
-  // function update({statusId, data}: { statusId: string, data: TwinClassStatusUpdateRq }) {
-  //     return settings.client.PUT('/private/twin_status/{twinStatusId}/v1', {
-  //         params: {
-  //             header: getApiDomainHeaders(settings),
-  //             path: {twinStatusId: statusId}
-  //         },
-  //         body: data
-  //     })
-  // }
-
   function search({
     twinClassId,
     pagination,
@@ -72,10 +47,13 @@ export function createTwinflowApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         path: { twinflowId: twinFlowId },
         query: {
+          // lazyRelation: false,
           showTwinflowMode: "DETAILED",
           showTwinflow2TransitionMode: "DETAILED",
           showTransition2StatusMode: "SHORT",
           showTwinflowInitStatus2StatusMode: "SHORT",
+          showTransition2PermissionMode: "DETAILED",
+          showTransition2UserMode: "SHORT",
         },
       },
     });
@@ -110,62 +88,11 @@ export function createTwinflowApi(settings: ApiSettings) {
     });
   }
 
-  function getTransitionById({ transitionId }: { transitionId: string }) {
-    return settings.client.GET("/private/transition/{transitionId}/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { transitionId },
-        query: {
-          showTransitionMode: "MANAGED",
-          showTransition2StatusMode: "DETAILED",
-        },
-      },
-    });
-  }
-
-  function createTransition({
-    twinFlowId,
-    data,
-  }: {
-    twinFlowId: string;
-    data: TwinFlowTransitionCreateRq;
-  }) {
-    return settings.client.POST(
-      "/private/twinflow/{twinflowId}/transition/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { twinflowId: twinFlowId },
-        },
-        body: data,
-      }
-    );
-  }
-
-  function updateTransition({
-    transitionId,
-    data,
-  }: {
-    transitionId: string;
-    data: TwinFlowTransitionUpdateRq;
-  }) {
-    return settings.client.POST("/private/transition/{transitionId}/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { transitionId },
-      },
-      body: data,
-    });
-  }
-
   return {
     search,
     getById,
     create,
     update,
-    getTransitionById,
-    createTransition,
-    updateTransition,
   };
 }
 

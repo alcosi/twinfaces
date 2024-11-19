@@ -2,7 +2,7 @@
 
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { LoadingOverlay } from "@/components/base/loading";
-import { TwinFlowTransition } from "@/entities/twinFlow";
+import { TF_Transition } from "@/entities/twinFlowTransition";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowContext } from "@/features/twinFlow";
 import { ApiContext } from "@/shared/api";
@@ -28,7 +28,7 @@ export default function TransitionPage({
   const { twinClass } = useContext(TwinClassContext);
   const { twinFlow } = useContext(TwinFlowContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [transition, setTransition] = useState<TwinFlowTransition | undefined>(
+  const [transition, setTransition] = useState<TF_Transition | undefined>(
     undefined
   );
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -71,10 +71,8 @@ export default function TransitionPage({
 
   function fetchTransitionData() {
     setLoading(true);
-    api.twinflow
-      .getTransitionById({
-        transitionId,
-      })
+    api.twinFlowTransition
+      .fetchById(transitionId)
       .then((response: any) => {
         const data = response.data;
         if (!data || data.status != 0) {
