@@ -7,6 +7,7 @@ import {
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { TwinFlow } from "@/entities/twinFlow";
+import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
@@ -38,8 +39,8 @@ const columns: ColumnDef<TwinFlow>[] = [
 export function TwinClassTwinflows() {
   const [twinflowDialogOpen, setTwinflowDialogOpen] = useState(false);
   const api = useContext(ApiContext);
-  const { twinClass, getStatusesBySearch, findStatusById } =
-    useContext(TwinClassContext);
+  const { twinClass } = useContext(TwinClassContext);
+  const sAdapter = useTwinStatusSelectAdapter();
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
 
@@ -127,14 +128,10 @@ export function TwinClassTwinflows() {
             initialStatusId: {
               type: AutoFormValueType.combobox,
               label: "Initial status",
-              getItems: getStatusesBySearch,
-              getItemKey: (c) => c?.id?.toLowerCase() ?? "",
-              getItemLabel: (c) => {
-                let label = c?.key ?? "";
-                if (c.name) label += ` (${c.name})`;
-                return label;
-              },
-              getById: findStatusById,
+              getById: sAdapter.getById,
+              getItems: sAdapter.getItems,
+              getItemKey: (i) => sAdapter.getItemKey(i as TwinStatus),
+              getItemLabel: (i) => sAdapter.getItemLabel(i as TwinStatus),
               selectPlaceholder: "Select status...",
             },
           },

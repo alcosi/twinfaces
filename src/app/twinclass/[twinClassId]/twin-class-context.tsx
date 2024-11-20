@@ -1,7 +1,7 @@
 import { LoadingOverlay } from "@/components/base/loading";
 import { TwinClass, useFetchTwinClassById } from "@/entities/twinClass";
 import { TwinClassLink } from "@/entities/twinClassLink";
-import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { TwinStatus } from "@/entities/twinStatus";
 import { RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
@@ -13,9 +13,9 @@ interface TwinClassContextProps {
   relatedObjects?: RelatedObjects;
   loading: boolean;
   fetchClassData: () => void;
-  statuses: TwinClassStatus[];
-  getStatusesBySearch: (search: string) => Promise<TwinClassStatus[]>;
-  findStatusById: (id: string) => Promise<TwinClassStatus | undefined>;
+  statuses: TwinStatus[];
+  getStatusesBySearch: (search: string) => Promise<TwinStatus[]>;
+  findStatusById: (id: string) => Promise<TwinStatus | undefined>;
   linkId?: string;
   link?: TwinClassLink;
   isForwardLink?: boolean;
@@ -43,7 +43,7 @@ export function TwinClassContextProvider({
   // `Status` related logic
   // TODO: Consider extracting `statuses`, `getStatusesBySearch`, and `findStatusById`
   // into a separate hook or component for better maintainability.
-  const [statuses, setStatuses] = useState<TwinClassStatus[]>([]);
+  const [statuses, setStatuses] = useState<TwinStatus[]>([]);
 
   // `Link` related logic
   // TODO: Consider extracting `linkId`, `link` and `isForwardLink`

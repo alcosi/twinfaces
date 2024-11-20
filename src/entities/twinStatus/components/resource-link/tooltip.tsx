@@ -1,10 +1,10 @@
 import { isPopulatedString } from "@/shared/libs";
 import { Avatar, ColorTile, ResourceLinkTooltip } from "@/shared/ui";
 import { CircleDot } from "lucide-react";
-import { TwinClassStatus } from "../../api";
+import { TwinStatus } from "../../api";
 
 type Props = {
-  data: TwinClassStatus;
+  data: TwinStatus;
   link: string;
 };
 

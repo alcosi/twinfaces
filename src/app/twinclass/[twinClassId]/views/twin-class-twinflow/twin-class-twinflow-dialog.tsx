@@ -7,16 +7,15 @@ import {
   DialogTitle,
 } from "@/components/base/dialog";
 import { Form } from "@/components/base/form";
-import { ComboboxFormField } from "@/components/form-fields/combobox";
 import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
-import { useClassStatuses } from "@/entities/twinClassStatus";
 import { TwinFlowCreateRq } from "@/entities/twinFlow";
+import { TwinStatusSelectField } from "@/features/twinStatus";
 import { ApiContext } from "@/shared/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -40,12 +39,7 @@ export default function CreateTwinflowDialog({
   twinClassId,
   onSuccess,
 }: CreateEditTwinflowDialogProps) {
-  const [error, setError] = useState<string | null>(null);
-
   const api = useContext(ApiContext);
-  const { getStatusesBySearch, findStatusById } = useClassStatuses({
-    twinClassId,
-  });
 
   const form = useForm<z.infer<typeof twinflowSchema>>({
     resolver: zodResolver(twinflowSchema),
@@ -84,11 +78,9 @@ export default function CreateTwinflowDialog({
         twinClassId,
         body: requestBody,
       });
+
       if (error) {
-        console.error("failed to create twinflow", error);
-        const errorMessage = error?.msg;
-        setError("Failed to create twinflow: " + errorMessage ?? error);
-        return;
+        throw new Error("Failed to create twinflow");
       }
     } catch (e) {
       console.error("exception while creating twinflow", e);
@@ -125,22 +117,12 @@ export default function CreateTwinflowDialog({
               label="Description"
             />
 
-            <ComboboxFormField
+            <TwinStatusSelectField
+              twinClassId={twinClassId}
               control={form.control}
               name="initialStatusId"
               label="Initial status"
-              getById={findStatusById}
               required={true}
-              getItems={getStatusesBySearch}
-              getItemKey={(c) => c?.id?.toLowerCase() ?? ""}
-              getItemLabel={(c) => {
-                let label = c?.key ?? "";
-                if (c.name) label += ` (${c.name})`;
-                return label;
-              }}
-              selectPlaceholder={"Select status..."}
-              searchPlaceholder={"Search status..."}
-              noItemsText={"No statuses found"}
             />
           </form>
         </Form>

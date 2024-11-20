@@ -1,11 +1,11 @@
 import { isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
 import { CircleDot } from "lucide-react";
-import { TwinClassStatus } from "../../api";
+import { TwinStatus } from "../../api";
 import { TwinClassStatusResourceTooltip } from "./tooltip";
 
 type Props = {
-  data: TwinClassStatus;
+  data: TwinStatus;
   twinClassId: string;
   disabled?: boolean;
   withTooltip?: boolean;

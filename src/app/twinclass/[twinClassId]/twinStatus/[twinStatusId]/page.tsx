@@ -3,7 +3,7 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { TwinStatusGeneral } from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twin-status-general";
 import { LoadingOverlay } from "@/components/base/loading";
-import { TwinClassStatus } from "@/entities/twinClassStatus";
+import { TwinStatus } from "@/entities/twinStatus";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { Tab, TabsLayout } from "@/widgets";
@@ -22,7 +22,7 @@ export default function TwinClassPage({
   const api = useContext(ApiContext);
   const { twinClass } = useContext(TwinClassContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [twinStatus, setTwinStatus] = useState<TwinClassStatus | undefined>(
+  const [twinStatus, setTwinStatus] = useState<TwinStatus | undefined>(
     undefined
   );
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -53,10 +53,8 @@ export default function TwinClassPage({
     if (twinStatusId) {
       setLoading(true);
 
-      api.twinClass
-        .getStatusById({
-          twinStatusId: twinStatusId,
-        })
+      api.twinStatus
+        .getById({ twinStatusId })
         .then((response) => {
           const data = response.data;
           if (!data || data.status != 0) {
