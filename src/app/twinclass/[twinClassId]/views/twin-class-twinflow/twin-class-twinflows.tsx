@@ -148,10 +148,6 @@ export function TwinClassTwinflows() {
               selectPlaceholder: "Select status...",
             },
           },
-          onChange: () => {
-            console.log("Filters changed");
-            return Promise.resolve();
-          },
         }}
       />
       <CreateTwinflowDialog

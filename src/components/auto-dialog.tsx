@@ -37,14 +37,12 @@ export function AutoDialog({
   const [error, setError] = useState<string | null>(null);
 
   function onOpenChangeInternal(newOpen: boolean) {
-    console.log("EditFieldDialog onOpenChangeInternal", newOpen);
     onOpenChange?.(newOpen);
   }
 
   useEffect(() => {
     if (open) {
       if (settings?.value) {
-        console.log("resetting form", settings.value);
         form.reset({
           ...settings.value,
         });
@@ -72,15 +70,7 @@ export function AutoDialog({
       return null;
     }
     return (
-      <AutoField
-        key={key}
-        info={info}
-        onChange={(newFieldValue) =>
-          console.log("updateValueOfField", key, newFieldValue)
-        }
-        name={key}
-        control={form.control}
-      />
+      <AutoField key={key} info={info} name={key} control={form.control} />
     );
   }
 

@@ -62,7 +62,6 @@ export default function CreateEditTwinFieldDialog({
   const api = useContext(ApiContext);
 
   function onOpenChangeInternal(newOpen: boolean) {
-    console.log("CreateEditTwinFieldDialog onOpenChangeInternal", newOpen);
     if (!newOpen && form.formState.isSubmitting) {
       return;
     }
@@ -71,7 +70,6 @@ export default function CreateEditTwinFieldDialog({
   }
 
   useEffect(() => {
-    console.log("CreateEditTwinFieldDialog useEffect open", open, field);
     if (!open) return;
 
     if (field) {
@@ -86,10 +84,6 @@ export default function CreateEditTwinFieldDialog({
         { keepDefaultValues: true }
       );
     } else {
-      console.log(
-        "CreateEditTwinFieldDialog useEffect reset",
-        form.formState.defaultValues
-      );
       form.reset();
     }
     setError(null);
@@ -106,7 +100,6 @@ export default function CreateEditTwinFieldDialog({
   });
 
   async function onSubmit(formValues: z.infer<typeof twinFieldSchema>) {
-    console.log("CreateEditTwinFieldDialog onSubmit", formValues);
     setError(null);
 
     if (!featurer) {
@@ -212,7 +205,6 @@ export default function CreateEditTwinFieldDialog({
                 defaultId={field?.fieldTyperFeaturerId}
                 defaultParams={field?.fieldTyperParams}
                 onChange={(val) => {
-                  console.log("new featurer", val);
                   setFeaturer(val);
                 }}
               />

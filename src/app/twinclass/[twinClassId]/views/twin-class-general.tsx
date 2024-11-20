@@ -40,7 +40,6 @@ export function TwinClassGeneral() {
 
     try {
       await api.twinClass.update({ id: twinClass.id!, body: newClass });
-      console.log("updated");
       fetchClassData();
     } catch (e) {
       console.error(e);

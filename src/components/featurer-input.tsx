@@ -51,26 +51,12 @@ export function FeaturerInput({
   const [params, setParams] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    console.log("FeaturerInputInternal on mount", defaultId);
-
-    return () => {
-      console.log("FeaturerInputInternal on unmount");
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log(
-      "FeaturerInputInternal on defaultId change",
-      selected,
-      defaultId
-    );
     if (!selected && defaultId) {
       setById(defaultId, defaultParams);
     }
   }, [defaultId, defaultParams]);
 
   async function setById(id: number, params?: any) {
-    console.log("setById", id, params);
     try {
       const response = await api.featurer.search({
         pagination: { pageIndex: 0, pageSize: 10 },
@@ -115,16 +101,12 @@ export function FeaturerInput({
     return response.data?.featurerList ?? [];
   }
 
-  function onSelect(newFeaturer?: Featurer[]) {
-    console.log("onSelect", newFeaturer);
-    if (isPopulatedArray(newFeaturer)) {
-      setSelected(newFeaturer[0]);
-      setParams({});
-    }
+  function onSelect(newFeaturer?: Featurer) {
+    setSelected(newFeaturer);
+    setParams({});
   }
 
   function onParamChange(key: string, value?: string) {
-    console.log("onParamChange", key, value);
     setParams((old) => {
       return { ...old, [key]: value! };
     });
@@ -132,7 +114,6 @@ export function FeaturerInput({
 
   useEffect(() => {
     onChange?.(selected ? { featurer: selected, params } : null);
-    console.log("onChange", selected, params);
   }, [selected, params]);
 
   return (

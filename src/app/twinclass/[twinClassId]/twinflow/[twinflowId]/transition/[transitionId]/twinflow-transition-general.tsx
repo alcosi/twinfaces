@@ -36,7 +36,6 @@ export function TwinflowTransitionGeneral({
         transitionId: transition.id!,
         body: newTransition,
       });
-      console.log("updated");
       onChange?.();
     } catch (e) {
       console.error(e);
