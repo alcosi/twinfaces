@@ -2,11 +2,11 @@ import { LoadingOverlay } from "@/components/base/loading";
 import { ApiContext } from "@/shared/api";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { DataListOption } from "@/entities/datalist";
+import { DataList } from "@/entities/datalist";
 
 interface DatalistContextProps {
   datalistId: string;
-  datalist: DataListOption | undefined;
+  datalist: DataList | undefined;
   fetchDatalist: () => void;
 }
 
@@ -23,9 +23,7 @@ export function DatalistContextProvider({
 }) {
   const api = useContext(ApiContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [datalist, setDatalist] = useState<DataListOption | undefined>(
-    undefined
-  );
+  const [datalist, setDatalist] = useState<DataList | undefined>(undefined);
 
   useEffect(() => {
     fetchDatalist();
@@ -37,6 +35,7 @@ export function DatalistContextProvider({
       .getById({
         id: datalistId,
         query: {
+          showDataListMode: "DETAILED",
           showDataListOptionMode: "DETAILED",
         },
       })

@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 
 const colDefs: Record<
-  keyof Pick<DataList, "id" | "name" | "updatedAt">,
+  keyof Pick<DataList, "id" | "name" | "updatedAt" | "description">,
   ColumnDef<DataList>
 > = {
   id: {
@@ -28,6 +28,11 @@ const colDefs: Record<
     id: "name",
     accessorKey: "name",
     header: "Name",
+  },
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
   },
   updatedAt: {
     id: "updatedAt",
@@ -76,7 +81,12 @@ const Page = () => {
     <>
       <Experimental_CrudDataTable
         ref={tableRef}
-        columns={[colDefs.id!, colDefs.name!, colDefs.updatedAt!]}
+        columns={[
+          colDefs.id!,
+          colDefs.name!,
+          colDefs.description!,
+          colDefs.updatedAt!,
+        ]}
         getRowId={(row) => row.id!}
         fetcher={fetchDataLists}
         pageSizes={[10, 20, 50]}

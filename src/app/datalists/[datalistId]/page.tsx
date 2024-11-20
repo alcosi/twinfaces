@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef } from "@tanstack/table-core";
 import { toast } from "sonner";
@@ -9,6 +9,8 @@ import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { DataListOption } from "@/entities/datalist";
+import { DatalistContext } from "@/app/datalists/[datalistId]/datalist-context";
+import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 
 interface DatalistPageProps {
   params: {
@@ -18,6 +20,7 @@ interface DatalistPageProps {
 
 const Page = ({ params: { datalistId } }: DatalistPageProps) => {
   const api = useContext(ApiContext);
+  const { datalist } = useContext(DatalistContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { setBreadcrumbs } = useBreadcrumbs();
   const [columns, setColumns] = useState<ColumnDef<DataListOption>[]>([]);
@@ -25,9 +28,9 @@ const Page = ({ params: { datalistId } }: DatalistPageProps) => {
   useEffect(() => {
     setBreadcrumbs([
       { label: "Datalists", href: "/datalists" },
-      { label: "Datalist", href: `/datalists/${datalistId}` },
+      { label: datalist?.name!, href: `/datalists/${datalistId}` },
     ]);
-  }, []);
+  }, [datalist?.name, datalistId]);
 
   async function fetchDataList(): Promise<{
     data: DataListOption[];
@@ -70,6 +73,11 @@ const Page = ({ params: { datalistId } }: DatalistPageProps) => {
           header: "Name",
         },
         ...dynamicColumns,
+        {
+          id: "icon",
+          accessorKey: "icon",
+          header: "Icon",
+        },
       ]);
 
       return { data: datalist, pageCount: 0 };
@@ -86,6 +94,36 @@ const Page = ({ params: { datalistId } }: DatalistPageProps) => {
 
   return (
     <>
+      <div className="text-lg mt-4">General</div>
+
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>
+              <ShortGuidWithCopy value={datalist?.id} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>{datalist?.name}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Description</TableCell>
+            <TableCell>{datalist?.description}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Updated at</TableCell>
+            <TableCell>
+              {new Date(datalist?.updatedAt!).toLocaleDateString()}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+
       <Experimental_CrudDataTable
         title={"Options"}
         ref={tableRef}
