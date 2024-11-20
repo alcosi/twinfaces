@@ -51,19 +51,15 @@ const TableFooter = React.forwardRef<
 ));
 TableFooter.displayName = "TableFooter";
 
-interface TableRowProps {
-  noHover?: boolean;
-}
-
 const TableRow = React.forwardRef<
-  HTMLTableRowElement & TableRowProps,
-  React.HTMLAttributes<HTMLTableRowElement> & TableRowProps
->(({ className, noHover = false, ...props }, ref) => (
+  HTMLTableRowElement,
+  React.HTMLAttributes<HTMLTableRowElement>
+>(({ className, ...props }, ref) => (
   <tr
     ref={ref}
     className={cn(
       "border-b transition-colors data-[state=selected]:bg-muted",
-      !noHover && "hover:bg-muted/50",
+      props.onClick && "hover:bg-muted/50",
       className
     )}
     {...props}

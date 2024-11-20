@@ -112,7 +112,6 @@ export function InPlaceField({
               control={form.control}
               autoFocus
               // TODO auto cancel edit on lost focus/on closed for popups
-              // TODO implement context for keeping only 1 item open at the time inside context
             />
 
             <Button

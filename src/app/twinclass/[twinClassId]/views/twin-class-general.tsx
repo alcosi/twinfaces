@@ -16,8 +16,11 @@ import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
-import { InPlaceField, InPlaceFieldProps } from "@/features/inPlaceEdit/in-place-field";
-import {InPlaceEditContextProvider} from "@/features/inPlaceEdit/in-place-edit-context";
+import {
+  InPlaceField,
+  InPlaceFieldProps,
+} from "@/features/inPlaceEdit/in-place-field";
+import { InPlaceEditContextProvider } from "@/features/inPlaceEdit/in-place-edit-context";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
@@ -72,21 +75,6 @@ export function TwinClassGeneral() {
   }
 
   const classValues: { [key: string]: AutoEditDialogSettings } = {
-    description: {
-      value: { description: twinClass.description },
-      title: "Update description",
-      onSubmit: (values) => {
-        return updateTwinClass({
-          descriptionI18n: { translationInCurrentLocale: values.description },
-        });
-      },
-      valuesInfo: {
-        description: {
-          type: AutoFormValueType.string,
-          label: "Description",
-        },
-      },
-    },
     head: {
       value: {
         headClassId: twinClass.headClassId,
@@ -185,41 +173,29 @@ export function TwinClassGeneral() {
     <InPlaceEditContextProvider>
       <Table className="mt-8">
         <TableBody>
-          <TableRow noHover>
+          <TableRow>
             <TableCell width={300}>ID</TableCell>
             <TableCell>
               <ShortGuidWithCopy value={twinClass.id} />
             </TableCell>
           </TableRow>
-          <TableRow noHover>
+          <TableRow>
             <TableCell>Key</TableCell>
             <TableCell>{twinClass.key}</TableCell>
           </TableRow>
-          <TableRow
-            noHover
-            // className={"cursor-pointer"}
-            // onClick={() => openWithSettings(classValues.name!)}
-          >
+          <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>
               <InPlaceField {...nameSettings} />
             </TableCell>
           </TableRow>
-          <TableRow
-            noHover
-            // className={"cursor-pointer"}
-            // onClick={() => openWithSettings(classValues.description!)}
-          >
+          <TableRow>
             <TableCell>Description</TableCell>
             <TableCell>
               <InPlaceField {...descriptionSettings} />
             </TableCell>
           </TableRow>
-          <TableRow
-            noHover
-            // className={"cursor-pointer"}
-            // onClick={() => openWithSettings(classValues.abstractClass!)}
-          >
+          <TableRow>
             <TableCell>Abstract</TableCell>
             <TableCell>
               <InPlaceField {...abstractSettings} />
