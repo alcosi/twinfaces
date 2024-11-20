@@ -45,15 +45,17 @@ export const FILTERS = {
     label: "Description",
   },
   [FilterFields.headTwinClassIdList]: {
-    type: AutoFormValueType.multiCombobox,
+    type: AutoFormValueType.combobox,
     label: "Head",
+    multi: true,
   },
   [FilterFields.extendsTwinClassIdList]: {
-    type: AutoFormValueType.multiCombobox,
+    type: AutoFormValueType.combobox,
     label: "Extends",
+    multi: true,
   },
   [FilterFields.ownerTypeList]: {
-    type: AutoFormValueType.multiCombobox,
+    type: AutoFormValueType.combobox,
     label: "Owner types",
     getById: async (key: string) => OWNER_TYPES?.find((o) => o === key),
     getItems: async (needle: string) => {

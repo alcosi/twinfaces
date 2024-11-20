@@ -11,7 +11,6 @@ import {
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields/text-form-field";
-import { useClassStatuses } from "@/entities/twinClassStatus";
 import { TwinFlowCreateRq } from "@/entities/twinFlow";
 import { ApiContext } from "@/shared/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +19,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinStatusSelectField } from "@/features/twinStatus";
+import {
+  useFetchTwinStatusById,
+  useTwinStatusSearchV1,
+} from "@/entities/twinStatus";
 
 interface CreateEditTwinflowDialogProps {
   open: boolean;
@@ -40,12 +43,7 @@ export default function CreateTwinflowDialog({
   twinClassId,
   onSuccess,
 }: CreateEditTwinflowDialogProps) {
-  const [error, setError] = useState<string | null>(null);
-
   const api = useContext(ApiContext);
-  const { getStatusesBySearch, findStatusById } = useClassStatuses({
-    twinClassId,
-  });
 
   const form = useForm<z.infer<typeof twinflowSchema>>({
     resolver: zodResolver(twinflowSchema),
