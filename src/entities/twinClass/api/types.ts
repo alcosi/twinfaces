@@ -13,6 +13,15 @@ export type TwinClassFieldUpdateRq =
   components["schemas"]["TwinClassFieldUpdateRqV1"];
 // export type TwinClassFieldUpdateRq = components["schemas"]["TwinClassField"];
 
+export type DataListOptionMap = {
+  [key: string]: components["schemas"]["DataListOptionV1"];
+};
+export type DataListV1 = components["schemas"]["DataListV1"];
+export type DataListsMap = {
+  [key: string]: components["schemas"]["DataListV1"];
+};
+export type DataListOption = components["schemas"]["DataListOptionV1"];
+
 export type TwinClassFilterKeys =
   | "twinClassIdList"
   | "twinClassKeyLikeList"

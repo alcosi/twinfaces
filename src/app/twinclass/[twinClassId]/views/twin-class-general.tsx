@@ -5,6 +5,7 @@ import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
 import { FeaturerTypes } from "@/components/featurer-input";
 import {
+  DataListV1,
   TwinClass_DETAILED,
   TwinClassResourceLink,
   TwinClassUpdateRq,
@@ -14,6 +15,7 @@ import {
 import { ApiContext } from "@/shared/api";
 import { useContext, useState } from "react";
 import { z } from "zod";
+import { DatalistResourceLink } from "@/entities/datalist";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
@@ -242,6 +244,39 @@ export function TwinClassGeneral() {
               )}
             </TableCell>
           </TableRow>
+
+          <TableRow>
+            <TableCell>Markers</TableCell>
+            <TableCell>
+              {twinClass.markersDataListId && relatedObjects?.dataListsMap && (
+                <DatalistResourceLink
+                  data={
+                    relatedObjects.dataListsMap[
+                      twinClass.markersDataListId
+                    ] as DataListV1
+                  }
+                  withTooltip
+                />
+              )}
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Tags</TableCell>
+            <TableCell>
+              {twinClass.tagsDataListId && relatedObjects?.dataListsMap && (
+                <DatalistResourceLink
+                  data={
+                    relatedObjects.dataListsMap[
+                      twinClass.tagsDataListId
+                    ] as DataListV1
+                  }
+                  withTooltip
+                />
+              )}
+            </TableCell>
+          </TableRow>
+
           <TableRow>
             <TableCell>Created at</TableCell>
             <TableCell>{twinClass.createdAt}</TableCell>

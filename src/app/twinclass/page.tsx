@@ -7,8 +7,7 @@ import {
   TWIN_CLASSES_SCHEMA,
   TwinClass_DETAILED,
   TwinClassCreateRq,
-  TwinClassResourceLink,
-  useTwinClassFilters,
+  TwinClassResourceLink, useTwinClassFilters,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
@@ -17,13 +16,14 @@ import { Check, Unplug } from "lucide-react";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useRef } from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { z } from "zod";
 import { FiltersState } from "@/components/base/data-table/crud-data-table";
-import { ApiContext } from "@/shared/api";
+import { DatalistResourceLink } from "@/entities/datalist";
+import {ApiContext} from "@/shared/api";
 
 const colDefs: Record<
   keyof Pick<
@@ -36,6 +36,8 @@ const colDefs: Record<
     | "extendsClassId"
     | "abstractClass"
     | "description"
+    | "markersDataListId"
+    | "tagsDataListId"
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
@@ -64,13 +66,11 @@ const colDefs: Record<
     header: "Id",
     cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
   },
-
   key: {
     id: "key",
     accessorKey: "key",
     header: "Key",
   },
-
   name: {
     id: "name",
     accessorKey: "name",
@@ -81,7 +81,6 @@ const colDefs: Record<
       </div>
     ),
   },
-
   headClassId: {
     id: "headClassId",
     accessorKey: "headClassId",
@@ -96,7 +95,6 @@ const colDefs: Record<
         </div>
       ) : null,
   },
-
   extendsClassId: {
     id: "extendsClass.id",
     accessorKey: "extendsClass.id",
@@ -111,18 +109,40 @@ const colDefs: Record<
         </div>
       ) : null,
   },
-
   abstractClass: {
     id: "abstractClass",
     accessorKey: "abstractClass",
     header: "Abstract",
     cell: (data) => <>{data.getValue() && <Check />}</>,
   },
-
   description: {
     id: "description",
     accessorKey: "description",
     header: "Description",
+  },
+
+  markersDataListId: {
+    id: "markersDataListId",
+    accessorKey: "markersDataListId",
+    header: "Markers",
+    cell: ({ row: { original } }) =>
+      original.markerMap ? (
+        <div className="max-w-48 inline-flex">
+          <DatalistResourceLink data={original.markerMap} withTooltip />
+        </div>
+      ) : null,
+  },
+
+  tagsDataListId: {
+    id: "tagsDataListId",
+    accessorKey: "tagsDataListId",
+    header: "Tags",
+    cell: ({ row: { original } }) =>
+      original.tagMap ? (
+        <div className="max-w-48 inline-flex">
+          <DatalistResourceLink data={original.tagMap} withTooltip />
+        </div>
+      ) : null,
   },
 };
 
@@ -221,6 +241,8 @@ export default function TwinClasses() {
           colDefs.extendsClassId!,
           colDefs.abstractClass!,
           colDefs.description!,
+          colDefs.markersDataListId!,
+          colDefs.tagsDataListId!,
         ]}
         getRowId={(row) => row.id!}
         pageSizes={[10, 20, 50]}
@@ -238,6 +260,8 @@ export default function TwinClasses() {
           colDefs.headClassId,
           colDefs.extendsClassId,
           colDefs.abstractClass,
+          colDefs.markersDataListId,
+          colDefs.tagsDataListId,
         ]}
         dialogForm={twinClassesForm}
         onCreateSubmit={handleOnCreateSubmit}
