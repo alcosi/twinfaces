@@ -24,7 +24,6 @@ export interface InputProps
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, fieldSize, ...props }, ref) => {
-    console.log("fieldSize", fieldSize)
     return (
       <input
         type={type}

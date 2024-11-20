@@ -77,7 +77,6 @@ export function InPlaceField({
   useEffect(() => {
     const handleEsc = (event: any) => {
       if (event.key === "Escape") {
-        console.log("Close");
         cancelEdit();
       }
     };

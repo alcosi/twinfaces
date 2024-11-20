@@ -67,7 +67,6 @@ export function CheckboxFormItem({
 
   return (
     <div className="flex flex-row items-start space-x-3 space-y-0">
-      {/*<FormControl>*/}
       <Checkbox
         checked={
           hasIndeterminate && fieldValue === undefined
@@ -78,7 +77,6 @@ export function CheckboxFormItem({
         {...props}
         type="button"
       />
-      {/*</FormControl>*/}
       <div className="space-y-1 leading-none">
         {label && <FormItemLabel inForm={inForm}>{label}</FormItemLabel>}
         {description && (

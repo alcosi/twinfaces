@@ -29,7 +29,6 @@ export function FeaturerFormField<TFormModel extends FieldValues>({
 }: FormFieldProps<TFormModel> &
   FeaturerFormFieldProps<TFormModel> &
   Omit<FeaturerInputProps, "defaultId" | "defaultParams" | "onChange">) {
-  console.log(control._fields);
   const methods = useFormContext();
   const paramsField = methods.getValues(paramsName);
 

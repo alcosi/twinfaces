@@ -194,10 +194,6 @@ export default function TwinsPage() {
       }}
       filters={{
         filtersInfo: buildFilterFields(),
-        onChange: () => {
-          console.log("Filters changed");
-          return Promise.resolve();
-        },
       }}
       customizableColumns={{
         enabled: true,

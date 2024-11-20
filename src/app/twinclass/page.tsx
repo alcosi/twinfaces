@@ -249,10 +249,6 @@ export default function TwinClasses() {
         pageSizes={[10, 20, 50]}
         filters={{
           filtersInfo: buildFilterFields(),
-          onChange: () => {
-            console.log("Filters changed");
-            return Promise.resolve();
-          },
         }}
         defaultVisibleColumns={[
           colDefs.id,
