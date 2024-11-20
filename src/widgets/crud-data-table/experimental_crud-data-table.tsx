@@ -57,6 +57,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onCreateSubmit,
     onUpdateSubmit,
     renderFormFields,
+    onRowClick,
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -126,9 +127,10 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     ? () => dialogRef.current?.open()
     : undefined;
 
-  const handleOnRowClick = onUpdateSubmit
-    ? (row: TData) => dialogRef.current?.open(row)
-    : undefined;
+  let handleOnRowClick = onRowClick;
+  if (handleOnRowClick === undefined && onUpdateSubmit) {
+    handleOnRowClick = (row: TData) => dialogRef.current?.open(row);
+  }
 
   return (
     <div className={cn("flex-1 py-4", className)}>

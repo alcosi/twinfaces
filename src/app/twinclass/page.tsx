@@ -1,15 +1,12 @@
 "use client";
 
-import { TwinClassDialog } from "@/app/twinclass/twin-class-dialog";
-import {
-  CrudDataTable,
-  FiltersState,
-} from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
+  TWIN_CLASSES_SCHEMA,
   TwinClass_DETAILED,
+  TwinClassCreateRq,
   TwinClassResourceLink,
   useTwinClassFilters,
   useTwinClassSearchV1,
@@ -17,12 +14,33 @@ import {
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
+import { Experimental_CrudDataTable } from "@/widgets";
+import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { z } from "zod";
+import { FiltersState } from "@/components/base/data-table/crud-data-table";
+import { ApiContext } from "@/shared/api";
 
-const columns: ColumnDef<TwinClass_DETAILED>[] = [
-  {
+const colDefs: Record<
+  keyof Pick<
+    TwinClass_DETAILED,
+    | "logo"
+    | "id"
+    | "key"
+    | "name"
+    | "headClassId"
+    | "extendsClassId"
+    | "abstractClass"
+    | "description"
+  >,
+  ColumnDef<TwinClass_DETAILED>
+> = {
+  logo: {
+    id: "logo",
     accessorKey: "logo",
     header: "Logo",
     cell: (data) => {
@@ -39,16 +57,22 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
       );
     },
   },
-  {
+
+  id: {
+    id: "id",
     accessorKey: "id",
     header: "Id",
     cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
   },
-  {
+
+  key: {
+    id: "key",
     accessorKey: "key",
     header: "Key",
   },
-  {
+
+  name: {
+    id: "name",
     accessorKey: "name",
     header: "Name",
     cell: ({ row: { original } }) => (
@@ -57,7 +81,9 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
       </div>
     ),
   },
-  {
+
+  headClassId: {
+    id: "headClassId",
     accessorKey: "headClassId",
     header: "Head",
     cell: ({ row: { original } }) =>
@@ -70,7 +96,9 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
         </div>
       ) : null,
   },
-  {
+
+  extendsClassId: {
+    id: "extendsClass.id",
     accessorKey: "extendsClass.id",
     header: "Extends",
     cell: ({ row: { original } }) =>
@@ -83,15 +111,23 @@ const columns: ColumnDef<TwinClass_DETAILED>[] = [
         </div>
       ) : null,
   },
-  {
+
+  abstractClass: {
+    id: "abstractClass",
     accessorKey: "abstractClass",
     header: "Abstract",
     cell: (data) => <>{data.getValue() && <Check />}</>,
   },
-];
+
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
+  },
+};
 
 export default function TwinClasses() {
-  const [classDialogOpen, setClassDialogOpen] = useState(false);
+  const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();
@@ -119,20 +155,75 @@ export default function TwinClasses() {
     }
   }
 
+  const twinClassesForm = useForm<z.infer<typeof TWIN_CLASSES_SCHEMA>>({
+    resolver: zodResolver(TWIN_CLASSES_SCHEMA),
+    defaultValues: {
+      key: "",
+      name: "",
+      description: "",
+      abstractClass: false,
+      headHunterFeaturerId: 0,
+      headHunterParams: {},
+      headTwinClassId: "",
+      extendsTwinClassId: "",
+      logo: "",
+      permissionSchemaSpace: false,
+      twinflowSchemaSpace: false,
+      twinClassSchemaSpace: false,
+      aliasSpace: false,
+      markerDataListId: "",
+      tagDataListId: "",
+      viewPermissionId: "",
+    },
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof TWIN_CLASSES_SCHEMA>
+  ) => {
+    const { name, description, ...withoutI18 } = formValues;
+
+    const requestBody: TwinClassCreateRq = {
+      ...withoutI18,
+      // headHunterFeaturerId: featurer?.featurer.id,
+      // headHunterParams: featurer?.params,
+      nameI18n: {
+        translationInCurrentLocale: name,
+        translations: {},
+      },
+      descriptionI18n: description
+        ? {
+            translationInCurrentLocale: description,
+            translations: {},
+          }
+        : undefined,
+    };
+
+    const { error } = await api.twinClass.create({ body: requestBody });
+
+    if (error) {
+      throw error;
+    }
+    toast.success("Twin class created successfully!");
+  };
+
   return (
-    <>
-      <CrudDataTable
+    <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
+      <Experimental_CrudDataTable
         ref={tableRef}
-        columns={columns}
-        getRowId={(row) => row.id!}
         fetcher={fetchTwinClasses}
-        pageSizes={[10, 20, 50]}
         onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
-        createButton={{
-          enabled: true,
-          onClick: () => setClassDialogOpen(true),
-          text: "Create Class",
-        }}
+        columns={[
+          colDefs.logo!,
+          colDefs.id!,
+          colDefs.key!,
+          colDefs.name!,
+          colDefs.headClassId!,
+          colDefs.extendsClassId!,
+          colDefs.abstractClass!,
+          colDefs.description!,
+        ]}
+        getRowId={(row) => row.id!}
+        pageSizes={[10, 20, 50]}
         filters={{
           filtersInfo: buildFilterFields(),
           onChange: () => {
@@ -140,24 +231,20 @@ export default function TwinClasses() {
             return Promise.resolve();
           },
         }}
-        customizableColumns={{
-          enabled: true,
-          defaultVisibleKeys: [
-            "name",
-            "headClassId",
-            "extendsClass.id",
-            "abstractClass",
-          ],
-        }}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.key,
+          colDefs.name,
+          colDefs.headClassId,
+          colDefs.extendsClassId,
+          colDefs.abstractClass,
+        ]}
+        dialogForm={twinClassesForm}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <TwinClassFormFields control={twinClassesForm.control} />
+        )}
       />
-
-      <TwinClassDialog
-        open={classDialogOpen}
-        onOpenChange={(newOpen) => {
-          setClassDialogOpen(newOpen);
-        }}
-        onSuccess={() => tableRef.current?.refresh()}
-      />
-    </>
+    </main>
   );
 }

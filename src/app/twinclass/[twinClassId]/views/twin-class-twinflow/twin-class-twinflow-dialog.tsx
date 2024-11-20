@@ -100,38 +100,37 @@ export default function CreateTwinflowDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6"
-          >
-            <TextFormField
-              control={form.control}
-              name="name"
-              label="Name"
-              autoFocus={true}
-            />
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
+              <TextFormField
+                control={form.control}
+                name="name"
+                label="Name"
+                autoFocus={true}
+              />
 
-            <TextAreaFormField
-              control={form.control}
-              name="description"
-              label="Description"
-            />
+              <TextAreaFormField
+                control={form.control}
+                name="description"
+                label="Description"
+              />
 
-            <TwinStatusSelectField
-              twinClassId={twinClassId}
-              control={form.control}
-              name="initialStatusId"
-              label="Initial status"
-              required={true}
-            />
+              <TwinStatusSelectField
+                twinClassId={twinClassId}
+                control={form.control}
+                name="initialStatusId"
+                label="Initial status"
+                required={true}
+              />
+            </div>
+
+            <DialogFooter className="sm:justify-end bg-background p-6">
+              <Button type="submit" loading={form.formState.isSubmitting}>
+                Save
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
-
-        <DialogFooter className="sm:justify-end bg-background p-6">
-          <Button type="submit" loading={form.formState.isSubmitting}>
-            Save
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -211,64 +211,65 @@ export function TwinflowTransitionCreateEditDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6"
-          >
-            {transition?.id && <Input value={transition?.id} disabled />}
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
+              {transition?.id && <Input value={transition?.id} disabled />}
 
-            <TwinStatusSelectField
-              twinClassId={twinClassId}
-              control={form.control}
-              name="srcStatusId"
-              label="Source status"
-              required={true}
-            />
+              <TwinStatusSelectField
+                twinClassId={twinClassId}
+                control={form.control}
+                name="srcStatusId"
+                label="Source status"
+                required={true}
+              />
 
-            <TwinStatusSelectField
-              twinClassId={twinClassId}
-              control={form.control}
-              name="dstStatusId"
-              label="Destination status"
-              required={true}
-            />
+              <TwinStatusSelectField
+                twinClassId={twinClassId}
+                control={form.control}
+                name="dstStatusId"
+                label="Destination status"
+                required={true}
+              />
 
-            <TextFormField control={form.control} name="name" label="Name" />
+              <TextFormField control={form.control} name="name" label="Name" />
 
-            <TextAreaFormField
-              control={form.control}
-              name="description"
-              label="Description"
-            />
+              <TextAreaFormField
+                control={form.control}
+                name="description"
+                label="Description"
+              />
 
-            <TextFormField
-              control={form.control}
-              name="alias"
-              label="Alias"
-              required={true}
-              idPrefix="create-edit-transition"
-              suggestions={existingAliases}
-            />
+              <TextFormField
+                control={form.control}
+                name="alias"
+                label="Alias"
+                required={true}
+                idPrefix="create-edit-transition"
+                suggestions={existingAliases}
+              />
 
-            <TextFormField
-              control={form.control}
-              name="permissionId"
-              label="Permission ID"
-            />
+              <TextFormField
+                control={form.control}
+                name="permissionId"
+                label="Permission ID"
+              />
 
-            {error && <Alert variant="destructive">{error}</Alert>}
+              {error && <Alert variant="destructive">{error}</Alert>}
 
-            {Object.values(form.formState.errors).length > 0 && (
-              <Alert variant="destructive">There are errors in the form</Alert>
-            )}
+              {Object.values(form.formState.errors).length > 0 && (
+                <Alert variant="destructive">
+                  There are errors in the form
+                </Alert>
+              )}
+            </div>
+
+            <DialogFooter className="sm:justify-end bg-background p-6">
+              <Button type="submit" loading={form.formState.isSubmitting}>
+                Save
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
-
-        <DialogFooter className="sm:justify-end bg-background p-6">
-          <Button type="submit" loading={form.formState.isSubmitting}>
-            Save
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
