@@ -93,9 +93,6 @@ const Page = () => {
       onRowClick={(row) => router.push(`/datalists/${row.id}`)}
       filters={{
         filtersInfo: buildFilterFields(),
-        onChange: () => {
-          return Promise.resolve();
-        },
       }}
     />
   );

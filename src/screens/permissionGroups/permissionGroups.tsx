@@ -107,7 +107,6 @@ export function PermissionGroups() {
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
-        onChange: () => Promise.resolve(),
       }}
       defaultVisibleColumns={[
         colDefs.id,
