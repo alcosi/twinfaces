@@ -1,52 +1,8 @@
-import { FiltersState } from "@/components/base/data-table/crud-data-table";
 import { TwinClassStatus } from "@/entities/twinClassStatus";
 import { RelatedObjects } from "@/shared/api";
-import { mapToChoice, toArray, toArrayOfString } from "@/shared/libs";
 import { TwinClass_DETAILED } from "../../twinClass";
 import { User } from "../../user";
 import { Twin } from "../api";
-import { FilterFields, FILTERS } from "./constants";
-
-// List of filter keys for string-like filtering
-const stringLikeFilters = [FilterFields.twinNameLikeList];
-
-const arrayLikeFilters = [
-  FilterFields.twinIdList,
-  FilterFields.twinClassIdList,
-  FilterFields.statusIdList,
-  FilterFields.createdByUserIdList,
-  FilterFields.assignerUserIdList,
-  FilterFields.headTwinIdList,
-  FilterFields.tagDataListOptionIdList,
-  FilterFields.markerDataListOptionIdList,
-];
-
-// List of filter keys for choice-mapping
-const choiceMappingFilters: any = [];
-
-export const buildFilters = (filters: FiltersState): Record<string, any> => {
-  return Object.entries(FILTERS).reduce<Record<string, any>>(
-    (acc, [filterKey, _]) => {
-      const filterValue =
-        filters?.filters[filterKey as keyof FiltersState["filters"]];
-
-      if (stringLikeFilters.includes(filterKey as FilterFields)) {
-        acc[filterKey] = filterValue ? [`%${filterValue}%`] : [];
-      } else if (arrayLikeFilters.includes(filterKey as FilterFields)) {
-        acc[filterKey] = toArrayOfString(toArray(filterValue));
-      } else if (choiceMappingFilters.includes(filterKey as FilterFields)) {
-        acc[filterKey] = mapToChoice(filterValue);
-      } else {
-        acc[filterKey] = Array.isArray(filterValue)
-          ? toArrayOfString(filterValue)
-          : filterValue;
-      }
-
-      return acc;
-    },
-    {}
-  );
-};
 
 export const hydrateTwinFromMap = (
   twinDTO: Twin,

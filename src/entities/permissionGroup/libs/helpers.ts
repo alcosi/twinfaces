@@ -36,7 +36,7 @@ export function buildFilterFields(
 > {
   return {
     idList: {
-      type: AutoFormValueType.multiCombobox,
+      type: AutoFormValueType.combobox,
       label: "Id",
       multi: true,
       getById: async (key: string) =>
@@ -50,7 +50,7 @@ export function buildFilterFields(
       getItemLabel: (p: PermissionGroup_DETAILED) => p.id,
     },
     keyLikeList: {
-      type: AutoFormValueType.multiCombobox,
+      type: AutoFormValueType.combobox,
       label: "Key",
       multi: true,
       getById: async (key: string) =>
@@ -64,7 +64,7 @@ export function buildFilterFields(
       getItemLabel: (p: PermissionGroup_DETAILED) => p.key,
     },
     nameLikeList: {
-      type: AutoFormValueType.multiCombobox,
+      type: AutoFormValueType.combobox,
       label: "Name",
       multi: true,
       getById: async (key: string) =>

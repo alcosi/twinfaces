@@ -1,8 +1,5 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
-import * as React from "react";
-
 import { Button } from "@/components/base/button";
 import {
   Command,
@@ -17,143 +14,108 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/base/popover";
-import { cn, fixedForwardRef, useDebouncedValue } from "@/shared/libs";
-import { ForwardedRef, ReactNode, useEffect, useImperativeHandle } from "react";
+import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { ForwardedRef } from "react";
+import { useComboboxController } from "./hooks";
+import { SelectedOptions } from "./selected-options";
+import { ComboboxHandle, ComboboxProps } from "./types";
 
-export type ComboboxHandle<T> = {
-  getSelected: () => T | undefined;
-  setSelected: (newSelected?: T) => any;
-};
-
-export interface ComboboxProps<T> {
-  getItems: (search: string) => Promise<T[]>;
-  getItemKey: (item: T) => string;
-  getItemLabel: (item: T) => string;
-  value?: T;
-  onSelect?: (value?: T) => any;
-  renderInList?: (value: T) => ReactNode;
-  renderSelected?: (value: T) => ReactNode;
-  selectPlaceholder?: string;
-  searchPlaceholder?: string;
-  noItemsText?: string;
-  buttonClassName?: string;
-  contentClassName?: string;
-  searchDelay?: number;
-}
-
-export const Combobox = fixedForwardRef(ComboboxInternal);
-
-function ComboboxInternal<T>(
+export const Combobox = fixedForwardRef(function Combobox<T>(
   props: ComboboxProps<T>,
   ref: ForwardedRef<ComboboxHandle<T>>
 ) {
-  const [open, setOpen] = React.useState(false);
-  const [items, setItems] = React.useState<T[]>([]);
-  const [loadingItems, setLoadingItems] = React.useState(false);
-  const [selected, setSelected] = React.useState<T | undefined>(undefined);
-  const [search, setSearch] = React.useState("");
-  const debouncedSearch = useDebouncedValue(search, props.searchDelay ?? 300);
-
-  useEffect(() => {
-    if (!open) return;
-    setLoadingItems(true);
-    props
-      .getItems(debouncedSearch)
-      .then((items) => {
-        console.log("Loaded items", items);
-        setItems(items);
-        setLoadingItems(false);
-      })
-      .catch((e) => {
-        setItems([]);
-        console.error(`Failed to load items with search ${debouncedSearch}`, e);
-      })
-      .finally(() => {
-        setLoadingItems(false);
-      });
-  }, [open, debouncedSearch]);
-
-  useEffect(() => {
-    setSelected(props.value);
-  }, [props.value]);
-
-  useImperativeHandle(ref, () => {
-    return {
-      getSelected() {
-        return selected;
-      },
-      setSelected(value: T | undefined) {
-        setSelected(value);
-      },
-    };
+  const {
+    isOpen,
+    setIsOpen,
+    selectedItems,
+    setSelectedItems,
+    availableItems,
+    isLoading,
+    searchQuery,
+    setSearchQuery,
+    selectItem,
+  } = useComboboxController({
+    getItems: props.getItems,
+    searchDelay: props.searchDelay ?? 300,
+    multi: !!props.multi,
+    ref,
   });
 
-  function onSearchChange(value: string) {
-    setSearch(value);
-  }
-
   function onSelect(newKey: string) {
-    const newItem = items.find((item) => props.getItemKey(item) === newKey);
-    console.log("Selected", newKey, newItem, items);
-    let newSelected = newItem;
-    if (!selected) {
-      setSelected(newItem);
-    } else {
-      if (props.getItemKey(selected) === newKey) {
-        setSelected(undefined);
-        newSelected = undefined;
-      } else {
-        setSelected(newItem);
-      }
-    }
-    props.onSelect?.(newSelected);
-    setOpen(false);
+    const selectedItem = selectItem(newKey, props.getItemKey);
+    const updatedSelection: T[] = Array.isArray(selectedItem)
+      ? selectedItem
+      : selectedItem
+        ? [selectedItem]
+        : [];
+    props.onSelect?.(updatedSelection);
+    setIsOpen(false);
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
-          aria-expanded={open}
-          className={cn([
-            "w-auto min-w-[120px] justify-between",
-            props.buttonClassName,
-          ])}
+          aria-expanded={isOpen}
+          className={cn(
+            "flex w-auto min-w-[120px] h-auto min-h-10 justify-between truncate max-w-80",
+            props.buttonClassName
+          )}
         >
-          {selected ? (
-            <span className="truncate max-w-80">
-              {props.getItemLabel(selected)}
-            </span>
+          {props.multi ? (
+            <SelectedOptions
+              selected={selectedItems}
+              getItemKey={props.getItemKey}
+              getItemLabel={props.getItemLabel}
+              onChange={(newSelected) => {
+                setSelectedItems(newSelected);
+                props.onSelect?.(newSelected);
+              }}
+              placeholder={props.selectPlaceholder}
+              multi={props.multi}
+            />
           ) : (
-            <span className="opacity-50">{props.selectPlaceholder}</span>
+            <>
+              {isPopulatedArray(selectedItems) ? (
+                <span className="truncate max-w-80">
+                  {props.getItemLabel(selectedItems[0]!)}
+                </span>
+              ) : (
+                <span className="opacity-50">{props.selectPlaceholder}</span>
+              )}
+            </>
           )}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn(["w-full p-0", props.contentClassName])}>
+      <PopoverContent className={cn("w-full p-0", props.contentClassName)}>
         <Command shouldFilter={false}>
           <CommandInput
             placeholder={props.searchPlaceholder}
-            value={search}
-            onValueChange={onSearchChange}
-            loading={loadingItems}
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+            loading={isLoading}
           />
           <CommandEmpty>{props.noItemsText}</CommandEmpty>
           <CommandList>
             <CommandGroup>
-              {items.map((item) => (
+              {availableItems.map((item) => (
                 <CommandItem
                   key={props.getItemKey(item)}
                   value={props.getItemKey(item)}
-                  onSelect={onSelect}
+                  onSelect={() => onSelect(props.getItemKey(item))}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      selected &&
-                        props.getItemKey(selected) === props.getItemKey(item)
+                      selectedItems.some(
+                        (selectedItem) =>
+                          props.getItemKey(selectedItem) ===
+                          props.getItemKey(item)
+                      )
                         ? "opacity-100"
                         : "opacity-0"
                     )}
@@ -167,4 +129,4 @@ function ComboboxInternal<T>(
       </PopoverContent>
     </Popover>
   );
-}
+});

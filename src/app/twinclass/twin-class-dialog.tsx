@@ -215,7 +215,7 @@ export function TwinClassDialog({
   async function fetchClasses(search: string) {
     const { data } = await searchTwinClasses({
       pagination: { pageIndex: 0, pageSize: 10 },
-      filters: { filters: { nameI18nLikeList: ["%" + search + "%"] } },
+      filters: { nameI18nLikeList: ["%" + search + "%"] },
     });
 
     return data ?? [];

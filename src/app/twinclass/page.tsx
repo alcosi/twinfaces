@@ -1,23 +1,25 @@
 "use client";
 
 import { TwinClassDialog } from "@/app/twinclass/twin-class-dialog";
-import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
+import {
+  CrudDataTable,
+  FiltersState,
+} from "@/components/base/data-table/crud-data-table";
 import { DataTableHandle } from "@/components/base/data-table/data-table";
 import { ShortGuidWithCopy } from "@/components/base/short-guid";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
-  FilterFields,
-  FILTERS,
   TwinClass_DETAILED,
   TwinClassResourceLink,
-  useFetchTwinClassById,
+  useTwinClassFilters,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ColumnDef } from "@tanstack/table-core";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const columns: ColumnDef<TwinClass_DETAILED>[] = [
   {
@@ -93,23 +95,28 @@ export default function TwinClasses() {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();
+  const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { fetchTwinClassById } = useFetchTwinClassById();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Classes", href: "/twinclass" }]);
   }, []);
 
-  async function findById(id: string) {
-    return (
-      await fetchTwinClassById({
-        id,
-        query: {
-          showTwinClassMode: "DETAILED",
-          showTwin2TwinClassMode: "SHORT",
-        },
-      })
-    ).data?.twinClass;
+  async function fetchTwinClasses(
+    pagination: PaginationState,
+    filters: FiltersState
+  ): Promise<{ data: TwinClass_DETAILED[]; pageCount: number }> {
+    const _filters = mapFiltersToPayload(filters.filters);
+
+    try {
+      return await searchTwinClasses({
+        pagination,
+        filters: _filters,
+      });
+    } catch (error) {
+      toast.error("Failed to fetch twin classes");
+      return { data: [], pageCount: 0 };
+    }
   }
 
   return (
@@ -118,9 +125,7 @@ export default function TwinClasses() {
         ref={tableRef}
         columns={columns}
         getRowId={(row) => row.id!}
-        fetcher={(pagination, filters) =>
-          searchTwinClasses({ pagination, filters })
-        }
+        fetcher={fetchTwinClasses}
         pageSizes={[10, 20, 50]}
         onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
         createButton={{
@@ -129,38 +134,7 @@ export default function TwinClasses() {
           text: "Create Class",
         }}
         filters={{
-          // TODO: Fix typing by removing `any`
-          filtersInfo: {
-            [FilterFields.twinClassIdList]: FILTERS.twinClassIdList,
-            [FilterFields.twinClassKeyLikeList]: FILTERS.twinClassKeyLikeList,
-            [FilterFields.nameI18nLikeList]: FILTERS.nameI18nLikeList,
-            [FilterFields.descriptionI18nLikeList]:
-              FILTERS.descriptionI18nLikeList,
-            [FilterFields.headTwinClassIdList]: {
-              ...FILTERS.headTwinClassIdList,
-              getById: findById,
-              getItems: async (search) =>
-                (await searchTwinClasses({ search })).data,
-              getItemKey: (item: any) => item?.id,
-              getItemLabel: ({ key = "", name }: any) =>
-                `${key}${name ? ` (${name})` : ""}`,
-            },
-            [FilterFields.extendsTwinClassIdList]: {
-              ...FILTERS.extendsTwinClassIdList,
-              getById: findById,
-              getItems: async (search) =>
-                (await searchTwinClasses({ search })).data,
-              getItemKey: (item: any) => item?.id,
-              getItemLabel: ({ key = "", name }: any) =>
-                `${key}${name ? ` (${name})` : ""}`,
-            },
-            [FilterFields.ownerTypeList]: FILTERS.ownerTypeList as any,
-            [FilterFields.twinflowSchemaSpace]: FILTERS.twinflowSchemaSpace,
-            [FilterFields.twinClassSchemaSpace]: FILTERS.twinClassSchemaSpace,
-            [FilterFields.permissionSchemaSpace]: FILTERS.permissionSchemaSpace,
-            [FilterFields.aliasSpace]: FILTERS.aliasSpace,
-            [FilterFields.abstractt]: FILTERS.abstractt,
-          },
+          filtersInfo: buildFilterFields(),
           onChange: () => {
             console.log("Filters changed");
             return Promise.resolve();

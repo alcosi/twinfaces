@@ -1,5 +1,5 @@
 import { ElementType } from "react";
-import { Falsy } from "./types";
+import { Falsy } from "./misc";
 
 export function isFunction<T>(value: T): value is Extract<T, Function> {
   return typeof value === "function";
@@ -13,6 +13,9 @@ export function isPopulatedString(str: unknown): str is string {
   return typeof str === "string" && str.trim().length > 0;
 }
 
+export function isArray<T>(arr: unknown): arr is T[] {
+  return Array.isArray(arr);
+}
 export function isEmptyArray<T>(arr: unknown): arr is T[] {
   return Array.isArray(arr) && arr.length === 0;
 }
@@ -23,6 +26,14 @@ export function isPopulatedArray<T>(arr: unknown): arr is T[] {
 
 export function isUndefined(value: unknown): value is undefined {
   return typeof value === "undefined";
+}
+
+export function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
+
+export function isTruthy<T>(value: T): boolean {
+  return Boolean(value);
 }
 
 export function isFalsy<T>(value: T | Falsy): value is Falsy {

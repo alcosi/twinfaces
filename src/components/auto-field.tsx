@@ -9,9 +9,8 @@ import {
 } from "@/components/form-fields/color-form-field";
 import {
   ComboboxFormField,
-  ComboboxFormFieldProps,
   ComboboxFormItem,
-} from "@/components/form-fields/combobox-form-field";
+} from "@/components/form-fields/combobox";
 import {
   FeaturerFormField,
   FeaturerFormItem,
@@ -21,12 +20,6 @@ import {
   TextFormItem,
 } from "@/components/form-fields/text-form-field";
 import { Control, FieldPath } from "react-hook-form";
-import { MultiComboboxProps } from "./base/combobox/multi-combobox/multi-combobox";
-import {
-  MultiComboboxFormField,
-  MultiComboboxFormFieldProps,
-  MultiComboboxFormItem,
-} from "./form-fields/multi-combobox-form-field";
 
 export enum AutoFormValueType {
   string = "string",
@@ -36,19 +29,17 @@ export enum AutoFormValueType {
   combobox = "combobox",
   featurer = "featurer",
   select = "select",
-  multiCombobox = "multiCombobox",
   color = "color",
 }
 /* eslint-enable no-unused-vars */
 
-export type AutoFormValueInfo<T = unknown> = AutoFormCommonInfo &
+export type AutoFormValueInfo = AutoFormCommonInfo &
   (
     | AutoFormSimpleValueInfo
     | AutoFormCheckboxValueInfo
     | AutoFormComboboxValueInfo
     | AutoFormFeaturerValueInfo
     | AutoFormSelectValueInfo
-    | AutoFormMultiComboboxValueInfo<T>
     | AutoFormColorValueInfo
   );
 
@@ -70,9 +61,7 @@ export interface AutoFormCheckboxValueInfo {
   hasIndeterminate?: boolean;
 }
 
-export interface AutoFormComboboxValueInfo
-  extends ComboboxFormFieldProps<any>,
-    ComboboxProps<any> {
+export interface AutoFormComboboxValueInfo extends ComboboxProps<any> {
   type: AutoFormValueType.combobox;
   // TODO combobox value type
 }
@@ -87,12 +76,6 @@ export interface AutoFormSelectValueInfo {
   type: AutoFormValueType.select;
   options: string[];
 }
-
-export type AutoFormMultiComboboxValueInfo<T> = MultiComboboxFormFieldProps<T> &
-  Pick<MultiComboboxProps<T>, "getItems" | "getItemKey" | "getItemLabel"> & {
-    type: AutoFormValueType.multiCombobox;
-    multi?: boolean;
-  };
 
 export interface AutoFormFieldProps {
   info: AutoFormValueInfo;
@@ -129,22 +112,10 @@ export function AutoField({
       />
     );
   } else if (info.type === AutoFormValueType.combobox) {
-    console.log("Combobox", info, value, onChange);
     return name && control ? (
       <ComboboxFormField name={name} control={control} {...info} />
     ) : (
       <ComboboxFormItem
-        value={value}
-        onChange={onChange}
-        description={info.description}
-        {...info}
-      />
-    );
-  } else if (info.type === AutoFormValueType.multiCombobox) {
-    return name && control ? (
-      <MultiComboboxFormField name={name} control={control} {...info} />
-    ) : (
-      <MultiComboboxFormItem
         fieldValue={value}
         onSelect={onChange}
         description={info.description}

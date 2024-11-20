@@ -34,7 +34,7 @@ const ResourceLinkContent = ({
   fontColor,
 }: ResourceLinkContentProps) => {
   const styles = {
-    base: "inline-flex items-center h-6 max-w-full border rounded-lg p-2 transition-colors",
+    base: "inline-flex items-center h-6 max-w-full border rounded-lg px-2 transition-colors",
     borderColor: disabled
       ? "border-link-light-disabled dark:border-link-dark-disabled"
       : "",
@@ -63,9 +63,12 @@ const ResourceLinkContent = ({
       )}
     >
       <i
-        className={css`
-          color: ${fontColor};
-        `}
+        className={cn(
+          "h-4 w-4 flex items-center",
+          css`
+            color: ${fontColor};
+          `
+        )}
       >
         <IconComponent className="h-4 w-4" />
       </i>

@@ -1,7 +1,7 @@
 import {
-  MultiCombobox,
-  MultiComboboxHandle,
-  MultiComboboxProps,
+  Combobox,
+  ComboboxHandle,
+  ComboboxProps,
 } from "@/components/base/combobox";
 import {
   FormControl,
@@ -18,18 +18,9 @@ import { cn } from "@/shared/libs";
 import React, { useEffect, useRef } from "react";
 import { FieldValues } from "react-hook-form";
 
-export interface MultiComboboxFormFieldProps<T> {
-  getById: (id: string) => Promise<T | undefined>;
-}
+type Props<T extends FieldValues, K> = FormFieldProps<T> & ComboboxProps<K>;
 
-type Props<T extends FieldValues, K> = FormFieldProps<T> &
-  MultiComboboxFormFieldProps<K> &
-  MultiComboboxProps<K>;
-
-export function MultiComboboxFormField<
-  TFormModel extends FieldValues,
-  TFieldModel,
->({
+export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
   name,
   control,
   label,
@@ -43,7 +34,7 @@ export function MultiComboboxFormField<
       control={control}
       name={name}
       render={({ field }) => (
-        <MultiComboboxFormItem
+        <ComboboxFormItem
           label={label}
           description={description}
           required={required}
@@ -58,28 +49,23 @@ export function MultiComboboxFormField<
   );
 }
 
-export function MultiComboboxFormItem<TFieldModel>({
+export function ComboboxFormItem<TFieldModel>({
   fieldValue = [],
   onSelect,
-  getById,
   label,
   description,
   required,
   buttonClassName,
   inForm,
   ...props
-}: MultiComboboxProps<TFieldModel> &
-  MultiComboboxFormFieldProps<TFieldModel> & {
-    fieldValue?: TFieldModel[];
-    onSelect?: (value?: TFieldModel[]) => any;
-    label?: React.ReactNode;
-    description?: React.ReactNode;
-    required?: boolean;
-    inForm?: boolean;
-  }) {
-  const multiComboboxRef = useRef<MultiComboboxHandle<TFieldModel> | null>(
-    null
-  );
+}: ComboboxProps<TFieldModel> & {
+  fieldValue?: TFieldModel[];
+  label?: React.ReactNode;
+  description?: React.ReactNode;
+  required?: boolean;
+  inForm?: boolean;
+}) {
+  const comboboxRef = useRef<ComboboxHandle<TFieldModel> | null>(null);
 
   useEffect(() => {
     applySelectedValues(fieldValue);
@@ -89,9 +75,9 @@ export function MultiComboboxFormItem<TFieldModel>({
     if (!values?.length) return;
 
     if (props.multi) {
-      multiComboboxRef.current?.setSelected(values);
+      comboboxRef.current?.setSelected(values);
     } else if (values.length > 0) {
-      multiComboboxRef.current?.setSelected(values.slice(-1));
+      comboboxRef.current?.setSelected(values.slice(-1));
     }
   }
 
@@ -103,8 +89,8 @@ export function MultiComboboxFormItem<TFieldModel>({
         </FormItemLabel>
       )}
       <FormControl>
-        <MultiCombobox<TFieldModel>
-          ref={multiComboboxRef}
+        <Combobox<TFieldModel>
+          ref={comboboxRef}
           onSelect={onSelect}
           buttonClassName={cn("w-full", buttonClassName)}
           {...props}

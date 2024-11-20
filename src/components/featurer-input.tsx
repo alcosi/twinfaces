@@ -10,6 +10,7 @@ import { Input } from "@/components/base/input";
 import { ApiContext } from "@/shared/api";
 import { Featurer, FeaturerParam } from "@/entities/featurer";
 import { useContext, useEffect, useState } from "react";
+import { isPopulatedArray } from "@/shared/libs";
 
 export const FeaturerTypes = {
   fieldTyper: 13,
@@ -114,10 +115,12 @@ export function FeaturerInput({
     return response.data?.featurerList ?? [];
   }
 
-  function onSelect(newFeaturer?: Featurer) {
+  function onSelect(newFeaturer?: Featurer[]) {
     console.log("onSelect", newFeaturer);
-    setSelected(newFeaturer);
-    setParams({});
+    if (isPopulatedArray(newFeaturer)) {
+      setSelected(newFeaturer[0]);
+      setParams({});
+    }
   }
 
   function onParamChange(key: string, value?: string) {
@@ -138,6 +141,7 @@ export function FeaturerInput({
         selectPlaceholder={selectPlaceholder ?? "Select featurer"}
         searchPlaceholder={searchPlaceholder ?? "Search featurer..."}
         noItemsText={noItemsText ?? "No featurers found"}
+        getById={async () => undefined}
         getItems={fetchHeadHunterFeaturers}
         getItemKey={(c) => c.id!.toString()}
         getItemLabel={(c) => {

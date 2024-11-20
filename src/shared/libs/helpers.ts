@@ -1,12 +1,14 @@
 import React from "react";
+import { isBoolean } from "./types";
 
-type ChoiceType = "ONLY" | "ONLY_NOT" | "ANY";
-type TriStateFlag = boolean | "indeterminate";
-
-export const mapToChoice = (input?: TriStateFlag): ChoiceType => {
+export const mapToChoice = (input: unknown): "ONLY" | "ONLY_NOT" | "ANY" => {
   if (input === "indeterminate" || input === undefined) return "ANY";
 
-  return input ? "ONLY" : "ONLY_NOT";
+  if (isBoolean(input)) {
+    return input ? "ONLY" : "ONLY_NOT";
+  }
+
+  return "ANY";
 };
 
 export const toArray = <T>(value: T | T[] | undefined | null): T[] => {

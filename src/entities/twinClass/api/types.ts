@@ -12,3 +12,21 @@ export type TwinClassFieldCreateRq =
 export type TwinClassFieldUpdateRq =
   components["schemas"]["TwinClassFieldUpdateRqV1"];
 // export type TwinClassFieldUpdateRq = components["schemas"]["TwinClassField"];
+
+export type TwinClassFilterKeys =
+  | "twinClassIdList"
+  | "twinClassKeyLikeList"
+  | "nameI18nLikeList"
+  | "descriptionI18nLikeList"
+  | "headTwinClassIdList"
+  | "extendsTwinClassIdList"
+  | "ownerTypeList"
+  | "abstractt"
+  | "twinflowSchemaSpace"
+  | "twinClassSchemaSpace"
+  | "permissionSchemaSpace"
+  | "aliasSpace";
+
+export type TwinClassFilters = Partial<
+  Pick<components["schemas"]["TwinClassListRqV1"], TwinClassFilterKeys>
+>;

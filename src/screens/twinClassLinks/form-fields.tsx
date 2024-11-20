@@ -1,4 +1,4 @@
-import { ComboboxFormField } from "@/components/form-fields/combobox-form-field";
+import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { TextFormField } from "@/components/form-fields/text-form-field";
 import {
   TWIN_CLASS_LINK_STRENGTH,
