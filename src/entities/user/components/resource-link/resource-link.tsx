@@ -1,8 +1,8 @@
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
 import { User as UserIcon } from "lucide-react";
-import { User } from "../../libs";
 import { UserResourceTooltip } from "./tooltip";
+import { User } from "../../api";
 
 type Props = {
   data: User;
@@ -13,7 +13,7 @@ type Props = {
 export const UserResourceLink = ({ data, disabled, withTooltip }: Props) => {
   if (isUndefined(data)) return null;
 
-  const link = `/twin`;
+  const link = `/under-construction`;
 
   return (
     <ResourceLink
