@@ -31,7 +31,6 @@ export type CrudDataTableHeaderProps = {
   };
   filters?: {
     filtersInfo: { [key: string]: AutoFormValueInfo };
-    onChange: (values: { [key: string]: any }) => Promise<any>;
   };
   hideRefresh?: boolean;
   onCreateClick?: () => void;
