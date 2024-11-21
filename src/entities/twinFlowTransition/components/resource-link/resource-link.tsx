@@ -1,10 +1,10 @@
 import { ResourceLink } from "@/shared/ui";
 import { ArrowRightLeft } from "lucide-react";
-import { TF_Transition } from "../../api";
+import { TwinFlowTransition } from "../../api";
 import { TwinClassTransitionResourceTooltip } from "./tooltip";
 
 type Props = {
-  data: TF_Transition;
+  data: TwinFlowTransition;
   twinClassId: string;
   twinFlowId: string;
   disabled?: boolean;

@@ -1,18 +1,21 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { wrapWithPercent } from "@/shared/libs";
+import { PaginationState } from "@tanstack/react-table";
 import {
-  TwinFlowTransitionApiFilters,
+  TwinFlowTransitionFilters,
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionUpdateRq,
 } from "./types";
-import { PaginationState } from "@tanstack/react-table";
 
 export function createTwinFlowTransitionApi(settings: ApiSettings) {
   async function search({
+    search,
     pagination,
     filters,
   }: {
+    search?: string;
     pagination: PaginationState;
-    filters: TwinFlowTransitionApiFilters;
+    filters: TwinFlowTransitionFilters;
   }) {
     return settings.client.POST("/private/transition/search/v1", {
       params: {
@@ -29,6 +32,7 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
         },
       },
       body: {
+        aliasLikeList: search ? [wrapWithPercent(search)] : undefined,
         ...filters,
       },
     });

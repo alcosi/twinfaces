@@ -1,7 +1,12 @@
 import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { FormFieldProps } from "@/components/form-fields/form-fields-common";
-import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
-import { Control, FieldValues, Path } from "react-hook-form";
+import {
+  TwinStatus,
+  useFetchTwinStatusById,
+  useTwinStatusSelectAdapter,
+} from "@/entities/twinStatus";
+import { useEffect, useState } from "react";
+import { Control, FieldValues, Path, useWatch } from "react-hook-form";
 
 type Props<T extends FieldValues> = {
   twinClassId?: string;
@@ -13,6 +18,18 @@ type Props<T extends FieldValues> = {
 export function TwinStatusSelectField<T extends FieldValues>(props: Props<T>) {
   const { getById, getItems, getItemKey, getItemLabel } =
     useTwinStatusSelectAdapter(props.twinClassId);
+  const { fetchTwinStatusById } = useFetchTwinStatusById();
+  const statusId = useWatch({
+    control: props.control,
+    name: props.name,
+  });
+  const [initVals, setInitVals] = useState<TwinStatus[]>([]);
+
+  useEffect(() => {
+    if (statusId) {
+      fetchTwinStatusById(statusId).then((data) => setInitVals([data]));
+    }
+  }, [statusId]);
 
   return (
     <ComboboxFormField
@@ -23,6 +40,7 @@ export function TwinStatusSelectField<T extends FieldValues>(props: Props<T>) {
       selectPlaceholder="Select status"
       searchPlaceholder="Search status..."
       noItemsText={"No statuses found"}
+      initialValues={initVals}
       {...props}
     />
   );

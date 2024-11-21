@@ -1,7 +1,7 @@
 "use client";
 
 import { TwinClassContext } from "@/entities/twinClass";
-import { TF_Transition } from "@/entities/twinFlowTransition";
+import { TwinFlowTransition } from "@/entities/twinFlowTransition";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowContext } from "@/features/twinFlow";
 import { ApiContext } from "@/shared/api";
@@ -28,7 +28,7 @@ export default function TransitionPage({
   const { twinClass } = useContext(TwinClassContext);
   const { twinFlow } = useContext(TwinFlowContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [transition, setTransition] = useState<TF_Transition | undefined>(
+  const [transition, setTransition] = useState<TwinFlowTransition | undefined>(
     undefined
   );
   const { setBreadcrumbs } = useBreadcrumbs();

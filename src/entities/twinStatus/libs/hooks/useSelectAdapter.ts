@@ -1,7 +1,10 @@
-import { SelectAdapter } from "@/shared/libs";
-import { TwinStatus } from "../../api";
-import { useFetchTwinStatusById } from "./useFetchById";
-import { useTwinStatusSearchV1 } from "./useSearchV1";
+import { SelectAdapter, wrapWithPercent } from "@/shared/libs";
+import {
+  TwinStatus,
+  TwinStatusFilters,
+  useFetchTwinStatusById,
+  useTwinStatusSearchV1,
+} from "../../api";
 
 export function useTwinStatusSelectAdapter(
   twinClassId?: string
@@ -15,7 +18,11 @@ export function useTwinStatusSelectAdapter(
 
   async function getItems(search: string) {
     try {
-      const { data } = await searchTwinStatuses({ twinClassId, search });
+      const filters: TwinStatusFilters = {
+        twinClassIdList: twinClassId ? [twinClassId] : [],
+        keyLikeList: search ? [wrapWithPercent(search)] : [],
+      };
+      const { data } = await searchTwinStatuses({ filters });
       return data;
     } catch (error) {
       console.error("Error fetching search items:", error);

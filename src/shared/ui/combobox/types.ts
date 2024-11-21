@@ -23,5 +23,5 @@ export interface ComboboxProps<T> extends SelectAdapter<T> {
   searchDelay?: number;
   searchPlaceholder?: string;
   selectPlaceholder?: string;
-  value?: T;
+  initialValues?: T[];
 }

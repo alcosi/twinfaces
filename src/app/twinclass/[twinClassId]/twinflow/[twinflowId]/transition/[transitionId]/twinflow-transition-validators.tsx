@@ -2,7 +2,7 @@ import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import {
-  TF_Transition,
+  TwinFlowTransition,
   TwinFlowTransitionValidator,
 } from "@/entities/twinFlowTransition";
 import { ColumnDef } from "@tanstack/table-core";
@@ -13,7 +13,7 @@ export function TwinflowTransitionValidators({
   transition,
   onChange,
 }: {
-  transition: TF_Transition;
+  transition: TwinFlowTransition;
   onChange: () => any;
 }) {
   const tableRef = useRef<DataTableHandle>(null);

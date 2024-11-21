@@ -1,10 +1,10 @@
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { ArrowRightLeft } from "lucide-react";
-import { TF_Transition } from "../../api";
+import { TwinFlowTransition } from "../../api";
 
 type Props = {
-  data: TF_Transition;
+  data: TwinFlowTransition;
   link: string;
 };
 

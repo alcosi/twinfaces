@@ -26,7 +26,6 @@ export const usePermissionGroupSearchV1 = () => {
         });
 
         if (error) {
-          console.error("Failed to fetch permissions due to API error:", error);
           throw new Error("Failed to fetch permissions due to API error");
         }
 

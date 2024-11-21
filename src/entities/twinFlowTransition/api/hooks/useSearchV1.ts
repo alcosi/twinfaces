@@ -2,21 +2,27 @@ import { ApiContext } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 import { hydrateTwinFlowTransitionFromMap } from "../../libs";
-import { TF_Transition_DETAILED, TwinFlowTransitionApiFilters } from "../types";
+import {
+  TwinFlowTransition_DETAILED,
+  TwinFlowTransitionFilters,
+} from "../types";
 
 // TODO: Apply caching-strategy
 export const useTwinFlowTransitionSearchV1 = () => {
   const api = useContext(ApiContext);
 
   async function searchTwinFlowTransitions({
+    search,
     pagination = { pageIndex: 0, pageSize: 10 },
     filters = {},
   }: {
+    search?: string;
     pagination?: PaginationState;
-    filters?: TwinFlowTransitionApiFilters;
-  }): Promise<{ data: TF_Transition_DETAILED[]; pageCount: number }> {
+    filters?: TwinFlowTransitionFilters;
+  }): Promise<{ data: TwinFlowTransition_DETAILED[]; pageCount: number }> {
     try {
       const { data, error } = await api.twinFlowTransition.search({
+        search,
         pagination,
         filters,
       });

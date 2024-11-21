@@ -24,14 +24,15 @@ export function PermissionGroupSelectField<T extends FieldValues>(
     control: props.control,
     name: props.name,
   });
-  const [permissionGroup, setPermissionGroup] =
-    useState<PermissionGroup_DETAILED>();
+  const [initVals, setInitVals] = useState<PermissionGroup_DETAILED[]>([]);
 
   useEffect(() => {
-    if (props.disabled && permissionGroupId) {
-      fetchPermissionGroupById(permissionGroupId).then(setPermissionGroup);
+    if (permissionGroupId) {
+      fetchPermissionGroupById(permissionGroupId).then((data) =>
+        setInitVals([data])
+      );
     }
-  }, [props.disabled, permissionGroupId, fetchPermissionGroupById]);
+  }, [permissionGroupId, fetchPermissionGroupById]);
 
   async function getById(id: string) {
     return await fetchPermissionGroupById(id);
@@ -53,8 +54,8 @@ export function PermissionGroupSelectField<T extends FieldValues>(
       {...props}
       placeholder="Group..."
       value={
-        permissionGroup?.key
-          ? `${permissionGroup?.key}${permissionGroup?.name ? ` (${permissionGroup?.name})` : ""}`
+        initVals[0]?.key
+          ? `${initVals[0]?.key}${initVals[0]?.name ? ` (${initVals[0]?.name})` : ""}`
           : undefined
       }
     />
@@ -67,6 +68,7 @@ export function PermissionGroupSelectField<T extends FieldValues>(
       selectPlaceholder="Select permission group"
       searchPlaceholder="Search permission group..."
       noItemsText={"No classes found"}
+      initialValues={initVals}
       {...props}
     />
   );
