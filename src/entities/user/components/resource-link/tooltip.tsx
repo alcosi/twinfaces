@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLinkTooltip } from "@/shared/ui";
 import { User as UserIcon } from "lucide-react";
-import { User } from "../../libs";
+import { User } from "../../api";
 
 type Props = {
   data: User;

@@ -1,5 +1,6 @@
 "use client";
 
+import { createDatalistApi, DatalistApi } from "@/entities/datalist";
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
 import {
@@ -12,18 +13,19 @@ import {
   createTwinClassLinksApi,
   TwinClassLinkApi,
 } from "@/entities/twinClassLink";
-import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinStatus";
 import { createTwinflowApi, TwinflowApi } from "@/entities/twinFlow";
 import {
   createTwinFlowTransitionApi,
   TwinFlowTransitionApi,
 } from "@/entities/twinFlowTransition";
+import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinStatus";
+import { createUserApi, UserApi } from "@/entities/user";
+import { createUserGroupApi, UserGroupApi } from "@/entities/userGroup";
 import { ApiContext, ApiSettings } from "@/shared/api";
 import { paths } from "@/shared/api/generated/schema";
 import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
-import { createDatalistApi, DatalistApi } from "@/entities/datalist";
 
 export interface ApiContextProps {
   twinClass: TwinClassApi;
@@ -35,6 +37,8 @@ export interface ApiContextProps {
   twinClassLink: TwinClassLinkApi;
   permission: PermissionApi;
   permissionGroup: PermissionGroupApi;
+  user: UserApi;
+  userGroup: UserGroupApi;
   datalist: DatalistApi;
 }
 
@@ -62,6 +66,8 @@ export function ApiContextProvider({
         twinClassLink: createTwinClassLinksApi(settings),
         permission: createPermissionApi(settings),
         permissionGroup: createPermissionGroupApi(settings),
+        user: createUserApi(settings),
+        userGroup: createUserGroupApi(settings),
         datalist: createDatalistApi(settings),
       }}
     >
