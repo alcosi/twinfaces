@@ -1,8 +1,8 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { TwinflowTransitionCreateEditDialog } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-transition-dialog";
-import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { TwinClassField } from "@/entities/twinClass";
 import { TwinStatus } from "@/entities/twinStatus";
 import { TwinFlow } from "@/entities/twinFlow";

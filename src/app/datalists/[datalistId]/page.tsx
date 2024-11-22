@@ -5,12 +5,12 @@ import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef } from "@tanstack/table-core";
 import { toast } from "sonner";
 import { ApiContext } from "@/shared/api";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { DataListOption } from "@/entities/datalist";
 import { DatalistContext } from "@/app/datalists/[datalistId]/datalist-context";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 interface DatalistPageProps {
   params: {

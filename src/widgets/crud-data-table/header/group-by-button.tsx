@@ -1,11 +1,7 @@
-import { Button } from "@/components/base/button";
-import { Label } from "@/components/base/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/base/popover";
-import { RadioGroup, RadioGroupItem } from "@/components/base/radio-group";
+import { Button } from "@/shared/ui/button";
+import { Label } from "@/shared/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { ColumnDef } from "@tanstack/react-table";
 import { AlignJustify } from "lucide-react";
 import { getColumnKey } from "../helpers";

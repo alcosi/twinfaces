@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/base/badge";
+import { Badge } from "@/shared/ui/badge";
 import { XCircle } from "lucide-react";
 
 const MAX_COUNT = 3;

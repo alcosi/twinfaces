@@ -1,5 +1,5 @@
-import { Checkbox } from "@/components/base/checkbox";
-import { FormField } from "@/components/base/form";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { FormField } from "@/shared/ui/form";
 import {
   FormFieldProps,
   FormItemDescription,

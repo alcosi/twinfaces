@@ -1,4 +1,4 @@
-import { TooltipProvider } from "@/components/base/tooltip";
+import { TooltipProvider } from "@/shared/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ApiContextProvider } from "@/features/api-context-provider";
 import { cn } from "@/shared/libs";

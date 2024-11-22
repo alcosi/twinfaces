@@ -1,10 +1,10 @@
-import { ColorPicker } from "@/components/base/color-picker";
+import { ColorPicker } from "@/shared/ui/color-picker";
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/base/form";
+} from "@/shared/ui/form";
 import {
   FormFieldProps,
   FormItemDescription,

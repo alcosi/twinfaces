@@ -1,11 +1,7 @@
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
-import { Button } from "@/components/base/button";
-import { Form } from "@/components/base/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/base/popover";
+import { Button } from "@/shared/ui/button";
+import { Form } from "@/shared/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { cn } from "@/shared/libs";
 import { FilterIcon } from "lucide-react";
 import { useState } from "react";

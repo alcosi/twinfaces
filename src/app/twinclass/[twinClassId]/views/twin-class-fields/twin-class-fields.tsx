@@ -2,9 +2,9 @@ import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-conte
 import {
   CrudDataTable,
   FiltersState,
-} from "@/components/base/data-table/crud-data-table";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+} from "@/shared/ui/data-table/crud-data-table";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { TwinClassField } from "@/entities/twinClass";
 import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";

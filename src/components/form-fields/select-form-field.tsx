@@ -7,14 +7,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/base/form";
+} from "@/shared/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/base/select";
+} from "@/shared/ui/select";
 
 interface SelectFormFieldProps<T extends FieldValues, K>
   extends FormFieldProps<T> {

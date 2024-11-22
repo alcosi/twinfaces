@@ -1,4 +1,4 @@
-import { ComboboxProps } from "@/components/base/combobox";
+import { ComboboxProps } from "@/shared/ui/combobox";
 import {
   CheckboxFormField,
   CheckboxFormItem,

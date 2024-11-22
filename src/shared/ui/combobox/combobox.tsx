@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/base/button";
+import { Button } from "@/shared/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -8,12 +8,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/base/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/base/popover";
+} from "@/shared/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { ForwardedRef } from "react";

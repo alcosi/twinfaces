@@ -1,4 +1,4 @@
-import { LoadingOverlay } from "@/components/base/loading";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { TwinClass, useFetchTwinClassById } from "@/entities/twinClass";
 import { TwinClassLink } from "@/entities/twinClassLink";
 import { TwinStatus } from "@/entities/twinStatus";

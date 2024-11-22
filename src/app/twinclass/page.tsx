@@ -1,13 +1,14 @@
 "use client";
 
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
   TWIN_CLASSES_SCHEMA,
   TwinClass_DETAILED,
   TwinClassCreateRq,
-  TwinClassResourceLink, useTwinClassFilters,
+  TwinClassResourceLink,
+  useTwinClassFilters,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
@@ -16,14 +17,14 @@ import { Check, Unplug } from "lucide-react";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { TwinClassFormFields } from "@/app/twinclass/twin-class-form-fields";
 import { useRouter } from "next/navigation";
-import {useContext, useEffect, useRef, useState} from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { z } from "zod";
-import { FiltersState } from "@/components/base/data-table/crud-data-table";
+import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DatalistResourceLink } from "@/entities/datalist";
-import {ApiContext} from "@/shared/api";
+import { ApiContext } from "@/shared/api";
 
 const colDefs: Record<
   keyof Pick<

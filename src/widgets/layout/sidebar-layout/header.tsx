@@ -3,8 +3,8 @@ import {
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/base/breadcrumb";
-import { SidebarTrigger } from "@/components/base/sidebar";
+} from "@/shared/ui/breadcrumb";
+import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { cn } from "@/shared/libs";

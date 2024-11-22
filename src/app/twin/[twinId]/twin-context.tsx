@@ -1,4 +1,4 @@
-import { LoadingOverlay } from "@/components/base/loading";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { Twin } from "@/entities/twin";
 import { ApiContext } from "@/shared/api";
 import React, { createContext, useContext, useEffect, useState } from "react";

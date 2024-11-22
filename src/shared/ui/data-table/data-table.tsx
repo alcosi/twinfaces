@@ -8,8 +8,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { DataTablePagination } from "@/components/base/data-table/data-table-pagination";
-import { LoadingOverlay } from "@/components/base/loading";
+import { DataTablePagination } from "@/shared/ui/data-table/data-table-pagination";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/base/table";
+} from "@/shared/ui/table";
 import {
   cn,
   fixedForwardRef,

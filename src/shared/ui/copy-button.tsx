@@ -1,11 +1,7 @@
 "use client";
 
-import { Button, ButtonProps } from "@/components/base/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/base/tooltip";
+import { Button, ButtonProps } from "@/shared/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 

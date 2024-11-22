@@ -1,7 +1,7 @@
 import {
   DataTableHandle,
   DataTableRow,
-} from "@/components/base/data-table/data-table";
+} from "@/shared/ui/data-table/data-table";
 import { ForwardedRef } from "react";
 
 export function getColumnKey(column: any): string {

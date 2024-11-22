@@ -1,5 +1,5 @@
-import { Alert } from "@/components/base/alert";
-import { Button } from "@/components/base/button";
+import { Alert } from "@/shared/ui/alert";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,9 +7,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/base/dialog";
-import { Form } from "@/components/base/form";
-import { Input } from "@/components/base/input";
+} from "@/shared/ui/dialog";
+import { Form } from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input";
 import { ColorPickerFormField } from "@/components/form-fields/color-form-field";
 import {
   TextAreaFormField,

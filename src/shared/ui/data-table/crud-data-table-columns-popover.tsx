@@ -1,9 +1,5 @@
-import { Button } from "@/components/base/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/base/popover";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
 import { cn } from "@/shared/libs";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";

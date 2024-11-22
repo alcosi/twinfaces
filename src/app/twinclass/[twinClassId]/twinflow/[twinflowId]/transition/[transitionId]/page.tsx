@@ -1,7 +1,7 @@
 "use client";
 
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { LoadingOverlay } from "@/components/base/loading";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { TF_Transition } from "@/entities/twinFlowTransition";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowContext } from "@/features/twinFlow";

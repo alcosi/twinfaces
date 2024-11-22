@@ -2,10 +2,10 @@ import { TwinContext } from "@/app/twin/[twinId]/twin-context";
 import {
   CrudDataTable,
   FiltersState,
-} from "@/components/base/data-table/crud-data-table";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { LoadingOverlay } from "@/components/base/loading";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+} from "@/shared/ui/data-table/crud-data-table";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { LoadingOverlay } from "@/shared/ui/loading";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { TwinLinkView } from "@/entities/twin";
 import { TwinClassField } from "@/entities/twinClass";
 import { ApiContext } from "@/shared/api";

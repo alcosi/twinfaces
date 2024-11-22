@@ -1,12 +1,12 @@
-import { Checkbox } from "@/components/base/checkbox";
-import { Combobox } from "@/components/base/combobox";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { Combobox } from "@/shared/ui/combobox";
 import {
   FormControl,
   FormDescription,
   FormItem,
   FormLabel,
-} from "@/components/base/form";
-import { Input } from "@/components/base/input";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input";
 import { ApiContext } from "@/shared/api";
 import { Featurer, FeaturerParam } from "@/entities/featurer";
 import { useContext, useEffect, useState } from "react";

@@ -1,6 +1,6 @@
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
-import { Alert } from "@/components/base/alert";
-import { Button } from "@/components/base/button";
+import { Alert } from "@/shared/ui/alert";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,8 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/base/dialog";
-import { Form } from "@/components/base/form";
+} from "@/shared/ui/dialog";
+import { Form } from "@/shared/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";

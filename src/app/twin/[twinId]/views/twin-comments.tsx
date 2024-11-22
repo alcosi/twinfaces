@@ -3,21 +3,17 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import {
   CrudDataTable,
   FiltersState,
-} from "@/components/base/data-table/crud-data-table";
+} from "@/shared/ui/data-table/crud-data-table";
 import { toast } from "sonner";
 import { TwinContext } from "@/app/twin/[twinId]/twin-context";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { Card, CardContent, CardHeader } from "@/components/base/card";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { Avatar } from "@/shared/ui";
 import { CommentView } from "@/entities/twin";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/base/popover";
-import { Button } from "@/components/base/button";
-import { CopyButton } from "@/components/base/copy-button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { Button } from "@/shared/ui/button";
+import { CopyButton } from "@/shared/ui/copy-button";
 
 import { CircleUserRound, EllipsisVertical } from "lucide-react";
 import { ApiContext } from "@/shared/api";

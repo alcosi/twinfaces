@@ -1,9 +1,5 @@
-import { CopyButton } from "@/components/base/copy-button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/base/tooltip";
+import { CopyButton } from "@/shared/ui/copy-button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 export interface ShortGuidProps {
   value: string | undefined;
