@@ -1,5 +1,5 @@
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { PermissionContext } from "@/features/permission";
 import { useContext } from "react";
 

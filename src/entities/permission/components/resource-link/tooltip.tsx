@@ -1,4 +1,4 @@
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { Key } from "lucide-react";

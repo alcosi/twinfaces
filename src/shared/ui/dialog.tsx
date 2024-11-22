@@ -4,7 +4,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import * as React from "react";
 
-import { Separator } from "@/components/base/separator";
+import { Separator } from "@/shared/ui/separator";
 import { cn } from "@/shared/libs";
 
 const Dialog = DialogPrimitive.Root;
@@ -78,9 +78,7 @@ const DialogFooter = ({
   ...props
 }: { showSeparator?: boolean } & React.HTMLAttributes<HTMLDivElement>) => (
   <>
-    {showSeparator && (
-      <Separator />
-    )}
+    {showSeparator && <Separator />}
 
     <div
       className={cn(

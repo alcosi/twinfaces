@@ -1,6 +1,6 @@
-import { FormControl, FormField, FormMessage } from "@/components/base/form";
-import { Input, InputProps } from "@/components/base/input";
-import { Textarea, TextareaProps } from "@/components/base/textarea";
+import { FormControl, FormField, FormMessage } from "@/shared/ui/form";
+import { Input, InputProps } from "@/shared/ui/input";
+import { Textarea, TextareaProps } from "@/shared/ui/textarea";
 import { ReactNode } from "react";
 import { FieldValues } from "react-hook-form";
 import {

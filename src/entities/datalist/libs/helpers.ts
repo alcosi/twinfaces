@@ -1,4 +1,4 @@
-import { FiltersState } from "@/components/base/data-table/crud-data-table";
+import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 
 import { FilterFields, FILTERS } from "@/entities/datalist/libs/constants";
 import { mapToChoice, toArray, toArrayOfString } from "@/shared/libs";

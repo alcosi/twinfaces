@@ -2,11 +2,11 @@ import {
   TF_Transition,
   TwinFlowTransitionTrigger,
 } from "@/entities/twinFlowTransition";
-import { CrudDataTable } from "@/components/base/data-table/crud-data-table";
+import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
 import { useRef, useState } from "react";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { TwinflowTransitionTriggerDialog } from "./twinflow-transition-trigger-dialog";
 
 export function TwinflowTransitionTriggers({

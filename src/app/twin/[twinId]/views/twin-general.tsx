@@ -1,5 +1,5 @@
 import { TwinUpdateRq } from "@/entities/twin";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { useContext, useState } from "react";
 import { AutoFormValueType } from "@/components/auto-field";
@@ -10,7 +10,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { User, UserResourceLink } from "@/entities/user";
 
 export function TwinGeneral() {

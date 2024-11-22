@@ -1,4 +1,4 @@
-import { LoadingOverlay } from "@/components/base/loading";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { TwinFlow, useTwinFlowSearchV1 } from "@/entities/twinFlow";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 

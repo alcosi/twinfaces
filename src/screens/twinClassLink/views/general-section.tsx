@@ -1,6 +1,6 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { Badge } from "@/components/base/badge";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { Badge } from "@/shared/ui/badge";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,

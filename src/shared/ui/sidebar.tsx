@@ -1,16 +1,16 @@
 "use client";
 
-import { Button } from "@/components/base/button";
-import { Input } from "@/components/base/input";
-import { Separator } from "@/components/base/separator";
-import { Sheet, SheetContent } from "@/components/base/sheet";
-import { Skeleton } from "@/components/base/skeleton";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Separator } from "@/shared/ui/separator";
+import { Sheet, SheetContent } from "@/shared/ui/sheet";
+import { Skeleton } from "@/shared/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/base/tooltip";
+} from "@/shared/ui/tooltip";
 import { cn, useIsMobile, useLocalStorage } from "@/shared/libs";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";

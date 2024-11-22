@@ -5,7 +5,7 @@ import {
   DataTableHandle,
   DataTableProps,
   DataTableRow,
-} from "@/components/base/data-table/data-table";
+} from "@/shared/ui/data-table/data-table";
 import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { PaginationState } from "@tanstack/table-core";
 import {

@@ -10,9 +10,16 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/base/sidebar";
+} from "@/shared/ui/sidebar";
 import { cn } from "@/shared/libs";
-import { BookKey, Braces, Key, LayoutTemplate, Smile, ListTree } from "lucide-react";
+import {
+  BookKey,
+  Braces,
+  Key,
+  LayoutTemplate,
+  Smile,
+  ListTree,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

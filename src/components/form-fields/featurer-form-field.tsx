@@ -1,4 +1,4 @@
-import { FormField, FormItem, FormMessage } from "@/components/base/form";
+import { FormField, FormItem, FormMessage } from "@/shared/ui/form";
 import {
   FeaturerInput,
   FeaturerInputProps,

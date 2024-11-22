@@ -3,13 +3,13 @@
 import { useContext, useEffect, useRef } from "react";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { FiltersState } from "@/components/base/data-table/crud-data-table";
+import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { toast } from "sonner";
 
 import { DataList } from "@/entities/datalist";
 import { ApiContext } from "@/shared/api";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { buildFilters, FilterFields, FILTERS } from "@/entities/datalist/libs";
 import { useRouter } from "next/navigation";
 import { useBreadcrumbs } from "@/features/breadcrumb";

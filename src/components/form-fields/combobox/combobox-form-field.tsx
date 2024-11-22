@@ -1,14 +1,10 @@
-import {
-  Combobox,
-  ComboboxHandle,
-  ComboboxProps,
-} from "@/components/base/combobox";
+import { Combobox, ComboboxHandle, ComboboxProps } from "@/shared/ui/combobox";
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/base/form";
+} from "@/shared/ui/form";
 import {
   FormFieldProps,
   FormItemDescription,

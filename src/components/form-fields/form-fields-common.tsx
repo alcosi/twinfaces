@@ -1,7 +1,7 @@
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 import { ReactNode } from "react";
-import { FormDescription, FormLabel } from "@/components/base/form";
-import { Label } from "@/components/base/label";
+import { FormDescription, FormLabel } from "@/shared/ui/form";
+import { Label } from "@/shared/ui/label";
 import * as React from "react";
 import { cn } from "@/shared/libs";
 

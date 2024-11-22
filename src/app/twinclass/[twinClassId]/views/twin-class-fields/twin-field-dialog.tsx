@@ -1,14 +1,14 @@
-import { Alert } from "@/components/base/alert";
-import { Button } from "@/components/base/button";
+import { Alert } from "@/shared/ui/alert";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/base/dialog";
-import { Form } from "@/components/base/form";
-import { Input } from "@/components/base/input";
+} from "@/shared/ui/dialog";
+import { Form } from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input";
 import {
   FeaturerInput,
   FeaturerTypes,

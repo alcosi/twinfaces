@@ -1,4 +1,4 @@
-import { LoadingOverlay } from "@/components/base/loading";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import {
   Permission,
   Permission_DETAILED,

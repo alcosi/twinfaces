@@ -1,4 +1,4 @@
-import { Button } from "@/components/base/button";
+import { Button } from "@/shared/ui/button";
 import { isElementType, stopPropagation } from "@/shared/libs";
 import { Copy, Link } from "lucide-react";
 import React, {

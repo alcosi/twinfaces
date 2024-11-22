@@ -1,4 +1,4 @@
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
 import { UserResourceLink } from "@/entities/user";
 import {

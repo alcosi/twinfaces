@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarProvider } from "@/components/base/sidebar";
+import { SidebarProvider } from "@/shared/ui/sidebar";
 import React from "react";
 import { SidebarLayoutContent } from "./content";
 import { SidebarLayoutHeader } from "./header";

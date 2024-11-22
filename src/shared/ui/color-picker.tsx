@@ -1,13 +1,9 @@
 "use client";
 
-import type { ButtonProps } from "@/components/base/button";
-import { Button } from "@/components/base/button";
-import { Input } from "@/components/base/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/base/popover";
+import type { ButtonProps } from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { cn, fixedForwardRef, isUndefined } from "@/shared/libs";
 import { X } from "lucide-react";
 import { ForwardedRef, useState } from "react";

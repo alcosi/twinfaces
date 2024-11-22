@@ -6,8 +6,8 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import {
   CrudDataTable,
   FiltersState,
-} from "@/components/base/data-table/crud-data-table";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
+} from "@/shared/ui/data-table/crud-data-table";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { TwinContext } from "@/app/twin/[twinId]/twin-context";
 
 interface DataField {

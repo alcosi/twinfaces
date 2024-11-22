@@ -1,7 +1,7 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { ApiContext } from "@/shared/api";
 import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twinFlow";
 import { useContext, useState } from "react";

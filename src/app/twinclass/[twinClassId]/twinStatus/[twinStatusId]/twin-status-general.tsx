@@ -1,8 +1,8 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { ColorPicker } from "@/components/base/color-picker";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
+import { ColorPicker } from "@/shared/ui/color-picker";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import {
   TwinClassStatusResourceLink,
   TwinStatus,

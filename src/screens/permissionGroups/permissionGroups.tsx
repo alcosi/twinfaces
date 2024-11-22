@@ -1,7 +1,7 @@
 "use client";
 
-import { FiltersState } from "@/components/base/data-table/crud-data-table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import {
   buildFilterFields,
   mapToPermissionGroupApiFilters,

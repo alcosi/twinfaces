@@ -1,7 +1,7 @@
 import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { Badge } from "@/components/base/badge";
-import { DataTableHandle } from "@/components/base/data-table/data-table";
-import { LoadingOverlay } from "@/components/base/loading";
+import { Badge } from "@/shared/ui/badge";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinClassLinkFormFields } from "./form-fields";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 
 const twinLinkSchema = z.object({

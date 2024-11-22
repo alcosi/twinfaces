@@ -1,13 +1,13 @@
 import { AutoFormValueInfo } from "@/components/auto-field";
-import { Button } from "@/components/base/button";
-import { CustomizableColumnsPopover } from "@/components/base/data-table/crud-data-table-columns-popover";
+import { Button } from "@/shared/ui/button";
+import { CustomizableColumnsPopover } from "@/shared/ui/data-table/crud-data-table-columns-popover";
 import {
   DataTableHandle,
   DataTableProps,
   DataTableRow,
-} from "@/components/base/data-table/data-table";
-import { Input } from "@/components/base/input";
-import { Separator } from "@/components/base/separator";
+} from "@/shared/ui/data-table/data-table";
+import { Input } from "@/shared/ui/input";
+import { Separator } from "@/shared/ui/separator";
 import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { Plus, RefreshCw, Search } from "lucide-react";
 import React, { ForwardedRef, useCallback, useEffect, useReducer } from "react";

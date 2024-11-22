@@ -1,22 +1,18 @@
 "use client";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
-import { Button } from "@/components/base/button";
-import { CustomizableColumnsPopover } from "@/components/base/data-table/crud-data-table-columns-popover";
+import { Button } from "@/shared/ui/button";
+import { CustomizableColumnsPopover } from "@/shared/ui/data-table/crud-data-table-columns-popover";
 import {
   DataTable,
   DataTableHandle,
   DataTableProps,
   DataTableRow,
-} from "@/components/base/data-table/data-table";
-import { Form } from "@/components/base/form";
-import { Input } from "@/components/base/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/base/popover";
-import { Separator } from "@/components/base/separator";
+} from "@/shared/ui/data-table/data-table";
+import { Form } from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { Separator } from "@/shared/ui/separator";
 import { cn, fixedForwardRef } from "@/shared/libs";
 import { PaginationState } from "@tanstack/table-core";
 import { FilterIcon, RefreshCw, Search } from "lucide-react";
