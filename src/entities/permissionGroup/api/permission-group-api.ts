@@ -1,6 +1,6 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { PermissionGroupApiFilters } from "./types";
+import { PermissionGroupFilters } from "./types";
 
 export function createPermissionGroupApi(settings: ApiSettings) {
   async function search({
@@ -10,7 +10,7 @@ export function createPermissionGroupApi(settings: ApiSettings) {
   }: {
     search?: string;
     pagination: PaginationState;
-    filters: PermissionGroupApiFilters;
+    filters: PermissionGroupFilters;
   }) {
     return settings.client.POST("/private/permission_group/search/v1", {
       params: {

@@ -23,7 +23,7 @@ export function createTwinflowApi(settings: ApiSettings) {
           showTwinflowMode: "DETAILED",
           showTwinflow2TransitionMode: "DETAILED",
           showTransition2StatusMode: "SHORT",
-          showTwinflowInitStatus2StatusMode: "SHORT",
+          showTwinflowInitStatus2StatusMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
         },

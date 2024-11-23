@@ -31,5 +31,6 @@ export * from "./skeleton";
 export * from "./sonner";
 export * from "./table";
 export * from "./tabs";
+export * from "./tag-box";
 export * from "./textarea";
 export * from "./tooltip";

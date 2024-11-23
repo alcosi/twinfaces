@@ -52,7 +52,9 @@ export function createTwinClassApi(settings: ApiSettings) {
       },
       body: {
         ...filters,
-        twinClassKeyLikeList: search ? ["%" + search + "%"] : undefined,
+        twinClassKeyLikeList: search
+          ? ["%" + search + "%"]
+          : filters.twinClassKeyLikeList,
       },
     });
   }

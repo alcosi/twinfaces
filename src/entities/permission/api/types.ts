@@ -8,12 +8,12 @@ export type CreatePermissionRequestBody =
 export type UpdatePermissionRequestBody =
   components["schemas"]["PermissionUpdateRqV1"];
 
-export type PermissionApiFilterFields =
+export type PermissionFilterKeys =
   | "idList"
   | "keyLikeList"
   | "nameLikeList"
   | "descriptionLikeList";
 
-export type PermissionApiFilters = Partial<
-  Pick<components["schemas"]["PermissionSearchRqV1"], PermissionApiFilterFields>
+export type PermissionFilters = Partial<
+  Pick<components["schemas"]["PermissionSearchRqV1"], PermissionFilterKeys>
 >;

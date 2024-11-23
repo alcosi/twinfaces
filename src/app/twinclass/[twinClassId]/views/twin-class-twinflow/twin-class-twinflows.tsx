@@ -1,7 +1,11 @@
 import { AutoFormValueType } from "@/components/auto-field";
 import { TwinClassContext } from "@/entities/twinClass";
 import { TwinFlow } from "@/entities/twinFlow";
-import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import {
+  TwinClassStatusResourceLink,
+  TwinStatus,
+  useTwinStatusSelectAdapter,
+} from "@/entities/twinStatus";
 import { ApiContext } from "@/shared/api";
 import {
   CrudDataTable,
@@ -32,7 +36,16 @@ const columns: ColumnDef<TwinFlow>[] = [
   {
     accessorKey: "initialStatus",
     header: "Initial status",
-    cell: (data) => <>{data.row.original.initialStatus?.name}</>,
+    cell: ({ row: { original } }) =>
+      original.initialStatus && (
+        <div className="max-w-48 inline-flex">
+          <TwinClassStatusResourceLink
+            data={original.initialStatus as TwinStatus}
+            twinClassId={original.twinClassId!}
+            withTooltip
+          />
+        </div>
+      ),
   },
 ];
 

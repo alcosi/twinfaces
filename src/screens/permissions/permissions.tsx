@@ -1,25 +1,22 @@
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import {
-  buildFilterFields,
   CreatePermissionRequestBody,
-  mapToPermissionApiFilters,
-  Permission_DETAILED,
   PERMISSION_SCHEMA,
   PermissionFormValues,
   UpdatePermissionRequestBody,
+  usePermissionFilters,
   usePermissionSearchV1,
   type Permission,
 } from "@/entities/permission";
 import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
-import { mergeUniqueItems } from "@/shared/libs";
+import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -66,9 +63,9 @@ const colDefs: Record<
 export function Permissions() {
   const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const [permissions, setPermissions] = useState<Permission_DETAILED[]>([]);
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissions } = usePermissionSearchV1();
+  const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Permissions", href: "/permission" }]);
@@ -88,20 +85,18 @@ export function Permissions() {
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<{ data: Permission[]; pageCount: number }> {
-    const _filters = mapToPermissionApiFilters(filters.filters);
+    const _filters = mapFiltersToPayload(filters.filters);
 
     try {
       const response = await searchPermissions({
         pagination,
         filters: _filters,
       });
-      setPermissions((prev) => mergeUniqueItems(prev, response.data));
 
       return response;
     } catch (e) {
       console.error("Failed to fetch permissions", e);
       toast.error("Failed to fetch permissions");
-      setPermissions([]);
       return { data: [], pageCount: 0 };
     }
   }
@@ -174,7 +169,7 @@ export function Permissions() {
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
       filters={{
-        filtersInfo: buildFilterFields(permissions),
+        filtersInfo: buildFilterFields(),
         onChange: () => Promise.resolve(),
       }}
       defaultVisibleColumns={[

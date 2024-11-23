@@ -2,7 +2,7 @@ import { ApiContext } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 import { hydratePermissionGroupFromMap } from "../../libs";
-import { PermissionGroup_DETAILED, PermissionGroupApiFilters } from "../types";
+import { PermissionGroup_DETAILED, PermissionGroupFilters } from "../types";
 
 // TODO: Apply caching-strategy
 export const usePermissionGroupSearchV1 = () => {
@@ -16,7 +16,7 @@ export const usePermissionGroupSearchV1 = () => {
     }: {
       search?: string;
       pagination?: PaginationState;
-      filters?: PermissionGroupApiFilters;
+      filters?: PermissionGroupFilters;
     }): Promise<{ data: PermissionGroup_DETAILED[]; pageCount: number }> => {
       try {
         const { data, error } = await api.permissionGroup.search({

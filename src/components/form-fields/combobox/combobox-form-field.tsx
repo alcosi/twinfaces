@@ -30,6 +30,7 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
       control={control}
       name={name}
       render={({ field }) => {
+        // TODO: Refactor after TWINFACES-207 - Combobox/select should fetch object value from field ID.
         const _fieldValue = props.initialValues ?? field.value;
         return (
           <ComboboxFormItem

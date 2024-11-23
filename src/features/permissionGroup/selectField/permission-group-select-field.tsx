@@ -24,6 +24,7 @@ export function PermissionGroupSelectField<T extends FieldValues>(
     control: props.control,
     name: props.name,
   });
+  // TODO: Refactor after TWINFACES-207 - Combobox/select should fetch object value from field ID.
   const [initVals, setInitVals] = useState<PermissionGroup_DETAILED[]>([]);
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export function PermissionGroupSelectField<T extends FieldValues>(
   }
 
   // TODO: to refactor after https://alcosi.atlassian.net/browse/TWINFACES-76
+  // TODO: Refactor after TWINFACES-207 - Combobox/select should fetch object value from field ID.
   return props.disabled ? (
     <TextFormItem
       {...props}
@@ -67,7 +69,7 @@ export function PermissionGroupSelectField<T extends FieldValues>(
       getItemLabel={({ key = "", name }) => `${key}${name ? ` (${name})` : ""}`}
       selectPlaceholder="Select permission group"
       searchPlaceholder="Search permission group..."
-      noItemsText={"No classes found"}
+      noItemsText={"No permission groups found"}
       initialValues={initVals}
       {...props}
     />
