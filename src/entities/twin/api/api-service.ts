@@ -43,7 +43,7 @@ export function createTwinApi(settings: ApiSettings) {
     query = {},
   }: {
     id: string;
-    query: operations["twinViewV2"]["parameters"]["query"];
+    query?: operations["twinViewV2"]["parameters"]["query"];
   }) {
     return settings.client.GET("/private/twin/{twinId}/v2", {
       params: {

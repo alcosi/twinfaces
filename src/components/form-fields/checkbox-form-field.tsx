@@ -51,14 +51,6 @@ export function CheckboxFormItem({
   hasIndeterminate?: boolean;
 }) {
   function onCheckedChange(x: boolean) {
-    console.log(
-      "onCheckedChange",
-      x,
-      "hasIndeterminate",
-      hasIndeterminate,
-      "fieldValue",
-      fieldValue
-    );
     if (hasIndeterminate && fieldValue === false && x === true) {
       onChange?.("indeterminate");
     } else {

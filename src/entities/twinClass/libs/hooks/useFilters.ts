@@ -13,6 +13,7 @@ import {
   wrapWithPercent,
   type FilterFeature,
 } from "@/shared/libs";
+import { z } from "zod";
 
 export function useTwinClassFilters(): FilterFeature<
   TwinClassFilterKeys,
@@ -24,15 +25,17 @@ export function useTwinClassFilters(): FilterFeature<
   function buildFilterFields(): Record<TwinClassFilterKeys, AutoFormValueInfo> {
     return {
       twinClassIdList: {
-        type: AutoFormValueType.uuid,
+        type: AutoFormValueType.tag,
         label: "Id",
+        schema: z.string().uuid("Please enter a valid UUID"),
+        placeholder: "Enter UUID",
       },
       twinClassKeyLikeList: {
-        type: AutoFormValueType.string,
+        type: AutoFormValueType.tag,
         label: "Key",
       },
       nameI18nLikeList: {
-        type: AutoFormValueType.string,
+        type: AutoFormValueType.tag,
         label: "Name",
       },
       descriptionI18nLikeList: {
@@ -109,11 +112,13 @@ export function useTwinClassFilters(): FilterFeature<
     filters: Record<TwinClassFilterKeys, unknown>
   ): TwinClassFilters {
     const result: TwinClassFilters = {
-      twinClassIdList: toArrayOfString(toArray(filters.twinClassIdList), "id"),
-      nameI18nLikeList: toArrayOfString(
-        toArray(filters.nameI18nLikeList),
-        "name"
-      ).map(wrapWithPercent),
+      twinClassIdList: toArrayOfString(filters.twinClassIdList),
+      twinClassKeyLikeList: toArrayOfString(filters.twinClassKeyLikeList).map(
+        wrapWithPercent
+      ),
+      nameI18nLikeList: toArrayOfString(filters.nameI18nLikeList).map(
+        wrapWithPercent
+      ),
       descriptionI18nLikeList: toArrayOfString(
         toArray(filters.descriptionI18nLikeList),
         "description"
