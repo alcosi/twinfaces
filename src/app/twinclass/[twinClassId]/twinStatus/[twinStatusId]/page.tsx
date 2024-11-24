@@ -1,14 +1,14 @@
 "use client";
 
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { TwinStatusGeneral } from "@/app/twinclass/[twinClassId]/twinStatus/[twinStatusId]/twin-status-general";
-import { LoadingOverlay } from "@/shared/ui/loading";
+import { TwinClassContext } from "@/entities/twinClass";
 import { TwinStatus } from "@/entities/twinStatus";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { TwinStatusGeneral } from "./twin-status-general";
 
 interface TwinStatusPageProps {
   params: {

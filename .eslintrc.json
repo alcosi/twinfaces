@@ -5,6 +5,15 @@
     "eslint:recommended",
     "plugin:prettier/recommended"
   ],
+  "plugins": ["fsd-import"],
+  "rules": {
+    "fsd-import/layer-imports": [
+      "error",
+      {
+        "alias": "@"
+      }
+    ]
+  },
   "overrides": [
     {
       "files": ["src/**/*"],

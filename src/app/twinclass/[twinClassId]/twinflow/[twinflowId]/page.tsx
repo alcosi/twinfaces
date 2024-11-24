@@ -1,14 +1,14 @@
 "use client";
 
-import { TwinflowGeneral } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-general";
-import { LoadingOverlay } from "@/shared/ui/loading";
+import { TwinClassContext } from "@/entities/twinClass";
 import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twinFlow";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowTransitions } from "@/screens/twinFlowTransitions";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { TwinClassContext } from "../../twin-class-context";
+import { TwinflowGeneral } from "./twinflow-general";
 
 interface TwinflowPageProps {
   params: {

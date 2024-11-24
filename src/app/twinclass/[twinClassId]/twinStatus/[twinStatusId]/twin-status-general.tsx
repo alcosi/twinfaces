@@ -1,16 +1,16 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { ColorPicker } from "@/shared/ui/color-picker";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
+import { TwinClassContext } from "@/entities/twinClass";
 import {
   TwinClassStatusResourceLink,
   TwinStatus,
   TwinStatusUpdateRq,
 } from "@/entities/twinStatus";
 import { ApiContext } from "@/shared/api";
+import { ColorPicker } from "@/shared/ui/color-picker";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
-import { TwinClassContext } from "../../twin-class-context";
 
 export function TwinStatusGeneral({
   status,

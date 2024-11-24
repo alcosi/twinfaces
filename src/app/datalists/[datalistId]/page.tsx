@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Experimental_CrudDataTable } from "@/widgets";
-import { ColumnDef } from "@tanstack/table-core";
-import { toast } from "sonner";
+import { DataListOption } from "@/entities/datalist";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { DataListOption } from "@/entities/datalist";
-import { DatalistContext } from "@/app/datalists/[datalistId]/datalist-context";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
+import { Experimental_CrudDataTable } from "@/widgets";
+import { ColumnDef } from "@tanstack/table-core";
+import { useContext, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { DatalistContext } from "./datalist-context";
 
 interface DatalistPageProps {
   params: {

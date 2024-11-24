@@ -1,6 +1,6 @@
 "use client";
 
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { TwinClassContext } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";

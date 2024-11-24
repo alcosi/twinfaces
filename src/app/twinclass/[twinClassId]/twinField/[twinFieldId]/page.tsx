@@ -1,14 +1,13 @@
 "use client";
 
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { TwinFieldGeneral } from "@/app/twinclass/[twinClassId]/twinField/[twinFieldId]/twin-field-general";
-import { LoadingOverlay } from "@/shared/ui/loading";
-import { TwinClassField } from "@/entities/twinClass";
+import { TwinClassContext, TwinClassField } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { TwinFieldGeneral } from "./twin-field-general";
 
 interface TwinFieldPageProps {
   params: {

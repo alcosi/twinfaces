@@ -1,4 +1,5 @@
-import { TwinContext } from "@/app/twin/[twinId]/twin-context";
+import { TwinLinkView } from "@/entities/twin";
+import { ApiContext } from "@/shared/api";
 import {
   CrudDataTable,
   FiltersState,
@@ -6,22 +7,16 @@ import {
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { TwinLinkView } from "@/entities/twin";
-import { TwinClassField } from "@/entities/twinClass";
-import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { toast } from "sonner";
+import { TwinContext } from "../twin-context";
 
 export function TwinLinks() {
   const api = useContext(ApiContext);
   const { twin } = useContext(TwinContext);
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
-
-  // const [createEditLinkDialogOpen, setCreateEditLinkDialogOpen] =
-  //   useState<boolean>(false);
-  // const [editedLink, setEditedLink] = useState<any | null>(null);
 
   const columns: ColumnDef<TwinLinkView>[] = [
     {
@@ -95,16 +90,6 @@ export function TwinLinks() {
     }
   }
 
-  // function createLink() {
-  //   setEditedLink(null);
-  //   setCreateEditLinkDialogOpen(true);
-  // }
-
-  // function editLink(field: TwinClassField) {
-  //   setEditedLink(field);
-  //   setCreateEditLinkDialogOpen(true);
-  // }
-
   if (!twin) {
     return <LoadingOverlay />;
   }
@@ -164,14 +149,6 @@ export function TwinLinks() {
           ],
         }}
       />
-
-      {/*    <CreateEditTwinFieldDialog*/}
-      {/*open={createEditFieldDialogOpen}*/}
-      {/*twinClassId={twinClass.id!}*/}
-      {/*field={editedField}*/}
-      {/*onOpenChange={setCreateEditFieldDialogOpen}*/}
-      {/*onSuccess={tableRefForward.current?.refresh}*/}
-      {/*/>*/}
     </>
   );
 }

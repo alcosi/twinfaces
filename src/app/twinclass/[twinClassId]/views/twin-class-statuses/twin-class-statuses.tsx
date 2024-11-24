@@ -1,13 +1,12 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { ImageWithFallback } from "@/components/image-with-fallback";
+import { TwinClassContext, useFetchTwinClassById } from "@/entities/twinClass";
+import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
+import { isFalsy } from "@/shared/libs";
+import { ColorTile } from "@/shared/ui";
 import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { ImageWithFallback } from "@/components/image-with-fallback";
-import { useFetchTwinClassById } from "@/entities/twinClass";
-import { TwinStatus, TwinClassStatusResourceLink } from "@/entities/twinStatus";
-import { isFalsy } from "@/shared/libs";
-import { ColorTile } from "@/shared/ui";
 import { ColumnDef } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";

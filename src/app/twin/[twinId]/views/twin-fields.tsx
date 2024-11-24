@@ -1,14 +1,13 @@
-import { TwinClassField } from "@/entities/twinClass";
-import { useContext, useRef, useState } from "react";
 import { ApiContext } from "@/shared/api";
-import { toast } from "sonner";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { TwinContext } from "@/app/twin/[twinId]/twin-context";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useContext, useRef } from "react";
+import { toast } from "sonner";
+import { TwinContext } from "../twin-context";
 
 interface DataField {
   [key: string]: string;
@@ -18,10 +17,6 @@ export function TwinFields() {
   const api = useContext(ApiContext);
   const { twin } = useContext(TwinContext);
   const tableRef = useRef<DataTableHandle>(null);
-
-  const [createEditFieldDialogOpen, setCreateEditFieldDialogOpen] =
-    useState<boolean>(false);
-  const [editedField, setEditedField] = useState<TwinClassField | null>(null);
 
   const columns: ColumnDef<DataField>[] = [
     {
@@ -68,41 +63,25 @@ export function TwinFields() {
     }
   }
 
-  // function createField() {
-  //     setEditedField(null);
-  //     setCreateEditFieldDialogOpen(true);
-  // }
-
-  // function editField(field: TwinClassField) {
-  //     setEditedField(field);
-  //     setCreateEditFieldDialogOpen(true);
-  // }
-
   if (!twin) {
     console.error("TwinFields: no twin");
     return;
   }
 
   return (
-    <>
-      <CrudDataTable
-        ref={tableRef}
-        title="Fields"
-        columns={columns}
-        getRowId={(row) => row.key!}
-        fetcher={fetchFields}
-        // createButton={{
-        //     enabled: true,
-        //     onClick: createField,
-        // }}
-        disablePagination={true}
-        pageSizes={[10, 20, 50]}
-        // onRowClick={(row) => router.push(`/twin/${twin!.id!}/twinField/${row.id}`)}
-      />
-
-      {/*<CreateEditTwinFieldDialog open={createEditFieldDialogOpen} twinClassId={twin.id!} field={editedField}*/}
-      {/*                           onOpenChange={setCreateEditFieldDialogOpen}*/}
-      {/*                           onSuccess={tableRef.current?.refresh}/>*/}
-    </>
+    <CrudDataTable
+      ref={tableRef}
+      title="Fields"
+      columns={columns}
+      getRowId={(row) => row.key!}
+      fetcher={fetchFields}
+      // createButton={{
+      //     enabled: true,
+      //     onClick: createField,
+      // }}
+      disablePagination={true}
+      pageSizes={[10, 20, 50]}
+      // onRowClick={(row) => router.push(`/twin/${twin!.id!}/twinField/${row.id}`)}
+    />
   );
 }

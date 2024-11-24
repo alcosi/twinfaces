@@ -1,14 +1,14 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { AutoFormValueType } from "@/components/auto-field";
+import { TwinClassContext } from "@/entities/twinClass";
+import { TwinFlow } from "@/entities/twinFlow";
+import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import { ApiContext } from "@/shared/api";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { TwinFlow } from "@/entities/twinFlow";
-import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twinStatus";
-import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";

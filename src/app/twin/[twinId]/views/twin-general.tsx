@@ -1,17 +1,17 @@
-import { TwinUpdateRq } from "@/entities/twin";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
-import { useContext, useState } from "react";
 import { AutoFormValueType } from "@/components/auto-field";
-import { ApiContext } from "@/shared/api";
-import { z } from "zod";
-import { TwinContext } from "@/app/twin/[twinId]/twin-context";
+import { TwinUpdateRq } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { User, UserResourceLink } from "@/entities/user";
+import { ApiContext } from "@/shared/api";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
+import { useContext, useState } from "react";
+import { z } from "zod";
+import { TwinContext } from "../twin-context";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);

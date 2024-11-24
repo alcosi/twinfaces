@@ -1,22 +1,22 @@
-import React, { useContext, useRef, useState } from "react";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { CommentView } from "@/entities/twin";
+import { Avatar } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { CopyButton } from "@/shared/ui/copy-button";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/shared/ui/data-table/crud-data-table";
-import { toast } from "sonner";
-import { TwinContext } from "@/app/twin/[twinId]/twin-context";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { Card, CardContent, CardHeader } from "@/shared/ui/card";
-import { Avatar } from "@/shared/ui";
-import { CommentView } from "@/entities/twin";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { Button } from "@/shared/ui/button";
-import { CopyButton } from "@/shared/ui/copy-button";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useContext, useRef, useState } from "react";
+import { toast } from "sonner";
+import { TwinContext } from "../twin-context";
 
-import { CircleUserRound, EllipsisVertical } from "lucide-react";
 import { ApiContext } from "@/shared/api";
+import { CircleUserRound, EllipsisVertical } from "lucide-react";
 
 const columns: ColumnDef<CommentView>[] = [
   {

@@ -1,15 +1,14 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { TwinflowTransitionCreateEditDialog } from "@/app/twinclass/[twinClassId]/twinflow/[twinflowId]/twinflow-transition-dialog";
+import { TwinClassContext, TwinClassField } from "@/entities/twinClass";
+import { TwinFlow } from "@/entities/twinFlow";
+import { TF_Transition } from "@/entities/twinFlowTransition";
+import { TwinStatus } from "@/entities/twinStatus";
 import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { TwinClassField } from "@/entities/twinClass";
-import { TwinStatus } from "@/entities/twinStatus";
-import { TwinFlow } from "@/entities/twinFlow";
 import { ColumnDef } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
-import { TF_Transition } from "@/entities/twinFlowTransition";
+import { TwinflowTransitionCreateEditDialog } from "./twinflow-transition-dialog";
 
 export function TwinflowTransitions({
   twinflow,

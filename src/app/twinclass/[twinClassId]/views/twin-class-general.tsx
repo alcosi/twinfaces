@@ -1,21 +1,21 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { FeaturerTypes } from "@/components/featurer-input";
+import { DatalistResourceLink } from "@/entities/datalist";
 import {
   DataListV1,
   TwinClass_DETAILED,
+  TwinClassContext,
   TwinClassResourceLink,
   TwinClassUpdateRq,
   useFetchTwinClassById,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { ApiContext } from "@/shared/api";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
-import { DatalistResourceLink } from "@/entities/datalist";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
