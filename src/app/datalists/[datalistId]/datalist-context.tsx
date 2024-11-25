@@ -27,7 +27,7 @@ export function DatalistContextProvider({
 
   useEffect(() => {
     fetchDatalist();
-  }, []);
+  }, [datalistId]);
 
   function fetchDatalist() {
     setLoading(true);
