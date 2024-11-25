@@ -1,7 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { DatalistContext } from "@/app/datalists/[datalistId]/datalist-context";
-import { Table, TableBody, TableCell, TableRow } from "@/components/base/table";
-import { ShortGuidWithCopy } from "@/components/base/short-guid";
+import {
+  ShortGuidWithCopy,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/shared/ui";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 
 export function DatalistGeneral() {
