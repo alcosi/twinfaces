@@ -7,10 +7,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . --quiet",
     "format": "prettier --write .",
     "test:ts": "tsc --noEmit",
-    "generate:schema": "./scripts/generate-schema.sh"
+    "generate:schema": "./scripts/generate-schema.sh",
+    "postinstall": "patch-package"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -62,10 +63,12 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.3",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-fsd-import": "^0.0.13",
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "openapi-typescript": "^6.7.6",
+    "patch-package": "^8.0.0",
     "postcss": "^8",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",

@@ -1,12 +1,11 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { TwinClassContext, TwinClassField } from "@/entities/twinClass";
+import { ApiContext } from "@/shared/api";
 import {
   CrudDataTable,
   FiltersState,
 } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { TwinClassField } from "@/entities/twinClass";
-import { ApiContext } from "@/shared/api";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";

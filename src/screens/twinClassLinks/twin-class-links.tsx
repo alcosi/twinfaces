@@ -1,19 +1,21 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { Badge } from "@/shared/ui/badge";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { LoadingOverlay } from "@/shared/ui/loading";
 import {
   TwinClass_DETAILED,
+  TwinClassContext,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import {
   CreateLinkRequestBody,
   LinkStrengthEnum,
   LinkTypesEnum,
+  TwinClassLink,
   UpdateLinkRequestBody,
 } from "@/entities/twinClassLink";
+import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 import { ApiContext } from "@/shared/api";
-import { TwinClassLink } from "@/entities/twinClassLink";
+import { Badge } from "@/shared/ui/badge";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { LoadingOverlay } from "@/shared/ui/loading";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -22,8 +24,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinClassLinkFormFields } from "./form-fields";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 
 const twinLinkSchema = z.object({
   srcTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),

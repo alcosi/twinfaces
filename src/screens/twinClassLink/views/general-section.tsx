@@ -1,11 +1,11 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { Badge } from "@/shared/ui/badge";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import {
   TwinClass_DETAILED,
+  TwinClassContext,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
+import { Badge } from "@/shared/ui/badge";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext } from "react";
 
 export function GeneralSection() {

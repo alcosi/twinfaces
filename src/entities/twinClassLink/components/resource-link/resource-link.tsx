@@ -1,9 +1,8 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
+import { TwinClass, TwinClassContext } from "@/entities/twinClass";
 import { ResourceLink } from "@/shared/ui";
 import { Link2 } from "lucide-react";
 import { useContext } from "react";
 import { TwinClassLinkResourceTooltip } from "./tooltip";
-import { TwinClass } from "@/entities/twinClass";
 
 type Props = {
   data: TwinClass;

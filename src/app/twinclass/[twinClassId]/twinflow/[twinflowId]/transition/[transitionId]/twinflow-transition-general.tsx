@@ -1,15 +1,15 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { ClassStatusView } from "@/components/class-status-view";
 import { PermissionResourceLink } from "@/entities/permission";
+import { TwinClassContext } from "@/entities/twinClass";
 import {
   TF_Transition,
   TwinFlowTransitionUpdateRq,
 } from "@/entities/twinFlowTransition";
 import { ApiContext } from "@/shared/api";
 import { NULLIFY_UUID_VALUE } from "@/shared/libs";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 
 export function TwinflowTransitionGeneral({

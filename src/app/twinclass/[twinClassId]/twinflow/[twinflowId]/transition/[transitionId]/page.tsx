@@ -1,11 +1,11 @@
 "use client";
 
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
-import { LoadingOverlay } from "@/shared/ui/loading";
+import { TwinClassContext } from "@/entities/twinClass";
 import { TF_Transition } from "@/entities/twinFlowTransition";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowContext } from "@/features/twinFlow";
 import { ApiContext } from "@/shared/api";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";

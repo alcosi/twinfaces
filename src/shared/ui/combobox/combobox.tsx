@@ -1,5 +1,6 @@
 "use client";
 
+import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
 import {
   Command,
@@ -10,7 +11,6 @@ import {
   CommandList,
 } from "@/shared/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { ForwardedRef } from "react";
 import { useComboboxController } from "./hooks";
