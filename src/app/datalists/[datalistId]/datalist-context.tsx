@@ -3,6 +3,7 @@ import { ApiContext } from "@/shared/api";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { DataList } from "@/entities/datalist";
+import { isUndefined } from "@/shared/libs";
 
 interface DatalistContextProps {
   datalistId: string;
@@ -56,6 +57,8 @@ export function DatalistContextProvider({
       })
       .finally(() => setLoading(false));
   }
+
+  if (isUndefined(datalist)) return <>{loading && <LoadingOverlay />}</>;
 
   return (
     <DatalistContext.Provider

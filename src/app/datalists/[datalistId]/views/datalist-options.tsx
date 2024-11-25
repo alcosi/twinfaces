@@ -100,15 +100,13 @@ export const DatalistOptions = () => {
   }
 
   return (
-    <>
-      <Experimental_CrudDataTable
-        ref={tableRef}
-        columns={columns}
-        getRowId={(row) => row.id!}
-        fetcher={fetchDataList}
-        disablePagination={true}
-        pageSizes={[10, 20, 50]}
-      />
-    </>
+    <Experimental_CrudDataTable
+      ref={tableRef}
+      columns={columns}
+      getRowId={(row) => row.id!}
+      fetcher={fetchDataList}
+      disablePagination={true}
+      pageSizes={[10, 20, 50]}
+    />
   );
 };

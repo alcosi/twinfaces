@@ -29,34 +29,32 @@ export function DatalistGeneral() {
   }
 
   return (
-    <>
-      <Table className="mt-8">
-        <TableBody>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>
-              <ShortGuidWithCopy value={datalist?.id} />
-            </TableCell>
-          </TableRow>
+    <Table className="mt-8">
+      <TableBody>
+        <TableRow>
+          <TableCell>ID</TableCell>
+          <TableCell>
+            <ShortGuidWithCopy value={datalist?.id} />
+          </TableCell>
+        </TableRow>
 
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>{datalist?.name}</TableCell>
-          </TableRow>
+        <TableRow>
+          <TableCell>Name</TableCell>
+          <TableCell>{datalist?.name}</TableCell>
+        </TableRow>
 
-          <TableRow>
-            <TableCell>Description</TableCell>
-            <TableCell>{datalist?.description}</TableCell>
-          </TableRow>
+        <TableRow>
+          <TableCell>Description</TableCell>
+          <TableCell>{datalist?.description}</TableCell>
+        </TableRow>
 
-          <TableRow>
-            <TableCell>Updated at</TableCell>
-            <TableCell>
-              {new Date(datalist?.updatedAt!).toLocaleDateString()}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </>
+        <TableRow>
+          <TableCell>Updated at</TableCell>
+          <TableCell>
+            {new Date(datalist?.updatedAt!).toLocaleDateString()}
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
   );
 }

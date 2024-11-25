@@ -10,9 +10,9 @@ import { DataList } from "@/entities/datalist";
 import { ApiContext } from "@/shared/api";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
-import { buildFilters, FilterFields, FILTERS } from "@/entities/datalist/libs";
 import { useRouter } from "next/navigation";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { useDatalistFilters } from "@/entities/datalist/libs/hooks/useFilters";
 
 const colDefs: Record<
   keyof Pick<DataList, "id" | "name" | "updatedAt" | "description">,
@@ -49,6 +49,7 @@ const Page = () => {
   const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
+  const { buildFilterFields, mapFiltersToPayload } = useDatalistFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const Page = () => {
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<{ data: DataList[]; pageCount: number }> {
-    const _filters = buildFilters(filters ?? { filters: {} });
+    const _filters = mapFiltersToPayload(filters.filters);
 
     try {
       const response = await api.datalist.searchDatalist({
@@ -78,32 +79,25 @@ const Page = () => {
   }
 
   return (
-    <>
-      <Experimental_CrudDataTable
-        ref={tableRef}
-        columns={[
-          colDefs.id!,
-          colDefs.name!,
-          colDefs.description!,
-          colDefs.updatedAt!,
-        ]}
-        getRowId={(row) => row.id!}
-        fetcher={fetchDataLists}
-        pageSizes={[10, 20, 50]}
-        onRowClick={(row) => router.push(`/datalists/${row.id}`)}
-        filters={{
-          filtersInfo: {
-            [FilterFields.idList]: FILTERS.idList,
-            [FilterFields.nameLikeList]: FILTERS.nameLikeList,
-            [FilterFields.descriptionLikeList]: FILTERS.descriptionLikeList,
-            [FilterFields.keyLikeList]: FILTERS.keyLikeList,
-          },
-          onChange: () => {
-            return Promise.resolve();
-          },
-        }}
-      />
-    </>
+    <Experimental_CrudDataTable
+      ref={tableRef}
+      columns={[
+        colDefs.id!,
+        colDefs.name!,
+        colDefs.description!,
+        colDefs.updatedAt!,
+      ]}
+      getRowId={(row) => row.id!}
+      fetcher={fetchDataLists}
+      pageSizes={[10, 20, 50]}
+      onRowClick={(row) => router.push(`/datalists/${row.id}`)}
+      filters={{
+        filtersInfo: buildFilterFields(),
+        onChange: () => {
+          return Promise.resolve();
+        },
+      }}
+    />
   );
 };
 
