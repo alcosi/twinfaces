@@ -4,6 +4,9 @@
  */
 
 
+/** WithRequired type helpers */
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
 export interface paths {
   "/private/user/{userId}/v1": {
     /** Update user */
@@ -107,6 +110,10 @@ export interface paths {
   "/private/twinflow/search/v1": {
     /** Returns twinflow search result */
     post: operations["twinflowSearchV1"];
+  };
+  "/private/twin_status/search/v1": {
+    /** Returns twin status search result in current domain */
+    post: operations["twinStatusSearchV1"];
   };
   "/private/twin_class/{twinClassId}/twinflow/v1": {
     /** Create new twinflow */
@@ -2713,9 +2720,43 @@ export interface components {
         [key: string]: components["schemas"]["DataListOptionV1"];
       };
     };
+    /** @description data list option search */
+    DataListOptionSearchV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description option like list */
+      optionLikeList?: string[];
+      /** @description option not like list */
+      optionNotLikeList?: string[];
+      /** @description option i18n like list */
+      optionI18nLikeList?: string[];
+      /** @description option i18n not like list */
+      optionI18nNotLikeList?: string[];
+      /** @description business account id list */
+      businessAccountIdList?: string[];
+      /** @description business account id exclude list */
+      businessAccountIdExcludeList?: string[];
+    };
     DataListSearchRqV1: {
-      /** @description data list id list */
-      dataListIdList?: string[];
+      /** @description datalist id list */
+      idList?: string[];
+      /** @description datalist id exclude list */
+      idExcludeList?: string[];
+      /** @description datalist name like list */
+      nameLikeList?: string[];
+      /** @description datalist name not like list */
+      nameNotLikeList?: string[];
+      /** @description datalist description like list */
+      descriptionLikeList?: string[];
+      /** @description datalist description not like list */
+      descriptionNotLikeList?: string[];
+      /** @description datalist class key like list */
+      keyLikeList?: string[];
+      /** @description datalist class key not like list */
+      keyNotLikeList?: string[];
+      optionSearch?: components["schemas"]["DataListOptionSearchV1"];
     };
     DataListSearchRsV1: {
       /**
@@ -2734,8 +2775,30 @@ export interface components {
        * @example success
        */
       statusDetails?: string;
-      /** @description results - data lists list */
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description data list */
       dataListList?: components["schemas"]["DataListV1"][];
+    };
+    /** @description pagination data */
+    PaginationV1: {
+      /**
+       * Format: int32
+       * @description record number from which data sampling begins
+       * @example 25
+       */
+      offset?: number;
+      /**
+       * Format: int32
+       * @description number of records in the query result
+       * @example 10
+       */
+      limit?: number;
+      /**
+       * Format: int64
+       * @description total results count
+       * @example 100
+       */
+      total?: number;
     };
     UserGroupMemberManageRqV1: {
       userGroupEnterList?: string[];
@@ -2797,27 +2860,6 @@ export interface components {
       createdByUserIdList?: string[];
       /** @description user id exclude list */
       createdByUserIdExcludeList?: string[];
-    };
-    /** @description pagination data */
-    PaginationV1: {
-      /**
-       * Format: int32
-       * @description record number from which data sampling begins
-       * @example 25
-       */
-      offset?: number;
-      /**
-       * Format: int32
-       * @description number of records in the query result
-       * @example 10
-       */
-      limit?: number;
-      /**
-       * Format: int64
-       * @description total results count
-       * @example 100
-       */
-      total?: number;
     };
     TwinflowSchemaSearchRsV1: {
       /**
@@ -3242,6 +3284,49 @@ export interface components {
       validatorRules?: components["schemas"]["TransitionValidatorRuleBaseV1"][];
       /** @description triggers */
       triggers?: components["schemas"]["TriggerV1"][];
+    };
+    TwinStatusSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description twin class id list */
+      twinClassIdList?: string[];
+      /** @description twin class id exclude list */
+      twinClassIdExcludeList?: string[];
+      /** @description key like list */
+      keyLikeList?: string[];
+      /** @description key not like list */
+      keyNotLikeList?: string[];
+      /** @description name i18n like list */
+      nameI18nLikeList?: string[];
+      /** @description name i18n not like list */
+      nameI18nNotLikeList?: string[];
+      /** @description description i18n like list */
+      descriptionI18nLikeList?: string[];
+      /** @description description i18n not like list */
+      descriptionI18nNotLikeList?: string[];
+    };
+    TwinStatusSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - status list */
+      statuses?: components["schemas"]["TwinStatusV1"][];
     };
     TwinflowCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
@@ -4023,11 +4108,11 @@ export interface components {
       twinClassIdExcludeList?: string[];
       /** @description Twin name like list */
       twinNameLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin name not like list */
       twinNameNotLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin description like list */
       descriptionLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin description not like list */
       descriptionNotLikeList?: string[];
       /** @description Head twin id list */
       headTwinIdList?: string[];
@@ -4088,11 +4173,11 @@ export interface components {
       twinClassIdExcludeList?: string[];
       /** @description Twin name like list */
       twinNameLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin name not like list */
       twinNameNotLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin description like list */
       descriptionLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin description not like list */
       descriptionNotLikeList?: string[];
       /** @description Head twin id list */
       headTwinIdList?: string[];
@@ -4200,11 +4285,11 @@ export interface components {
       twinClassIdExcludeList?: string[];
       /** @description Twin name like list */
       twinNameLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin name not like list */
       twinNameNotLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin description like list */
       descriptionLikeList?: string[];
-      /** @description Twin name like list */
+      /** @description Twin description not like list */
       descriptionNotLikeList?: string[];
       /** @description Head twin id list */
       headTwinIdList?: string[];
@@ -4334,8 +4419,23 @@ export interface components {
       /** @description discriminator */
       resultType: string;
       changeType: string;
-    } & components["schemas"]["TwinTransitionPerformRsV1"];
-    TwinTransitionPerformRsV1: {
+    } & (components["schemas"]["TwinTransitionPerformResultMinorRsV1"] | components["schemas"]["TwinTransitionPerformResultMajorRsV1"]);
+    TwinTransitionPerformResultMajorRsV1: WithRequired<{
+      resultType: "multiUserV1";
+    } & Omit<components["schemas"]["TwinTransitionPerformResultDTO"], "resultType"> & {
+      draft?: components["schemas"]["DraftV1"];
+    }, "resultType">;
+    TwinTransitionPerformResultMinorRsV1: WithRequired<{
+      resultType: "userV1";
+    } & Omit<components["schemas"]["TwinTransitionPerformResultDTO"], "resultType"> & {
+      /** @description list of twins from input */
+      transitionedTwinList?: components["schemas"]["TwinV2"][];
+      /** @description list of twins processed by transition (some new can be created or updated). Key is twinClassId */
+      processedTwinList?: {
+        [key: string]: components["schemas"]["TwinV2"][];
+      };
+    }, "resultType">;
+    TwinTransitionPerformRsV2: {
       /**
        * Format: int32
        * @description request processing status (see ErrorCode enum)
@@ -4354,6 +4454,31 @@ export interface components {
       statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       result?: components["schemas"]["TwinTransitionPerformResultDTO"];
+    };
+    TwinTransitionPerformRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description list of twins from input */
+      transitionedTwinList?: components["schemas"]["TwinV2"][];
+      /** @description list of twins processed by transition (some new can be created or updated). Key is twinClassId */
+      processedTwinList?: {
+        [key: string]: components["schemas"]["TwinV2"][];
+      };
     };
     TwinTransitionPerformBatchRqV1: {
       twinIdList?: string[];
@@ -7325,6 +7450,9 @@ export interface operations {
       query?: {
         showDataListMode?: "HIDE" | "SHORT" | "DETAILED";
         showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -7545,6 +7673,44 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinflowListRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns twin status search result in current domain */
+  twinStatusSearchV1: {
+    parameters: {
+      query?: {
+        showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TwinStatusSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Twin status list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinStatusSearchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -8799,7 +8965,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -8952,7 +9118,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -9269,7 +9435,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -9422,7 +9588,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -9499,7 +9665,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -10464,6 +10630,9 @@ export interface operations {
       query?: {
         showDataListMode?: "HIDE" | "SHORT" | "DETAILED";
         showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
