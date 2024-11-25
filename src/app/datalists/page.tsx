@@ -93,7 +93,10 @@ const Page = () => {
         onRowClick={(row) => router.push(`/datalists/${row.id}`)}
         filters={{
           filtersInfo: {
-            [FilterFields.dataListIdList]: FILTERS.dataListIdList,
+            [FilterFields.idList]: FILTERS.idList,
+            [FilterFields.nameLikeList]: FILTERS.nameLikeList,
+            [FilterFields.descriptionLikeList]: FILTERS.descriptionLikeList,
+            [FilterFields.keyLikeList]: FILTERS.keyLikeList,
           },
           onChange: () => {
             return Promise.resolve();

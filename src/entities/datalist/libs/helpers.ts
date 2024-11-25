@@ -3,9 +3,13 @@ import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { FilterFields, FILTERS } from "@/entities/datalist/libs/constants";
 import { mapToChoice, toArray, toArrayOfString } from "@/shared/libs";
 
-const stringLikeFilters: FilterFields[] = [];
+const stringLikeFilters: FilterFields[] = [
+  FilterFields.nameLikeList,
+  FilterFields.descriptionLikeList,
+  FilterFields.keyLikeList,
+];
 
-const arrayLikeFilters: FilterFields[] = [FilterFields.dataListIdList];
+const arrayLikeFilters: FilterFields[] = [FilterFields.idList];
 
 const choiceMappingFilters: FilterFields[] = [];
 
