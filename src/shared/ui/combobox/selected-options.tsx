@@ -1,5 +1,6 @@
 "use client";
 
+import { isPopulatedArray } from "@/shared/libs";
 import { Badge } from "@/shared/ui/badge";
 import { XCircle } from "lucide-react";
 
@@ -71,6 +72,12 @@ export const SelectedOptions = <T,>({
       )}
     </div>
   ) : (
-    getItemLabel(selected[0] as T)
+    <>
+      {isPopulatedArray(selected) ? (
+        <span className="truncate max-w-80">{getItemLabel(selected[0]!)}</span>
+      ) : (
+        <span className="opacity-50">{placeholder}</span>
+      )}
+    </>
   );
 };

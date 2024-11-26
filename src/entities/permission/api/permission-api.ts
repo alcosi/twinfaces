@@ -2,7 +2,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import {
   CreatePermissionRequestBody,
-  PermissionApiFilters,
+  PermissionFilters,
   UpdatePermissionRequestBody,
 } from "./types";
 
@@ -12,7 +12,7 @@ export function createPermissionApi(settings: ApiSettings) {
     filters,
   }: {
     pagination: PaginationState;
-    filters: PermissionApiFilters;
+    filters: PermissionFilters;
   }) {
     return settings.client.POST("/private/permission/search/v1", {
       params: {

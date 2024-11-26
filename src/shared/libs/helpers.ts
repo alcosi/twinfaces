@@ -43,6 +43,15 @@ export function wrapWithPercent(input: string): string {
   return `%${input}%`;
 }
 
+export function mergeUniqueStrings(
+  existing: string[],
+  incoming: string[]
+): string[] {
+  const existingSet = new Set(existing);
+  const uniqueIncoming = incoming.filter((item) => !existingSet.has(item));
+  return [...existing, ...uniqueIncoming];
+}
+
 export function mergeUniqueItems<T extends { id: string | number }>(
   existing: T[],
   incoming: T[]

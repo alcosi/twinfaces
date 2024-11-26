@@ -1,12 +1,9 @@
 "use client";
 
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import {
-  buildFilterFields,
-  mapToPermissionGroupApiFilters,
   PermissionGroup,
   PermissionGroup_DETAILED,
+  usePermissionGroupFilters,
   usePermissionGroupSearchV1,
 } from "@/entities/permissionGroup";
 import {
@@ -14,10 +11,11 @@ import {
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { mergeUniqueItems } from "@/shared/libs";
+import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 const colDefs: Record<
@@ -62,11 +60,10 @@ const colDefs: Record<
 };
 
 export function PermissionGroups() {
-  const [permissionGroups, setPermissionGroups] = useState<
-    PermissionGroup_DETAILED[]
-  >([]);
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissionGroups } = usePermissionGroupSearchV1();
+  const { buildFilterFields, mapFiltersToPayload } =
+    usePermissionGroupFilters();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -78,7 +75,7 @@ export function PermissionGroups() {
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<{ data: PermissionGroup_DETAILED[]; pageCount: number }> {
-    const _filters = mapToPermissionGroupApiFilters(filters.filters);
+    const _filters = mapFiltersToPayload(filters.filters);
 
     try {
       const response = await searchPermissionGroups({
@@ -87,8 +84,6 @@ export function PermissionGroups() {
       });
 
       const permissionGroups = response.data ?? [];
-      setPermissionGroups((prev) => mergeUniqueItems(prev, permissionGroups));
-
       return { data: permissionGroups, pageCount: 0 };
     } catch (e) {
       console.error("Failed to fetch permission groups", e);
@@ -111,7 +106,7 @@ export function PermissionGroups() {
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
       filters={{
-        filtersInfo: buildFilterFields(permissionGroups),
+        filtersInfo: buildFilterFields(),
         onChange: () => Promise.resolve(),
       }}
       defaultVisibleColumns={[

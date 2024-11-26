@@ -23,6 +23,7 @@ export function TwinStatusSelectField<T extends FieldValues>(props: Props<T>) {
     control: props.control,
     name: props.name,
   });
+  // TODO: Refactor after TWINFACES-207 - Combobox/select should fetch object value from field ID.
   const [initVals, setInitVals] = useState<TwinStatus[]>([]);
 
   useEffect(() => {

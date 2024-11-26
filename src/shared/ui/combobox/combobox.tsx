@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
 import {
   Command,
@@ -61,29 +61,17 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
             props.buttonClassName
           )}
         >
-          {props.multi ? (
-            <SelectedOptions
-              selected={selectedItems}
-              getItemKey={props.getItemKey}
-              getItemLabel={props.getItemLabel}
-              onChange={(newSelected) => {
-                setSelectedItems(newSelected);
-                props.onSelect?.(newSelected);
-              }}
-              placeholder={props.selectPlaceholder}
-              multi={props.multi}
-            />
-          ) : (
-            <>
-              {isPopulatedArray(selectedItems) ? (
-                <span className="truncate max-w-80">
-                  {props.getItemLabel(selectedItems[0]!)}
-                </span>
-              ) : (
-                <span className="opacity-50">{props.selectPlaceholder}</span>
-              )}
-            </>
-          )}
+          <SelectedOptions
+            selected={selectedItems}
+            getItemKey={props.getItemKey}
+            getItemLabel={props.getItemLabel}
+            onChange={(newSelected) => {
+              setSelectedItems(newSelected);
+              props.onSelect?.(newSelected);
+            }}
+            placeholder={props.selectPlaceholder}
+            multi={props.multi}
+          />
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

@@ -3,24 +3,29 @@ import {
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twinClass";
+import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import { useUserSelectAdapter } from "@/entities/user/libs";
 import {
   toArray,
   toArrayOfString,
   wrapWithPercent,
   type FilterFeature,
 } from "@/shared/libs";
+import { z } from "zod";
 import { TwinFilterKeys, TwinFilters } from "../../api";
-import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 
 export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
   const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
+  const uAdapter = useUserSelectAdapter();
 
   function buildFilterFields(): Record<TwinFilterKeys, AutoFormValueInfo> {
     return {
       twinIdList: {
-        type: AutoFormValueType.uuid,
+        type: AutoFormValueType.tag,
         label: "ID",
+        schema: z.string().uuid("Please enter a valid UUID"),
+        placeholder: "Enter UUID",
       },
       twinClassIdList: {
         type: AutoFormValueType.combobox,
@@ -41,18 +46,26 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
         multi: true,
       },
       twinNameLikeList: {
-        // TODO: replace with combobox
-        // via using useTwinSelectAdapter
-        type: AutoFormValueType.string,
+        type: AutoFormValueType.tag,
         label: "Name",
       },
       createdByUserIdList: {
-        type: AutoFormValueType.string,
-        label: "Author ID",
+        type: AutoFormValueType.combobox,
+        label: "Author",
+        getById: uAdapter.getById,
+        getItems: uAdapter.getItems,
+        getItemKey: uAdapter.getItemKey,
+        getItemLabel: uAdapter.getItemLabel,
+        multi: true,
       },
       assignerUserIdList: {
-        type: AutoFormValueType.string,
-        label: "Assigner ID",
+        type: AutoFormValueType.combobox,
+        label: "Assigner",
+        getById: uAdapter.getById,
+        getItems: uAdapter.getItems,
+        getItemKey: uAdapter.getItemKey,
+        getItemLabel: uAdapter.getItemLabel,
+        multi: true,
       },
       headTwinIdList: {
         type: AutoFormValueType.combobox,
