@@ -7,7 +7,7 @@ import {
 } from "@/components/form-fields/form-fields-common";
 import { ReactNode } from "react";
 import { FieldValues } from "react-hook-form";
-import {CheckboxProps} from "@radix-ui/react-checkbox";
+import { CheckboxProps } from "@radix-ui/react-checkbox";
 
 export function CheckboxFormField<T extends FieldValues>({
   name,

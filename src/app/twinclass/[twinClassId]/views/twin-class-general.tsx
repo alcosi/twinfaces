@@ -195,7 +195,7 @@ export function TwinClassGeneral() {
     },
   };
 
-  const nameSettings: InPlaceFieldProps = {
+  const nameSettings: InPlaceEditProps = {
     id: "name",
     value: twinClass.name,
     valueInfo: {
@@ -213,7 +213,7 @@ export function TwinClassGeneral() {
     },
   };
 
-  const descriptionSettings: InPlaceFieldProps = {
+  const descriptionSettings: InPlaceEditProps = {
     id: "description",
     value: twinClass.description,
     valueInfo: {
@@ -231,7 +231,7 @@ export function TwinClassGeneral() {
     },
   };
 
-  const abstractSettings: InPlaceFieldProps = {
+  const abstractSettings: InPlaceEditProps = {
     id: "abstract",
     value: twinClass.abstractClass,
     valueInfo: {
@@ -269,19 +269,19 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>
-              <InPlaceField {...nameSettings} />
+              <InPlaceEdit {...nameSettings} />
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Description</TableCell>
             <TableCell>
-              <InPlaceField {...descriptionSettings} />
+              <InPlaceEdit {...descriptionSettings} />
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Abstract</TableCell>
             <TableCell>
-              <InPlaceField {...abstractSettings} />
+              <InPlaceEdit {...abstractSettings} />
             </TableCell>
           </TableRow>
           <TableRow

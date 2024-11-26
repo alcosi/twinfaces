@@ -22,9 +22,7 @@ export function InPlaceEditContextProvider({
   }
 
   return (
-    <InPlaceEditContext.Provider
-      value={{ current, setCurrent, clearCurrent }}
-    >
+    <InPlaceEditContext.Provider value={{ current, setCurrent, clearCurrent }}>
       {children}
     </InPlaceEditContext.Provider>
   );
