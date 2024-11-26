@@ -22,7 +22,7 @@ import { ComboboxProps } from "@/shared/ui/combobox";
 import { Control, FieldPath } from "react-hook-form";
 import { TagsFormField, TagsFormItem } from "./form-fields/tags-form-field";
 import { TagBoxProps } from "@/shared/ui";
-import { InputProps } from "@/components/base/input";
+import { InputProps } from "@/shared/ui/input";
 
 export enum AutoFormValueType {
   string = "string",
