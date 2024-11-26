@@ -54,7 +54,6 @@ export default function CreateTwinflowDialog({
   });
 
   function onOpenChangeInternal(newOpen: boolean) {
-    console.log("CreateEditTwinFieldDialog onOpenChangeInternal", newOpen);
     if (!newOpen && form.formState.isSubmitting) {
       return;
     }
@@ -63,8 +62,6 @@ export default function CreateTwinflowDialog({
   }
 
   async function onSubmit(formValues: z.infer<typeof twinflowSchema>) {
-    console.log("CreateEditTwinflowDialog onSubmit", formValues);
-
     const { name, description, ...withoutI18 } = formValues;
 
     const requestBody: TwinFlowCreateRq = {

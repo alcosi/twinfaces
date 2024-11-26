@@ -44,7 +44,7 @@ interface CrudDataTableSearchProps {
 
 interface CrudDataTableFiltersProps<TFilterKeys extends string = string> {
   filtersInfo: Record<TFilterKeys, AutoFormValueInfo>;
-  onChange: (values: Record<TFilterKeys, any>) => Promise<any>;
+  onChange?: (values: Record<TFilterKeys, any>) => Promise<any>;
 }
 
 interface CrudDataTableCustomizableColumnsProps {
@@ -113,16 +113,14 @@ function CrudDataTableInternal<
 
   async function onFiltersChange(values: Record<TFilterKeys, any>) {
     setTableFilters(values);
-    filters?.onChange(values);
+    filters?.onChange?.(values);
   }
 
   function onVisibleColumnsChange(columns: string[]) {
-    console.log("onVisibleColumnsChange", columns);
     setVisibleColumnKeys(columns);
   }
 
   function onSortColumnsChange(columns: string[]) {
-    console.log("onSortColumnsChange", columns);
     setSortColumnKeys(columns);
   }
 
@@ -130,10 +128,6 @@ function CrudDataTableInternal<
     tableRef.current?.resetPage();
     refresh();
   }, [tableFilters]);
-
-  useEffect(() => {
-    console.log("visibleColumns", visibleColumnKeys);
-  }, [visibleColumnKeys]);
 
   const visibleColumns = useMemo(() => {
     return customizableColumns?.enabled
@@ -165,7 +159,6 @@ function CrudDataTableInternal<
                 className="flex flex-row space-x-1"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  console.log("submit");
                   tableRef.current?.refresh();
                 }}
               >
@@ -271,7 +264,6 @@ function FiltersPopover<TFilterKeys extends string = string>({
   });
 
   async function internalSubmit(newValue: Record<TFilterKeys, any>) {
-    console.log("submit", newValue);
     try {
       await onChange(newValue);
       setOpen(false);

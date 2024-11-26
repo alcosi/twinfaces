@@ -17,12 +17,8 @@ export function TextFormField<T extends FieldValues>({
   name,
   control,
   idPrefix,
-  label,
-  description,
-  suggestions,
-  disabled,
   ...props
-}: FormFieldProps<T> & TextFormFieldProps & InputProps) {
+}: FormFieldProps<T> & TextFormFieldProps & Omit<InputProps, "onChange">) {
   const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
   return (
     <FormField
@@ -35,11 +31,8 @@ export function TextFormField<T extends FieldValues>({
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
             inputId={inputId}
-            label={label}
-            description={description}
-            suggestions={suggestions}
             inForm={true}
-            disabled={disabled}
+            {...props}
           />
         );
       }}
@@ -60,7 +53,6 @@ export function TextFormItem<T extends FieldValues>({
 }: TextFormFieldProps &
   InputProps & {
     fieldValue?: string;
-    onChange?: (value?: T) => any;
     label?: ReactNode;
     description?: ReactNode;
     required?: boolean;

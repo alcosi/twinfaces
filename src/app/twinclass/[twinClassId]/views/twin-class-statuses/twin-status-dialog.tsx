@@ -74,7 +74,6 @@ export default function CreateEditTwinStatusDialog({
   const api = useContext(ApiContext);
 
   function onOpenChangeInternal(newOpen: boolean) {
-    console.log("CreateEditTwinStatusDialog onOpenChangeInternal", newOpen);
     if (!newOpen && form.formState.isSubmitting) {
       return;
     }
@@ -112,7 +111,6 @@ export default function CreateEditTwinStatusDialog({
   });
 
   async function onSubmit(formValues: z.infer<typeof twinStatusSchema>) {
-    console.log("CreateEditTwinStatusDialog onSubmit", formValues);
     setError(null);
 
     const data: TwinStatusCreateRq | TwinStatusUpdateRq = {

@@ -24,7 +24,6 @@ export function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
   });
 
   async function internalSubmit(newValue: object) {
-    console.log("submit", newValue);
     try {
       await onChange(newValue);
       setOpen(false);

@@ -22,7 +22,6 @@ export function TwinflowGeneral({
   async function updateTwinFlow(newFlow: TwinFlowUpdateRq) {
     try {
       await api.twinflow.update({ id: twinflow.id!, body: newFlow });
-      console.log("updated");
       onChange?.();
     } catch (e) {
       console.error(e);

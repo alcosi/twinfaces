@@ -63,7 +63,7 @@ export function CustomizableColumnsPopover({
       const newColumns = [...columns];
       newColumns.splice(oldIndex, 1);
       newColumns.splice(newIndex, 0, columns[oldIndex]!);
-      console.log("newColumns", newColumns);
+
       onSortChange(newColumns.map((column) => column.id));
     }
   }
