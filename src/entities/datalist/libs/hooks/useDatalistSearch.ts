@@ -30,7 +30,7 @@ export const useDatalistSearch = () => {
         return { data: [], pageCount: 0 };
       }
     },
-    [api]
+    [api],
   );
 
   return { searchDatalist };

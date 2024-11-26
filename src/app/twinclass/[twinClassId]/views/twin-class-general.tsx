@@ -69,7 +69,6 @@ export function TwinClassGeneral() {
     return data ?? [];
   }
 
-
   async function findById(id: string) {
     return (
       await fetchTwinClassById({
