@@ -1,2 +1,2 @@
-export * from './in-place-edit'
-export * from './in-place-edit-context'
+export * from "./in-place-edit";
+export * from "./in-place-edit-context";
