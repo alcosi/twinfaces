@@ -4,6 +4,9 @@
  */
 
 
+/** WithRequired type helpers */
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
 export interface paths {
   "/private/user/{userId}/v1": {
     /** Update user */
@@ -4421,8 +4424,23 @@ export interface components {
       /** @description discriminator */
       resultType: string;
       changeType: string;
-    } & components["schemas"]["TwinTransitionPerformRsV1"];
-    TwinTransitionPerformRsV1: {
+    } & (components["schemas"]["TwinTransitionPerformResultMinorRsV1"] | components["schemas"]["TwinTransitionPerformResultMajorRsV1"]);
+    TwinTransitionPerformResultMajorRsV1: WithRequired<{
+      resultType: "multiUserV1";
+    } & Omit<components["schemas"]["TwinTransitionPerformResultDTO"], "resultType"> & {
+      draft?: components["schemas"]["DraftV1"];
+    }, "resultType">;
+    TwinTransitionPerformResultMinorRsV1: WithRequired<{
+      resultType: "userV1";
+    } & Omit<components["schemas"]["TwinTransitionPerformResultDTO"], "resultType"> & {
+      /** @description list of twins from input */
+      transitionedTwinList?: components["schemas"]["TwinV2"][];
+      /** @description list of twins processed by transition (some new can be created or updated). Key is twinClassId */
+      processedTwinList?: {
+        [key: string]: components["schemas"]["TwinV2"][];
+      };
+    }, "resultType">;
+    TwinTransitionPerformRsV2: {
       /**
        * Format: int32
        * @description request processing status (see ErrorCode enum)
@@ -4441,6 +4459,31 @@ export interface components {
       statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       result?: components["schemas"]["TwinTransitionPerformResultDTO"];
+    };
+    TwinTransitionPerformRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description list of twins from input */
+      transitionedTwinList?: components["schemas"]["TwinV2"][];
+      /** @description list of twins processed by transition (some new can be created or updated). Key is twinClassId */
+      processedTwinList?: {
+        [key: string]: components["schemas"]["TwinV2"][];
+      };
     };
     TwinTransitionPerformBatchRqV1: {
       twinIdList?: string[];
@@ -8927,7 +8970,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -9080,7 +9123,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -9397,7 +9440,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -9550,7 +9593,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
@@ -9627,7 +9670,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
         };
       };
       /** @description Access is denied */
