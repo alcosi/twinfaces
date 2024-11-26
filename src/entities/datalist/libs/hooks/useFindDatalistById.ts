@@ -23,9 +23,8 @@ export const useFetchDatalistById = () => {
         throw new Error(`Failed to find datalist with ID ${id}`);
       }
     },
-    [api],
+    [api]
   );
 
   return { fetchDatalistById };
 };
-
