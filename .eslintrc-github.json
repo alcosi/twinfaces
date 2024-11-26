@@ -19,7 +19,8 @@
       "files": ["src/**/*"],
       "rules": {
         "no-unused-vars": "off",
-        "prettier/prettier": "warn"
+        "prettier/prettier": "warn",
+        "react-hooks/exhaustive-deps": "off"
       }
     }
   ]
