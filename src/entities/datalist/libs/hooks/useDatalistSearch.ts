@@ -9,13 +9,12 @@ export const useDatalistSearch = () => {
 
   const searchDatalist = useCallback(
     async ({
-             pagination = { pageIndex: 0, pageSize: 10 },
-             filters = {},
-           }: {
+      pagination = { pageIndex: 0, pageSize: 10 },
+      filters = {},
+    }: {
       pagination?: PaginationState;
       filters?: DatalistApiFilters;
     }): Promise<{ data: DataList[]; pageCount: number }> => {
-
       try {
         const response = await api.datalist.searchDatalist({
           pagination,
@@ -31,7 +30,7 @@ export const useDatalistSearch = () => {
         return { data: [], pageCount: 0 };
       }
     },
-    [api],
+    [api]
   );
 
   return { searchDatalist };

@@ -7,24 +7,24 @@ export const useFetchDatalistById = () => {
 
   const fetchDatalistById = useCallback(
     async ({
-             id,
-             query,
-           }: {
+      id,
+      query,
+    }: {
       id: string;
       query: operations["dataListPublicViewV1"]["parameters"]["query"];
     }): Promise<ReturnType<typeof api.datalist.getById>> => {
       try {
         return await api.datalist.getById({
-          id, query: query,
+          id,
+          query: query,
         });
       } catch (error) {
         console.error(`Failed to find datalist by ID: ${id}`, error);
         throw new Error(`Failed to find datalist with ID ${id}`);
       }
     },
-    [api],
+    [api]
   );
 
   return { fetchDatalistById };
 };
-

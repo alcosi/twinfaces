@@ -1,4 +1,3 @@
-import { TwinClassContext } from "@/app/twinclass/[twinClassId]/twin-class-context";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
@@ -7,6 +6,7 @@ import { FeaturerTypes } from "@/components/featurer-input";
 import {
   DataListV1,
   TwinClass_DETAILED,
+  TwinClassContext,
   TwinClassResourceLink,
   TwinClassUpdateRq,
   useFetchTwinClassById,
@@ -64,7 +64,6 @@ export function TwinClassGeneral() {
 
     return data ?? [];
   }
-
 
   async function findById(id: string) {
     return (
@@ -222,9 +221,10 @@ export function TwinClassGeneral() {
 
     tag: {
       value: {
-        tagsDataListId: twinClass.tagsDataListId && relatedObjects?.dataListsMap
-          ? relatedObjects.dataListsMap[twinClass.tagsDataListId]?.name
-          : "Select markers...",
+        tagsDataListId:
+          twinClass.tagsDataListId && relatedObjects?.dataListsMap
+            ? relatedObjects.dataListsMap[twinClass.tagsDataListId]?.name
+            : "Select markers...",
       },
       title: "Update tags",
       onSubmit: (values) => {
@@ -301,7 +301,7 @@ export function TwinClassGeneral() {
                   data={
                     relatedObjects.twinClassMap[
                       twinClass.headClassId
-                      ] as TwinClass_DETAILED
+                    ] as TwinClass_DETAILED
                   }
                   withTooltip
                 />
@@ -323,7 +323,7 @@ export function TwinClassGeneral() {
                   data={
                     relatedObjects.twinClassMap[
                       twinClass.extendsClassId
-                      ] as TwinClass_DETAILED
+                    ] as TwinClass_DETAILED
                   }
                   withTooltip
                 />
@@ -342,7 +342,7 @@ export function TwinClassGeneral() {
                   data={
                     relatedObjects.dataListsMap[
                       twinClass.markersDataListId
-                      ] as DataListV1
+                    ] as DataListV1
                   }
                   withTooltip
                 />
@@ -361,7 +361,7 @@ export function TwinClassGeneral() {
                   data={
                     relatedObjects.dataListsMap[
                       twinClass.tagsDataListId
-                      ] as DataListV1
+                    ] as DataListV1
                   }
                   withTooltip
                 />
@@ -371,7 +371,9 @@ export function TwinClassGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{new Date(twinClass.createdAt ?? "").toLocaleDateString()}</TableCell>
+            <TableCell>
+              {new Date(twinClass.createdAt ?? "").toLocaleDateString()}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
