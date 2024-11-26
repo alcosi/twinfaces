@@ -17,10 +17,10 @@ import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
 import {
-  InPlaceField,
-  InPlaceFieldProps,
-} from "@/features/inPlaceEdit/in-place-field";
-import { InPlaceEditContextProvider } from "@/features/inPlaceEdit/in-place-edit-context";
+  InPlaceEdit,
+  InPlaceEditProps,
+  InPlaceEditContextProvider,
+} from "@/features/inPlaceEdit";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
@@ -111,7 +111,7 @@ export function TwinClassGeneral() {
     },
   };
 
-  const nameSettings: InPlaceFieldProps = {
+  const nameSettings: InPlaceEditProps = {
     id: "name",
     value: twinClass.name,
     valueInfo: {
@@ -129,7 +129,7 @@ export function TwinClassGeneral() {
     },
   };
 
-  const descriptionSettings: InPlaceFieldProps = {
+  const descriptionSettings: InPlaceEditProps = {
     id: "description",
     value: twinClass.description,
     valueInfo: {
@@ -147,7 +147,7 @@ export function TwinClassGeneral() {
     },
   };
 
-  const abstractSettings: InPlaceFieldProps = {
+  const abstractSettings: InPlaceEditProps = {
     id: "abstract",
     value: twinClass.abstractClass,
     valueInfo: {
@@ -185,19 +185,19 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>
-              <InPlaceField {...nameSettings} />
+              <InPlaceEdit {...nameSettings} />
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Description</TableCell>
             <TableCell>
-              <InPlaceField {...descriptionSettings} />
+              <InPlaceEdit {...descriptionSettings} />
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Abstract</TableCell>
             <TableCell>
-              <InPlaceField {...abstractSettings} />
+              <InPlaceEdit {...abstractSettings} />
             </TableCell>
           </TableRow>
           <TableRow

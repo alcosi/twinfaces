@@ -8,11 +8,11 @@ import { Alert } from "@/shared/ui/alert";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/shared/ui/button";
-import { Check, Cross, Loader, LoaderCircle, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { LoadingSpinner } from "@/shared/ui/loading";
 import { InPlaceEditContext } from "./in-place-edit-context";
 
-export interface InPlaceFieldProps {
+export interface InPlaceEditProps {
   id: string;
   value: unknown;
   renderView?: (value: unknown) => ReactNode;
@@ -21,14 +21,14 @@ export interface InPlaceFieldProps {
   schema?: z.ZodType<any, any>;
 }
 
-export function InPlaceField({
+export function InPlaceEdit({
   id,
   value,
   renderView,
   valueInfo,
   onSubmit,
   schema,
-}: InPlaceFieldProps) {
+}: InPlaceEditProps) {
   const context = useContext(InPlaceEditContext);
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
