@@ -1,13 +1,14 @@
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type TF_Transition = components["schemas"]["TwinflowTransitionBaseV3"];
-export type TF_Transition_SHORT = RequireFields<
-  TF_Transition,
+export type TwinFlowTransition =
+  components["schemas"]["TwinflowTransitionBaseV3"];
+export type TwinFlowTransition_SHORT = RequireFields<
+  TwinFlowTransition,
   "id" | "alias" | "name" | "allowAttachments" | "allowComment" | "allowLinks"
 >;
-export type TF_Transition_DETAILED = RequireFields<
-  TF_Transition_SHORT,
+export type TwinFlowTransition_DETAILED = RequireFields<
+  TwinFlowTransition_SHORT,
   | "description"
   | "createdAt"
   | "createdByUserId"
@@ -21,16 +22,16 @@ export type TwinFlowTransitionCreateRq =
 export type TwinFlowTransitionUpdateRq =
   components["schemas"]["TransitionUpdateRqV1"];
 
-export type TwinFlowTransitionApiFilterFields =
+export type TwinFlowTransitionFilterKeys =
   | "twinflowIdList"
   | "aliasLikeList"
   | "srcStatusIdList"
   | "dstStatusIdList"
   | "permissionIdList";
-export type TwinFlowTransitionApiFilters = Partial<
+export type TwinFlowTransitionFilters = Partial<
   Pick<
     components["schemas"]["TransitionSearchRqV1"],
-    TwinFlowTransitionApiFilterFields
+    TwinFlowTransitionFilterKeys
   >
 >;
 

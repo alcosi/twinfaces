@@ -57,7 +57,7 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
           role="combobox"
           aria-expanded={isOpen}
           className={cn(
-            "flex w-auto min-w-[120px] h-auto min-h-10 justify-between truncate max-w-80",
+            "flex w-auto min-w-[120px] h-auto min-h-10 justify-between truncate",
             props.buttonClassName
           )}
         >

@@ -1,9 +1,8 @@
 "use client";
 
 import { TwinClassContext } from "@/entities/twinClass";
-import { TwinStatus } from "@/entities/twinStatus";
+import { TwinStatus, useFetchTwinStatusById } from "@/entities/twinStatus";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
@@ -19,8 +18,8 @@ interface TwinStatusPageProps {
 export default function TwinClassPage({
   params: { twinStatusId },
 }: TwinStatusPageProps) {
-  const api = useContext(ApiContext);
   const { twinClass } = useContext(TwinClassContext);
+  const { fetchTwinStatusById } = useFetchTwinStatusById();
   const [loading, setLoading] = useState<boolean>(false);
   const [twinStatus, setTwinStatus] = useState<TwinStatus | undefined>(
     undefined
@@ -53,19 +52,8 @@ export default function TwinClassPage({
     if (twinStatusId) {
       setLoading(true);
 
-      api.twinStatus
-        .getById({ twinStatusId })
-        .then((response) => {
-          const data = response.data;
-          if (!data || data.status != 0) {
-            console.error("failed to fetch twin class", data);
-            let message = "Failed to load twin class";
-            if (data?.msg) message += `: ${data.msg}`;
-            toast.error(message);
-            return;
-          }
-          setTwinStatus(data.twinStatus);
-        })
+      fetchTwinStatusById(twinStatusId)
+        .then(setTwinStatus)
         .catch((e) => {
           console.error("exception while fetching twin class", e);
           toast.error("Failed to fetch twin class");

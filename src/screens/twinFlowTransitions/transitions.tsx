@@ -1,26 +1,24 @@
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { PermissionResourceLink } from "@/entities/permission";
-import { TwinStatus, TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import {
-  buildFilterFields,
-  mapToTwinFlowTransitionApiFilters,
-  TF_Transition_DETAILED,
+  TwinFlowTransition,
+  TwinFlowTransition_DETAILED,
   TWIN_FLOW_TRANSITION_SCHEMA,
-  TF_Transition,
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFormValues,
   TwinFlowTransitionResourceLink,
   TwinFlowTransitionUpdateRq,
+  useTwinFlowTransitionFilters,
   useTwinFlowTransitionSearchV1,
 } from "@/entities/twinFlowTransition";
+import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { ApiContext } from "@/shared/api";
-import { mergeUniqueItems } from "@/shared/libs";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -35,7 +33,7 @@ function buildColumnDefs({
 }) {
   const colDefs: Record<
     keyof Pick<
-      TF_Transition,
+      TwinFlowTransition,
       | "id"
       | "alias"
       | "name"
@@ -45,7 +43,7 @@ function buildColumnDefs({
       | "permissionId"
       | "createdByUserId"
     >,
-    ColumnDef<TF_Transition>
+    ColumnDef<TwinFlowTransition>
   > = {
     id: {
       id: "id",
@@ -140,7 +138,8 @@ function buildColumnDefs({
 export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
   const colDefs = buildColumnDefs({ twinClassId, twinFlowId });
   const api = useContext(ApiContext);
-  const [transitions, setTransitions] = useState<TF_Transition_DETAILED[]>([]);
+  const { buildFilterFields, mapFiltersToPayload } =
+    useTwinFlowTransitionFilters(twinClassId);
   const { searchTwinFlowTransitions } = useTwinFlowTransitionSearchV1();
 
   const form = useForm<TwinFlowTransitionFormValues>({
@@ -159,8 +158,8 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
     async (
       pagination: PaginationState,
       filters: FiltersState
-    ): Promise<{ data: TF_Transition_DETAILED[]; pageCount: number }> => {
-      const _filters = mapToTwinFlowTransitionApiFilters(filters.filters);
+    ): Promise<{ data: TwinFlowTransition_DETAILED[]; pageCount: number }> => {
+      const _filters = mapFiltersToPayload(filters.filters);
 
       try {
         const response = await searchTwinFlowTransitions({
@@ -170,9 +169,6 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
             twinflowIdList: [twinFlowId],
           },
         });
-
-        const transitions = response.data ?? [];
-        setTransitions((prev) => mergeUniqueItems(prev, transitions));
 
         return response;
       } catch (error) {
@@ -252,7 +248,7 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
       filters={{
-        filtersInfo: buildFilterFields(transitions),
+        filtersInfo: buildFilterFields(),
         onChange: () => Promise.resolve(),
       }}
       defaultVisibleColumns={[
@@ -270,7 +266,10 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
       onCreateSubmit={handleCreate}
       onUpdateSubmit={handleUpdate}
       renderFormFields={() => (
-        <TwinFlowTransitionFormFields control={form.control} />
+        <TwinFlowTransitionFormFields
+          twinClassId={twinClassId}
+          control={form.control}
+        />
       )}
     />
   );

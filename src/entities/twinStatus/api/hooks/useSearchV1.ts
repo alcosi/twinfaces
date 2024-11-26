@@ -1,6 +1,6 @@
 import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
-import { TwinStatus } from "../../api";
+import { TwinStatus, TwinStatusFilters } from "../../api";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useTwinStatusSearchV1 = () => {
@@ -8,28 +8,20 @@ export const useTwinStatusSearchV1 = () => {
 
   const searchTwinStatuses = useCallback(
     async ({
-      twinClassId,
-      search,
+      filters,
     }: {
-      twinClassId?: string;
-      search?: string;
+      filters: TwinStatusFilters;
     }): Promise<{
       data: TwinStatus[];
       pageCount: number;
     }> => {
-      const { data, error } = await api.twinStatus.search({
-        twinClassId,
-        search,
-      });
+      const { data, error } = await api.twinStatus.search({ filters });
 
       if (error) {
         throw new Error("Failed to fetch statuses due to API error");
       }
 
-      const statuses =
-        Object.values(data.relatedObjects?.statusMap || {}) ?? [];
-
-      return { data: statuses, pageCount: 0 };
+      return { data: data.statuses ?? [], pageCount: 0 };
     },
     [api]
   );

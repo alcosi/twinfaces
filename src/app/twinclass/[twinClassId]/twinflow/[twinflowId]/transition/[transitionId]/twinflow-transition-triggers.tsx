@@ -1,5 +1,5 @@
 import {
-  TF_Transition,
+  TwinFlowTransition,
   TwinFlowTransitionTrigger,
 } from "@/entities/twinFlowTransition";
 import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
@@ -13,7 +13,7 @@ export function TwinflowTransitionTriggers({
   transition,
   onChange,
 }: {
-  transition: TF_Transition;
+  transition: TwinFlowTransition;
   onChange: () => any;
 }) {
   const tableRef = useRef<DataTableHandle>(null);

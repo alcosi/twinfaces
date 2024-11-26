@@ -4,7 +4,7 @@ import { ClassStatusView } from "@/components/class-status-view";
 import { PermissionResourceLink } from "@/entities/permission";
 import { TwinClassContext } from "@/entities/twinClass";
 import {
-  TF_Transition,
+  TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
 } from "@/entities/twinFlowTransition";
 import { ApiContext } from "@/shared/api";
@@ -16,7 +16,7 @@ export function TwinflowTransitionGeneral({
   transition,
   onChange,
 }: {
-  transition: TF_Transition;
+  transition: TwinFlowTransition;
   onChange: () => any;
 }) {
   const api = useContext(ApiContext);

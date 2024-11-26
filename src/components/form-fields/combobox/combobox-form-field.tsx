@@ -29,18 +29,21 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
-        <ComboboxFormItem
-          label={label}
-          description={description}
-          required={required}
-          buttonClassName={buttonClassName}
-          onSelect={field.onChange}
-          fieldValue={field.value}
-          inForm={true}
-          {...props}
-        />
-      )}
+      render={({ field }) => {
+        const _fieldValue = props.initialValues ?? field.value;
+        return (
+          <ComboboxFormItem
+            label={label}
+            description={description}
+            required={required}
+            buttonClassName={buttonClassName}
+            onSelect={field.onChange}
+            fieldValue={_fieldValue}
+            inForm={true}
+            {...props}
+          />
+        );
+      }}
     />
   );
 }

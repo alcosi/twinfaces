@@ -1,5 +1,9 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { TwinStatusCreateRq, TwinStatusUpdateRq } from "./types";
+import {
+  TwinStatusCreateRq,
+  TwinStatusFilters,
+  TwinStatusUpdateRq,
+} from "./types";
 
 export function createTwinStatusApi(settings: ApiSettings) {
   function create({
@@ -49,54 +53,19 @@ export function createTwinStatusApi(settings: ApiSettings) {
     });
   }
 
-  // NOTE: Emulating `/private/twin_status/search/v1`
-  // TODO: replace as per ${jira-task-link}
-  function search({
-    twinClassId,
-    search,
-  }: {
-    twinClassId?: string;
-    search?: string;
-  }) {
-    return settings.client
-      .POST("/private/twin_class/search/v1", {
-        params: {
-          header: getApiDomainHeaders(settings),
-          query: {
-            lazyRelation: false,
-            showTwinClassMode: "SHORT",
-            showTwinClass2StatusMode: "DETAILED",
-            limit: 10,
-            offset: 0,
-          },
+  function search({ filters }: { filters: TwinStatusFilters }) {
+    return settings.client.POST("/private/twin_status/search/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          showStatusMode: "DETAILED",
+          limit: 10,
+          offset: 0,
+          sortAsc: true,
         },
-        body: {
-          twinClassIdList: twinClassId ? [twinClassId] : [],
-        },
-      })
-      .then((response) => {
-        if (response.data?.relatedObjects?.statusMap) {
-          const lowerSearch = search?.toLowerCase() || "";
-          const record = response.data.relatedObjects.statusMap;
-
-          const newRecord = Object.entries(record).reduce(
-            (acc, [key, value]) => {
-              if (
-                value.key?.toLowerCase().includes(lowerSearch) ||
-                value.name?.toLowerCase().includes(lowerSearch)
-              ) {
-                acc[key] = value;
-              }
-              return acc;
-            },
-            {} as { [key: string]: any }
-          );
-
-          response.data.relatedObjects.statusMap = newRecord;
-        }
-
-        return response;
-      });
+      },
+      body: filters,
+    });
   }
 
   return { create, update, getById, search };

@@ -40,7 +40,6 @@ export const usePermissionGrantUserSearchV1 = () => {
         const totalItems = data.pagination?.total ?? 0;
         const pageCount = Math.ceil(totalItems / pagination.pageSize);
 
-        console.log("foobar DATA", data, error, pageCount);
         return { data: permissionGrantUsers, pageCount };
       } catch (error) {
         throw new Error(

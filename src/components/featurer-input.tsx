@@ -149,7 +149,7 @@ export function FeaturerInput({
           if (c.name) label += ` (${c.name})`;
           return label;
         }}
-        value={selected}
+        initialValues={selected ? [selected] : []}
         onSelect={onSelect}
         buttonClassName={buttonClassName}
       />
