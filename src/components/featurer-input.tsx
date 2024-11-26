@@ -101,8 +101,8 @@ export function FeaturerInput({
     return response.data?.featurerList ?? [];
   }
 
-  function onSelect(newFeaturer?: Featurer) {
-    setSelected(newFeaturer);
+  function onSelect(newFeaturers?: Featurer[]) {
+    setSelected(newFeaturers?.[0]);
     setParams({});
   }
 

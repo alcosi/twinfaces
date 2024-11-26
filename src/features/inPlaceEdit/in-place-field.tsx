@@ -2,15 +2,15 @@
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
 import { z } from "zod";
-import {ReactNode, useContext, useEffect, useState} from "react";
-import { Form } from "@/components/base/form";
-import { Alert } from "@/components/base/alert";
+import { ReactNode, useContext, useEffect, useState } from "react";
+import { Form } from "@/shared/ui/form";
+import { Alert } from "@/shared/ui/alert";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/base/button";
+import { Button } from "@/shared/ui/button";
 import { Check, Cross, Loader, LoaderCircle, X } from "lucide-react";
-import { LoadingSpinner } from "@/components/base/loading";
-import {InPlaceEditContext} from "@/features/inPlaceEdit/in-place-edit-context";
+import { LoadingSpinner } from "@/shared/ui/loading";
+import { InPlaceEditContext } from "./in-place-edit-context";
 
 export interface InPlaceFieldProps {
   id: string;

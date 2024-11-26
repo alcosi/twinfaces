@@ -53,7 +53,6 @@ export function TextFormItem<T extends FieldValues>({
 }: TextFormFieldProps &
   InputProps & {
     fieldValue?: string;
-    onChange?: (value?: T) => any;
     label?: ReactNode;
     description?: ReactNode;
     required?: boolean;
