@@ -17,10 +17,10 @@ import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
 import {
-  InPlaceField,
-  InPlaceFieldProps,
-} from "@/features/inPlaceEdit/in-place-field";
-import { InPlaceEditContextProvider } from "@/features/inPlaceEdit/in-place-edit-context";
+  InPlaceEdit,
+  InPlaceEditProps,
+  InPlaceEditContextProvider,
+} from "@/features/inPlaceEdit";
 import { useFetchDatalistById } from "@/entities/datalist/libs/hooks";
 import { useDatalistSearch } from "@/entities/datalist/libs/hooks/useDatalistSearch";
 
