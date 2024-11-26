@@ -16,6 +16,8 @@ import { ApiContext } from "@/shared/api";
 import { useContext, useState } from "react";
 import { z } from "zod";
 import { DatalistResourceLink } from "@/entities/datalist";
+import { useFetchDatalistById } from "@/entities/datalist/libs/hooks";
+import { useDatalistSearch } from "@/entities/datalist/libs/hooks/useDatalistSearch";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
@@ -26,6 +28,8 @@ export function TwinClassGeneral() {
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
   const { fetchTwinClassById } = useFetchTwinClassById();
+  const { searchDatalist } = useDatalistSearch();
+  const { fetchDatalistById } = useFetchDatalistById();
 
   async function updateTwinClass(newClass: TwinClassUpdateRq) {
     if (!twinClass) {
@@ -52,6 +56,16 @@ export function TwinClassGeneral() {
     return data ?? [];
   }
 
+  async function fetchDatalists(search: string) {
+    const { data } = await searchDatalist({
+      pagination: { pageIndex: 0, pageSize: 10 },
+      filters: { nameLikeList: ["%" + search + "%"] },
+    });
+
+    return data ?? [];
+  }
+
+
   async function findById(id: string) {
     return (
       await fetchTwinClassById({
@@ -62,6 +76,18 @@ export function TwinClassGeneral() {
         },
       })
     ).data?.twinClass;
+  }
+
+  async function findDatalistById(id: string) {
+    return (
+      await fetchDatalistById({
+        id,
+        query: {
+          showDataListMode: "DETAILED",
+          showDataListOptionMode: "DETAILED",
+        },
+      })
+    ).data?.dataList;
   }
 
   if (!twinClass) {
@@ -99,6 +125,7 @@ export function TwinClassGeneral() {
         },
       },
     },
+
     description: {
       value: { description: twinClass.description },
       title: "Update description",
@@ -114,6 +141,7 @@ export function TwinClassGeneral() {
         },
       },
     },
+
     abstractClass: {
       value: { abstractClass: twinClass.abstractClass },
       title: "Update abstract",
@@ -127,6 +155,7 @@ export function TwinClassGeneral() {
         },
       },
     },
+
     head: {
       value: {
         headClassId: twinClass.headClassId,
@@ -159,6 +188,63 @@ export function TwinClassGeneral() {
           label: "Head hunter featurer",
           paramsName: "headHunterParams",
           typeId: FeaturerTypes.headHunter,
+        },
+      },
+    },
+
+    marker: {
+      value: {
+        markersDataListId: twinClass.markersDataListId,
+      },
+      title: "Update markers",
+      onSubmit: (values) => {
+        return updateTwinClass({
+          markerDataListUpdate: {
+            newId: values.markerId,
+            onUnreplacedStrategy: "delete",
+          },
+        });
+      },
+      valuesInfo: {
+        markersDataListId: {
+          type: AutoFormValueType.combobox,
+          label: "Markers",
+          getById: findDatalistById,
+          getItems: fetchDatalists,
+          getItemKey: (c) => c?.id?.toLowerCase() ?? "",
+          selectPlaceholder: "Select markers...",
+          getItemLabel: (c) => {
+            return c?.name;
+          },
+        },
+      },
+    },
+
+    tag: {
+      value: {
+        tagsDataListId: twinClass.tagsDataListId && relatedObjects?.dataListsMap
+          ? relatedObjects.dataListsMap[twinClass.tagsDataListId]?.name
+          : "Select markers...",
+      },
+      title: "Update tags",
+      onSubmit: (values) => {
+        return updateTwinClass({
+          tagDataListUpdate: {
+            newId: values.markerId,
+            onUnreplacedStrategy: "delete",
+          },
+        });
+      },
+      valuesInfo: {
+        tagsDataListId: {
+          type: AutoFormValueType.combobox,
+          label: "Tags",
+          getById: findDatalistById,
+          getItems: fetchDatalists,
+          getItemKey: (c) => c?.id?.toLowerCase() ?? "",
+          getItemLabel: (c) => {
+            return c?.name;
+          },
         },
       },
     },
@@ -215,7 +301,7 @@ export function TwinClassGeneral() {
                   data={
                     relatedObjects.twinClassMap[
                       twinClass.headClassId
-                    ] as TwinClass_DETAILED
+                      ] as TwinClass_DETAILED
                   }
                   withTooltip
                 />
@@ -237,7 +323,7 @@ export function TwinClassGeneral() {
                   data={
                     relatedObjects.twinClassMap[
                       twinClass.extendsClassId
-                    ] as TwinClass_DETAILED
+                      ] as TwinClass_DETAILED
                   }
                   withTooltip
                 />
@@ -247,13 +333,16 @@ export function TwinClassGeneral() {
 
           <TableRow>
             <TableCell>Markers</TableCell>
-            <TableCell>
+            <TableCell
+              className={"cursor-pointer"}
+              onClick={() => openWithSettings(classValues.marker!)}
+            >
               {twinClass.markersDataListId && relatedObjects?.dataListsMap && (
                 <DatalistResourceLink
                   data={
                     relatedObjects.dataListsMap[
                       twinClass.markersDataListId
-                    ] as DataListV1
+                      ] as DataListV1
                   }
                   withTooltip
                 />
@@ -263,13 +352,16 @@ export function TwinClassGeneral() {
 
           <TableRow>
             <TableCell>Tags</TableCell>
-            <TableCell>
+            <TableCell
+              className={"cursor-pointer"}
+              onClick={() => openWithSettings(classValues.tag!)}
+            >
               {twinClass.tagsDataListId && relatedObjects?.dataListsMap && (
                 <DatalistResourceLink
                   data={
                     relatedObjects.dataListsMap[
                       twinClass.tagsDataListId
-                    ] as DataListV1
+                      ] as DataListV1
                   }
                   withTooltip
                 />
@@ -279,7 +371,7 @@ export function TwinClassGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{twinClass.createdAt}</TableCell>
+            <TableCell>{new Date(twinClass.createdAt ?? "").toLocaleDateString()}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
