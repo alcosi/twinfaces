@@ -1,5 +1,6 @@
 import {
   CreatePermissionRequestBody,
+  Permission_DETAILED,
   PERMISSION_SCHEMA,
   PermissionFormValues,
   UpdatePermissionRequestBody,
@@ -9,7 +10,7 @@ import {
 } from "@/entities/permission";
 import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
@@ -84,7 +85,7 @@ export function Permissions() {
   async function fetchPermissions(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<{ data: Permission[]; pageCount: number }> {
+  ): Promise<PagedResponse<Permission_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
@@ -97,7 +98,7 @@ export function Permissions() {
     } catch (e) {
       console.error("Failed to fetch permissions", e);
       toast.error("Failed to fetch permissions");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

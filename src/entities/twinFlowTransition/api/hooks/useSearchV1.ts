@@ -1,4 +1,4 @@
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 import { hydrateTwinFlowTransitionFromMap } from "../../libs";
@@ -19,7 +19,7 @@ export const useTwinFlowTransitionSearchV1 = () => {
     search?: string;
     pagination?: PaginationState;
     filters?: TwinFlowTransitionFilters;
-  }): Promise<{ data: TwinFlowTransition_DETAILED[]; pageCount: number }> {
+  }): Promise<PagedResponse<TwinFlowTransition_DETAILED>> {
     try {
       const { data, error } = await api.twinFlowTransition.search({
         search,
@@ -37,10 +37,7 @@ export const useTwinFlowTransitionSearchV1 = () => {
           hydrateTwinFlowTransitionFromMap(dto, data.relatedObjects)
         ) ?? [];
 
-      const totalItems = data.pagination?.total ?? 0;
-      const pageCount = Math.ceil(totalItems / pagination.pageSize);
-
-      return { data: transitions, pageCount };
+      return { data: transitions, pagination: data.pagination ?? {} };
     } catch (error) {
       throw new Error("An error occurred while fetching transitions");
     }

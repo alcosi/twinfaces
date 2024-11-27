@@ -1,4 +1,3 @@
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
 import {
   PermissionGrantUser,
@@ -7,7 +6,9 @@ import {
   UserResourceLink,
 } from "@/entities/user";
 import { PermissionContext } from "@/features/permission";
+import { PagedResponse } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
+import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
@@ -64,7 +65,7 @@ export function UsersTable() {
   async function fetchData(
     pagination: PaginationState
     // filters: FiltersState
-  ): Promise<{ data: PermissionGrantUser_DETAILED[]; pageCount: number }> {
+  ): Promise<PagedResponse<PermissionGrantUser_DETAILED>> {
     try {
       const response = await searchPermissionGrantUsers({
         pagination,
@@ -77,7 +78,7 @@ export function UsersTable() {
     } catch (e) {
       console.error("Failed to fetch permission groups", e);
       toast.error("Failed to fetch permissions");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

@@ -11,6 +11,7 @@ import {
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Experimental_CrudDataTable } from "@/widgets";
@@ -74,7 +75,7 @@ export function PermissionGroups() {
   async function fetchData(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<{ data: PermissionGroup_DETAILED[]; pageCount: number }> {
+  ): Promise<PagedResponse<PermissionGroup_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
@@ -83,12 +84,11 @@ export function PermissionGroups() {
         filters: _filters,
       });
 
-      const permissionGroups = response.data ?? [];
-      return { data: permissionGroups, pageCount: 0 };
+      return response;
     } catch (e) {
       console.error("Failed to fetch permission groups", e);
       toast.error("Failed to fetch permissions");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

@@ -1,13 +1,12 @@
 "use client";
 
+import { PagedResponse, PaginationV1 } from "@/shared/api";
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
+  cn,
+  fixedForwardRef,
+  Identifiable,
+  isPopulatedArray,
+} from "@/shared/libs";
 import { DataTablePagination } from "@/shared/ui/data-table/data-table-pagination";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import {
@@ -19,13 +18,15 @@ import {
   TableRow,
 } from "@/shared/ui/table";
 import {
-  cn,
-  fixedForwardRef,
-  Identifiable,
-  isPopulatedArray,
-} from "@/shared/libs";
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import {
   getExpandedRowModel,
+  isFunction,
   PaginationState,
   Row,
 } from "@tanstack/table-core";
@@ -34,6 +35,7 @@ import React, {
   ForwardedRef,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useState,
 } from "react";
 
@@ -52,9 +54,7 @@ export interface DataTableRow<TData> extends Object, Identifiable {
 export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
   columns: ColumnDef<TData, TValue>[];
   getRowId: (row: TData, index: number) => string;
-  fetcher: (
-    pagination: PaginationState
-  ) => Promise<{ data: TData[]; pageCount: number }>;
+  fetcher: (pagination: PaginationState) => Promise<PagedResponse<TData>>;
   disablePagination?: boolean;
   pageSizes?: number[];
   onFetchError?: (e: Error) => any;
@@ -69,7 +69,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     getRowId,
     fetcher,
     disablePagination,
-    pageSizes,
+    pageSizes = [10, 25, 50],
     onFetchError,
     onRowClick,
   }: DataTableProps<TData, TValue>,
@@ -77,11 +77,25 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
 ) {
   const [data, setData] = useState<TData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: pageSizes?.[0] ?? 10,
+  const [pagination, setPagination] = useState<{
+    tanstask: PaginationState;
+    api: PaginationV1;
+  }>({
+    tanstask: {
+      pageIndex: 0,
+      pageSize: pageSizes[0]!,
+    },
+    api: {
+      offset: 0,
+      limit: 0,
+      total: 0,
+    },
   });
-  const [pageCount, setPageCount] = useState<number>(0);
+
+  const pageCount = useMemo(() => {
+    if (!pagination.api?.limit || !pagination.api?.total) return 0;
+    return Math.ceil(pagination.api.total / pagination.api.limit);
+  }, [pagination.api]);
 
   const table = useReactTable<TData>({
     data,
@@ -93,12 +107,16 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     manualPagination: true,
     pageCount: pageCount,
     state: {
-      pagination: pagination,
+      pagination: pagination.tanstask,
     },
     onPaginationChange: (updater) => {
-      const nextState =
-        typeof updater === "function" ? updater(pagination) : updater;
-      setPagination(nextState);
+      const nextState = isFunction(updater)
+        ? updater(pagination.tanstask)
+        : updater;
+      setPagination({
+        api: pagination.api,
+        tanstask: nextState,
+      });
     },
     // NOTE: Options for ExpandableRows
     getSubRows: (row) => row.subRows || [],
@@ -120,10 +138,13 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   function fetchData() {
     setLoading(true);
-    fetcher(pagination)
-      .then(({ data, pageCount }) => {
+    fetcher(pagination.tanstask)
+      .then(({ data, pagination }) => {
         setData(data);
-        setPageCount(pageCount);
+        setPagination((prev) => ({
+          tanstask: prev.tanstask,
+          api: pagination ?? prev.api,
+        }));
       })
       .catch((error) => {
         onFetchError?.(error);
@@ -139,7 +160,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   useEffect(() => {
     fetchData();
-  }, [pagination]);
+  }, [pagination.tanstask]);
 
   function renderRow(row: Row<TData>) {
     return (
@@ -242,7 +263,11 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
         {loading && <LoadingOverlay />}
       </div>
       {!disablePagination && (
-        <DataTablePagination table={table} pageSizes={pageSizes} />
+        <DataTablePagination
+          table={table}
+          pageSizes={pageSizes}
+          pageState={pagination.api}
+        />
       )}
     </div>
   );

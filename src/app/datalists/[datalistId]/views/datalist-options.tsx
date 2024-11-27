@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef } from "@tanstack/table-core";
 import { toast } from "sonner";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { DataListOption } from "@/entities/datalist";
 import { DatalistContext } from "@/app/datalists/[datalistId]/datalist-context";
@@ -28,13 +28,10 @@ export const DatalistOptions = () => {
     ]);
   }, [datalist?.name, datalistId]);
 
-  async function fetchDataList(): Promise<{
-    data: DataListOption[];
-    pageCount: number;
-  }> {
+  async function fetchDataList(): Promise<PagedResponse<DataListOption>> {
     if (!datalist?.id) {
       toast.error("Datalist ID is missing");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
 
     try {
@@ -86,11 +83,11 @@ export const DatalistOptions = () => {
         },
       ]);
 
-      return { data: datalist, pageCount: 0 };
+      return { data: datalist, pagination: {} };
     } catch (e) {
       console.error("Failed to fetch datalists", e);
       toast.error("Failed to fetch datalists");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 
