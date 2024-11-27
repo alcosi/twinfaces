@@ -1,6 +1,8 @@
 "use client";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
+import { PagedResponse } from "@/shared/api";
+import { cn, fixedForwardRef } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
 import { CustomizableColumnsPopover } from "@/shared/ui/data-table/crud-data-table-columns-popover";
 import {
@@ -13,7 +15,6 @@ import { Form } from "@/shared/ui/form";
 import { Input } from "@/shared/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Separator } from "@/shared/ui/separator";
-import { cn, fixedForwardRef } from "@/shared/libs";
 import { PaginationState } from "@tanstack/table-core";
 import { FilterIcon, RefreshCw, Search } from "lucide-react";
 import {
@@ -60,7 +61,7 @@ interface CrudDataTableProps<
   fetcher: (
     pagination: PaginationState,
     filters: FiltersState<TFilterKeys>
-  ) => Promise<{ data: TData[]; pageCount: number }>;
+  ) => Promise<PagedResponse<TData>>;
   title?: string;
   createButton?: CrudDataTableCreateButtonProps;
   search?: CrudDataTableSearchProps;
@@ -70,6 +71,11 @@ interface CrudDataTableProps<
   className?: string;
 }
 
+/**
+ * @deprecated
+ * The `CrudDataTable` should not be used in new code.
+ * Use `Experimental_CrudDataTable` instead.
+ */
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
 
 function CrudDataTableInternal<

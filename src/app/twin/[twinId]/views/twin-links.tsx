@@ -1,5 +1,5 @@
 import { TwinLinkView } from "@/entities/twin";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import {
   CrudDataTable,
   FiltersState,
@@ -53,10 +53,10 @@ export function TwinLinks() {
     type: "forward" | "backward",
     _: PaginationState,
     filters: FiltersState
-  ) {
+  ): Promise<PagedResponse<TwinLinkView>> {
     if (!twin?.id) {
       toast.error("Twin ID is missing");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
 
     try {
@@ -68,7 +68,7 @@ export function TwinLinks() {
         let message = "Failed to load twin links";
         if (data?.msg) message += `: ${data.msg}`;
         toast.error(message);
-        return { data: [], pageCount: 0 };
+        return { data: [], pagination: {} };
       }
 
       const linksData = data?.twin?.links
@@ -81,12 +81,12 @@ export function TwinLinks() {
 
       return {
         data: linksData,
-        pageCount: 0,
+        pagination: {},
       };
     } catch (e) {
       console.error(`Failed to fetch twin ${type} links`, e);
       toast.error(`Failed to fetch twin ${type} links`);
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

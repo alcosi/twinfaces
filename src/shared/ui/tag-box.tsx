@@ -84,41 +84,39 @@ export const TagBox = fixedForwardRef(function Component<T>(
   }
 
   return (
-    <div>
-      <div
-        className={cn(
-          "flex flex-wrap items-center gap-1 rounded-md bg-background p-2",
-          className
-        )}
-      >
-        {validationError && (
-          <p className="text-destructive text-xs italic mt-1">
-            {validationError}
-          </p>
-        )}
-        <Input
-          value={inputValue}
-          onChange={handleOnChange}
-          onKeyDown={handleKeyDown}
-          onBlur={addInputAsTag}
-          placeholder={placeholder}
-        />
-        {Array.from(tags).map((tag, _) => (
-          <Badge
-            key={String(tag)}
-            className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
-          >
-            <span className="truncate max-w-[130px] mr-2">{String(tag)}</span>
-            <XCircle
-              className="h-4 w-4 cursor-pointer"
-              onClick={(event) => {
-                event.stopPropagation();
-                removeTag(tag);
-              }}
-            />
-          </Badge>
-        ))}
-      </div>
+    <div
+      className={cn(
+        "flex flex-wrap items-center gap-1 rounded-md bg-background mt-2",
+        className
+      )}
+    >
+      {validationError && (
+        <p className="text-destructive text-xs italic mt-1">
+          {validationError}
+        </p>
+      )}
+      <Input
+        value={inputValue}
+        onChange={handleOnChange}
+        onKeyDown={handleKeyDown}
+        onBlur={addInputAsTag}
+        placeholder={placeholder}
+      />
+      {Array.from(tags).map((tag, _) => (
+        <Badge
+          key={String(tag)}
+          className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
+        >
+          <span className="truncate max-w-[130px] mr-2">{String(tag)}</span>
+          <XCircle
+            className="h-4 w-4 cursor-pointer"
+            onClick={(event) => {
+              event.stopPropagation();
+              removeTag(tag);
+            }}
+          />
+        </Badge>
+      ))}
     </div>
   );
 });

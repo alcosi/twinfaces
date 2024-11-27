@@ -1,11 +1,11 @@
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+import { hydratePermissionGrantUserGroupFromMap } from "../../libs";
 import {
   PermissionGrantUserGroup_DETAILED,
   PermissionGrantUserGroupFilters,
 } from "../types";
-import { hydratePermissionGrantUserGroupFromMap } from "../../libs";
 
 // TODO: Apply caching-strategy
 export const usePermissionGrantUserGroupSearchV1 = () => {
@@ -18,10 +18,7 @@ export const usePermissionGrantUserGroupSearchV1 = () => {
     }: {
       pagination?: PaginationState;
       filters?: PermissionGrantUserGroupFilters;
-    }): Promise<{
-      data: PermissionGrantUserGroup_DETAILED[];
-      pageCount: number;
-    }> => {
+    }): Promise<PagedResponse<PermissionGrantUserGroup_DETAILED>> => {
       try {
         const { data, error } = await api.userGroup.searchPermissionGrants({
           pagination,
@@ -37,10 +34,10 @@ export const usePermissionGrantUserGroupSearchV1 = () => {
             hydratePermissionGrantUserGroupFromMap(dto, data.relatedObjects)
           ) ?? [];
 
-        const totalItems = data.pagination?.total ?? 0;
-        const pageCount = Math.ceil(totalItems / pagination.pageSize);
-
-        return { data: permissionGrantUserGroups, pageCount };
+        return {
+          data: permissionGrantUserGroups,
+          pagination: data.pagination ?? {},
+        };
       } catch (error) {
         throw new Error(
           "An error occurred while fetching permission grant user groups"

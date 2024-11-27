@@ -11,7 +11,7 @@ import {
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
@@ -162,7 +162,7 @@ export default function TwinClasses() {
   async function fetchTwinClasses(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<{ data: TwinClass_DETAILED[]; pageCount: number }> {
+  ): Promise<PagedResponse<TwinClass_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
@@ -172,7 +172,7 @@ export default function TwinClasses() {
       });
     } catch (error) {
       toast.error("Failed to fetch twin classes");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

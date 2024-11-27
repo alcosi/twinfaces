@@ -15,7 +15,7 @@ import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
 import { TwinContext } from "../twin-context";
 
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { CircleUserRound, EllipsisVertical } from "lucide-react";
 
 const columns: ColumnDef<CommentView>[] = [
@@ -50,10 +50,13 @@ export function TwinComments() {
 
   const [commentsData, setCommentsData] = useState<CommentView[]>();
 
-  async function fetchComments(_: PaginationState, filters: FiltersState) {
+  async function fetchComments(
+    _: PaginationState,
+    filters: FiltersState
+  ): Promise<PagedResponse<CommentView>> {
     if (!twin?.id) {
       toast.error("Twin ID is missing");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
 
     try {
@@ -65,17 +68,17 @@ export function TwinComments() {
         let message = "Failed to load twin comments";
         if (data?.msg) message += `: ${data.msg}`;
         toast.error(message);
-        return { data: [], pageCount: 0 };
+        return { data: [], pagination: {} };
       }
       setCommentsData(data?.comments);
       return {
         data: data?.comments || [],
-        pageCount: 0,
+        pagination: {},
       };
     } catch (e) {
       console.error(`Failed to fetch twin comments`, e);
       toast.error(`Failed to fetch twin comments`);
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

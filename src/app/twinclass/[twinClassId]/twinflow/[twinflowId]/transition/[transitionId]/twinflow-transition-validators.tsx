@@ -44,7 +44,7 @@ export function TwinflowTransitionValidators({
   function getValidators() {
     return Promise.resolve({
       data: Object.values(transition.validatorRules ?? {}),
-      pageCount: 0,
+      pagination: {},
     });
   }
 

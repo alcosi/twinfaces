@@ -11,7 +11,7 @@ import {
   UpdateLinkRequestBody,
 } from "@/entities/twinClassLink";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { Badge } from "@/shared/ui/badge";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -136,10 +136,13 @@ export function TwinClassLinks() {
     },
   });
 
-  async function fetchLinks(type: "forward" | "backward", _: PaginationState) {
+  async function fetchLinks(
+    type: "forward" | "backward",
+    _: PaginationState
+  ): Promise<PagedResponse<TwinClassLink>> {
     if (!twinClass?.id) {
       toast.error("Twin class ID is missing");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
 
     try {
@@ -153,7 +156,7 @@ export function TwinClassLinks() {
         let message = "Failed to load twin class links";
         if (data?.msg) message += `: ${data.msg}`;
         toast.error(message);
-        return { data: [], pageCount: 0 };
+        return { data: [], pagination: {} };
       }
 
       return {
@@ -168,12 +171,12 @@ export function TwinClassLinks() {
                   isBackward: true,
                 })
               ),
-        pageCount: 0,
+        pagination: {},
       };
     } catch (e) {
       console.error(`Failed to fetch twin class ${type} links`, e);
       toast.error(`Failed to fetch twin class ${type} links`);
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 
