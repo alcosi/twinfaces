@@ -19,7 +19,7 @@ export const DatalistResourceLink = ({
 
   return (
     <ResourceLink
-      IconComponent={() => (data ? <ListTree size={20} /> : "N/A")}
+      IconComponent={ListTree}
       data={data}
       disabled={disabled}
       renderTooltip={
