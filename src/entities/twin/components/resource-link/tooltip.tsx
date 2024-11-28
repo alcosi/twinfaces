@@ -1,3 +1,7 @@
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { isPopulatedString } from "@/shared/libs";
@@ -20,6 +24,13 @@ export function TwinResourceTooltip({ data, link }: Props) {
 
       <ResourceLinkTooltip.Main>
         {data.description && <p>{data.description}</p>}
+        {data.twinClass && (
+          <ResourceLinkTooltip.Item title="Class">
+            <TwinClassResourceLink
+              data={data.twinClass as TwinClass_DETAILED}
+            />
+          </ResourceLinkTooltip.Item>
+        )}
         {data.status && (
           <ResourceLinkTooltip.Item title="Status">
             <TwinClassStatusResourceLink
