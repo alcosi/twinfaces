@@ -12,7 +12,7 @@ import {
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { ApiContext } from "@/shared/api";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
@@ -259,7 +259,7 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell width={300}>ID</TableCell>
             <TableCell>
-              <ShortGuidWithCopy value={twinClass.id} />
+              <GuidWithCopy value={twinClass.id} variant="long" />
             </TableCell>
           </TableRow>
           <TableRow>

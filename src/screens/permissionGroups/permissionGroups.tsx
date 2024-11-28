@@ -14,7 +14,7 @@ import {
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useEffect } from "react";
@@ -28,7 +28,7 @@ const colDefs: Record<
     id: "id",
     accessorKey: "id",
     header: "Id",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   key: {
     id: "key",

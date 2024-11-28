@@ -1,4 +1,4 @@
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { PermissionContext } from "@/features/permission";
 import { useContext } from "react";
@@ -12,7 +12,7 @@ export function GeneralSection() {
         <TableRow>
           <TableCell>ID</TableCell>
           <TableCell>
-            <ShortGuidWithCopy value={permission.id} />
+            <GuidWithCopy value={permission.id} variant="long" />
           </TableCell>
         </TableRow>
         <TableRow>

@@ -7,7 +7,7 @@ import {
 } from "@/entities/twinClass";
 import { User, UserResourceLink } from "@/entities/user";
 import { ApiContext } from "@/shared/api";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
@@ -70,7 +70,7 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>
-              <ShortGuidWithCopy value={twin.id} />
+              <GuidWithCopy value={twin.id} variant="long" />
             </TableCell>
           </TableRow>
 

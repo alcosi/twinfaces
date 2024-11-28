@@ -1,5 +1,5 @@
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { PermissionResourceLink } from "@/entities/permission";
 import {
   TwinFlowTransition,
@@ -49,7 +49,7 @@ function buildColumnDefs({
       id: "id",
       accessorKey: "id",
       header: "ID",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
     },
     alias: {
       id: "alias",

@@ -8,7 +8,7 @@ import {
 } from "@/entities/twinStatus";
 import { ApiContext } from "@/shared/api";
 import { ColorPicker } from "@/shared/ui/color-picker";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 
@@ -121,7 +121,7 @@ export function TwinStatusGeneral({
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>
-              <ShortGuidWithCopy value={status.id} />
+              <GuidWithCopy value={status.id} variant="long" />
             </TableCell>
           </TableRow>
 

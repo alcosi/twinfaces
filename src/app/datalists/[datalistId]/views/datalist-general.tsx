@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { DatalistContext } from "../datalist-context";
 import {
-  ShortGuidWithCopy,
+  GuidWithCopy,
   Table,
   TableBody,
   TableCell,
@@ -34,7 +34,7 @@ export function DatalistGeneral() {
         <TableRow>
           <TableCell>ID</TableCell>
           <TableCell>
-            <ShortGuidWithCopy value={datalist?.id} />
+            <GuidWithCopy value={datalist?.id} variant="long" />
           </TableCell>
         </TableRow>
 

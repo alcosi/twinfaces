@@ -14,7 +14,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -65,7 +65,7 @@ const colDefs: Record<
     id: "id",
     accessorKey: "id",
     header: "Id",
-    cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
+    cell: (data) => <GuidWithCopy value={data.row.original.id} />,
   },
   key: {
     id: "key",

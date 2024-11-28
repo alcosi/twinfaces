@@ -9,7 +9,7 @@ import {
 } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -22,12 +22,12 @@ const columns: ColumnDef<CommentView>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   {
     accessorKey: "authorUserId",
     header: "Author",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   {
     accessorKey: "text",
@@ -169,7 +169,7 @@ export function CommentCard({ item }: CommentCardProps) {
                           <CopyButton textToCopy={value} />
                         </>
                       ) : (
-                        <ShortGuidWithCopy value={value} />
+                        <GuidWithCopy value={value} />
                       )}
                     </div>
                   ))}

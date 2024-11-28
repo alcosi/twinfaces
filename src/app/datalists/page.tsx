@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 import { PagedResponse } from "@/shared/api";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ const colDefs: Record<
     id: "id",
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   name: {
     id: "name",
