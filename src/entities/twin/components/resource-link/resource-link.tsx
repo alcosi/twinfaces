@@ -2,6 +2,7 @@ import { ResourceLink } from "@/shared/ui";
 import { Braces } from "lucide-react";
 import { TwinResourceTooltip } from "./tooltip";
 import { Twin } from "../../api";
+import { isPopulatedString } from "@/shared/libs";
 
 type Props = {
   data: Twin;
@@ -22,7 +23,9 @@ export function TwinResourceLink({ data, disabled, withTooltip }: Props) {
           ? (data) => <TwinResourceTooltip data={data} link={link} />
           : undefined
       }
-      getDisplayName={(data) => data.name ?? "N/A"}
+      getDisplayName={(data) =>
+        isPopulatedString(data.name) ? data.name : "N/A"
+      }
       link={link}
     />
   );
