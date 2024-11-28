@@ -35,7 +35,7 @@ export function SidebarLayoutHeader() {
                     href={item.href}
                     title={item.label}
                     className={cn(
-                      "truncate max-w-24",
+                      "truncate max-w-28",
                       index === breadcrumbs.length - 1 && "font-semibold"
                     )}
                   >

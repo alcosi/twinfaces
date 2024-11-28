@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  PermissionGroupResourceLink,
   PermissionGroup,
   PermissionGroup_DETAILED,
   usePermissionGroupFilters,
@@ -38,6 +39,11 @@ const colDefs: Record<
     id: "name",
     accessorKey: "name",
     header: "Name",
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <PermissionGroupResourceLink data={original} withTooltip />
+      </div>
+    ),
   },
   description: {
     id: "description",
