@@ -1,26 +1,26 @@
 import { isPopulatedString } from "@/shared/libs";
-import { Avatar, ColorTile, ResourceLinkTooltip } from "@/shared/ui";
-import { CircleDot } from "lucide-react";
+import { ColorTile, ResourceLinkTooltip } from "@/shared/ui";
+import { ElementType } from "react";
 import { TwinStatus } from "../../api";
+import { ENTITY_COLOR } from "../../libs";
 
 type Props = {
   data: TwinStatus;
   link: string;
+  IconComponent: ElementType;
 };
 
-export const TwinClassStatusResourceTooltip = ({ data, link }: Props) => {
+export const TwinClassStatusResourceTooltip = ({
+  data,
+  link,
+  IconComponent,
+}: Props) => {
   return (
-    <ResourceLinkTooltip uuid={data.id!} link={link}>
+    <ResourceLinkTooltip uuid={data.id!} link={link} accentColor={ENTITY_COLOR}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}
-        iconSource={
-          data.logo ? (
-            <Avatar url={data.logo} alt={data.name ?? "Logo"} size="xlg" />
-          ) : (
-            CircleDot
-          )
-        }
+        iconSource={IconComponent}
       />
 
       <ResourceLinkTooltip.Main>
