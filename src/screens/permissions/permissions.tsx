@@ -13,7 +13,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -31,13 +31,13 @@ const colDefs: Record<
     id: "groupId",
     accessorKey: "groupId",
     header: "Group",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   id: {
     id: "id",
     accessorKey: "id",
     header: "Id",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   key: {
     id: "key",

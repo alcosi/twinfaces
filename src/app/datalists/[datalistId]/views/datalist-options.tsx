@@ -8,7 +8,7 @@ import { ApiContext, PagedResponse } from "@/shared/api";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { DataListOption } from "@/entities/datalist";
 import { DatalistContext } from "../datalist-context";
-import { DataTableHandle, ShortGuidWithCopy } from "@/shared/ui";
+import { DataTableHandle, GuidWithCopy } from "@/shared/ui";
 
 export const DatalistOptions = () => {
   const api = useContext(ApiContext);
@@ -68,7 +68,7 @@ export const DatalistOptions = () => {
           id: "id",
           accessorKey: "id",
           header: "ID",
-          cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+          cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
         },
         {
           id: "name",

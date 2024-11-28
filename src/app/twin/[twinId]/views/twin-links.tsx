@@ -6,7 +6,7 @@ import {
 } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
@@ -22,22 +22,22 @@ export function TwinLinks() {
     {
       accessorKey: "id",
       header: "ID",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "linkId",
       header: "Link ID",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "dstTwinId",
       header: "Destination Twin",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "createdByUserId",
       header: "Created by User",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "createdAt",

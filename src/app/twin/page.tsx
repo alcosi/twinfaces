@@ -14,7 +14,7 @@ import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { ShortGuidWithCopy } from "@/shared/ui";
+import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
   FiltersState,
@@ -29,7 +29,7 @@ const columns: ColumnDef<Twin>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   {
     accessorKey: "name",

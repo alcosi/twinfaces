@@ -5,7 +5,7 @@ import { isFalsy } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { ColumnDef } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
@@ -37,7 +37,7 @@ function buildColumnDefs(twinClassId: string) {
     {
       accessorKey: "id",
       header: "ID",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "key",

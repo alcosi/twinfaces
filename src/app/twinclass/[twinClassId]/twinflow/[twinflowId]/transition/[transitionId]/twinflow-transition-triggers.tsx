@@ -6,7 +6,7 @@ import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
 import { useRef, useState } from "react";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { TwinflowTransitionTriggerDialog } from "./twinflow-transition-trigger-dialog";
 
 export function TwinflowTransitionTriggers({
@@ -52,7 +52,7 @@ export function TwinflowTransitionTriggers({
     {
       accessorKey: "id",
       header: "ID",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
     },
     {
       accessorKey: "order",
