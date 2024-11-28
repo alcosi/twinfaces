@@ -12,7 +12,7 @@ import {
 } from "@/entities/twinClassLink";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { Badge } from "@/shared/ui/badge";
+import { Badge } from "@/shared/ui";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";

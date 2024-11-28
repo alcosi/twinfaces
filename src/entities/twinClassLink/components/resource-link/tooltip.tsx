@@ -1,6 +1,6 @@
 import { TwinClassLink } from "@/entities/twinClassLink";
 import { isPopulatedString, isUndefined } from "@/shared/libs";
-import { ResourceLinkTooltip } from "@/shared/ui";
+import { Badge, ResourceLinkTooltip } from "@/shared/ui";
 import { Link2 } from "lucide-react";
 
 type Props = {
@@ -17,6 +17,15 @@ export function TwinClassLinkResourceTooltip({ data, link }: Props) {
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         iconSource={Link2}
       />
+
+      <ResourceLinkTooltip.Main>
+        <ResourceLinkTooltip.Item title="Type">
+          <Badge variant="outline">{data.type}</Badge>
+        </ResourceLinkTooltip.Item>
+        <ResourceLinkTooltip.Item title="Strength">
+          <Badge variant="outline">{data.linkStrengthId}</Badge>
+        </ResourceLinkTooltip.Item>
+      </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
 }
