@@ -27,6 +27,7 @@ export function createPermissionGroupApi(settings: ApiSettings) {
       body: {
         keyLikeList: search ? ["%" + search + "%"] : undefined,
         ...filters,
+        showSystemGroups: true,
       },
     });
   }
