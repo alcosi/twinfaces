@@ -303,6 +303,14 @@ export interface paths {
     /** Return a list of all permission grant users for the current domain */
     post: operations["permissionGrantUserSearchV1"];
   };
+  "/private/permission_grant/twin_role/search/v1": {
+    /** Permission grant twin role search */
+    post: operations["permissionGrantTwinRoleSearchV1"];
+  };
+  "/private/permission_grant/space_role/search/v1": {
+    /** Permission grant space role search */
+    post: operations["permissionGrantSpaceRoleSearchV1"];
+  };
   "/private/permission/{permissionId}/v1": {
     /** Update permission */
     post: operations["permissionUpdateV1"];
@@ -364,6 +372,10 @@ export interface paths {
   "/private/business_account/{businessAccountId}/user/v1": {
     /** Add user to business account. If business account is not exist it will be created. If user is not exist it will be created */
     post: operations["businessAccountUserAddV1"];
+  };
+  "/private/attachment/quotas/validate_cud/v1": {
+    /** Validate attachment CUD operations */
+    post: operations["attachmentValidateV1"];
   };
   "/public/locale/list/v1": {
     /** Return list of locales */
@@ -482,6 +494,14 @@ export interface paths {
     get: operations["attachmentViewV1"];
     /** Delete attachment by id */
     delete: operations["attachmentDeleteV1"];
+  };
+  "/private/attachment/quotas/domain_business_account/v1": {
+    /** Get info about storage quotas(count files/disk space usage) for BA */
+    get: operations["attachmentDomainBusinessAccountQuotasV1"];
+  };
+  "/private/attachment/quotas/domain/v1": {
+    /** Get info about storage quotas(count files/disk space usage) for Domain */
+    get: operations["attachmentDomainQuotasV1"];
   };
   "/private/twin/{twinId}/delete_drafted/v1": {
     /** Delete twin by id */
@@ -1534,6 +1554,11 @@ export interface components {
        */
       description?: string;
       /**
+       * Format: int64
+       * @description File size in bytes
+       */
+      size?: number;
+      /**
        * Format: uuid
        * @description link to the field to which attachment was added (if any)
        */
@@ -1670,6 +1695,11 @@ export interface components {
        * @example Supported country list
        */
       description?: string;
+      /**
+       * @description key
+       * @example country
+       */
+      key?: string;
       /**
        * Format: date-time
        * @description updated at
@@ -1859,15 +1889,27 @@ export interface components {
        */
       key?: string;
       /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
        * @description description
-       * @example Member i18n description
+       * @example Some description
        */
       description?: string;
       /**
-       * @description name
-       * @example Member i18n name
+       * Format: uuid
+       * @description twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
-      name?: string;
+      twinClassId?: string;
+      /**
+       * Format: uuid
+       * @description business account id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      businessAccountId?: string;
     };
     TwinClassRsV1: {
       /**
@@ -2042,7 +2084,7 @@ export interface components {
       /** @description Tag list. Will be filled only if lazyRelations mode is true */
       tags?: components["schemas"]["DataListOptionV1"][];
       /** @description Suitable actions list */
-      actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "ATTACHMENT_DELETE" | "HISTORY_VIEW")[];
+      actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "HISTORY_VIEW")[];
       /** @description fields */
       fields?: {
         [key: string]: string;
@@ -2122,6 +2164,11 @@ export interface components {
        */
       description?: string;
       /**
+       * Format: int64
+       * @description File size in bytes
+       */
+      size?: number;
+      /**
        * Format: uuid
        * @description link to the field to which attachment was added (if any)
        */
@@ -2163,6 +2210,11 @@ export interface components {
        * @example cert.pdf
        */
       description?: string;
+      /**
+       * Format: int64
+       * @description File size in bytes
+       */
+      size?: number;
       /**
        * Format: uuid
        * @description id
@@ -3820,7 +3872,7 @@ export interface components {
       /** @description Tag list. Will be filled only if lazyRelations mode is true */
       tags?: components["schemas"]["DataListOptionV1"][];
       /** @description Suitable actions list */
-      actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "ATTACHMENT_DELETE" | "HISTORY_VIEW")[];
+      actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "HISTORY_VIEW")[];
       /** @description fields */
       fields?: components["schemas"]["TwinFieldV1"][];
     };
@@ -4774,6 +4826,44 @@ export interface components {
        */
       userGroupIdList?: string[];
     };
+    /** @description space role list */
+    SpaceRoleV2: {
+      /**
+       * Format: uuid
+       * @description space role user id
+       * @example 275bf3c4-951a-4d26-bb82-5e18361d301c
+       */
+      id?: string;
+      /**
+       * @description key
+       * @example Member
+       */
+      key?: string;
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      twinClassId?: string;
+      /**
+       * Format: uuid
+       * @description business account id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      businessAccountId?: string;
+      twinClass?: components["schemas"]["TwinClassV1"];
+      businessAccount?: components["schemas"]["BusinessAccountV1"];
+    };
     UserWithinSpaceRolesListRsV1: {
       /**
        * Format: int32
@@ -4805,7 +4895,7 @@ export interface components {
       userId?: string;
       user?: components["schemas"]["UserV1"];
       /** @description space role list */
-      spaceRoleList?: components["schemas"]["SpaceRoleV1"][];
+      spaceRoleList?: components["schemas"]["SpaceRoleV2"][];
       /** @description spaceRoleIds list. Will be filled only in lazyRelations mode is false */
       spaceRoleIdsList?: string[];
     };
@@ -5171,6 +5261,175 @@ export interface components {
       permission?: components["schemas"]["PermissionV2"];
       permissionSchema?: components["schemas"]["PermissionSchemaV1"];
       user?: components["schemas"]["UserV1"];
+      grantedByUser?: components["schemas"]["UserV1"];
+    };
+    PermissionGrantTwinRoleSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description permission schema id list */
+      permissionSchemaIdList?: string[];
+      /** @description permission schema id exclude list */
+      permissionSchemaIdExcludeList?: string[];
+      /** @description permission id list */
+      permissionIdList?: string[];
+      /** @description permission id exclude list */
+      permissionIdExcludeList?: string[];
+      /** @description twin class id list */
+      twinClassIdList?: string[];
+      /** @description twin class id exclude list */
+      twinClassIdExcludeList?: string[];
+      /** @description twin role list */
+      twinRoleList?: ("assignee" | "creator" | "watcher" | "space_assignee" | "space_creator")[];
+      /** @description twin role exclude list */
+      twinRoleExcludeList?: ("assignee" | "creator" | "watcher" | "space_assignee" | "space_creator")[];
+      /** @description granted by user id list */
+      grantedByUserIdList?: string[];
+      /** @description granted by user id exclude list */
+      grantedByUserIdExcludeList?: string[];
+    };
+    PermissionGrantTwinRoleSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - permission grant twin role list */
+      permissionGrantTwinRoles?: components["schemas"]["PermissionGrantTwinRoleV1"][];
+    };
+    /** @description results - permission grant twin role list */
+    PermissionGrantTwinRoleV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 22fd2df0-cae7-455f-a721-eaec415105a4
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      twinClassId?: string;
+      /**
+       * Format: uuid
+       * @description granted by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      grantedByUserId?: string;
+      /**
+       * @description twin role
+       * @enum {string}
+       */
+      twinRole?: "assignee" | "creator" | "watcher" | "space_assignee" | "space_creator";
+      permission?: components["schemas"]["PermissionV1"];
+      twinClass?: components["schemas"]["TwinClassV1"];
+      grantedByUser?: components["schemas"]["UserV1"];
+    };
+    PermissionGrantSpaceRoleSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description permission schema id list */
+      permissionSchemaIdList?: string[];
+      /** @description permission schema id exclude list */
+      permissionSchemaIdExcludeList?: string[];
+      /** @description permission id list */
+      permissionIdList?: string[];
+      /** @description permission id exclude list */
+      permissionIdExcludeList?: string[];
+      /** @description space role id list */
+      spaceRoleIdList?: string[];
+      /** @description space role id exclude list */
+      spaceRoleIdExcludeList?: string[];
+      /** @description granted by user id list */
+      grantedByUserIdList?: string[];
+      /** @description granted by user id exclude list */
+      grantedByUserIdExcludeList?: string[];
+    };
+    PermissionGrantSpaceRoleSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - permission grant space role list */
+      permissionGrantSpaceRoles?: components["schemas"]["PermissionGrantSpaceRoleV2"][];
+    };
+    /** @description results - permission grant space role list */
+    PermissionGrantSpaceRoleV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 9e8641f2-dda1-4a43-9a23-8786124cdb6b
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description space role id
+       */
+      spaceRoleId?: string;
+      /**
+       * Format: uuid
+       * @description granted by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      grantedByUserId?: string;
+      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
+      permission?: components["schemas"]["PermissionV1"];
+      spaceRole?: components["schemas"]["SpaceRoleV2"];
       grantedByUser?: components["schemas"]["UserV1"];
     };
     PermissionUpdateRqV1: {
@@ -5755,6 +6014,128 @@ export interface components {
        * @example c2a7f81f-d7da-43e8-a1d3-18d6f632878b
        */
       userId?: string;
+    };
+    AttachmentCUDValidateRqV1: {
+      /**
+       * Format: uuid
+       * @description Twin id
+       */
+      twinId?: string;
+      attachments?: components["schemas"]["AttachmentCudV1"];
+    };
+    AttachmentCUDValidateRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      twinAttachmentProblems?: components["schemas"]["TwinAttachmentProblemsV1"];
+      /** @description Field attachment problems */
+      twinFieldAttachmentProblems?: components["schemas"]["TwinFieldAttachmentProblemsV1"][];
+      /** @description Comment attachment problems */
+      twinCommentAttachmentProblems?: components["schemas"]["TwinCommentAttachmentProblemsV1"][];
+      /** @description Attachment entities for update and delete operations */
+      attachmentsForUpdateDeleteOperations?: components["schemas"]["AttachmentViewV2"][];
+    };
+    /** @description attachment details */
+    AttachmentViewV2: {
+      /**
+       * @description External storage link
+       * @example https://test.filestorage.by/JFUjEFWksfqwf
+       */
+      storageLink?: string;
+      /**
+       * @description External id
+       * @example JD999weqw9f
+       */
+      externalId?: string;
+      /**
+       * @description Title
+       * @example cert.pdf
+       */
+      title?: string;
+      /**
+       * @description Description
+       * @example cert.pdf
+       */
+      description?: string;
+      /**
+       * Format: int64
+       * @description File size in bytes
+       */
+      size?: number;
+      /**
+       * Format: uuid
+       * @description link to the field to which attachment was added (if any)
+       */
+      twinClassFieldId?: string;
+      /**
+       * Format: uuid
+       * @description link to the comment to which attachment was added (if any)
+       */
+      commentId?: string;
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description author id
+       */
+      authorUserId?: string;
+      authorUser?: components["schemas"]["UserV1"];
+      /**
+       * Format: uuid
+       * @description twinflow transition id
+       */
+      twinflowTransitionId?: string;
+      twinflowTransition?: components["schemas"]["TwinflowTransitionBaseV1"];
+      comment?: components["schemas"]["CommentBaseDTOv2"];
+      twinClassField?: components["schemas"]["TwinClassFieldV1"];
+      /** @description attachment action list */
+      attachmentActions?: ("VIEW" | "EDIT" | "DELETE")[];
+    };
+    /** @description Twin attachment problems */
+    TwinAttachmentProblemsV1: {
+      /** @description Twin attachment problems */
+      problems?: ("TIER_SIZE_QUOTA_REACHED" | "TIER_COUNT_QUOTA_REACHED" | "ATTACHEMENT_INVALID_NAME" | "ATTACHEMENT_INAVLID_SIZE" | "ATTACHEMENT_INAVLID_COUNT")[];
+    };
+    /** @description Comment attachment problems */
+    TwinCommentAttachmentProblemsV1: {
+      /** @description Twin attachment problems */
+      problems?: ("TIER_SIZE_QUOTA_REACHED" | "TIER_COUNT_QUOTA_REACHED" | "ATTACHEMENT_INVALID_NAME" | "ATTACHEMENT_INAVLID_SIZE" | "ATTACHEMENT_INAVLID_COUNT")[];
+      /**
+       * Format: uuid
+       * @description Comment id
+       */
+      commentId?: string;
+    };
+    /** @description Field attachment problems */
+    TwinFieldAttachmentProblemsV1: {
+      /** @description Twin attachment problems */
+      problems?: ("TIER_SIZE_QUOTA_REACHED" | "TIER_COUNT_QUOTA_REACHED" | "ATTACHEMENT_INVALID_NAME" | "ATTACHEMENT_INAVLID_SIZE" | "ATTACHEMENT_INAVLID_COUNT")[];
+      /**
+       * Format: uuid
+       * @description Twin field id
+       */
+      twinFieldId?: string;
     };
     /** @description locales in domain */
     LocaleV1: {
@@ -6341,64 +6722,47 @@ export interface components {
       statusDetails?: string;
       attachment?: components["schemas"]["AttachmentViewV2"];
     };
-    /** @description attachment details */
-    AttachmentViewV2: {
+    /** @description attachment quotas details */
+    AttachmentQuotasBaseV1: {
       /**
-       * @description External storage link
-       * @example https://test.filestorage.by/JFUjEFWksfqwf
+       * Format: int64
+       * @description Quota count
        */
-      storageLink?: string;
+      quotaCount?: number;
       /**
-       * @description External id
-       * @example JD999weqw9f
+       * Format: int64
+       * @description Quota size
        */
-      externalId?: string;
+      quotaSize?: number;
       /**
-       * @description Title
-       * @example cert.pdf
+       * Format: int64
+       * @description Used count
        */
-      title?: string;
+      usedCount?: number;
       /**
-       * @description Description
-       * @example cert.pdf
+       * Format: int64
+       * @description Used size
        */
-      description?: string;
+      usedSize?: number;
+    };
+    AttachmentQuotasRsV1: {
       /**
-       * Format: uuid
-       * @description link to the field to which attachment was added (if any)
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
        */
-      twinClassFieldId?: string;
+      status?: number;
       /**
-       * Format: uuid
-       * @description link to the comment to which attachment was added (if any)
+       * @description User friendly, localized request processing status description
+       * @example success
        */
-      commentId?: string;
+      msg?: string;
       /**
-       * Format: uuid
-       * @description id
+       * @description request processing status description, technical
+       * @example success
        */
-      id?: string;
-      /**
-       * Format: date-time
-       * @description created at
-       */
-      createdAt?: string;
-      /**
-       * Format: uuid
-       * @description author id
-       */
-      authorUserId?: string;
-      authorUser?: components["schemas"]["UserV1"];
-      /**
-       * Format: uuid
-       * @description twinflow transition id
-       */
-      twinflowTransitionId?: string;
-      twinflowTransition?: components["schemas"]["TwinflowTransitionBaseV1"];
-      comment?: components["schemas"]["CommentBaseDTOv2"];
-      twinClassField?: components["schemas"]["TwinClassFieldV1"];
-      /** @description attachment action list */
-      attachmentActions?: ("VIEW" | "EDIT" | "DELETE")[];
+      statusDetails?: string;
+      quotas?: components["schemas"]["AttachmentQuotasBaseV1"];
     };
   };
   responses: never;
@@ -8035,6 +8399,8 @@ export interface operations {
         showPermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showSpaceRoleUser2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRoleUserGroup2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRoleUserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9665,7 +10031,7 @@ export interface operations {
       /** @description Twin data */
       200: {
         content: {
-          "application/json": components["schemas"]["TwinTransitionPerformRsV2"];
+          "application/json": components["schemas"]["TwinTransitionPerformRsV1"];
         };
       };
       /** @description Access is denied */
@@ -9803,8 +10169,28 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showSpace2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         offset?: number;
         limit?: number;
         sortAsc?: boolean;
@@ -10138,6 +10524,131 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["PermissionGrantUserSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Permission grant twin role search */
+  permissionGrantTwinRoleSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermissionGrantTwinRole2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantTwinRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermissionGrantTwinRole2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantTwinRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantTwinRoleSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Permission grant twin role list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantTwinRoleSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Permission grant space role search */
+  permissionGrantSpaceRoleSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantSpaceRoleSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Permission grant space role list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantSpaceRoleSearchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -10767,6 +11278,38 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Response"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Validate attachment CUD operations */
+  attachmentValidateV1: {
+    parameters: {
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AttachmentCUDValidateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Attachment validation result */
+      200: {
+        content: {
+          "application/json": components["schemas"]["AttachmentCUDValidateRsV1"];
         };
       };
       /** @description Access is denied */
@@ -11786,8 +12329,28 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showSpace2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         offset?: number;
         limit?: number;
         sortAsc?: boolean;
@@ -12051,6 +12614,66 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Response"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Get info about storage quotas(count files/disk space usage) for BA */
+  attachmentDomainBusinessAccountQuotasV1: {
+    parameters: {
+      query?: {
+        showAttachmentQuotasMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    responses: {
+      /** @description Attachment quotas data */
+      200: {
+        content: {
+          "application/json": components["schemas"]["AttachmentQuotasRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Get info about storage quotas(count files/disk space usage) for Domain */
+  attachmentDomainQuotasV1: {
+    parameters: {
+      query?: {
+        showAttachmentQuotasMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    responses: {
+      /** @description Attachment quotas data */
+      200: {
+        content: {
+          "application/json": components["schemas"]["AttachmentQuotasRsV1"];
         };
       };
       /** @description Access is denied */

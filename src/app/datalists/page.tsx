@@ -1,18 +1,19 @@
 "use client";
 
-import { useContext, useEffect, useRef } from "react";
-import { Experimental_CrudDataTable } from "@/widgets";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { DataList, DatalistResourceLink } from "@/entities/datalist";
+import { useDatalistFilters } from "@/entities/datalist/libs/hooks/useFilters";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { ApiContext } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { toast } from "sonner";
 
-import { DataList } from "@/entities/datalist";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse } from "@/shared/api";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { Experimental_CrudDataTable } from "@/widgets";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { useDatalistFilters } from "@/entities/datalist/libs/hooks/useFilters";
+import { useContext, useEffect, useRef } from "react";
 
 const colDefs: Record<
   keyof Pick<DataList, "id" | "name" | "updatedAt" | "description">,
@@ -28,6 +29,11 @@ const colDefs: Record<
     id: "name",
     accessorKey: "name",
     header: "Name",
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <DatalistResourceLink data={original} withTooltip />
+      </div>
+    ),
   },
   description: {
     id: "description",
