@@ -25,6 +25,7 @@ import {
   FilterState,
 } from "./header";
 import { getColumnKey, groupDataByKey } from "./helpers";
+import { PagedResponse } from "@/shared/api";
 
 type CrudDataTableProps<
   TData extends DataTableRow<TData>,
@@ -34,7 +35,7 @@ type CrudDataTableProps<
     fetcher: (
       pagination: PaginationState,
       filters: { search?: string; filters: { [key: string]: any } }
-    ) => Promise<{ data: TData[]; pageCount: number }>;
+    ) => Promise<PagedResponse<TData>>;
     className?: string;
     defaultVisibleColumns?: DataTableProps<TData, TValue>["columns"];
     orderedColumns?: DataTableProps<TData, TValue>["columns"];
@@ -91,6 +92,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         filters: viewSettings.filters,
       });
 
+      console.log("foobar table#respose", response);
       if (viewSettings.groupByKey) {
         response.data = groupDataByKey(response.data, viewSettings.groupByKey);
       }

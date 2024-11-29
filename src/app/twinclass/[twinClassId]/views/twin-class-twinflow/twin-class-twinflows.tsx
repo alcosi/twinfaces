@@ -6,7 +6,7 @@ import {
   TwinStatus,
   useTwinStatusSelectAdapter,
 } from "@/entities/twinStatus";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import {
   CrudDataTable,
   FiltersState,
@@ -60,10 +60,10 @@ export function TwinClassTwinflows() {
   async function fetchTwinflows(
     pagination: PaginationState,
     filters: FiltersState
-  ) {
+  ): Promise<PagedResponse<TwinFlow>> {
     if (!twinClass?.id) {
       toast.error("Twin class ID is missing");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
 
     try {
@@ -80,22 +80,20 @@ export function TwinClassTwinflows() {
         toast.error("Failed to fetch twinflows");
         return {
           data: [],
-          pageCount: 0,
+          pagination: {},
         };
       }
 
       return {
         data: data.twinflowList ?? [],
-        pageCount: Math.ceil(
-          (data.pagination?.total ?? 0) / pagination.pageSize
-        ),
+        pagination: data.pagination ?? {},
       };
     } catch (e) {
       console.error("Failed to fetch twinflow", e);
       toast.error("Failed to fetch twinflow");
       return {
         data: [],
-        pageCount: 0,
+        pagination: {},
       };
     }
   }

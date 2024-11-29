@@ -1,4 +1,4 @@
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import {
   CrudDataTable,
   FiltersState,
@@ -31,10 +31,13 @@ export function TwinFields() {
     },
   ];
 
-  async function fetchFields(_: PaginationState, filters: FiltersState) {
+  async function fetchFields(
+    _: PaginationState,
+    filters: FiltersState
+  ): Promise<PagedResponse<{ key: string; value: string }>> {
     if (!twin?.id) {
       toast.error("Twin ID is missing");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
 
     try {
@@ -46,7 +49,7 @@ export function TwinFields() {
         let message = "Failed to load twin fields";
         if (data?.msg) message += `: ${data.msg}`;
         toast.error(message);
-        return { data: [], pageCount: 0 };
+        return { data: [], pagination: {} };
       }
 
       const fields = data?.twin?.fields || [];
@@ -55,11 +58,11 @@ export function TwinFields() {
         value: value,
       }));
 
-      return { data: entriesFields, pageCount: 0 };
+      return { data: entriesFields, pagination: {} };
     } catch (e) {
       console.error("exception while fetching twin fields", e);
       toast.error("Failed to fetch twin fields");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

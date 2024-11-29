@@ -44,7 +44,7 @@ export function TwinflowTransitionTriggers({
   function getTriggers() {
     return Promise.resolve({
       data: Object.values(transition.triggers ?? {}),
-      pageCount: 0,
+      pagination: {},
     });
   }
 

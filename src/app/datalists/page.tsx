@@ -7,7 +7,7 @@ import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { toast } from "sonner";
 
 import { DataList } from "@/entities/datalist";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { useRouter } from "next/navigation";
@@ -59,7 +59,7 @@ const Page = () => {
   async function fetchDataLists(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<{ data: DataList[]; pageCount: number }> {
+  ): Promise<PagedResponse<DataList>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
@@ -68,13 +68,14 @@ const Page = () => {
         filters: _filters,
       });
 
-      const data = response.data?.dataListList ?? [];
-
-      return { data: data, pageCount: 0 };
+      return {
+        data: response.data?.dataListList ?? [],
+        pagination: response.data?.pagination ?? {},
+      };
     } catch (e) {
       console.error("Failed to fetch datalists", e);
       toast.error("Failed to fetch datalists");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

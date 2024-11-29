@@ -1,11 +1,6 @@
 "use client";
 
 import {
-  CrudDataTable,
-  FiltersState,
-} from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import {
   hydrateTwinFromMap,
   Twin,
   TwinResourceLink,
@@ -15,19 +10,19 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { TwinStatus, TwinClassStatusResourceLink } from "@/entities/twinStatus";
+import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
+import {
+  CrudDataTable,
+  FiltersState,
+} from "@/shared/ui/data-table/crud-data-table";
+import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
 import { toast } from "sonner";
-
-type FetchDataResponse = {
-  data: Twin[];
-  pageCount: number;
-};
 
 const columns: ColumnDef<Twin>[] = [
   {
@@ -141,7 +136,7 @@ export default function TwinsPage() {
     search?: string;
     pagination?: PaginationState;
     filters: FiltersState;
-  }): Promise<FetchDataResponse> {
+  }): Promise<PagedResponse<Twin>> {
     const _pagination = pagination || { pageIndex: 0, pageSize: 10 };
     const _filters = mapFiltersToPayload(filters.filters);
 
@@ -153,12 +148,7 @@ export default function TwinsPage() {
       });
 
       if (error) {
-        console.error("failed to fetch twins", error);
-        toast.error("Failed to fetch twins");
-        return {
-          data: [],
-          pageCount: 0,
-        };
+        throw error;
       }
 
       return {
@@ -166,17 +156,12 @@ export default function TwinsPage() {
           data?.twinList?.map((dto) =>
             hydrateTwinFromMap(dto, data.relatedObjects)
           ) ?? [],
-        pageCount: Math.ceil(
-          (data.pagination?.total ?? 0) / _pagination.pageSize
-        ),
+        pagination: data.pagination ?? {},
       };
     } catch (e) {
-      console.error("Exception when fetching twins", e);
+      console.error("Failed to fetch twins", e);
       toast.error("Failed to fetch twins");
-      return {
-        data: [],
-        pageCount: 0,
-      };
+      return { data: [], pagination: {} };
     }
   }
 

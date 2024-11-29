@@ -1,4 +1,4 @@
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 import { hydratePermissionFromMap } from "../../libs";
@@ -16,7 +16,7 @@ export const usePermissionSearchV1 = () => {
       search?: string;
       pagination?: PaginationState;
       filters?: PermissionFilters;
-    }): Promise<{ data: Permission_DETAILED[]; pageCount: number }> => {
+    }): Promise<PagedResponse<Permission_DETAILED>> => {
       try {
         const { data, error } = await api.permission.search({
           pagination,
@@ -33,10 +33,7 @@ export const usePermissionSearchV1 = () => {
             hydratePermissionFromMap(dto, data.relatedObjects)
           ) ?? [];
 
-        const totalItems = data.pagination?.total ?? 0;
-        const pageCount = Math.ceil(totalItems / pagination.pageSize);
-
-        return { data: permissions, pageCount };
+        return { data: permissions, pagination: data.pagination ?? {} };
       } catch (error) {
         console.error("Failed to fetch twin classes:", error);
         throw new Error("An error occurred while fetching twin classes");

@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
 import { toast } from "sonner";
 import CreateEditTwinStatusDialog from "./twin-status-dialog";
+import { PagedResponse } from "@/shared/api";
 
 function buildColumnDefs(twinClassId: string) {
   const colDefs: ColumnDef<TwinStatus>[] = [
@@ -97,10 +98,10 @@ export function TwinClassStatuses() {
   const [editedStatus, setEditedStatus] = useState<TwinStatus | null>(null);
   const { fetchTwinClassById } = useFetchTwinClassById();
 
-  async function fetchStatuses() {
+  async function fetchStatuses(): Promise<PagedResponse<TwinStatus>> {
     if (!twinClass?.id) {
       toast.error("Twin class ID is missing");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
 
     try {
@@ -120,18 +121,18 @@ export function TwinClassStatuses() {
         let message = "Failed to load twin class fields";
         if (data?.msg) message += `: ${data.msg}`;
         toast.error(message);
-        return { data: [], pageCount: 0 };
+        return { data: [], pagination: {} };
       }
 
       const values = Object.values(data.twinClass?.statusMap ?? {});
       return {
         data: values,
-        pageCount: 0,
+        pagination: {},
       };
     } catch (e) {
       console.error("exception while fetching twin class fields", e);
       toast.error("Failed to fetch twin class fields");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 

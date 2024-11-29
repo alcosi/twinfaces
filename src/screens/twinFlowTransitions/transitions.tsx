@@ -14,7 +14,7 @@ import {
 } from "@/entities/twinFlowTransition";
 import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
@@ -158,7 +158,7 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
     async (
       pagination: PaginationState,
       filters: FiltersState
-    ): Promise<{ data: TwinFlowTransition_DETAILED[]; pageCount: number }> => {
+    ): Promise<PagedResponse<TwinFlowTransition_DETAILED>> => {
       const _filters = mapFiltersToPayload(filters.filters);
 
       try {
@@ -173,7 +173,7 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
         return response;
       } catch (error) {
         toast.error("Failed to fetch transitions");
-        return { data: [], pageCount: 0 };
+        return { data: [], pagination: {} };
       }
     },
     [searchTwinFlowTransitions, twinFlowId]

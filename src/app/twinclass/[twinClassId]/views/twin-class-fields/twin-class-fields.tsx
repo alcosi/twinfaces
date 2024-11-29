@@ -1,5 +1,9 @@
-import { TwinClassContext, TwinClassField } from "@/entities/twinClass";
-import { ApiContext } from "@/shared/api";
+import {
+  TwinClass,
+  TwinClassContext,
+  TwinClassField,
+} from "@/entities/twinClass";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import {
   CrudDataTable,
   FiltersState,
@@ -54,10 +58,13 @@ export function TwinClassFields() {
     // }
   ];
 
-  async function fetchFields(_: PaginationState, filters: FiltersState) {
+  async function fetchFields(
+    _: PaginationState,
+    filters: FiltersState
+  ): Promise<PagedResponse<TwinClass>> {
     if (!twinClass?.id) {
       toast.error("Twin class ID is missing");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
 
     try {
@@ -68,14 +75,14 @@ export function TwinClassFields() {
         let message = "Failed to load twin class fields";
         if (data?.msg) message += `: ${data.msg}`;
         toast.error(message);
-        return { data: [], pageCount: 0 };
+        return { data: [], pagination: {} };
       }
       // setFields(data.twinClassFieldList ?? []);
-      return { data: data.twinClassFieldList ?? [], pageCount: 0 };
+      return { data: data.twinClassFieldList ?? [], pagination: {} };
     } catch (e) {
       console.error("exception while fetching twin class fields", e);
       toast.error("Failed to fetch twin class fields");
-      return { data: [], pageCount: 0 };
+      return { data: [], pagination: {} };
     }
   }
 
