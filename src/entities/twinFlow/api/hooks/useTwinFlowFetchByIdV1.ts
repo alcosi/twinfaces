@@ -9,7 +9,7 @@ export const useTwinFlowFetchByIdV1 = () => {
 
   const fetchTwinFlowById = useCallback(
     async (id: string): Promise<TwinFlow> => {
-      const { data, error } = await api.twinflow.getById({
+      const { data, error } = await api.twinFlow.getById({
         twinFlowId: id,
       });
 

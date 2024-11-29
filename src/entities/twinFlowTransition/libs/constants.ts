@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const ENTITY_COLOR = "#8B5CF6"; // text-violet-500
+
 export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
   alias: z.string().min(1, "Alias must not be empty"),
   name: z.string().min(1, "Name must not be empty"),

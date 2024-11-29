@@ -1,10 +1,11 @@
+import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 import { ArrowRightLeft } from "lucide-react";
-import { TwinFlowTransition } from "../../api";
-import { TwinClassTransitionResourceTooltip } from "./tooltip";
+import { TwinFlowTransition_DETAILED } from "../../api";
+import { TwinFlowTransitionResourceTooltip } from "./tooltip";
 
 type Props = {
-  data: TwinFlowTransition;
+  data: TwinFlowTransition_DETAILED;
   twinClassId: string;
   twinFlowId: string;
   disabled?: boolean;
@@ -28,11 +29,17 @@ export function TwinFlowTransitionResourceLink({
       renderTooltip={
         withTooltip
           ? (data) => (
-              <TwinClassTransitionResourceTooltip data={data} link={link} />
+              <TwinFlowTransitionResourceTooltip
+                data={data}
+                link={link}
+                twinClassId={twinClassId}
+              />
             )
           : undefined
       }
-      getDisplayName={(data) => data.name ?? ""}
+      getDisplayName={(data) =>
+        isPopulatedString(data.name) ? data.name : data.alias
+      }
       link={link}
     />
   );

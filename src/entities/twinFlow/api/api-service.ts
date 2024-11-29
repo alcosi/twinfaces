@@ -2,7 +2,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
 import { TwinFlowCreateRq, TwinFlowUpdateRq } from "./types";
 
-export function createTwinflowApi(settings: ApiSettings) {
+export function createTwinFlowApi(settings: ApiSettings) {
   function search({
     twinClassId,
     pagination,
@@ -96,4 +96,4 @@ export function createTwinflowApi(settings: ApiSettings) {
   };
 }
 
-export type TwinflowApi = ReturnType<typeof createTwinflowApi>;
+export type TwinFlowApi = ReturnType<typeof createTwinFlowApi>;

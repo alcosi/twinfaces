@@ -1,9 +1,12 @@
-import React, { useContext, useState } from "react";
-import { TwinClassField, TwinClassFieldUpdateRq } from "@/entities/twinClass";
-import { ApiContext } from "@/shared/api";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
+import {
+  TwinClassField,
+  TwinClassFieldUpdateRq,
+} from "@/entities/twinClassField";
+import { ApiContext } from "@/shared/api";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
+import { useContext, useState } from "react";
 
 export function TwinFieldGeneral({
   field,
@@ -24,7 +27,7 @@ export function TwinFieldGeneral({
 
   async function updateField(newField: TwinClassFieldUpdateRq) {
     try {
-      await api.twinClass.updateField({ fieldId: field.id!, body: newField });
+      await api.twinClassField.update({ fieldId: field.id!, body: newField });
       onChange?.();
     } catch (e) {
       console.error(e);

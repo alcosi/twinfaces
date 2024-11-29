@@ -1,8 +1,5 @@
-import {
-  TwinClass,
-  TwinClassContext,
-  TwinClassField,
-} from "@/entities/twinClass";
+import { TwinClass, TwinClassContext } from "@/entities/twinClass";
+import { TwinClassField } from "@/entities/twinClassField";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import {
   CrudDataTable,
@@ -68,7 +65,7 @@ export function TwinClassFields() {
     }
 
     try {
-      const response = await api.twinClass.getFields({ id: twinClass.id });
+      const response = await api.twinClassField.getFields({ id: twinClass.id });
       const data = response.data;
       if (!data || data.status != 0) {
         console.error("failed to fetch twin class fields", data);
