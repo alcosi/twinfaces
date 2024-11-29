@@ -16,7 +16,7 @@ export const useTwinFlowSearchV1 = () => {
       pagination?: PaginationState;
     }): Promise<{ data: TwinFlow[]; pageCount: number }> => {
       try {
-        const { data, error } = await api.twinflow.search({
+        const { data, error } = await api.twinFlow.search({
           twinClassId,
           pagination,
         });

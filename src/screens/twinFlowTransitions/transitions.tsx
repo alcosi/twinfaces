@@ -43,7 +43,7 @@ function buildColumnDefs({
       | "permissionId"
       | "createdByUserId"
     >,
-    ColumnDef<TwinFlowTransition>
+    ColumnDef<TwinFlowTransition_DETAILED>
   > = {
     id: {
       id: "id",

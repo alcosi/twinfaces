@@ -67,7 +67,7 @@ export function TwinClassTwinflows() {
     }
 
     try {
-      const { data, error } = await api.twinflow.search({
+      const { data, error } = await api.twinFlow.search({
         twinClassId: twinClass.id!,
         pagination,
         nameFilter: filters?.filters["name"] as string,
