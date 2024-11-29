@@ -12,10 +12,10 @@ import {
 } from "@/entities/twinClassLink";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { Badge } from "@/shared/ui/badge";
+import { Badge } from "@/shared/ui";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -75,7 +75,7 @@ export function TwinClassLinks() {
     id: {
       accessorKey: "id",
       header: "Id",
-      cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
     },
     name: {
       accessorKey: "name",

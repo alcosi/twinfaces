@@ -1,3 +1,4 @@
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
 import { UserResourceLink } from "@/entities/user";
 import {
@@ -9,7 +10,6 @@ import {
 import { PermissionContext } from "@/features/permission";
 import { PagedResponse } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
@@ -25,7 +25,7 @@ const colDefs: Record<
   id: {
     accessorKey: "id",
     header: "Id",
-    cell: (data) => <ShortGuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   permissionSchemaId: {
     accessorKey: "permissionSchemaId",

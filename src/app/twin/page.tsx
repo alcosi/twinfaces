@@ -14,6 +14,7 @@ import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
+import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
   FiltersState,
@@ -28,11 +29,20 @@ const columns: ColumnDef<Twin>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
         <TwinResourceLink data={original} withTooltip />
       </div>
     ),
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
   },
   {
     accessorKey: "twinClassId",
@@ -61,14 +71,7 @@ const columns: ColumnDef<Twin>[] = [
         </div>
       ),
   },
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-  },
+
   {
     accessorKey: "authorUserId",
     header: "Author",

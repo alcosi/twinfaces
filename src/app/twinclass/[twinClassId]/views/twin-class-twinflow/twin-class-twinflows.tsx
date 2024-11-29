@@ -12,7 +12,7 @@ import {
   FiltersState,
 } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
@@ -23,7 +23,7 @@ const columns: ColumnDef<TwinFlow>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <ShortGuidWithCopy value={data.row.original.id} />,
+    cell: (data) => <GuidWithCopy value={data.row.original.id} />,
   },
   {
     accessorKey: "key",

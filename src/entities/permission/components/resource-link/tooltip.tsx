@@ -1,4 +1,4 @@
-import { ShortGuidWithCopy } from "@/shared/ui/short-guid";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { Key } from "lucide-react";
@@ -21,7 +21,7 @@ export function PermissionResourceTooltip({ data, link }: Props) {
       <ResourceLinkTooltip.Main>
         {data.groupId && (
           <ResourceLinkTooltip.Item title="Group Id">
-            <ShortGuidWithCopy value={data.groupId} disableTooltip />
+            <GuidWithCopy value={data.groupId} disableTooltip />
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

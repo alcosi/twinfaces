@@ -1,6 +1,6 @@
 import { DataListV1 } from "@/entities/twinClass";
-import { ResourceLinkTooltip } from "@/shared/ui";
 import { isPopulatedString } from "@/shared/libs";
+import { ResourceLinkTooltip } from "@/shared/ui";
 import { ListTree } from "lucide-react";
 
 type PropsDataTooltip = {
@@ -10,10 +10,11 @@ type PropsDataTooltip = {
 
 export const DatalistResourceTooltip = ({ data, link }: PropsDataTooltip) => {
   return (
-    <ResourceLinkTooltip uuid={data.id || "N/A"} link={link}>
+    <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
-        iconSource={data.id ? <ListTree size={35} /> : "N/A"}
+        subTitle={data.key}
+        iconSource={<ListTree size={35} />}
       />
 
       <ResourceLinkTooltip.Main>
