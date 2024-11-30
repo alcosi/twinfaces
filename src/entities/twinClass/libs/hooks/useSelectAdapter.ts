@@ -3,7 +3,7 @@ import {
   useFetchTwinClassById,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
-import { SelectAdapter } from "@/shared/libs";
+import { isPopulatedString, SelectAdapter } from "@/shared/libs";
 
 export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
   const { searchTwinClasses } = useTwinClassSearchV1();
@@ -35,7 +35,7 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
   }
 
   function getItemLabel({ key = "", name }: TwinClass_DETAILED) {
-    return `${key}${name ? ` (${name})` : ""}`;
+    return isPopulatedString(name) ? `${name} : ${key}` : key;
   }
 
   return {

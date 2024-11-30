@@ -1,9 +1,6 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import {
-  TwinClass_DETAILED,
-  useTwinClassSelectAdapter,
-} from "@/entities/twinClass";
-import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 import { useUserSelectAdapter } from "@/entities/user/libs";
 import {
   toArray,
@@ -30,20 +27,14 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
       twinClassIdList: {
         type: AutoFormValueType.combobox,
         label: "Twin Class",
-        getById: tcAdapter.getById,
-        getItems: tcAdapter.getItems,
-        getItemKey: (i) => tcAdapter.getItemKey(i as TwinClass_DETAILED),
-        getItemLabel: (i) => tcAdapter.getItemLabel(i as TwinClass_DETAILED),
         multi: true,
+        ...tcAdapter,
       },
       statusIdList: {
         type: AutoFormValueType.combobox,
         label: "Statuses",
-        getById: sAdapter.getById,
-        getItems: sAdapter.getItems,
-        getItemKey: (i) => sAdapter.getItemKey(i as TwinStatus),
-        getItemLabel: (i) => sAdapter.getItemLabel(i as TwinStatus),
         multi: true,
+        ...sAdapter,
       },
       twinNameLikeList: {
         type: AutoFormValueType.tag,
@@ -52,31 +43,20 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
       createdByUserIdList: {
         type: AutoFormValueType.combobox,
         label: "Author",
-        getById: uAdapter.getById,
-        getItems: uAdapter.getItems,
-        getItemKey: uAdapter.getItemKey,
-        getItemLabel: uAdapter.getItemLabel,
         multi: true,
+        ...uAdapter,
       },
       assignerUserIdList: {
         type: AutoFormValueType.combobox,
         label: "Assigner",
-        getById: uAdapter.getById,
-        getItems: uAdapter.getItems,
-        getItemKey: uAdapter.getItemKey,
-        getItemLabel: uAdapter.getItemLabel,
         multi: true,
+        ...uAdapter,
       },
       headTwinIdList: {
         type: AutoFormValueType.combobox,
         label: "Head",
-        getById: tcAdapter.getById,
-        getItems: tcAdapter.getItems,
-        getItemKey: (item: unknown) =>
-          tcAdapter.getItemKey(item as TwinClass_DETAILED),
-        getItemLabel: (item: unknown) =>
-          tcAdapter.getItemLabel(item as TwinClass_DETAILED),
         multi: true,
+        ...tcAdapter,
       },
       tagDataListOptionIdList: {
         type: AutoFormValueType.string,
