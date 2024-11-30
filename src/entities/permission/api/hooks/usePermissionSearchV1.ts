@@ -1,4 +1,5 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 import { hydratePermissionFromMap } from "../../libs";
@@ -10,6 +11,7 @@ export const usePermissionSearchV1 = () => {
 
   const searchPermissions = useCallback(
     async ({
+      search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
     }: {
@@ -20,7 +22,12 @@ export const usePermissionSearchV1 = () => {
       try {
         const { data, error } = await api.permission.search({
           pagination,
-          filters,
+          filters: {
+            ...filters,
+            keyLikeList: isPopulatedString(search)
+              ? [wrapWithPercent(search)]
+              : filters.keyLikeList,
+          },
         });
 
         if (error) {

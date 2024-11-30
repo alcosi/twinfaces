@@ -1,4 +1,5 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 import {
   toArray,
@@ -7,7 +8,6 @@ import {
   type FilterFeature,
 } from "@/shared/libs";
 import {
-  TwinFlowTransition,
   TwinFlowTransition_DETAILED,
   TwinFlowTransitionFilterKeys,
   TwinFlowTransitionFilters,
@@ -22,8 +22,8 @@ export function useTwinFlowTransitionFilters(
 ): FilterFeature<FilterKeys, TwinFlowTransitionFilters> {
   const { fetchTwinFlowTransitionById } = useFetchTwinFlowTransitionById();
   const { searchTwinFlowTransitions } = useTwinFlowTransitionSearchV1();
-  const { getById, getItems, getItemKey, getItemLabel } =
-    useTwinStatusSelectAdapter(twinClassId);
+  const tcAdapter = useTwinStatusSelectAdapter(twinClassId);
+  const pAdapter = usePermissionSelectAdapter();
 
   function buildFilterFields(): Record<FilterKeys, AutoFormValueInfo> {
     return {
@@ -43,37 +43,28 @@ export function useTwinFlowTransitionFilters(
         type: AutoFormValueType.combobox,
         label: "Source status",
         multi: true,
-        getById,
-        getItems,
-        getItemKey,
-        getItemLabel,
+        getById: tcAdapter.getById,
+        getItems: tcAdapter.getItems,
+        getItemKey: tcAdapter.getItemKey,
+        getItemLabel: tcAdapter.getItemLabel,
       },
       dstStatusIdList: {
         type: AutoFormValueType.combobox,
         label: "Destination status",
         multi: true,
-        getById,
-        getItems,
-        getItemKey,
-        getItemLabel,
+        getById: tcAdapter.getById,
+        getItems: tcAdapter.getItems,
+        getItemKey: tcAdapter.getItemKey,
+        getItemLabel: tcAdapter.getItemLabel,
       },
       permissionIdList: {
-        type: AutoFormValueType.string,
+        type: AutoFormValueType.combobox,
         label: "Permission",
-        // TODO: Uncomment and refactor
-        // as per https://alcosi.atlassian.net/browse/TWINFACES-116
-        //   type: AutoFormValueType.multiCombobox,
-        //   label: "Permission",
-        //   multi: true,
-        //   getById: async (key: string) =>
-        //     transitions?.find((i: TwinFlowTransition) => i.permissionId === key),
-        //   getItems: async (needle: string) => {
-        //     return transitions?.filter((i) =>
-        //       i.permission?.name?.toLowerCase().includes(needle.toLowerCase())
-        //     );
-        //   },
-        //   getItemKey: (i: TwinFlowTransition) => i.permissionId,
-        //   getItemLabel: (i: TwinFlowTransition) => i.permission?.key,
+        multi: true,
+        getById: pAdapter.getById,
+        getItems: pAdapter.getItems,
+        getItemKey: pAdapter.getItemKey,
+        getItemLabel: pAdapter.getItemLabel,
       },
     };
   }
@@ -86,17 +77,11 @@ export function useTwinFlowTransitionFilters(
         toArray(filters.aliasLikeList),
         "alias"
       ).map(wrapWithPercent),
-      srcStatusIdList: toArrayOfString(
-        toArray(filters.srcStatusIdList),
-        "srcTwinStatusId"
-      ),
-      dstStatusIdList: toArrayOfString(
-        toArray(filters.dstStatusIdList),
-        "dstTwinStatusId"
-      ),
+      srcStatusIdList: toArrayOfString(toArray(filters.srcStatusIdList), "id"),
+      dstStatusIdList: toArrayOfString(toArray(filters.dstStatusIdList), "id"),
       permissionIdList: toArrayOfString(
         toArray(filters.permissionIdList),
-        "permissionId"
+        "id"
       ),
     };
 
