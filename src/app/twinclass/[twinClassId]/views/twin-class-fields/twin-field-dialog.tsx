@@ -1,3 +1,18 @@
+import {
+  FeaturerInput,
+  FeaturerTypes,
+  FeaturerValue,
+} from "@/components/featurer-input";
+import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
+import {
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields/text-form-field";
+import {
+  TwinClassField,
+  TwinClassFieldCreateRq,
+} from "@/entities/twinClassField";
+import { ApiContext } from "@/shared/api";
 import { Alert } from "@/shared/ui/alert";
 import { Button } from "@/shared/ui/button";
 import {
@@ -9,18 +24,6 @@ import {
 } from "@/shared/ui/dialog";
 import { Form } from "@/shared/ui/form";
 import { Input } from "@/shared/ui/input";
-import {
-  FeaturerInput,
-  FeaturerTypes,
-  FeaturerValue,
-} from "@/components/featurer-input";
-import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
-import {
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields/text-form-field";
-import { TwinClassField, TwinClassFieldCreateRq } from "@/entities/twinClass";
-import { ApiContext } from "@/shared/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -123,7 +126,7 @@ export default function CreateEditTwinFieldDialog({
 
     if (!field) {
       try {
-        const { data: response, error } = await api.twinClass.createField({
+        const { data: response, error } = await api.twinClassField.create({
           id: twinClassId,
           body: requestBody,
         });
@@ -146,7 +149,7 @@ export default function CreateEditTwinFieldDialog({
       }
 
       try {
-        const { data: response, error } = await api.twinClass.updateField({
+        const { data: response, error } = await api.twinClassField.update({
           fieldId: field.id,
           body: requestBody,
         });

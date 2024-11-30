@@ -75,7 +75,7 @@ export default function CreateTwinflowDialog({
     };
 
     try {
-      const { data: response, error } = await api.twinflow.create({
+      const { data: response, error } = await api.twinFlow.create({
         twinClassId,
         body: requestBody,
       });

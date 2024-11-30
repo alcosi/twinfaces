@@ -1,6 +1,7 @@
 "use client";
 
-import { TwinClassContext, TwinClassField } from "@/entities/twinClass";
+import { TwinClassContext } from "@/entities/twinClass";
+import { TwinClassField } from "@/entities/twinClassField";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -49,8 +50,8 @@ export default function TwinClassPage({
     if (twinFieldId) {
       setLoading(true);
 
-      api.twinClass
-        .getFieldById({
+      api.twinClassField
+        .getById({
           fieldId: twinFieldId,
         })
         .then((response) => {

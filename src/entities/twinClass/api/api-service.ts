@@ -1,12 +1,7 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { components, operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
-import {
-  TwinClassCreateRq,
-  TwinClassFieldCreateRq,
-  TwinClassFieldUpdateRq,
-  TwinClassUpdateRq,
-} from "./types";
+import { TwinClassCreateRq, TwinClassUpdateRq } from "./types";
 
 type TwinClassApiFilters = Partial<
   Pick<
@@ -91,22 +86,6 @@ export function createTwinClassApi(settings: ApiSettings) {
     });
   }
 
-  function getFields({ id }: { id: string }) {
-    return settings.client.GET(
-      `/private/twin_class/{twinClassId}/field/list/v1`,
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          query: {
-            showTwinClassFieldMode: "MANAGED",
-            showTwinClass2TwinClassFieldMode: "MANAGED",
-          },
-          path: { twinClassId: id },
-        },
-      }
-    );
-  }
-
   function create({ body }: { body: TwinClassCreateRq }) {
     return settings.client.POST("/private/twin_class/v1", {
       params: {
@@ -125,87 +104,12 @@ export function createTwinClassApi(settings: ApiSettings) {
       body: body,
     });
   }
-
-  function createField({
-    id,
-    body,
-  }: {
-    id: string;
-    body: TwinClassFieldCreateRq;
-  }) {
-    return settings.client.POST(`/private/twin_class/{twinClassId}/field/v1`, {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: {
-          twinClassId: id,
-        },
-      },
-      body: body,
-    });
-  }
-
-  function updateField({
-    fieldId,
-    body,
-  }: {
-    fieldId: string;
-    body: TwinClassFieldUpdateRq;
-  }) {
-    return settings.client.PUT(
-      "/private/twin_class_field/{twinClassFieldId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { twinClassFieldId: fieldId },
-        },
-        body,
-      }
-    );
-  }
-
-  function getFieldById({ fieldId }: { fieldId: string }) {
-    return settings.client.GET(
-      "/private/twin_class_field/{twinClassFieldId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { twinClassFieldId: fieldId },
-          query: {
-            showLinkDst2TwinClassMode: "MANAGED",
-            showTwin2StatusMode: "DETAILED",
-            showTwin2TwinClassMode: "MANAGED",
-            showTwin2UserMode: "DETAILED",
-            showTwinAliasMode: "DETAILED",
-            showTwinByHeadMode: "WHITE",
-            showTwinClass2LinkMode: "DETAILED",
-            showTwinClass2StatusMode: "DETAILED",
-            showTwinClass2TwinClassFieldMode: "MANAGED",
-            showTwinClassExtends2TwinClassMode: "MANAGED",
-            showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
-            showTwinClassFieldDescriptor2TwinMode: "DETAILED",
-            showTwinClassFieldDescriptor2UserMode: "DETAILED",
-            showTwinClassFieldMode: "MANAGED",
-            showTwinClassHead2TwinClassMode: "MANAGED",
-            showTwinClassMarker2DataListOptionMode: "DETAILED",
-            showTwinClassMode: "MANAGED",
-            showTwinClassTag2DataListOptionMode: "DETAILED",
-          },
-        },
-      }
-    );
-  }
-
   return {
     search,
     getByKey,
     getById,
     create,
     update,
-    // twin_fields
-    getFields,
-    getFieldById,
-    updateField,
-    createField,
   };
 }
 

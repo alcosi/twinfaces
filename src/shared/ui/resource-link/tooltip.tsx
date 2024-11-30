@@ -44,7 +44,7 @@ export function ResourceLinkTooltip({
       className="text-xs w-72 py-2 px-4 space-y-1.5"
       onClick={stopPropagation}
       style={{
-        background: `linear-gradient(to bottom, ${accentColor}  56px, transparent 56px)`,
+        background: `linear-gradient(to bottom, ${accentColor} 56px, transparent 56px)`,
       }}
     >
       {children}
@@ -107,7 +107,7 @@ ResourceLinkTooltip.Header = function Header({
 
       <div className="flex flex-col justify-end h-12 overflow-hidden">
         <div className="font-semibold truncate whitespace-nowrap">{title}</div>
-        <div className="text-sm whitespace-nowrap">{subTitle}</div>
+        <div className="text-sm truncate whitespace-nowrap">{subTitle}</div>
       </div>
     </header>
   );
@@ -125,7 +125,7 @@ type ItemProps = PropsWithChildren<{
 
 ResourceLinkTooltip.Item = function Item({ title, children }: ItemProps) {
   return (
-    <div className="flex flex-row gap-2 items-center">
+    <div className="flex max-w-48 flex-row gap-2 items-center">
       {title && <strong>{title}:</strong>}
       {children}
     </div>
