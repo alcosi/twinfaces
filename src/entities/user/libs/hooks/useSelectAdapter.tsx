@@ -1,7 +1,9 @@
-import { SelectAdapter } from "@/shared/libs";
-import { User_DETAILED } from "../../api";
-import { useContext } from "react";
 import { ApiContext } from "@/shared/api";
+import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import { Avatar } from "@/shared/ui";
+import { UserIcon } from "lucide-react";
+import { useContext } from "react";
+import { User_DETAILED } from "../../api";
 
 export function useUserSelectAdapter(): SelectAdapter<User_DETAILED> {
   const api = useContext(ApiContext);
@@ -33,8 +35,19 @@ export function useUserSelectAdapter(): SelectAdapter<User_DETAILED> {
     }
   }
 
-  function renderItem({ fullName }: User_DETAILED) {
-    return fullName;
+  function renderItem({ fullName, avatar }: User_DETAILED) {
+    return (
+      <div className="flex gap-2">
+        <div className="flex grow">
+          {isPopulatedString(avatar) ? (
+            <Avatar url={avatar} size="sm" />
+          ) : (
+            <UserIcon className="h-4 w-4" />
+          )}
+        </div>
+        <span className="truncate">{fullName}</span>
+      </div>
+    );
   }
 
   return {

@@ -48,7 +48,7 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
       },
       assignerUserIdList: {
         type: AutoFormValueType.combobox,
-        label: "Assigner",
+        label: "Assignee",
         multi: true,
         ...uAdapter,
       },
