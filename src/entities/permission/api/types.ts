@@ -12,7 +12,8 @@ export type PermissionFilterKeys =
   | "idList"
   | "keyLikeList"
   | "nameLikeList"
-  | "descriptionLikeList";
+  | "descriptionLikeList"
+  | "groupIdList";
 
 export type PermissionFilters = Partial<
   Pick<components["schemas"]["PermissionSearchRqV1"], PermissionFilterKeys>

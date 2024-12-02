@@ -1,4 +1,5 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+import { usePermissionGroupSelectAdapter } from "@/entities/permissionGroup";
 import {
   toArray,
   toArrayOfString,
@@ -12,6 +13,8 @@ export function usePermissionFilters(): FilterFeature<
   PermissionFilterKeys,
   PermissionFilters
 > {
+  const pgAdapter = usePermissionGroupSelectAdapter();
+
   function buildFilterFields(): Record<
     PermissionFilterKeys,
     AutoFormValueInfo
@@ -35,6 +38,12 @@ export function usePermissionFilters(): FilterFeature<
         type: AutoFormValueType.tag,
         label: "Description",
       },
+      groupIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Permission Groups",
+        multi: true,
+        ...pgAdapter,
+      },
     } as const;
   }
 
@@ -48,6 +57,7 @@ export function usePermissionFilters(): FilterFeature<
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList)
       ).map(wrapWithPercent),
+      groupIdList: toArrayOfString(filters.groupIdList, "id"),
     };
 
     return result;
