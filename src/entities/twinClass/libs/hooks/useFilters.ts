@@ -1,7 +1,6 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import {
   OWNER_TYPES,
-  TwinClass_DETAILED,
   TwinClassFilterKeys,
   TwinClassFilters,
   useTwinClassSelectAdapter,
@@ -46,6 +45,9 @@ export function useTwinClassFilters(): FilterFeature<
         label: "Head",
         multi: true,
         ...tcAdapter,
+        getItems: async (search: string) => {
+          return tcAdapter.getItems(search, { abstractt: "ONLY_NOT" });
+        },
       },
       extendsTwinClassIdList: {
         type: AutoFormValueType.combobox,

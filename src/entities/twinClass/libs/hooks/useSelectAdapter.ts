@@ -1,5 +1,6 @@
 import {
   TwinClass_DETAILED,
+  TwinClassFilters,
   useFetchTwinClassById,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
@@ -25,8 +26,8 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
     return response.data.twinClass as TwinClass_DETAILED;
   }
 
-  async function getItems(search: string) {
-    const response = await searchTwinClasses({ search });
+  async function getItems(search: string, filters?: TwinClassFilters) {
+    const response = await searchTwinClasses({ search, filters });
     return response.data;
   }
 
@@ -36,7 +37,8 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
 
   return {
     getById,
-    getItems,
+    getItems: (search, options) =>
+      getItems(search, options as TwinClassFilters),
     renderItem,
   };
 }
