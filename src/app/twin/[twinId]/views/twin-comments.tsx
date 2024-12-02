@@ -1,4 +1,4 @@
-import { CommentView } from "@/entities/twin";
+import { CommentView } from "@/entities/comment";
 import { Avatar } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
@@ -17,6 +17,7 @@ import { TwinContext } from "../twin-context";
 
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { CircleUserRound, EllipsisVertical } from "lucide-react";
+import { formatToTwinfaceDate } from "@/shared/libs";
 
 const columns: ColumnDef<CommentView>[] = [
   {
@@ -37,9 +38,7 @@ const columns: ColumnDef<CommentView>[] = [
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt
-        ? new Date(original.createdAt).toLocaleDateString()
-        : "",
+      original.createdAt && formatToTwinfaceDate(original.createdAt),
   },
 ];
 
@@ -141,9 +140,7 @@ export function CommentCard({ item }: CommentCardProps) {
               @{item.authorUser?.fullName}
             </h2>
             <span className="text-xs text-gray-500">
-              {item.createdAt
-                ? new Date(item.createdAt).toLocaleDateString()
-                : ""}
+              {formatToTwinfaceDate(item.createdAt!)}
             </span>
           </div>
 

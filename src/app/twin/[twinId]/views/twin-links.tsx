@@ -11,6 +11,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 import { TwinContext } from "../twin-context";
+import { formatToTwinfaceDate } from "@/shared/libs";
 
 export function TwinLinks() {
   const api = useContext(ApiContext);
@@ -43,9 +44,7 @@ export function TwinLinks() {
       accessorKey: "createdAt",
       header: "Created at",
       cell: ({ row: { original } }) =>
-        original.createdAt
-          ? new Date(original.createdAt).toLocaleDateString()
-          : "",
+        original.createdAt && formatToTwinfaceDate(original.createdAt),
     },
   ];
 

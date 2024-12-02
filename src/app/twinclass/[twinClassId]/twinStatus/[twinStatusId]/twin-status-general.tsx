@@ -11,6 +11,8 @@ import { ColorPicker } from "@/shared/ui/color-picker";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
+import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
+import { z } from "zod";
 
 export function TwinStatusGeneral({
   status,
@@ -62,19 +64,21 @@ export function TwinStatusGeneral({
     },
   };
 
-  const descriptionAutoDialogSettings: AutoEditDialogSettings = {
-    value: { description: status.description },
-    title: "Update description",
-    onSubmit: (values) => {
-      return updateStatus({
-        descriptionI18n: { translationInCurrentLocale: values.description },
-      });
-    },
-    valuesInfo: {
-      description: {
-        type: AutoFormValueType.string,
-        label: "Description",
+  const descriptionSettings: InPlaceEditProps = {
+    id: "description",
+    value: status.description,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      inputProps: {
+        fieldSize: "sm",
       },
+      label: "",
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateStatus({
+        descriptionI18n: { translationInCurrentLocale: value as string },
+      });
     },
   };
 
@@ -119,7 +123,7 @@ export function TwinStatusGeneral({
       <Table className="mt-8">
         <TableBody>
           <TableRow>
-            <TableCell>ID</TableCell>
+            <TableCell width={300}>ID</TableCell>
             <TableCell>
               <GuidWithCopy value={status.id} variant="long" />
             </TableCell>
@@ -143,12 +147,11 @@ export function TwinStatusGeneral({
             </TableCell>
           </TableRow>
 
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(descriptionAutoDialogSettings)}
-          >
+          <TableRow className="cursor-pointer">
             <TableCell>Description</TableCell>
-            <TableCell>{status.description}</TableCell>
+            <TableCell>
+              <InPlaceEdit {...descriptionSettings} />
+            </TableCell>
           </TableRow>
 
           <TableRow

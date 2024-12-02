@@ -84,3 +84,13 @@ export function debounce<T extends (...args: any[]) => void>(
     timer = setTimeout(() => func(...args), delay);
   };
 }
+
+export function formatToTwinfaceDate(
+  dateInput: Date | string | number
+): string {
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid date input");
+  }
+  return date.toLocaleDateString();
+}

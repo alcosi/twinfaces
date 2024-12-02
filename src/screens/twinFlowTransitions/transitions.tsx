@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinFlowTransitionFormFields } from "./form-fields";
+import { useRouter } from "next/navigation";
 
 function buildColumnDefs({
   twinClassId,
@@ -138,6 +139,7 @@ function buildColumnDefs({
 export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
   const colDefs = buildColumnDefs({ twinClassId, twinFlowId });
   const api = useContext(ApiContext);
+  const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } =
     useTwinFlowTransitionFilters(twinClassId);
   const { searchTwinFlowTransitions } = useTwinFlowTransitionSearchV1();
@@ -246,6 +248,11 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
       columns={Object.values(colDefs)}
       fetcher={fetchTransitions}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(
+          `/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${row.id}`
+        )
+      }
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

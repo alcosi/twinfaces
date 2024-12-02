@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/shared/libs";
+import { cn, isUndefined } from "@/shared/libs";
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -85,13 +85,22 @@ TableHead.displayName = "TableHead";
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
-  <td
-    ref={ref}
-    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  if (isUndefined(props.children)) {
+    return <div className="text-gray-700 font-light p-4">None</div>;
+  }
+
+  return (
+    <td
+      ref={ref}
+      className={cn(
+        "p-4 align-middle [&:has([role=checkbox])]:pr-0",
+        className
+      )}
+      {...props}
+    />
+  );
+});
 TableCell.displayName = "TableCell";
 
 const TableCaption = React.forwardRef<

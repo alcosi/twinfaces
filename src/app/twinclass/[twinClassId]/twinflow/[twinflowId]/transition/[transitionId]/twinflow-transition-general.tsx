@@ -8,9 +8,12 @@ import {
 } from "@/entities/twinFlowTransition";
 import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 import { ApiContext } from "@/shared/api";
-import { NULLIFY_UUID_VALUE } from "@/shared/libs";
+import { formatToTwinfaceDate, NULLIFY_UUID_VALUE } from "@/shared/libs";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
+import { GuidWithCopy } from "@/shared/ui";
+import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
+import { z } from "zod";
 
 export function TwinflowTransitionGeneral({
   transition,
@@ -43,35 +46,39 @@ export function TwinflowTransitionGeneral({
     }
   }
 
-  const nameAutoDialogSettings: AutoEditDialogSettings = {
-    value: { name: transition.name },
-    title: "Update name",
-    onSubmit: (values) => {
-      return updateTransition({
-        nameI18n: { translationInCurrentLocale: values.name },
-      });
-    },
-    valuesInfo: {
-      name: {
-        type: AutoFormValueType.string,
-        label: "Name",
+  const nameSettings: InPlaceEditProps = {
+    id: "name",
+    value: transition.name,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      label: "",
+      inputProps: {
+        fieldSize: "sm",
       },
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateTransition({
+        nameI18n: { translationInCurrentLocale: value as string },
+      });
     },
   };
 
-  const descriptionAutoDialogSettings: AutoEditDialogSettings = {
-    value: { description: transition.description },
-    title: "Update description",
-    onSubmit: (values) => {
-      return updateTransition({
-        descriptionI18n: { translationInCurrentLocale: values.description },
-      });
-    },
-    valuesInfo: {
-      description: {
-        type: AutoFormValueType.string,
-        label: "Description",
+  const descriptionSettings: InPlaceEditProps = {
+    id: "description",
+    value: transition.description,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      inputProps: {
+        fieldSize: "sm",
       },
+      label: "",
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateTransition({
+        descriptionI18n: { translationInCurrentLocale: value as string },
+      });
     },
   };
 
@@ -130,23 +137,26 @@ export function TwinflowTransitionGeneral({
       <Table className="mt-8">
         <TableBody>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>{transition.id}</TableCell>
+            <TableCell width={300}>ID</TableCell>
+            <TableCell>
+              <GuidWithCopy value={transition.id} variant="long" />
+            </TableCell>
           </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(nameAutoDialogSettings)}
-          >
+
+          <TableRow className="cursor-pointer">
             <TableCell>Name</TableCell>
-            <TableCell>{transition.name}</TableCell>
+            <TableCell>
+              <InPlaceEdit {...nameSettings} />
+            </TableCell>
           </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(descriptionAutoDialogSettings)}
-          >
+
+          <TableRow className="cursor-pointer">
             <TableCell>Description</TableCell>
-            <TableCell>{transition.description}</TableCell>
+            <TableCell>
+              <InPlaceEdit {...descriptionSettings} />
+            </TableCell>
           </TableRow>
+
           <TableRow
             className="cursor-pointer"
             onClick={() => openWithSettings(statusIdAutoDialogSettings)}
@@ -171,16 +181,14 @@ export function TwinflowTransitionGeneral({
           >
             <TableCell>Permission</TableCell>
             <TableCell>
-              {transition.permission ? (
+              {transition.permission && (
                 <PermissionResourceLink data={transition.permission} />
-              ) : (
-                "N/A"
               )}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{transition.createdAt}</TableCell>
+            <TableCell>{formatToTwinfaceDate(transition.createdAt!)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
