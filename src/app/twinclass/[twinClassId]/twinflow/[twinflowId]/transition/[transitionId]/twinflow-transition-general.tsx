@@ -2,11 +2,11 @@ import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import { ClassStatusView } from "@/components/class-status-view";
 import { PermissionResourceLink } from "@/entities/permission";
-import { TwinClassContext } from "@/entities/twinClass";
 import {
   TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
 } from "@/entities/twinFlowTransition";
+import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 import { ApiContext } from "@/shared/api";
 import { NULLIFY_UUID_VALUE } from "@/shared/libs";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
@@ -20,7 +20,7 @@ export function TwinflowTransitionGeneral({
   onChange: () => any;
 }) {
   const api = useContext(ApiContext);
-  const { getStatusesBySearch, findStatusById } = useContext(TwinClassContext);
+  const sAdapter = useTwinStatusSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -91,28 +91,14 @@ export function TwinflowTransitionGeneral({
       srcTwinStatusId: {
         type: AutoFormValueType.combobox,
         label: "Source status",
-        getItems: getStatusesBySearch,
-        getItemKey: (c) => c?.id?.toLowerCase() ?? "",
-        getItemLabel: (c) => {
-          let label = c?.key ?? "";
-          if (c.name) label += ` (${c.name})`;
-          return label;
-        },
-        getById: findStatusById,
         selectPlaceholder: "Select status...",
+        ...sAdapter,
       },
       dstTwinStatusId: {
         type: AutoFormValueType.combobox,
         label: "Destination status",
-        getItems: getStatusesBySearch,
-        getItemKey: (c) => c?.id?.toLowerCase() ?? "",
-        getItemLabel: (c) => {
-          let label = c?.key ?? "";
-          if (c.name) label += ` (${c.name})`;
-          return label;
-        },
-        getById: findStatusById,
         selectPlaceholder: "Select status...",
+        ...sAdapter,
       },
     },
   };

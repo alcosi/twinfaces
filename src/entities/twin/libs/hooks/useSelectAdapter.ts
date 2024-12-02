@@ -16,18 +16,13 @@ export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
     return response.data as Twin_DETAILED[];
   }
 
-  function getItemKey(item: Twin_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ name }: Twin_DETAILED) {
+  function renderItem({ name }: Twin_DETAILED) {
     return name;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }

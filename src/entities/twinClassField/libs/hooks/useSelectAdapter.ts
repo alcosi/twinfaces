@@ -12,18 +12,13 @@ export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassField_D
     return [];
   }
 
-  function getItemKey(item: TwinClassField_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ key }: TwinClassField_DETAILED) {
+  function renderItem({ key }: TwinClassField_DETAILED) {
     return key;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }

@@ -1,7 +1,7 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { TwinClassContext } from "@/entities/twinClass";
 import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twinFlow";
+import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 import { ApiContext } from "@/shared/api";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
@@ -14,7 +14,7 @@ export function TwinflowGeneral({
   onChange: () => any;
 }) {
   const api = useContext(ApiContext);
-  const { getStatusesBySearch, findStatusById } = useContext(TwinClassContext);
+  const sAdapter = useTwinStatusSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -69,15 +69,8 @@ export function TwinflowGeneral({
       initialStatusId: {
         type: AutoFormValueType.combobox,
         label: "Initial status",
-        getItems: getStatusesBySearch,
-        getItemKey: (c) => c?.id?.toLowerCase() ?? "",
-        getItemLabel: (c) => {
-          let label = c?.key ?? "";
-          if (c.name) label += ` (${c.name})`;
-          return label;
-        },
-        getById: findStatusById,
         selectPlaceholder: "Select status...",
+        ...sAdapter,
       },
     },
   };

@@ -33,18 +33,13 @@ export function useUserSelectAdapter(): SelectAdapter<User_DETAILED> {
     }
   }
 
-  function getItemKey(item: User_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ fullName }: User_DETAILED) {
+  function renderItem({ fullName }: User_DETAILED) {
     return fullName;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }

@@ -30,18 +30,13 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
     return response.data;
   }
 
-  function getItemKey(item: TwinClass_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ key = "", name }: TwinClass_DETAILED) {
+  function renderItem({ key = "", name }: TwinClass_DETAILED) {
     return isPopulatedString(name) ? `${name} : ${key}` : key;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }

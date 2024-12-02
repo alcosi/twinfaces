@@ -1,5 +1,5 @@
 import { cn, isPopulatedString } from "@/shared/libs";
-import { Avatar, ResourceLink } from "@/shared/ui";
+import { ResourceLink } from "@/shared/ui";
 import { css } from "@emotion/css";
 import { Square } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -26,13 +26,9 @@ export function TwinClassStatusResourceLink({
 
   return (
     <ResourceLink
-      IconComponent={() =>
-        data.logo ? (
-          <Avatar url={data.logo} alt={data.key} size="sm" />
-        ) : (
-          <Square className="w-4 h-4" fill={squareColor} stroke={squareColor} />
-        )
-      }
+      IconComponent={() => (
+        <Square className="w-4 h-4" fill={squareColor} stroke={squareColor} />
+      )}
       data={data}
       disabled={disabled}
       renderTooltip={
@@ -41,20 +37,16 @@ export function TwinClassStatusResourceLink({
               <TwinClassStatusResourceTooltip
                 data={data}
                 link={link}
-                IconComponent={() =>
-                  data.logo ? (
-                    <Avatar url={data.logo} alt={data.key} size="xlg" />
-                  ) : (
-                    <div
-                      className={cn(
-                        "w-16 h-16 rounded-full",
-                        css`
-                          background-color: ${squareColor};
-                        `
-                      )}
-                    />
-                  )
-                }
+                IconComponent={() => (
+                  <div
+                    className={cn(
+                      "w-16 h-16 rounded-full",
+                      css`
+                        background-color: ${squareColor};
+                      `
+                    )}
+                  />
+                )}
               />
             )
           : undefined

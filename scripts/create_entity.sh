@@ -122,7 +122,7 @@ export function use${ENTITY_NAME_CAPITALIZED}Filters(): FilterFeature<
   ${ENTITY_NAME_CAPITALIZED}FilterKeys,
   ${ENTITY_NAME_CAPITALIZED}Filters
 > {
-  const { getById, getItems, getItemKey, getItemLabel } =
+  const { getById, getItems, getItemLabel } =
     use${ENTITY_NAME_CAPITALIZED}SelectAdapter();
 
   function buildFilterFields(): Record<
@@ -171,19 +171,14 @@ export function use${ENTITY_NAME_CAPITALIZED}SelectAdapter(): SelectAdapter<${EN
     return [];
   }
 
-  function getItemKey(item: ${ENTITY_NAME_CAPITALIZED}_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ key }: ${ENTITY_NAME_CAPITALIZED}_DETAILED) {
+  function renderItem({ key }: ${ENTITY_NAME_CAPITALIZED}_DETAILED) {
     return key;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }
 EOL

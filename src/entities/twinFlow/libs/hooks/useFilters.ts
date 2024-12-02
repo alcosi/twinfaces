@@ -8,8 +8,7 @@ export function useTwinFlowFilters(): FilterFeature<
   TwinFlowFilterKeys,
   TwinFlowFilters
 > {
-  const { getById, getItems, getItemKey, getItemLabel } =
-    useTwinFlowSelectAdapter();
+  const { getById, getItems, renderItem } = useTwinFlowSelectAdapter();
 
   function buildFilterFields(): Record<TwinFlowFilterKeys, AutoFormValueInfo> {
     return {

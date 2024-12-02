@@ -1,9 +1,8 @@
-import { LoadingOverlay } from "@/shared/ui/loading";
 import { TwinClass, useFetchTwinClassById } from "@/entities/twinClass";
 import { TwinClassLink } from "@/entities/twinClassLink";
-import { TwinStatus } from "@/entities/twinStatus";
 import { RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -13,9 +12,6 @@ interface TwinClassContextProps {
   relatedObjects?: RelatedObjects;
   loading: boolean;
   fetchClassData: () => void;
-  statuses: TwinStatus[];
-  getStatusesBySearch: (search: string) => Promise<TwinStatus[]>;
-  findStatusById: (id: string) => Promise<TwinStatus | undefined>;
   linkId?: string;
   link?: TwinClassLink;
   isForwardLink?: boolean;
@@ -40,11 +36,6 @@ export function TwinClassContextProvider({
     RelatedObjects | undefined
   >(undefined);
 
-  // `Status` related logic
-  // TODO: Consider extracting `statuses`, `getStatusesBySearch`, and `findStatusById`
-  // into a separate hook or component for better maintainability.
-  const [statuses, setStatuses] = useState<TwinStatus[]>([]);
-
   // `Link` related logic
   // TODO: Consider extracting `linkId`, `link` and `isForwardLink`
   // into a separate hook or component for better maintainability.
@@ -68,7 +59,6 @@ export function TwinClassContextProvider({
           showTwin2TwinClassMode: "MANAGED",
           showTwinClassHead2TwinClassMode: "MANAGED",
           showTwinClassExtends2TwinClassMode: "DETAILED",
-          showTwinClass2StatusMode: "DETAILED",
           showTwinClass2LinkMode: "DETAILED",
           showLinkDst2TwinClassMode: "DETAILED",
           showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
@@ -80,11 +70,6 @@ export function TwinClassContextProvider({
 
       setTwinClass(data?.twinClass);
       setRelatedObjects(data?.relatedObjects);
-      setStatuses(
-        data?.twinClass?.statusMap
-          ? Object.values(data.twinClass?.statusMap)
-          : []
-      );
 
       if (linkId) {
         const forwardLink = data?.twinClass?.forwardLinkMap?.[linkId];
@@ -100,18 +85,6 @@ export function TwinClassContextProvider({
     }
   }
 
-  async function getStatusesBySearch(search: string) {
-    return statuses.filter(
-      (status) =>
-        (status.name ?? "").toLowerCase().includes(search.toLowerCase()) ||
-        (status.key ?? "").toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  async function findStatusById(id: string) {
-    return statuses.find((x) => x.id === id);
-  }
-
   if (isUndefined(twinClass)) return <>{loading && <LoadingOverlay />}</>;
 
   return (
@@ -122,9 +95,6 @@ export function TwinClassContextProvider({
         relatedObjects,
         loading,
         fetchClassData,
-        statuses,
-        getStatusesBySearch,
-        findStatusById,
         linkId,
         link,
         isForwardLink,

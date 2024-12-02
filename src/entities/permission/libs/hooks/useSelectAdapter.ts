@@ -18,18 +18,13 @@ export function usePermissionSelectAdapter(): SelectAdapter<Permission_DETAILED>
     return response.data;
   }
 
-  function getItemKey(item: Permission_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ name, key }: Permission_DETAILED) {
+  function renderItem({ name, key }: Permission_DETAILED) {
     return isPopulatedString(name) ? `${name} : ${key}` : key;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }

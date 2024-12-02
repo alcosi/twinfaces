@@ -16,8 +16,7 @@ type Props<T extends FieldValues> = {
 
 export function TwinClassSelectField<T extends FieldValues>(props: Props<T>) {
   const { twinClass } = useContext(TwinClassContext);
-  const { getById, getItems, getItemKey, getItemLabel } =
-    useTwinClassSelectAdapter();
+  const tcAdapter = useTwinClassSelectAdapter();
 
   // TODO: to refactor after https://alcosi.atlassian.net/browse/TWINFACES-76
   return props.disabled ? (
@@ -30,10 +29,7 @@ export function TwinClassSelectField<T extends FieldValues>(props: Props<T>) {
       selectPlaceholder="Select twin class"
       searchPlaceholder="Search twin class..."
       noItemsText={"No classes found"}
-      getById={getById}
-      getItems={getItems}
-      getItemKey={getItemKey}
-      getItemLabel={getItemLabel}
+      {...tcAdapter}
       {...props}
     />
   );

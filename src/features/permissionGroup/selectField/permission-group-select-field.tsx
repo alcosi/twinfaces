@@ -65,8 +65,7 @@ export function PermissionGroupSelectField<T extends FieldValues>(
     <ComboboxFormField
       getById={getById}
       getItems={getItems}
-      getItemKey={(item) => item.id!}
-      getItemLabel={({ key = "", name }) => `${key}${name ? ` (${name})` : ""}`}
+      renderItem={({ key = "", name }) => `${key}${name ? ` (${name})` : ""}`}
       selectPlaceholder="Select permission group"
       searchPlaceholder="Search permission group..."
       noItemsText={"No permission groups found"}

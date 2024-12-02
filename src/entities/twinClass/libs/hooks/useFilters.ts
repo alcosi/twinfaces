@@ -19,8 +19,7 @@ export function useTwinClassFilters(): FilterFeature<
   TwinClassFilterKeys,
   TwinClassFilters
 > {
-  const { getById, getItems, getItemKey, getItemLabel } =
-    useTwinClassSelectAdapter();
+  const tcAdapter = useTwinClassSelectAdapter();
 
   function buildFilterFields(): Record<TwinClassFilterKeys, AutoFormValueInfo> {
     return {
@@ -45,22 +44,14 @@ export function useTwinClassFilters(): FilterFeature<
       headTwinClassIdList: {
         type: AutoFormValueType.combobox,
         label: "Head",
-        getById,
-        getItems,
-        getItemKey: (item: unknown) => getItemKey(item as TwinClass_DETAILED),
-        getItemLabel: (item: unknown) =>
-          getItemLabel(item as TwinClass_DETAILED),
         multi: true,
+        ...tcAdapter,
       },
       extendsTwinClassIdList: {
         type: AutoFormValueType.combobox,
         label: "Extends",
-        getById,
-        getItems,
-        getItemKey: (item: unknown) => getItemKey(item as TwinClass_DETAILED),
-        getItemLabel: (item: unknown) =>
-          getItemLabel(item as TwinClass_DETAILED),
         multi: true,
+        ...tcAdapter,
       },
       ownerTypeList: {
         type: AutoFormValueType.combobox,
@@ -72,7 +63,7 @@ export function useTwinClassFilters(): FilterFeature<
           );
         },
         getItemKey: (o: unknown) => o as string,
-        getItemLabel: (o: unknown) => o as string,
+        renderItem: (o: unknown) => o as string,
         multi: true,
       },
       twinflowSchemaSpace: {

@@ -22,7 +22,7 @@ export function useTwinFlowTransitionFilters(
 ): FilterFeature<FilterKeys, TwinFlowTransitionFilters> {
   const { fetchTwinFlowTransitionById } = useFetchTwinFlowTransitionById();
   const { searchTwinFlowTransitions } = useTwinFlowTransitionSearchV1();
-  const tcAdapter = useTwinStatusSelectAdapter(twinClassId);
+  const sAdapter = useTwinStatusSelectAdapter(twinClassId);
   const pAdapter = usePermissionSelectAdapter();
 
   function buildFilterFields(): Record<FilterKeys, AutoFormValueInfo> {
@@ -36,35 +36,25 @@ export function useTwinFlowTransitionFilters(
           const { data } = await searchTwinFlowTransitions({ search });
           return data;
         },
-        getItemKey: (i: TwinFlowTransition_DETAILED) => i.alias,
-        getItemLabel: (i: TwinFlowTransition_DETAILED) => i.alias,
+        renderItem: (i: TwinFlowTransition_DETAILED) => i.alias,
       },
       srcStatusIdList: {
         type: AutoFormValueType.combobox,
         label: "Source status",
         multi: true,
-        getById: tcAdapter.getById,
-        getItems: tcAdapter.getItems,
-        getItemKey: tcAdapter.getItemKey,
-        getItemLabel: tcAdapter.getItemLabel,
+        ...sAdapter,
       },
       dstStatusIdList: {
         type: AutoFormValueType.combobox,
         label: "Destination status",
         multi: true,
-        getById: tcAdapter.getById,
-        getItems: tcAdapter.getItems,
-        getItemKey: tcAdapter.getItemKey,
-        getItemLabel: tcAdapter.getItemLabel,
+        ...sAdapter,
       },
       permissionIdList: {
         type: AutoFormValueType.combobox,
         label: "Permission",
         multi: true,
-        getById: pAdapter.getById,
-        getItems: pAdapter.getItems,
-        getItemKey: pAdapter.getItemKey,
-        getItemLabel: pAdapter.getItemLabel,
+        ...pAdapter,
       },
     };
   }

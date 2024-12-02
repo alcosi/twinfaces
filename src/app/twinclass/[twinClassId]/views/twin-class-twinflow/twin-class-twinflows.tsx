@@ -139,11 +139,8 @@ export function TwinClassTwinflows() {
             initialStatusId: {
               type: AutoFormValueType.combobox,
               label: "Initial status",
-              getById: sAdapter.getById,
-              getItems: sAdapter.getItems,
-              getItemKey: (i) => sAdapter.getItemKey(i as TwinStatus),
-              getItemLabel: (i) => sAdapter.getItemLabel(i as TwinStatus),
               selectPlaceholder: "Select status...",
+              ...sAdapter,
             },
           },
         }}
