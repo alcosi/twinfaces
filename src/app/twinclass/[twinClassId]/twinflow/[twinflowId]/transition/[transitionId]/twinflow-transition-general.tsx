@@ -7,12 +7,12 @@ import {
   TwinFlowTransitionUpdateRq,
 } from "@/entities/twinFlowTransition";
 import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
 import { formatToTwinfaceDate, NULLIFY_UUID_VALUE } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
-import { GuidWithCopy } from "@/shared/ui";
-import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
 import { z } from "zod";
 
 export function TwinflowTransitionGeneral({

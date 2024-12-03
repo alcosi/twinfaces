@@ -1,4 +1,4 @@
-import { DataListV1 } from "@/entities/twinClass";
+import { DataListV1 } from "@/entities/datalist";
 import { ResourceLink } from "@/shared/ui";
 import { ListTree } from "lucide-react";
 import { isPopulatedString } from "@/shared/libs";

@@ -1,5 +1,5 @@
 import { RequireFields } from "@/shared/libs";
-import { DataListV1, TwinClass } from "../api";
+import { TwinClass } from "../api";
 
 export type TwinClass_SHORT = RequireFields<TwinClass, "id" | "key">;
 

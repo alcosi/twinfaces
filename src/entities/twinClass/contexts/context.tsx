@@ -64,6 +64,7 @@ export function TwinClassContextProvider({
           showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
           showTwinClassMarker2DataListOptionMode: "DETAILED",
           showTwinClassTag2DataListOptionMode: "DETAILED",
+          showTwinClass2PermissionMode: "DETAILED",
           lazyRelation: false,
         },
       });
