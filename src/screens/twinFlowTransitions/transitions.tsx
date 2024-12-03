@@ -1,10 +1,8 @@
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { GuidWithCopy } from "@/shared/ui/guid";
 import { PermissionResourceLink } from "@/entities/permission";
 import {
+  TWIN_FLOW_TRANSITION_SCHEMA,
   TwinFlowTransition,
   TwinFlowTransition_DETAILED,
-  TWIN_FLOW_TRANSITION_SCHEMA,
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFormValues,
   TwinFlowTransitionResourceLink,
@@ -13,17 +11,19 @@ import {
   useTwinFlowTransitionSearchV1,
 } from "@/entities/twinFlowTransition";
 import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
-import { UserResourceLink } from "@/entities/user";
 import { ApiContext, PagedResponse } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
+import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { useCallback, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinFlowTransitionFormFields } from "./form-fields";
-import { useRouter } from "next/navigation";
 
 function buildColumnDefs({
   twinClassId,
@@ -42,7 +42,7 @@ function buildColumnDefs({
       | "srcTwinStatusId"
       | "dstTwinStatusId"
       | "permissionId"
-      | "createdByUserId"
+      | "createdAt"
     >,
     ColumnDef<TwinFlowTransition_DETAILED>
   > = {
@@ -51,11 +51,6 @@ function buildColumnDefs({
       accessorKey: "id",
       header: "ID",
       cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-    },
-    alias: {
-      id: "alias",
-      accessorKey: "alias",
-      header: "Alias",
     },
     name: {
       id: "name",
@@ -74,10 +69,10 @@ function buildColumnDefs({
         );
       },
     },
-    description: {
-      id: "description",
-      accessorKey: "description",
-      header: "Description",
+    alias: {
+      id: "alias",
+      accessorKey: "alias",
+      header: "Alias",
     },
     srcTwinStatusId: {
       id: "srcTwinStatusId",
@@ -120,16 +115,17 @@ function buildColumnDefs({
           </div>
         ),
     },
-    createdByUserId: {
-      id: "createdByUserId",
-      accessorKey: "createdByUserId",
-      header: "Created By",
+    description: {
+      id: "description",
+      accessorKey: "description",
+      header: "Description",
+    },
+    createdAt: {
+      id: "createdAt",
+      accessorKey: "createdAt",
+      header: "Created at",
       cell: ({ row: { original } }) =>
-        original.createdByUser && (
-          <div className="max-w-48 inline-flex">
-            <UserResourceLink data={original.createdByUser} withTooltip />
-          </div>
-        ),
+        original.createdAt && formatToTwinfaceDate(original.createdAt),
     },
   };
 
@@ -258,14 +254,14 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
         filtersInfo: buildFilterFields(),
       }}
       defaultVisibleColumns={[
-        // colDefs.id,
-        // colDefs.alias,
+        colDefs.id,
         colDefs.name,
-        // colDefs.description,
+        colDefs.alias,
         colDefs.srcTwinStatusId,
         colDefs.dstTwinStatusId,
         colDefs.permissionId,
-        colDefs.createdByUserId,
+        colDefs.description,
+        colDefs.createdAt,
       ]}
       orderedColumns={Object.values(colDefs)}
       dialogForm={form}

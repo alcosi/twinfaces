@@ -1,10 +1,26 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twinFlow";
-import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import {
+  TwinClassStatusResourceLink,
+  TwinStatus,
+  useTwinStatusSelectAdapter,
+} from "@/entities/twinStatus";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
+import { z } from "zod";
 
 export function TwinflowGeneral({
   twinflow,
@@ -29,36 +45,42 @@ export function TwinflowGeneral({
     }
   }
 
-  const nameAutoDialogSettings: AutoEditDialogSettings = {
-    value: { name: twinflow.name },
-    title: "Update name",
-    onSubmit: (values) => {
-      return updateTwinFlow({
-        nameI18n: { translationInCurrentLocale: values.name },
-      });
-    },
-    valuesInfo: {
-      name: {
-        type: AutoFormValueType.string,
-        label: "Name",
+  const nameSettings: InPlaceEditProps = {
+    id: "name",
+    value: twinflow.name,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      label: "",
+      inputProps: {
+        fieldSize: "sm",
       },
     },
-  };
-  const descriptionAutoDialogSettings: AutoEditDialogSettings = {
-    value: { description: twinflow.description },
-    title: "Update description",
-    onSubmit: (values) => {
+    schema: z.string().min(3),
+    onSubmit: (value) => {
       return updateTwinFlow({
-        descriptionI18n: { translationInCurrentLocale: values.description },
+        nameI18n: { translationInCurrentLocale: value as string },
       });
     },
-    valuesInfo: {
-      description: {
-        type: AutoFormValueType.string,
-        label: "Description",
+  };
+
+  const descriptionSettings: InPlaceEditProps = {
+    id: "description",
+    value: twinflow.description,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      inputProps: {
+        fieldSize: "sm",
       },
+      label: "",
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateTwinFlow({
+        descriptionI18n: { translationInCurrentLocale: value as string },
+      });
     },
   };
+
   const initialStatusIdAutoDialogSettings: AutoEditDialogSettings = {
     value: { initialStatusId: twinflow.initialStatusId },
     title: "Update initial status",
@@ -82,42 +104,67 @@ export function TwinflowGeneral({
 
   return (
     <>
-      <Table className="mt-8">
-        <TableBody>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>{twinflow.id}</TableCell>
-          </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(nameAutoDialogSettings)}
-          >
-            <TableCell>Name</TableCell>
-            <TableCell>{twinflow.name}</TableCell>
-          </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(descriptionAutoDialogSettings)}
-          >
-            <TableCell>Description</TableCell>
-            <TableCell>{twinflow.description}</TableCell>
-          </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(initialStatusIdAutoDialogSettings)}
-          >
-            <TableCell>Initial status</TableCell>
-            <TableCell>
-              {twinflow.initialStatus?.name ?? twinflow.initialStatus?.key}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Created at</TableCell>
-            <TableCell>{twinflow.createdAt}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <InPlaceEditContextProvider>
+        <Table className="mt-8">
+          <TableBody>
+            <TableRow>
+              <TableCell width={300}>ID</TableCell>
+              <TableCell>
+                <GuidWithCopy value={twinflow.id} variant={"long"} />
+              </TableCell>
+            </TableRow>
 
+            <TableRow>
+              <TableCell>Class</TableCell>
+              <TableCell>
+                {twinflow.twinClass && (
+                  <TwinClassResourceLink
+                    data={twinflow.twinClass as TwinClass_DETAILED}
+                    withTooltip
+                  />
+                )}
+              </TableCell>
+            </TableRow>
+
+            <TableRow className="cursor-pointer">
+              <TableCell>Name</TableCell>
+              <TableCell>
+                <InPlaceEdit {...nameSettings} />
+              </TableCell>
+            </TableRow>
+
+            <TableRow className="cursor-pointer">
+              <TableCell>Description</TableCell>
+              <TableCell>
+                <InPlaceEdit {...descriptionSettings} />
+              </TableCell>
+            </TableRow>
+
+            <TableRow
+              className="cursor-pointer"
+              onClick={() =>
+                openWithSettings(initialStatusIdAutoDialogSettings)
+              }
+            >
+              <TableCell>Initial status</TableCell>
+              <TableCell>
+                {twinflow.initialStatus && (
+                  <TwinClassStatusResourceLink
+                    data={twinflow.initialStatus as TwinStatus}
+                    twinClassId={twinflow.twinClassId!}
+                    withTooltip
+                  />
+                )}
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell>Created at</TableCell>
+              <TableCell>{formatToTwinfaceDate(twinflow.createdAt!)}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </InPlaceEditContextProvider>
       <AutoDialog
         open={editFieldDialogOpen}
         onOpenChange={setEditFieldDialogOpen}

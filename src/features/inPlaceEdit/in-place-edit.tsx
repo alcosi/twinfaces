@@ -12,7 +12,6 @@ import { Check, X } from "lucide-react";
 import { LoadingSpinner } from "@/shared/ui/loading";
 import { InPlaceEditContext } from "./in-place-edit-context";
 
-
 export interface InPlaceEditProps {
   id: string;
   value: unknown;
@@ -97,9 +96,7 @@ export function InPlaceEdit({
         {renderView ? (
           renderView(value)
         ) : (
-          <>
-            {value || <div className="text-gray-700 font-light p-4">None</div>}
-          </>
+          <>{value || <div className="text-gray-700 font-light">None</div>}</>
         )}
       </div>
     );
