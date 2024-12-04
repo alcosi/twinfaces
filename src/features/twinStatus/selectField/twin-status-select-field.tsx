@@ -16,8 +16,7 @@ type Props<T extends FieldValues> = {
 } & FormFieldProps<T>;
 
 export function TwinStatusSelectField<T extends FieldValues>(props: Props<T>) {
-  const { getById, getItems, getItemKey, getItemLabel } =
-    useTwinStatusSelectAdapter(props.twinClassId);
+  const sAdapter = useTwinStatusSelectAdapter(props.twinClassId);
   const { fetchTwinStatusById } = useFetchTwinStatusById();
   const statusId = useWatch({
     control: props.control,
@@ -34,10 +33,7 @@ export function TwinStatusSelectField<T extends FieldValues>(props: Props<T>) {
 
   return (
     <ComboboxFormField
-      getById={getById}
-      getItems={getItems}
-      getItemKey={getItemKey}
-      getItemLabel={getItemLabel}
+      {...sAdapter}
       selectPlaceholder="Select status"
       searchPlaceholder="Search status..."
       noItemsText={"No statuses found"}

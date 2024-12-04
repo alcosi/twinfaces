@@ -12,18 +12,13 @@ export function useTwinFlowSelectAdapter(): SelectAdapter<TwinFlow_DETAILED> {
     return [];
   }
 
-  function getItemKey(item: TwinFlow_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ name }: TwinFlow_DETAILED) {
+  function renderItem({ name }: TwinFlow_DETAILED) {
     return name;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }

@@ -12,18 +12,13 @@ export function useCommentSelectAdapter(): SelectAdapter<Comment_DETAILED> {
     return [];
   }
 
-  function getItemKey(item: Comment_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ text }: Comment_DETAILED) {
+  function renderItem({ text }: Comment_DETAILED) {
     return text;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }

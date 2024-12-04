@@ -1,9 +1,10 @@
 import {
   TwinClass_DETAILED,
+  TwinClassFilters,
   useFetchTwinClassById,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
-import { SelectAdapter } from "@/shared/libs";
+import { isPopulatedString, SelectAdapter } from "@/shared/libs";
 
 export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
   const { searchTwinClasses } = useTwinClassSearchV1();
@@ -25,23 +26,19 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
     return response.data.twinClass as TwinClass_DETAILED;
   }
 
-  async function getItems(search: string) {
-    const response = await searchTwinClasses({ search });
+  async function getItems(search: string, filters?: TwinClassFilters) {
+    const response = await searchTwinClasses({ search, filters });
     return response.data;
   }
 
-  function getItemKey(item: TwinClass_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ key = "", name }: TwinClass_DETAILED) {
-    return `${key}${name ? ` (${name})` : ""}`;
+  function renderItem({ key = "", name }: TwinClass_DETAILED) {
+    return isPopulatedString(name) ? `${name} : ${key}` : key;
   }
 
   return {
     getById,
-    getItems,
-    getItemKey,
-    getItemLabel,
+    getItems: (search, options) =>
+      getItems(search, options as TwinClassFilters),
+    renderItem,
   };
 }

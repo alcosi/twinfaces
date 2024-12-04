@@ -122,7 +122,7 @@ export function use${ENTITY_NAME_CAPITALIZED}Filters(): FilterFeature<
   ${ENTITY_NAME_CAPITALIZED}FilterKeys,
   ${ENTITY_NAME_CAPITALIZED}Filters
 > {
-  const { getById, getItems, getItemKey, getItemLabel } =
+  const { getById, getItems, renderItem } =
     use${ENTITY_NAME_CAPITALIZED}SelectAdapter();
 
   function buildFilterFields(): Record<
@@ -171,19 +171,14 @@ export function use${ENTITY_NAME_CAPITALIZED}SelectAdapter(): SelectAdapter<${EN
     return [];
   }
 
-  function getItemKey(item: ${ENTITY_NAME_CAPITALIZED}_DETAILED) {
-    return item.id;
-  }
-
-  function getItemLabel({ key }: ${ENTITY_NAME_CAPITALIZED}_DETAILED) {
+  function renderItem({ key }: ${ENTITY_NAME_CAPITALIZED}_DETAILED) {
     return key;
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }
 EOL
@@ -193,17 +188,17 @@ import { RelatedObjects } from "@/shared/api";
 import { ${ENTITY_NAME_CAPITALIZED}, ${ENTITY_NAME_CAPITALIZED}_DETAILED } from "../api";
 
 export const hydrate${ENTITY_NAME_CAPITALIZED}FromMap = (
-  ${ENTITY_NAME}DTO: ${ENTITY_NAME_CAPITALIZED},
+  dto: ${ENTITY_NAME_CAPITALIZED},
   relatedObjects?: RelatedObjects
 ): ${ENTITY_NAME_CAPITALIZED}_DETAILED => {
-  const ${ENTITY_NAME_CAPITALIZED}: ${ENTITY_NAME_CAPITALIZED}_DETAILED = Object.assign(
+  const hydrated: ${ENTITY_NAME_CAPITALIZED}_DETAILED = Object.assign(
     {},
-    ${ENTITY_NAME}DTO
+    dto
   ) as ${ENTITY_NAME_CAPITALIZED}_DETAILED;
 
   // TODO: Add hydration logic here
 
-  return ${ENTITY_NAME_CAPITALIZED};
+  return hydrated;
 };
 EOL
 
@@ -214,14 +209,13 @@ EOL
 
 cat <<EOL >"$BASE_DIR/components/resource-link/index.ts"
 export * from "./resource-link";
-export * from "./tooltip";
 EOL
 
 cat <<EOL >"$BASE_DIR/components/resource-link/resource-link.tsx"
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { ${ENTITY_NAME_CAPITALIZED}ResourceTooltip } from "./tooltip";
 import { ${ICON_NAME} } from "lucide-react";
+import { ${ENTITY_NAME_CAPITALIZED}ResourceTooltip } from "./tooltip";
 
 type Props = {
   data: unknown;

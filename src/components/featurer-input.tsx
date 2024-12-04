@@ -124,8 +124,7 @@ export function FeaturerInput({
         noItemsText={noItemsText ?? "No featurers found"}
         getById={async () => undefined}
         getItems={fetchHeadHunterFeaturers}
-        getItemKey={(c) => c.id!.toString()}
-        getItemLabel={(c) => {
+        renderItem={(c) => {
           let label = c?.id!.toString();
           if (c.name) label += ` (${c.name})`;
           return label;

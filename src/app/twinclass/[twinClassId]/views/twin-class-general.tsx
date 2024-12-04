@@ -8,29 +8,27 @@ import {
   TwinClassContext,
   TwinClassResourceLink,
   TwinClassUpdateRq,
-  useFetchTwinClassById,
-  useTwinClassSearchV1,
+  useTwinClassSelectAdapter,
 } from "@/entities/twinClass";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
-import {
-  InPlaceEdit,
-  InPlaceEditProps,
-  InPlaceEditContextProvider,
-} from "@/features/inPlaceEdit";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
   const { twinClass, relatedObjects, fetchClassData } =
     useContext(TwinClassContext);
-  const { searchTwinClasses } = useTwinClassSearchV1();
+  const tcAdapter = useTwinClassSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
-  const { fetchTwinClassById } = useFetchTwinClassById();
 
   async function updateTwinClass(newClass: TwinClassUpdateRq) {
     if (!twinClass) {
@@ -45,27 +43,6 @@ export function TwinClassGeneral() {
       console.error(e);
       throw e;
     }
-  }
-
-  async function fetchClasses(search: string) {
-    const { data } = await searchTwinClasses({
-      pagination: { pageIndex: 0, pageSize: 10 },
-      filters: { nameI18nLikeList: ["%" + search + "%"] },
-    });
-
-    return data ?? [];
-  }
-
-  async function findById(id: string) {
-    return (
-      await fetchTwinClassById({
-        id,
-        query: {
-          showTwinClassMode: "DETAILED",
-          showTwin2TwinClassMode: "SHORT",
-        },
-      })
-    ).data?.twinClass;
   }
 
   if (!twinClass) {
@@ -92,14 +69,7 @@ export function TwinClassGeneral() {
         headClassId: {
           type: AutoFormValueType.combobox,
           label: "Head class",
-          getById: findById,
-          getItems: fetchClasses,
-          getItemKey: (c) => c?.id?.toLowerCase() ?? "",
-          getItemLabel: (c) => {
-            let label = c?.key ?? "";
-            if (c.name) label += ` (${c.name})`;
-            return label;
-          },
+          ...tcAdapter,
         },
         headHunterFeaturerId: {
           type: AutoFormValueType.featurer,

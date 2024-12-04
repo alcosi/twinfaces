@@ -1,4 +1,10 @@
-import { SelectAdapter, wrapWithPercent } from "@/shared/libs";
+import {
+  isPopulatedString,
+  SelectAdapter,
+  wrapWithPercent,
+} from "@/shared/libs";
+import { Square } from "lucide-react";
+import { useTheme } from "next-themes";
 import {
   TwinStatus,
   TwinStatusFilters,
@@ -9,6 +15,7 @@ import {
 export function useTwinStatusSelectAdapter(
   twinClassId?: string
 ): SelectAdapter<TwinStatus> {
+  const { theme } = useTheme();
   const { fetchTwinStatusById } = useFetchTwinStatusById();
   const { searchTwinStatuses } = useTwinStatusSearchV1();
 
@@ -30,18 +37,25 @@ export function useTwinStatusSelectAdapter(
     }
   }
 
-  function getItemKey(item: TwinStatus) {
-    return item.id ?? "";
-  }
+  function renderItem(status: TwinStatus) {
+    const squareColor =
+      status.backgroundColor || (theme === "light" ? "#0c66e4" : "#579dff");
 
-  function getItemLabel({ key = "", name }: TwinStatus): string {
-    return name ? `${key} (${name})` : key;
+    return (
+      <div className="flex gap-2">
+        <div className="flex grow">
+          <Square className="w-4 h-4" fill={squareColor} stroke={squareColor} />
+        </div>
+        <span className="truncate">
+          {isPopulatedString(status.name) ? status.name : status.key}
+        </span>
+      </div>
+    );
   }
 
   return {
     getById,
     getItems,
-    getItemKey,
-    getItemLabel,
+    renderItem,
   };
 }

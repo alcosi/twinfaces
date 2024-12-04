@@ -1,42 +1,31 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { TwinFlowCreateRq, TwinFlowUpdateRq } from "./types";
+import { TwinFlowCreateRq, TwinFlowFilters, TwinFlowUpdateRq } from "./types";
 
 export function createTwinFlowApi(settings: ApiSettings) {
   function search({
-    twinClassId,
     pagination,
-    nameFilter,
-    descriptionFilter,
-    initialStatusFilter,
+    filters,
   }: {
-    twinClassId: string;
     pagination: PaginationState;
-    nameFilter?: string;
-    descriptionFilter?: string;
-    initialStatusFilter?: string;
+    filters: TwinFlowFilters;
   }) {
     return settings.client.POST("/private/twinflow/search/v1", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
+          lazyRelation: false,
           showTwinflowMode: "DETAILED",
           showTwinflow2TransitionMode: "DETAILED",
           showTransition2StatusMode: "SHORT",
           showTwinflowInitStatus2StatusMode: "DETAILED",
+          showTransition2UserMode: "SHORT",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
         },
       },
       body: {
-        twinClassIdList: [twinClassId],
-        nameI18nLikeList: nameFilter ? ["%" + nameFilter + "%"] : undefined,
-        descriptionI18nLikeList: descriptionFilter
-          ? ["%" + descriptionFilter + "%"]
-          : undefined,
-        initialStatusIdList: initialStatusFilter
-          ? [initialStatusFilter]
-          : undefined,
+        ...filters,
       },
     });
   }

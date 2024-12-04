@@ -11,8 +11,7 @@ export function useCommentFilters(): FilterFeature<
   CommentFilterKeys,
   CommentFilters
 > {
-  const { getById, getItems, getItemKey, getItemLabel } =
-    useCommentSelectAdapter();
+  const { getById, getItems, renderItem } = useCommentSelectAdapter();
 
   function buildFilterFields(): Record<CommentFilterKeys, AutoFormValueInfo> {
     return {

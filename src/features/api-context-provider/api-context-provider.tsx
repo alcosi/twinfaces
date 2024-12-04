@@ -19,6 +19,10 @@ import {
 } from "@/entities/twinClassLink";
 import { createTwinFlowApi, TwinFlowApi } from "@/entities/twinFlow";
 import {
+  createTwinFlowSchemaApi,
+  TwinFlowSchemaApi,
+} from "@/entities/twinFlowSchema";
+import {
   createTwinFlowTransitionApi,
   TwinFlowTransitionApi,
 } from "@/entities/twinFlowTransition";
@@ -32,6 +36,7 @@ import createClient from "openapi-fetch";
 import React from "react";
 
 export interface ApiContextProps {
+  twinFlowSchema: TwinFlowSchemaApi;
   twinClassField: TwinClassFieldApi;
   twinClass: TwinClassApi;
   twinStatus: TwinStatusApi;
@@ -62,6 +67,7 @@ export function ApiContextProvider({
   return (
     <ApiContext.Provider
       value={{
+        twinFlowSchema: createTwinFlowSchemaApi(settings),
         twinClassField: createTwinClassFieldApi(settings),
         twinClass: createTwinClassApi(settings),
         twinStatus: createTwinStatusApi(settings),

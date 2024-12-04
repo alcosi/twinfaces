@@ -1,16 +1,22 @@
 import { RelatedObjects } from "@/shared/api";
-import { TwinFlow_DETAILED } from "../api";
+import { TwinFlow, TwinFlow_DETAILED } from "../api";
 
 export const hydrateTwinFlowFromMap = (
-  twinFlowDTO: unknown,
+  dto: TwinFlow,
   relatedObjects?: RelatedObjects
 ): TwinFlow_DETAILED => {
-  const TwinFlow: TwinFlow_DETAILED = Object.assign(
+  const hydrated: TwinFlow_DETAILED = Object.assign(
     {},
-    twinFlowDTO
+    dto
   ) as TwinFlow_DETAILED;
 
-  // TODO: Add hydration logic here
+  if (dto.initialStatusId && relatedObjects?.statusMap) {
+    hydrated.initialStatus = relatedObjects.statusMap[dto.initialStatusId];
+  }
 
-  return TwinFlow;
+  if (dto.createdByUserId && relatedObjects?.userMap) {
+    hydrated.createdByUser = relatedObjects.userMap[dto.createdByUserId];
+  }
+
+  return hydrated;
 };

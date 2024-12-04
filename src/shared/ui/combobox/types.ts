@@ -18,8 +18,6 @@ export interface ComboboxProps<T> extends SelectAdapter<T> {
   multi?: boolean;
   noItemsText?: string;
   onSelect?: (items?: T[]) => void;
-  renderInList?: (item: T) => ReactNode;
-  renderSelected?: (item: T) => ReactNode;
   searchDelay?: number;
   searchPlaceholder?: string;
   selectPlaceholder?: string;

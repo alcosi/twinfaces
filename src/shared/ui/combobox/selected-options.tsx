@@ -3,13 +3,14 @@
 import { isPopulatedArray } from "@/shared/libs";
 import { Badge } from "@/shared/ui/badge";
 import { XCircle } from "lucide-react";
+import { ReactNode } from "react";
 
 const MAX_COUNT = 3;
 
 type Props<T> = {
   selected: T[];
   getItemKey: (item: T) => string;
-  getItemLabel: (item: T) => string;
+  renderItem: (item: T) => ReactNode | string;
   onChange: (value: T[]) => void;
   placeholder?: string;
   multi?: boolean;
@@ -18,7 +19,7 @@ type Props<T> = {
 export const SelectedOptions = <T,>({
   selected,
   getItemKey,
-  getItemLabel,
+  renderItem,
   onChange,
   placeholder,
   multi,
@@ -46,7 +47,7 @@ export const SelectedOptions = <T,>({
           className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
         >
           <span className="truncate max-w-[130px] mr-2">
-            {getItemLabel(item)}
+            {renderItem(item)}
           </span>
           <XCircle
             className="h-4 w-4 cursor-pointer"
@@ -74,7 +75,7 @@ export const SelectedOptions = <T,>({
   ) : (
     <>
       {isPopulatedArray(selected) ? (
-        <span className="truncate max-w-80">{getItemLabel(selected[0]!)}</span>
+        <span className="truncate max-w-80">{renderItem(selected[0]!)}</span>
       ) : (
         <span className="opacity-50">{placeholder}</span>
       )}

@@ -24,6 +24,13 @@ export const Fake = {
     twinClassId: "5e8ff555-fda9-440e-9102-3d8f120ce532",
     twinClass: twinClassMap.supplyPortion,
   },
+  TwinFlowSchema: {
+    id: "2c618b09-e8dc-4712-a433-2e18915ee70d",
+    name: "TwinFlowSchema name",
+    description: "Lorem ipsum dolor sit amet consectetur.",
+    domainId: "f67ad556-dd27-4871-9a00-16fb0e8a4102",
+    createdByUserId: "608c6d7d-99c8-4d87-89c6-2f72d0f5d673",
+  },
   TwinFlowTransition: {
     id: "627bb3f0-8d4b-4e20-847b-44500671d73c",
     name: "Task Transfer",

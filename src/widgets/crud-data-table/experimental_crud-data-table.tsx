@@ -92,7 +92,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         filters: viewSettings.filters,
       });
 
-      console.log("foobar table#respose", response);
       if (viewSettings.groupByKey) {
         response.data = groupDataByKey(response.data, viewSettings.groupByKey);
       }

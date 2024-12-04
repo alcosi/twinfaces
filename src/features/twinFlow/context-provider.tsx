@@ -31,11 +31,11 @@ export function TwinFlowContextProvider({
     setLoading(true);
     try {
       const response = await searchTwinFlows({
-        twinClassId,
         pagination: {
           pageIndex: 0,
           pageSize: 1,
         },
+        filters: { twinClassIdList: [twinClassId] },
       });
       const twinFlows = response.data ?? [];
       setTwinFlow(twinFlows[0]);

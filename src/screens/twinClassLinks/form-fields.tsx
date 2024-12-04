@@ -39,8 +39,7 @@ export function TwinClassLinkFormFields<T extends FieldValues>({
         label="Link Type"
         getById={async (id) => TWIN_CLASS_LINK_TYPES.find((i) => i.id === id)}
         getItems={async () => TWIN_CLASS_LINK_TYPES}
-        getItemKey={({ id }) => id}
-        getItemLabel={({ label }) => label}
+        renderItem={({ label }) => label}
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
@@ -53,8 +52,7 @@ export function TwinClassLinkFormFields<T extends FieldValues>({
           TWIN_CLASS_LINK_STRENGTH.find((i) => i.id === id)
         }
         getItems={async () => TWIN_CLASS_LINK_STRENGTH}
-        getItemKey={({ id }) => id}
-        getItemLabel={({ label }) => label}
+        renderItem={({ label }) => label}
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"

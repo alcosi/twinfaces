@@ -38,8 +38,14 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
     ref,
   });
 
+  function getItemKey(item: T): string {
+    if (props.getItemKey) return props.getItemKey(item);
+
+    return (item as { id: string }).id;
+  }
+
   function onSelect(newKey: string) {
-    const selectedItem = selectItem(newKey, props.getItemKey);
+    const selectedItem = selectItem(newKey, getItemKey);
     const updatedSelection: T[] = Array.isArray(selectedItem)
       ? selectedItem
       : selectedItem
@@ -63,8 +69,8 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
         >
           <SelectedOptions
             selected={selectedItems}
-            getItemKey={props.getItemKey}
-            getItemLabel={props.getItemLabel}
+            getItemKey={getItemKey}
+            renderItem={props.renderItem}
             onChange={(newSelected) => {
               setSelectedItems(newSelected);
               props.onSelect?.(newSelected);
@@ -88,23 +94,22 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
             <CommandGroup>
               {availableItems.map((item) => (
                 <CommandItem
-                  key={props.getItemKey(item)}
-                  value={props.getItemKey(item)}
-                  onSelect={() => onSelect(props.getItemKey(item))}
+                  key={getItemKey(item)}
+                  value={getItemKey(item)}
+                  onSelect={() => onSelect(getItemKey(item))}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
                       selectedItems.some(
                         (selectedItem) =>
-                          props.getItemKey(selectedItem) ===
-                          props.getItemKey(item)
+                          getItemKey(selectedItem) === getItemKey(item)
                       )
                         ? "opacity-100"
                         : "opacity-0"
                     )}
                   />
-                  {props.renderInList?.(item) ?? props.getItemLabel(item)}
+                  {props.renderItem?.(item)}
                 </CommandItem>
               ))}
             </CommandGroup>

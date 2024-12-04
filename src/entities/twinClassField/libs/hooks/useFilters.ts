@@ -8,8 +8,7 @@ export function useTwinClassFieldFilters(): FilterFeature<
   TwinClassFieldFilterKeys,
   TwinclassfieldFilters
 > {
-  const { getById, getItems, getItemKey, getItemLabel } =
-    useTwinClassFieldSelectAdapter();
+  const { getById, getItems, renderItem } = useTwinClassFieldSelectAdapter();
 
   function buildFilterFields(): Record<
     TwinClassFieldFilterKeys,

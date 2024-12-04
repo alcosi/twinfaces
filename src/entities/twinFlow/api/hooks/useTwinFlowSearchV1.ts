@@ -1,7 +1,8 @@
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { TwinFlow } from "../types";
+import { hydrateTwinFlowFromMap } from "../../libs";
+import { TwinFlow_DETAILED, TwinFlowFilters } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTwinFlowSearchV1 = () => {
@@ -9,32 +10,29 @@ export const useTwinFlowSearchV1 = () => {
 
   const searchTwinFlows = useCallback(
     async ({
-      twinClassId,
       pagination = { pageIndex: 0, pageSize: 10 },
+      filters = {},
     }: {
-      twinClassId: string;
       pagination?: PaginationState;
-    }): Promise<{ data: TwinFlow[]; pageCount: number }> => {
+      filters?: TwinFlowFilters;
+    }): Promise<PagedResponse<TwinFlow_DETAILED>> => {
       try {
         const { data, error } = await api.twinFlow.search({
-          twinClassId,
           pagination,
+          filters,
         });
 
         if (error) {
-          console.error("Failed to fetch twin flows due to API error:", error);
-          throw new Error("Failed to fetch twin flows due to API error");
+          throw new Error("Failed to fetch twin flows due to API error", error);
         }
 
-        const twinFlows = data.twinflowList ?? [];
+        const twinFlows =
+          data.twinflowList?.map((dto) =>
+            hydrateTwinFlowFromMap(dto, data.relatedObjects)
+          ) ?? [];
 
-        const totalItems = data.pagination?.total ?? 0;
-        const pageCount = Math.ceil(totalItems / pagination.pageSize);
-
-        console.log("Fetched twin flows:", twinFlows);
-        return { data: twinFlows, pageCount };
+        return { data: twinFlows, pagination: data.pagination ?? {} };
       } catch (error) {
-        console.error("Failed to fetch twin flows:", error);
         throw new Error("An error occurred while fetching twin flows");
       }
     },
