@@ -7,7 +7,13 @@ export type TwinFlow_DETAILED = RequireFields<
   "id" | "name" | "twinClassId"
 >;
 
-export type TwinFlowFilterKeys = "idList";
+export type TwinFlowFilterKeys =
+  | "idList"
+  | "twinClassIdList"
+  | "nameI18nLikeList"
+  | "descriptionI18nLikeList"
+  | "initialStatusIdList"
+  | "twinflowSchemaIdList";
 export type TwinFlowFilters = Partial<
   Pick<components["schemas"]["TwinflowListRqV1"], TwinFlowFilterKeys>
 >;

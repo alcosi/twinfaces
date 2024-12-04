@@ -1,6 +1,6 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { Waves } from "lucide-react";
+import { Activity } from "lucide-react";
 import { TwinFlow_DETAILED } from "../../api";
 import { TwinFlowResourceTooltip } from "./tooltip";
 
@@ -19,7 +19,7 @@ export const TwinFlowResourceLink = ({
 
   return (
     <ResourceLink
-      IconComponent={Waves}
+      IconComponent={Activity}
       data={data}
       disabled={disabled}
       renderTooltip={

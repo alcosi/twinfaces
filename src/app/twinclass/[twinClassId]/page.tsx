@@ -3,14 +3,10 @@
 import { TwinClassContext } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinClassLinks } from "@/screens/twinClassLinks";
+import { TwinClassTwinFlows } from "@/screens/twinClassTwinFlows";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";
-import {
-  TwinClassFields,
-  TwinClassGeneral,
-  TwinClassStatuses,
-  TwinClassTwinflows,
-} from "./views";
+import { TwinClassFields, TwinClassGeneral, TwinClassStatuses } from "./views";
 
 const tabs: Tab[] = [
   {
@@ -31,7 +27,7 @@ const tabs: Tab[] = [
   {
     key: "twinflows",
     label: "Twinflows",
-    content: <TwinClassTwinflows />,
+    content: <TwinClassTwinFlows />,
   },
   {
     key: "links",
