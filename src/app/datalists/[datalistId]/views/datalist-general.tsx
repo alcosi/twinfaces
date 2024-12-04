@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { DatalistContext } from "@/app/datalists/[datalistId]/datalist-context";
+import { DatalistContext } from "../datalist-context";
 import {
   ShortGuidWithCopy,
   Table,
