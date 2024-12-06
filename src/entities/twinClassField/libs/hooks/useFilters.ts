@@ -1,12 +1,12 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { type FilterFeature } from "@/shared/libs";
 import { z } from "zod";
-import { TwinClassFieldFilterKeys, TwinclassfieldFilters } from "../../api";
+import { TwinClassFieldFilterKeys, TwinClassFieldFilters } from "../../api";
 import { useTwinClassFieldSelectAdapter } from "./useSelectAdapter";
 
 export function useTwinClassFieldFilters(): FilterFeature<
   TwinClassFieldFilterKeys,
-  TwinclassfieldFilters
+  TwinClassFieldFilters
 > {
   const { getById, getItems, renderItem } = useTwinClassFieldSelectAdapter();
 
@@ -26,8 +26,8 @@ export function useTwinClassFieldFilters(): FilterFeature<
 
   function mapFiltersToPayload(
     filters: Record<TwinClassFieldFilterKeys, unknown>
-  ): TwinclassfieldFilters {
-    const result: TwinclassfieldFilters = {
+  ): TwinClassFieldFilters {
+    const result: TwinClassFieldFilters = {
       // TODO: add logic here
     };
 

@@ -85,4 +85,20 @@ export const Fake = {
     },
     createdAt: "2024-11-18T08:27:04",
   },
+  Featurer: {
+    id: 1301,
+    featurerTypeId: 13,
+    name: "FieldTyperTextField",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere, consequatur.",
+    deprecated: false,
+    params: [
+      {
+        key: "regexp",
+        name: "regexp",
+        description: "",
+        type: "STRING",
+      },
+    ],
+  },
 };

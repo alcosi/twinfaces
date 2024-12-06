@@ -1,15 +1,15 @@
-import { FormField, FormItem, FormMessage } from "@/shared/ui/form";
-import {
-  FeaturerInput,
-  FeaturerInputProps,
-  FeaturerValue,
-} from "@/components/featurer-input";
 import {
   FormFieldProps,
   FormItemDescription,
   FormItemLabel,
 } from "@/components/form-fields/form-fields-common";
+import {
+  FeaturerInput,
+  FeaturerInputProps,
+  FeaturerValue,
+} from "@/entities/featurer";
 import { cn } from "@/shared/libs";
+import { FormField, FormItem, FormMessage } from "@/shared/ui/form";
 import { ReactNode, useEffect } from "react";
 import { FieldValues, Path, useFormContext } from "react-hook-form";
 

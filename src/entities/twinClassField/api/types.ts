@@ -8,7 +8,7 @@ export type TwinClassField_DETAILED = RequireFields<
 >;
 
 export type TwinClassFieldFilterKeys = "twinClassFieldList";
-export type TwinclassfieldFilters = Partial<
+export type TwinClassFieldFilters = Partial<
   Pick<
     components["schemas"]["TwinClassFieldListRsV1"],
     TwinClassFieldFilterKeys

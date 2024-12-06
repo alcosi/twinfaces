@@ -1,3 +1,11 @@
+import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
+import { FeaturerFormField } from "@/components/form-fields/featurer-form-field";
+import {
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields/text-form-field";
+import { FeaturerTypes } from "@/entities/featurer";
+import { TwinClassSelectField } from "@/features/twinClass";
 import {
   Control,
   FieldValues,
@@ -5,14 +13,6 @@ import {
   PathValue,
   useWatch,
 } from "react-hook-form";
-import {
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields/text-form-field";
-import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
-import { TwinClassSelectField } from "@/features/twinClass";
-import { FeaturerFormField } from "@/components/form-fields/featurer-form-field";
-import { FeaturerTypes } from "@/components/featurer-input";
 
 export function TwinClassFormFields<T extends FieldValues>({
   control,
