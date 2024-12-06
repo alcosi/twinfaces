@@ -9,9 +9,10 @@ import { User, UserResourceLink } from "@/entities/user";
 import { ApiContext } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { z } from "zod";
 import { TwinContext } from "../twin-context";
+import { formatToTwinfaceDate } from "@/shared/libs";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);
@@ -144,7 +145,7 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{twin.createdAt}</TableCell>
+            <TableCell>{formatToTwinfaceDate(twin.createdAt!)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

@@ -1,12 +1,18 @@
-import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
+import { useContext } from "react";
 import { AutoFormValueType } from "@/components/auto-field";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
+import { GuidWithCopy } from "@/shared/ui";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
+import { z } from "zod";
 import {
   TwinClassField,
   TwinClassFieldUpdateRq,
 } from "@/entities/twinClassField";
 import { ApiContext } from "@/shared/api";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { useContext, useState } from "react";
 
 export function TwinFieldGeneral({
   field,
@@ -16,14 +22,6 @@ export function TwinFieldGeneral({
   onChange: () => any;
 }) {
   const api = useContext(ApiContext);
-  const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
-  const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
-    useState<AutoEditDialogSettings | undefined>(undefined);
-
-  function openWithSettings(settings: AutoEditDialogSettings) {
-    setCurrentAutoEditDialogSettings(settings);
-    setEditFieldDialogOpen(true);
-  }
 
   async function updateField(newField: TwinClassFieldUpdateRq) {
     try {
@@ -35,72 +33,73 @@ export function TwinFieldGeneral({
     }
   }
 
-  const nameAutoDialogSettings: AutoEditDialogSettings = {
-    value: { name: field.name },
-    title: "Update name",
-    onSubmit: (values) => {
-      return updateField({
-        nameI18n: { translationInCurrentLocale: values.name },
-      });
-    },
-    valuesInfo: {
-      name: {
-        type: AutoFormValueType.string,
-        label: "Name",
+  const nameSettings: InPlaceEditProps = {
+    id: "name",
+    value: field.name,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      label: "",
+      inputProps: {
+        fieldSize: "sm",
       },
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateField({
+        nameI18n: { translationInCurrentLocale: value as string },
+      });
     },
   };
 
-  const descriptionAutoDialogSettings: AutoEditDialogSettings = {
-    value: { description: field.description },
-    title: "Update description",
-    onSubmit: (values) => {
-      return updateField({
-        descriptionI18n: { translationInCurrentLocale: values.description },
-      });
-    },
-    valuesInfo: {
-      description: {
-        type: AutoFormValueType.string,
-        label: "Description",
+  const descriptionSettings: InPlaceEditProps = {
+    id: "description",
+    value: field.description,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      inputProps: {
+        fieldSize: "sm",
       },
+      label: "",
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateField({
+        descriptionI18n: { translationInCurrentLocale: value as string },
+      });
     },
   };
 
   return (
-    <>
+    <InPlaceEditContextProvider>
       <Table className="mt-8">
         <TableBody>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>{field.id}</TableCell>
+            <TableCell width={300}>ID</TableCell>
+            <TableCell>
+              <GuidWithCopy value={field.id} variant="long" />
+            </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Key</TableCell>
             <TableCell>{field.key}</TableCell>
           </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(nameAutoDialogSettings)}
-          >
+
+          <TableRow className="cursor-pointer">
             <TableCell>Name</TableCell>
-            <TableCell>{field.name}</TableCell>
+            <TableCell>
+              <InPlaceEdit {...nameSettings} />
+            </TableCell>
           </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(descriptionAutoDialogSettings)}
-          >
+
+          <TableRow className="cursor-pointer">
             <TableCell>Description</TableCell>
-            <TableCell>{field.description}</TableCell>
+            <TableCell>
+              <InPlaceEdit {...descriptionSettings} />
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
-
-      <AutoDialog
-        open={editFieldDialogOpen}
-        onOpenChange={setEditFieldDialogOpen}
-        settings={currentAutoEditDialogSettings}
-      />
-    </>
+    </InPlaceEditContextProvider>
   );
 }

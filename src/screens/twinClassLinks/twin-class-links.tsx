@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinClassLinkFormFields } from "./form-fields";
+import { useRouter } from "next/navigation";
 
 const twinLinkSchema = z.object({
   srcTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
@@ -64,7 +65,8 @@ const mapLinkToFormPayload = (
 
 export function TwinClassLinks() {
   const api = useContext(ApiContext);
-  const { twinClass } = useContext(TwinClassContext);
+  const { twinClass, twinClassId } = useContext(TwinClassContext);
+  const router = useRouter();
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
 
@@ -246,6 +248,9 @@ export function TwinClassLinks() {
           columnsMap.linkStrengthId,
         ]}
         fetcher={(paginationState) => fetchLinks("forward", paginationState)}
+        onRowClick={(row) =>
+          router.push(`/twinclass/${twinClassId}/link/${row.id}`)
+        }
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
@@ -278,6 +283,9 @@ export function TwinClassLinks() {
           columnsMap.linkStrengthId,
         ]}
         fetcher={(paginationState) => fetchLinks("backward", paginationState)}
+        onRowClick={(row) =>
+          router.push(`/twinclass/${twinClassId}/link/${row.id}`)
+        }
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}

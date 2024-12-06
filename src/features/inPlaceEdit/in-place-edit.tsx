@@ -12,6 +12,7 @@ import { Check, X } from "lucide-react";
 import { LoadingSpinner } from "@/shared/ui/loading";
 import { InPlaceEditContext } from "./in-place-edit-context";
 
+
 export interface InPlaceEditProps {
   id: string;
   value: unknown;
@@ -93,7 +94,13 @@ export function InPlaceEdit({
         onClick={onValueClick}
         className="hover:bg-muted/50 cursor-pointer h-full min-h-8 flex flex-row items-center"
       >
-        {renderView ? renderView(value) : <>{value ?? <div>Empty</div>}</>}
+        {renderView ? (
+          renderView(value)
+        ) : (
+          <>
+            {value || <div className="text-gray-700 font-light p-4">None</div>}
+          </>
+        )}
       </div>
     );
   } else {

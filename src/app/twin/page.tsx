@@ -24,6 +24,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { formatToTwinfaceDate } from "@/shared/libs";
 
 const columns: ColumnDef<Twin>[] = [
   {
@@ -114,9 +115,7 @@ const columns: ColumnDef<Twin>[] = [
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt
-        ? new Date(original.createdAt).toLocaleDateString()
-        : "",
+      original.createdAt && formatToTwinfaceDate(original.createdAt),
   },
 ];
 

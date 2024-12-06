@@ -16,6 +16,7 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
@@ -148,6 +149,7 @@ export function TwinClassGeneral() {
               <GuidWithCopy value={twinClass.id} variant="long" />
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Key</TableCell>
             <TableCell>{twinClass.key}</TableCell>
@@ -158,18 +160,21 @@ export function TwinClassGeneral() {
               <InPlaceEdit {...nameSettings} />
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Description</TableCell>
             <TableCell>
               <InPlaceEdit {...descriptionSettings} />
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Abstract</TableCell>
             <TableCell>
               <InPlaceEdit {...abstractSettings} />
             </TableCell>
           </TableRow>
+
           <TableRow
             className={"cursor-pointer"}
             onClick={() => openWithSettings(classValues.head!)}
@@ -188,13 +193,15 @@ export function TwinClassGeneral() {
               )}
             </TableCell>
           </TableRow>
+
           <TableRow
             className={"cursor-pointer"}
             onClick={() => openWithSettings(classValues.head!)}
           >
-            <TableCell>Head Hunter ID</TableCell>
+            <TableCell>Head hunter</TableCell>
             <TableCell>{twinClass.headHunterFeaturerId}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Extends</TableCell>
             <TableCell>
@@ -212,7 +219,7 @@ export function TwinClassGeneral() {
           </TableRow>
 
           <TableRow>
-            <TableCell>Markers</TableCell>
+            <TableCell>Markers list</TableCell>
             <TableCell>
               {twinClass.markersDataListId && relatedObjects?.dataListsMap && (
                 <DatalistResourceLink
@@ -228,7 +235,7 @@ export function TwinClassGeneral() {
           </TableRow>
 
           <TableRow>
-            <TableCell>Tags</TableCell>
+            <TableCell>Tags list</TableCell>
             <TableCell>
               {twinClass.tagsDataListId && relatedObjects?.dataListsMap && (
                 <DatalistResourceLink
@@ -245,7 +252,7 @@ export function TwinClassGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{twinClass.createdAt}</TableCell>
+            <TableCell>{formatToTwinfaceDate(twinClass.createdAt!)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

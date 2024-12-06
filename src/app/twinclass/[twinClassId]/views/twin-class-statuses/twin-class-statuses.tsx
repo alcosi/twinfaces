@@ -57,6 +57,10 @@ function buildColumnDefs(twinClassId: string) {
       ),
     },
     {
+      accessorKey: "description",
+      header: "Description",
+    },
+    {
       accessorKey: "backgroundColor",
       header: "Background Color",
       cell: (data) => {
