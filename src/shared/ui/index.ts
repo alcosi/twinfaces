@@ -5,6 +5,7 @@ export * from "./breadcrumb";
 export * from "./button";
 export * from "./card";
 export * from "./checkbox";
+export * from "./collapsible";
 export * from "./color-picker";
 export * from "./color-tile";
 export * from "./combobox";
