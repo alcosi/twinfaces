@@ -1,3 +1,4 @@
+import { ServerErrorAlert } from "@/components/server-error-alert";
 import {
   CreatePermissionRequestBody,
   Permission_DETAILED,
@@ -17,7 +18,7 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -67,6 +68,7 @@ export function Permissions() {
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissions } = usePermissionSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Permissions", href: "/permission" }]);
@@ -87,6 +89,7 @@ export function Permissions() {
     filters: FiltersState
   ): Promise<PagedResponse<Permission_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
+    setError(false);
 
     try {
       const response = await searchPermissions({
@@ -98,6 +101,7 @@ export function Permissions() {
     } catch (e) {
       console.error("Failed to fetch permissions", e);
       toast.error("Failed to fetch permissions");
+      setError(true);
       return { data: [], pagination: {} };
     }
   }
@@ -153,6 +157,10 @@ export function Permissions() {
       throw error;
     }
     toast.success("Permission updated successfully!");
+  }
+
+  if (error) {
+    return <ServerErrorAlert />;
   }
 
   return (
