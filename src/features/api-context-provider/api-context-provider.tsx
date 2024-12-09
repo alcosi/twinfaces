@@ -34,6 +34,7 @@ import { paths } from "@/shared/api/generated/schema";
 import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
+import { CommentApi, createCommentApi } from "@/entities/comment";
 
 export interface ApiContextProps {
   twinFlowSchema: TwinFlowSchemaApi;
@@ -50,6 +51,7 @@ export interface ApiContextProps {
   user: UserApi;
   userGroup: UserGroupApi;
   datalist: DatalistApi;
+  comment: CommentApi;
 }
 
 export function ApiContextProvider({
@@ -81,6 +83,7 @@ export function ApiContextProvider({
         user: createUserApi(settings),
         userGroup: createUserGroupApi(settings),
         datalist: createDatalistApi(settings),
+        comment: createCommentApi(settings),
       }}
     >
       {children}
