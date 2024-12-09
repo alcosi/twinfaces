@@ -1,3 +1,4 @@
+import { REGEX_PATTERNS } from "@/shared/libs";
 import { z } from "zod";
 
 export const OWNER_TYPES = [
@@ -16,7 +17,7 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .min(1)
     .max(100)
     .regex(
-      /^[a-zA-Z0-9_-]+$/,
+      REGEX_PATTERNS.ALPHANUMERIC_WITH_DASHES,
       "Key can only contain latin letters, numbers, underscores and dashes"
     ),
   name: z.string().min(1).max(100),

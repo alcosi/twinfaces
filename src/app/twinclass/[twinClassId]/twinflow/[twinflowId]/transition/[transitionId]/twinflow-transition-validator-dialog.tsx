@@ -1,6 +1,6 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { FeaturerTypes } from "@/components/featurer-input";
+import { FeaturerTypes } from "@/entities/featurer";
 import {
   TwinFlowTransitionValidator,
   TwinFlowTransitionValidatorUpdate,

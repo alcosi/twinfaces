@@ -1,3 +1,4 @@
+import { ApiContext } from "@/shared/api";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Combobox } from "@/shared/ui/combobox";
 import {
@@ -7,25 +8,13 @@ import {
   FormLabel,
 } from "@/shared/ui/form";
 import { Input } from "@/shared/ui/input";
-import { ApiContext } from "@/shared/api";
-import { Featurer, FeaturerParam } from "@/entities/featurer";
 import { useContext, useEffect, useState } from "react";
-import { isPopulatedArray } from "@/shared/libs";
-
-export const FeaturerTypes = {
-  fieldTyper: 13,
-  trigger: 15,
-  validator: 16,
-  headHunter: 26,
-};
-
-export interface FeaturerValue {
-  featurer: Featurer;
-  params: { [key: string]: string };
-}
+import { Featurer, FeaturerParam } from "../../api";
+import { FeaturerTypeId, FeaturerValue } from "../../libs";
+import { isPopulatedString } from "@/shared/libs";
 
 export interface FeaturerInputProps {
-  typeId: number;
+  typeId: FeaturerTypeId;
   defaultId?: number;
   defaultParams?: object;
   onChange?: (value: FeaturerValue | null) => any;
@@ -124,11 +113,9 @@ export function FeaturerInput({
         noItemsText={noItemsText ?? "No featurers found"}
         getById={async () => undefined}
         getItems={fetchHeadHunterFeaturers}
-        renderItem={(c) => {
-          let label = c?.id!.toString();
-          if (c.name) label += ` (${c.name})`;
-          return label;
-        }}
+        renderItem={({ name, id }) =>
+          isPopulatedString(name) ? `${name} : ${id}` : id
+        }
         initialValues={selected ? [selected] : []}
         onSelect={onSelect}
         buttonClassName={buttonClassName}

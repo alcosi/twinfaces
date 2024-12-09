@@ -8,6 +8,7 @@ import { TwinFlowTransitionResourceLink } from "@/entities/twinFlowTransition";
 import { UserGroupResourceLink } from "@/entities/userGroup";
 import { Separator } from "@/shared/ui";
 import { Fake } from "./seeds";
+import { FeaturerResourceLink } from "@/entities/featurer";
 
 export default function DesignSystemPage() {
   return (
@@ -70,6 +71,11 @@ export default function DesignSystemPage() {
       <h2>Comment</h2>
       <div className="max-w-48">
         <CommentResourceLink data={Fake.Comment} withTooltip />
+      </div>
+
+      <h2>Featurer</h2>
+      <div className="max-w-48">
+        <FeaturerResourceLink data={Fake.Featurer} withTooltip />
       </div>
     </div>
   );

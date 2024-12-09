@@ -27,7 +27,24 @@ export function createFeaturerApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function getById() {
+    // TODO: Add implementation
+  }
+
+  function create() {
+    // TODO: Add implementation
+  }
+
+  function update() {
+    // TODO: Add implementation
+  }
+
+  return {
+    search,
+    getById,
+    create,
+    update,
+  };
 }
 
 export type FeaturerApi = ReturnType<typeof createFeaturerApi>;

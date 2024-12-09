@@ -1,3 +1,15 @@
+import { ColorPickerFormField } from "@/components/form-fields/color-form-field";
+import {
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields/text-form-field";
+import {
+  TwinStatus,
+  TwinStatusCreateRq,
+  TwinStatusUpdateRq,
+} from "@/entities/twinStatus";
+import { ApiContext } from "@/shared/api";
+import { REGEX_PATTERNS } from "@/shared/libs";
 import { Alert } from "@/shared/ui/alert";
 import { Button } from "@/shared/ui/button";
 import {
@@ -10,17 +22,6 @@ import {
 } from "@/shared/ui/dialog";
 import { Form } from "@/shared/ui/form";
 import { Input } from "@/shared/ui/input";
-import { ColorPickerFormField } from "@/components/form-fields/color-form-field";
-import {
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields/text-form-field";
-import {
-  TwinStatus,
-  TwinStatusCreateRq,
-  TwinStatusUpdateRq,
-} from "@/entities/twinStatus";
-import { ApiContext } from "@/shared/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,7 +41,7 @@ const twinStatusSchema = z.object({
     .min(1)
     .max(100)
     .regex(
-      /^[a-zA-Z0-9_-]+$/,
+      REGEX_PATTERNS.ALPHANUMERIC_WITH_DASHES,
       "Key can only contain latin letters, numbers, underscores and dashes"
     ),
   name: z.string().min(0).max(100),

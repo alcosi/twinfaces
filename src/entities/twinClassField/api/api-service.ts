@@ -54,9 +54,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     return settings.client.POST(`/private/twin_class/{twinClassId}/field/v1`, {
       params: {
         header: getApiDomainHeaders(settings),
-        path: {
-          twinClassId: id,
-        },
+        path: { twinClassId: id },
       },
       body: body,
     });

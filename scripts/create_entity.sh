@@ -215,10 +215,11 @@ cat <<EOL >"$BASE_DIR/components/resource-link/resource-link.tsx"
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 import { ${ICON_NAME} } from "lucide-react";
+import { ${ENTITY_NAME_CAPITALIZED}_DETAILED } from "../../api";
 import { ${ENTITY_NAME_CAPITALIZED}ResourceTooltip } from "./tooltip";
 
 type Props = {
-  data: unknown;
+  data: ${ENTITY_NAME_CAPITALIZED}_DETAILED;
   disabled?: boolean;
   withTooltip?: boolean;
 };
@@ -253,10 +254,11 @@ cat <<EOL >"$BASE_DIR/components/resource-link/tooltip.tsx"
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { ${ICON_NAME} } from "lucide-react";
+import { ${ENTITY_NAME_CAPITALIZED}_DETAILED } from "../../api";
 import { ENTITY_COLOR } from "../../libs";
 
 type Props = {
-  data: unknown;
+  data: ${ENTITY_NAME_CAPITALIZED}_DETAILED;
   link: string;
 };
 

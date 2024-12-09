@@ -2,11 +2,12 @@
 
 import { TwinClassContext } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { TwinClassFields } from "@/screens/twinClassFields";
 import { TwinClassLinks } from "@/screens/twinClassLinks";
 import { TwinClassTwinFlows } from "@/screens/twinClassTwinFlows";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";
-import { TwinClassFields, TwinClassGeneral, TwinClassStatuses } from "./views";
+import { TwinClassGeneral, TwinClassStatuses } from "./views";
 
 const tabs: Tab[] = [
   {

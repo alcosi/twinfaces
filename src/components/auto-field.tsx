@@ -18,11 +18,12 @@ import {
   TextFormField,
   TextFormItem,
 } from "@/components/form-fields/text-form-field";
+import { FeaturerTypeId } from "@/entities/featurer";
+import { TagBoxProps } from "@/shared/ui";
 import { ComboboxProps } from "@/shared/ui/combobox";
+import { InputProps } from "@/shared/ui/input";
 import { Control, FieldPath } from "react-hook-form";
 import { TagsFormField, TagsFormItem } from "./form-fields/tags-form-field";
-import { TagBoxProps } from "@/shared/ui";
-import { InputProps } from "@/shared/ui/input";
 
 export enum AutoFormValueType {
   string = "string",
@@ -82,7 +83,7 @@ export interface AutoFormTagValueInfo
 
 export interface AutoFormFeaturerValueInfo {
   type: AutoFormValueType.featurer;
-  typeId: number;
+  typeId: FeaturerTypeId;
   paramsName?: FieldPath<any>;
 }
 
