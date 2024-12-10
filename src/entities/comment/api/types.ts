@@ -10,3 +10,7 @@ export type Comment_DETAILED = RequireFields<
 export type CommentFilterKeys = "idList";
 export type CommentFilters = Partial<Pick<any, CommentFilterKeys>>;
 export type CommentView = components["schemas"]["CommentViewV1"];
+export type CommentView_DETAILED = RequireFields<
+  CommentView,
+  "id" | "text" | "authorUserId" | "createdAt"
+>;

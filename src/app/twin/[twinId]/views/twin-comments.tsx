@@ -1,181 +1,48 @@
-import { CommentView } from "@/entities/comment";
-import { Avatar } from "@/shared/ui";
-import { Button } from "@/shared/ui/button";
-import { Card, CardContent, CardHeader } from "@/shared/ui/card";
-import { CopyButton } from "@/shared/ui/copy-button";
 import {
-  CrudDataTable,
-  FiltersState,
-} from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useContext, useRef, useState } from "react";
+  CommentCard,
+  CommentView_DETAILED,
+  useFetchComments,
+} from "@/entities/comment";
+import { PagedResponse } from "@/shared/api";
+import { PaginationState } from "@tanstack/table-core";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { TwinContext } from "../twin-context";
 
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { CircleUserRound, EllipsisVertical } from "lucide-react";
-import { formatToTwinfaceDate } from "@/shared/libs";
-
-const columns: ColumnDef<CommentView>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-  },
-  {
-    accessorKey: "authorUserId",
-    header: "Author",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-  },
-  {
-    accessorKey: "text",
-    header: "Text",
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created at",
-    cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
-  },
-];
-
 export function TwinComments() {
-  const api = useContext(ApiContext);
   const { twin } = useContext(TwinContext);
-  const tableRefForward = useRef<DataTableHandle>(null);
+  const { fetchCommentsByTwinId } = useFetchComments();
+  const [commentsData, setCommentsData] = useState<CommentView_DETAILED[]>();
 
-  const [commentsData, setCommentsData] = useState<CommentView[]>();
+  useEffect(() => {
+    fetchComments({ pageIndex: 0, pageSize: 10 });
+  }, []);
 
   async function fetchComments(
-    _: PaginationState,
-    filters: FiltersState
-  ): Promise<PagedResponse<CommentView>> {
+    pagination: PaginationState
+  ): Promise<PagedResponse<CommentView_DETAILED>> {
     if (!twin?.id) {
       toast.error("Twin ID is missing");
       return { data: [], pagination: {} };
     }
 
     try {
-      const response = await api.twin.getComments({ id: twin.id });
-      const data = response.data;
+      const response = await fetchCommentsByTwinId({
+        twinId: twin?.id,
+        pagination,
+      });
 
-      if (!data || data.status != 0) {
-        console.error("failed to fetch twin comments", data);
-        let message = "Failed to load twin comments";
-        if (data?.msg) message += `: ${data.msg}`;
-        toast.error(message);
-        return { data: [], pagination: {} };
-      }
-      setCommentsData(data?.comments);
-      return {
-        data: data?.comments || [],
-        pagination: {},
-      };
-    } catch (e) {
-      console.error(`Failed to fetch twin comments`, e);
-      toast.error(`Failed to fetch twin comments`);
+      setCommentsData(response.data);
+      return { data: response.data, pagination: response.pagination };
+    } catch (error) {
+      toast.error("Failed to fetch twin comments");
       return { data: [], pagination: {} };
     }
   }
 
   return (
-    <>
-      <div className="mb-10">
-        <CrudDataTable
-          ref={tableRefForward}
-          title="Comments"
-          columns={columns}
-          getRowId={(row) => row.id!}
-          fetcher={(paginationState, filters) =>
-            fetchComments(paginationState, filters)
-          }
-          // createButton={{
-          //   enabled: true,
-          //   onClick: createLink,
-          // }}
-          disablePagination={true}
-          pageSizes={[10, 20, 50]}
-          customizableColumns={{
-            enabled: true,
-            defaultVisibleKeys: ["id", "authorUserId", "text", "createdAt"],
-          }}
-        />
-      </div>
-
+    <div className="py-10">
       {commentsData?.map((item) => <CommentCard item={item} key={item.id} />)}
-    </>
-  );
-}
-
-interface CommentCardProps {
-  item: CommentView;
-}
-
-export function CommentCard({ item }: CommentCardProps) {
-  const displayFields = [
-    { label: "ID:", value: item.id },
-    { label: "Author:", value: item.authorUserId },
-    item.authorUser?.email && {
-      label: "Email:",
-      value: item.authorUser.email,
-      isEmail: true,
-    },
-  ] as { label: string; value: string; isEmail?: boolean }[];
-
-  return (
-    <Card className="mb-2 w-auto" key={item.id}>
-      <CardHeader>
-        <div className="flex items-center justify-between space-x-4">
-          <div className="flex items-center space-x-4">
-            {item.authorUser?.avatar ? (
-              <Avatar url={item.authorUser?.avatar} alt={"Logo"} size="lg" />
-            ) : (
-              <CircleUserRound className="h-9 w-9" />
-            )}
-
-            <h2 className="text-base font-semibold">
-              @{item.authorUser?.fullName}
-            </h2>
-            <span className="text-xs text-gray-500">
-              {formatToTwinfaceDate(item.createdAt!)}
-            </span>
-          </div>
-
-          <Popover>
-            <PopoverTrigger className="flex" asChild>
-              <Button size="iconSm" variant="outline">
-                <EllipsisVertical />
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent className={"w-auto"}>
-              <div className={"flex flex-col items-start gap-2"}>
-                {displayFields
-                  .filter(Boolean)
-                  .map(({ label, value, isEmail }) => (
-                    <div key={label} className="flex items-center">
-                      <span className="text-black-500 font-bold mr-2.5">
-                        {label}
-                      </span>
-                      {isEmail ? (
-                        <>
-                          {value}
-                          <CopyButton textToCopy={value} />
-                        </>
-                      ) : (
-                        <GuidWithCopy value={value} />
-                      )}
-                    </div>
-                  ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </CardHeader>
-      <CardContent className={"break-words"}>{item.text}</CardContent>
-    </Card>
+    </div>
   );
 }

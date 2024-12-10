@@ -88,21 +88,7 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function getComments({ id }: { id: string }) {
-    return settings.client.GET("/private/comment/twin/{twinId}/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { twinId: id },
-        query: {
-          showStatusMode: "DETAILED",
-          showCommentMode: "DETAILED",
-          showComment2UserMode: "DETAILED",
-        },
-      },
-    });
-  }
-
-  return { search, getById, update, searchLinks, getFieldById, getComments };
+  return { search, getById, update, searchLinks, getFieldById };
 }
 
 export type TwinApi = ReturnType<typeof createTwinApi>;
