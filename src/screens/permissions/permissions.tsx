@@ -1,12 +1,12 @@
 import {
   CreatePermissionRequestBody,
+  type Permission,
   Permission_DETAILED,
   PERMISSION_SCHEMA,
   PermissionFormValues,
   UpdatePermissionRequestBody,
   usePermissionFilters,
   usePermissionSearchV1,
-  type Permission,
 } from "@/entities/permission";
 import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
 import { useBreadcrumbs } from "@/features/breadcrumb";
@@ -22,21 +22,19 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { PermissionsFormFields } from "./form-fields";
+import {
+  PermissionGroup,
+  PermissionGroupResourceLink,
+} from "@/entities/permissionGroup";
 
 const colDefs: Record<
   keyof Omit<Permission, "group">,
   ColumnDef<Permission>
 > = {
-  groupId: {
-    id: "groupId",
-    accessorKey: "groupId",
-    header: "Group",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-  },
   id: {
     id: "id",
     accessorKey: "id",
-    header: "Id",
+    header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   key: {
@@ -53,6 +51,20 @@ const colDefs: Record<
         <PermissionResourceLink data={row.original} withTooltip />
       </div>
     ),
+  },
+  groupId: {
+    id: "groupId",
+    accessorKey: "groupId",
+    header: "Group",
+    cell: ({ row: { original } }) =>
+      original.group && (
+        <div className="max-w-48 inline-flex">
+          <PermissionGroupResourceLink
+            data={original.group as PermissionGroup}
+            withTooltip
+          />
+        </div>
+      ),
   },
   description: {
     id: "description",
@@ -160,10 +172,10 @@ export function Permissions() {
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
-        colDefs.groupId!,
         colDefs.id!,
         colDefs.key!,
         colDefs.name!,
+        colDefs.groupId!,
         colDefs.description!,
       ]}
       fetcher={fetchPermissions}
@@ -173,18 +185,20 @@ export function Permissions() {
         filtersInfo: buildFilterFields(),
       }}
       defaultVisibleColumns={[
-        colDefs.groupId,
-        colDefs.name,
-        colDefs.description,
-      ]}
-      orderedColumns={[
-        colDefs.groupId,
         colDefs.id,
         colDefs.key,
         colDefs.name,
+        colDefs.groupId,
         colDefs.description,
       ]}
-      groupableColumns={[colDefs.groupId, colDefs.name, colDefs.description]}
+      orderedColumns={[
+        colDefs.id,
+        colDefs.key,
+        colDefs.name,
+        colDefs.groupId,
+        colDefs.description,
+      ]}
+      groupableColumns={[colDefs.name, colDefs.groupId, colDefs.description]}
       dialogForm={form}
       onCreateSubmit={handleCreate}
       onUpdateSubmit={handleUpdate}
