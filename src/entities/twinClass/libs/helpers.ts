@@ -1,6 +1,7 @@
 import { RelatedObjects } from "@/shared/api";
-import { DataListsMap, TwinClass } from "../api";
+import { TwinClass } from "../api";
 import { TwinClass_DETAILED } from "./types";
+import { DataListsMap } from "@/entities/datalist";
 
 export const hydrateTwinClassFromMap = (
   twinClassDTO: TwinClass,

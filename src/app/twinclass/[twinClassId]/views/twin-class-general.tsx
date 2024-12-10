@@ -1,9 +1,9 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
+import { DatalistResourceLink, DataListV1 } from "@/entities/datalist";
 import { FeaturerTypes } from "@/entities/featurer";
-import { DatalistResourceLink } from "@/entities/datalist";
+import { Permission, PermissionResourceLink } from "@/entities/permission";
 import {
-  DataListV1,
   TwinClass_DETAILED,
   TwinClassContext,
   TwinClassResourceLink,
@@ -244,6 +244,18 @@ export function TwinClassGeneral() {
                       twinClass.tagsDataListId
                     ] as DataListV1
                   }
+                  withTooltip
+                />
+              )}
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>View Permission</TableCell>
+            <TableCell>
+              {twinClass.viewPermission && (
+                <PermissionResourceLink
+                  data={twinClass.viewPermission as Permission}
                   withTooltip
                 />
               )}

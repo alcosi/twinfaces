@@ -36,7 +36,11 @@ const colDefs: Record<
     | "headClassId"
     | "extendsClassId"
     | "abstractClass"
+    | "permissionSchemaSpace"
+    | "twinflowSchemaSpace"
+    | "twinClassSchemaSpace"
     | "description"
+    | "aliasSpace"
     | "markersDataListId"
     | "tagsDataListId"
   >,
@@ -64,14 +68,16 @@ const colDefs: Record<
   id: {
     id: "id",
     accessorKey: "id",
-    header: "Id",
+    header: "ID",
     cell: (data) => <GuidWithCopy value={data.row.original.id} />,
   },
+
   key: {
     id: "key",
     accessorKey: "key",
     header: "Key",
   },
+
   name: {
     id: "name",
     accessorKey: "name",
@@ -82,6 +88,13 @@ const colDefs: Record<
       </div>
     ),
   },
+
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
+  },
+
   headClassId: {
     id: "headClassId",
     accessorKey: "headClassId",
@@ -96,6 +109,7 @@ const colDefs: Record<
         </div>
       ) : null,
   },
+
   extendsClassId: {
     id: "extendsClass.id",
     accessorKey: "extendsClass.id",
@@ -110,22 +124,46 @@ const colDefs: Record<
         </div>
       ) : null,
   },
+
   abstractClass: {
     id: "abstractClass",
     accessorKey: "abstractClass",
     header: "Abstract",
     cell: (data) => <>{data.getValue() && <Check />}</>,
   },
-  description: {
-    id: "description",
-    accessorKey: "description",
-    header: "Description",
+
+  permissionSchemaSpace: {
+    id: "permissionSchemaSpace",
+    accessorKey: "permissionSchemaSpace",
+    header: "Permission Schema",
+    cell: (data) => <>{data.getValue() && <Check />}</>,
+  },
+
+  twinflowSchemaSpace: {
+    id: "twinflowSchemaSpace",
+    accessorKey: "twinflowSchemaSpace",
+    header: "Twinflow schema",
+    cell: (data) => <>{data.getValue() && <Check />}</>,
+  },
+
+  twinClassSchemaSpace: {
+    id: "twinClassSchemaSpace",
+    accessorKey: "twinClassSchemaSpace",
+    header: "Twinclass schema",
+    cell: (data) => <>{data.getValue() && <Check />}</>,
+  },
+
+  aliasSpace: {
+    id: "aliasSpace",
+    accessorKey: "aliasSpace",
+    header: "Alias space",
+    cell: (data) => <>{data.getValue() && <Check />}</>,
   },
 
   markersDataListId: {
     id: "markersDataListId",
     accessorKey: "markersDataListId",
-    header: "Markers",
+    header: "Markers list",
     cell: ({ row: { original } }) =>
       original.markerMap ? (
         <div className="max-w-48 inline-flex">
@@ -137,7 +175,7 @@ const colDefs: Record<
   tagsDataListId: {
     id: "tagsDataListId",
     accessorKey: "tagsDataListId",
-    header: "Tags",
+    header: "Tags list",
     cell: ({ row: { original } }) =>
       original.tagMap ? (
         <div className="max-w-48 inline-flex">
@@ -238,10 +276,14 @@ export default function TwinClasses() {
           colDefs.id!,
           colDefs.key!,
           colDefs.name!,
+          colDefs.description!,
           colDefs.headClassId!,
           colDefs.extendsClassId!,
           colDefs.abstractClass!,
-          colDefs.description!,
+          colDefs.permissionSchemaSpace!,
+          colDefs.twinflowSchemaSpace!,
+          colDefs.twinClassSchemaSpace!,
+          colDefs.aliasSpace!,
           colDefs.markersDataListId!,
           colDefs.tagsDataListId!,
         ]}
