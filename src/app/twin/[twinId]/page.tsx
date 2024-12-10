@@ -4,7 +4,13 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";
 import { TwinContext } from "./twin-context";
-import { TwinFields, TwinGeneral, TwinLinks, TwinComments } from "./views";
+import {
+  TwinFields,
+  TwinGeneral,
+  TwinLinks,
+  TwinComments,
+  TwinHistory,
+} from "./views";
 
 const tabs: Tab[] = [
   {
@@ -26,6 +32,11 @@ const tabs: Tab[] = [
     key: "comments",
     label: "Comments",
     content: <TwinComments />,
+  },
+  {
+    key: "history",
+    label: "History",
+    content: <TwinHistory />,
   },
 ];
 export default function TwinPage() {

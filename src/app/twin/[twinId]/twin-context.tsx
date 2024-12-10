@@ -1,6 +1,7 @@
-import { LoadingOverlay } from "@/shared/ui/loading";
 import { Twin } from "@/entities/twin";
 import { ApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -61,6 +62,8 @@ export function TwinContextProvider({
       })
       .finally(() => setLoading(false));
   }
+
+  if (isUndefined(twin)) return <>{loading && <LoadingOverlay />}</>;
 
   return (
     <TwinContext.Provider
