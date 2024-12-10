@@ -144,6 +144,11 @@ export function TwinflowTransitionGeneral({
           </TableRow>
 
           <TableRow className="cursor-pointer">
+            <TableCell>Alias</TableCell>
+            <TableCell>{transition.alias}</TableCell>
+          </TableRow>
+
+          <TableRow className="cursor-pointer">
             <TableCell>Name</TableCell>
             <TableCell>
               <InPlaceEdit {...nameSettings} />
