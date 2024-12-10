@@ -103,73 +103,70 @@ export function TwinflowGeneral({
   }
 
   return (
-    <>
-      <InPlaceEditContextProvider>
-        <Table className="mt-8">
-          <TableBody>
-            <TableRow>
-              <TableCell width={300}>ID</TableCell>
-              <TableCell>
-                <GuidWithCopy value={twinflow.id} variant={"long"} />
-              </TableCell>
-            </TableRow>
+    <InPlaceEditContextProvider>
+      <Table className="mt-8">
+        <TableBody>
+          <TableRow>
+            <TableCell width={300}>ID</TableCell>
+            <TableCell>
+              <GuidWithCopy value={twinflow.id} variant={"long"} />
+            </TableCell>
+          </TableRow>
 
-            <TableRow>
-              <TableCell>Class</TableCell>
-              <TableCell>
-                {twinflow.twinClass && (
-                  <TwinClassResourceLink
-                    data={twinflow.twinClass as TwinClass_DETAILED}
-                    withTooltip
-                  />
-                )}
-              </TableCell>
-            </TableRow>
+          <TableRow>
+            <TableCell>Class</TableCell>
+            <TableCell>
+              {twinflow.twinClass && (
+                <TwinClassResourceLink
+                  data={twinflow.twinClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              )}
+            </TableCell>
+          </TableRow>
 
-            <TableRow className="cursor-pointer">
-              <TableCell>Name</TableCell>
-              <TableCell>
-                <InPlaceEdit {...nameSettings} />
-              </TableCell>
-            </TableRow>
+          <TableRow className="cursor-pointer">
+            <TableCell>Name</TableCell>
+            <TableCell>
+              <InPlaceEdit {...nameSettings} />
+            </TableCell>
+          </TableRow>
 
-            <TableRow className="cursor-pointer">
-              <TableCell>Description</TableCell>
-              <TableCell>
-                <InPlaceEdit {...descriptionSettings} />
-              </TableCell>
-            </TableRow>
+          <TableRow className="cursor-pointer">
+            <TableCell>Description</TableCell>
+            <TableCell>
+              <InPlaceEdit {...descriptionSettings} />
+            </TableCell>
+          </TableRow>
 
-            <TableRow
-              className="cursor-pointer"
-              onClick={() =>
-                openWithSettings(initialStatusIdAutoDialogSettings)
-              }
-            >
-              <TableCell>Initial status</TableCell>
-              <TableCell>
-                {twinflow.initialStatus && (
-                  <TwinClassStatusResourceLink
-                    data={twinflow.initialStatus as TwinStatus}
-                    twinClassId={twinflow.twinClassId!}
-                    withTooltip
-                  />
-                )}
-              </TableCell>
-            </TableRow>
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(initialStatusIdAutoDialogSettings)}
+          >
+            <TableCell>Initial status</TableCell>
+            <TableCell>
+              {twinflow.initialStatus && (
+                <TwinClassStatusResourceLink
+                  data={twinflow.initialStatus as TwinStatus}
+                  twinClassId={twinflow.twinClassId!}
+                  withTooltip
+                />
+              )}
+            </TableCell>
+          </TableRow>
 
-            <TableRow>
-              <TableCell>Created at</TableCell>
-              <TableCell>{formatToTwinfaceDate(twinflow.createdAt!)}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </InPlaceEditContextProvider>
+          <TableRow>
+            <TableCell>Created at</TableCell>
+            <TableCell>{formatToTwinfaceDate(twinflow.createdAt!)}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+
       <AutoDialog
         open={editFieldDialogOpen}
         onOpenChange={setEditFieldDialogOpen}
         settings={currentAutoEditDialogSettings}
       />
-    </>
+    </InPlaceEditContextProvider>
   );
 }
