@@ -1,19 +1,27 @@
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import { TwinClassContext, useFetchTwinClassById } from "@/entities/twinClass";
-import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
+import {
+  TWIN_CLASS_STATUS_SCHEMA,
+  TwinClassStatusFormValues,
+  TwinClassStatusResourceLink,
+  TwinStatus,
+  TwinStatusCreateRq,
+} from "@/entities/twinStatus";
 import { isFalsy } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
-import { CrudDataTable } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { ColumnDef } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { toast } from "sonner";
-import CreateEditTwinStatusDialog from "./twin-status-dialog";
-import { PagedResponse } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
+import { Experimental_CrudDataTable } from "@/widgets";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TwinClassStatusFormFields } from "@/screens/twinClassStatus";
 
 function buildColumnDefs(twinClassId: string) {
   const colDefs: ColumnDef<TwinStatus>[] = [
@@ -94,13 +102,23 @@ function buildColumnDefs(twinClassId: string) {
 }
 
 export function TwinClassStatuses() {
+  const api = useContext(ApiContext);
   const router = useRouter();
   const { twinClass, fetchClassData } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const [createEditStatusDialogOpen, setCreateEditStatusDialogOpen] =
-    useState<boolean>(false);
-  const [editedStatus, setEditedStatus] = useState<TwinStatus | null>(null);
   const { fetchTwinClassById } = useFetchTwinClassById();
+
+  const form = useForm<TwinClassStatusFormValues>({
+    resolver: zodResolver(TWIN_CLASS_STATUS_SCHEMA),
+    defaultValues: {
+      key: "",
+      name: "",
+      description: "",
+      logo: "",
+      backgroundColor: "#000000",
+      fontColor: "#000000",
+    },
+  });
 
   async function fetchStatuses(): Promise<PagedResponse<TwinStatus>> {
     if (!twinClass?.id) {
@@ -113,7 +131,6 @@ export function TwinClassStatuses() {
         id: twinClass.id,
         query: {
           showTwinClassMode: "SHORT",
-          // showTwin2TwinClassMode: 'SHORT',
           showTwin2StatusMode: "DETAILED",
           showTwinClass2StatusMode: "DETAILED",
         },
@@ -140,46 +157,60 @@ export function TwinClassStatuses() {
     }
   }
 
-  function createStatus() {
-    setEditedStatus(null);
-    setCreateEditStatusDialogOpen(true);
-  }
-
-  function onChangeSuccess() {
-    fetchClassData();
-    tableRef.current?.refresh();
-  }
-
   if (isFalsy(twinClass)) {
     console.error("TwinClassFields: no twin class");
     return;
   }
 
-  return (
-    <>
-      <CrudDataTable
-        ref={tableRef}
-        columns={buildColumnDefs(twinClass.id!)}
-        getRowId={(row) => row.key!}
-        fetcher={fetchStatuses}
-        createButton={{
-          enabled: true,
-          onClick: createStatus,
-        }}
-        disablePagination={true}
-        pageSizes={[10, 20, 50]}
-        onRowClick={(row) =>
-          router.push(`/twinclass/${twinClass!.id!}/twinStatus/${row.id}`)
-        }
-      />
+  async function handleCreate(formValues: TwinClassStatusFormValues) {
+    const data: TwinStatusCreateRq = {
+      key: formValues.key,
+      nameI18n: {
+        translationInCurrentLocale: formValues.name,
+        translations: {},
+      },
+      descriptionI18n: {
+        translationInCurrentLocale: formValues.description,
+        translations: {},
+      },
+      logo: formValues.logo,
+      backgroundColor: formValues.backgroundColor,
+      fontColor: formValues.fontColor,
+    };
 
-      <CreateEditTwinStatusDialog
-        open={createEditStatusDialogOpen}
-        twinClassId={twinClass.id!}
-        status={editedStatus}
-        onOpenChange={setCreateEditStatusDialogOpen}
-        onSuccess={onChangeSuccess}
-      />
-    </>
+    if (!twinClass?.id) {
+      toast.error("Twin class ID is missing");
+      return;
+    }
+
+    const { error } = await api.twinStatus.create({
+      twinClassId: twinClass.id,
+      data: data,
+    });
+
+    if (error) {
+      throw new Error("Failed to create status");
+    }
+
+    toast.success("Link created successfully!");
+    fetchClassData();
+  }
+
+  return (
+    <Experimental_CrudDataTable
+      ref={tableRef}
+      columns={buildColumnDefs(twinClass.id!)}
+      getRowId={(row) => row.key!}
+      fetcher={fetchStatuses}
+      onRowClick={(row) =>
+        router.push(`/twinclass/${twinClass!.id!}/twinStatus/${row.id}`)
+      }
+      dialogForm={form}
+      onCreateSubmit={handleCreate}
+      renderFormFields={() => (
+        <TwinClassStatusFormFields control={form.control} />
+      )}
+      disablePagination={true}
+    />
   );
 }
