@@ -88,7 +88,36 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update, searchLinks, getFieldById };
+  function getHistory({
+    twinId,
+    pagination,
+  }: {
+    twinId: string;
+    pagination: PaginationState;
+  }) {
+    return settings.client.GET("/private/twin/{twinId}/history/list/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { twinId },
+        query: {
+          showHistory2TwinMode: "DETAILED",
+          // showTwin2TwinClassMode: "DETAILED",
+          showTwin2UserMode: "DETAILED",
+          limit: pagination.pageSize,
+          offset: pagination.pageIndex * pagination.pageSize,
+        },
+      },
+    });
+  }
+
+  return {
+    search,
+    getById,
+    update,
+    searchLinks,
+    getFieldById,
+    getHistory,
+  };
 }
 
 export type TwinApi = ReturnType<typeof createTwinApi>;

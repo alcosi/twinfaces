@@ -7,6 +7,7 @@ export type Twin_DETAILED = RequireFields<Twin, "id" | "name">;
 export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
 export type TwinLinkView = components["schemas"]["TwinLinkViewV1"];
 export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];
+export type HistoryV1 = components["schemas"]["HistoryV1"];
 
 export type TwinFilterKeys =
   | "twinIdList"
