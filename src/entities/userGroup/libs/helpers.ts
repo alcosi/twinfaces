@@ -2,7 +2,23 @@ import { RelatedObjects } from "@/shared/api";
 import {
   PermissionGrantUserGroup,
   PermissionGrantUserGroup_DETAILED,
+  UserGroup,
+  UserGroup_DETAILED,
 } from "../api";
+
+export function hydrateUserGroupFromMap(
+  dto: UserGroup,
+  relatedObjects?: RelatedObjects
+) {
+  const hydrated: UserGroup_DETAILED = Object.assign(
+    {},
+    dto
+  ) as UserGroup_DETAILED;
+
+  // Add valid logic here
+
+  return hydrated;
+}
 
 export const hydratePermissionGrantUserGroupFromMap = (
   dto: PermissionGrantUserGroup,

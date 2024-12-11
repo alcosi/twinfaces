@@ -1,6 +1,6 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { DatalistResourceLink, DataListV1 } from "@/entities/datalist";
+import { DataList, DatalistResourceLink } from "@/entities/datalist";
 import { FeaturerTypes } from "@/entities/featurer";
 import { Permission, PermissionResourceLink } from "@/entities/permission";
 import {
@@ -226,7 +226,7 @@ export function TwinClassGeneral() {
                   data={
                     relatedObjects.dataListsMap[
                       twinClass.markersDataListId
-                    ] as DataListV1
+                    ] as DataList
                   }
                   withTooltip
                 />
@@ -242,7 +242,7 @@ export function TwinClassGeneral() {
                   data={
                     relatedObjects.dataListsMap[
                       twinClass.tagsDataListId
-                    ] as DataListV1
+                    ] as DataList
                   }
                   withTooltip
                 />
