@@ -80,7 +80,6 @@ export const Fake = {
   UserGroup: {
     id: "e155e05b-f353-49ff-9869-da1e62aab179",
     name: "manager",
-    type: "domainScopeBusinessAccountManage",
   },
   Comment: {
     id: "123",

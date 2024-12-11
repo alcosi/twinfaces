@@ -1,8 +1,32 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { PermissionGrantUserGroupFilters } from "./types";
+import { PermissionGrantUserGroupFilters, UserGroupFilters } from "./types";
 
 export function createUserGroupApi(settings: ApiSettings) {
+  async function search({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: UserGroupFilters;
+  }) {
+    return settings.client.POST("/private/user_group/search/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showUserGroupMode: "SHORT",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+        },
+      },
+      body: {
+        ...filters,
+      },
+    });
+  }
+
   async function searchPermissionGrants({
     pagination,
     filters,
@@ -34,7 +58,7 @@ export function createUserGroupApi(settings: ApiSettings) {
     );
   }
 
-  return { searchPermissionGrants };
+  return { search, searchPermissionGrants };
 }
 
 export type UserGroupApi = ReturnType<typeof createUserGroupApi>;

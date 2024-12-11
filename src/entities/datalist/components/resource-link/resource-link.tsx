@@ -1,11 +1,11 @@
-import { DataListV1 } from "@/entities/datalist";
+import { DataList } from "@/entities/datalist";
+import { DatalistResourceTooltip } from "@/entities/datalist/components/resource-link/tooltip";
+import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 import { ListTree } from "lucide-react";
-import { isPopulatedString } from "@/shared/libs";
-import { DatalistResourceTooltip } from "@/entities/datalist/components/resource-link/tooltip";
 
 type PropsDataLink = {
-  data: DataListV1;
+  data: DataList;
   disabled?: boolean;
   withTooltip?: boolean;
 };
