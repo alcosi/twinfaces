@@ -1,7 +1,6 @@
-import { cn, isPopulatedString } from "@/shared/libs";
+import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { css } from "@emotion/css";
-import { Square } from "lucide-react";
+import { CircleDot, Square } from "lucide-react";
 import { useTheme } from "next-themes";
 import { TwinStatus } from "../../api";
 import { TwinClassStatusResourceTooltip } from "./tooltip";
@@ -37,16 +36,7 @@ export function TwinClassStatusResourceLink({
               <TwinClassStatusResourceTooltip
                 data={data}
                 link={link}
-                IconComponent={() => (
-                  <div
-                    className={cn(
-                      "w-16 h-16 rounded-full",
-                      css`
-                        background-color: ${squareColor};
-                      `
-                    )}
-                  />
-                )}
+                IconComponent={CircleDot}
               />
             )
           : undefined
