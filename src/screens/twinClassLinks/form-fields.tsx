@@ -1,8 +1,8 @@
 import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { TextFormField } from "@/components/form-fields/text-form-field";
 import {
-  TWIN_CLASS_LINK_STRENGTH,
-  TWIN_CLASS_LINK_TYPES,
+  useTwinClassLinkStrengthSelectAdapter,
+  useTwinClassLinkTypeSelectAdapter,
 } from "@/entities/twinClassLink";
 import { TwinClassSelectField } from "@/features/twinClass";
 import { Control, FieldValues, Path } from "react-hook-form";
@@ -14,6 +14,9 @@ export function TwinClassLinkFormFields<T extends FieldValues>({
   control: Control<T>;
   isForward?: boolean;
 }) {
+  const typeAdapter = useTwinClassLinkTypeSelectAdapter();
+  const strengthAdapter = useTwinClassLinkStrengthSelectAdapter();
+
   return (
     <>
       <TwinClassSelectField
@@ -37,25 +40,19 @@ export function TwinClassLinkFormFields<T extends FieldValues>({
         control={control}
         name={"type" as Path<T>}
         label="Link Type"
-        getById={async (id) => TWIN_CLASS_LINK_TYPES.find((i) => i.id === id)}
-        getItems={async () => TWIN_CLASS_LINK_TYPES}
-        renderItem={({ label }) => label}
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
+        {...typeAdapter}
       />
       <ComboboxFormField
         control={control}
         name={"linkStrength" as Path<T>}
         label="Link Strength"
-        getById={async (id) =>
-          TWIN_CLASS_LINK_STRENGTH.find((i) => i.id === id)
-        }
-        getItems={async () => TWIN_CLASS_LINK_STRENGTH}
-        renderItem={({ label }) => label}
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
+        {...strengthAdapter}
       />
     </>
   );

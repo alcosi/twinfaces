@@ -1,17 +1,23 @@
 import { AutoField, AutoFormValueType } from "@/components/auto-field";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import {
+  useTwinClassLinkStrengthSelectAdapter,
+  useTwinClassLinkTypeSelectAdapter,
+} from "@/entities/twinClassLink";
 import { useUserSelectAdapter } from "@/entities/user/libs";
+import { useUserGroupSelectAdapter } from "@/entities/userGroup/libs/hooks";
 import { Form } from "@/shared/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UiSection } from "../components/ui-section";
-import { useUserGroupSelectAdapter } from "@/entities/userGroup/libs/hooks";
 
 export function InputFieldsTab() {
   const tcAdapter = useTwinClassSelectAdapter();
   const uAdapter = useUserSelectAdapter();
   const ugAdapter = useUserGroupSelectAdapter();
+  const linkTypeAdapter = useTwinClassLinkTypeSelectAdapter();
+  const linkStrengthAdapter = useTwinClassLinkStrengthSelectAdapter();
 
   const form = useForm({
     resolver: zodResolver(z.any()),
@@ -43,6 +49,56 @@ export function InputFieldsTab() {
                     type: AutoFormValueType.combobox,
                     label: "Label",
                     ...tcAdapter,
+                    multi: true,
+                  }}
+                />
+              }
+            />
+            <UiSection.Item
+              title="Link type (single)"
+              value={
+                <AutoField
+                  info={{
+                    type: AutoFormValueType.combobox,
+                    label: "Label",
+                    ...linkTypeAdapter,
+                  }}
+                />
+              }
+            />
+            <UiSection.Item
+              title="Link type (multi)"
+              value={
+                <AutoField
+                  info={{
+                    type: AutoFormValueType.combobox,
+                    label: "Label",
+                    ...linkTypeAdapter,
+                    multi: true,
+                  }}
+                />
+              }
+            />
+            <UiSection.Item
+              title="Link strength (single)"
+              value={
+                <AutoField
+                  info={{
+                    type: AutoFormValueType.combobox,
+                    label: "Label",
+                    ...linkStrengthAdapter,
+                  }}
+                />
+              }
+            />
+            <UiSection.Item
+              title="Link strength (multi)"
+              value={
+                <AutoField
+                  info={{
+                    type: AutoFormValueType.combobox,
+                    label: "Label",
+                    ...linkStrengthAdapter,
                     multi: true,
                   }}
                 />
