@@ -17,7 +17,7 @@ export function createTwinApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
-          lazyRelation: true,
+          lazyRelation: false,
           showTwinMode: "DETAILED",
           showTwinClassMode: "DETAILED",
           showTwin2TwinClassMode: "DETAILED",
