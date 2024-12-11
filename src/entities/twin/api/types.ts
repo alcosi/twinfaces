@@ -8,6 +8,7 @@ export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
 export type TwinLinkView = components["schemas"]["TwinLinkViewV1"];
 export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];
 export type HistoryV1 = components["schemas"]["HistoryV1"];
+export type TwinBaseV2 = components["schemas"]["TwinBaseV2"];
 
 export type TwinFilterKeys =
   | "twinIdList"
