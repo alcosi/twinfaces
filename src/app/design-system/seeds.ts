@@ -9,6 +9,14 @@ const twinClassMap = {
 };
 
 export const Fake = {
+  loremIpsum: {
+    id: "lorem-ipsum",
+    key: "Lorem ipsum",
+    name: "Lorem ipsum",
+    fullName: "Lorem Ipsum",
+    alias: "lorem ipsum",
+    description: "Lorem ipsum dolor sit amet consectetur.",
+  } as any,
   TwinClass: twinClassMap.supplyPortion,
   TwinClassField: {
     id: "c2b35e49-a3a5-43da-8cb7-dfb7a0989303",
