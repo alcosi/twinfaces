@@ -63,10 +63,6 @@ export function TwinClassFormFields<T extends FieldValues>({
             typeId={FeaturerTypes.headHunter}
             label={"Head Hunter"}
           />
-          {/*<FeaturerInput typeId={FeaturerTypes.headHunter} onChange={(val) => {*/}
-          {/*    console.log('new featurer', val)*/}
-          {/*    setFeaturer(val)*/}
-          {/*}}/>*/}
         </>
       )}
       <TwinClassSelectField
