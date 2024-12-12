@@ -2,7 +2,6 @@
 
 import {
   Twin,
-  TwinBaseV2,
   TwinResourceLink,
   useTwinFilters,
   useTwinSearchV3,
@@ -128,10 +127,7 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.headTwinId && original.headTwin ? (
         <div className="max-w-48 inline-flex">
-          <TwinResourceLink
-            data={original.headTwin as TwinBaseV2}
-            withTooltip
-          />
+          <TwinResourceLink data={original.headTwin} withTooltip />
         </div>
       ) : null,
   },
@@ -196,17 +192,17 @@ export default function TwinsPage() {
     <Experimental_CrudDataTable
       ref={tableRef}
       columns={[
-        colDefs.id!,
-        colDefs.twinClassId!,
-        colDefs.name!,
-        colDefs.statusId!,
-        colDefs.description!,
-        colDefs.authorUserId!,
-        colDefs.assignerUserId!,
-        colDefs.headTwinId!,
-        colDefs.tags!,
-        colDefs.markers!,
-        colDefs.createdAt!,
+        colDefs.id,
+        colDefs.twinClassId,
+        colDefs.name,
+        colDefs.statusId,
+        colDefs.description,
+        colDefs.authorUserId,
+        colDefs.assignerUserId,
+        colDefs.headTwinId,
+        colDefs.tags,
+        colDefs.markers,
+        colDefs.createdAt,
       ]}
       getRowId={(row) => row.id!}
       fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
