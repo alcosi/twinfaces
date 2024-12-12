@@ -1,5 +1,26 @@
 import { RelatedObjects } from "@/shared/api";
-import { PermissionGrantUser, PermissionGrantUser_DETAILED } from "../api";
+import {
+  DomainUser,
+  DomainUser_DETAILED,
+  PermissionGrantUser,
+  PermissionGrantUser_DETAILED,
+} from "../api";
+
+export const hydrateDomainUserFromMap = (
+  dto: DomainUser,
+  relatedObjects?: RelatedObjects
+): DomainUser_DETAILED => {
+  const hydrated: DomainUser_DETAILED = Object.assign(
+    {},
+    dto
+  ) as DomainUser_DETAILED;
+
+  if (dto.userId && relatedObjects?.userMap) {
+    hydrated.user = relatedObjects.userMap[dto.userId]!;
+  }
+
+  return hydrated;
+};
 
 export const hydratePermissionGrantUserFromMap = (
   dto: PermissionGrantUser,
@@ -16,10 +37,6 @@ export const hydratePermissionGrantUserFromMap = (
 
   if (dto.grantedByUserId && relatedObjects?.userMap) {
     hydrated.grantedByUser = relatedObjects.userMap[dto.grantedByUserId]!;
-  }
-
-  if (dto.userId && relatedObjects?.userMap) {
-    hydrated.user = relatedObjects.userMap[dto.userId]!;
   }
 
   if (dto.permissionId && relatedObjects?.permissionMap) {

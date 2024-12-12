@@ -1,8 +1,33 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { PermissionGrantUserFilters } from "./types";
+import { DomainUserFilters, PermissionGrantUserFilters } from "./types";
 
 export function createUserApi(settings: ApiSettings) {
+  async function searchDomainUsers({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: DomainUserFilters;
+  }) {
+    return settings.client.POST("/private/domain/user/search/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showDomainUser2UserMode: "DETAILED",
+          showDomainUserMode: "DETAILED",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+        },
+      },
+      body: {
+        ...filters,
+      },
+    });
+  }
+
   async function searchPermissionGrants({
     pagination,
     filters,
@@ -31,7 +56,7 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
-  return { searchPermissionGrants };
+  return { searchDomainUsers, searchPermissionGrants };
 }
 
 export type UserApi = ReturnType<typeof createUserApi>;
