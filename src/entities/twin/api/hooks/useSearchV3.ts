@@ -1,7 +1,8 @@
-import { ApiContext } from "@/shared/api";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { Twin } from "../types";
+import { Twin_DETAILED, TwinFilters } from "../types";
+import { hydrateTwinFromMap } from "@/entities/twin";
 
 // TODO: Apply caching-strategy
 export const useTwinSearchV3 = () => {
@@ -11,23 +12,29 @@ export const useTwinSearchV3 = () => {
     async ({
       search,
       pagination = { pageIndex: 0, pageSize: 10 },
+      filters,
     }: {
-      search: string;
+      search?: string;
       pagination?: PaginationState;
-    }): Promise<{ data: Twin[]; pageCount: number }> => {
+      filters?: TwinFilters;
+    }): Promise<PagedResponse<Twin_DETAILED>> => {
       try {
-        const { data, error } = await api.twin.search({ search, pagination });
+        const { data, error } = await api.twin.search({
+          search,
+          pagination,
+          filters,
+        });
 
         if (error) {
           throw new Error("Failed to fetch twins due to API error");
         }
 
-        const twinList = data.twinList ?? [];
+        const twinList =
+          data?.twinList?.map((dto) =>
+            hydrateTwinFromMap(dto, data.relatedObjects)
+          ) ?? [];
 
-        const totalItems = data.pagination?.total ?? 0;
-        const pageCount = Math.ceil(totalItems / pagination.pageSize);
-
-        return { data: twinList, pageCount };
+        return { data: twinList, pagination: data.pagination ?? {} };
       } catch (error) {
         throw new Error("An error occurred while fetching twins");
       }

@@ -2987,7 +2987,7 @@ export interface components {
       /** @description data list */
       dataListList?: components["schemas"]["DataListV2"][];
     };
-    /** @description data list */
+    /** @description results - data lists list */
     DataListV2: {
       /**
        * Format: uuid
@@ -6301,20 +6301,20 @@ export interface components {
        * @example en
        */
       currentLocale?: {
-        extensionKeys?: string[];
-        iso3Language?: string;
-        iso3Country?: string;
+        language?: string;
         displayName?: string;
-        script?: string;
         country?: string;
         variant?: string;
+        script?: string;
         unicodeLocaleAttributes?: string[];
         unicodeLocaleKeys?: string[];
         displayLanguage?: string;
         displayScript?: string;
         displayCountry?: string;
         displayVariant?: string;
-        language?: string;
+        extensionKeys?: string[];
+        iso3Language?: string;
+        iso3Country?: string;
       };
       /**
        * Format: date-time
@@ -6637,7 +6637,7 @@ export interface components {
        * @example success
        */
       statusDetails?: string;
-      dataList?: components["schemas"]["DataListV1"];
+      dataList?: components["schemas"]["DataListV2"];
     };
     /** @description permission groups list */
     PermissionGroupV2: {

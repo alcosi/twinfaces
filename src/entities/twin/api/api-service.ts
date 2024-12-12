@@ -25,6 +25,7 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2StatusMode: "DETAILED",
           showTwinMarker2DataListOptionMode: "DETAILED",
           showTwinTag2DataListOptionMode: "DETAILED",
+          showTwinByHeadMode: "YELLOW",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

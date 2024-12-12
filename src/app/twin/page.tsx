@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  hydrateTwinFromMap,
   Twin,
   TwinResourceLink,
   useTwinFilters,
+  useTwinSearchV3,
 } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
@@ -13,41 +13,45 @@ import {
 import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
-import {
-  CrudDataTable,
-  FiltersState,
-} from "@/shared/ui/data-table/crud-data-table";
+import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { formatToTwinfaceDate } from "@/shared/libs";
+import { Experimental_CrudDataTable } from "@/widgets";
 
-const columns: ColumnDef<Twin>[] = [
-  {
+const colDefs: Record<
+  keyof Pick<
+    Twin,
+    | "id"
+    | "twinClassId"
+    | "name"
+    | "statusId"
+    | "description"
+    | "authorUserId"
+    | "assignerUserId"
+    | "headTwinId"
+    | "tags"
+    | "markers"
+    | "createdAt"
+  >,
+  ColumnDef<Twin>
+> = {
+  id: {
+    id: "id",
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => <GuidWithCopy value={data.row.original.id} />,
   },
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinResourceLink data={original} withTooltip />
-      </div>
-    ),
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-  },
-  {
+
+  twinClassId: {
+    id: "twinClassId",
     accessorKey: "twinClassId",
-    header: "Twin Class",
+    header: "Twin class",
     cell: ({ row: { original } }) =>
       original.twinClass && (
         <div className="max-w-48 inline-flex">
@@ -58,7 +62,20 @@ const columns: ColumnDef<Twin>[] = [
         </div>
       ),
   },
-  {
+
+  name: {
+    id: "name",
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        <TwinResourceLink data={original} withTooltip />
+      </div>
+    ),
+  },
+
+  statusId: {
+    id: "statusId",
     accessorKey: "statusId",
     header: "Status",
     cell: ({ row: { original } }) =>
@@ -73,7 +90,14 @@ const columns: ColumnDef<Twin>[] = [
       ),
   },
 
-  {
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
+  },
+
+  authorUserId: {
+    id: "authorUserId",
     accessorKey: "authorUserId",
     header: "Author",
     cell: ({ row: { original } }) =>
@@ -83,9 +107,11 @@ const columns: ColumnDef<Twin>[] = [
         </div>
       ),
   },
-  {
+
+  assignerUserId: {
+    id: "assignerUserId",
     accessorKey: "assignerUserId",
-    header: "Assigner",
+    header: "Assignee",
     cell: ({ row: { original } }) =>
       original.assignerUser && (
         <div className="max-w-48 inline-flex">
@@ -93,38 +119,46 @@ const columns: ColumnDef<Twin>[] = [
         </div>
       ),
   },
-  {
+
+  headTwinId: {
+    id: "headTwinId",
     accessorKey: "headTwinId",
     header: "Head",
     cell: ({ row: { original } }) =>
-      original.headTwinId ? (
+      original.headTwinId && original.headTwin ? (
         <div className="max-w-48 inline-flex">
-          <TwinResourceLink data={{ id: original.headTwinId }} withTooltip />
+          <TwinResourceLink data={original.headTwin} withTooltip />
         </div>
       ) : null,
   },
-  {
+
+  tags: {
+    id: "tags",
     accessorKey: "tags",
     header: "Tags",
   },
-  {
+
+  markers: {
+    id: "markers",
     accessorKey: "markers",
     header: "Markers",
   },
-  {
+
+  createdAt: {
+    id: "createdAt",
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
       original.createdAt && formatToTwinfaceDate(original.createdAt),
   },
-];
+};
 
 export default function TwinsPage() {
-  const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } = useTwinFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { searchTwins } = useTwinSearchV3();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Twins", href: "/twin" }]);
@@ -139,27 +173,14 @@ export default function TwinsPage() {
     pagination?: PaginationState;
     filters: FiltersState;
   }): Promise<PagedResponse<Twin>> {
-    const _pagination = pagination || { pageIndex: 0, pageSize: 10 };
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      const { data, error } = await api.twin.search({
-        pagination: _pagination,
+      return await searchTwins({
         search: search,
+        pagination: pagination,
         filters: _filters,
       });
-
-      if (error) {
-        throw error;
-      }
-
-      return {
-        data:
-          data?.twinList?.map((dto) =>
-            hydrateTwinFromMap(dto, data.relatedObjects)
-          ) ?? [],
-        pagination: data.pagination ?? {},
-      };
     } catch (e) {
       console.error("Failed to fetch twins", e);
       toast.error("Failed to fetch twins");
@@ -168,34 +189,41 @@ export default function TwinsPage() {
   }
 
   return (
-    <CrudDataTable
+    <Experimental_CrudDataTable
       ref={tableRef}
-      columns={columns}
+      columns={[
+        colDefs.id,
+        colDefs.twinClassId,
+        colDefs.name,
+        colDefs.statusId,
+        colDefs.description,
+        colDefs.authorUserId,
+        colDefs.assignerUserId,
+        colDefs.headTwinId,
+        colDefs.tags,
+        colDefs.markers,
+        colDefs.createdAt,
+      ]}
       getRowId={(row) => row.id!}
       fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
       pageSizes={[10, 20, 50]}
       onRowClick={(row) => router.push(`/twin/${row.id}`)}
-      createButton={{
-        enabled: false,
-        text: "Create",
-      }}
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      customizableColumns={{
-        enabled: true,
-        defaultVisibleKeys: [
-          "id",
-          "twinClassId",
-          "statusId",
-          "name",
-          "description",
-          "authorUserId",
-          "assignerUserId",
-          "headTwinId",
-          "createdAt",
-        ],
-      }}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.twinClassId,
+        colDefs.name,
+        colDefs.statusId,
+        colDefs.description,
+        colDefs.authorUserId,
+        colDefs.assignerUserId,
+        colDefs.headTwinId,
+        colDefs.tags,
+        colDefs.markers,
+        colDefs.createdAt,
+      ]}
     />
   );
 }

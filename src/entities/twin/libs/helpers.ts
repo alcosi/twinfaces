@@ -2,13 +2,13 @@ import { TwinStatus } from "@/entities/twinStatus";
 import { RelatedObjects } from "@/shared/api";
 import { TwinClass_DETAILED } from "../../twinClass";
 import { User } from "../../user";
-import { Twin } from "../api";
+import { Twin, Twin_DETAILED } from "../api";
 
 export const hydrateTwinFromMap = (
   twinDTO: Twin,
   relatedObjects?: RelatedObjects
-): Twin => {
-  const twin: Twin = Object.assign({}, twinDTO) as Twin;
+): Twin_DETAILED => {
+  const twin: Twin_DETAILED = Object.assign({}, twinDTO) as Twin_DETAILED;
 
   if (!relatedObjects?.twinClassMap) return twin;
 
