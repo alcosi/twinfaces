@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const CommentResourceLink = ({ data, disabled, withTooltip }: Props) => {
-  const link = `/comment/${data.id}`;
+  const link = `/worskpace/comment/${data.id}`;
 
   return (
     <ResourceLink

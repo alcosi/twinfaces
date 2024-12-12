@@ -15,7 +15,7 @@ export const TwinFlowSchemaResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/twinFlowSchema/${data.id}`;
+  const link = `/workspace/twinFlowSchema/${data.id}`;
 
   return (
     <ResourceLink

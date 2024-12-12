@@ -15,7 +15,7 @@ export const FeaturerResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/featurer/${data.id}`;
+  const link = `/workspace/featurer/${data.id}`;
 
   return (
     <ResourceLink

@@ -1,15 +1,10 @@
-import { TooltipProvider } from "@/shared/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ApiContextProvider } from "@/features/api-context-provider";
 import { cn } from "@/shared/libs";
-import { SidebarLayout } from "@/widgets";
 import type { Metadata } from "next";
 import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
-import { Toaster } from "sonner";
 import "./globals.css";
-import { BreadcrumbProvider } from "@/features/breadcrumb";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -44,17 +39,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ApiContextProvider>
-            <BreadcrumbProvider>
-              <SidebarLayout>
-                <TooltipProvider delayDuration={700} skipDelayDuration={0}>
-                  {children}
-                </TooltipProvider>
-              </SidebarLayout>
-            </BreadcrumbProvider>
-          </ApiContextProvider>
-
-          <Toaster />
+          {children}
         </ThemeProvider>
       </body>
     </html>
