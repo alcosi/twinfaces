@@ -27,9 +27,12 @@ type SidebarGroupItem = {
 export type GroupKeys =
   | "class"
   | "twin"
-  | "flow"
   | "user"
+  | "datalist"
   | "permission"
+  | "factory"
+  | "transition"
+  | "businessAccount"
   | "misc";
 
 export type Group = {
