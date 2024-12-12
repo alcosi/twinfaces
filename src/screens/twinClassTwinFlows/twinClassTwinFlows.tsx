@@ -128,7 +128,9 @@ export function TwinClassTwinFlows() {
       fetcher={fetchTwinflows}
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
-        router.push(`/twinclass/${row.twinClassId}/twinflow/${row.id}`)
+        router.push(
+          `/workspace/twinclass/${row.twinClassId}/twinflow/${row.id}`
+        )
       }
       filters={{
         filtersInfo: buildFilterFields(),

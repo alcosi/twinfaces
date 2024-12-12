@@ -16,7 +16,7 @@ export function TwinClassLinkResourceLink({
   withTooltip,
 }: Props) {
   const { twinClassId } = useContext(TwinClassContext);
-  const link = `/twinclass/${twinClassId}/link/${data.id}`;
+  const link = `/workspace/twinclass/${twinClassId}/link/${data.id}`;
 
   return (
     <ResourceLink

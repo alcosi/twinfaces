@@ -36,22 +36,22 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Classes",
-        url: "/twinclass",
+        url: "/workspace/twinclass",
         icon: LayoutTemplate,
       },
       {
         title: "Fields",
-        url: "/fields",
+        url: "/workspace/fields",
         icon: Puzzle,
       },
       {
         title: "Statuses",
-        url: "/statuses",
+        url: "/workspace/statuses",
         icon: CircleDot,
       },
       {
         title: "Links",
-        url: "/links",
+        url: "/workspace/links",
         icon: Link2,
       },
     ],
@@ -61,17 +61,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Twins",
-        url: "/twin",
+        url: "/workspace/twin",
         icon: Braces,
       },
       {
         title: "Comments",
-        url: "/comments",
+        url: "/workspace/comments",
         icon: MessageCircle,
       },
       {
         title: "Attachments",
-        url: "/attachments",
+        url: "/workspace/attachments",
         icon: Paperclip,
       },
     ],
@@ -81,12 +81,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Users",
-        url: "/users",
+        url: "/workspace/users",
         icon: User,
       },
       {
         title: "Groups",
-        url: "/user-groups",
+        url: "/workspace/user-groups",
         icon: UsersRound,
       },
     ],
@@ -96,17 +96,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Datalists",
-        url: "/datalists",
+        url: "/workspace/datalists",
         icon: ListTree,
       },
       {
         title: "Options",
-        url: "/options",
+        url: "/workspace/options",
         icon: Option,
       },
       {
         title: "Subsets",
-        url: "/subsets",
+        url: "/workspace/subsets",
         icon: Shapes,
       },
     ],
@@ -116,17 +116,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Permissions",
-        url: "/permission",
+        url: "/workspace/permission",
         icon: Key,
       },
       {
         title: "Permission Groups",
-        url: "/permission-group",
+        url: "/workspace/permission-group",
         icon: BookKey,
       },
       {
         title: "Schemas",
-        url: "/permission-schemas",
+        url: "/workspace/permission-schemas",
         icon: Scroll,
       },
     ],
@@ -136,37 +136,37 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Factories",
-        url: "/factories",
+        url: "/workspace/factories",
         icon: Factory,
       },
       {
         title: "Multipliers",
-        url: "/multipliers",
+        url: "/workspace/multipliers",
         icon: Asterisk,
       },
       {
         title: "Multiplier filters",
-        url: "/multiplier-filters",
+        url: "/workspace/multiplier-filters",
         icon: SquareAsterisk,
       },
       {
         title: "Pipelines",
-        url: "/pipelines",
+        url: "/workspace/pipelines",
         icon: Fence,
       },
       {
         title: "Pipeline steps",
-        url: "/pipeline-steps",
+        url: "/workspace/pipeline-steps",
         icon: Footprints,
       },
       {
         title: "Branches",
-        url: "/branches",
+        url: "/workspace/branches",
         icon: Split,
       },
       {
         title: "Erasers",
-        url: "/erasers",
+        url: "/workspace/erasers",
         icon: Eraser,
       },
     ],
@@ -176,17 +176,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Transitions",
-        url: "/transitions",
+        url: "/workspace/transitions",
         icon: ArrowRightLeft,
       },
       {
         title: "Twinflows",
-        url: "/twinflows",
+        url: "/workspace/twinflows",
         icon: Activity,
       },
       {
         title: "Schemas",
-        url: "/twinflow-schemas",
+        url: "/workspace/twinflow-schemas",
         icon: SquareActivity,
       },
     ],
@@ -196,12 +196,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Business accounts",
-        url: "/business-accounts",
+        url: "/workspace/business-accounts",
         icon: BriefcaseBusiness,
       },
       {
         title: "Tiers",
-        url: "/tiers",
+        url: "/workspace/tiers",
         icon: Leaf,
       },
     ],
@@ -211,7 +211,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Featurers",
-        url: "/featurers",
+        url: "/workspace/featurers",
         icon: Play,
       },
     ],

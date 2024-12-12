@@ -249,7 +249,7 @@ export function TwinClassLinks() {
         ]}
         fetcher={(paginationState) => fetchLinks("forward", paginationState)}
         onRowClick={(row) =>
-          router.push(`/twinclass/${twinClassId}/link/${row.id}`)
+          router.push(`/workspace/twinclass/${twinClassId}/link/${row.id}`)
         }
         getRowId={(row) => row.id!}
         disablePagination={true}
@@ -284,7 +284,7 @@ export function TwinClassLinks() {
         ]}
         fetcher={(paginationState) => fetchLinks("backward", paginationState)}
         onRowClick={(row) =>
-          router.push(`/twinclass/${twinClassId}/link/${row.id}`)
+          router.push(`/workspace/twinclass/${twinClassId}/link/${row.id}`)
         }
         getRowId={(row) => row.id!}
         disablePagination={true}

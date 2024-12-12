@@ -19,7 +19,7 @@ export function TwinClassStatusResourceLink({
   withTooltip,
 }: Props) {
   const { theme } = useTheme();
-  const link = `/twinclass/${twinClassId}/twinStatus/${data.id}`;
+  const link = `/workspace/twinclass/${twinClassId}/twinStatus/${data.id}`;
   const squareColor =
     data.backgroundColor || (theme === "light" ? "#0c66e4" : "#579dff");
 

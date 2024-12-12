@@ -6,14 +6,14 @@ import {
   UserResourceLink,
 } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 const colDefs: Record<
@@ -47,14 +47,13 @@ const colDefs: Record<
 };
 
 export function Users() {
-  const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchUsers } = useDomainUserSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Users", href: "/users" }]);
+    setBreadcrumbs([{ label: "Users", href: "/workspace/users" }]);
   }, []);
 
   async function fetchUsers(

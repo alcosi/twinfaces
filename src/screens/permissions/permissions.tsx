@@ -81,7 +81,7 @@ export function Permissions() {
   const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Permissions", href: "/permission" }]);
+    setBreadcrumbs([{ label: "Permissions", href: "/workspace/permission" }]);
   }, []);
 
   const form = useForm<PermissionFormValues>({

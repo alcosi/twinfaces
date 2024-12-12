@@ -246,7 +246,7 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
       getRowId={(row) => row.id!}
       onRowClick={(row) =>
         router.push(
-          `/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${row.id}`
+          `/workspace/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${row.id}`
         )
       }
       pageSizes={[10, 20, 50]}

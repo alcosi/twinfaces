@@ -26,12 +26,12 @@ export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Classes", href: "/twinclass" },
-      { label: twinClass?.name!, href: `/twinclass/${twinClassId}` },
-      { label: "Links", href: `/twinclass/${twinClassId}#links` },
+      { label: "Classes", href: "/workspace/twinclass" },
+      { label: twinClass?.name!, href: `/workspace/twinclass/${twinClassId}` },
+      { label: "Links", href: `/workspace/twinclass/${twinClassId}#links` },
       {
         label: link?.name ?? "N/A",
-        href: `/twinclass/${twinClassId}/link/${linkId}`,
+        href: `/workspace/twinclass/${twinClassId}/link/${linkId}`,
       },
     ]);
   }, [linkId, twinClassId, twinClass?.name, link?.name]);

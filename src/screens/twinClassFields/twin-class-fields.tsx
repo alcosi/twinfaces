@@ -157,7 +157,9 @@ export function TwinClassFields() {
       disablePagination={true}
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
-        router.push(`/twinclass/${twinClass!.id!}/twinField/${row.id}`)
+        router.push(
+          `/workspace/twinclass/${twinClass!.id!}/twinField/${row.id}`
+        )
       }
       filters={{
         filtersInfo: buildFilterFields(),

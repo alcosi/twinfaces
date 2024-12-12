@@ -11,7 +11,7 @@ type Props = {
 };
 
 export function TwinResourceLink({ data, disabled, withTooltip }: Props) {
-  const link = `/twin/${data.id}`;
+  const link = `/workspace/twin/${data.id}`;
 
   return (
     <ResourceLink

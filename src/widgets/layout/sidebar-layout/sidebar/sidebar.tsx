@@ -1,17 +1,22 @@
 "use client";
 
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/shared/ui";
-import { Smile } from "lucide-react";
-import Link from "next/link";
+import { ChevronsUpDown, ChevronUp, Globe, User2 } from "lucide-react";
 import { SIDEBAR_GROUPS } from "./constants";
 import { GroupSection } from "./group";
+import Link from "next/link";
 
 export function AppSidebar() {
   return (
@@ -20,15 +25,25 @@ export function AppSidebar() {
         <SidebarHeader className="h-16 items-center justify-center">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 text-xl font-semibold md:text-lg"
-                >
-                  <Smile className="h-6 w-6 text-primary" />
-                  Twin Faces
-                </Link>
-              </SidebarMenuButton>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <div className="bg-primary p-1.5 rounded-lg">
+                      <Globe className="h-3 w-3 text-muted" />
+                    </div>
+                    alcosi
+                    <ChevronsUpDown className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
+                  <DropdownMenuItem>
+                    <span>basic</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>elpmi</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
@@ -44,6 +59,31 @@ export function AppSidebar() {
           <GroupSection group={SIDEBAR_GROUPS.businessAccount} />
           <GroupSection group={SIDEBAR_GROUPS.misc} />
         </SidebarContent>
+
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <User2 /> Username
+                    <ChevronUp className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <DropdownMenuItem>
+                    <Link href="/" className="block">
+                      Sign out
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
       </Sidebar>
     </nav>
   );

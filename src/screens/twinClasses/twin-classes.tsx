@@ -181,7 +181,7 @@ export function TwinClasses() {
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Classes", href: "/twinclass" }]);
+    setBreadcrumbs([{ label: "Classes", href: "/workspace/twinclass" }]);
   }, []);
 
   async function fetchTwinClasses(
@@ -257,7 +257,7 @@ export function TwinClasses() {
       <Experimental_CrudDataTable
         ref={tableRef}
         fetcher={fetchTwinClasses}
-        onRowClick={(row) => router.push(`/twinclass/${row.id}`)}
+        onRowClick={(row) => router.push(`/workspace/twinclass/${row.id}`)}
         columns={[
           colDefs.logo,
           colDefs.id,

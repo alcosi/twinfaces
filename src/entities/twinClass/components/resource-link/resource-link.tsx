@@ -15,7 +15,7 @@ export const TwinClassResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/twinclass/${data.id}`;
+  const link = `/workspace/twinclass/${data.id}`;
 
   return (
     <ResourceLink

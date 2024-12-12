@@ -19,7 +19,7 @@ export function TwinFlowTransitionResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  const link = `/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${data.id}`;
+  const link = `/workspasce/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${data.id}`;
 
   return (
     <ResourceLink

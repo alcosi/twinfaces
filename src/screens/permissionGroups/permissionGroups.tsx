@@ -74,7 +74,7 @@ export function PermissionGroups() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Permission Groups", href: "/permission-groups" },
+      { label: "Permission Groups", href: "/workspace/permission-groups" },
     ]);
   }, []);
 
