@@ -1,18 +1,30 @@
 import {
   Activity,
   ArrowRightLeft,
+  Asterisk,
   BookKey,
   Braces,
+  BriefcaseBusiness,
   CircleDot,
+  Eraser,
+  Factory,
+  Fence,
+  Footprints,
   Key,
   LayoutTemplate,
+  Leaf,
   Link2,
   ListTree,
   MessageCircle,
+  Option,
+  Paperclip,
   Play,
   Puzzle,
   Scroll,
+  Shapes,
+  Split,
   SquareActivity,
+  SquareAsterisk,
   User,
   UsersRound,
 } from "lucide-react";
@@ -42,11 +54,6 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         url: "/links",
         icon: Link2,
       },
-      {
-        title: "Featurers",
-        url: "/featurers",
-        icon: Play,
-      },
     ],
   },
   twin: {
@@ -62,25 +69,10 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         url: "/comments",
         icon: MessageCircle,
       },
-    ],
-  },
-  flow: {
-    title: "Flow",
-    items: [
       {
-        title: "Flows",
-        url: "/flows",
-        icon: Activity,
-      },
-      {
-        title: "Flow schemas",
-        url: "/flow-schemas",
-        icon: SquareActivity,
-      },
-      {
-        title: "Flow transitions",
-        url: "/flow-transitions",
-        icon: ArrowRightLeft,
+        title: "Attachments",
+        url: "/attachments",
+        icon: Paperclip,
       },
     ],
   },
@@ -93,9 +85,29 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         icon: User,
       },
       {
-        title: "User Groups",
+        title: "Groups",
         url: "/user-groups",
         icon: UsersRound,
+      },
+    ],
+  },
+  datalist: {
+    title: "Datalist",
+    items: [
+      {
+        title: "Datalists",
+        url: "/datalists",
+        icon: ListTree,
+      },
+      {
+        title: "Options",
+        url: "/options",
+        icon: Option,
+      },
+      {
+        title: "Subsets",
+        url: "/subsets",
+        icon: Shapes,
       },
     ],
   },
@@ -113,9 +125,84 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         icon: BookKey,
       },
       {
-        title: "Permission Schemas",
+        title: "Schemas",
         url: "/permission-schemas",
         icon: Scroll,
+      },
+    ],
+  },
+  factory: {
+    title: "Factory",
+    items: [
+      {
+        title: "Factories",
+        url: "/factories",
+        icon: Factory,
+      },
+      {
+        title: "Multipliers",
+        url: "/multipliers",
+        icon: Asterisk,
+      },
+      {
+        title: "Multiplier filters",
+        url: "/multiplier-filters",
+        icon: SquareAsterisk,
+      },
+      {
+        title: "Pipelines",
+        url: "/pipelines",
+        icon: Fence,
+      },
+      {
+        title: "Pipeline steps",
+        url: "/pipeline-steps",
+        icon: Footprints,
+      },
+      {
+        title: "Branches",
+        url: "/branches",
+        icon: Split,
+      },
+      {
+        title: "Erasers",
+        url: "/erasers",
+        icon: Eraser,
+      },
+    ],
+  },
+  transition: {
+    title: "Transition",
+    items: [
+      {
+        title: "Transitions",
+        url: "/transitions",
+        icon: ArrowRightLeft,
+      },
+      {
+        title: "Twinflows",
+        url: "/twinflows",
+        icon: Activity,
+      },
+      {
+        title: "Schemas",
+        url: "/twinflow-schemas",
+        icon: SquareActivity,
+      },
+    ],
+  },
+  businessAccount: {
+    title: "Business account",
+    items: [
+      {
+        title: "Business accounts",
+        url: "/business-accounts",
+        icon: BriefcaseBusiness,
+      },
+      {
+        title: "Tiers",
+        url: "/tiers",
+        icon: Leaf,
       },
     ],
   },
@@ -123,9 +210,9 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     title: "Misc",
     items: [
       {
-        title: "Datalists",
-        url: "/datalists",
-        icon: ListTree,
+        title: "Featurers",
+        url: "/featurers",
+        icon: Play,
       },
     ],
   },

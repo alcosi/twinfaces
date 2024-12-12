@@ -36,9 +36,12 @@ export function AppSidebar() {
         <SidebarContent className="gap-1">
           <GroupSection group={SIDEBAR_GROUPS.class} />
           <GroupSection group={SIDEBAR_GROUPS.twin} />
-          <GroupSection group={SIDEBAR_GROUPS.flow} />
           <GroupSection group={SIDEBAR_GROUPS.user} />
+          <GroupSection group={SIDEBAR_GROUPS.datalist} />
           <GroupSection group={SIDEBAR_GROUPS.permission} />
+          <GroupSection group={SIDEBAR_GROUPS.factory} />
+          <GroupSection group={SIDEBAR_GROUPS.transition} />
+          <GroupSection group={SIDEBAR_GROUPS.businessAccount} />
           <GroupSection group={SIDEBAR_GROUPS.misc} />
         </SidebarContent>
       </Sidebar>
