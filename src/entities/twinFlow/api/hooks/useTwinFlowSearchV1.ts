@@ -1,4 +1,5 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 import { hydrateTwinFlowFromMap } from "../../libs";
@@ -10,16 +11,23 @@ export const useTwinFlowSearchV1 = () => {
 
   const searchTwinFlows = useCallback(
     async ({
+      search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
     }: {
+      search?: string;
       pagination?: PaginationState;
       filters?: TwinFlowFilters;
     }): Promise<PagedResponse<TwinFlow_DETAILED>> => {
       try {
         const { data, error } = await api.twinFlow.search({
           pagination,
-          filters,
+          filters: {
+            ...filters,
+            nameI18nLikeList: isPopulatedString(search)
+              ? [wrapWithPercent(search)]
+              : filters.nameI18nLikeList,
+          },
         });
 
         if (error) {

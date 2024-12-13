@@ -1,9 +1,12 @@
 import { AutoField, AutoFormValueType } from "@/components/auto-field";
+import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import {
   useTwinClassLinkStrengthSelectAdapter,
   useTwinClassLinkTypeSelectAdapter,
 } from "@/entities/twinClassLink";
+import { useTwinFlowSelectAdapter } from "@/entities/twinFlow";
+import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import { useUserSelectAdapter } from "@/entities/user/libs";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup/libs/hooks";
 import { Form } from "@/shared/ui";
@@ -11,7 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UiSection } from "../components/ui-section";
-import { useDatalistSelectAdapter } from "@/entities/datalist";
 
 export function InputFieldsTab() {
   const tcAdapter = useTwinClassSelectAdapter();
@@ -20,6 +22,8 @@ export function InputFieldsTab() {
   const linkTypeAdapter = useTwinClassLinkTypeSelectAdapter();
   const linkStrengthAdapter = useTwinClassLinkStrengthSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
+  const tfAdapter = useTwinFlowSelectAdapter();
+  const tfsAdapter = useTwinFlowSchemaSelectAdapter();
 
   const form = useForm({
     resolver: zodResolver(z.any()),
@@ -188,6 +192,33 @@ export function InputFieldsTab() {
                     label: "Label",
                     ...dlAdapter,
                     multi: true,
+                  }}
+                />
+              }
+            />
+          </UiSection>
+
+          <UiSection title="Transition">
+            <UiSection.Item
+              title="Twinflow (single)"
+              value={
+                <AutoField
+                  info={{
+                    type: AutoFormValueType.combobox,
+                    label: "Label",
+                    ...tfAdapter,
+                  }}
+                />
+              }
+            />
+            <UiSection.Item
+              title="Twinflow schema (single)"
+              value={
+                <AutoField
+                  info={{
+                    type: AutoFormValueType.combobox,
+                    label: "Label",
+                    ...tfsAdapter,
                   }}
                 />
               }
