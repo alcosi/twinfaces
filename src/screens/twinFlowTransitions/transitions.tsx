@@ -203,7 +203,7 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
     if (error) {
       throw error;
     }
-    toast.success("Link created successfully!");
+    toast.success("Twinflow transition created successfully!");
   }
 
   async function handleUpdate(
@@ -236,7 +236,7 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
     if (error) {
       throw error;
     }
-    toast.success("Permission updated successfully!");
+    toast.success("Twinflow transition updated successfully!");
   }
   return (
     <Experimental_CrudDataTable
