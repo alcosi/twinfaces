@@ -22,15 +22,13 @@ export function AppSidebar() {
   return (
     <nav>
       <Sidebar collapsible="icon">
-        <SidebarHeader className="h-16 items-center justify-center">
+        <SidebarHeader className="h-16 items-center justify-center border-b">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
-                    <div className="bg-primary p-1.5 rounded-lg">
-                      <Globe className="h-3 w-3 text-muted" />
-                    </div>
+                    <Globe className="h-4 w-4" />
                     alcosi
                     <ChevronsUpDown className="ml-auto" />
                   </SidebarMenuButton>
@@ -48,7 +46,7 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent className="gap-1">
+        <SidebarContent className="gap-1 my-4">
           <GroupSection group={SIDEBAR_GROUPS.class} />
           <GroupSection group={SIDEBAR_GROUPS.twin} />
           <GroupSection group={SIDEBAR_GROUPS.user} />
@@ -60,7 +58,7 @@ export function AppSidebar() {
           <GroupSection group={SIDEBAR_GROUPS.misc} />
         </SidebarContent>
 
-        <SidebarFooter>
+        <SidebarFooter className="border-t">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
