@@ -18,3 +18,13 @@ export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
     .uuid("Permission ID must be a valid UUID")
     .optional(),
 });
+
+export const TRIGGER_SCHEMA = z.object({
+  order: z.number().min(0, "Order must be at least 0").default(0),
+  active: z.boolean().default(false),
+  triggerFeaturerId: z
+    .number()
+    .or(z.literal("").transform(() => undefined))
+    .optional(),
+  triggerParams: z.record(z.string(), z.any()).optional(),
+});
