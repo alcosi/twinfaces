@@ -1,8 +1,8 @@
 "use client";
 
 import { Tab, TabsLayout } from "@/widgets";
-import { ResourceLinksTab } from "./tabs/resource-links";
 import { InputFieldsTab } from "./tabs/input-fields";
+import { ResourceLinksTab } from "./tabs/resource-links";
 
 const tabs: Tab[] = [
   {

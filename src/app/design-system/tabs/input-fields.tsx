@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UiSection } from "../components/ui-section";
+import { useDatalistSelectAdapter } from "@/entities/datalist";
 
 export function InputFieldsTab() {
   const tcAdapter = useTwinClassSelectAdapter();
@@ -18,6 +19,7 @@ export function InputFieldsTab() {
   const ugAdapter = useUserGroupSelectAdapter();
   const linkTypeAdapter = useTwinClassLinkTypeSelectAdapter();
   const linkStrengthAdapter = useTwinClassLinkStrengthSelectAdapter();
+  const dlAdapter = useDatalistSelectAdapter();
 
   const form = useForm({
     resolver: zodResolver(z.any()),
@@ -26,7 +28,12 @@ export function InputFieldsTab() {
 
   return (
     <Form {...form}>
-      <form className="h-screen">
+      <form
+        className="h-screen overflow-y-auto max-h-98"
+        style={{
+          maxHeight: "calc(100vh - var(--header-height))",
+        }}
+      >
         <div className="space-y-4 p-4">
           <UiSection title="Class">
             <UiSection.Item
@@ -152,6 +159,34 @@ export function InputFieldsTab() {
                     type: AutoFormValueType.combobox,
                     label: "Label",
                     ...ugAdapter,
+                    multi: true,
+                  }}
+                />
+              }
+            />
+          </UiSection>
+
+          <UiSection title="Datalist">
+            <UiSection.Item
+              title="Datalist (single)"
+              value={
+                <AutoField
+                  info={{
+                    type: AutoFormValueType.combobox,
+                    label: "Label",
+                    ...dlAdapter,
+                  }}
+                />
+              }
+            />
+            <UiSection.Item
+              title="Datalist (multi)"
+              value={
+                <AutoField
+                  info={{
+                    type: AutoFormValueType.combobox,
+                    label: "Label",
+                    ...dlAdapter,
                     multi: true,
                   }}
                 />

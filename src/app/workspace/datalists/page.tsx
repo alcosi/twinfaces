@@ -1,7 +1,10 @@
 "use client";
 
-import { DataList, DatalistResourceLink } from "@/entities/datalist";
-import { useDatalistFilters } from "@/entities/datalist/libs/hooks/useFilters";
+import {
+  DataList,
+  DatalistResourceLink,
+  useDatalistFilters,
+} from "@/entities/datalist";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
@@ -69,7 +72,7 @@ const Page = () => {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      const response = await api.datalist.searchDatalist({
+      const response = await api.datalist.search({
         pagination,
         filters: _filters,
       });

@@ -9,7 +9,7 @@ export function UiSection({ title, children }: Props) {
   return (
     <section className="">
       <h1 className="font-bold mb-3">{title}</h1>
-      <main className="grid grid-cols-2 gap-4">{children}</main>
+      <main className="grid grid-cols-2 md:grid-cols-4 gap-4">{children}</main>
     </section>
   );
 }

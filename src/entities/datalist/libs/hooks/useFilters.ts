@@ -5,16 +5,13 @@ import {
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { DatalistApiFilters, DatalistFilterFields } from "@/entities/datalist";
+import { DatalistFilters, DatalistFilterKeys } from "@/entities/datalist";
 
 export function useDatalistFilters(): FilterFeature<
-  DatalistFilterFields,
-  DatalistApiFilters
+  DatalistFilterKeys,
+  DatalistFilters
 > {
-  function buildFilterFields(): Record<
-    DatalistFilterFields,
-    AutoFormValueInfo
-  > {
+  function buildFilterFields(): Record<DatalistFilterKeys, AutoFormValueInfo> {
     return {
       idList: {
         type: AutoFormValueType.uuid,
@@ -36,9 +33,9 @@ export function useDatalistFilters(): FilterFeature<
   }
 
   function mapFiltersToPayload(
-    filters: Record<DatalistFilterFields, unknown>
-  ): DatalistApiFilters {
-    const result: DatalistApiFilters = {
+    filters: Record<DatalistFilterKeys, unknown>
+  ): DatalistFilters {
+    const result: DatalistFilters = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
       nameLikeList: toArrayOfString(toArray(filters.nameLikeList), "name").map(
         wrapWithPercent
