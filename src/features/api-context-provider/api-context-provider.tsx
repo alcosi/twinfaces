@@ -1,6 +1,8 @@
 "use client";
 
+import { CommentApi, createCommentApi } from "@/entities/comment";
 import { createDatalistApi, DatalistApi } from "@/entities/datalist";
+import { createDomainApi, DomainApi } from "@/entities/domain";
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
 import {
@@ -30,12 +32,11 @@ import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinStatus";
 import { createUserApi, UserApi } from "@/entities/user";
 import { createUserGroupApi, UserGroupApi } from "@/entities/userGroup";
 import { ApiContext, ApiSettings } from "@/shared/api";
-import { createDomainApi, DomainApi } from "@/entities/domain";
 import { paths } from "@/shared/api/generated/schema";
 import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
-import { CommentApi, createCommentApi } from "@/entities/comment";
+import { useAuthUser } from "../auth";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -61,9 +62,11 @@ export function ApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { authUser } = useAuthUser();
+
   const settings: ApiSettings = {
-    domain: env("NEXT_PUBLIC_DOMAIN") ?? "",
-    authToken: env("NEXT_PUBLIC_AUTH_TOKEN") ?? "",
+    authToken: authUser?.authToken ?? "",
+    domain: authUser?.domainId ?? "",
     channel: env("NEXT_PUBLIC_CHANNEL") ?? "",
     client: createClient<paths>({ baseUrl: env("NEXT_PUBLIC_TWINS_API_URL") }),
   };
@@ -89,7 +92,7 @@ export function ApiContextProvider({
         comment: createCommentApi(settings),
       }}
     >
-      {children}
+      {authUser && children}
     </ApiContext.Provider>
   );
 }

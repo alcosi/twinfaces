@@ -1,6 +1,7 @@
 "use client";
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
+import { useAuthUser } from "@/features/auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,19 +16,27 @@ import {
   SidebarMenuItem,
 } from "@/shared/ui";
 import { ChevronsUpDown, ChevronUp, Globe, User2 } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { SIDEBAR_GROUPS } from "./constants";
 import { GroupSection } from "./group";
 
 export function AppSidebar() {
   const { data } = useDomains();
-  const [currentDomain, setCurrentDomain] = useState<
-    DomainView_SHORT | undefined
-  >();
+  const { authUser, updateUser, logout } = useAuthUser();
+  const currentDomain = data?.find((i) => i.id === authUser?.domainId);
+  const router = useRouter();
 
   function onDomainSwitch(domain: DomainView_SHORT) {
-    setCurrentDomain(domain);
+    updateUser({ domainId: domain.id });
+
+    // Reload the page to apply changes (e.g., re-fetching data using the new domainId)
+    // TODO: Replace reload with context/state management to avoid full page reloads.
+    window.location.reload();
+  }
+
+  function onLogout() {
+    logout();
+    router.replace("/");
   }
 
   return (
@@ -87,9 +96,9 @@ export function AppSidebar() {
                   className="w-[--radix-popper-anchor-width]"
                 >
                   <DropdownMenuItem>
-                    <Link href="/" className="block">
-                      Sign out
-                    </Link>
+                    <SidebarMenuButton onClick={onLogout}>
+                      Log out
+                    </SidebarMenuButton>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
