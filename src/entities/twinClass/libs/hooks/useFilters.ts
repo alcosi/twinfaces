@@ -105,7 +105,7 @@ export function useTwinClassFilters(): FilterFeature<
         label: "View permission",
         multi: true,
         ...pAdapter,
-      }
+      },
     };
   }
 
