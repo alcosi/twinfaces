@@ -13,12 +13,14 @@ import {
   type FilterFeature,
 } from "@/shared/libs";
 import { z } from "zod";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 
 export function useTwinClassFilters(): FilterFeature<
   TwinClassFilterKeys,
   TwinClassFilters
 > {
   const tcAdapter = useTwinClassSelectAdapter();
+  const pAdapter = usePermissionSelectAdapter();
 
   function buildFilterFields(): Record<TwinClassFilterKeys, AutoFormValueInfo> {
     return {
@@ -98,6 +100,12 @@ export function useTwinClassFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
+      viewPermissionIdList: {
+        type: AutoFormValueType.combobox,
+        label: "View permission",
+        multi: true,
+        ...pAdapter,
+      }
     };
   }
 
@@ -132,6 +140,10 @@ export function useTwinClassFilters(): FilterFeature<
       permissionSchemaSpace: mapToChoice(filters.permissionSchemaSpace),
       aliasSpace: mapToChoice(filters.aliasSpace),
       abstractt: mapToChoice(filters.abstractt),
+      viewPermissionIdList: toArrayOfString(
+        toArray(filters.viewPermissionIdList),
+        "id"
+      ),
     };
 
     return result;
