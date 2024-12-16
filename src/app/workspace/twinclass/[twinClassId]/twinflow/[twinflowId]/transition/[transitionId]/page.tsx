@@ -10,8 +10,8 @@ import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { TwinflowTransitionGeneral } from "./twinflow-transition-general";
-import { TwinflowTransitionTriggers } from "./twinflow-transition-triggers";
 import { TwinflowTransitionValidators } from "./twinflow-transition-validators";
+import { TwinflowTransitionTriggers } from "@/screens/twinclassTriggers";
 
 interface TransitionPageProps {
   params: {
@@ -106,12 +106,7 @@ export default function TransitionPage({
         {
           key: "triggers",
           label: "Triggers",
-          content: (
-            <TwinflowTransitionTriggers
-              transition={transition}
-              onChange={fetchTransitionData}
-            />
-          ),
+          content: <TwinflowTransitionTriggers transition={transition} />,
         },
         {
           key: "validators",

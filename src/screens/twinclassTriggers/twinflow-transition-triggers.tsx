@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ApiContext } from "@/shared/api";
 import { toast } from "sonner";
-import { TriggersFormFields } from "@/screens/twinclassTriggers";
+import { TriggersFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -54,17 +54,15 @@ const colDefs: Record<
 
 export function TwinflowTransitionTriggers({
   transition,
-  onChange,
 }: {
   transition: TwinFlowTransition;
-  onChange: () => any;
 }) {
   const tableRef = useRef<DataTableHandle>(null);
   const api = useContext(ApiContext);
-  const { fetchTriggers } = useTwinFlowTransitionTriggersSearch(transition.id!);
+  const { fetchTriggers } = useTwinFlowTransitionTriggersSearch();
 
   async function fetchData() {
-    const response = await fetchTriggers();
+    const response = await fetchTriggers({ transitionId: transition.id! });
     return response;
   }
 
