@@ -65,8 +65,8 @@ export function ApiContextProvider({
   const { authUser } = useAuthUser();
 
   const settings: ApiSettings = {
-    authToken: authUser?.authToken ?? "",
-    domain: authUser?.domainId ?? "",
+    authToken: authUser?.authToken ?? env("NEXT_PUBLIC_AUTH_TOKEN") ?? "",
+    domain: authUser?.domainId ?? env("NEXT_PUBLIC_DOMAIN") ?? "",
     channel: env("NEXT_PUBLIC_CHANNEL") ?? "",
     client: createClient<paths>({ baseUrl: env("NEXT_PUBLIC_TWINS_API_URL") }),
   };
@@ -92,7 +92,7 @@ export function ApiContextProvider({
         comment: createCommentApi(settings),
       }}
     >
-      {authUser && children}
+      {children}
     </ApiContext.Provider>
   );
 }
