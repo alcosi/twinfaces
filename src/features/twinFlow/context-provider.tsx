@@ -5,7 +5,6 @@ import { createContext, PropsWithChildren, useEffect, useState } from "react";
 type TwinFlowContextType = {
   twinClassId: string;
   twinFlow?: TwinFlow;
-  fetchData: () => Promise<void>;
 };
 
 export type TwinFlowLayoutProps = PropsWithChildren<{
@@ -49,7 +48,7 @@ export function TwinFlowContextProvider({
   }
 
   return (
-    <TwinFlowContext.Provider value={{ twinClassId, twinFlow, fetchData }}>
+    <TwinFlowContext.Provider value={{ twinClassId, twinFlow }}>
       {loading && <LoadingOverlay />}
       {!loading && children}
     </TwinFlowContext.Provider>

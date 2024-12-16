@@ -4,6 +4,7 @@ import {
   TwinFlowTransition,
   TwinFlowTransitionTrigger,
   TwinFlowTransitionTriggerUpdate,
+  useTwinFlowTransitionTriggersSearch,
 } from "@/entities/twinFlowTransition";
 import { useContext, useRef } from "react";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
@@ -13,10 +14,8 @@ import { Experimental_CrudDataTable } from "@/widgets";
 import { Check } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { ApiContext } from "@/shared/api";
 import { toast } from "sonner";
-import { TwinFlowContext } from "@/features/twinFlow";
 import { TriggersFormFields } from "@/screens/twinclassTriggers";
 
 const colDefs: Record<
@@ -62,17 +61,14 @@ export function TwinflowTransitionTriggers({
 }) {
   const tableRef = useRef<DataTableHandle>(null);
   const api = useContext(ApiContext);
-  const { fetchData } = useContext(TwinFlowContext);
-  const getTriggersRef = useRef(getTriggers);
+  const { fetchTriggers } = useTwinFlowTransitionTriggersSearch(transition.id!);
 
-  function getTriggers() {
-    return Promise.resolve({
-      data: Object.values(transition.triggers ?? {}),
-      pagination: {},
-    });
+  async function fetchData() {
+    const response = await fetchTriggers();
+    return response;
   }
 
-  const triggersForm = useForm<z.infer<typeof TRIGGER_SCHEMA>>({
+  const triggersForm = useForm<TriggersFormValues>({
     resolver: zodResolver(TRIGGER_SCHEMA),
     defaultValues: {
       order: 0,
@@ -84,7 +80,7 @@ export function TwinflowTransitionTriggers({
 
   async function createTrigger(formValues: TriggersFormValues) {
     if (!transition.id) {
-      console.error("Create trigger: no twin class");
+      console.error("Create trigger: no transition");
       return;
     }
 
@@ -103,12 +99,9 @@ export function TwinflowTransitionTriggers({
         },
       });
       if (result.error) {
-        console.error(result.error);
         throw new Error("Failed to create trigger");
       }
-      fetchData();
     } catch (e) {
-      console.error(e);
       toast.error("Failed to create trigger");
       throw e;
     }
@@ -116,7 +109,7 @@ export function TwinflowTransitionTriggers({
 
   async function updateTrigger(id: string, formValues: TriggersFormValues) {
     if (!transition.id) {
-      console.error("Update trigger: no twin class");
+      console.error("Update trigger: no transition");
       return;
     }
 
@@ -135,13 +128,9 @@ export function TwinflowTransitionTriggers({
         },
       });
       if (result.error) {
-        console.error(result.error);
         throw new Error("Failed to update trigger");
       }
-      fetchData();
-      // window.location.reload();
     } catch (e) {
-      console.error(e);
       toast.error("Failed to update trigger");
       throw e;
     }
@@ -149,7 +138,6 @@ export function TwinflowTransitionTriggers({
 
   return (
     <Experimental_CrudDataTable
-      hideRefresh={true}
       ref={tableRef}
       className="mt-4"
       title="Triggers"
@@ -160,7 +148,7 @@ export function TwinflowTransitionTriggers({
         colDefs.active,
       ]}
       getRowId={(x) => x.id!}
-      fetcher={() => getTriggersRef.current()}
+      fetcher={fetchData}
       disablePagination={true}
       defaultVisibleColumns={[
         colDefs.id,
