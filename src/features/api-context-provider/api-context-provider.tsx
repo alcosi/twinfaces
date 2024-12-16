@@ -30,6 +30,7 @@ import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinStatus";
 import { createUserApi, UserApi } from "@/entities/user";
 import { createUserGroupApi, UserGroupApi } from "@/entities/userGroup";
 import { ApiContext, ApiSettings } from "@/shared/api";
+import { createDomainApi, DomainApi } from "@/entities/domain";
 import { paths } from "@/shared/api/generated/schema";
 import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
@@ -37,6 +38,7 @@ import React from "react";
 import { CommentApi, createCommentApi } from "@/entities/comment";
 
 export interface ApiContextProps {
+  domain: DomainApi;
   twinFlowSchema: TwinFlowSchemaApi;
   twinClassField: TwinClassFieldApi;
   twinClass: TwinClassApi;
@@ -69,6 +71,7 @@ export function ApiContextProvider({
   return (
     <ApiContext.Provider
       value={{
+        domain: createDomainApi(settings),
         twinFlowSchema: createTwinFlowSchemaApi(settings),
         twinClassField: createTwinClassFieldApi(settings),
         twinClass: createTwinClassApi(settings),

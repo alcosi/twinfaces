@@ -1,5 +1,6 @@
 "use client";
 
+import { DomainView_SHORT, useDomains } from "@/entities/domain";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,11 +15,21 @@ import {
   SidebarMenuItem,
 } from "@/shared/ui";
 import { ChevronsUpDown, ChevronUp, Globe, User2 } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import { SIDEBAR_GROUPS } from "./constants";
 import { GroupSection } from "./group";
-import Link from "next/link";
 
 export function AppSidebar() {
+  const { data } = useDomains();
+  const [currentDomain, setCurrentDomain] = useState<
+    DomainView_SHORT | undefined
+  >();
+
+  function onDomainSwitch(domain: DomainView_SHORT) {
+    setCurrentDomain(domain);
+  }
+
   return (
     <nav>
       <Sidebar collapsible="icon">
@@ -29,17 +40,20 @@ export function AppSidebar() {
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
                     <Globe className="h-4 w-4" />
-                    alcosi
+                    {currentDomain?.key ?? "Select Domain"}
                     <ChevronsUpDown className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                  <DropdownMenuItem>
-                    <span>basic</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>elpmi</span>
-                  </DropdownMenuItem>
+                  {data?.map((domain) => (
+                    <DropdownMenuItem
+                      key={domain.id}
+                      disabled={domain.id === currentDomain?.id}
+                      onClick={() => onDomainSwitch(domain)}
+                    >
+                      <span>{domain.key}</span>
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
