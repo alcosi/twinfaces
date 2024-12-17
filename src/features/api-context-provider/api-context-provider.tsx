@@ -37,6 +37,10 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
+import {
+  createPermissionTwinRoleApi,
+  PermissionTwinRoleApi,
+} from "@/entities/twinRole";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -55,6 +59,7 @@ export interface ApiContextProps {
   userGroup: UserGroupApi;
   datalist: DatalistApi;
   comment: CommentApi;
+  twinRole: PermissionTwinRoleApi;
 }
 
 export function ApiContextProvider({
@@ -90,6 +95,7 @@ export function ApiContextProvider({
         userGroup: createUserGroupApi(settings),
         datalist: createDatalistApi(settings),
         comment: createCommentApi(settings),
+        twinRole: createPermissionTwinRoleApi(settings),
       }}
     >
       {children}
