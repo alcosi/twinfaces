@@ -41,6 +41,10 @@ import {
   createPermissionTwinRoleApi,
   PermissionTwinRoleApi,
 } from "@/entities/twinRole";
+import {
+  createPermissionAssigneePropagationApi,
+  PermissionAssigneePropagationApi,
+} from "@/entities/assigneePropagation";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -60,6 +64,7 @@ export interface ApiContextProps {
   datalist: DatalistApi;
   comment: CommentApi;
   twinRole: PermissionTwinRoleApi;
+  assigneePropagation: PermissionAssigneePropagationApi;
 }
 
 export function ApiContextProvider({
@@ -96,6 +101,7 @@ export function ApiContextProvider({
         datalist: createDatalistApi(settings),
         comment: createCommentApi(settings),
         twinRole: createPermissionTwinRoleApi(settings),
+        assigneePropagation: createPermissionAssigneePropagationApi(settings),
       }}
     >
       {children}

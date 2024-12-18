@@ -6048,6 +6048,11 @@ export interface components {
        * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
       grantedByUserId?: string;
+      /**
+       * Format: date-time
+       * @description granted at
+       */
+      grantedAt?: string;
       permissionSchema?: components["schemas"]["PermissionSchemaV1"];
       permission?: components["schemas"]["PermissionV1"];
       propagationTwinClass?: components["schemas"]["TwinClassV1"];
