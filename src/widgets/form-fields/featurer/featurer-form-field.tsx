@@ -3,15 +3,13 @@ import {
   FormItemDescription,
   FormItemLabel,
 } from "@/components/form-fields/form-fields-common";
-import {
-  FeaturerInput,
-  FeaturerInputProps,
-  FeaturerValue,
-} from "@/entities/featurer";
+import { FeaturerValue } from "@/entities/featurer";
 import { cn } from "@/shared/libs";
 import { FormField, FormItem, FormMessage } from "@/shared/ui/form";
 import { ReactNode, useEffect } from "react";
 import { FieldValues, Path, useFormContext } from "react-hook-form";
+import { FeaturerInput } from "./featurer-input";
+import { FeaturerInputProps } from "./types";
 
 export interface FeaturerFormFieldProps<TFormModel extends FieldValues>
   extends FeaturerInputProps {

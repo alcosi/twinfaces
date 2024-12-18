@@ -1,5 +1,6 @@
 import { AutoField, AutoFormValueType } from "@/components/auto-field";
 import { useDatalistSelectAdapter } from "@/entities/datalist";
+import { FeaturerTypes } from "@/entities/featurer";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import {
   useTwinClassLinkStrengthSelectAdapter,
@@ -10,6 +11,7 @@ import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import { useUserSelectAdapter } from "@/entities/user/libs";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup/libs/hooks";
 import { Form } from "@/shared/ui";
+import { FeaturerFormField } from "@/widgets/form-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,7 +27,7 @@ export function InputFieldsTab() {
   const tfAdapter = useTwinFlowSelectAdapter();
   const tfsAdapter = useTwinFlowSchemaSelectAdapter();
 
-  const form = useForm({
+  const form = useForm<any>({
     resolver: zodResolver(z.any()),
     defaultValues: {},
   });
@@ -220,6 +222,57 @@ export function InputFieldsTab() {
                     label: "Label",
                     ...tfsAdapter,
                   }}
+                />
+              }
+            />
+          </UiSection>
+
+          <UiSection title="Misc">
+            <UiSection.Item
+              title=""
+              value={
+                <FeaturerFormField
+                  typeId={FeaturerTypes.fieldTyper}
+                  control={form.control}
+                  name={"fieldTyperFeaturerId"}
+                  paramsName="fieldTyperParams"
+                  label={"Featurer fieldTyper"}
+                />
+              }
+            />
+            <UiSection.Item
+              title=""
+              value={
+                <FeaturerFormField
+                  typeId={FeaturerTypes.headHunter}
+                  control={form.control}
+                  name="fieldTyperFeaturerId"
+                  paramsName="fieldTyperParams"
+                  label={"Featurer headHunter"}
+                />
+              }
+            />
+            <UiSection.Item
+              title=""
+              value={
+                <FeaturerFormField
+                  typeId={FeaturerTypes.trigger}
+                  control={form.control}
+                  name="fieldTyperFeaturerId"
+                  paramsName="fieldTyperParams"
+                  label={"Featurer trigger"}
+                />
+              }
+            />
+            <UiSection.Item
+              title=""
+              value={
+                <FeaturerFormField
+                  typeId={FeaturerTypes.validator}
+                  control={form.control}
+                  name="fieldTyperFeaturerId"
+                  paramsName="fieldTyperParams"
+                  label={"Featurer validator"}
                 />
               }
             />
