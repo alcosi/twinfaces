@@ -11,10 +11,6 @@ import {
   ComboboxFormItem,
 } from "@/components/form-fields/combobox";
 import {
-  FeaturerFormField,
-  FeaturerFormItem,
-} from "@/components/form-fields/featurer-form-field";
-import {
   TextFormField,
   TextFormItem,
 } from "@/components/form-fields/text-form-field";
@@ -22,6 +18,7 @@ import { FeaturerTypeId } from "@/entities/featurer";
 import { TagBoxProps } from "@/shared/ui";
 import { ComboboxProps } from "@/shared/ui/combobox";
 import { InputProps } from "@/shared/ui/input";
+import { FeaturerFormField, FeaturerFormItem } from "@/widgets/form-fields";
 import { Control, FieldPath } from "react-hook-form";
 import { TagsFormField, TagsFormItem } from "./form-fields/tags-form-field";
 
