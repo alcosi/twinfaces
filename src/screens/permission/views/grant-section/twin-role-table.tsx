@@ -5,12 +5,8 @@ import { formatToTwinfaceDate } from "@/shared/libs";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
+import { TwinClassResourceLink } from "@/entities/twinClass";
 import {
-  TwinClass_DETAILED,
-  TwinClassResourceLink,
-} from "@/entities/twinClass";
-import {
-  PermissionGrantTwinRoles,
   PermissionGrantTwinRoles_DETAILED,
   usePermissionGrantTwinRolesSearchV1,
 } from "@/entities/twinRole";
@@ -18,7 +14,7 @@ import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
 
 const colDefs: Record<
   keyof Pick<
-    PermissionGrantTwinRoles,
+    PermissionGrantTwinRoles_DETAILED,
     | "id"
     | "permissionSchemaId"
     | "twinClassId"
@@ -26,7 +22,7 @@ const colDefs: Record<
     | "grantedByUserId"
     | "grantedAt"
   >,
-  ColumnDef<PermissionGrantTwinRoles>
+  ColumnDef<PermissionGrantTwinRoles_DETAILED>
 > = {
   id: {
     id: "id",
@@ -52,10 +48,7 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.twinClass && (
         <div className="max-w-48 inline-flex">
-          <TwinClassResourceLink
-            data={original.twinClass as TwinClass_DETAILED}
-            withTooltip
-          />
+          <TwinClassResourceLink data={original.twinClass} withTooltip />
         </div>
       ),
   },
@@ -97,7 +90,6 @@ export function TwinRoleTable() {
       });
       return response;
     } catch (e) {
-      console.error("Failed to fetch permission twin roles", e);
       toast.error("Failed to fetch permissions twin roles");
       return { data: [], pagination: {} };
     }
