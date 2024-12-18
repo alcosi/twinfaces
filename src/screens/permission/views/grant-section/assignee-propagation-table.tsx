@@ -6,23 +6,24 @@ import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { TwinClassResourceLink } from "@/entities/twinClass";
-import {
-  PermissionGrantTwinRoles_DETAILED,
-  usePermissionGrantTwinRolesSearchV1,
-} from "@/entities/twinRole";
 import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
+import {
+  PermissionGrantAssigneePropagation_DETAILED,
+  usePermissionGrantAssigneePropagationSearchV1,
+} from "@/entities/assigneePropagation";
+import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 
 const colDefs: Record<
   keyof Pick<
-    PermissionGrantTwinRoles_DETAILED,
+    PermissionGrantAssigneePropagation_DETAILED,
     | "id"
     | "permissionSchemaId"
-    | "twinClassId"
-    | "twinRole"
+    | "propagationTwinClassId"
+    | "propagationTwinStatusId"
     | "grantedByUserId"
     | "grantedAt"
   >,
-  ColumnDef<PermissionGrantTwinRoles_DETAILED>
+  ColumnDef<PermissionGrantAssigneePropagation_DETAILED>
 > = {
   id: {
     id: "id",
@@ -41,21 +42,34 @@ const colDefs: Record<
         </div>
       ),
   },
-  twinClassId: {
-    id: "twinClassId",
-    accessorKey: "twinClassId",
-    header: "Class",
+  propagationTwinClassId: {
+    id: "propagationTwinClassId",
+    accessorKey: "propagationTwinClassId",
+    header: "By class",
     cell: ({ row: { original } }) =>
-      original.twinClass && (
+      original.propagationTwinClass && (
         <div className="max-w-48 inline-flex">
-          <TwinClassResourceLink data={original.twinClass} withTooltip />
+          <TwinClassResourceLink
+            data={original.propagationTwinClass}
+            withTooltip
+          />
         </div>
       ),
   },
-  twinRole: {
-    id: "twinRole",
-    accessorKey: "twinRole",
-    header: "Twin role",
+  propagationTwinStatusId: {
+    id: "propagationTwinStatusId",
+    accessorKey: "propagationTwinStatusId",
+    header: "By status",
+    cell: ({ row: { original } }) =>
+      original.propagationTwinStatus && (
+        <div className="max-w-48 inline-flex">
+          <TwinClassStatusResourceLink
+            data={original.propagationTwinStatus}
+            twinClassId={original.propagationTwinStatusId!}
+            withTooltip
+          />
+        </div>
+      ),
   },
   grantedByUserId: {
     id: "grantedByUserId",
@@ -77,32 +91,33 @@ const colDefs: Record<
   },
 };
 
-export function TwinRoleTable() {
-  const { searchTwinRoleGrant } = usePermissionGrantTwinRolesSearchV1();
+export function AssigneePropagationTable() {
+  const { searchAssigneePropagationGrant } =
+    usePermissionGrantAssigneePropagationSearchV1();
 
   async function fetchData(
     pagination: PaginationState
-  ): Promise<PagedResponse<PermissionGrantTwinRoles_DETAILED>> {
+  ): Promise<PagedResponse<PermissionGrantAssigneePropagation_DETAILED>> {
     try {
-      const response = await searchTwinRoleGrant({
+      const response = await searchAssigneePropagationGrant({
         pagination,
         filters: {},
       });
       return response;
     } catch (e) {
-      toast.error("Failed to fetch permissions twin roles");
+      toast.error("Failed to fetch permissions assignee propagation");
       return { data: [], pagination: {} };
     }
   }
 
   return (
     <Experimental_CrudDataTable
-      title="Twin roles"
+      title="Assignee propagation"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,
-        colDefs.twinClassId,
-        colDefs.twinRole,
+        colDefs.propagationTwinClassId,
+        colDefs.propagationTwinStatusId,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}

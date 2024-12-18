@@ -16,7 +16,7 @@ export function createPermissionTwinRoleApi(settings: ApiSettings) {
         params: {
           header: getApiDomainHeaders(settings),
           query: {
-            lazyRelation: true,
+            lazyRelation: false,
             showPermissionGrantTwinRoleMode: "DETAILED",
             showPermissionGrantTwinRole2TwinClassMode: "DETAILED",
             showPermissionGrantTwinRole2UserMode: "DETAILED",

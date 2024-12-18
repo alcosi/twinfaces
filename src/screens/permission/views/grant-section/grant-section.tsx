@@ -1,6 +1,7 @@
 import { UserGroupsTable } from "./user-groups-table";
 import { UsersTable } from "./users-table";
 import { TwinRoleTable } from "./twin-role-table";
+import { AssigneePropagationTable } from "./assignee-propagation-table";
 
 export function GrantSection() {
   return (
@@ -8,6 +9,7 @@ export function GrantSection() {
       <UserGroupsTable />
       <UsersTable />
       <TwinRoleTable />
+      <AssigneePropagationTable />
     </>
   );
 }
