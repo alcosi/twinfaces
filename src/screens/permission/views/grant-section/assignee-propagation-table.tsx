@@ -5,9 +5,7 @@ import { formatToTwinfaceDate } from "@/shared/libs";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
-import {
-  TwinClassResourceLink,
-} from "@/entities/twinClass";
+import { TwinClassResourceLink } from "@/entities/twinClass";
 import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
 import {
   PermissionGrantAssigneePropagation_DETAILED,
