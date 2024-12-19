@@ -3,7 +3,7 @@ import { PaginationState } from "@tanstack/table-core";
 import { PermissionGrantTwinRolesFilter } from "@/entities/twinRole";
 
 export function createPermissionTwinRoleApi(settings: ApiSettings) {
-  async function searchTwinRole({
+  async function search({
     pagination,
     filters,
   }: {
@@ -34,7 +34,7 @@ export function createPermissionTwinRoleApi(settings: ApiSettings) {
   }
 
   return {
-    searchTwinRole,
+    search,
   };
 }
 

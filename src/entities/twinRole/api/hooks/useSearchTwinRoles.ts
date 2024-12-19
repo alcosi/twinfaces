@@ -20,7 +20,7 @@ export const usePermissionGrantTwinRolesSearchV1 = () => {
       filters?: PermissionGrantTwinRolesFilter;
     }): Promise<PagedResponse<PermissionGrantTwinRoles_DETAILED>> => {
       try {
-        const { data, error } = await api.twinRole.searchTwinRole({
+        const { data, error } = await api.twinRole.search({
           pagination,
           filters,
         });

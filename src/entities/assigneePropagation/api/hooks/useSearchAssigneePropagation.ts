@@ -20,11 +20,10 @@ export const usePermissionGrantAssigneePropagationSearchV1 = () => {
       filters?: PermissionGrantAssigneePropagationFilter;
     }): Promise<PagedResponse<PermissionGrantAssigneePropagation_DETAILED>> => {
       try {
-        const { data, error } =
-          await api.assigneePropagation.searchAssigneePropagation({
-            pagination,
-            filters,
-          });
+        const { data, error } = await api.assigneePropagation.search({
+          pagination,
+          filters,
+        });
 
         if (error) {
           throw new Error(

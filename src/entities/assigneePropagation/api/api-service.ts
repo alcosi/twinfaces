@@ -3,7 +3,7 @@ import { PaginationState } from "@tanstack/table-core";
 import { PermissionGrantAssigneePropagationFilter } from "@/entities/assigneePropagation";
 
 export function createPermissionAssigneePropagationApi(settings: ApiSettings) {
-  async function searchAssigneePropagation({
+  async function search({
     pagination,
     filters,
   }: {
@@ -35,7 +35,7 @@ export function createPermissionAssigneePropagationApi(settings: ApiSettings) {
   }
 
   return {
-    searchAssigneePropagation,
+    search,
   };
 }
 

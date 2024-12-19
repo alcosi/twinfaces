@@ -6,54 +6,33 @@ import {
 import { TwinClass_DETAILED } from "@/entities/twinClass";
 
 export const hydratePermissionGrantAssigneePropagationFromMap = (
-  permissionGrantAssigneePropagationsDTO: PermissionGrantAssigneePropagation,
+  dto: PermissionGrantAssigneePropagation,
   relatedObjects?: RelatedObjects
 ): PermissionGrantAssigneePropagation_DETAILED => {
-  const permissionGrantAssigneePropagation: PermissionGrantAssigneePropagation_DETAILED =
-    Object.assign(
-      {},
-      permissionGrantAssigneePropagationsDTO
-    ) as PermissionGrantAssigneePropagation_DETAILED;
+  const hydrated: PermissionGrantAssigneePropagation_DETAILED = Object.assign(
+    {},
+    dto
+  ) as PermissionGrantAssigneePropagation_DETAILED;
 
-  if (
-    permissionGrantAssigneePropagationsDTO.grantedByUserId &&
-    relatedObjects?.userMap
-  ) {
-    permissionGrantAssigneePropagation.grantedByUser =
-      relatedObjects.userMap[
-        permissionGrantAssigneePropagationsDTO.grantedByUserId
-      ]!;
+  if (dto.grantedByUserId && relatedObjects?.userMap) {
+    hydrated.grantedByUser = relatedObjects.userMap[dto.grantedByUserId]!;
   }
 
-  if (
-    permissionGrantAssigneePropagationsDTO.permissionSchemaId &&
-    relatedObjects?.permissionSchemaMap
-  ) {
-    permissionGrantAssigneePropagation.permissionSchema =
-      relatedObjects.permissionSchemaMap[
-        permissionGrantAssigneePropagationsDTO.permissionSchemaId
-      ]!;
+  if (dto.permissionSchemaId && relatedObjects?.permissionSchemaMap) {
+    hydrated.permissionSchema =
+      relatedObjects.permissionSchemaMap[dto.permissionSchemaId]!;
   }
 
-  if (
-    permissionGrantAssigneePropagationsDTO.propagationTwinClassId &&
-    relatedObjects?.twinClassMap
-  ) {
-    permissionGrantAssigneePropagation.propagationTwinClass = relatedObjects
-      .twinClassMap[
-      permissionGrantAssigneePropagationsDTO.propagationTwinClassId
+  if (hydrated.propagationTwinClassId && relatedObjects?.twinClassMap) {
+    hydrated.propagationTwinClass = relatedObjects.twinClassMap[
+      hydrated.propagationTwinClassId
     ] as TwinClass_DETAILED;
   }
 
-  if (
-    permissionGrantAssigneePropagationsDTO.propagationTwinStatusId &&
-    relatedObjects?.statusMap
-  ) {
-    permissionGrantAssigneePropagation.propagationTwinStatus =
-      relatedObjects.statusMap[
-        permissionGrantAssigneePropagationsDTO.propagationTwinStatusId
-      ]!;
+  if (hydrated.propagationTwinStatusId && relatedObjects?.statusMap) {
+    hydrated.propagationTwinStatus =
+      relatedObjects.statusMap[hydrated.propagationTwinStatusId]!;
   }
 
-  return permissionGrantAssigneePropagation;
+  return hydrated;
 };
