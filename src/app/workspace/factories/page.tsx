@@ -1,5 +1,5 @@
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { Factories } from "@/screens/factories";
 
 export default function FactoriesPage() {
-  return <UnderConstruction />;
+  return <Factories />;
 }
