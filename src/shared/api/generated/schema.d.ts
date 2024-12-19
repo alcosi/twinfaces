@@ -355,6 +355,10 @@ export interface paths {
     /** Featurer search */
     post: operations["featurerListV1"];
   };
+  "/private/factory_condition_set/search/v1": {
+    /** Condition set search */
+    post: operations["factoryConditionSetSearchV1"];
+  };
   "/private/factory/search/v1": {
     /** Return a list of all factories for the current domain */
     post: operations["factorySearchListV1"];
@@ -5957,6 +5961,11 @@ export interface components {
        * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
       grantedByUserId?: string;
+      /**
+       * Format: date-time
+       * @description granted at
+       */
+      grantedAt?: string;
       permissionSchema?: components["schemas"]["PermissionSchemaV1"];
       permission?: components["schemas"]["PermissionV1"];
       spaceRole?: components["schemas"]["SpaceRoleV2"];
@@ -6287,6 +6296,91 @@ export interface components {
       deprecated?: boolean;
       /** @description params list */
       params?: components["schemas"]["FeaturerParamV1"][];
+    };
+    FactoryConditionSetSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name like exclude list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description like exclude list */
+      descriptionNotLikeList?: string[];
+    };
+    FactoryConditionSetSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - condition list */
+      conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
+    };
+    /** @description results - condition list */
+    FactoryConditionSetV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      id?: string;
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: int32
+       * @description count in factory pipeline usages
+       * @example 3
+       */
+      inFactoryPipelineUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory pipeline step usages
+       * @example 3
+       */
+      inFactoryPipelineStepUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory multiplier filter usages
+       * @example 3
+       */
+      inFactoryMultiplierFilterUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory branch usages
+       * @example 3
+       */
+      inFactoryBranchUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory eraser usages
+       * @example 3
+       */
+      inFactoryEraserUsagesCount?: number;
     };
     FactorySearchRqV1: {
       /** @description id List */
@@ -11553,11 +11647,11 @@ export interface operations {
         lazyRelation?: boolean;
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGrantSpaceRole2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGrantSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-        showPermissionGrantUserGroup2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
-        showPermissionGrantUserGroup2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -11894,6 +11988,50 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["FeaturerSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Condition set search */
+  factoryConditionSetSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showConditionSetInFactoryBranchUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryConditionSetSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Condition set list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryConditionSetSearchRsV1"];
         };
       };
       /** @description Access is denied */
