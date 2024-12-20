@@ -2,12 +2,16 @@
 
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Factory } from "@/entities/factory";
+import {
+  Factory,
+  useFactoryFilters,
+  useFactorySearch,
+} from "@/entities/factory";
 import { FiltersState, GuidWithCopy } from "@/shared/ui";
 import { UserResourceLink } from "@/entities/user";
-import { useContext } from "react";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse } from "@/shared/api";
 import { toast } from "sonner";
+import { formatToTwinfaceDate } from "@/shared/libs";
 
 const colDefs: Record<
   keyof Omit<Factory, "createdByUserId">,
@@ -38,6 +42,8 @@ const colDefs: Record<
     id: "createdAt",
     accessorKey: "createdAt",
     header: "Created At",
+    cell: ({ row: { original } }) =>
+      original.createdAt && formatToTwinfaceDate(original.createdAt),
   },
   createdByUser: {
     id: "createdByUser",
@@ -76,33 +82,23 @@ const colDefs: Record<
 };
 
 export function Factories() {
-  const api = useContext(ApiContext);
+  const { searchFactories } = useFactorySearch();
+  const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
 
   async function fetchFactories(
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<Factory>> {
+    const _filters = mapFiltersToPayload(filters.filters);
+
     try {
-      const response = await api.factory.search({
+      return await searchFactories({
         pagination,
-        filters: filters as any,
+        filters: _filters,
       });
-
-      if (!response.data) {
-        throw new Error("No data returned in a successful response");
-      }
-
-      return {
-        data: response.data.factories ?? [],
-        pagination: response.data.pagination ?? {},
-      };
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to fetch factories");
-      return {
-        data: [],
-        pagination: {},
-      };
+      toast.error("An error occurred while fetching factories: " + error);
+      throw error;
     }
   }
 
@@ -119,6 +115,9 @@ export function Factories() {
         colDefs.name,
         colDefs.factoryUsagesCount,
       ]}
+      filters={{
+        filtersInfo: buildFilterFields(),
+      }}
     />
   );
 }
