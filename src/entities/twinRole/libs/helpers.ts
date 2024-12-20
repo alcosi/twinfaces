@@ -6,35 +6,28 @@ import {
 import { TwinClass_DETAILED } from "@/entities/twinClass";
 
 export const hydratePermissionGrantTwinRolesFromMap = (
-  permissionGrantTwinRolesDTO: PermissionGrantTwinRoles,
+  dto: PermissionGrantTwinRoles,
   relatedObjects?: RelatedObjects
 ): PermissionGrantTwinRoles_DETAILED => {
-  const permissionGrantTwinRoles: PermissionGrantTwinRoles_DETAILED =
-    Object.assign(
-      {},
-      permissionGrantTwinRolesDTO
-    ) as PermissionGrantTwinRoles_DETAILED;
+  const hydrated: PermissionGrantTwinRoles_DETAILED = Object.assign(
+    {},
+    dto
+  ) as PermissionGrantTwinRoles_DETAILED;
 
-  if (
-    permissionGrantTwinRolesDTO.permissionSchemaId &&
-    relatedObjects?.permissionSchemaMap
-  ) {
-    permissionGrantTwinRoles.permissionSchema =
-      relatedObjects.permissionSchemaMap[
-        permissionGrantTwinRolesDTO.permissionSchemaId
-      ]!;
+  if (dto.permissionSchemaId && relatedObjects?.permissionSchemaMap) {
+    hydrated.permissionSchema =
+      relatedObjects.permissionSchemaMap[dto.permissionSchemaId]!;
   }
 
-  if (permissionGrantTwinRolesDTO.twinClassId && relatedObjects?.twinClassMap) {
-    permissionGrantTwinRoles.twinClass = relatedObjects.twinClassMap[
-      permissionGrantTwinRolesDTO.twinClassId
+  if (dto.twinClassId && relatedObjects?.twinClassMap) {
+    hydrated.twinClass = relatedObjects.twinClassMap[
+      dto.twinClassId
     ] as TwinClass_DETAILED;
   }
 
-  if (permissionGrantTwinRolesDTO.grantedByUserId && relatedObjects?.userMap) {
-    permissionGrantTwinRoles.grantedByUser =
-      relatedObjects.userMap[permissionGrantTwinRolesDTO.grantedByUserId]!;
+  if (dto.grantedByUserId && relatedObjects?.userMap) {
+    hydrated.grantedByUser = relatedObjects.userMap[dto.grantedByUserId]!;
   }
 
-  return permissionGrantTwinRoles;
+  return hydrated;
 };

@@ -1,8 +1,8 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { hydratePermissionGrantTwinRolesFromMap } from "@/entities/twinRole/libs";
 import {
+  hydratePermissionGrantTwinRolesFromMap,
   PermissionGrantTwinRoles_DETAILED,
   PermissionGrantTwinRolesFilter,
 } from "@/entities/twinRole";
@@ -20,7 +20,7 @@ export const usePermissionGrantTwinRolesSearchV1 = () => {
       filters?: PermissionGrantTwinRolesFilter;
     }): Promise<PagedResponse<PermissionGrantTwinRoles_DETAILED>> => {
       try {
-        const { data, error } = await api.twinRole.searchTwinRole({
+        const { data, error } = await api.twinRole.search({
           pagination,
           filters,
         });
