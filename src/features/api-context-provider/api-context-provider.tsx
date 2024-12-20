@@ -45,6 +45,7 @@ import {
   createPermissionAssigneePropagationApi,
   PermissionAssigneePropagationApi,
 } from "@/entities/assigneePropagation";
+import { createFactoryApi, FactoryApi } from "@/entities/factory";
 import {
   createPermissionSpaceRoleApi,
   PermissionSpaceRoleApi,
@@ -69,6 +70,7 @@ export interface ApiContextProps {
   comment: CommentApi;
   twinRole: PermissionTwinRoleApi;
   assigneePropagation: PermissionAssigneePropagationApi;
+  factory: FactoryApi;
   spaceRole: PermissionSpaceRoleApi;
 }
 
@@ -107,6 +109,7 @@ export function ApiContextProvider({
         comment: createCommentApi(settings),
         twinRole: createPermissionTwinRoleApi(settings),
         assigneePropagation: createPermissionAssigneePropagationApi(settings),
+        factory: createFactoryApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
       }}
     >
