@@ -66,7 +66,6 @@ export function FeaturerParamInput({
 
   function renderParamFieldByType() {
     const type: FeaturerParamTypes = param.type as FeaturerParamTypes;
-    console.log("foobar renderParamFieldByType", param.name, { value }, param);
 
     switch (type) {
       case ParamTypes.BOOLEAN:
