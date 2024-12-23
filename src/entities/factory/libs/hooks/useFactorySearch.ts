@@ -3,6 +3,7 @@ import { Factory, FactoryFilters } from "@/entities/factory";
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
+// TODO: Turn off lazy-relation for users, implement hydration
 export function useFactorySearch() {
   const api = useContext(ApiContext);
 

@@ -355,6 +355,10 @@ export interface paths {
     /** Featurer search */
     post: operations["featurerListV1"];
   };
+  "/private/factory_pipeline/search/v1": {
+    /** Factory pipeline search */
+    post: operations["factoryPipelineSearchV1"];
+  };
   "/private/factory_condition_set/search/v1": {
     /** Condition set search */
     post: operations["factoryConditionSetSearchV1"];
@@ -1747,6 +1751,74 @@ export interface components {
       updatedAt?: string;
     };
     /**
+     * @description related factory pipeline map
+     * @example {factory pipeline map}
+     */
+    FactoryPipelineV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryId?: string;
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryConditionSetId?: string;
+      /**
+       * @description factory condition set invert
+       * @example true
+       */
+      factoryConditionSetInvert?: boolean;
+      /**
+       * @description is active
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description output twin status id
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      outputTwinStatusId?: string;
+      /**
+       * Format: uuid
+       * @description next factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      nextFactoryId?: string;
+      /**
+       * @description next factory limit scope
+       * @example true
+       */
+      nextFactoryLimitScope?: boolean;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: int32
+       * @description count pipeline steps
+       * @example 3
+       */
+      pipelineStepsCount?: number;
+    };
+    /**
      * @description related factory map
      * @example {factory map}
      */
@@ -1986,6 +2058,13 @@ export interface components {
        */
       factoryMap?: {
         [key: string]: components["schemas"]["FactoryV1"];
+      };
+      /**
+       * @description related factory pipeline map
+       * @example {factory pipeline map}
+       */
+      factoryPipelineMap?: {
+        [key: string]: components["schemas"]["FactoryPipelineV1"];
       };
     };
     /**
@@ -2892,6 +2971,10 @@ export interface components {
       dataListSubsetIdList?: string[];
       /** @description data list class subset id exclude list */
       dataListSubsetIdExcludeList?: string[];
+      /** @description data list class subset key list */
+      dataListSubsetKeyList?: string[];
+      /** @description data list class subset key exclude list */
+      dataListSubsetKeyExcludeList?: string[];
     };
     DataListOptionSearchRsV1: {
       /**
@@ -3041,6 +3124,10 @@ export interface components {
       dataListSubsetIdList?: string[];
       /** @description data list class subset id exclude list */
       dataListSubsetIdExcludeList?: string[];
+      /** @description data list class subset key list */
+      dataListSubsetKeyList?: string[];
+      /** @description data list class subset key exclude list */
+      dataListSubsetKeyExcludeList?: string[];
     };
     DataListSearchRqV1: {
       /** @description datalist id list */
@@ -3775,6 +3862,10 @@ export interface components {
       idList?: string[];
       /** @description id exclude list */
       idExcludeList?: string[];
+      /** @description twin class id list */
+      twinClassIdList?: string[];
+      /** @description twin class id exclude list */
+      twinClassIdExcludeList?: string[];
       /** @description key like list */
       keyLikeList?: string[];
       /** @description key not like list */
@@ -3823,9 +3914,74 @@ export interface components {
        * @example success
        */
       statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - twin class field list */
-      fields?: components["schemas"]["TwinClassFieldV1"][];
+      fields?: components["schemas"]["TwinClassFieldV2"][];
+    };
+    /** @description results - twin class field list */
+    TwinClassFieldV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 2fe95272-afcb-40ee-a6a8-87c5da4d5b8d
+       */
+      id?: string;
+      /**
+       * @description key
+       * @example serialNumber
+       */
+      key?: string;
+      /**
+       * @description name
+       * @example Serial number
+       */
+      name?: string;
+      /**
+       * @description required
+       * @example true
+       */
+      required?: boolean;
+      /** @description description */
+      description?: string;
+      descriptor?: components["schemas"]["TwinClassFieldDescriptorDTO"];
+      /**
+       * Format: uuid
+       * @description twin class id
+       */
+      twinClassId?: string;
+      /**
+       * Format: uuid
+       * @description name i18n id
+       */
+      nameI18nId?: string;
+      /**
+       * Format: uuid
+       * @description description i18n id
+       */
+      descriptionI18nId?: string;
+      /**
+       * Format: int32
+       * @description field typer featurer id
+       */
+      fieldTyperFeaturerId?: number;
+      /** @description field typer params */
+      fieldTyperParams?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: uuid
+       * @description view permission id
+       */
+      viewPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description edit permission id
+       */
+      editPermissionId?: string;
+      twinClass?: components["schemas"]["TwinClassBaseV1"];
+      viewPermission?: components["schemas"]["PermissionV1"];
+      editPermission?: components["schemas"]["PermissionV1"];
     };
     TwinflowCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
@@ -6297,41 +6453,47 @@ export interface components {
       /** @description params list */
       params?: components["schemas"]["FeaturerParamV1"][];
     };
-    FactoryConditionSetSearchRqV1: {
+    FactoryPipelineSearchRqV1: {
       /** @description id list */
       idList?: string[];
       /** @description id exclude list */
       idExcludeList?: string[];
-      /** @description name like list */
-      nameLikeList?: string[];
-      /** @description name like exclude list */
-      nameNotLikeList?: string[];
+      /** @description factory id list */
+      factoryIdList?: string[];
+      /** @description factory id exclude list */
+      factoryIdExcludeList?: string[];
+      /** @description input twin class id list */
+      inputTwinClassIdList?: string[];
+      /** @description input twin class id exclude list */
+      inputTwinClassIdExcludeList?: string[];
+      /** @description factory condition set id list */
+      factoryConditionSetIdList?: string[];
+      /** @description factory condition set id exclude list */
+      factoryConditionSetIdExcludeList?: string[];
+      /** @description output twin status id list */
+      outputTwinStatusIdList?: string[];
+      /** @description output twin status id exclude list */
+      outputTwinStatusIdExcludeList?: string[];
+      /** @description next factory id list */
+      nextFactoryIdList?: string[];
+      /** @description next factory id exclude list */
+      nextFactoryIdExcludeList?: string[];
       /** @description description like list */
       descriptionLikeList?: string[];
-      /** @description description like exclude list */
+      /** @description description not like list */
       descriptionNotLikeList?: string[];
-    };
-    FactoryConditionSetSearchRsV1: {
       /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
+       * @description is active
+       * @example ONLY
+       * @enum {string}
        */
-      status?: number;
+      active?: "ONLY" | "ONLY_NOT" | "ANY";
       /**
-       * @description User friendly, localized request processing status description
-       * @example success
+       * @description next factory limit scope
+       * @example ONLY
+       * @enum {string}
        */
-      msg?: string;
-      /**
-       * @description request processing status description, technical
-       * @example success
-       */
-      statusDetails?: string;
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      pagination?: components["schemas"]["PaginationV1"];
-      /** @description results - condition list */
-      conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
+      nextFactoryLimitScope?: "ONLY" | "ONLY_NOT" | "ANY";
     };
     /** @description results - condition list */
     FactoryConditionSetV1: {
@@ -6381,6 +6543,134 @@ export interface components {
        * @example 3
        */
       inFactoryEraserUsagesCount?: number;
+    };
+    FactoryPipelineSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - factory pipeline list */
+      pipelines?: components["schemas"]["FactoryPipelineV2"][];
+    };
+    /** @description results - factory pipeline list */
+    FactoryPipelineV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryId?: string;
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryConditionSetId?: string;
+      /**
+       * @description factory condition set invert
+       * @example true
+       */
+      factoryConditionSetInvert?: boolean;
+      /**
+       * @description is active
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description output twin status id
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      outputTwinStatusId?: string;
+      /**
+       * Format: uuid
+       * @description next factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      nextFactoryId?: string;
+      /**
+       * @description next factory limit scope
+       * @example true
+       */
+      nextFactoryLimitScope?: boolean;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: int32
+       * @description count pipeline steps
+       * @example 3
+       */
+      pipelineStepsCount?: number;
+      factory?: components["schemas"]["FactoryV1"];
+      inputTwinClass?: components["schemas"]["TwinClassBaseV1"];
+      factoryConditionSet?: components["schemas"]["FactoryConditionSetV1"];
+      outputTwinStatus?: components["schemas"]["TwinStatusV1"];
+      nextFactory?: components["schemas"]["FactoryV1"];
+    };
+    FactoryConditionSetSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name like exclude list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description like exclude list */
+      descriptionNotLikeList?: string[];
+    };
+    FactoryConditionSetSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - condition list */
+      conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
     };
     FactorySearchRqV1: {
       /** @description id List */
@@ -6701,20 +6991,20 @@ export interface components {
        * @example en
        */
       currentLocale?: {
-        language?: string;
         displayName?: string;
+        extensionKeys?: string[];
+        iso3Language?: string;
+        iso3Country?: string;
+        script?: string;
         country?: string;
         variant?: string;
-        script?: string;
         unicodeLocaleAttributes?: string[];
         unicodeLocaleKeys?: string[];
         displayLanguage?: string;
         displayScript?: string;
         displayCountry?: string;
         displayVariant?: string;
-        extensionKeys?: string[];
-        iso3Language?: string;
-        iso3Country?: string;
+        language?: string;
       };
       /**
        * Format: date-time
@@ -8143,6 +8433,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8965,6 +9258,7 @@ export interface operations {
   twinClassFieldSearchV1: {
     parameters: {
       query?: {
+        lazyRelation?: boolean;
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8976,6 +9270,8 @@ export interface operations {
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9458,6 +9754,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9801,6 +10100,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9909,6 +10211,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9985,6 +10290,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10057,6 +10365,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10332,6 +10643,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10409,6 +10723,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10485,6 +10802,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10562,6 +10882,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10812,6 +11135,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10889,6 +11215,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10965,6 +11294,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11042,6 +11374,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11998,6 +12333,60 @@ export interface operations {
       };
     };
   };
+  /** Factory pipeline search */
+  factoryPipelineSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showConditionSetInFactoryBranchUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipeline2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineNextTwinFactory2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineOutputTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineTwinFactory2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryPipelineSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory pipeline list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryPipelineSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Condition set search */
   factoryConditionSetSearchV1: {
     parameters: {
@@ -12052,7 +12441,7 @@ export interface operations {
         showFactoryErasersCountMode?: "HIDE" | "SHOW";
         showFactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
-        showFactoryPipelinesCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
         showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         offset?: number;
         limit?: number;
@@ -13011,6 +13400,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13413,6 +13805,9 @@ export interface operations {
         showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
         showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
