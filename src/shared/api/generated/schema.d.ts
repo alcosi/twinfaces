@@ -908,6 +908,49 @@ export interface components {
         [key: string]: string;
       };
     };
+    /** @description params list */
+    FeaturerParamV1: {
+      /**
+       * @description key
+       * @example listUUID
+       */
+      key?: string;
+      /**
+       * @description name
+       * @example listUUID
+       */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /** @description type */
+      type?: string;
+    };
+    /** @description head hunter featurer */
+    FeaturerV1: {
+      /**
+       * Format: int32
+       * @description id
+       * @example 1000
+       */
+      id?: number;
+      /**
+       * Format: int32
+       * @description featurer type id
+       * @example 12
+       */
+      featurerTypeId?: number;
+      /**
+       * @description name
+       * @example InjectorImpl
+       */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /** @description deprecated */
+      deprecated?: boolean;
+      /** @description params list */
+      params?: components["schemas"]["FeaturerParamV1"][];
+    };
     LinkV1: {
       /**
        * Format: uuid
@@ -1476,6 +1519,7 @@ export interface components {
       headClass?: components["schemas"]["TwinClassBaseV1"];
       extendsClass?: components["schemas"]["TwinClassBaseV1"];
       viewPermission?: components["schemas"]["PermissionV1"];
+      headHunterFeaturer?: components["schemas"]["FeaturerV1"];
     };
     /** @description created by user */
     UserV1: {
@@ -2065,6 +2109,13 @@ export interface components {
        */
       factoryPipelineMap?: {
         [key: string]: components["schemas"]["FactoryPipelineV1"];
+      };
+      /**
+       * @description related featurer map
+       * @example {featurer map}
+       */
+      featurerMap?: {
+        [key: string]: components["schemas"]["FeaturerV1"];
       };
     };
     /**
@@ -3633,8 +3684,10 @@ export interface components {
       /**
        * Format: uuid
        * @description id
+       * @example 9d956a15-6858-40ba-b0aa-b123c54e250d
        */
       id?: string;
+      triggerFeaturer?: components["schemas"]["FeaturerV1"];
     };
     /** @description Twin validator list */
     TwinValidatorBaseV1: {
@@ -3669,6 +3722,7 @@ export interface components {
        */
       order?: number;
       twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+      validatorFeaturer?: components["schemas"]["FeaturerV1"];
     };
     /** @description grouping set of twin validator */
     TwinValidatorSetBaseV1: {
@@ -3982,6 +4036,7 @@ export interface components {
       twinClass?: components["schemas"]["TwinClassBaseV1"];
       viewPermission?: components["schemas"]["PermissionV1"];
       editPermission?: components["schemas"]["PermissionV1"];
+      fieldTyperFeaturer?: components["schemas"]["FeaturerV1"];
     };
     TwinflowCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
@@ -5348,8 +5403,10 @@ export interface components {
       /**
        * Format: uuid
        * @description id
+       * @example 9d956a15-6858-40ba-b0aa-b123c54e250d
        */
       id?: string;
+      triggerFeaturer?: components["schemas"]["FeaturerV1"];
     };
     /** @description validators create list */
     ValidatorCreateV1: {
@@ -6388,23 +6445,6 @@ export interface components {
       /** @description names list */
       nameLikeList?: string[];
     };
-    /** @description params list */
-    FeaturerParamV1: {
-      /**
-       * @description key
-       * @example listUUID
-       */
-      key?: string;
-      /**
-       * @description name
-       * @example listUUID
-       */
-      name?: string;
-      /** @description description */
-      description?: string;
-      /** @description type */
-      type?: string;
-    };
     FeaturerSearchRsV1: {
       /**
        * Format: int32
@@ -6426,32 +6466,6 @@ export interface components {
       pagination?: components["schemas"]["PaginationV1"];
       /** @description featurer list */
       featurerList?: components["schemas"]["FeaturerV1"][];
-    };
-    /** @description featurer list */
-    FeaturerV1: {
-      /**
-       * Format: int32
-       * @description id
-       * @example 1000
-       */
-      id?: number;
-      /**
-       * Format: int32
-       * @description featurer type id
-       * @example 12
-       */
-      featurerTypeId?: number;
-      /**
-       * @description name
-       * @example InjectorImpl
-       */
-      name?: string;
-      /** @description description */
-      description?: string;
-      /** @description deprecated */
-      deprecated?: boolean;
-      /** @description params list */
-      params?: components["schemas"]["FeaturerParamV1"][];
     };
     FactoryPipelineSearchRqV1: {
       /** @description id list */
@@ -6671,6 +6685,91 @@ export interface components {
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - condition list */
       conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
+    };
+    FactoryConditionSetSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name like exclude list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description like exclude list */
+      descriptionNotLikeList?: string[];
+    };
+    FactoryConditionSetSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - condition list */
+      conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
+    };
+    /** @description results - condition list */
+    FactoryConditionSetV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      id?: string;
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: int32
+       * @description count in factory pipeline usages
+       * @example 3
+       */
+      inFactoryPipelineUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory pipeline step usages
+       * @example 3
+       */
+      inFactoryPipelineStepUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory multiplier filter usages
+       * @example 3
+       */
+      inFactoryMultiplierFilterUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory branch usages
+       * @example 3
+       */
+      inFactoryBranchUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory eraser usages
+       * @example 3
+       */
+      inFactoryEraserUsagesCount?: number;
     };
     FactorySearchRqV1: {
       /** @description id List */
@@ -6991,20 +7090,20 @@ export interface components {
        * @example en
        */
       currentLocale?: {
+        language?: string;
         displayName?: string;
-        extensionKeys?: string[];
-        iso3Language?: string;
-        iso3Country?: string;
-        script?: string;
         country?: string;
         variant?: string;
+        script?: string;
         unicodeLocaleAttributes?: string[];
         unicodeLocaleKeys?: string[];
         displayLanguage?: string;
         displayScript?: string;
         displayCountry?: string;
         displayVariant?: string;
-        language?: string;
+        extensionKeys?: string[];
+        iso3Language?: string;
+        iso3Country?: string;
       };
       /**
        * Format: date-time
@@ -7951,10 +8050,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTrigger2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinValidator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinValidator2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflow2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8113,12 +8215,14 @@ export interface operations {
   twinClassFieldViewV1: {
     parameters: {
       query?: {
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8165,12 +8269,14 @@ export interface operations {
   twinClassFieldUpdateV1: {
     parameters: {
       query?: {
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8223,12 +8329,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8275,12 +8383,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8337,6 +8447,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8351,6 +8462,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8407,6 +8519,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8421,6 +8534,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -8586,6 +8700,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showLinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -8595,6 +8710,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9170,10 +9286,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTrigger2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinValidator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinValidator2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflow2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -9259,17 +9378,20 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9399,12 +9521,14 @@ export interface operations {
   twinClassFieldCreateV1: {
     parameters: {
       query?: {
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9457,12 +9581,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9514,12 +9640,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9567,12 +9695,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9622,6 +9752,7 @@ export interface operations {
   permissonCheckOverviewV1: {
     parameters: {
       query?: {
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9638,6 +9769,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9728,6 +9860,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9742,6 +9875,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9838,12 +9972,14 @@ export interface operations {
   twinFieldByKeyViewV1: {
     parameters: {
       query?: {
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10074,6 +10210,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10088,6 +10225,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10185,6 +10323,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10199,6 +10338,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10264,6 +10404,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10278,6 +10419,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10339,6 +10481,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10353,6 +10496,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10414,6 +10558,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10428,6 +10573,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10518,6 +10664,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showHistory2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showHistory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -10526,6 +10673,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10616,6 +10764,7 @@ export interface operations {
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showDraft2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showDraftMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -10631,6 +10780,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10696,6 +10846,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -10711,6 +10862,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10775,6 +10927,7 @@ export interface operations {
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showDraft2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showDraftMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -10790,6 +10943,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10855,6 +11009,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -10870,6 +11025,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11010,12 +11166,15 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTrigger2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinValidator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinValidator2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinflow2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinflow2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11108,6 +11267,7 @@ export interface operations {
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showDraft2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showDraftMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -11123,6 +11283,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11188,6 +11349,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -11203,6 +11365,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11267,6 +11430,7 @@ export interface operations {
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showDraft2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showDraftMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -11282,6 +11446,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11347,6 +11512,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTransitionResultMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -11362,6 +11528,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11549,6 +11716,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showSpace2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11559,6 +11727,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11736,6 +11905,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11744,6 +11914,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11794,6 +11965,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11807,6 +11979,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11857,6 +12030,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGrantUser2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11869,6 +12043,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11919,6 +12094,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermissionGrantTwinRole2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGrantTwinRole2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11930,6 +12106,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11980,6 +12157,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGrantSpaceRole2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11995,6 +12173,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12045,6 +12224,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGrantAssigneePropagation2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12059,6 +12239,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12183,6 +12364,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -12192,6 +12374,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12242,6 +12425,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showLinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -12251,6 +12435,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12323,6 +12508,50 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["FeaturerSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Condition set search */
+  factoryConditionSetSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showConditionSetInFactoryBranchUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryConditionSetSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Condition set list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryConditionSetSearchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -13116,6 +13345,7 @@ export interface operations {
   userPermissionGroupedListV1: {
     parameters: {
       query?: {
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13125,6 +13355,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13171,6 +13402,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
         showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -13180,6 +13412,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13289,12 +13522,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13374,6 +13609,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13388,6 +13624,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13446,6 +13683,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showLinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13453,6 +13691,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13498,12 +13737,14 @@ export interface operations {
   twinClassFieldListV1: {
     parameters: {
       query?: {
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13586,12 +13827,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13639,6 +13882,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13653,6 +13897,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13709,6 +13954,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13723,6 +13969,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13779,6 +14026,7 @@ export interface operations {
         lazyRelation?: boolean;
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13793,6 +14041,7 @@ export interface operations {
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
         showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13849,6 +14098,7 @@ export interface operations {
       query?: {
         childDepth?: number;
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showHistory2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showHistory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -13857,6 +14107,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13963,6 +14214,7 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
         showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showSpace2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13973,6 +14225,7 @@ export interface operations {
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";

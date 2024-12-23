@@ -1,7 +1,7 @@
 "use client";
 
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { Fields } from "@/screens/fields";
 
 export default function FieldsPage() {
-  return <UnderConstruction />;
+  return <Fields />;
 }
