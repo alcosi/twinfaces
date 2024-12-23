@@ -6,7 +6,7 @@ import {
   useFactoryPipelineSearch,
 } from "@/entities/factoryPipeline";
 import { PaginationState } from "@tanstack/react-table";
-import { FiltersState } from "@/shared/ui";
+import { FiltersState, GuidWithCopy } from "@/shared/ui";
 import { toast } from "sonner";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { ColumnDef } from "@tanstack/table-core";
@@ -17,6 +17,7 @@ import {
 } from "@/entities/twinClass";
 import { Check } from "lucide-react";
 import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
+import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
 
 const colDefs: Record<
   keyof Omit<
@@ -33,18 +34,24 @@ const colDefs: Record<
     id: "id",
     accessorKey: "id",
     header: "ID",
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   description: {
     id: "description",
     accessorKey: "description",
     header: "Description",
   },
-  // TODO: Replace with a factory resource link
   factory: {
     id: "factory",
     accessorKey: "factory",
     header: "Factory",
-    cell: (data) => <span>{data.getValue<Factory>()?.key ?? "None"}</span>,
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        {original.factory && (
+          <FactoryResourceLink data={original.factory as Factory} withTooltip />
+        )}
+      </div>
+    ),
   },
   // TODO: Replace with a condition set resource link
   factoryConditionSet: {
@@ -89,12 +96,20 @@ const colDefs: Record<
         </div>
       ),
   },
-  // TODO: Replace with a factory resource link
   nextFactory: {
     id: "nextFactory",
     accessorKey: "nextFactory",
     header: "Next Factory",
-    cell: (data) => <span>{data.getValue<Factory>()?.key ?? "None"}</span>,
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        {original.nextFactory && (
+          <FactoryResourceLink
+            data={original.nextFactory as Factory}
+            withTooltip
+          />
+        )}
+      </div>
+    ),
   },
   active: {
     id: "active",
