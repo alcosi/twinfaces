@@ -39,7 +39,6 @@ export function TwinClassFieldFormFields<T extends FieldValues>({
         typeId={FeaturerTypes.fieldTyper}
         control={control}
         name={"fieldTyperFeaturerId" as Path<T>}
-        paramsName={"fieldTyperParams" as Path<T>}
         label={"Featurer"}
       />
     </>

@@ -6,15 +6,15 @@ import {
   TWIN_CLASSES_SCHEMA,
   TwinClass_DETAILED,
   TwinClassCreateRq,
+  TwinClassFieldValues,
   TwinClassResourceLink,
   useTwinClassFilters,
   useTwinClassSearchV1,
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { GuidWithCopy } from "@/shared/ui/guid";
+import { pluckProperty } from "@/shared/libs";
+import { DataTableHandle, FiltersState, GuidWithCopy } from "@/shared/ui";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -122,31 +122,31 @@ const colDefs: Record<
     id: "abstractClass",
     accessorKey: "abstractClass",
     header: "Abstract",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => data.getValue() && <Check />,
   },
   permissionSchemaSpace: {
     id: "permissionSchemaSpace",
     accessorKey: "permissionSchemaSpace",
     header: "Permission Schema",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => data.getValue() && <Check />,
   },
   twinflowSchemaSpace: {
     id: "twinflowSchemaSpace",
     accessorKey: "twinflowSchemaSpace",
     header: "Twinflow schema",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => data.getValue() && <Check />,
   },
   twinClassSchemaSpace: {
     id: "twinClassSchemaSpace",
     accessorKey: "twinClassSchemaSpace",
     header: "Twinclass schema",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => data.getValue() && <Check />,
   },
   aliasSpace: {
     id: "aliasSpace",
     accessorKey: "aliasSpace",
     header: "Alias space",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => data.getValue() && <Check />,
   },
   markersDataListId: {
     id: "markersDataListId",
@@ -201,16 +201,15 @@ export function TwinClasses() {
     }
   }
 
-  const twinClassesForm = useForm<z.infer<typeof TWIN_CLASSES_SCHEMA>>({
+  const twinClassesForm = useForm<TwinClassFieldValues>({
     resolver: zodResolver(TWIN_CLASSES_SCHEMA),
     defaultValues: {
       key: "",
       name: "",
       description: "",
       abstractClass: false,
-      headHunterFeaturerId: 0,
-      headHunterParams: {},
-      headTwinClassId: "",
+      headTwinClass: null,
+      headHunterFeaturer: {},
       extendsTwinClassId: "",
       logo: "",
       permissionSchemaSpace: false,
@@ -226,12 +225,16 @@ export function TwinClasses() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof TWIN_CLASSES_SCHEMA>
   ) => {
-    const { name, description, ...withoutI18 } = formValues;
+    const { name, description, headTwinClass, headHunterFeaturer, ...rest } =
+      formValues;
 
     const requestBody: TwinClassCreateRq = {
-      ...withoutI18,
-      // headHunterFeaturerId: featurer?.featurer.id,
-      // headHunterParams: featurer?.params,
+      ...rest,
+      headTwinClassId: headTwinClass?.[0]?.id,
+      headHunterFeaturerId: headHunterFeaturer?.id,
+      headHunterParams: headHunterFeaturer?.params
+        ? pluckProperty(headHunterFeaturer.params, "value")
+        : {},
       nameI18n: {
         translationInCurrentLocale: name,
         translations: {},

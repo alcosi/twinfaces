@@ -69,12 +69,12 @@ export const TagBox = fixedForwardRef(function Component<T>(
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  function handleOnKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
       addInputAsTag();
       e.preventDefault();
     }
-  };
+  }
 
   function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInputValue(e.target.value);
@@ -98,7 +98,7 @@ export const TagBox = fixedForwardRef(function Component<T>(
       <Input
         value={inputValue}
         onChange={handleOnChange}
-        onKeyDown={handleKeyDown}
+        onKeyDown={handleOnKeyDown}
         onBlur={addInputAsTag}
         placeholder={placeholder}
       />

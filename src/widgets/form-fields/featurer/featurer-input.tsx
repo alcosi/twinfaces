@@ -1,126 +1,128 @@
-import { Featurer } from "@/entities/featurer";
+import {
+  Featurer,
+  FeaturerParams,
+  FeaturerParamTypes,
+  FeaturerValue,
+} from "@/entities/featurer";
 import { ApiContext } from "@/shared/api";
-import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
+import {
+  isPopulatedArray,
+  isPopulatedString,
+  PartialFields,
+} from "@/shared/libs";
 import { Combobox } from "@/shared/ui/combobox";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { FeaturerParamInput } from "./featurer-param-input";
 import { FeaturerInputProps } from "./types";
 
+type State = PartialFields<FeaturerValue, "featurer">;
+
 export function FeaturerInput({
   typeId,
-  defaultId,
-  defaultParams,
   onChange,
-  buttonClassName,
-  selectPlaceholder,
-  searchPlaceholder,
-  noItemsText,
+  selectPlaceholder = "Select featurer",
+  searchPlaceholder = "Search featurer...",
+  noItemsText = "No featurers found",
 }: FeaturerInputProps) {
   const api = useContext(ApiContext);
 
-  const [selected, setSelected] = useState<Featurer | undefined>(undefined);
-  const [params, setParams] = useState<{ [key: string]: string }>({});
+  const [state, setState] = useState<State>({
+    featurer: undefined,
+    params: {},
+  });
 
-  useEffect(() => {
-    if (!selected && defaultId) {
-      setById(defaultId, defaultParams);
-    }
-  }, [defaultId, defaultParams]);
-
-  async function setById(id: number, params?: any) {
+  const fetchFeaturers = async (search: string): Promise<Featurer[]> => {
     try {
       const response = await api.featurer.search({
         pagination: { pageIndex: 0, pageSize: 10 },
         options: {
           typeIdList: [typeId],
-          idList: [id],
+          nameLikeList: [search ? `%${search}%` : "%"],
         },
       });
-
-      if (response.data?.featurerList?.length != 1) {
-        console.error("featurer not found by id", id);
-        return;
-      }
-
-      const featurer = response.data.featurerList[0];
-      setSelected(featurer);
-      if (!params) return;
-      for (const param of featurer?.params ?? []) {
-        const key = param.key;
-        if (!key) continue;
-        if (params[key]) {
-          setParams((old) => {
-            return { ...old, [key!]: params[key] };
-          });
-        }
-      }
-    } catch (e) {
-      console.error("failed to fetch featurer by id", id, e);
-      return;
+      return response.data?.featurerList ?? [];
+    } catch (error) {
+      console.error("Error fetching featurers:", error);
+      return [];
     }
-  }
+  };
 
-  async function fetchHeadHunterFeaturers(search: string): Promise<Featurer[]> {
-    const response = await api.featurer.search({
-      pagination: { pageIndex: 0, pageSize: 10 },
-      options: {
-        typeIdList: [typeId],
-        nameLikeList: [search ? "%" + search + "%" : "%"],
-      },
+  const handleFeaturerSelect = (newFeaturers?: Featurer[]) => {
+    const selectedFeaturer: State["featurer"] = newFeaturers?.[0];
+    const initialParams: State["params"] =
+      selectedFeaturer?.params?.reduce((acc, param) => {
+        if (param.key) {
+          acc[param.key] = {
+            value: "",
+            type: param.type as FeaturerParamTypes,
+          };
+        }
+        return acc;
+      }, {} as FeaturerParams) ?? {};
+
+    const next: State = {
+      featurer: selectedFeaturer,
+      params: initialParams,
+    };
+
+    if (next.featurer) {
+      onChange?.(next as FeaturerValue);
+    }
+
+    setState(next);
+  };
+
+  const handleParamChange = (key: string, newValue?: string) => {
+    setState((prev) => {
+      const nextParams: FeaturerParams = {
+        ...prev.params,
+        [key]: {
+          value: newValue ?? "",
+          type: prev.params?.[key]?.type!,
+        },
+      };
+
+      const next: State = {
+        featurer: prev.featurer,
+        params: nextParams,
+      };
+
+      if (next.featurer) {
+        onChange?.(next as FeaturerValue);
+      }
+
+      return next;
     });
-
-    return response.data?.featurerList ?? [];
-  }
-
-  function onSelect(newFeaturers?: Featurer[]) {
-    setSelected(newFeaturers?.[0]);
-    setParams({});
-  }
-
-  function onParamChange(key: string, value?: string) {
-    setParams((old) => {
-      return { ...old, [key]: value! };
-    });
-  }
-
-  useEffect(() => {
-    onChange?.(selected ? { featurer: selected, params } : null);
-  }, [selected, params]);
+  };
 
   return (
     <>
       <Combobox<Featurer>
-        selectPlaceholder={selectPlaceholder ?? "Select featurer"}
-        searchPlaceholder={searchPlaceholder ?? "Search featurer..."}
-        noItemsText={noItemsText ?? "No featurers found"}
+        selectPlaceholder={selectPlaceholder}
+        searchPlaceholder={searchPlaceholder}
+        noItemsText={noItemsText}
         getById={async () => undefined}
-        getItems={fetchHeadHunterFeaturers}
+        getItems={fetchFeaturers}
         renderItem={({ name, id }) =>
-          isPopulatedString(name) ? `${name} : ${id}` : id
+          isPopulatedString(name) ? `${name} : ${id}` : `${id}`
         }
-        initialValues={selected ? [selected] : []}
-        onSelect={onSelect}
-        buttonClassName={buttonClassName}
+        initialValues={state.featurer ? [state.featurer] : []}
+        onSelect={handleFeaturerSelect}
+        buttonClassName="w-full"
       />
 
-      {isPopulatedArray(selected?.params) && (
+      {isPopulatedArray(state.featurer?.params) && (
         <fieldset className="px-1.5 py-2.5 rounded-md border border-dashed">
-          <legend className="text-sm font-medium">Param Types</legend>
+          <legend className="text-sm font-medium italic">Params</legend>
           <div className="space-y-2">
-            {selected.params.map((param) => {
-              let value: string = "";
-              if (params && param.key) {
-                value = params[param.key] ?? "";
-              }
-              return (
-                <FeaturerParamInput
-                  key={param.key}
-                  param={param}
-                  value={value}
-                  onChange={onParamChange}
-                />
-              );
-            })}
+            {state.featurer.params.map((param) => (
+              <FeaturerParamInput
+                key={param.key}
+                param={param}
+                value={state.params?.[param.key!]?.value ?? ""}
+                onChange={handleParamChange}
+              />
+            ))}
           </div>
         </fieldset>
       )}

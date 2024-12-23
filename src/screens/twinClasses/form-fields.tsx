@@ -4,25 +4,22 @@ import {
   TextFormField,
 } from "@/components/form-fields/text-form-field";
 import { FeaturerTypes } from "@/entities/featurer";
+import { TwinClassFieldValues } from "@/entities/twinClass";
 import { TwinClassSelectField } from "@/features/twinClass";
+import { isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
-import {
-  Control,
-  FieldValues,
-  Path,
-  PathValue,
-  useWatch,
-} from "react-hook-form";
+import { Control, Path, PathValue, useWatch } from "react-hook-form";
 
-export function TwinClassFormFields<T extends FieldValues>({
+export function TwinClassFormFields<T extends TwinClassFieldValues>({
   control,
 }: {
   control: Control<T>;
 }) {
-  const headTwinClassId = useWatch({
-    control: control,
-    name: "headTwinClassId" as Path<T>,
-    defaultValue: "" as PathValue<T, Path<T>>,
+  const headTwinClass = useWatch<T>({
+    control,
+    name: "headTwinClass" as Path<T>,
+    // TODO: Fix type for `defaultValue`, ensuring it matches `PathValue<T, "headTwinClass">`.
+    defaultValue: [] as PathValue<T, any>,
   });
 
   return (
@@ -51,19 +48,16 @@ export function TwinClassFormFields<T extends FieldValues>({
       />
       <TwinClassSelectField
         control={control}
-        name={"headTwinClassId" as Path<T>}
+        name={"headTwinClass" as Path<T>}
         label="Head"
       />
-      {headTwinClassId && (
-        <>
-          <FeaturerFormField
-            control={control}
-            name={"headHunterFeaturerId" as Path<T>}
-            paramsName={"headHunterParams" as Path<T>}
-            typeId={FeaturerTypes.headHunter}
-            label={"Head Hunter"}
-          />
-        </>
+      {isPopulatedArray(headTwinClass) && (
+        <FeaturerFormField
+          typeId={FeaturerTypes.headHunter}
+          control={control}
+          name={"headHunterFeaturer" as Path<T>}
+          label={"Head Hunter"}
+        />
       )}
       <TwinClassSelectField
         control={control}

@@ -26,7 +26,6 @@ export function TriggersFormFields<T extends FieldValues>({
         typeId={FeaturerTypes.trigger}
         control={control}
         name={"fieldTyperFeaturerId" as Path<T>}
-        paramsName={"fieldTyperParams" as Path<T>}
         label={"Featurer"}
       />
     </>

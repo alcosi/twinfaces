@@ -1,5 +1,4 @@
 import { SelectAdapter } from "@/shared/libs";
-import { ReactNode } from "react";
 
 // NOTE: Internal Types
 export type ComboboxHandle<T> = {
