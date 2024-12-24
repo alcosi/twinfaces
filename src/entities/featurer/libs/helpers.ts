@@ -1,10 +1,10 @@
 import { RelatedObjects } from "@/shared/api";
 import { Featurer, Featurer_DETAILED } from "../api";
 
-export const hydrateFeaturerFromMap = (
+export function hydrateFeaturerFromMap(
   dto: Featurer,
   relatedObjects?: RelatedObjects
-): Featurer_DETAILED => {
+): Featurer_DETAILED {
   const hydrated: Featurer_DETAILED = Object.assign(
     {},
     dto
@@ -13,4 +13,4 @@ export const hydrateFeaturerFromMap = (
   // TODO: Add hydration logic here
 
   return hydrated;
-};
+}

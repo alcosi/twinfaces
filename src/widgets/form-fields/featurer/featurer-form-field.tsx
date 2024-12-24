@@ -4,12 +4,12 @@ import {
   FormItemLabel,
 } from "@/components/form-fields/form-fields-common";
 import { FeaturerValue } from "@/entities/featurer";
-import { isPopulatedString } from "@/shared/libs";
+import { FormFieldValidationError, isPopulatedArray } from "@/shared/libs";
 import { FormField, FormItem, FormMessage } from "@/shared/ui/form";
 import { ReactNode } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
-import { z } from "zod";
 import { FeaturerInput } from "./featurer-input";
+import { validateParamTypes } from "./helpers";
 import { FeaturerInputProps } from "./types";
 
 interface TFeaturerFormModel extends FieldValues {
@@ -32,35 +32,13 @@ export function FeaturerFormField<TFormModel extends TFeaturerFormModel>({
   Omit<FeaturerInputProps, "defaultId" | "defaultParams" | "onChange">) {
   const methods = useFormContext();
 
-  function validateParams(params: FeaturerValue["params"]): string | null {
-    for (const property in params) {
-      const param = params[property];
-
-      // TODO: SUPPORT other params
-      if (isPopulatedString(param?.value)) {
-        if (param?.type === "UUID:TWINS_DATA_LIST_ID") {
-          const { success, error } = z
-            .string()
-            .uuid("Please enter a valid UUID")
-            .safeParse(param.value);
-
-          if (!success) {
-            return `${property}: ${error.errors[0]?.message}`;
-          }
-        }
-      }
-    }
-
-    return null;
-  }
-
   function onChange(value: FeaturerValue | null) {
     methods.clearErrors();
 
-    const error = validateParams(value?.params ?? {});
-
-    if (isPopulatedString(error)) {
-      methods.setError(name, { message: error });
+    const { errors } = validateParamTypes(value?.params ?? {});
+    if (isPopulatedArray<FormFieldValidationError>(errors)) {
+      const { key, message } = errors[0];
+      methods.setError(name, { message: `${key}: ${message}` });
     }
 
     methods.setValue(

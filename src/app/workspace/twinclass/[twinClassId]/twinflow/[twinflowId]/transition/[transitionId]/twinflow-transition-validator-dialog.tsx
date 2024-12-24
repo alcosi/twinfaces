@@ -14,7 +14,8 @@ export interface TwinflowTransitionValidatorDialogProps {
   open: boolean;
   onOpenChange?: (open: boolean) => any;
   transitionId: string;
-  validator: TwinFlowTransitionValidator | null;
+  // TODO: fix `any` when <CrudDataTable /> is replaced with <Experimental_CrudDataTable />
+  validator: any | null;
   onSuccess?: () => any;
 }
 
@@ -62,10 +63,10 @@ export function TwinflowTransitionValidatorDialog({
       order: validator?.order,
       active: validator?.active ?? false,
       validatorFeaturerId: isPopulatedArray(validator?.twinValidators)
-        ? validator.twinValidators[0]?.validatorFeaturerId
+        ? validator.twinValidators[0]?.validatorFeaturerId.id
         : undefined,
       validatorParams: isPopulatedArray(validator?.twinValidators)
-        ? validator.twinValidators[0]?.validatorParams
+        ? validator.twinValidators[0]?.validatorFeaturerId.params
         : undefined,
       invert: isPopulatedArray(validator?.twinValidators)
         ? validator.twinValidators[0]?.invert
@@ -90,7 +91,6 @@ export function TwinflowTransitionValidatorDialog({
         type: AutoFormValueType.featurer,
         label: "Featurer",
         typeId: FeaturerTypes.validator,
-        paramsName: "validatorParams",
       },
       invert: {
         type: AutoFormValueType.boolean,

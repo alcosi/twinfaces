@@ -20,7 +20,7 @@ export function isEmptyArray<T>(arr: unknown): arr is T[] {
   return Array.isArray(arr) && arr.length === 0;
 }
 
-export function isPopulatedArray<T>(arr: unknown): arr is T[] {
+export function isPopulatedArray<T>(arr: unknown): arr is [T, ...T[]] {
   return Array.isArray(arr) && arr.length > 0;
 }
 

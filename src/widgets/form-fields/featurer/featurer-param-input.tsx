@@ -2,7 +2,7 @@ import { CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
 import { TagsFormItem } from "@/components/form-fields/tags-form-field";
 import { TextFormItem } from "@/components/form-fields/text-form-field";
 import { FeaturerParam, FeaturerParamTypes } from "@/entities/featurer";
-import { ParamTypes } from "./types";
+import { ParamTypes } from "./constants";
 
 interface FeaturerParamInputProps {
   param: FeaturerParam;

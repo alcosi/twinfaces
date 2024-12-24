@@ -81,7 +81,6 @@ export interface AutoFormTagValueInfo
 export interface AutoFormFeaturerValueInfo {
   type: AutoFormValueType.featurer;
   typeId: FeaturerTypeId;
-  paramsName?: FieldPath<any>;
 }
 
 export interface AutoFormSelectValueInfo {
@@ -148,13 +147,8 @@ export function AutoField({
         );
 
       case AutoFormValueType.featurer:
-        return name && control && info.paramsName ? (
-          <FeaturerFormField
-            name={name}
-            control={control}
-            paramsName={info.paramsName}
-            {...info}
-          />
+        return name && control ? (
+          <FeaturerFormField name={name} control={control} {...info} />
         ) : (
           <FeaturerFormItem {...info} />
         );
