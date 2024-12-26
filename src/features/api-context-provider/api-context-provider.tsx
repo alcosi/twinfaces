@@ -50,7 +50,10 @@ import {
   createPermissionSpaceRoleApi,
   PermissionSpaceRoleApi,
 } from "@/entities/spaceRole";
-import {createFactoryPipelineApi, FactoryPipelineApi} from "@/entities/factoryPipeline";
+import {
+  createFactoryPipelineApi,
+  FactoryPipelineApi,
+} from "@/entities/factoryPipeline";
 
 export interface ApiContextProps {
   domain: DomainApi;

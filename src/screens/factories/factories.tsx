@@ -1,18 +1,20 @@
 "use client";
 
-import { Experimental_CrudDataTable } from "@/widgets";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import {
   Factory,
   useFactoryFilters,
   useFactorySearch,
 } from "@/entities/factory";
-import { FiltersState, GuidWithCopy } from "@/shared/ui";
 import { UserResourceLink } from "@/entities/user";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
-import { toast } from "sonner";
 import { formatToTwinfaceDate } from "@/shared/libs";
-import {useRouter} from "next/navigation";
+import { FiltersState, GuidWithCopy } from "@/shared/ui";
+import { Experimental_CrudDataTable } from "@/widgets";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Omit<Factory, "createdByUserId">,
@@ -86,6 +88,11 @@ export function Factories() {
   const { searchFactories } = useFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
   const router = useRouter();
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  useEffect(() => {
+    setBreadcrumbs([{ label: "Factories", href: "/workspace/factories" }]);
+  }, []);
 
   async function fetchFactories(
     pagination: PaginationState,

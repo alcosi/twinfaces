@@ -18,6 +18,8 @@ import {
 import { Check } from "lucide-react";
 import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { useEffect } from "react";
 
 const colDefs: Record<
   keyof Omit<
@@ -66,7 +68,7 @@ const colDefs: Record<
     id: "factoryConditionSetInvert",
     accessorKey: "factoryConditionSetInvert",
     header: "Factory Condition Set Invert",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => data.getValue() && <Check />,
   },
   inputTwinClass: {
     id: "inputTwinClass",
@@ -115,13 +117,13 @@ const colDefs: Record<
     id: "active",
     accessorKey: "active",
     header: "Active",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => data.getValue() && <Check />,
   },
   nextFactoryLimitScope: {
     id: "nextFactoryLimitScope",
     accessorKey: "nextFactoryLimitScope",
     header: "Next Factory Limit Scope",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => data.getValue() && <Check />,
   },
   pipelineStepsCount: {
     id: "pipelineStepsCount",
@@ -134,6 +136,11 @@ export function FactoryPipelines() {
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryPipelineFilters();
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  useEffect(() => {
+    setBreadcrumbs([{ label: "Pipelines", href: "/workspace/pipelines" }]);
+  }, []);
 
   async function fetchFactoryPipelines(
     pagination: PaginationState,
