@@ -94,3 +94,12 @@ export function formatToTwinfaceDate(
   }
   return date.toLocaleDateString();
 }
+
+export function pluckProperty<
+  T extends Record<string, Record<K, unknown>>,
+  K extends keyof T[string],
+>(obj: T, prop: K): Record<keyof T, T[string][K]> {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, nestedObj]) => [key, nestedObj[prop]])
+  ) as Record<keyof T, T[string][K]>;
+}

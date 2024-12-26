@@ -4,48 +4,48 @@ import {
   FormItemLabel,
 } from "@/components/form-fields/form-fields-common";
 import { FeaturerValue } from "@/entities/featurer";
-import { cn } from "@/shared/libs";
+import { FormFieldValidationError, isPopulatedArray } from "@/shared/libs";
 import { FormField, FormItem, FormMessage } from "@/shared/ui/form";
-import { ReactNode, useEffect } from "react";
-import { FieldValues, Path, useFormContext } from "react-hook-form";
+import { ReactNode } from "react";
+import { FieldValues, useFormContext } from "react-hook-form";
 import { FeaturerInput } from "./featurer-input";
+import { validateParamTypes } from "./helpers";
 import { FeaturerInputProps } from "./types";
 
-export interface FeaturerFormFieldProps<TFormModel extends FieldValues>
-  extends FeaturerInputProps {
-  paramsName: Path<TFormModel>;
+interface TFeaturerFormModel extends FieldValues {
+  // TODO: Replace `any` with the correct form model type.
+  [key: string]: any;
+  // [key: string]: { id?: number; params?: FeaturerParams } | null;
 }
 
-export function FeaturerFormField<TFormModel extends FieldValues>({
+export interface FeaturerFormFieldProps extends FeaturerInputProps {}
+
+export function FeaturerFormField<TFormModel extends TFeaturerFormModel>({
   name,
-  paramsName,
   control,
   label,
   description,
   required,
   ...props
 }: FormFieldProps<TFormModel> &
-  FeaturerFormFieldProps<TFormModel> &
+  FeaturerFormFieldProps &
   Omit<FeaturerInputProps, "defaultId" | "defaultParams" | "onChange">) {
   const methods = useFormContext();
-  const paramsField = methods.getValues(paramsName);
-
-  useEffect(() => {
-    control.register(paramsName);
-  }, []);
 
   function onChange(value: FeaturerValue | null) {
-    if (value) {
-      // @ts-ignore
-      methods.setValue(name, value.featurer.id);
-      // @ts-ignore
-      methods.setValue(paramsName, value.params);
-    } else {
-      // @ts-ignore
-      methods.setValue(name, null);
-      // @ts-ignore
-      methods.setValue(paramsName, null);
+    methods.clearErrors();
+
+    const { errors } = validateParamTypes(value?.params ?? {});
+    if (isPopulatedArray<FormFieldValidationError>(errors)) {
+      const { key, message } = errors[0];
+      methods.setError(name, { message: `${key}: ${message}` });
     }
+
+    methods.setValue(
+      name,
+      // TODO: Replace `any` with the appropriate type for `value` to ensure type safety.
+      value ? ({ id: value.featurer?.id, params: value.params } as any) : null
+    );
   }
 
   return (
@@ -54,8 +54,6 @@ export function FeaturerFormField<TFormModel extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FeaturerFormItem
-          fieldValue={field.value}
-          paramsValue={paramsField}
           onChange={onChange}
           label={label}
           description={description}
@@ -70,20 +68,15 @@ export function FeaturerFormField<TFormModel extends FieldValues>({
 
 export function FeaturerFormItem({
   typeId,
-  fieldValue,
-  paramsValue,
   onChange,
   label,
   description,
   required,
-  buttonClassName,
   inForm,
   ...props
-}: Omit<FeaturerInputProps, "defaultId" | "defaultParams" | "onChange"> & {
+}: Omit<FeaturerInputProps, "onChange"> & {
   typeId: number;
-  fieldValue?: number;
-  paramsValue?: object;
-  onChange?: (value: FeaturerValue | null) => any;
+  onChange?: (value: FeaturerValue | null) => void;
   label?: ReactNode;
   description?: ReactNode;
   required?: boolean;
@@ -96,14 +89,7 @@ export function FeaturerFormItem({
           {label} {required && <span className="text-red-500">*</span>}
         </FormItemLabel>
       )}
-      <FeaturerInput
-        typeId={typeId}
-        defaultId={fieldValue}
-        defaultParams={paramsValue}
-        onChange={onChange}
-        buttonClassName={cn("w-full", buttonClassName)}
-        {...props}
-      />
+      <FeaturerInput typeId={typeId} onChange={onChange} {...props} />
 
       {description && (
         <FormItemDescription inForm={inForm}>{description}</FormItemDescription>

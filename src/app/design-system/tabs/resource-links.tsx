@@ -18,47 +18,38 @@ export function ResourceLinksTab() {
     <div className="h-screen">
       <div className="space-y-4 p-4">
         <UiSection title="Class">
-          <div>
-            <h2>Class</h2>
-            <div className="max-w-48">
-              <TwinClassResourceLink data={Fake.TwinClass} withTooltip />
-            </div>
-          </div>
+          <UiSection.Item
+            title="Class"
+            value={<TwinClassResourceLink data={Fake.TwinClass} withTooltip />}
+          />
 
-          <div>
-            <h2>Field</h2>
-            <div className="max-w-48">
+          <UiSection.Item
+            title="Field"
+            value={
               <TwinClassFieldResourceLink
                 data={Fake.TwinClassField}
                 withTooltip
               />
-            </div>
-          </div>
+            }
+          />
 
-          <div>
-            <h2>Status</h2>
-            <div className="max-w-48">
+          <UiSection.Item
+            title="Status"
+            value={
               <TwinClassStatusResourceLink
                 twinClassId=""
                 data={Fake.loremIpsum}
                 withTooltip
               />
-            </div>
-          </div>
+            }
+          />
 
-          <div>
-            <h2>Link</h2>
-            <div className="max-w-48">
+          <UiSection.Item
+            title="Link"
+            value={
               <TwinClassLinkResourceLink data={Fake.loremIpsum} withTooltip />
-            </div>
-          </div>
-
-          <div>
-            <h2>Featurer</h2>
-            <div className="max-w-48">
-              <FeaturerResourceLink data={Fake.Featurer} withTooltip />
-            </div>
-          </div>
+            }
+          />
         </UiSection>
 
         <UiSection title="Twin">
@@ -115,6 +106,13 @@ export function ResourceLinksTab() {
           <UiSection.Item
             title="User group"
             value={<UserGroupResourceLink data={Fake.UserGroup} withTooltip />}
+          />
+        </UiSection>
+
+        <UiSection title="Misc">
+          <UiSection.Item
+            title="Feature"
+            value={<FeaturerResourceLink data={Fake.Featurer} withTooltip />}
           />
         </UiSection>
       </div>

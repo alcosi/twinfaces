@@ -6,3 +6,8 @@ export type SelectAdapter<Entity> = {
   getItemKey?: (entity: Entity) => string;
   renderItem: (entity: Entity) => ReactNode | string;
 };
+
+export type FormFieldValidationError = {
+  key: string;
+  message: string;
+};

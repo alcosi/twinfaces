@@ -74,7 +74,7 @@ export const SelectedOptions = <T,>({
     </div>
   ) : (
     <>
-      {isPopulatedArray(selected) ? (
+      {isPopulatedArray<T>(selected) ? (
         <span className="truncate max-w-80">{renderItem(selected[0]!)}</span>
       ) : (
         <span className="opacity-50">{placeholder}</span>

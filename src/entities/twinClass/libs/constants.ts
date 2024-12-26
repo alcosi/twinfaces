@@ -1,3 +1,4 @@
+import { FEATURER_FIELD_SCHEMA } from "@/entities/featurer";
 import { REGEX_PATTERNS } from "@/shared/libs";
 import { z } from "zod";
 
@@ -26,13 +27,8 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .optional()
     .or(z.literal("").transform(() => undefined)),
   abstractClass: z.boolean(),
-  headHunterFeaturerId: z.number(),
-  headHunterParams: z.record(z.string(), z.any()).optional(),
-  headTwinClassId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+  headTwinClass: z.array(z.object({ id: z.string().uuid() })).nullable(),
+  headHunterFeaturer: FEATURER_FIELD_SCHEMA,
   extendsTwinClassId: z
     .string()
     .uuid()

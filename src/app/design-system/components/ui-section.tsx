@@ -22,7 +22,7 @@ UiSection.Item = function Item({
   value: ReactNode;
 }) {
   return (
-    <Card className="py-2 px-4">
+    <Card className="py-2 px-4 col-span-2">
       <h2>{title}</h2>
       <div className="">{value}</div>
     </Card>

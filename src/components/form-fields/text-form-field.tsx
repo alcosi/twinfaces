@@ -135,7 +135,7 @@ export function TextAreaFormItem<T extends FieldValues>({
   ...props
 }: TextareaProps & {
   fieldValue?: string;
-  onChange?: (value?: T) => any;
+  onChange?: (value?: T) => void;
   label?: ReactNode;
   description?: ReactNode;
   required?: boolean;
