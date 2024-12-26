@@ -1,8 +1,7 @@
 import { CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
 import { TagsFormItem } from "@/components/form-fields/tags-form-field";
 import { TextFormItem } from "@/components/form-fields/text-form-field";
-import { FeaturerParam, FeaturerParamTypes } from "@/entities/featurer";
-import { ParamTypes } from "./constants";
+import { FeaturerParam, FeaturerParamType } from "@/entities/featurer";
 
 interface FeaturerParamInputProps {
   param: FeaturerParam;
@@ -20,10 +19,8 @@ export function FeaturerParamInput({
   }
 
   function renderParamFieldByType() {
-    const type: FeaturerParamTypes = param.type as FeaturerParamTypes;
-
-    switch (type) {
-      case ParamTypes.BOOLEAN:
+    switch (param.type) {
+      case FeaturerParamType.BOOLEAN:
         return (
           <CheckboxFormItem
             name={param.name}
@@ -33,18 +30,18 @@ export function FeaturerParamInput({
             onChange={(newChecked) => setValue(newChecked ? "true" : "false")}
           />
         );
-      case ParamTypes["UUID:TWINS_PERMISSION_SCHEMA_ID"]:
-      case ParamTypes["UUID:TWINS_TWIN_CLASS_SCHEMA_ID"]:
-      case ParamTypes["UUID:TWINS_TWINFLOW_SCHEMA_ID"]:
-      case ParamTypes["UUID:TWINS_TWIN_ID"]:
-      case ParamTypes["UUID:TWINS_LINK_ID"]:
-      case ParamTypes["UUID:TWINS_DATA_LIST_ID"]:
-      case ParamTypes["UUID:TWINS_TWIN_CLASS_FIELD_ID"]:
-      case ParamTypes.UUID:
-      case ParamTypes["UUID:TWINS_TWIN_CLASS_ID"]:
-      case ParamTypes["UUID:TWINS_TWIN_STATUS_ID"]:
-      case ParamTypes["UUID:TWINS_MARKER_ID"]:
-      case ParamTypes["UUID:TWINS_PERMISSION_ID"]:
+      case FeaturerParamType.UUID_TWINS_PERMISSION_SCHEMA_ID:
+      case FeaturerParamType.UUID_TWINS_TWIN_CLASS_SCHEMA_ID:
+      case FeaturerParamType.UUID_TWINS_TWINFLOW_SCHEMA_ID:
+      case FeaturerParamType.UUID_TWINS_TWIN_ID:
+      case FeaturerParamType.UUID_TWINS_LINK_ID:
+      case FeaturerParamType.UUID_TWINS_DATA_LIST_ID:
+      case FeaturerParamType.UUID_TWINS_TWIN_CLASS_FIELD_ID:
+      case FeaturerParamType.UUID:
+      case FeaturerParamType.UUID_TWINS_TWIN_CLASS_ID:
+      case FeaturerParamType.UUID_TWINS_TWIN_STATUS_ID:
+      case FeaturerParamType.UUID_TWINS_MARKER_ID:
+      case FeaturerParamType.UUID_TWINS_PERMISSION_ID:
         return (
           <TextFormItem
             value={value}
@@ -54,11 +51,11 @@ export function FeaturerParamInput({
             description={param.description}
           />
         );
-      case ParamTypes["UUID_SET:TWINS_USER_GROUP_ID"]:
-      case ParamTypes["UUID_SET:TWINS_TWIN_STATUS_ID"]:
-      case ParamTypes["UUID_SET:TWINS_TWIN_CLASS_ID"]:
-      case ParamTypes["UUID_SET:TWINS_TWIN_CLASS_FIELD_ID"]:
-      case ParamTypes["UUID_SET:TWINS_LINK_ID"]:
+      case FeaturerParamType.UUID_SET_TWINS_USER_GROUP_ID:
+      case FeaturerParamType.UUID_SET_TWINS_TWIN_STATUS_ID:
+      case FeaturerParamType.UUID_SET_TWINS_TWIN_CLASS_ID:
+      case FeaturerParamType.UUID_SET_TWINS_TWIN_CLASS_FIELD_ID:
+      case FeaturerParamType.UUID_SET_TWINS_LINK_ID:
         return (
           <TagsFormItem
             name={param.name}
@@ -67,8 +64,8 @@ export function FeaturerParamInput({
             value={value}
           />
         );
-      case ParamTypes.WORD_LIST:
-      case ParamTypes["WORD_LIST:TWINS_TWIN_BASIC_FIELD"]:
+      case FeaturerParamType.WORD_LIST:
+      case FeaturerParamType.WORD_LIST_TWINS_TWIN_BASIC_FIELD:
         return (
           <TagsFormItem
             name={param.name}
@@ -77,8 +74,8 @@ export function FeaturerParamInput({
             value={value}
           />
         );
-      case ParamTypes.INT:
-      case ParamTypes.DOUBLE:
+      case FeaturerParamType.INT:
+      case FeaturerParamType.DOUBLE:
         return (
           <TextFormItem
             type="number"
@@ -89,8 +86,8 @@ export function FeaturerParamInput({
             description={param.description}
           />
         );
-      case ParamTypes.STRING:
-      case ParamTypes["STRING:TWINS_TWIN_BASIC_FIELD"]:
+      case FeaturerParamType.STRING:
+      case FeaturerParamType.STRING_TWINS_TWIN_BASIC_FIELD:
       default:
         return (
           <TextFormItem

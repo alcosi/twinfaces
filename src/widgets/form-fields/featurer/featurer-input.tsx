@@ -1,7 +1,7 @@
 import {
   Featurer,
   FeaturerParams,
-  FeaturerParamTypes,
+  FeaturerParamType,
   FeaturerValue,
 } from "@/entities/featurer";
 import { ApiContext } from "@/shared/api";
@@ -54,7 +54,7 @@ export function FeaturerInput({
         if (param.key) {
           acc[param.key] = {
             value: "",
-            type: param.type as FeaturerParamTypes,
+            type: param.type as FeaturerParamType,
           };
         }
         return acc;
