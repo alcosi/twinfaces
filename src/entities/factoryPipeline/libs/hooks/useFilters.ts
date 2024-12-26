@@ -1,4 +1,4 @@
-import {FilterFeature, mapToChoice, toArrayOfString} from "@/shared/libs";
+import { FilterFeature, mapToChoice, toArrayOfString } from "@/shared/libs";
 import {
   FactoryPipelineFilterKeys,
   FactoryPipelineFilters,
@@ -53,6 +53,7 @@ export function useFactoryPipelineFilters(): FilterFeature<
         ...twinStatusAdapter,
       },
       // TODO: Change to combobox when factoryConditionSet is implemented
+      // https://alcosi.atlassian.net/browse/TWINS-241
       factoryConditionSetIdList: {
         type: AutoFormValueType.tag,
         label: "Factory Condition Set",
@@ -82,7 +83,10 @@ export function useFactoryPipelineFilters(): FilterFeature<
       factoryIdList: toArrayOfString(filters.factoryIdList, "id"),
       inputTwinClassIdList: toArrayOfString(filters.inputTwinClassIdList, "id"),
       nextFactoryIdList: toArrayOfString(filters.nextFactoryIdList, "id"),
-      outputTwinStatusIdList: toArrayOfString(filters.outputTwinStatusIdList, "id"),
+      outputTwinStatusIdList: toArrayOfString(
+        filters.outputTwinStatusIdList,
+        "id"
+      ),
       factoryConditionSetIdList: toArrayOfString(
         filters.factoryConditionSetIdList
       ),

@@ -4,6 +4,7 @@ import { PaginationState } from "@tanstack/table-core";
 import { Factory, FactoryFilters } from "@/entities/factory";
 
 // TODO: Turn off lazy-relation for twinClasses and factories, implement hydration
+// https://alcosi.atlassian.net/browse/TWINFACES-419
 export function useFactoryPipelineSearch() {
   const api = useContext(ApiContext);
   const searchFactoryPipelines = useCallback(

@@ -1,4 +1,8 @@
-import {isPopulatedString, SelectAdapter, wrapWithPercent} from "@/shared/libs";
+import {
+  isPopulatedString,
+  SelectAdapter,
+  wrapWithPercent,
+} from "@/shared/libs";
 import {
   Factory,
   FactoryFilters,
@@ -11,11 +15,7 @@ export function useFactorySelectAdapter(): SelectAdapter<Factory> {
   const { fetchFactoryById } = useFetchFactoryById();
 
   async function getById(id: string) {
-    try {
-      return await fetchFactoryById(id);
-    } catch (error) {
-      throw new Error(`Factory with ID ${id} not found.`);
-    }
+    return await fetchFactoryById(id);
   }
 
   async function getItems(search: string, filters?: FactoryFilters) {
