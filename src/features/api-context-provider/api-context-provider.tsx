@@ -50,6 +50,7 @@ import {
   createPermissionSpaceRoleApi,
   PermissionSpaceRoleApi,
 } from "@/entities/spaceRole";
+import {createFactoryPipelineApi, FactoryPipelineApi} from "@/entities/factoryPipeline";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -71,6 +72,7 @@ export interface ApiContextProps {
   twinRole: PermissionTwinRoleApi;
   assigneePropagation: PermissionAssigneePropagationApi;
   factory: FactoryApi;
+  factoryPipeline: FactoryPipelineApi;
   spaceRole: PermissionSpaceRoleApi;
 }
 
@@ -110,6 +112,7 @@ export function ApiContextProvider({
         twinRole: createPermissionTwinRoleApi(settings),
         assigneePropagation: createPermissionAssigneePropagationApi(settings),
         factory: createFactoryApi(settings),
+        factoryPipeline: createFactoryPipelineApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
       }}
     >

@@ -12,6 +12,7 @@ import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
 import { toast } from "sonner";
 import { formatToTwinfaceDate } from "@/shared/libs";
+import {useRouter} from "next/navigation";
 
 const colDefs: Record<
   keyof Omit<Factory, "createdByUserId">,
@@ -84,6 +85,7 @@ const colDefs: Record<
 export function Factories() {
   const { searchFactories } = useFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
+  const router = useRouter();
 
   async function fetchFactories(
     pagination: PaginationState,
@@ -117,6 +119,9 @@ export function Factories() {
       ]}
       filters={{
         filtersInfo: buildFilterFields(),
+      }}
+      onRowClick={(row) => {
+        router.push(`/workspace/factories/${row.id}`);
       }}
     />
   );
