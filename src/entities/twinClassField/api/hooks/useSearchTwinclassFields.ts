@@ -2,13 +2,13 @@ import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 import {
-  Fields_DETAILED,
-  FieldsFilter,
-  hydrateFieldsFromMap,
-} from "@/entities/fields";
+  hydrateTwinclassFieldFromMap,
+  TwinClassFieldV2_DETAILED,
+  TwinClassFieldV2Filters,
+} from "@/entities/twinClassField";
 
 // TODO: Apply caching-strategy
-export const useFieldsSearchV1 = () => {
+export const useSearchTwinclassFields = () => {
   const api = useContext(ApiContext);
 
   const searchFields = useCallback(
@@ -17,10 +17,10 @@ export const useFieldsSearchV1 = () => {
       filters = {},
     }: {
       pagination?: PaginationState;
-      filters?: FieldsFilter;
-    }): Promise<PagedResponse<Fields_DETAILED>> => {
+      filters?: TwinClassFieldV2Filters;
+    }): Promise<PagedResponse<TwinClassFieldV2_DETAILED>> => {
       try {
-        const { data, error } = await api.fields.search({
+        const { data, error } = await api.twinClassField.search({
           pagination,
           filters,
         });
@@ -30,7 +30,7 @@ export const useFieldsSearchV1 = () => {
         }
         const fields =
           data.fields?.map((dto) =>
-            hydrateFieldsFromMap(dto, data.relatedObjects)
+            hydrateTwinclassFieldFromMap(dto, data.relatedObjects)
           ) ?? [];
 
         return {

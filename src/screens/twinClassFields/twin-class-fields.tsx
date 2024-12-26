@@ -1,49 +1,112 @@
-import { TwinClass, TwinClassContext } from "@/entities/twinClass";
-import {
-  TwinClassField,
-  TwinClassFieldCreateRq,
-  useTwinClassFieldFilters,
-} from "@/entities/twinClassField";
+import { TwinClassResourceLink } from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { REGEX_PATTERNS } from "@/shared/libs";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Experimental_CrudDataTable } from "@/widgets";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import { FeaturerResourceLink } from "@/entities/featurer";
+import { PermissionResourceLink } from "@/entities/permission";
+import { REGEX_PATTERNS, toArray, toArrayOfString } from "@/shared/libs";
+import {
+  TwinClassFieldCreateRq,
+  TwinClassFieldV2_DETAILED,
+  useSearchTwinclassFields,
+  useTwinClassFieldFilters,
+} from "@/entities/twinClassField";
+import { useRouter } from "next/navigation";
 import { TwinClassFieldFormFields } from "./form-fields";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const colDefs: Record<
   keyof Pick<
-    TwinClassField,
-    "id" | "key" | "name" | "description" | "required"
+    TwinClassFieldV2_DETAILED,
+    | "id"
+    | "twinClassId"
+    | "key"
+    | "name"
+    | "description"
+    | "fieldTyperFeaturerId"
+    | "viewPermissionId"
+    | "editPermissionId"
+    | "required"
   >,
-  ColumnDef<TwinClassField>
+  ColumnDef<TwinClassFieldV2_DETAILED>
 > = {
   id: {
     accessorKey: "id",
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
+
+  twinClassId: {
+    id: "twinClassId",
+    accessorKey: "twinClassId",
+    header: "Class",
+    cell: ({ row: { original } }) =>
+      original.twinClass && (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink data={original.twinClass} withTooltip />
+        </div>
+      ),
+  },
+
   key: {
     accessorKey: "key",
     header: "Key",
   },
+
   name: {
     accessorKey: "name",
     header: "Name",
   },
+
   description: {
     accessorKey: "description",
     header: "Description",
   },
+
+  fieldTyperFeaturerId: {
+    accessorKey: "fieldTyperFeaturerId",
+    header: "Field typer",
+    cell: ({ row: { original } }) =>
+      original.fieldTyperFeaturer && (
+        <div className="max-w-48 inline-flex">
+          <FeaturerResourceLink
+            data={original.fieldTyperFeaturer}
+            withTooltip
+          />
+        </div>
+      ),
+  },
+
+  viewPermissionId: {
+    accessorKey: "viewPermissionId",
+    header: "View permission",
+    cell: ({ row: { original } }) =>
+      original.viewPermission && (
+        <div className="max-w-48 column-flex space-y-2">
+          <PermissionResourceLink data={original.viewPermission} withTooltip />
+        </div>
+      ),
+  },
+
+  editPermissionId: {
+    accessorKey: "editPermissionId",
+    header: "Edit permission",
+    cell: ({ row: { original } }) =>
+      original.editPermission && (
+        <div className="max-w-48 column-flex space-y-2">
+          <PermissionResourceLink data={original.editPermission} withTooltip />
+        </div>
+      ),
+  },
+
   required: {
     accessorKey: "required",
     header: "Required",
@@ -51,53 +114,49 @@ const colDefs: Record<
   },
 };
 
-const twinClassFieldchema = z.object({
-  key: z
-    .string()
-    .min(1)
-    .max(100)
-    .regex(
-      REGEX_PATTERNS.ALPHANUMERIC_WITH_DASHES,
-      "Key can only contain latin letters, numbers, underscores and dashes"
-    ),
-  name: z.string().min(0).max(100),
-  description: z.string(),
-  required: z.boolean(),
-  fieldTyperFeaturerId: z.number(),
-  fieldTyperParams: z.record(z.string()),
-});
-
-export function TwinClassFields() {
-  const api = useContext(ApiContext);
-  const { twinClass } = useContext(TwinClassContext);
+export function TwinClassFields({ twinClassId }: { twinClassId?: string }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
-  const { buildFilterFields } = useTwinClassFieldFilters();
+  const api = useContext(ApiContext);
+  const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters();
+  const { searchFields } = useSearchTwinclassFields();
+
+  const twinClassFieldchema = z.object({
+    key: z
+      .string()
+      .min(1)
+      .max(100)
+      .regex(
+        REGEX_PATTERNS.ALPHANUMERIC_WITH_DASHES,
+        "Key can only contain latin letters, numbers, underscores and dashes"
+      ),
+    name: z.string().min(0).max(100),
+    description: z.string(),
+    required: z.boolean(),
+    fieldTyperFeaturerId: z.number(),
+    fieldTyperParams: z.record(z.string()),
+  });
 
   async function fetchFields(
-    _: PaginationState,
+    pagination: PaginationState,
     filters: FiltersState
-  ): Promise<PagedResponse<TwinClass>> {
-    if (!twinClass?.id) {
-      toast.error("Twin class ID is missing");
-      return { data: [], pagination: {} };
-    }
-
+  ): Promise<PagedResponse<TwinClassFieldV2_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
     try {
-      const response = await api.twinClassField.getFields({ id: twinClass.id });
-      const data = response.data;
-      if (!data || data.status != 0) {
-        console.error("failed to fetch twin class fields", data);
-        let message = "Failed to load twin class fields";
-        if (data?.msg) message += `: ${data.msg}`;
-        toast.error(message);
-        return { data: [], pagination: {} };
-      }
-      // setFields(data.twinClassFieldList ?? []);
-      return { data: data.twinClassFieldList ?? [], pagination: {} };
+      const response = await searchFields({
+        pagination,
+        filters: {
+          ..._filters,
+          twinClassIdList: toArrayOfString(toArray(twinClassId), "id"),
+        },
+      });
+
+      return {
+        data: response.data ?? [],
+        pagination: response.pagination ?? {},
+      };
     } catch (e) {
-      console.error("exception while fetching twin class fields", e);
-      toast.error("Failed to fetch twin class fields");
+      toast.error("Failed to fetch fields");
       return { data: [], pagination: {} };
     }
   }
@@ -129,7 +188,7 @@ export function TwinClassFields() {
     };
 
     const { error } = await api.twinClassField.create({
-      id: twinClass.id!,
+      id: twinClassId!,
       body,
     });
     if (error) {
@@ -138,36 +197,43 @@ export function TwinClassFields() {
     toast.success("Class field created successfully!");
   };
 
-  if (!twinClass) {
+  if (!twinClassId) {
     console.error("TwinClassFields: no twin class");
     return;
   }
   return (
     <Experimental_CrudDataTable
+      title="Fields"
       ref={tableRef}
       columns={[
         colDefs.id,
+        colDefs.twinClassId,
         colDefs.key,
         colDefs.name,
         colDefs.description,
+        colDefs.fieldTyperFeaturerId,
+        colDefs.viewPermissionId,
+        colDefs.editPermissionId,
         colDefs.required,
       ]}
       getRowId={(row) => row.key!}
       fetcher={fetchFields}
-      disablePagination={true}
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
-        router.push(
-          `/workspace/twinclass/${twinClass!.id!}/twinField/${row.id}`
-        )
+        router.push(`/workspace/twinclass/${twinClassId}/twinField/${row.id}`)
       }
       filters={{
         filtersInfo: buildFilterFields(),
       }}
       defaultVisibleColumns={[
         colDefs.id,
+        colDefs.twinClassId,
         colDefs.key,
         colDefs.name,
+        colDefs.description,
+        colDefs.fieldTyperFeaturerId,
+        colDefs.viewPermissionId,
+        colDefs.editPermissionId,
         colDefs.required,
       ]}
       dialogForm={form}

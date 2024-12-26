@@ -9,37 +9,37 @@ import { Tab, TabsLayout } from "@/widgets";
 import { useContext, useEffect } from "react";
 import { TwinClassGeneral, TwinClassStatuses } from "./views";
 
-const tabs: Tab[] = [
-  {
-    key: "general",
-    label: "General",
-    content: <TwinClassGeneral />,
-  },
-  {
-    key: "fields",
-    label: "Fields",
-    content: <TwinClassFields />,
-  },
-  {
-    key: "statuses",
-    label: "Statuses",
-    content: <TwinClassStatuses />,
-  },
-  {
-    key: "twinflows",
-    label: "Twinflows",
-    content: <TwinClassTwinFlows />,
-  },
-  {
-    key: "links",
-    label: "Links",
-    content: <TwinClassLinks />,
-  },
-];
-
 export default function TwinClassPage() {
   const { setBreadcrumbs } = useBreadcrumbs();
   const { twinClass } = useContext(TwinClassContext);
+
+  const tabs: Tab[] = [
+    {
+      key: "general",
+      label: "General",
+      content: <TwinClassGeneral />,
+    },
+    {
+      key: "fields",
+      label: "Fields",
+      content: <TwinClassFields twinClassId={twinClass.id} />,
+    },
+    {
+      key: "statuses",
+      label: "Statuses",
+      content: <TwinClassStatuses />,
+    },
+    {
+      key: "twinflows",
+      label: "Twinflows",
+      content: <TwinClassTwinFlows />,
+    },
+    {
+      key: "links",
+      label: "Links",
+      content: <TwinClassLinks />,
+    },
+  ];
 
   useEffect(() => {
     setBreadcrumbs([
