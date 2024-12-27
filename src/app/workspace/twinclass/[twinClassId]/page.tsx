@@ -22,7 +22,7 @@ export default function TwinClassPage() {
     {
       key: "fields",
       label: "Fields",
-      content: <TwinClassFields twinClassId={twinClass.id} />,
+      content: <TwinClassFields />,
     },
     {
       key: "statuses",

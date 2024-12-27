@@ -1,4 +1,4 @@
-import { TwinClassResourceLink } from "@/entities/twinClass";
+import { TwinClassContext, TwinClassResourceLink } from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
@@ -114,10 +114,11 @@ const colDefs: Record<
   },
 };
 
-export function TwinClassFields({ twinClassId }: { twinClassId?: string }) {
+export function TwinClassFields() {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const api = useContext(ApiContext);
+  const { twinClassId } = useContext(TwinClassContext);
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters();
   const { searchFields } = useSearchTwinclassFields();
 
@@ -135,6 +136,16 @@ export function TwinClassFields({ twinClassId }: { twinClassId?: string }) {
     required: z.boolean(),
     fieldTyperFeaturerId: z.number(),
     fieldTyperParams: z.record(z.string()),
+    viewPermissionId: z
+      .string()
+      .uuid()
+      .optional()
+      .or(z.literal("").transform(() => undefined)),
+    editPermissionId: z
+      .string()
+      .uuid()
+      .optional()
+      .or(z.literal("").transform(() => undefined)),
   });
 
   async function fetchFields(
@@ -168,6 +179,9 @@ export function TwinClassFields({ twinClassId }: { twinClassId?: string }) {
       name: "",
       description: "",
       required: false,
+      fieldTyperFeaturerId: 0,
+      viewPermissionId: "",
+      editPermissionId: "",
     },
   });
 
@@ -185,6 +199,8 @@ export function TwinClassFields({ twinClassId }: { twinClassId?: string }) {
       },
       fieldTyperFeaturerId: formValues.fieldTyperFeaturerId,
       fieldTyperParams: formValues.fieldTyperParams,
+      viewPermissionId: formValues.viewPermissionId,
+      editPermissionId: formValues.editPermissionId,
     };
 
     const { error } = await api.twinClassField.create({
@@ -197,10 +213,6 @@ export function TwinClassFields({ twinClassId }: { twinClassId?: string }) {
     toast.success("Class field created successfully!");
   };
 
-  if (!twinClassId) {
-    console.error("TwinClassFields: no twin class");
-    return;
-  }
   return (
     <Experimental_CrudDataTable
       title="Fields"
@@ -220,7 +232,9 @@ export function TwinClassFields({ twinClassId }: { twinClassId?: string }) {
       fetcher={fetchFields}
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
-        router.push(`/workspace/twinclass/${twinClassId}/twinField/${row.id}`)
+        router.push(
+          `/workspace/twinclass/${row.twinClassId}/twinField/${row.id}`
+        )
       }
       filters={{
         filtersInfo: buildFilterFields(),

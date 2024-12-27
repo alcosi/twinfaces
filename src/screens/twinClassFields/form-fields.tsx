@@ -29,17 +29,29 @@ export function TwinClassFieldFormFields<T extends FieldValues>({
         label="Description"
       />
 
-      <CheckboxFormField
-        control={control}
-        name={"required" as Path<T>}
-        label="Required"
-      />
-
       <FeaturerFormField
         typeId={FeaturerTypes.fieldTyper}
         control={control}
         name={"fieldTyperFeaturerId" as Path<T>}
         label={"Featurer"}
+      />
+
+      <TextFormField
+        control={control}
+        name={"viewPermissionId" as Path<T>}
+        label="View permission ID"
+      />
+
+      <TextFormField
+        control={control}
+        name={"editPermissionId" as Path<T>}
+        label="Edit permission ID"
+      />
+
+      <CheckboxFormField
+        control={control}
+        name={"required" as Path<T>}
+        label="Required"
       />
     </>
   );

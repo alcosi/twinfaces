@@ -7,7 +7,6 @@ import {
 } from "@/shared/libs";
 import { z } from "zod";
 import { TwinClassFieldV2FilterKeys, TwinClassFieldV2Filters } from "../../api";
-import { useTwinClassFieldSelectAdapter } from "./useSelectAdapter";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
@@ -16,7 +15,6 @@ export function useTwinClassFieldFilters(): FilterFeature<
   TwinClassFieldV2FilterKeys,
   TwinClassFieldV2Filters
 > {
-  const { getById, getItems, renderItem } = useTwinClassFieldSelectAdapter();
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
   const fAdapter = useFeaturerSelectAdapter(13);
