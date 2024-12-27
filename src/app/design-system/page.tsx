@@ -1,6 +1,6 @@
 "use client";
 
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { InputFieldsTab } from "./tabs/input-fields";
 import { ResourceLinksTab } from "./tabs/resource-links";
 

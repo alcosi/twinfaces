@@ -10,7 +10,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { FiltersState, GuidWithCopy } from "@/shared/ui";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

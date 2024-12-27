@@ -5,7 +5,7 @@ import { TwinClassField } from "@/entities/twinClassField";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { TwinFieldGeneral } from "./twin-field-general";

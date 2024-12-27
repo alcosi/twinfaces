@@ -1,18 +1,18 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { PaginationState } from "@tanstack/react-table";
 import {
   TwinClassFieldCreateRq,
+  TwinClassFieldSearchFilters,
   TwinClassFieldUpdateRq,
-  TwinClassFieldV2Filters,
 } from "./types";
-import { PaginationState } from "@tanstack/table-core";
 
 export function createTwinClassFieldApi(settings: ApiSettings) {
-  async function search({
+  function search({
     pagination,
     filters,
   }: {
     pagination: PaginationState;
-    filters: TwinClassFieldV2Filters;
+    filters: TwinClassFieldSearchFilters;
   }) {
     return settings.client.POST("/private/twin_class_fields/search/v1", {
       params: {

@@ -1,5 +1,5 @@
 import React from "react";
-import { isBoolean } from "./types";
+import { isBoolean, SelectAdapter } from "./types";
 
 export const mapToChoice = (input: unknown): "ONLY" | "ONLY_NOT" | "ANY" => {
   if (input === "indeterminate" || input === undefined) return "ANY";
@@ -68,6 +68,17 @@ export const createEnum = <T extends string>(values: T[]): { [K in T]: K } => {
     return acc;
   }, Object.create(null));
 };
+
+export function createFixedSelectAdapter<T extends string>(
+  items: readonly T[]
+): SelectAdapter<T> {
+  return {
+    getById: async (id) => items.find((item) => item === id),
+    getItems: async () => [...items],
+    getItemKey: (item) => item,
+    renderItem: (item) => item,
+  };
+}
 
 export function stopPropagation(e: React.MouseEvent) {
   return e.stopPropagation();

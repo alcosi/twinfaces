@@ -8,7 +8,7 @@ import {
 import { PaginationState } from "@tanstack/react-table";
 import { FiltersState, GuidWithCopy } from "@/shared/ui";
 import { toast } from "sonner";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Factory } from "@/entities/factory";
 import {

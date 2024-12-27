@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TwinClassStatusFormFields } from "@/screens/twinClassStatus";

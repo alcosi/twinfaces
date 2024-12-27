@@ -6,7 +6,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowContext } from "@/features/twinFlow";
 import { ApiContext } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { TwinflowTransitionGeneral } from "./twinflow-transition-general";

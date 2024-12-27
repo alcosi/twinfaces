@@ -1,10 +1,10 @@
 import { RelatedObjects } from "@/shared/api";
-import { TwinClassFieldV2, TwinClassFieldV2_DETAILED } from "../api";
+import { TwinClassField, TwinClassFieldV2_DETAILED } from "../api";
 import { TwinClass_DETAILED } from "@/entities/twinClass";
 import { Featurer_DETAILED } from "@/entities/featurer";
 
-export const hydrateTwinclassFieldFromMap = (
-  dto: TwinClassFieldV2,
+export const hydrateTwinClassFieldFromMap = (
+  dto: TwinClassField,
   relatedObjects?: RelatedObjects
 ): TwinClassFieldV2_DETAILED => {
   const hydrated: TwinClassFieldV2_DETAILED = Object.assign(

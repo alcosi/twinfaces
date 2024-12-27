@@ -9,6 +9,14 @@ export type TwinClassField_DETAILED = RequireFields<
   "id" | "key" | "name" | "twinClassId"
 >;
 
+export type TwinClassFieldSearchFilterKeys = "twinClassIdList" | "keyLikeList";
+export type TwinClassFieldSearchFilters = Partial<
+  Pick<
+    components["schemas"]["TwinClassFieldSearchRqV1"],
+    TwinClassFieldSearchFilterKeys
+  >
+>;
+
 export type TwinClassFieldDescriptor =
   components["schemas"]["TwinClassFieldDescriptorDTO"];
 export type TwinClassFieldCreateRq =

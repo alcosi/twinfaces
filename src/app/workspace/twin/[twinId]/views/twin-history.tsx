@@ -2,7 +2,7 @@ import { HistoryV1, useFetchHistoryV1 } from "@/entities/twin";
 import { User, UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
 import { DataTableHandle, GuidWithCopy } from "@/shared/ui";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";

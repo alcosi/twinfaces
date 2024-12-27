@@ -9,7 +9,7 @@ import {
 import { PermissionContext } from "@/features/permission";
 import { PagedResponse } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 import { toast } from "sonner";

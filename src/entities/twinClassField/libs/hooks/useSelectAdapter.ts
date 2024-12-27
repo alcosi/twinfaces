@@ -1,18 +1,21 @@
-import { TwinClassField_DETAILED } from "@/entities/twinClassField";
+import { TwinClassFieldV2_DETAILED } from "@/entities/twinClassField";
 import { SelectAdapter } from "@/shared/libs";
+import { useTwinClassFieldSearchV1 } from "../../api/hooks";
 
-export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassField_DETAILED> {
+export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassFieldV2_DETAILED> {
+  const { searchTwinClassFields } = useTwinClassFieldSearchV1();
+
   async function getById(id: string) {
     // TODO: Apply valid logic here
-    return { id } as TwinClassField_DETAILED;
+    return { id } as TwinClassFieldV2_DETAILED;
   }
 
   async function getItems(search: string) {
-    // TODO: Apply valid logic here
-    return [];
+    const response = await searchTwinClassFields({ search });
+    return response.data;
   }
 
-  function renderItem({ key }: TwinClassField_DETAILED) {
+  function renderItem({ key }: TwinClassFieldV2_DETAILED) {
     return key;
   }
 

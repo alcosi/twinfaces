@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { toast } from "sonner";
 import { ApiContext, PagedResponse } from "@/shared/api";

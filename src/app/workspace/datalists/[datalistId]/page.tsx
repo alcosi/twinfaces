@@ -1,6 +1,6 @@
 "use client";
 
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { DatalistGeneral, DatalistOptions } from "./views";
 
 const tabs: Tab[] = [

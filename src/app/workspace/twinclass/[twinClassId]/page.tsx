@@ -4,7 +4,7 @@ import { TwinClassContext } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinClassLinks } from "@/screens/twinClassLinks";
 import { TwinClassTwinFlows } from "@/screens/twinClassTwinFlows";
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinClassFieldsTable } from "@/widgets/tables";
 import { useContext, useEffect } from "react";
 import { TwinClassGeneral, TwinClassStatuses } from "./views";

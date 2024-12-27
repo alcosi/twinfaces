@@ -15,7 +15,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { pluckProperty } from "@/shared/libs";
 import { DataTableHandle, FiltersState, GuidWithCopy } from "@/shared/ui";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";

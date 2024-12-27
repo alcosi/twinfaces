@@ -1,6 +1,11 @@
-import { SelectAdapter } from "@/shared/libs";
+import {
+  createFixedSelectAdapter,
+  isPopulatedString,
+  SelectAdapter,
+} from "@/shared/libs";
 import { Twin_DETAILED } from "../../api";
 import { useTwinFetchByIdV2, useTwinSearchV3 } from "../../api/hooks";
+import { TwinBasicFields, TwinTouchIds } from "../constants";
 
 export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
   const { searchTwins } = useTwinSearchV3();
@@ -16,8 +21,8 @@ export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
     return response.data as Twin_DETAILED[];
   }
 
-  function renderItem({ name }: Twin_DETAILED) {
-    return name;
+  function renderItem({ name, id }: Twin_DETAILED) {
+    return isPopulatedString(name) ? name : id;
   }
 
   return {
@@ -25,4 +30,16 @@ export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
     getItems,
     renderItem,
   };
+}
+
+export function useTwinBasicFieldSelectAdapter(): SelectAdapter<
+  (typeof TwinBasicFields)[number]
+> {
+  return createFixedSelectAdapter(TwinBasicFields);
+}
+
+export function useTwinTouchIdSelectAdapter(): SelectAdapter<
+  (typeof TwinTouchIds)[number]
+> {
+  return createFixedSelectAdapter(TwinTouchIds);
 }

@@ -3,7 +3,7 @@
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PermissionContext } from "@/features/permission";
 import { isPopulatedString } from "@/shared/libs";
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect } from "react";
 import { GeneralSection, GrantSection } from "./views";
 
