@@ -1,7 +1,39 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { TwinClassFieldCreateRq, TwinClassFieldUpdateRq } from "./types";
+import {
+  TwinClassFieldCreateRq,
+  TwinClassFieldUpdateRq,
+  TwinClassFieldV2Filters,
+} from "./types";
+import { PaginationState } from "@tanstack/table-core";
 
 export function createTwinClassFieldApi(settings: ApiSettings) {
+  async function search({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: TwinClassFieldV2Filters;
+  }) {
+    return settings.client.POST("/private/twin_class_fields/search/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinClassFieldMode: "MANAGED",
+          showTwinClassField2TwinClassMode: "DETAILED",
+          showTwinClassField2PermissionMode: "DETAILED",
+          showTwinClassField2FeaturerMode: "DETAILED",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+        },
+      },
+      body: {
+        ...filters,
+      },
+    });
+  }
+
   function getFields({ id }: { id: string }) {
     return settings.client.GET(
       `/private/twin_class/{twinClassId}/field/list/v1`,
@@ -80,6 +112,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
   }
 
   return {
+    search,
     getFields,
     getById,
     create,

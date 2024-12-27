@@ -1,7 +1,7 @@
 "use client";
 
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { TwinClassFieldsScreen } from "@/screens/twinClassFields";
 
 export default function FieldsPage() {
-  return <UnderConstruction />;
+  return <TwinClassFieldsScreen />;
 }

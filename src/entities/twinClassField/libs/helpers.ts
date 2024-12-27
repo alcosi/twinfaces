@@ -1,16 +1,38 @@
 import { RelatedObjects } from "@/shared/api";
-import { TwinClassField, TwinClassField_DETAILED } from "../api";
+import { TwinClassFieldV2, TwinClassFieldV2_DETAILED } from "../api";
+import { TwinClass_DETAILED } from "@/entities/twinClass";
+import { Featurer_DETAILED } from "@/entities/featurer";
 
-export const hydrateTwinclassfieldFromMap = (
-  twinClassFieldDTO: TwinClassField,
+export const hydrateTwinclassFieldFromMap = (
+  dto: TwinClassFieldV2,
   relatedObjects?: RelatedObjects
-): TwinClassField_DETAILED => {
-  const TwinClassField: TwinClassField_DETAILED = Object.assign(
+): TwinClassFieldV2_DETAILED => {
+  const hydrated: TwinClassFieldV2_DETAILED = Object.assign(
     {},
-    twinClassFieldDTO
-  ) as TwinClassField_DETAILED;
+    dto
+  ) as TwinClassFieldV2_DETAILED;
 
-  // TODO: Add hydration logic here
+  if (dto.twinClassId && relatedObjects?.twinClassMap) {
+    hydrated.twinClass = relatedObjects.twinClassMap[
+      dto.twinClassId
+    ] as TwinClass_DETAILED;
+  }
 
-  return TwinClassField;
+  if (dto.viewPermissionId && relatedObjects?.permissionMap) {
+    hydrated.viewPermission =
+      relatedObjects.permissionMap[dto.viewPermissionId]!;
+  }
+
+  if (dto.editPermissionId && relatedObjects?.permissionMap) {
+    hydrated.editPermission =
+      relatedObjects.permissionMap[dto.editPermissionId]!;
+  }
+
+  if (dto.fieldTyperFeaturerId && relatedObjects?.featurerMap) {
+    hydrated.fieldTyperFeaturer = relatedObjects.featurerMap[
+      dto.fieldTyperFeaturerId
+    ] as Featurer_DETAILED;
+  }
+
+  return hydrated;
 };
