@@ -2,16 +2,16 @@
 
 import { TwinClassContext } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { TwinClassFields } from "@/screens/twinClassFields";
 import { TwinClassLinks } from "@/screens/twinClassLinks";
 import { TwinClassTwinFlows } from "@/screens/twinClassTwinFlows";
 import { Tab, TabsLayout } from "@/widgets";
+import { TwinClassFieldsTable } from "@/widgets/tables";
 import { useContext, useEffect } from "react";
 import { TwinClassGeneral, TwinClassStatuses } from "./views";
 
 export default function TwinClassPage() {
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { twinClass } = useContext(TwinClassContext);
+  const { twinClassId, twinClass } = useContext(TwinClassContext);
 
   const tabs: Tab[] = [
     {
@@ -22,7 +22,7 @@ export default function TwinClassPage() {
     {
       key: "fields",
       label: "Fields",
-      content: <TwinClassFields />,
+      content: <TwinClassFieldsTable twinClassId={twinClassId} />,
     },
     {
       key: "statuses",
@@ -49,7 +49,7 @@ export default function TwinClassPage() {
         href: `/workspace/twinclass/${twinClass?.id}`,
       },
     ]);
-  }, [twinClass?.id, twinClass?.name]);
+  }, [twinClass?.id, twinClass?.name, setBreadcrumbs]);
 
   return <TabsLayout tabs={tabs} />;
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { TwinClassFields } from "@/screens/twinClassFields";
+import { TwinClassFieldsScreen } from "@/screens/twinClassFields";
 
 export default function FieldsPage() {
-  return <TwinClassFields />;
+  return <TwinClassFieldsScreen />;
 }

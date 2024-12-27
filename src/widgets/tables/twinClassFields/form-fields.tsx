@@ -4,8 +4,8 @@ import {
   TextFormField,
 } from "@/components/form-fields/text-form-field";
 import { FeaturerTypes } from "@/entities/featurer";
-import { FeaturerFormField } from "@/widgets/form-fields";
 import { Control, FieldValues, Path } from "react-hook-form";
+import { FeaturerFormField } from "../../form-fields";
 
 export function TwinClassFieldFormFields<T extends FieldValues>({
   control,
