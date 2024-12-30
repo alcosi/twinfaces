@@ -1,57 +1,85 @@
-import { TwinLinkView } from "@/entities/twin";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import {
-  CrudDataTable,
-  FiltersState,
-} from "@/shared/ui/data-table/crud-data-table";
+import { TwinResourceLink } from "@/entities/twin";
+import { PagedResponse } from "@/shared/api";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { LoadingOverlay } from "@/shared/ui/loading";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 import { TwinContext } from "../twin-context";
 import { formatToTwinfaceDate } from "@/shared/libs";
+import { Experimental_CrudDataTable } from "@/widgets";
+import { UserResourceLink } from "@/entities/user";
+import { TwinClassLinkResourceLink } from "@/entities/twinClassLink";
+import { TwinLinkView } from "@/entities/twinLink";
+import { useFetchTwinLinks } from "@/entities/twinLink/api/hooks";
+
+const colDefs: Record<
+  keyof Pick<
+    TwinLinkView,
+    "id" | "linkId" | "dstTwinId" | "createdByUserId" | "createdAt"
+  >,
+  ColumnDef<TwinLinkView>
+> = {
+  id: {
+    id: "id",
+    accessorKey: "id",
+    header: "ID",
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+  },
+
+  linkId: {
+    id: "linkId",
+    accessorKey: "linkId",
+    header: "Link",
+    cell: ({ row: { original } }) =>
+      original.link && (
+        <div className="max-w-48 inline-flex">
+          <TwinClassLinkResourceLink data={original.link} withTooltip />
+        </div>
+      ),
+  },
+
+  dstTwinId: {
+    id: "dstTwinId",
+    accessorKey: "dstTwinId",
+    header: "Destination Twin",
+    cell: ({ row: { original } }) =>
+      original.dstTwin && (
+        <div className="max-w-48 inline-flex">
+          <TwinResourceLink data={original.dstTwin} withTooltip />
+        </div>
+      ),
+  },
+
+  createdByUserId: {
+    id: "createdByUserId",
+    accessorKey: "createdByUserId",
+    header: "Created by User",
+    cell: ({ row: { original } }) =>
+      original.createdByUser && (
+        <div className="max-w-48 inline-flex">
+          <UserResourceLink data={original.createdByUser} withTooltip />
+        </div>
+      ),
+  },
+
+  createdAt: {
+    id: "createdAt",
+    accessorKey: "createdAt",
+    header: "Created at",
+    cell: ({ row: { original } }) =>
+      original.createdAt && formatToTwinfaceDate(original.createdAt),
+  },
+};
 
 export function TwinLinks() {
-  const api = useContext(ApiContext);
   const { twin } = useContext(TwinContext);
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
-
-  const columns: ColumnDef<TwinLinkView>[] = [
-    {
-      accessorKey: "id",
-      header: "ID",
-      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-    },
-    {
-      accessorKey: "linkId",
-      header: "Link ID",
-      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-    },
-    {
-      accessorKey: "dstTwinId",
-      header: "Destination Twin",
-      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-    },
-    {
-      accessorKey: "createdByUserId",
-      header: "Created by User",
-      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-    },
-    {
-      accessorKey: "createdAt",
-      header: "Created at",
-      cell: ({ row: { original } }) =>
-        original.createdAt && formatToTwinfaceDate(original.createdAt),
-    },
-  ];
+  const { fetchTwinLinksById } = useFetchTwinLinks();
 
   async function fetchLinks(
-    type: "forward" | "backward",
-    _: PaginationState,
-    filters: FiltersState
+    type: "forward" | "backward"
   ): Promise<PagedResponse<TwinLinkView>> {
     if (!twin?.id) {
       toast.error("Twin ID is missing");
@@ -59,94 +87,63 @@ export function TwinLinks() {
     }
 
     try {
-      const response = await api.twin.searchLinks({ twinId: twin.id });
+      const response = await fetchTwinLinksById({ twinId: twin.id, type });
       const data = response.data;
 
-      if (!data || data.status != 0) {
-        console.error("failed to fetch twin links", data);
-        let message = "Failed to load twin links";
-        if (data?.msg) message += `: ${data.msg}`;
-        toast.error(message);
-        return { data: [], pagination: {} };
-      }
-
-      const linksData = data?.twin?.links
-        ? Object.values(
-            data.twin.links[
-              type === "forward" ? "forwardLinks" : "backwardLinks"
-            ] || []
-          )
-        : [];
-
       return {
-        data: linksData,
+        data: data,
         pagination: {},
       };
     } catch (e) {
-      console.error(`Failed to fetch twin ${type} links`, e);
       toast.error(`Failed to fetch twin ${type} links`);
       return { data: [], pagination: {} };
     }
   }
 
-  if (!twin) {
-    return <LoadingOverlay />;
-  }
-
   return (
     <>
-      <div className="mb-10">
-        <CrudDataTable
-          ref={tableRefForward}
-          title="Forward Links"
-          columns={columns}
-          getRowId={(row) => row.id!}
-          fetcher={(paginationState, filters) =>
-            fetchLinks("forward", paginationState, filters)
-          }
-          // createButton={{
-          //   enabled: true,
-          //   onClick: createLink,
-          // }}
-          disablePagination={true}
-          pageSizes={[10, 20, 50]}
-          customizableColumns={{
-            enabled: true,
-            defaultVisibleKeys: [
-              "id",
-              "linkId",
-              "dstTwinId",
-              "createdByUserId",
-              "createdAt",
-            ],
-          }}
-        />
-      </div>
-
-      <CrudDataTable
-        ref={tableRefBackward}
-        title="Backward Links"
-        columns={columns}
+      <Experimental_CrudDataTable
+        title="Forward Links"
+        ref={tableRefForward}
+        columns={[
+          colDefs.id,
+          colDefs.linkId,
+          colDefs.dstTwinId,
+          colDefs.createdByUserId,
+          colDefs.createdAt,
+        ]}
         getRowId={(row) => row.id!}
-        fetcher={(paginationState, filters) =>
-          fetchLinks("backward", paginationState, filters)
-        }
-        // createButton={{
-        //   enabled: true,
-        //   onClick: createLink,
-        // }}
+        fetcher={() => fetchLinks("forward")}
         disablePagination={true}
-        pageSizes={[10, 20, 50]}
-        customizableColumns={{
-          enabled: true,
-          defaultVisibleKeys: [
-            "id",
-            "linkId",
-            "dstTwinId",
-            "createdByUserId",
-            "createdAt",
-          ],
-        }}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.linkId,
+          colDefs.dstTwinId,
+          colDefs.createdByUserId,
+          colDefs.createdAt,
+        ]}
+      />
+
+      <Experimental_CrudDataTable
+        title="Backward Links"
+        ref={tableRefBackward}
+        columns={[
+          colDefs.id,
+          colDefs.linkId,
+          { ...colDefs.dstTwinId, header: "Source Twin" },
+          colDefs.createdByUserId,
+          colDefs.createdAt,
+        ]}
+        getRowId={(row) => row.id!}
+        fetcher={() => fetchLinks("backward")}
+        disablePagination={true}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.linkId,
+          colDefs.dstTwinId,
+          colDefs.createdByUserId,
+          colDefs.createdAt,
+        ]}
       />
     </>
   );

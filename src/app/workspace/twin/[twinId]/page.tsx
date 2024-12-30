@@ -24,8 +24,8 @@ const tabs: Tab[] = [
     content: <TwinFields />,
   },
   {
-    key: "links",
-    label: "Links",
+    key: "relations",
+    label: "Relations",
     content: <TwinLinks />,
   },
   {

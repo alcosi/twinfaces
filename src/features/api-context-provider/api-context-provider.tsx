@@ -54,6 +54,7 @@ import {
   createFactoryPipelineApi,
   FactoryPipelineApi,
 } from "@/entities/factoryPipeline";
+import { createTwinLinksApi, TwinLinkApi } from "@/entities/twinLink";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -77,6 +78,7 @@ export interface ApiContextProps {
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
   spaceRole: PermissionSpaceRoleApi;
+  twinLink: TwinLinkApi;
 }
 
 export function ApiContextProvider({
@@ -117,6 +119,7 @@ export function ApiContextProvider({
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
+        twinLink: createTwinLinksApi(settings),
       }}
     >
       {children}
