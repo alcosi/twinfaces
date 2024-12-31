@@ -1,12 +1,12 @@
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import {
-  FeaturerFilterKeys,
-  FeaturerFilters,
-  FeaturerTypes,
-  useFeaturerSelectAdapter,
-} from "@/entities/featurer";
 import { type FilterFeature } from "@/shared/libs";
 import { z } from "zod";
+import {
+  AutoFormValueInfo,
+  AutoFormValueType,
+} from "../../../../components/auto-field";
+import { FeaturerFilterKeys, FeaturerFilters } from "../../api";
+import { FeaturerTypes } from "../constants";
+import { useFeaturerSelectAdapter } from "./useSelectAdapter";
 
 export function useFeaturerFilters(): FilterFeature<
   FeaturerFilterKeys,

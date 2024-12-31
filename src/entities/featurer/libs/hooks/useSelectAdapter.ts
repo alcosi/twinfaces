@@ -1,7 +1,8 @@
-import { Featurer_DETAILED, FeaturerTypeId } from "@/entities/featurer";
 import { ApiContext } from "@/shared/api";
 import { SelectAdapter } from "@/shared/libs";
 import { useContext } from "react";
+import { Featurer_DETAILED } from "../../api";
+import { FeaturerTypeId } from "../types";
 
 export function useFeaturerSelectAdapter(
   typeId: FeaturerTypeId
