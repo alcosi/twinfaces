@@ -1,5 +1,11 @@
 import { Featurer } from "../api";
-import { FeaturerTypes } from "./constants";
+
+export const FeaturerTypes = {
+  fieldTyper: 13,
+  trigger: 15,
+  validator: 16,
+  headHunter: 26,
+} as const;
 
 export type FeaturerTypeId = (typeof FeaturerTypes)[keyof typeof FeaturerTypes];
 
