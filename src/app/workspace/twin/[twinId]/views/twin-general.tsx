@@ -13,7 +13,7 @@ import React, { useContext, useState } from "react";
 import { z } from "zod";
 import { TwinContext } from "../twin-context";
 import { formatToTwinfaceDate } from "@/shared/libs";
-import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
+import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
 import { useUserSelectAdapter } from "@/entities/user/libs";
 
@@ -116,7 +116,9 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Alias</TableCell>
-            <TableCell>not implemented yet</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
           </TableRow>
 
           <TableRow>
@@ -136,7 +138,7 @@ export function TwinGeneral() {
             <TableCell>
               {twin.statusId && twin.status && (
                 <TwinClassStatusResourceLink
-                  data={twin.status as TwinStatus}
+                  data={twin.status}
                   twinClassId={twin.twinClassId!}
                   withTooltip
                 />
@@ -174,7 +176,7 @@ export function TwinGeneral() {
             <TableCell>Assigner</TableCell>
             <TableCell>
               {twin.assignerUserId && twin.assignerUser && (
-                <UserResourceLink data={twin.assignerUser as User} />
+                <UserResourceLink data={twin.assignerUser} />
               )}
             </TableCell>
           </TableRow>
@@ -192,37 +194,51 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Markers</TableCell>
-            <TableCell>not implemented yet</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Tags</TableCell>
-            <TableCell>not implemented yet</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>View Permission</TableCell>
-            <TableCell>not implemented yet</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Permission schema space</TableCell>
-            <TableCell>not implemented yet</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Twinflow schema space</TableCell>
-            <TableCell>not implemented yet</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Twin class schema space</TableCell>
-            <TableCell>not implemented yet</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Alias space</TableCell>
-            <TableCell>not implemented yet</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
           </TableRow>
 
           <TableRow>
