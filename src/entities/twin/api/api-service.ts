@@ -33,6 +33,7 @@ export function createTwinApi(settings: ApiSettings) {
       },
       body: [
         {
+          twinNameLikeList: search ? ["%" + search + "%"] : undefined,
           ...filters,
         },
       ],

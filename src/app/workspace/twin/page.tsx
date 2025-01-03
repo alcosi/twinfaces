@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { formatToTwinfaceDate } from "@/shared/libs";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 
 const colDefs: Record<
   keyof Pick<

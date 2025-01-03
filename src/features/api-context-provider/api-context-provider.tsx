@@ -1,14 +1,31 @@
 "use client";
 
+import {
+  createPermissionAssigneePropagationApi,
+  PermissionAssigneePropagationApi,
+} from "@/entities/assigneePropagation";
 import { CommentApi, createCommentApi } from "@/entities/comment";
 import { createDatalistApi, DatalistApi } from "@/entities/datalist";
 import { createDomainApi, DomainApi } from "@/entities/domain";
+import { createFactoryApi, FactoryApi } from "@/entities/factory";
+import {
+  createFactoryPipelineApi,
+  FactoryPipelineApi,
+} from "@/entities/factoryPipeline";
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
 import {
   createPermissionGroupApi,
   PermissionGroupApi,
 } from "@/entities/permissionGroup";
+import {
+  createPermissionSchemaApi,
+  PermissionSchemaApi,
+} from "@/entities/permissionSchema";
+import {
+  createPermissionSpaceRoleApi,
+  PermissionSpaceRoleApi,
+} from "@/entities/spaceRole";
 import { createTwinApi, TwinApi } from "@/entities/twin";
 import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
 import {
@@ -28,6 +45,10 @@ import {
   createTwinFlowTransitionApi,
   TwinFlowTransitionApi,
 } from "@/entities/twinFlowTransition";
+import {
+  createPermissionTwinRoleApi,
+  PermissionTwinRoleApi,
+} from "@/entities/twinRole";
 import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinStatus";
 import { createUserApi, UserApi } from "@/entities/user";
 import { createUserGroupApi, UserGroupApi } from "@/entities/userGroup";
@@ -37,23 +58,6 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
-import {
-  createPermissionTwinRoleApi,
-  PermissionTwinRoleApi,
-} from "@/entities/twinRole";
-import {
-  createPermissionAssigneePropagationApi,
-  PermissionAssigneePropagationApi,
-} from "@/entities/assigneePropagation";
-import { createFactoryApi, FactoryApi } from "@/entities/factory";
-import {
-  createPermissionSpaceRoleApi,
-  PermissionSpaceRoleApi,
-} from "@/entities/spaceRole";
-import {
-  createFactoryPipelineApi,
-  FactoryPipelineApi,
-} from "@/entities/factoryPipeline";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -68,6 +72,7 @@ export interface ApiContextProps {
   twinClassLink: TwinClassLinkApi;
   permission: PermissionApi;
   permissionGroup: PermissionGroupApi;
+  permissionSchema: PermissionSchemaApi;
   user: UserApi;
   userGroup: UserGroupApi;
   datalist: DatalistApi;
@@ -108,6 +113,7 @@ export function ApiContextProvider({
         twinClassLink: createTwinClassLinksApi(settings),
         permission: createPermissionApi(settings),
         permissionGroup: createPermissionGroupApi(settings),
+        permissionSchema: createPermissionSchemaApi(settings),
         user: createUserApi(settings),
         userGroup: createUserGroupApi(settings),
         datalist: createDatalistApi(settings),

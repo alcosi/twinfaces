@@ -15,7 +15,7 @@ import { ApiContext, PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";

@@ -4,8 +4,8 @@ import { TwinClassResourceLink } from "@/entities/twinClass";
 import {
   TwinClassFieldCreateRq,
   TwinClassFieldV2_DETAILED,
-  useSearchTwinclassFields,
   useTwinClassFieldFilters,
+  useTwinClassFieldSearchV1,
 } from "@/entities/twinClassField";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { REGEX_PATTERNS, toArray, toArrayOfString } from "@/shared/libs";
@@ -123,7 +123,7 @@ export function TwinClassFieldsTable({
   const router = useRouter();
   const api = useContext(ApiContext);
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters();
-  const { searchFields } = useSearchTwinclassFields();
+  const { searchTwinClassFields } = useTwinClassFieldSearchV1();
 
   const twinClassFieldchema = z.object({
     key: z
@@ -157,7 +157,7 @@ export function TwinClassFieldsTable({
   ): Promise<PagedResponse<TwinClassFieldV2_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
     try {
-      const response = await searchFields({
+      const response = await searchTwinClassFields({
         pagination,
         filters: {
           ..._filters,

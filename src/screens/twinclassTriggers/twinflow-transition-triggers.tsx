@@ -10,7 +10,7 @@ import { useContext, useRef } from "react";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { Check } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";

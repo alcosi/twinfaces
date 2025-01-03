@@ -2,7 +2,7 @@
 
 import { TwinClassContext } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect } from "react";
 import { GeneralSection } from "./views/general-section";
 

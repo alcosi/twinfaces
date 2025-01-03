@@ -4,7 +4,7 @@ import { TwinClassContext } from "@/entities/twinClass";
 import { TwinStatus, useFetchTwinStatusById } from "@/entities/twinStatus";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { TwinStatusGeneral } from "./twin-status-general";

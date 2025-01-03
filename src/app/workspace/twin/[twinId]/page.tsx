@@ -1,7 +1,7 @@
 "use client";
 
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { Tab, TabsLayout } from "@/widgets";
+import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect } from "react";
 import { TwinContext } from "./twin-context";
 import {

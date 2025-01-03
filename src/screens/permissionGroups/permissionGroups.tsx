@@ -15,7 +15,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets";
+import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useEffect } from "react";
 import { toast } from "sonner";

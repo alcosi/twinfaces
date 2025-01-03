@@ -1,5 +1,5 @@
 import { BreadcrumbProvider } from "@/features/breadcrumb";
-import { SidebarLayout } from "@/widgets";
+import { SidebarLayout } from "@/widgets/layout";
 import React from "react";
 import { Toaster } from "sonner";
 
