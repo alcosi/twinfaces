@@ -10,8 +10,7 @@ import { formatToTwinfaceDate } from "@/shared/libs";
 import { Experimental_CrudDataTable } from "@/widgets";
 import { UserResourceLink } from "@/entities/user";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink";
-import { TwinLinkView } from "@/entities/twinLink";
-import { useFetchTwinLinks } from "@/entities/twinLink/api/hooks";
+import { TwinLinkView, useFetchTwinLinks } from "@/entities/twinLink";
 
 const colDefs: Record<
   keyof Pick<
@@ -76,7 +75,7 @@ export function TwinLinks() {
   const { twin } = useContext(TwinContext);
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
-  const { fetchTwinLinksById } = useFetchTwinLinks();
+  const { fetchTwinLinksByTwinId } = useFetchTwinLinks();
 
   async function fetchLinks(
     type: "forward" | "backward"
@@ -87,13 +86,10 @@ export function TwinLinks() {
     }
 
     try {
-      const response = await fetchTwinLinksById({ twinId: twin.id, type });
-      const data = response.data;
+      const response = await fetchTwinLinksByTwinId({ twinId: twin.id, type });
+      const { data } = response;
 
-      return {
-        data: data,
-        pagination: {},
-      };
+      return { data, pagination: {} };
     } catch (e) {
       toast.error(`Failed to fetch twin ${type} links`);
       return { data: [], pagination: {} };

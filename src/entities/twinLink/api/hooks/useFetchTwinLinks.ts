@@ -6,7 +6,7 @@ import { TwinLinkView } from "@/entities/twinLink";
 export const useFetchTwinLinks = () => {
   const api = useContext(ApiContext);
 
-  const fetchTwinLinksById = useCallback(
+  const fetchTwinLinksByTwinId = useCallback(
     async ({
       twinId,
       type,
@@ -15,7 +15,7 @@ export const useFetchTwinLinks = () => {
       type: "forward" | "backward";
     }): Promise<PagedResponse<TwinLinkView>> => {
       try {
-        const { data, error } = await api.twinLink.getLinks({ twinId });
+        const { data, error } = await api.twin.getLinks({ twinId });
 
         if (error) {
           throw new Error("Failed to fetch twins due to API error");
@@ -35,5 +35,5 @@ export const useFetchTwinLinks = () => {
     [api]
   );
 
-  return { fetchTwinLinksById };
+  return { fetchTwinLinksByTwinId };
 };
