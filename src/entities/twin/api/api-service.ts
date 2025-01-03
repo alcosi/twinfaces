@@ -66,11 +66,11 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function getFieldById({ fieldId }: { fieldId: string }) {
+  function getFieldById({ twinId }: { twinId: string }) {
     return settings.client.GET("/private/twin/{twinId}/v2", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { twinId: fieldId },
+        path: { twinId: twinId },
         query: {
           showTwinFieldCollectionMode: "ALL_FIELDS",
         },
