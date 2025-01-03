@@ -43,6 +43,9 @@ export function TwinContextProvider({
           showTwinClassMode: "DETAILED",
           showTwin2TwinClassMode: "DETAILED",
           showTwin2UserMode: "DETAILED",
+          showTwin2StatusMode: "DETAILED",
+          showTwinMarker2DataListOptionMode: "DETAILED",
+          showTwinByHeadMode: "YELLOW",
         },
       })
       .then((response) => {
