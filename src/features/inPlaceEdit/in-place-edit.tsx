@@ -96,7 +96,11 @@ export function InPlaceEdit({
         {renderView ? (
           renderView(value)
         ) : (
-          <>{value || <div className="text-gray-700 font-light">None</div>}</>
+          <>
+            {(value as ReactNode) || (
+              <div className="text-gray-700 font-light">None</div>
+            )}
+          </>
         )}
       </div>
     );

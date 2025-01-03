@@ -5,6 +5,10 @@ export function isFunction<T>(value: T): value is Extract<T, Function> {
   return typeof value === "function";
 }
 
+export function isNotFunction<T>(value: T): value is Exclude<T, Function> {
+  return typeof value !== "function";
+}
+
 export function isEmptyString(str: unknown): str is string {
   return typeof str === "string" && str.trim().length === 0;
 }

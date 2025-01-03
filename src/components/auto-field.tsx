@@ -14,7 +14,7 @@ import {
   TextFormField,
   TextFormItem,
 } from "@/components/form-fields/text-form-field";
-import { FeaturerTypeId } from "@/entities/featurer";
+import { type FeaturerTypeId } from "@/entities/featurer/libs";
 import { TagBoxProps } from "@/shared/ui";
 import { ComboboxProps } from "@/shared/ui/combobox";
 import { InputProps } from "@/shared/ui/input";

@@ -1,3 +1,4 @@
+import { isNotFunction } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
 import { Label } from "@/shared/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
@@ -30,7 +31,7 @@ export function GroupByButton<TData, TValue>({
               <div key={key} className="flex items-center space-x-2">
                 <RadioGroupItem value={key} id={key} />
                 <Label htmlFor={key}>
-                  <>{column.header}</>
+                  {isNotFunction(column.header) ? column.header : "N/A"}
                 </Label>
               </div>
             );

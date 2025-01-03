@@ -1,4 +1,4 @@
-import { FeaturerResourceLink } from "@/entities/featurer";
+import { FeaturerResourceLink } from "@/entities/featurer/components";
 import { PermissionResourceLink } from "@/entities/permission";
 import { TwinClassResourceLink } from "@/entities/twinClass";
 import {

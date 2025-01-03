@@ -65,18 +65,6 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function searchLinks({ twinId }: { twinId: string }) {
-    return settings.client.GET("/private/twin/{twinId}/v2", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { twinId: twinId },
-        query: {
-          showTwin2TwinLinkMode: "DETAILED",
-        },
-      },
-    });
-  }
-
   function getFieldById({ fieldId }: { fieldId: string }) {
     return settings.client.GET("/private/twin/{twinId}/v2", {
       params: {
@@ -111,13 +99,29 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
+  function getLinks({ twinId }: { twinId: string }) {
+    return settings.client.GET("/private/twin/{twinId}/v2", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { twinId: twinId },
+        query: {
+          showTwin2TwinLinkMode: "DETAILED",
+          showTwinLink2UserMode: "DETAILED",
+          showTwinLink2LinkMode: "DETAILED",
+          showTwinField2TwinMode: "DETAILED",
+          showTwinByLinkMode: "GREEN",
+        },
+      },
+    });
+  }
+
   return {
     search,
     getById,
     update,
-    searchLinks,
     getFieldById,
     getHistory,
+    getLinks,
   };
 }
 

@@ -48,7 +48,9 @@ const colDefs: Record<
     id: "active",
     accessorKey: "active",
     header: "Active",
-    cell: (data) => <>{data.getValue() && <Check />}</>,
+    cell: (data) => {
+      data.getValue() && <Check />;
+    },
   },
 };
 
