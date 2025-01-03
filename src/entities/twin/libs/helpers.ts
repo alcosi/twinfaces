@@ -30,5 +30,13 @@ export const hydrateTwinFromMap = (
     twin.assignerUser = relatedObjects.userMap[twinDTO.assignerUserId] as User;
   }
 
+  if (twinDTO.headTwinId && relatedObjects.twinMap) {
+    twin.headTwin = relatedObjects.twinMap[twinDTO.headTwinId];
+  }
+
+  if (twinDTO.headTwinId && relatedObjects.twinMap) {
+    twin.headTwin = relatedObjects.twinMap[twinDTO.headTwinId];
+  }
+
   return twin;
 };
