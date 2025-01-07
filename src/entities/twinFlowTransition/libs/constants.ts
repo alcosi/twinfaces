@@ -28,3 +28,8 @@ export const TRIGGER_SCHEMA = z.object({
     .optional(),
   triggerParams: z.record(z.string(), z.any()).optional(),
 });
+
+export const VALIDATOR_RULES_SCHEMA = z.object({
+  order: z.number().min(0, "Order must be at least 0").default(0),
+  active: z.boolean().default(false),
+});

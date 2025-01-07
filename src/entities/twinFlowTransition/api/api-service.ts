@@ -47,6 +47,9 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
           showTransitionMode: "MANAGED",
           showTransition2StatusMode: "DETAILED",
           showTransition2PermissionMode: "DETAILED",
+          showTwinflowTransition2TwinflowTransitionValidatorRuleMode:
+            "DETAILED",
+          showTwinflowTransitionValidatorRule2TwinValidatorSetMode: "DETAILED",
         },
       },
     });
