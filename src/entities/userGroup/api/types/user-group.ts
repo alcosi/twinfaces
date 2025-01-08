@@ -10,13 +10,8 @@ export type UserGroup_DETAILED = RequireFields<
 
 export type UserGroupFilterKeys =
   | "idList"
-  | "idExcludeList"
   | "nameLikeList"
-  | "nameNotLikeList"
-  | "descriptionLikeList"
-  | "descriptionNotLikeList"
-  | "typeList"
-  | "typeExcludeList";
+  | "descriptionLikeList";
 
 export type UserGroupFilters = Partial<
   Pick<components["schemas"]["UserGroupSearchRqV1"], UserGroupFilterKeys>

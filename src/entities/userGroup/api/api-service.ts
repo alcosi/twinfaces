@@ -15,7 +15,8 @@ export function createUserGroupApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
-          showUserGroupMode: "SHORT",
+          showUserGroupMode: "DETAILED",
+          showUserGroup2BusinessAccountMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
