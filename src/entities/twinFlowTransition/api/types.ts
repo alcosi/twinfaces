@@ -44,5 +44,7 @@ export type TwinFlowTransitionValidator =
   components["schemas"]["TransitionValidatorRuleBaseV1"];
 export type TwinFlowTransitionValidatorCud =
   components["schemas"]["ValidatorCudV1"];
+export type TwinFlowTransitionValidatorCreate =
+  components["schemas"]["ValidatorCreateV1"];
 export type TwinFlowTransitionValidatorUpdate =
   components["schemas"]["ValidatorUpdateV1"];
