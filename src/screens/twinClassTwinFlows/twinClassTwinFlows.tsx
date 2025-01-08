@@ -6,13 +6,15 @@ import {
   useTwinFlowFilters,
   useTwinFlowSearchV1,
 } from "@/entities/twinFlow";
-import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
+import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
@@ -115,7 +117,7 @@ export function TwinClassTwinFlows() {
 
   // NOTE: https://alcosi.atlassian.net/browse/TWINFACES-190
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       ref={tableRef}
       columns={[
         columnsMap.id,

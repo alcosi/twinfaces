@@ -7,13 +7,12 @@ import {
 } from "@/entities/datalist";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
+import { DataTableHandle, FiltersState } from "@/widgets/crud-data-table";
 import { toast } from "sonner";
 
 import { PagedResponse } from "@/shared/api";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
@@ -89,7 +88,7 @@ const Page = () => {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       ref={tableRef}
       columns={[
         colDefs.id!,

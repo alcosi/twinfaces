@@ -13,9 +13,8 @@ import {
 import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
@@ -239,7 +238,7 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
     toast.success("Twinflow transition updated successfully!");
   }
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       columns={Object.values(colDefs)}
       fetcher={fetchTransitions}

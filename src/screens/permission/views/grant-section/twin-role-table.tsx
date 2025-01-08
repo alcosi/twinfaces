@@ -2,7 +2,7 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { TwinClassResourceLink } from "@/entities/twinClass";
@@ -96,7 +96,7 @@ export function TwinRoleTable() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       title="Twin roles"
       columns={[
         colDefs.id,

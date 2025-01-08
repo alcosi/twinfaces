@@ -13,18 +13,17 @@ import {
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { Badge } from "@/shared/ui";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinClassLinkFormFields } from "./form-fields";
-import { useRouter } from "next/navigation";
 
 const twinLinkSchema = z.object({
   srcTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
@@ -236,7 +235,7 @@ export function TwinClassLinks() {
 
   return (
     <>
-      <Experimental_CrudDataTable
+      <CrudDataTable
         className="mb-10"
         ref={tableRefForward}
         title="Forward"
@@ -272,7 +271,7 @@ export function TwinClassLinks() {
         )}
       />
 
-      <Experimental_CrudDataTable
+      <CrudDataTable
         ref={tableRefBackward}
         title="Backward"
         columns={[

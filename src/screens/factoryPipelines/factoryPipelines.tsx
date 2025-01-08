@@ -1,25 +1,25 @@
 "use client";
 
+import { Factory } from "@/entities/factory";
+import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
 import {
   FactoryPipeline,
   useFactoryPipelineFilters,
   useFactoryPipelineSearch,
 } from "@/entities/factoryPipeline";
-import { PaginationState } from "@tanstack/react-table";
-import { FiltersState, GuidWithCopy } from "@/shared/ui";
-import { toast } from "sonner";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
-import { ColumnDef } from "@tanstack/table-core";
-import { Factory } from "@/entities/factory";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { Check } from "lucide-react";
 import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
-import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { GuidWithCopy } from "@/shared/ui";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+import { PaginationState } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Omit<
@@ -161,7 +161,7 @@ export function FactoryPipelines() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       columns={Object.values(colDefs) as ColumnDef<FactoryPipeline>[]}
       fetcher={fetchFactoryPipelines}
       getRowId={(row) => row.id!}

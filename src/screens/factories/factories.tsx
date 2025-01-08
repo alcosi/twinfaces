@@ -9,8 +9,8 @@ import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
-import { FiltersState, GuidWithCopy } from "@/shared/ui";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { GuidWithCopy } from "@/shared/ui";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -112,7 +112,7 @@ export function Factories() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       columns={Object.values(colDefs) as ColumnDef<Factory>[]}
       fetcher={fetchFactories}

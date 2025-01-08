@@ -7,21 +7,20 @@ import {
   TwinStatus,
   TwinStatusCreateRq,
 } from "@/entities/twinStatus";
+import { TwinClassStatusFormFields } from "@/screens/twinClassStatus";
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { isFalsy } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
-import { toast } from "sonner";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { TwinClassStatusFormFields } from "@/screens/twinClassStatus";
+import { toast } from "sonner";
 
 function buildColumnDefs(twinClassId: string) {
   const colDefs: ColumnDef<TwinStatus>[] = [
@@ -197,7 +196,7 @@ export function TwinClassStatuses() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       ref={tableRef}
       columns={buildColumnDefs(twinClass.id!)}
       getRowId={(row) => row.key!}

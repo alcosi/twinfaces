@@ -14,8 +14,12 @@ import {
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { pluckProperty } from "@/shared/libs";
-import { DataTableHandle, FiltersState, GuidWithCopy } from "@/shared/ui";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { GuidWithCopy } from "@/shared/ui";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
@@ -257,7 +261,7 @@ export function TwinClasses() {
 
   return (
     <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
-      <Experimental_CrudDataTable
+      <CrudDataTable
         ref={tableRef}
         fetcher={fetchTwinClasses}
         onRowClick={(row) => router.push(`/workspace/twinclass/${row.id}`)}

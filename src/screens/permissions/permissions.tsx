@@ -11,10 +11,10 @@ import {
 import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { FiltersState } from "@/widgets/crud-data-table";
+import { DataTableHandle } from "@/widgets/crud-data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useEffect, useRef } from "react";
@@ -168,7 +168,7 @@ export function Permissions() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[

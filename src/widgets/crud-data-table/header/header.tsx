@@ -1,17 +1,13 @@
 import { AutoFormValueInfo } from "@/components/auto-field";
+import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
-import { CustomizableColumnsPopover } from "@/shared/ui/data-table/crud-data-table-columns-popover";
-import {
-  DataTableHandle,
-  DataTableProps,
-  DataTableRow,
-} from "@/shared/ui/data-table/data-table";
 import { Input } from "@/shared/ui/input";
 import { Separator } from "@/shared/ui/separator";
-import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { Plus, RefreshCw, Search } from "lucide-react";
 import React, { ForwardedRef, useCallback, useEffect, useReducer } from "react";
+import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";
 import { getColumnKey, safeRefresh } from "../helpers";
+import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersPopover } from "./filters-popover";
 import { GroupByButton } from "./group-by-button";
 
@@ -153,7 +149,7 @@ function CrudDataTableHeaderComponent<
         )}
 
         {isPopulatedArray(defaultVisibleColumns) && (
-          <CustomizableColumnsPopover
+          <ColumnManagerPopover
             columns={visibleOrderedColumns}
             sortKeys={viewSettings.orderKeys}
             onVisibleChange={(visibleKeys) =>

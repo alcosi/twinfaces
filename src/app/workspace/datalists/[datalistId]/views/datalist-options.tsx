@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { toast } from "sonner";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { DataListOption } from "@/entities/datalist";
 import { DatalistContext } from "../datalist-context";
-import { DataTableHandle, GuidWithCopy } from "@/shared/ui";
+import { GuidWithCopy } from "@/shared/ui";
 
 export const DatalistOptions = () => {
   const api = useContext(ApiContext);
@@ -97,7 +97,7 @@ export const DatalistOptions = () => {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       ref={tableRef}
       columns={columns}
       getRowId={(row) => row.id!}

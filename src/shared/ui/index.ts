@@ -13,7 +13,6 @@ export * from "./combobox/combobox";
 export * from "./combobox/selected-options";
 export * from "./command";
 export * from "./copy-button";
-export * from "./data-table";
 export * from "./dialog";
 export * from "./dropdown-menu";
 export * from "./form";

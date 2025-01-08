@@ -1,7 +1,6 @@
 import { TwinField, useFetchFields } from "@/entities/twinField";
 import { PagedResponse } from "@/shared/api";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
@@ -36,7 +35,7 @@ export function TwinFields() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       ref={tableRef}
       title="Fields"
       columns={columns}

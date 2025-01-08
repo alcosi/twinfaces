@@ -1,7 +1,7 @@
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
@@ -84,7 +84,7 @@ export function SpaceRoleTable() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       title="Space role"
       columns={[
         colDefs.id,

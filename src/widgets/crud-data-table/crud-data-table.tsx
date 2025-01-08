@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  DataTable,
-  DataTableHandle,
-  DataTableProps,
-  DataTableRow,
-} from "@/shared/ui/data-table/data-table";
+import { PagedResponse } from "@/shared/api";
 import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { PaginationState } from "@tanstack/table-core";
 import {
@@ -18,6 +13,12 @@ import {
   useRef,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
+import {
+  DataTable,
+  DataTableHandle,
+  DataTableProps,
+  DataTableRow,
+} from "./data-table";
 import { CrudDataTableDialog, CrudDataTableDialogRef } from "./dialog";
 import {
   CrudDataTableHeader,
@@ -25,7 +26,6 @@ import {
   FilterState,
 } from "./header";
 import { getColumnKey, groupDataByKey } from "./helpers";
-import { PagedResponse } from "@/shared/api";
 
 type CrudDataTableProps<
   TData extends DataTableRow<TData>,
@@ -46,9 +46,7 @@ type CrudDataTableProps<
     renderFormFields?: () => ReactNode;
   };
 
-export const Experimental_CrudDataTable = fixedForwardRef(
-  CrudDataTableInternal
-);
+export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
 
 function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   {

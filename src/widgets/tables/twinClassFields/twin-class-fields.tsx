@@ -9,8 +9,6 @@ import {
 } from "@/entities/twinClassField";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { REGEX_PATTERNS, toArray, toArrayOfString } from "@/shared/libs";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -20,7 +18,11 @@ import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Experimental_CrudDataTable } from "../../crud-data-table";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "../../crud-data-table";
 import { TwinClassFieldFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -217,7 +219,7 @@ export function TwinClassFieldsTable({
   };
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       title="Fields"
       ref={tableRef}
       columns={[

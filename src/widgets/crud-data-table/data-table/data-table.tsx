@@ -1,13 +1,7 @@
 "use client";
 
-import { PagedResponse, PaginationV1 } from "@/shared/api";
-import {
-  cn,
-  fixedForwardRef,
-  Identifiable,
-  isPopulatedArray,
-} from "@/shared/libs";
-import { DataTablePagination } from "@/shared/ui/data-table/data-table-pagination";
+import { PaginationV1 } from "@/shared/api";
+import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import {
   Table,
@@ -18,7 +12,6 @@ import {
   TableRow,
 } from "@/shared/ui/table";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -38,28 +31,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
-
-export type DataTableHandle = {
-  refresh: () => void;
-  resetPage: () => void;
-  // getFilterValues: () => PaginatedTableFilterValues | undefined;
-  // setFilterValues: (values?: PaginatedTableFilterValues) => any;
-};
-
-export interface DataTableRow<TData> extends Object, Identifiable {
-  subRows?: TData[];
-  [key: string]: any; // Allow indexing by string
-}
-
-export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  getRowId: (row: TData, index: number) => string;
-  fetcher: (pagination: PaginationState) => Promise<PagedResponse<TData>>;
-  disablePagination?: boolean;
-  pageSizes?: number[];
-  onFetchError?: (e: Error) => any;
-  onRowClick?: (row: TData) => any;
-}
+import { DataTablePagination } from "./data-table-pagination";
+import { DataTableHandle, DataTableProps, DataTableRow } from "./types";
 
 export const DataTable = fixedForwardRef(DataTableInternal);
 
