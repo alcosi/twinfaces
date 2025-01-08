@@ -2,11 +2,12 @@ import {
   TwinFlowTransition,
   TwinFlowTransitionValidator,
   TwinFlowTransitionValidatorCreate,
+  useCreateTwinFlowTransition,
   useTwinFlowTransitionValidatorRulesSearch,
   VALIDATOR_RULES_SCHEMA,
   ValidatorRulesFormValues,
 } from "@/entities/twinFlowTransition";
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -14,8 +15,6 @@ import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { ApiContext } from "@/shared/api";
 import { TransitionValidatorFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -58,9 +57,9 @@ export function TwinflowTransitionValidatorRules({
 }: {
   transition: TwinFlowTransition;
 }) {
-  const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { fetchValidatorRules } = useTwinFlowTransitionValidatorRulesSearch();
+  const { createTwinFlowTransition } = useCreateTwinFlowTransition();
 
   async function fetchData() {
     const response = await fetchValidatorRules({
@@ -88,20 +87,12 @@ export function TwinflowTransitionValidatorRules({
       active: formValues.active,
     };
 
-    try {
-      const result = await api.twinFlowTransition.update({
-        transitionId: transition.id,
-        body: {
-          validatorRules: { create: [body] },
-        },
-      });
-      if (result.error) {
-        throw new Error("Failed to create validators");
-      }
-    } catch (e) {
-      toast.error("Failed to create validators");
-      throw e;
-    }
+    await createTwinFlowTransition({
+      transitionId: transition.id,
+      body: {
+        validatorRules: { create: [body] },
+      },
+    });
   }
 
   return (

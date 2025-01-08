@@ -5,7 +5,7 @@ import {
   AutoFormValueType,
 } from "../../../../components/auto-field";
 import { FeaturerFilterKeys, FeaturerFilters } from "../../api";
-import { FeaturerTypes } from "../constants";
+import { FeaturerTypes } from "@/entities/featurer";
 import { useFeaturerSelectAdapter } from "./useSelectAdapter";
 
 export function useFeaturerFilters(): FilterFeature<
