@@ -1,7 +1,7 @@
 "use client";
 
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { UserGroups } from "@/screens/userGroups";
 
 export default function UserGroupsPage() {
-  return <UnderConstruction />;
+  return <UserGroups />;
 }
