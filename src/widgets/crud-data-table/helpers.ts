@@ -1,8 +1,5 @@
-import {
-  DataTableHandle,
-  DataTableRow,
-} from "@/shared/ui/data-table/data-table";
 import { ForwardedRef } from "react";
+import { DataTableHandle, DataTableRow } from "./data-table";
 
 export function getColumnKey(column: any): string {
   // Type guard to check if the column has an `accessorKey` property

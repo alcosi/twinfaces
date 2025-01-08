@@ -14,15 +14,17 @@ import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { formatToTwinfaceDate } from "@/shared/libs";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
 
 const colDefs: Record<
   keyof Pick<
@@ -189,7 +191,7 @@ export default function TwinsPage() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       ref={tableRef}
       columns={[
         colDefs.id,

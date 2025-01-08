@@ -8,10 +8,12 @@ import {
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
@@ -76,7 +78,7 @@ export function Users() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[colDefs.id, colDefs.userId, colDefs.createdAt]}

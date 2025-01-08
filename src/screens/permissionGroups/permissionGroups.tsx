@@ -13,9 +13,9 @@ import {
 } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
-import { FiltersState } from "@/shared/ui/data-table/crud-data-table";
+import { FiltersState } from "@/widgets/crud-data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -99,7 +99,7 @@ export function PermissionGroups() {
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       columns={[
         colDefs.id!,

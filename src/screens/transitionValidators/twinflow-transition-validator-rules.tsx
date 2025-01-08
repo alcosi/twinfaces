@@ -8,10 +8,10 @@ import {
   ValidatorRulesFormValues,
 } from "@/entities/twinFlowTransition";
 import { useRef } from "react";
-import { DataTableHandle } from "@/shared/ui/data-table/data-table";
+import { DataTableHandle } from "@/widgets/crud-data-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -96,7 +96,7 @@ export function TwinflowTransitionValidatorRules({
   }
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       ref={tableRef}
       title="Validator rules"
       columns={[

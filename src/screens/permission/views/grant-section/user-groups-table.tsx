@@ -10,7 +10,7 @@ import {
 import { PermissionContext } from "@/features/permission";
 import { PagedResponse } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-import { Experimental_CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 import { toast } from "sonner";
@@ -87,7 +87,7 @@ export function UserGroupsTable() {
   if (isUndefined(permission)) return null;
 
   return (
-    <Experimental_CrudDataTable
+    <CrudDataTable
       title="User groups"
       columns={[
         colDefs.id,

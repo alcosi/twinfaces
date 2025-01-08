@@ -1,7 +1,7 @@
-import { Button } from "@/shared/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
 import { cn } from "@/shared/libs";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -12,26 +12,26 @@ import { CSS } from "@dnd-kit/utilities";
 import { EyeIcon, GripVertical } from "lucide-react";
 import { useState } from "react";
 
-export interface CustomizableColumn {
+interface Column {
   id: string;
   name: string;
   visible: boolean;
 }
 
-export interface CustomizableColumnsPopoverProps {
-  columns: CustomizableColumn[];
+interface Props {
+  columns: Column[];
   sortKeys: string[];
   onVisibleChange: (columns: string[]) => void;
   onSortChange: (columns: string[]) => void;
   onReset?: () => void;
 }
 
-export function CustomizableColumnsPopover({
+export function ColumnManagerPopover({
   columns,
   onVisibleChange,
   onSortChange,
   onReset,
-}: CustomizableColumnsPopoverProps) {
+}: Props) {
   const [open, setOpen] = useState(false);
 
   function onColumnSwitch(columnKey: string) {
@@ -115,7 +115,7 @@ function DraggableCheckbox({
   column,
   onChange,
 }: {
-  column: CustomizableColumn;
+  column: Column;
   onChange: () => any;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
