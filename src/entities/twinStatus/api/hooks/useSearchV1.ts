@@ -24,7 +24,7 @@ export const useTwinStatusSearchV1 = () => {
         throw new Error("Failed to fetch statuses due to API error");
       }
 
-      return { data: data.statuses ?? [], pagination: {} };
+      return { data: data.statuses ?? [], pagination: data.pagination ?? {} };
     },
     [api]
   );

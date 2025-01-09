@@ -1,5 +1,5 @@
-import { TwinClassStatuses } from "@/widgets/tables";
+import { TwinClassStatusesTable } from "@/widgets/tables";
 
 export function TwinStatusesScreen() {
-  return <TwinClassStatuses />;
+  return <TwinClassStatusesTable />;
 }
