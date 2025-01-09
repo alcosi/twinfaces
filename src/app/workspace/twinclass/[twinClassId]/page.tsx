@@ -5,9 +5,9 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinClassLinks } from "@/screens/twinClassLinks";
 import { TwinClassTwinFlows } from "@/screens/twinClassTwinFlows";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { TwinClassFieldsTable } from "@/widgets/tables";
+import { TwinClassFieldsTable, TwinClassStatusesTable } from "@/widgets/tables";
 import { useContext, useEffect } from "react";
-import { TwinClassGeneral, TwinClassStatuses } from "./views";
+import { TwinClassGeneral } from "./views";
 
 export default function TwinClassPage() {
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -27,7 +27,7 @@ export default function TwinClassPage() {
     {
       key: "statuses",
       label: "Statuses",
-      content: <TwinClassStatuses />,
+      content: <TwinClassStatusesTable twinClassId={twinClassId} />,
     },
     {
       key: "twinflows",

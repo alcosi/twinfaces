@@ -1,26 +1,25 @@
 import { ImageWithFallback } from "@/components/image-with-fallback";
-import { TwinClassContext, useFetchTwinClassById } from "@/entities/twinClass";
 import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
   TwinClassStatusResourceLink,
   TwinStatus,
   TwinStatusCreateRq,
+  useTwinStatusSearchV1,
 } from "@/entities/twinStatus";
-import { TwinClassStatusFormFields } from "@/screens/twinClassStatus";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { isFalsy } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ColumnDef } from "@tanstack/table-core";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { CrudDataTable, DataTableHandle } from "../../crud-data-table";
+import { TwinClassStatusFormFields } from "./form-fields";
 
 function buildColumnDefs(twinClassId: string) {
   const colDefs: ColumnDef<TwinStatus>[] = [
@@ -100,12 +99,15 @@ function buildColumnDefs(twinClassId: string) {
   return colDefs;
 }
 
-export function TwinClassStatuses() {
+export function TwinClassStatusesTable({
+  twinClassId,
+}: {
+  twinClassId?: string;
+}) {
   const api = useContext(ApiContext);
   const router = useRouter();
-  const { twinClass, fetchClassData } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const { fetchTwinClassById } = useFetchTwinClassById();
+  const { searchTwinStatuses } = useTwinStatusSearchV1();
 
   const form = useForm<TwinClassStatusFormValues>({
     resolver: zodResolver(TWIN_CLASS_STATUS_SCHEMA),
@@ -119,46 +121,20 @@ export function TwinClassStatuses() {
     },
   });
 
-  async function fetchStatuses(): Promise<PagedResponse<TwinStatus>> {
-    if (!twinClass?.id) {
-      toast.error("Twin class ID is missing");
-      return { data: [], pagination: {} };
-    }
-
+  async function fetchStatuses(
+    pagination: PaginationState
+  ): Promise<PagedResponse<TwinStatus>> {
     try {
-      const response = await fetchTwinClassById({
-        id: twinClass.id,
-        query: {
-          showTwinClassMode: "SHORT",
-          showTwin2StatusMode: "DETAILED",
-          showTwinClass2StatusMode: "DETAILED",
+      return await searchTwinStatuses({
+        pagination,
+        filters: {
+          twinClassIdList: twinClassId ? [twinClassId] : [],
         },
       });
-
-      const data = response.data;
-      if (!data || data.status != 0) {
-        console.error("failed to fetch twin class fields", data);
-        let message = "Failed to load twin class fields";
-        if (data?.msg) message += `: ${data.msg}`;
-        toast.error(message);
-        return { data: [], pagination: {} };
-      }
-
-      const values = Object.values(data.twinClass?.statusMap ?? {});
-      return {
-        data: values,
-        pagination: {},
-      };
     } catch (e) {
-      console.error("exception while fetching twin class fields", e);
-      toast.error("Failed to fetch twin class fields");
+      toast.error("Failed to fetch statuses");
       return { data: [], pagination: {} };
     }
-  }
-
-  if (isFalsy(twinClass)) {
-    console.error("TwinClassFields: no twin class");
-    return;
   }
 
   async function handleCreate(formValues: TwinClassStatusFormValues) {
@@ -177,13 +153,13 @@ export function TwinClassStatuses() {
       fontColor: formValues.fontColor,
     };
 
-    if (!twinClass?.id) {
+    if (!twinClassId) {
       toast.error("Twin class ID is missing");
       return;
     }
 
     const { error } = await api.twinStatus.create({
-      twinClassId: twinClass.id,
+      twinClassId,
       data: data,
     });
 
@@ -192,26 +168,24 @@ export function TwinClassStatuses() {
     }
 
     toast.success("Link created successfully!");
-    fetchClassData();
+    fetchStatuses({ pageIndex: 0, pageSize: 10 });
   }
 
   return (
     <CrudDataTable
       ref={tableRef}
-      columns={buildColumnDefs(twinClass.id!)}
+      columns={buildColumnDefs(twinClassId!)}
       getRowId={(row) => row.key!}
       fetcher={fetchStatuses}
       onRowClick={(row) =>
-        router.push(
-          `/workspace/twinclass/${twinClass!.id!}/twinStatus/${row.id}`
-        )
+        router.push(`/workspace/twinclass/${twinClassId!}/twinStatus/${row.id}`)
       }
       dialogForm={form}
       onCreateSubmit={handleCreate}
       renderFormFields={() => (
         <TwinClassStatusFormFields control={form.control} />
       )}
-      disablePagination={true}
+      pageSizes={[10, 20, 50]}
     />
   );
 }

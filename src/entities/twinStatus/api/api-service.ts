@@ -1,4 +1,5 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { PaginationState } from "@tanstack/react-table";
 import {
   TwinStatusCreateRq,
   TwinStatusFilters,
@@ -53,18 +54,24 @@ export function createTwinStatusApi(settings: ApiSettings) {
     });
   }
 
-  function search({ filters }: { filters: TwinStatusFilters }) {
+  function search({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters?: TwinStatusFilters;
+  }) {
     return settings.client.POST("/private/twin_status/search/v1", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
           showStatusMode: "DETAILED",
-          limit: 10,
-          offset: 0,
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
           sortAsc: true,
         },
       },
-      body: filters,
+      body: { ...filters },
     });
   }
 
