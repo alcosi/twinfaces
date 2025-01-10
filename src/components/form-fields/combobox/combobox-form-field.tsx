@@ -1,3 +1,15 @@
+import {
+  FormFieldProps,
+  FormItemDescription,
+  FormItemLabel,
+} from "@/components/form-fields/form-fields-common";
+import {
+  cn,
+  isEmptyArray,
+  isEmptyString,
+  isFalsy,
+  isPopulatedString,
+} from "@/shared/libs";
 import { Combobox, ComboboxHandle, ComboboxProps } from "@/shared/ui/combobox";
 import {
   FormControl,
@@ -5,12 +17,6 @@ import {
   FormItem,
   FormMessage,
 } from "@/shared/ui/form";
-import {
-  FormFieldProps,
-  FormItemDescription,
-  FormItemLabel,
-} from "@/components/form-fields/form-fields-common";
-import { cn } from "@/shared/libs";
 import React, { useEffect, useRef } from "react";
 import { FieldValues } from "react-hook-form";
 
@@ -59,7 +65,7 @@ export function ComboboxFormItem<TFieldModel>({
   inForm,
   ...props
 }: ComboboxProps<TFieldModel> & {
-  fieldValue?: TFieldModel[];
+  fieldValue?: TFieldModel[] | string;
   label?: React.ReactNode;
   description?: React.ReactNode;
   required?: boolean;
@@ -71,13 +77,26 @@ export function ComboboxFormItem<TFieldModel>({
     applySelectedValues(fieldValue);
   }, [fieldValue]);
 
-  function applySelectedValues(values: TFieldModel[]) {
-    if (!values?.length) return;
+  async function applySelectedValues(values: TFieldModel[] | string) {
+    if (isEmptyString(values)) {
+      comboboxRef.current?.setSelected([]);
+      return;
+    }
 
-    if (props.multi) {
-      comboboxRef.current?.setSelected(values);
-    } else if (values.length > 0) {
-      comboboxRef.current?.setSelected(values.slice(-1));
+    const selected = comboboxRef.current?.getSelected();
+
+    if (isEmptyArray(selected)) {
+      if (isFalsy(props.multi)) {
+        if (isPopulatedString(values)) {
+          const result = await props.getById(values);
+          comboboxRef.current?.setSelected(result ? [result] : undefined);
+          return;
+        }
+
+        comboboxRef.current?.setSelected(values.slice(-1));
+      } else {
+        comboboxRef.current?.setSelected(values);
+      }
     }
   }
 

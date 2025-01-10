@@ -5,7 +5,7 @@ export type DomainUser = components["schemas"]["DomainUserV2"];
 export type DomainUser_SHORT = RequireFields<DomainUser, "id" | "userId">;
 export type DomainUser_DETAILED = RequireFields<
   DomainUser_SHORT,
-  "currentLocale" | "createdAt"
+  "currentLocale" | "createdAt" | "user"
 >;
 
 export type DomainUserFilterKeys =
