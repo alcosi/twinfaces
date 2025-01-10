@@ -1,41 +1,44 @@
-import { ApiContext } from "@/shared/api";
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import {
+  isPopulatedString,
+  SelectAdapter,
+  wrapWithPercent,
+} from "@/shared/libs";
 import { Avatar } from "@/shared/ui";
 import { UserIcon } from "lucide-react";
-import { useContext } from "react";
-import { User_DETAILED } from "../../api";
+import { DomainUser_DETAILED, useDomainUserSearchV1 } from "../../api";
 
-export function useUserSelectAdapter(): SelectAdapter<User_DETAILED> {
-  const api = useContext(ApiContext);
+export function useUserSelectAdapter(): SelectAdapter<DomainUser_DETAILED> {
+  const { searchUsers } = useDomainUserSearchV1();
 
   async function getById(id: string) {
     // TODO: Emulates user fetch;
     // replace with the correct endpoint when available.
-    return { id } as User_DETAILED;
+    const { data } = await searchUsers({
+      pagination: { pageIndex: 0, pageSize: 1 },
+      filters: {
+        userIdList: isPopulatedString(id) ? [id] : undefined,
+      },
+    });
+
+    return data[0];
   }
 
   async function getItems(search: string) {
-    try {
-      // TODO: Emulates user search;
-      // replace with the correct endpoint when available.
-      const { data, error } = await api.twin.search({
-        search,
-        pagination: { pageIndex: 0, pageSize: 10 },
-      });
+    const { data } = await searchUsers({
+      pagination: { pageIndex: 0, pageSize: 10 },
+      filters: {
+        nameLikeList: isPopulatedString(search)
+          ? [wrapWithPercent(search)]
+          : undefined,
+      },
+    });
 
-      if (error) {
-        throw new Error("Failed to fetch twins due to API error");
-      }
-
-      return Object.values(
-        data.relatedObjects?.userMap ?? []
-      ) as User_DETAILED[];
-    } catch (error) {
-      throw new Error("An error occurred while fetching twins");
-    }
+    return data;
   }
 
-  function renderItem({ fullName, avatar }: User_DETAILED) {
+  function renderItem({ user }: DomainUser_DETAILED) {
+    const { fullName, avatar } = user;
+
     return (
       <div className="flex gap-2">
         <div className="flex grow">

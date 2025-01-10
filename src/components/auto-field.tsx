@@ -138,12 +138,7 @@ export function AutoField({
         return name && control ? (
           <ComboboxFormField name={name} control={control} {...info} />
         ) : (
-          <ComboboxFormItem
-            fieldValue={value}
-            onSelect={onChange}
-            description={info.description}
-            {...info}
-          />
+          <ComboboxFormItem fieldValue={value} onSelect={onChange} {...info} />
         );
 
       case AutoFormValueType.featurer:
