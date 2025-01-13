@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -24,6 +24,7 @@ import {
   FiltersState,
 } from "../../crud-data-table";
 import { TwinClassFieldFormFields } from "./form-fields";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 
 const colDefs: Record<
   keyof Pick<
@@ -126,6 +127,11 @@ export function TwinClassFieldsTable({
   const api = useContext(ApiContext);
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters();
   const { searchTwinClassFields } = useTwinClassFieldSearchV1();
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  useEffect(() => {
+    setBreadcrumbs([{ label: "Fields", href: "/workspace/fields" }]);
+  }, [setBreadcrumbs]);
 
   const twinClassFieldchema = z.object({
     key: z
