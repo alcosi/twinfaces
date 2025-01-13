@@ -4,7 +4,7 @@ import { TextFormField } from "@/components/form-fields/text-form-field";
 import { useAuthUser } from "@/features/auth";
 import { Button, Form } from "@/shared/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Smile } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -38,7 +38,12 @@ export function Home() {
   return (
     <main className="flex flex-col justify-center items-center h-screen w-screen">
       <div className="flex flex-col my-5 items-center -mt-32 min-w-56">
-        <Smile className="h-14 w-14 text-primary" />
+        <Image
+          src="/favicon.png"
+          width={56}
+          height={56}
+          alt="Picture of the author"
+        />
         <h1 className="text-lg font-bold my-3">Twin Faces</h1>
 
         <Form {...form}>
