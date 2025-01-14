@@ -6,20 +6,25 @@ import {
 import { FeaturerTypes } from "@/entities/featurer";
 import { Control, FieldValues, Path } from "react-hook-form";
 import { FeaturerFormField } from "../../form-fields";
+import { TwinClassSelectField } from "@/features/twinClass";
 
 export function TwinClassFieldFormFields<T extends FieldValues>({
   control,
+  twinClassId,
 }: {
   control: Control<T>;
+  twinClassId?: string;
 }) {
   return (
     <>
-      <TextFormField
+      <TwinClassSelectField
         control={control}
-        name={"key" as Path<T>}
-        label="Key"
-        autoFocus={true}
+        name={"TwinClassId" as Path<T>}
+        label="Class"
+        disabled={!!twinClassId}
       />
+
+      <TextFormField control={control} name={"key" as Path<T>} label="Key" />
 
       <TextFormField control={control} name={"name" as Path<T>} label="Name" />
 
