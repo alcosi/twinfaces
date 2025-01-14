@@ -1,14 +1,18 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { TwinResourceLink, TwinUpdateRq } from "@/entities/twin";
+import { Twin_DETAILED, TwinResourceLink, TwinUpdateRq } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
+import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { useUserSelectAdapter } from "@/entities/user/libs";
-import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -19,8 +23,7 @@ import { TwinContext } from "../twin-context";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);
-  const { twin, fetchTwinData } = useContext(TwinContext);
-
+  const { twin, fetchTwinData, relatedObjects } = useContext(TwinContext);
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -104,7 +107,7 @@ export function TwinGeneral() {
   }
 
   return (
-    <>
+    <InPlaceEditContextProvider>
       <Table className="mt-8">
         <TableBody>
           <TableRow>
@@ -124,9 +127,13 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>Class</TableCell>
             <TableCell>
-              {twin.twinClass && (
+              {twin.twinClassId && relatedObjects?.twinClassMap && (
                 <TwinClassResourceLink
-                  data={twin.twinClass as TwinClass_DETAILED}
+                  data={
+                    relatedObjects?.twinClassMap[
+                      twin.twinClassId
+                    ] as TwinClass_DETAILED
+                  }
                   withTooltip
                 />
               )}
@@ -136,9 +143,9 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>Status</TableCell>
             <TableCell>
-              {twin.statusId && twin.status && (
+              {twin.statusId && relatedObjects?.statusMap && (
                 <TwinClassStatusResourceLink
-                  data={twin.status}
+                  data={relatedObjects?.statusMap[twin.statusId] as TwinStatus}
                   twinClassId={twin.twinClassId!}
                   withTooltip
                 />
@@ -163,7 +170,11 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>Author</TableCell>
             <TableCell>
-              <UserResourceLink data={twin.authorUser as User} />
+              {twin.authorUserId && relatedObjects?.userMap && (
+                <UserResourceLink
+                  data={relatedObjects?.userMap[twin.authorUserId] as User}
+                />
+              )}
             </TableCell>
           </TableRow>
 
@@ -175,8 +186,10 @@ export function TwinGeneral() {
           >
             <TableCell>Assignee</TableCell>
             <TableCell>
-              {twin.assignerUserId && twin.assignerUser && (
-                <UserResourceLink data={twin.assignerUser} />
+              {twin.assignerUserId && relatedObjects?.userMap && (
+                <UserResourceLink
+                  data={relatedObjects?.userMap[twin.assignerUserId] as User}
+                />
               )}
             </TableCell>
           </TableRow>
@@ -184,9 +197,14 @@ export function TwinGeneral() {
           <TableRow className={"cursor-pointer"}>
             <TableCell>Head</TableCell>
             <TableCell>
-              {twin.headTwinId && twin.headTwin && (
+              {twin.headTwinId && relatedObjects?.twinMap && (
                 <div className="max-w-48 inline-flex">
-                  <TwinResourceLink data={twin.headTwin} withTooltip />
+                  <TwinResourceLink
+                    data={
+                      relatedObjects?.twinMap[twin.headTwinId] as Twin_DETAILED
+                    }
+                    withTooltip
+                  />
                 </div>
               )}
             </TableCell>
@@ -253,6 +271,6 @@ export function TwinGeneral() {
         onOpenChange={setEditFieldDialogOpen}
         settings={currentAutoEditDialogSettings}
       />
-    </>
+    </InPlaceEditContextProvider>
   );
 }

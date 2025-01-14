@@ -1,5 +1,5 @@
 import { Twin } from "@/entities/twin";
-import { ApiContext } from "@/shared/api";
+import { ApiContext, RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -9,6 +9,7 @@ interface TwinContextProps {
   twinId: string;
   twin: Twin | undefined;
   fetchTwinData: () => void;
+  relatedObjects: RelatedObjects | undefined;
 }
 
 export const TwinContext = createContext<TwinContextProps>(
@@ -25,6 +26,9 @@ export function TwinContextProvider({
   const api = useContext(ApiContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [twin, setTwin] = useState<Twin | undefined>(undefined);
+  const [relatedObjects, setRelatedObjects] = useState<
+    RelatedObjects | undefined
+  >(undefined);
 
   useEffect(() => {
     fetchTwinData();
@@ -39,6 +43,7 @@ export function TwinContextProvider({
       .getById({
         id: twinId,
         query: {
+          lazyRelation: false,
           showTwinMode: "DETAILED",
           showTwinClassMode: "DETAILED",
           showTwin2TwinClassMode: "DETAILED",
@@ -58,6 +63,7 @@ export function TwinContextProvider({
           return;
         }
         setTwin(data.twin);
+        setRelatedObjects(data?.relatedObjects);
       })
       .catch((e) => {
         console.error("exception while fetching twin", e);
@@ -74,6 +80,7 @@ export function TwinContextProvider({
         twinId,
         twin,
         fetchTwinData,
+        relatedObjects,
       }}
     >
       {loading && <LoadingOverlay />}
