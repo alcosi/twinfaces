@@ -9,9 +9,9 @@ import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { useUserSelectAdapter } from "@/entities/user/libs";
 import {
-  InPlaceEdit,
-  InPlaceEditContextProvider,
-  InPlaceEditProps,
+    InPlaceEdit,
+    InPlaceEditContextProvider,
+    InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
@@ -20,6 +20,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
 import { TwinContext } from "../twin-context";
+import { DatalistOptionResourceLink } from "@/entities/option";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);
@@ -166,7 +167,7 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>Author</TableCell>
             <TableCell>
-              {twin?.authorUser && <UserResourceLink data={twin.authorUser} />}
+              {twin.authorUser && <UserResourceLink data={twin.authorUser} />}
             </TableCell>
           </TableRow>
 
@@ -178,7 +179,7 @@ export function TwinGeneral() {
           >
             <TableCell>Assignee</TableCell>
             <TableCell>
-              {twin?.assignerUser && (
+              {twin.assignerUser && (
                 <UserResourceLink data={twin.assignerUser} />
               )}
             </TableCell>
@@ -187,7 +188,7 @@ export function TwinGeneral() {
           <TableRow className={"cursor-pointer"}>
             <TableCell>Head</TableCell>
             <TableCell>
-              {twin?.headTwin && (
+              {twin.headTwin && (
                 <div className="max-w-48 inline-flex">
                   <TwinResourceLink data={twin.headTwin} withTooltip />
                 </div>
@@ -197,15 +198,35 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Markers</TableCell>
-            <TableCell className="text-destructive">
-              Not Implemented Yet
+            <TableCell>
+              {twin.markerIdList && twin.markers && (
+                <div className="max-w-48 inline-flex">
+                  <DatalistOptionResourceLink
+                    data={{
+                      ...twin.markers,
+                      dataListId: twin.twinClass?.markersDataListId,
+                    }}
+                    withTooltip
+                  />
+                </div>
+              )}
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Tags</TableCell>
-            <TableCell className="text-destructive">
-              Not Implemented Yet
+            <TableCell>
+              {twin.tagIdList && twin.tags && (
+                <div className="max-w-48 inline-flex">
+                  <DatalistOptionResourceLink
+                    data={{
+                      ...twin.tags,
+                      dataListId: twin.twinClass?.tagsDataListId,
+                    }}
+                    withTooltip
+                  />
+                </div>
+              )}
             </TableCell>
           </TableRow>
 

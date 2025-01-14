@@ -21,12 +21,12 @@ export function useUserGroupsFilters(): FilterFeature<
         placeholder: "Enter UUID",
       },
 
-      nameLikeList: {
+      nameI18NLikeList: {
         type: AutoFormValueType.string,
         label: "Name",
       },
 
-      descriptionLikeList: {
+      descriptionI18NLikeList: {
         type: AutoFormValueType.string,
         label: "Description",
       },
@@ -38,11 +38,12 @@ export function useUserGroupsFilters(): FilterFeature<
   ): UserGroupFilters {
     const result: UserGroupFilters = {
       idList: toArrayOfString(filters.idList),
-      nameLikeList: toArrayOfString(toArray(filters.nameLikeList), "name").map(
-        wrapWithPercent
-      ),
-      descriptionLikeList: toArrayOfString(
-        toArray(filters.descriptionLikeList),
+      nameI18NLikeList: toArrayOfString(
+        toArray(filters.nameI18NLikeList),
+        "name"
+      ).map(wrapWithPercent),
+      descriptionI18NLikeList: toArrayOfString(
+        toArray(filters.descriptionI18NLikeList),
         "description"
       ).map(wrapWithPercent),
     };
