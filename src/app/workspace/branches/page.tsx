@@ -1,4 +1,4 @@
-import { FactoryBranchesScreen } from "@/screens/factories/factoryBranches";
+import { FactoryBranchesScreen } from "@/screens/factoryBranches/factoryBranches";
 
 export default function BranchesPage() {
   return <FactoryBranchesScreen />;
