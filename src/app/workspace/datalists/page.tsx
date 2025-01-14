@@ -89,6 +89,7 @@ const Page = () => {
 
   return (
     <CrudDataTable
+      title="Datalists"
       ref={tableRef}
       columns={[
         colDefs.id!,
