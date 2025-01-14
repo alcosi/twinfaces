@@ -14,6 +14,7 @@ export function createDatalistOptionApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
+          lazyRelation: false,
           showDataListOptionMode: "DETAILED",
           showDataListOption2DataListMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,

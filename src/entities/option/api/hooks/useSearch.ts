@@ -1,7 +1,11 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { useCallback, useContext } from "react";
 import { PaginationState } from "@tanstack/table-core";
-import { DataListOptionFilters, DataListOptionV3 } from "@/entities/option";
+import {
+  DataListOptionFilters,
+  DataListOptionV3,
+  hydrateDatalistOptionFromMap,
+} from "@/entities/option";
 
 export const useDatalistOptionsSearch = () => {
   const api = useContext(ApiContext);
@@ -24,8 +28,13 @@ export const useDatalistOptionsSearch = () => {
           throw new Error("Failed to fetch datalist options due to API error");
         }
 
+        const options =
+          data?.options?.map((dto) =>
+            hydrateDatalistOptionFromMap(dto, data.relatedObjects)
+          ) ?? [];
+
         return {
-          data: data?.options ?? [],
+          data: options,
           pagination: data.pagination ?? {},
         };
       } catch (error) {
