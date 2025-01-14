@@ -12,6 +12,8 @@ import { GuidWithCopy } from "@/shared/ui";
 import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
 import { Factory } from "@/entities/factory";
 import { Check } from "lucide-react";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { useEffect } from "react";
 
 const colDefs: Record<
   keyof Omit<
@@ -82,6 +84,12 @@ const colDefs: Record<
 
 export function FactoryBranchesScreen() {
   const { searchFactoryBranches } = useFactoryBranchesSearch();
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  useEffect(() => {
+    setBreadcrumbs([{ label: "Branches", href: "/workspace/branches" }])
+  }, [setBreadcrumbs]);
+
   async function fetchFactoryBranches(
     pagination: PaginationState,
     filters: {}
