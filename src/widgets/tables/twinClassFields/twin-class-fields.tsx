@@ -134,6 +134,7 @@ export function TwinClassFieldsTable({
   }, [setBreadcrumbs]);
 
   const twinClassFieldchema = z.object({
+    twinClassId: z.string().uuid().nullable(),
     key: z
       .string()
       .min(1)
@@ -186,6 +187,7 @@ export function TwinClassFieldsTable({
   const form = useForm<z.infer<typeof twinClassFieldchema>>({
     resolver: zodResolver(twinClassFieldchema),
     defaultValues: {
+      twinClassId: null,
       key: "",
       name: "",
       description: "",
@@ -215,7 +217,7 @@ export function TwinClassFieldsTable({
     };
 
     const { error } = await api.twinClassField.create({
-      id: twinClassId!,
+      id: twinClassId || formValues.twinClassId!,
       body,
     });
     if (error) {
@@ -264,7 +266,10 @@ export function TwinClassFieldsTable({
       dialogForm={form}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
-        <TwinClassFieldFormFields control={form.control} />
+        <TwinClassFieldFormFields
+          control={form.control}
+          twinClassId={twinClassId}
+        />
       )}
     />
   );
