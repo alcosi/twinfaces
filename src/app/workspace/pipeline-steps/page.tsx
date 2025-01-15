@@ -1,5 +1,5 @@
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { PipelineStepsScreen } from "../../../screens/pipelineSteps";
 
 export default function PipelineStepsPage() {
-  return <UnderConstruction />;
+  return <PipelineStepsScreen />;
 }
