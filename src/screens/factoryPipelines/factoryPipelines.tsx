@@ -3,7 +3,7 @@
 import { Factory } from "@/entities/factory";
 import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
 import {
-  FactoryPipeline,
+  FactoryPipeline, FactoryPipeline_DETAILED,
   useFactoryPipelineFilters,
   useFactoryPipelineSearch,
 } from "@/entities/factoryPipeline";
@@ -29,8 +29,9 @@ const colDefs: Record<
     | "factoryConditionSetId"
     | "nextFactoryId"
     | "outputTwinStatusId"
+      // | "inputTwinClass"
   >,
-  ColumnDef<FactoryPipeline>
+  ColumnDef<FactoryPipeline_DETAILED>
 > = {
   id: {
     id: "id",
@@ -71,24 +72,26 @@ const colDefs: Record<
     cell: (data) => data.getValue() && <Check />,
   },
   inputTwinClass: {
-    id: "inputTwinClass",
-    accessorKey: "inputTwinClass",
+    id: "inputTwinClassId",
+    accessorKey: "inputTwinClassId",
     header: "Input Twin Class",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinClassResourceLink
-          data={original.inputTwinClass as TwinClass_DETAILED}
-          withTooltip
-        />
-      </div>
-    ),
+    cell: ({row: {original}}) =>
+        original.inputTwinClass && (
+            <div className="max-w-48 inline-flex">
+              <TwinClassResourceLink
+                  data={original.inputTwinClass as TwinClass_DETAILED}
+                  withTooltip
+              />
+            </div>
+        ),
+
   },
   outputTwinStatus: {
     id: "outputTwinStatus",
     accessorKey: "outputTwinStatus",
     header: "Output Twin Status",
-    cell: ({ row: { original } }) =>
-      original.outputTwinStatus && (
+    cell: ({row: {original}}) =>
+        original.outputTwinStatus && (
         <div className="max-w-48 inline-flex">
           <TwinClassStatusResourceLink
             data={original.outputTwinStatus as TwinStatus}
@@ -147,7 +150,7 @@ export function FactoryPipelines() {
     filters: FiltersState
   ) {
     const _filters = mapFiltersToPayload(filters.filters);
-
+    console.log(await searchFactoryPipelines({ pagination, filters: _filters }))
     try {
       return await searchFactoryPipelines({ pagination, filters: _filters });
     } catch (error) {
@@ -162,7 +165,7 @@ export function FactoryPipelines() {
 
   return (
     <CrudDataTable
-      columns={Object.values(colDefs) as ColumnDef<FactoryPipeline>[]}
+      columns={Object.values(colDefs) as ColumnDef<FactoryPipeline_DETAILED>[]}
       fetcher={fetchFactoryPipelines}
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
