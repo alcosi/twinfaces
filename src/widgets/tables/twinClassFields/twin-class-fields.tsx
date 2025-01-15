@@ -187,7 +187,7 @@ export function TwinClassFieldsTable({
   const form = useForm<z.infer<typeof twinClassFieldchema>>({
     resolver: zodResolver(twinClassFieldchema),
     defaultValues: {
-      twinClassId: "",
+      twinClassId: null,
       key: "",
       name: "",
       description: "",
@@ -217,7 +217,7 @@ export function TwinClassFieldsTable({
     };
 
     const { error } = await api.twinClassField.create({
-      id: twinClassId! ? twinClassId! : formValues.twinClassId!,
+      id: twinClassId || formValues.twinClassId!,
       body,
     });
     if (error) {

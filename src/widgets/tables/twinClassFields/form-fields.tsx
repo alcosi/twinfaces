@@ -7,6 +7,7 @@ import { FeaturerTypes } from "@/entities/featurer";
 import { Control, FieldValues, Path } from "react-hook-form";
 import { FeaturerFormField } from "../../form-fields";
 import { TwinClassSelectField } from "@/features/twinClass";
+import { isTruthy } from "@/shared/libs";
 
 export function TwinClassFieldFormFields<T extends FieldValues>({
   control,
@@ -21,7 +22,7 @@ export function TwinClassFieldFormFields<T extends FieldValues>({
         control={control}
         name={"TwinClassId" as Path<T>}
         label="Class"
-        disabled={!!twinClassId}
+        disabled={isTruthy(twinClassId)}
       />
 
       <TextFormField control={control} name={"key" as Path<T>} label="Key" />
