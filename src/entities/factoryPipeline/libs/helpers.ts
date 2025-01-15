@@ -1,5 +1,10 @@
-import {RelatedObjects} from "@/shared/api";
-import {FactoryPipeline, FactoryPipeline_DETAILED} from "@/entities/factoryPipeline";
+import { RelatedObjects } from "@/shared/api";
+import {
+  FactoryPipeline,
+  FactoryPipeline_DETAILED,
+} from "@/entities/factoryPipeline";
+import { TwinClass_DETAILED } from "@/entities/twinClass";
+import { Factory } from "@/entities/factory";
 
 export const hydrateFactoryPipelineFromMap = (
   dto: FactoryPipeline,
@@ -7,17 +12,18 @@ export const hydrateFactoryPipelineFromMap = (
 ): FactoryPipeline_DETAILED => {
   const hydrated: FactoryPipeline_DETAILED = Object.assign(
     {},
-      dto
+    dto
   ) as FactoryPipeline_DETAILED;
+
   if (dto.inputTwinClassId && relatedObjects?.twinClassMap) {
-    dto.inputTwinClass = relatedObjects.twinClassMap[dto.inputTwinClassId]
+    hydrated.inputTwinClass = relatedObjects.twinClassMap[
+      dto.inputTwinClassId
+    ] as TwinClass_DETAILED;
   }
 
   if (dto.factoryId && relatedObjects?.factoryMap) {
-    dto.factory = relatedObjects.factoryMap[dto.factoryId]
+    hydrated.factory = relatedObjects.factoryMap[dto.factoryId] as Factory;
   }
-
-  console.log(dto, relatedObjects,hydrated )
 
   return hydrated;
 };

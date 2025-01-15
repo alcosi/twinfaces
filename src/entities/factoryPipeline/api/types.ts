@@ -14,7 +14,7 @@ export type FactoryPipelineFilterKeys =
   | "outputTwinStatusIdList"
   | "nextFactoryIdList"
   | "active"
-  | "nextFactoryLimitScope";
+  | "descriptionLikeList";
 
 export type FactoryPipelineFilters = Partial<
   Pick<FactoryPipelineSearchRq, FactoryPipelineFilterKeys>

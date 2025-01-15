@@ -1,9 +1,11 @@
 import { useCallback, useContext } from "react";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { Factory, FactoryFilters } from "@/entities/factory";
-import {hydratePermissionGrantUserGroupFromMap} from "@/entities/userGroup";
-import {FactoryPipeline_DETAILED, hydrateFactoryPipelineFromMap} from "@/entities/factoryPipeline";
+import { FactoryFilters } from "@/entities/factory";
+import {
+  FactoryPipeline_DETAILED,
+  hydrateFactoryPipelineFromMap,
+} from "@/entities/factoryPipeline";
 
 // TODO: Turn off lazy-relation for twinClasses and factories, implement hydration
 // https://alcosi.atlassian.net/browse/TWINFACES-419
@@ -27,14 +29,13 @@ export function useFactoryPipelineSearch() {
           throw error;
         }
 
-        const pipelines =  data.pipelines?.map((dto) =>
+        const pipelines =
+          data.pipelines?.map((dto) =>
             hydrateFactoryPipelineFromMap(dto, data.relatedObjects)
-        ) ?? [];
-        console.log(pipelines)
-        console.log(data.pipelines)
+          ) ?? [];
 
         return {
-          data: pipelines as any,
+          data: pipelines,
           pagination: data.pagination ?? {},
         };
       } catch (error) {
