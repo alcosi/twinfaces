@@ -1,4 +1,4 @@
-import { Twin } from "@/entities/twin";
+import { hydrateTwinFromMap, Twin_DETAILED } from "@/entities/twin";
 import { ApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 interface TwinContextProps {
   twinId: string;
-  twin: Twin | undefined;
+  twin: Twin_DETAILED | undefined;
   fetchTwinData: () => void;
 }
 
@@ -24,7 +24,7 @@ export function TwinContextProvider({
 }) {
   const api = useContext(ApiContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [twin, setTwin] = useState<Twin | undefined>(undefined);
+  const [twin, setTwin] = useState<Twin_DETAILED | undefined>(undefined);
 
   useEffect(() => {
     fetchTwinData();
@@ -39,6 +39,7 @@ export function TwinContextProvider({
       .getById({
         id: twinId,
         query: {
+          lazyRelation: false,
           showTwinMode: "DETAILED",
           showTwinClassMode: "DETAILED",
           showTwin2TwinClassMode: "DETAILED",
@@ -57,7 +58,10 @@ export function TwinContextProvider({
           toast.error(message);
           return;
         }
-        setTwin(data.twin);
+
+        if (data.twin && data.relatedObjects) {
+          setTwin(hydrateTwinFromMap(data.twin, data.relatedObjects));
+        }
       })
       .catch((e) => {
         console.error("exception while fetching twin", e);

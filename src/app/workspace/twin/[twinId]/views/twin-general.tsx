@@ -6,9 +6,13 @@ import {
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
-import { User, UserResourceLink } from "@/entities/user";
+import { UserResourceLink } from "@/entities/user";
 import { useUserSelectAdapter } from "@/entities/user/libs";
-import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -20,7 +24,6 @@ import { TwinContext } from "../twin-context";
 export function TwinGeneral() {
   const api = useContext(ApiContext);
   const { twin, fetchTwinData } = useContext(TwinContext);
-
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -104,7 +107,7 @@ export function TwinGeneral() {
   }
 
   return (
-    <>
+    <InPlaceEditContextProvider>
       <Table className="mt-8">
         <TableBody>
           <TableRow>
@@ -136,7 +139,7 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>Status</TableCell>
             <TableCell>
-              {twin.statusId && twin.status && (
+              {twin.twinClassId && twin.status && (
                 <TwinClassStatusResourceLink
                   data={twin.status}
                   twinClassId={twin.twinClassId!}
@@ -163,7 +166,7 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>Author</TableCell>
             <TableCell>
-              <UserResourceLink data={twin.authorUser as User} />
+              {twin?.authorUser && <UserResourceLink data={twin.authorUser} />}
             </TableCell>
           </TableRow>
 
@@ -175,7 +178,7 @@ export function TwinGeneral() {
           >
             <TableCell>Assignee</TableCell>
             <TableCell>
-              {twin.assignerUserId && twin.assignerUser && (
+              {twin?.assignerUser && (
                 <UserResourceLink data={twin.assignerUser} />
               )}
             </TableCell>
@@ -184,7 +187,7 @@ export function TwinGeneral() {
           <TableRow className={"cursor-pointer"}>
             <TableCell>Head</TableCell>
             <TableCell>
-              {twin.headTwinId && twin.headTwin && (
+              {twin?.headTwin && (
                 <div className="max-w-48 inline-flex">
                   <TwinResourceLink data={twin.headTwin} withTooltip />
                 </div>
@@ -253,6 +256,6 @@ export function TwinGeneral() {
         onOpenChange={setEditFieldDialogOpen}
         settings={currentAutoEditDialogSettings}
       />
-    </>
+    </InPlaceEditContextProvider>
   );
 }
