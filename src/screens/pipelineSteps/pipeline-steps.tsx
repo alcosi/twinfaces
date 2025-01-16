@@ -17,7 +17,7 @@ import { useEffect } from "react";
 const colDefs: Record<
   keyof Omit<
     PipelineSteps,
-    "factoryConditionSetId" | "order" | "fillerParams" | "factoryPipeline"
+    "factoryConditionSetId" | "order" | "fillerParams" | "factoryPipelineId"
   >,
   ColumnDef<PipelineSteps>
 > = {
@@ -33,11 +33,11 @@ const colDefs: Record<
     header: "Description",
   },
   //TODO: Replace with a Factory field
-  factoryPipelineId: {
-    id: "factoryPipelineId",
-    accessorKey: "factoryPipelineId",
-    header: "FactoryPipelineId",
-  },
+  factoryPipeline: {
+    id: "factory",
+    accessorKey: "factory",
+    header: "Factory",
+    cell: ({ row: { original } }) => <GuidWithCopy value={original.factoryPipeline?.factoryId}/>},
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
@@ -98,7 +98,7 @@ export function PipelineStepsScreen() {
       columns={[
         colDefs.id,
         colDefs.description,
-        colDefs.factoryPipelineId,
+        colDefs.factoryPipeline,
         colDefs.factoryConditionSet,
         colDefs.active,
         colDefs.fillerFeaturerId,
@@ -108,7 +108,7 @@ export function PipelineStepsScreen() {
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
         colDefs.id,
-        colDefs.factoryPipelineId,
+        colDefs.factoryPipeline,
         colDefs.factoryConditionSet,
         colDefs.fillerFeaturerId,
         colDefs.active,
