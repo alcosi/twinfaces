@@ -4,15 +4,12 @@ import { ResourceLinkTooltip } from "@/shared/ui";
 import { Option } from "lucide-react";
 import { DataListOptionV3 } from "@/entities/option";
 
-type PropsDataTooltip = {
+type Props = {
   data: DataListOptionV3;
   link: string;
 };
 
-export const DatalistOptionResourceTooltip = ({
-  data,
-  link,
-}: PropsDataTooltip) => {
+export function DatalistOptionResourceTooltip({ data, link }: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
@@ -29,4 +26,4 @@ export const DatalistOptionResourceTooltip = ({
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
-};
+}

@@ -1,7 +1,6 @@
 import { components } from "@/shared/api/generated/schema";
 
 export type DataListOptionV3 = components["schemas"]["DataListOptionV3"];
-export type DataListOptionV1 = components["schemas"]["DataListOptionV1"];
 
 export type DataListOptionFilterKeys =
   | "idList"

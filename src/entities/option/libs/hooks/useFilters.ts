@@ -41,7 +41,7 @@ export function useDatalistOptionFilters(
         label: "Name",
       },
     };
-
+    //TODO: refactor
     return Object.fromEntries(
       Object.entries(allFilters).filter(
         ([key]) => config?.[key as DataListOptionFilterKeys] !== false

@@ -3,12 +3,12 @@ import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { ListTree } from "lucide-react";
 
-type PropsDataTooltip = {
+type Props = {
   data: DataList;
   link: string;
 };
 
-export const DatalistResourceTooltip = ({ data, link }: PropsDataTooltip) => {
+export function DatalistResourceTooltip({ data, link }: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
@@ -26,4 +26,4 @@ export const DatalistResourceTooltip = ({ data, link }: PropsDataTooltip) => {
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
-};
+}

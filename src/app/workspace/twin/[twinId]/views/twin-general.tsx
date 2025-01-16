@@ -9,9 +9,9 @@ import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { useUserSelectAdapter } from "@/entities/user/libs";
 import {
-    InPlaceEdit,
-    InPlaceEditContextProvider,
-    InPlaceEditProps,
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
@@ -199,7 +199,7 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>Markers</TableCell>
             <TableCell>
-              {twin.markerIdList && twin.markers && (
+              {twin.twinClass?.markersDataListId && twin.markers && (
                 <div className="max-w-48 inline-flex">
                   <DatalistOptionResourceLink
                     data={{
@@ -216,7 +216,7 @@ export function TwinGeneral() {
           <TableRow>
             <TableCell>Tags</TableCell>
             <TableCell>
-              {twin.tagIdList && twin.tags && (
+              {twin.twinClass?.tagsDataListId && twin.tags && (
                 <div className="max-w-48 inline-flex">
                   <DatalistOptionResourceLink
                     data={{
