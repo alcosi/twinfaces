@@ -45,18 +45,23 @@ const colDefs: Record<
       </div>
     ),
   },
+  // TODO: Replace with a condition set resource link
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
-    header: "Factory Condition Set",
+    header: "Condition set",
     cell: ({ row: { original } }) => (
-      <span>{original.factoryConditionSet?.name}</span>
+      <div className="max-w-48 inline-flex">
+        {original.factory && (
+          <FactoryResourceLink data={original.factory as Factory} withTooltip />
+        )}
+      </div>
     ),
   },
   factoryConditionSetInvert: {
     id: "factoryConditionSetInvert",
     accessorKey: "factoryConditionSetInvert",
-    header: "Factory Condition Set Invert",
+    header: "Condition invert",
     cell: (data) => data.getValue() && <Check />,
   },
   nextFactory: {
@@ -87,7 +92,7 @@ export function FactoryBranchesScreen() {
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Branches", href: "/workspace/branches" }])
+    setBreadcrumbs([{ label: "Branches", href: "/workspace/branches" }]);
   }, [setBreadcrumbs]);
 
   async function fetchFactoryBranches(
@@ -104,7 +109,15 @@ export function FactoryBranchesScreen() {
 
   return (
     <CrudDataTable
-      columns={Object.values(colDefs) as ColumnDef<FactoryBranches>[]}
+      columns={[
+        colDefs.id,
+        colDefs.description,
+        colDefs.factory,
+        colDefs.factoryConditionSet,
+        colDefs.factoryConditionSetInvert,
+        colDefs.nextFactory,
+        colDefs.active,
+      ]}
       fetcher={fetchFactoryBranches}
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
