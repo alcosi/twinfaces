@@ -11,6 +11,8 @@ import { FactoryResourceLink } from "../../entities/factory/components/resource-
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { CrudDataTable } from "@/widgets/crud-data-table";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { useEffect } from "react";
 
 const colDefs: Record<
   keyof Omit<
@@ -72,6 +74,13 @@ const colDefs: Record<
 
 export function PipelineStepsScreen() {
   const { searchPipelineSteps } = usePipelineStepsSearch();
+  const { setBreadcrumbs } = useBreadcrumbs();
+
+  useEffect(() => {
+    setBreadcrumbs([
+      { label: "Pipeline Steps", href: "/workspace/pipeline-steps" },
+    ]);
+  }, [setBreadcrumbs]);
 
   async function fetchPipelineSteps(pagination: PaginationState, filters: {}) {
     try {
