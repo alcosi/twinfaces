@@ -7,11 +7,11 @@ import { SpaceRoleTable } from "./space-role-table";
 export function GrantSection() {
   return (
     <>
-      <UserGroupsTable />
       <UsersTable />
+      <UserGroupsTable />
       <TwinRoleTable />
-      <AssigneePropagationTable />
       <SpaceRoleTable />
+      <AssigneePropagationTable />
     </>
   );
 }

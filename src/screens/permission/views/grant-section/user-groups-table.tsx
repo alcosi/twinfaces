@@ -88,7 +88,7 @@ export function UserGroupsTable() {
 
   return (
     <CrudDataTable
-      title="User groups"
+      title="For user group"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,
