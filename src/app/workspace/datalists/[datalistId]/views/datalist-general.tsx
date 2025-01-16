@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { DatalistContext } from "../datalist-context";
+import { DatalistContext } from "@/features/datalist";
 import {
   GuidWithCopy,
   Table,
@@ -7,6 +6,7 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/ui";
+import { useContext } from "react";
 
 export function DatalistGeneral() {
   const { datalist } = useContext(DatalistContext);

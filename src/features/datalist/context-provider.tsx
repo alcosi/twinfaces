@@ -1,9 +1,9 @@
-import { LoadingOverlay } from "@/shared/ui/loading";
+import { DataList } from "@/entities/datalist";
 import { ApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { DataList } from "@/entities/datalist";
-import { isUndefined } from "@/shared/libs";
 
 interface DatalistContextProps {
   datalistId: string;

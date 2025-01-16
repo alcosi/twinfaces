@@ -1,11 +1,11 @@
 "use client";
 
-import { Tab, TabsLayout } from "@/widgets/layout";
-import { DatalistGeneral } from "./views";
-import { useContext, useEffect } from "react";
-import { DatalistContext } from "./datalist-context";
-import { DatalistOptionsTable } from "@/widgets/tables";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { DatalistContext } from "@/features/datalist";
+import { Tab, TabsLayout } from "@/widgets/layout";
+import { DatalistOptionsTable } from "@/widgets/tables";
+import { useContext, useEffect } from "react";
+import { DatalistGeneral } from "./views";
 
 export default function DatalistPage() {
   const { datalistId, datalist } = useContext(DatalistContext);

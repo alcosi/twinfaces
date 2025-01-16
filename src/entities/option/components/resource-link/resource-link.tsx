@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 import { Option } from "lucide-react";
-import { DataListOptionV3 } from "@/entities/option";
+import { type DataListOptionV3 } from "../../api";
 import { DatalistOptionResourceTooltip } from "./tooltip";
 
 type Props = {

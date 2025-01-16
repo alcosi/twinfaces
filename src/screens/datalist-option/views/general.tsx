@@ -7,8 +7,9 @@ export function DatalistOptionGeneral({
 }: {
   datalistOption: DataListOptionV3;
 }) {
-  const attributeKeys = Object.keys(datalistOption.attributes || {});
+  const attributeKeys = Object.keys(datalistOption.attributes ?? {});
 
+  console.log("foobar keys", attributeKeys);
   return (
     <Table className="mt-8">
       <TableBody>

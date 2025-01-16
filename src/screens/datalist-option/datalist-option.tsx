@@ -1,14 +1,14 @@
 "use client";
 
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { useContext, useEffect, useState } from "react";
-import { LoadingOverlay } from "@/shared/ui";
 import { DataListOptionV3, useDatalistOption } from "@/entities/option";
-import { DatalistContext } from "../../app/workspace/datalists/[datalistId]/datalist-context";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { DatalistContext } from "@/features/datalist";
+import { LoadingOverlay } from "@/shared/ui";
 import { Tab, TabsLayout } from "@/widgets/layout";
+import { useContext, useEffect, useState } from "react";
 import { DatalistOptionGeneral } from "./views";
 
-export function OptionScreen({ optionId }: { optionId: string }) {
+export function DatalistOptionScreen({ optionId }: { optionId: string }) {
   const [datalistOption, setDatalistOption] = useState<
     DataListOptionV3 | undefined
   >(undefined);

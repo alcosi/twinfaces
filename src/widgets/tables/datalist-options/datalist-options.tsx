@@ -19,14 +19,16 @@ import {
 import { DatalistResourceLink } from "@/entities/datalist";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
-import { toArray, toArrayOfString } from "@/shared/libs";
+import { isFalsy, toArray, toArrayOfString } from "@/shared/libs";
 
 export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { searchDatalistOptions } = useDatalistOptionsSearch();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
-    dataListIdList: !dataListId,
+    enabledFilters: isFalsy(dataListId)
+      ? ["idList", "optionI18nLikeList"]
+      : undefined,
   });
   const [columns, setColumns] = useState<ColumnDef<DataListOptionV3>[]>([]);
 

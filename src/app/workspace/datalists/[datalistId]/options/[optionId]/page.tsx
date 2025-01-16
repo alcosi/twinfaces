@@ -1,6 +1,6 @@
 "use client";
 
-import { OptionScreen } from "@/screens/options";
+import { DatalistOptionScreen } from "@/screens/datalist-option";
 
 interface DatalistOptionPageProps {
   params: {
@@ -11,5 +11,5 @@ interface DatalistOptionPageProps {
 export default function DatalistOptionPage({
   params: { optionId },
 }: DatalistOptionPageProps) {
-  return <OptionScreen optionId={optionId} />;
+  return <DatalistOptionScreen optionId={optionId} />;
 }
