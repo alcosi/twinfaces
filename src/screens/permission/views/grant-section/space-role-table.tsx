@@ -1,15 +1,17 @@
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { UserResourceLink } from "@/entities/user";
-import { PagedResponse } from "@/shared/api";
-import { CrudDataTable } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { toast } from "sonner";
 import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
 import {
   PermissionGrantSpaceRole_DETAILED,
   usePermissionSpaceRoleSearchV1,
 } from "@/entities/spaceRole";
+import { UserResourceLink } from "@/entities/user";
+import { PermissionContext } from "@/features/permission";
+import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { CrudDataTable } from "@/widgets/crud-data-table";
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useContext } from "react";
+import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Pick<
@@ -65,6 +67,7 @@ const colDefs: Record<
 };
 
 export function SpaceRoleTable() {
+  const { permission } = useContext(PermissionContext);
   const { searchSpaceRoleGrant } = usePermissionSpaceRoleSearchV1();
 
   async function fetchData(
@@ -73,7 +76,9 @@ export function SpaceRoleTable() {
     try {
       const response = await searchSpaceRoleGrant({
         pagination,
-        filters: {},
+        filters: {
+          permissionIdList: permission ? [permission.id] : [],
+        },
       });
 
       return response;
@@ -85,7 +90,7 @@ export function SpaceRoleTable() {
 
   return (
     <CrudDataTable
-      title="Space role"
+      title="For space role"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,

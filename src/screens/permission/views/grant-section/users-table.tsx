@@ -86,7 +86,7 @@ export function UsersTable() {
 
   return (
     <CrudDataTable
-      title="Users"
+      title="For user"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,

@@ -1,16 +1,18 @@
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { UserResourceLink } from "@/entities/user";
-import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
-import { CrudDataTable } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { toast } from "sonner";
+import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
 import { TwinClassResourceLink } from "@/entities/twinClass";
 import {
   PermissionGrantTwinRoles_DETAILED,
   usePermissionGrantTwinRolesSearchV1,
 } from "@/entities/twinRole";
-import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
+import { UserResourceLink } from "@/entities/user";
+import { PermissionContext } from "@/features/permission";
+import { PagedResponse } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { CrudDataTable } from "@/widgets/crud-data-table";
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useContext } from "react";
+import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Pick<
@@ -78,6 +80,7 @@ const colDefs: Record<
 };
 
 export function TwinRoleTable() {
+  const { permission } = useContext(PermissionContext);
   const { searchTwinRoleGrant } = usePermissionGrantTwinRolesSearchV1();
 
   async function fetchData(
@@ -86,7 +89,9 @@ export function TwinRoleTable() {
     try {
       const response = await searchTwinRoleGrant({
         pagination,
-        filters: {},
+        filters: {
+          permissionIdList: permission ? [permission.id] : [],
+        },
       });
       return response;
     } catch (e) {
@@ -97,7 +102,7 @@ export function TwinRoleTable() {
 
   return (
     <CrudDataTable
-      title="Twin roles"
+      title="For twin role"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,

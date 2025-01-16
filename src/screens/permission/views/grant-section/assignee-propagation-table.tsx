@@ -12,6 +12,8 @@ import {
   usePermissionGrantAssigneePropagationSearchV1,
 } from "@/entities/assigneePropagation";
 import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
+import { useContext } from "react";
+import { PermissionContext } from "@/features/permission";
 
 const colDefs: Record<
   keyof Pick<
@@ -92,6 +94,7 @@ const colDefs: Record<
 };
 
 export function AssigneePropagationTable() {
+  const { permission } = useContext(PermissionContext);
   const { searchAssigneePropagationGrant } =
     usePermissionGrantAssigneePropagationSearchV1();
 
@@ -101,7 +104,9 @@ export function AssigneePropagationTable() {
     try {
       const response = await searchAssigneePropagationGrant({
         pagination,
-        filters: {},
+        filters: {
+          permissionIdList: permission ? [permission.id] : [],
+        },
       });
       return response;
     } catch (e) {
@@ -112,7 +117,7 @@ export function AssigneePropagationTable() {
 
   return (
     <CrudDataTable
-      title="Assignee propagation"
+      title="By assignee propagation"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,
