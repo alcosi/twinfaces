@@ -1,26 +1,26 @@
-import { DataList } from "@/entities/datalist";
+import { DatalistResourceLink } from "@/entities/datalist";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { ListTree } from "lucide-react";
+import { Option } from "lucide-react";
+import { DataListOptionV3 } from "@/entities/datalist-option";
 
 type Props = {
-  data: DataList;
+  data: DataListOptionV3;
   link: string;
 };
 
-export function DatalistResourceTooltip({ data, link }: Props) {
+export function DatalistOptionResourceTooltip({ data, link }: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
-        subTitle={data.key}
-        iconSource={<ListTree size={35} />}
+        iconSource={<Option size={35} />}
       />
 
       <ResourceLinkTooltip.Main>
-        {data.updatedAt && (
-          <ResourceLinkTooltip.Item title="Updated at">
-            {new Date(data.updatedAt).toLocaleDateString()}
+        {data.dataList && (
+          <ResourceLinkTooltip.Item title="Datalist">
+            <DatalistResourceLink data={data.dataList} />
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

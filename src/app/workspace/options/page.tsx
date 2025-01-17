@@ -1,5 +1,7 @@
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+"use client";
+
+import { DatalistOptionsScreen } from "@/screens/datalist-options";
 
 export default function OptionsPage() {
-  return <UnderConstruction />;
+  return <DatalistOptionsScreen />;
 }

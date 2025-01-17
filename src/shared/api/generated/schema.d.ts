@@ -351,17 +351,37 @@ export interface paths {
     /** Create new link */
     post: operations["linkCreateV1"];
   };
+  "/private/link/search/v1": {
+    /** Link search */
+    post: operations["linkSearchV1"];
+  };
   "/private/featurer/v1": {
     /** Featurer search */
     post: operations["featurerListV1"];
+  };
+  "/private/factory_pipeline_step/search/v1": {
+    /** Factory pipeline step search */
+    post: operations["factoryPipelineStepSearchV1"];
   };
   "/private/factory_pipeline/search/v1": {
     /** Factory pipeline search */
     post: operations["factoryPipelineSearchV1"];
   };
+  "/private/factory_multiplier_filter/search/v1": {
+    /** Factory multiplier filter search */
+    post: operations["factoryMultiplierFilterSearchV1"];
+  };
+  "/private/factory_multiplier/search/v1": {
+    /** Factory multiplier search */
+    post: operations["factoryMultiplierSearchV1"];
+  };
   "/private/factory_condition_set/search/v1": {
     /** Condition set search */
     post: operations["factoryConditionSetSearchV1"];
+  };
+  "/private/factory_branch/search/v1": {
+    /** Factory branch search */
+    post: operations["factoryBranchSearchV1"];
   };
   "/private/factory/search/v1": {
     /** Return a list of all factories for the current domain */
@@ -712,6 +732,21 @@ export interface components {
       viewPermissionId?: string;
       /**
        * Format: uuid
+       * @description create permission id
+       */
+      createPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description edit permission id
+       */
+      editPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description delete permission id
+       */
+      deletePermissionId?: string;
+      /**
+       * Format: uuid
        * @description uuid of name in I18n table
        */
       nameI18nId?: string;
@@ -835,6 +870,12 @@ export interface components {
        * @example #ff00ff
        */
       fontColor?: string;
+      /**
+       * Format: uuid
+       * @description twin class
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      twinClassId?: string;
     };
     TwinClassFieldUpdateRqV1: {
       /**
@@ -982,7 +1023,7 @@ export interface components {
        */
       type?: "ManyToOne" | "ManyToMany" | "OneToOne";
     };
-    /** @description view permission */
+    /** @description delete permission */
     PermissionV1: {
       /**
        * Format: uuid
@@ -1103,7 +1144,7 @@ export interface components {
       aliases?: components["schemas"]["TwinAliasV1"][];
     };
     TwinClassFieldDescriptorAttachmentV1: {
-      fieldType: "attachmentFieldDescriptorV1";
+      fieldType: "attachmentFieldV1";
     } & Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
       fieldType?: string;
       /**
@@ -1235,7 +1276,7 @@ export interface components {
       options?: components["schemas"]["DataListOptionV1"][];
     };
     TwinClassFieldDescriptorNumericV1: {
-      fieldType: "numericFieldDescriptorV1";
+      fieldType: "numericFieldV1";
     } & Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
       fieldType?: string;
       /**
@@ -1480,6 +1521,21 @@ export interface components {
       viewPermissionId?: string;
       /**
        * Format: uuid
+       * @description create permission id
+       */
+      createPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description edit permission id
+       */
+      editPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description delete permission id
+       */
+      deletePermissionId?: string;
+      /**
+       * Format: uuid
        * @description uuid of name in I18n table
        */
       nameI18nId?: string;
@@ -1519,6 +1575,9 @@ export interface components {
       headClass?: components["schemas"]["TwinClassBaseV1"];
       extendsClass?: components["schemas"]["TwinClassBaseV1"];
       viewPermission?: components["schemas"]["PermissionV1"];
+      createPermission?: components["schemas"]["PermissionV1"];
+      editPermission?: components["schemas"]["PermissionV1"];
+      deletePermission?: components["schemas"]["PermissionV1"];
       headHunterFeaturer?: components["schemas"]["FeaturerV1"];
     };
     /** @description created by user */
@@ -2713,7 +2772,7 @@ export interface components {
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       link?: components["schemas"]["LinkV3"];
     };
-    /** @description link */
+    /** @description results - link list */
     LinkV3: {
       /**
        * Format: uuid
@@ -3260,14 +3319,14 @@ export interface components {
       idList?: string[];
       /** @description id exclude list */
       idExcludeList?: string[];
-      /** @description name like list */
-      nameLikeList?: string[];
-      /** @description name not like list */
-      nameNotLikeList?: string[];
-      /** @description description like list */
-      descriptionLikeList?: string[];
-      /** @description description not like list */
-      descriptionNotLikeList?: string[];
+      /** @description name i18n like list */
+      nameI18NLikeList?: string[];
+      /** @description name i18n not like list */
+      nameI18nNotLikeList?: string[];
+      /** @description description i18n like list */
+      descriptionI18NLikeList?: string[];
+      /** @description description i18n not like list */
+      descriptionI18NNotLikeList?: string[];
       /** @description type list */
       typeList?: ("domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage")[];
       /** @description type exclude list */
@@ -3907,9 +3966,47 @@ export interface components {
        * @example success
        */
       statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - status list */
-      statuses?: components["schemas"]["TwinStatusV1"][];
+      statuses?: components["schemas"]["TwinStatusV2"][];
+    };
+    /** @description results - status list */
+    TwinStatusV2: {
+      /**
+       * Format: uuid
+       * @description uuid
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      id?: string;
+      /** @description key within the domain */
+      key?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * @description url for status UI logo
+       * @example https://twins.org/img/twin_status_default.png
+       */
+      logo?: string;
+      /**
+       * @description background color hex
+       * @example #ff00ff
+       */
+      backgroundColor?: string;
+      /**
+       * @description font color hex
+       * @example #ff00ff
+       */
+      fontColor?: string;
+      /**
+       * Format: uuid
+       * @description twin class
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      twinClassId?: string;
+      twinClass?: components["schemas"]["TwinClassBaseV1"];
     };
     TwinClassFieldSearchRqV1: {
       /** @description id list */
@@ -5493,6 +5590,10 @@ export interface components {
       transition?: components["schemas"]["TwinflowTransitionBaseV2"];
     };
     TransitionSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
       /** @description twin class id list */
       twinClassIdList?: string[];
       /** @description twin class id exclude list */
@@ -6437,6 +6538,62 @@ export interface components {
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       link?: components["schemas"]["LinkV3"];
     };
+    LinkSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description src twin class id list */
+      srcTwinClassIdList?: string[];
+      /** @description src twin class id exclude list */
+      srcTwinClassIdExcludeList?: string[];
+      /** @description dst twin class id list */
+      dstTwinClassIdList?: string[];
+      /** @description dst twin class id exclude list */
+      dstTwinClassIdExcludeList?: string[];
+      /** @description src or dst twin class id list */
+      srcOrDstTwinClassIdList?: string[];
+      /** @description src or dst twin class id exclude list */
+      srcOrDstTwinClassIdExcludeList?: string[];
+      /** @description forward name like list */
+      forwardNameLikeList?: string[];
+      /** @description forward name not like list */
+      forwardNameNotLikeList?: string[];
+      /** @description backward name like list */
+      backwardNameLikeList?: string[];
+      /** @description backward name not like list */
+      backwardNameNotLikeList?: string[];
+      /** @description type like list */
+      typeLikeList?: ("ManyToOne" | "ManyToMany" | "OneToOne")[];
+      /** @description type not like list */
+      typeNotLikeList?: ("ManyToOne" | "ManyToMany" | "OneToOne")[];
+      /** @description strength like list */
+      strengthLikeList?: ("MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE")[];
+      /** @description strength not like list */
+      strengthNotLikeList?: ("MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE")[];
+    };
+    LinkSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - link list */
+      links?: components["schemas"]["LinkV3"][];
+    };
     FeaturerSearchRqV1: {
       /** @description ids list */
       idList?: number[];
@@ -6467,7 +6624,7 @@ export interface components {
       /** @description featurer list */
       featurerList?: components["schemas"]["FeaturerV1"][];
     };
-    FactoryPipelineSearchRqV1: {
+    FactoryPipelineStepSearchRqV1: {
       /** @description id list */
       idList?: string[];
       /** @description id exclude list */
@@ -6476,40 +6633,30 @@ export interface components {
       factoryIdList?: string[];
       /** @description factory id exclude list */
       factoryIdExcludeList?: string[];
-      /** @description input twin class id list */
-      inputTwinClassIdList?: string[];
-      /** @description input twin class id exclude list */
-      inputTwinClassIdExcludeList?: string[];
+      /** @description factory pipeline id list */
+      factoryPipelineIdList?: string[];
+      /** @description factory pipeline id exclude list */
+      factoryPipelineIdExcludeList?: string[];
       /** @description factory condition set id list */
       factoryConditionSetIdList?: string[];
       /** @description factory condition set id exclude list */
       factoryConditionSetIdExcludeList?: string[];
-      /** @description output twin status id list */
-      outputTwinStatusIdList?: string[];
-      /** @description output twin status id exclude list */
-      outputTwinStatusIdExcludeList?: string[];
-      /** @description next factory id list */
-      nextFactoryIdList?: string[];
-      /** @description next factory id exclude list */
-      nextFactoryIdExcludeList?: string[];
       /** @description description like list */
       descriptionLikeList?: string[];
       /** @description description not like list */
       descriptionNotLikeList?: string[];
+      /** @description filler featurer id list */
+      fillerFeaturerIdList?: number[];
+      /** @description filler featurer id exclude list */
+      fillerFeaturerIdExcludeList?: number[];
       /**
-       * @description is active
+       * @description optional
        * @example ONLY
        * @enum {string}
        */
-      active?: "ONLY" | "ONLY_NOT" | "ANY";
-      /**
-       * @description next factory limit scope
-       * @example ONLY
-       * @enum {string}
-       */
-      nextFactoryLimitScope?: "ONLY" | "ONLY_NOT" | "ANY";
+      optional?: "ONLY" | "ONLY_NOT" | "ANY";
     };
-    /** @description results - condition list */
+    /** @description factory condition set */
     FactoryConditionSetV1: {
       /**
        * Format: uuid
@@ -6558,7 +6705,7 @@ export interface components {
        */
       inFactoryEraserUsagesCount?: number;
     };
-    FactoryPipelineSearchRsV1: {
+    FactoryPipelineStepSearchRsV1: {
       /**
        * Format: int32
        * @description request processing status (see ErrorCode enum)
@@ -6577,8 +6724,66 @@ export interface components {
       statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
-      /** @description results - factory pipeline list */
-      pipelines?: components["schemas"]["FactoryPipelineV2"][];
+      /** @description results - factory pipeline step list */
+      steps?: components["schemas"]["FactoryPipelineStepV2"][];
+    };
+    /** @description results - factory pipeline step list */
+    FactoryPipelineStepV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 99856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description factory pipeline id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryPipelineId?: string;
+      /**
+       * Format: int32
+       * @description order
+       * @example 1
+       */
+      order?: number;
+      /**
+       * Format: uuid
+       * @description factory condition set id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryConditionSetId?: string;
+      /**
+       * @description is active
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * @description is optional
+       * @example true
+       */
+      optional?: boolean;
+      /**
+       * Format: int32
+       * @description filler featurer id
+       * @example 22
+       */
+      fillerFeaturerId?: number;
+      /**
+       * @description filler params
+       * @example {"outputTwinClassId"=>"da69c441-9c8f-4e73-a07e-b5648f8f4396",
+       * "copyHead"=>"true"}
+       */
+      fillerParams?: {
+        [key: string]: string;
+      };
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      factoryPipeline?: components["schemas"]["FactoryPipelineV2"];
+      factoryConditionSet?: components["schemas"]["FactoryConditionSetV1"];
     };
     /** @description results - factory pipeline list */
     FactoryPipelineV2: {
@@ -6650,21 +6855,103 @@ export interface components {
       outputTwinStatus?: components["schemas"]["TwinStatusV1"];
       nextFactory?: components["schemas"]["FactoryV1"];
     };
-    FactoryConditionSetSearchRqV1: {
+    FactoryPipelineSearchRqV1: {
       /** @description id list */
       idList?: string[];
       /** @description id exclude list */
       idExcludeList?: string[];
-      /** @description name like list */
-      nameLikeList?: string[];
-      /** @description name like exclude list */
-      nameNotLikeList?: string[];
+      /** @description factory id list */
+      factoryIdList?: string[];
+      /** @description factory id exclude list */
+      factoryIdExcludeList?: string[];
+      /** @description input twin class id list */
+      inputTwinClassIdList?: string[];
+      /** @description input twin class id exclude list */
+      inputTwinClassIdExcludeList?: string[];
+      /** @description factory condition set id list */
+      factoryConditionSetIdList?: string[];
+      /** @description factory condition set id exclude list */
+      factoryConditionSetIdExcludeList?: string[];
+      /** @description output twin status id list */
+      outputTwinStatusIdList?: string[];
+      /** @description output twin status id exclude list */
+      outputTwinStatusIdExcludeList?: string[];
+      /** @description next factory id list */
+      nextFactoryIdList?: string[];
+      /** @description next factory id exclude list */
+      nextFactoryIdExcludeList?: string[];
       /** @description description like list */
       descriptionLikeList?: string[];
-      /** @description description like exclude list */
+      /** @description description not like list */
       descriptionNotLikeList?: string[];
+      /**
+       * @description is active
+       * @example ONLY
+       * @enum {string}
+       */
+      active?: "ONLY" | "ONLY_NOT" | "ANY";
+      /**
+       * @description next factory limit scope
+       * @example ONLY
+       * @enum {string}
+       */
+      nextFactoryLimitScope?: "ONLY" | "ONLY_NOT" | "ANY";
     };
-    FactoryConditionSetSearchRsV1: {
+    FactoryPipelineSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - factory pipeline list */
+      pipelines?: components["schemas"]["FactoryPipelineV2"][];
+    };
+    FactoryMultiplierFilterSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description factory id list */
+      factoryIdList?: string[];
+      /** @description factory id exclude list */
+      factoryIdExcludeList?: string[];
+      /** @description factory multiplier id list */
+      factoryMultiplierIdList?: string[];
+      /** @description factory multiplier id exclude list */
+      factoryMultiplierIdExcludeList?: string[];
+      /** @description input twin class id list */
+      inputTwinClassIdList?: string[];
+      /** @description input twin class id exclude list */
+      inputTwinClassIdExcludeList?: string[];
+      /** @description factory condition set id list */
+      factoryConditionSetIdList?: string[];
+      /** @description factory condition set id exclude list */
+      factoryConditionSetIdExcludeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
+      /**
+       * @description active
+       * @example ONLY
+       * @enum {string}
+       */
+      active?: "ONLY" | "ONLY_NOT" | "ANY";
+    };
+    FactoryMultiplierFilterSearchRsDTOv1: {
       /**
        * Format: int32
        * @description request processing status (see ErrorCode enum)
@@ -6684,57 +6971,42 @@ export interface components {
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - condition list */
-      conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
+      multiplierFilters?: components["schemas"]["FactoryV2"][];
     };
-    FactoryConditionSetSearchRqV1: {
-      /** @description id list */
-      idList?: string[];
-      /** @description id exclude list */
-      idExcludeList?: string[];
-      /** @description name like list */
-      nameLikeList?: string[];
-      /** @description name like exclude list */
-      nameNotLikeList?: string[];
-      /** @description description like list */
-      descriptionLikeList?: string[];
-      /** @description description like exclude list */
-      descriptionNotLikeList?: string[];
-    };
-    FactoryConditionSetSearchRsV1: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description User friendly, localized request processing status description
-       * @example success
-       */
-      msg?: string;
-      /**
-       * @description request processing status description, technical
-       * @example success
-       */
-      statusDetails?: string;
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      pagination?: components["schemas"]["PaginationV1"];
-      /** @description results - condition list */
-      conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
-    };
-    /** @description results - condition list */
-    FactoryConditionSetV1: {
+    /** @description results - factory multiplier list */
+    FactoryMultiplierV2: {
       /**
        * Format: uuid
        * @description id
-       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
        */
       id?: string;
       /**
-       * @description name
-       * @example Some name
+       * Format: uuid
+       * @description factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
        */
-      name?: string;
+      factoryId?: string;
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
+      /**
+       * Format: int32
+       * @description count pipeline steps
+       * @example 3
+       */
+      pipelineStepsCount?: number;
+      /**
+       * @description multiplier params
+       * @example {"outputTwinClassId"=>"da69c441-9c8f-4e73-a07e-b5648f8f4396",
+       * "copyHead"=>"true"}
+       */
+      multiplierParams?: {
+        [key: string]: string;
+      };
       /**
        * @description description
        * @example Some description
@@ -6742,74 +7014,17 @@ export interface components {
       description?: string;
       /**
        * Format: int32
-       * @description count in factory pipeline usages
+       * @description count factory multiplier filters
        * @example 3
        */
-      inFactoryPipelineUsagesCount?: number;
+      factoryMultiplierFiltersCount?: number;
       /**
-       * Format: int32
-       * @description count in factory pipeline step usages
-       * @example 3
+       * @description is active
+       * @example false
        */
-      inFactoryPipelineStepUsagesCount?: number;
-      /**
-       * Format: int32
-       * @description count in factory multiplier filter usages
-       * @example 3
-       */
-      inFactoryMultiplierFilterUsagesCount?: number;
-      /**
-       * Format: int32
-       * @description count in factory branch usages
-       * @example 3
-       */
-      inFactoryBranchUsagesCount?: number;
-      /**
-       * Format: int32
-       * @description count in factory eraser usages
-       * @example 3
-       */
-      inFactoryEraserUsagesCount?: number;
-    };
-    FactorySearchRqV1: {
-      /** @description id List */
-      idList?: string[];
-      /** @description id exclude list */
-      idExcludeList?: string[];
-      /** @description key like list */
-      keyLikeList?: string[];
-      /** @description key not like list */
-      keyNotLikeList?: string[];
-      /** @description name like list */
-      nameLikeList?: string[];
-      /** @description name not like list */
-      nameNotLikeList?: string[];
-      /** @description description like list */
-      descriptionLikeList?: string[];
-      /** @description description not like list */
-      descriptionNotLikeList?: string[];
-    };
-    FactorySearchRsV1: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description User friendly, localized request processing status description
-       * @example success
-       */
-      msg?: string;
-      /**
-       * @description request processing status description, technical
-       * @example success
-       */
-      statusDetails?: string;
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      pagination?: components["schemas"]["PaginationV1"];
-      /** @description results - factory list */
-      factories?: components["schemas"]["FactoryV2"][];
+      active?: boolean;
+      factory?: components["schemas"]["FactoryV1"];
+      inputTwinClass?: components["schemas"]["TwinClassBaseV1"];
     };
     /** @description results - factory list */
     FactoryV2: {
@@ -6876,6 +7091,205 @@ export interface components {
        */
       factoryErasersCount?: number;
       createdByUser?: components["schemas"]["UserV1"];
+    };
+    FactoryMultiplierSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description factory id list */
+      factoryIdList?: string[];
+      /** @description factory id exclude list */
+      factoryIdExcludeList?: string[];
+      /** @description input twin class id list */
+      inputTwinClassIdList?: string[];
+      /** @description input twin class id exclude list */
+      inputTwinClassIdExcludeList?: string[];
+      /** @description multiplier featurer id list */
+      multiplierFeaturerIdList?: number[];
+      /** @description multiplier featurer id list */
+      multiplierFeaturerIdExcludeList?: number[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
+      /**
+       * @description is active
+       * @example ONLY
+       * @enum {string}
+       */
+      active?: "ONLY" | "ONLY_NOT" | "ANY";
+    };
+    FactoryMultiplierSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - factory multiplier list */
+      multipliers?: components["schemas"]["FactoryMultiplierV2"][];
+    };
+    FactoryConditionSetSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name like exclude list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description like exclude list */
+      descriptionNotLikeList?: string[];
+    };
+    FactoryConditionSetSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - condition list */
+      branches?: components["schemas"]["FactoryBranchV2"][];
+    };
+    FactoryBranchSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description factory id list */
+      factoryIdList?: string[];
+      /** @description factory id exclude list */
+      factoryIdExcludeList?: string[];
+      /** @description factory condition set id list */
+      factoryConditionSetIdList?: string[];
+      /** @description factory condition set id exclude list */
+      factoryConditionSetIdExcludeList?: string[];
+      /** @description next factory id list */
+      nextFactoryIdList?: string[];
+      /** @description next factory id exclude list */
+      nextFactoryIdExcludeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
+      /**
+       * @description active
+       * @example ONLY
+       * @enum {string}
+       */
+      active?: "ONLY" | "ONLY_NOT" | "ANY";
+    };
+    /** @description results - condition list */
+    FactoryBranchV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 99956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryId?: string;
+      /**
+       * Format: uuid
+       * @description factory condition set id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryConditionSetId?: string;
+      /**
+       * @description factory condition set invert
+       * @example true
+       */
+      factoryConditionSetInvert?: boolean;
+      /**
+       * @description active
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description next factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      nextFactoryId?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      factory?: components["schemas"]["FactoryV1"];
+      factoryConditionSet?: components["schemas"]["FactoryConditionSetV1"];
+      nextFactory?: components["schemas"]["FactoryV1"];
+    };
+    FactorySearchRqV1: {
+      /** @description id List */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description key like list */
+      keyLikeList?: string[];
+      /** @description key not like list */
+      keyNotLikeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name not like list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
+    };
+    FactorySearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - factory list */
+      factories?: components["schemas"]["FactoryV2"][];
     };
     DomainUserAddV1: {
       /**
@@ -9339,7 +9753,29 @@ export interface operations {
   twinStatusSearchV1: {
     parameters: {
       query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         offset?: number;
         limit?: number;
         sortAsc?: boolean;
@@ -12478,6 +12914,67 @@ export interface operations {
       };
     };
   };
+  /** Link search */
+  linkSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showLinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showLinkSrc2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LinkSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Link data list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["LinkSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Featurer search */
   featurerListV1: {
     parameters: {
@@ -12518,14 +13015,225 @@ export interface operations {
       };
     };
   };
+  /** Factory pipeline step search */
+  factoryPipelineStepSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipeline2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineNextTwinFactory2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineOutputTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineStep2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineStep2FactoryPipeline?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineStepMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryPipelineStepSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory pipeline step list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryPipelineStepSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Factory pipeline search */
+  factoryPipelineSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipeline2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineNextTwinFactory2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineOutputTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryPipelineSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory pipeline list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryPipelineSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Factory multiplier filter search */
+  factoryMultiplierFilterSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultiplier2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplier2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryMultiplierFilter2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplierFilter2FactoryMultiplierMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplierFilterMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplierFiltersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryMultiplierFilterSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory multiplier filter list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryMultiplierFilterSearchRsDTOv1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Factory multiplier search */
+  factoryMultiplierSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultiplier2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplier2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryMultiplierFiltersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultiplierMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryMultiplierSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory multiplier list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryMultiplierSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Condition set search */
   factoryConditionSetSearchV1: {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showConditionSetInFactoryBranchUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
-        showConditionSetInFactoryMultiplierFilterUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
         showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12562,26 +13270,23 @@ export interface operations {
       };
     };
   };
-  /** Factory pipeline search */
-  factoryPipelineSearchV1: {
+  /** Factory branch search */
+  factoryBranchSearchV1: {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showConditionSetInFactoryBranchUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
-        showConditionSetInFactoryMultiplierFilterUsagesCount?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryBranch2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryBranch2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryBranchesCountMode?: "HIDE" | "SHOW";
         showFactoryErasersCountMode?: "HIDE" | "SHOW";
         showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
-        showFactoryPipeline2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
-        showFactoryPipeline2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showFactoryPipelineCountMode?: "HIDE" | "SHOW";
-        showFactoryPipelineMode?: "HIDE" | "SHORT" | "DETAILED";
-        showFactoryPipelineNextTwinFactory2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
-        showFactoryPipelineOutputTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showFactoryPipelineTwinFactory2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         offset?: number;
         limit?: number;
@@ -12598,55 +13303,11 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["FactoryPipelineSearchRqV1"];
+        "application/json": components["schemas"]["FactoryBranchSearchRqV1"];
       };
     };
     responses: {
-      /** @description Factory pipeline list */
-      200: {
-        content: {
-          "application/json": components["schemas"]["FactoryPipelineSearchRsV1"];
-        };
-      };
-      /** @description Access is denied */
-      401: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  /** Condition set search */
-  factoryConditionSetSearchV1: {
-    parameters: {
-      query?: {
-        lazyRelation?: boolean;
-        showConditionSetInFactoryBranchUsagesCount?: "HIDE" | "SHOW";
-        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
-        showConditionSetInFactoryMultiplierFilterUsagesCount?: "HIDE" | "SHOW";
-        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
-        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
-        showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
-        offset?: number;
-        limit?: number;
-        sortAsc?: boolean;
-      };
-      header: {
-        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-        DomainId: string;
-        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-        AuthToken: string;
-        /** @example WEB */
-        Channel: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["FactoryConditionSetSearchRqV1"];
-      };
-    };
-    responses: {
-      /** @description Condition set list */
+      /** @description Factory branch list */
       200: {
         content: {
           "application/json": components["schemas"]["FactoryConditionSetSearchRsV1"];

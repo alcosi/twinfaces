@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from "react";
-import { DatalistContext } from "../datalist-context";
+import { DatalistContext } from "@/features/datalist";
 import {
   GuidWithCopy,
   Table,
@@ -7,21 +6,10 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/ui";
-import { useBreadcrumbs } from "@/features/breadcrumb";
+import { useContext } from "react";
 
 export function DatalistGeneral() {
-  const { datalist, datalistId } = useContext(DatalistContext);
-  const { setBreadcrumbs } = useBreadcrumbs();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Datalists", href: "/workspace/datalists" },
-      {
-        label: datalist?.name!,
-        href: `/workspace/datalists/${datalistId}`,
-      },
-    ]);
-  }, [datalistId, datalist?.name]);
+  const { datalist } = useContext(DatalistContext);
 
   if (!datalist) {
     console.error("DatalistGeneral: no datalist");

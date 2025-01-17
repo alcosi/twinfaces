@@ -58,6 +58,10 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
+import {
+  createDatalistOptionApi,
+  DatalistOptionApi,
+} from "@/entities/datalist-option";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -82,6 +86,7 @@ export interface ApiContextProps {
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
   spaceRole: PermissionSpaceRoleApi;
+  datalistOption: DatalistOptionApi;
 }
 
 export function ApiContextProvider({
@@ -123,6 +128,7 @@ export function ApiContextProvider({
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
+        datalistOption: createDatalistOptionApi(settings),
       }}
     >
       {children}
