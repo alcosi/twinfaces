@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { DatalistContextProvider } from "./datalist-context";
+import { DatalistContextProvider } from "@/features/datalist";
 
 interface DatalistLayoutProps {
   params: {

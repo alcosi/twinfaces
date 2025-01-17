@@ -24,9 +24,9 @@ export const useUserGroupSearchV1 = () => {
           pagination,
           filters: {
             ...filters,
-            nameLikeList: isPopulatedString(search)
+            nameI18NLikeList: isPopulatedString(search)
               ? [wrapWithPercent(search)]
-              : filters?.nameLikeList,
+              : filters?.nameI18NLikeList,
           },
         });
 

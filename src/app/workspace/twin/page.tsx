@@ -25,6 +25,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { DatalistOptionResourceLink } from "@/entities/option";
 
 const colDefs: Record<
   keyof Pick<
@@ -138,12 +139,36 @@ const colDefs: Record<
     id: "tags",
     accessorKey: "tags",
     header: "Tags",
+    cell: ({ row: { original } }) =>
+      original.tagIdList && original.tags && original.id ? (
+        <div className="max-w-48 inline-flex">
+          <DatalistOptionResourceLink
+            data={{
+              ...original.tags,
+              dataListId: original.twinClass?.tagsDataListId,
+            }}
+            withTooltip
+          />
+        </div>
+      ) : null,
   },
 
   markers: {
     id: "markers",
     accessorKey: "markers",
     header: "Markers",
+    cell: ({ row: { original } }) =>
+      original.markerIdList && original.markers ? (
+        <div className="max-w-48 inline-flex">
+          <DatalistOptionResourceLink
+            data={{
+              ...original.markers,
+              dataListId: original.twinClass?.markersDataListId,
+            }}
+            withTooltip
+          />
+        </div>
+      ) : null,
   },
 
   createdAt: {

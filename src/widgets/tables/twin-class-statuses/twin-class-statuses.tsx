@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { CrudDataTable, DataTableHandle } from "../../crud-data-table";
 import { TwinClassStatusFormFields } from "./form-fields";
 
-function buildColumnDefs(twinClassId: string) {
+function buildColumnDefs() {
   const colDefs: ColumnDef<TwinStatus>[] = [
     {
       accessorKey: "logo",
@@ -56,7 +56,7 @@ function buildColumnDefs(twinClassId: string) {
         <div className="max-w-48 inline-flex">
           <TwinClassStatusResourceLink
             data={original}
-            twinClassId={twinClassId}
+            twinClassId={original.twinClassId!}
             withTooltip
           />
         </div>
@@ -173,12 +173,15 @@ export function TwinClassStatusesTable({
 
   return (
     <CrudDataTable
+      title="Statuses"
       ref={tableRef}
-      columns={buildColumnDefs(twinClassId!)}
+      columns={buildColumnDefs()}
       getRowId={(row) => row.key!}
       fetcher={fetchStatuses}
       onRowClick={(row) =>
-        router.push(`/workspace/twinclass/${twinClassId!}/twinStatus/${row.id}`)
+        router.push(
+          `/workspace/twinclass/${row.twinClassId}/twinStatus/${row.id}`
+        )
       }
       dialogForm={form}
       onCreateSubmit={handleCreate}

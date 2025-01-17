@@ -9,7 +9,6 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
 import { DataTableHandle, FiltersState } from "@/widgets/crud-data-table";
 import { toast } from "sonner";
-
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable } from "@/widgets/crud-data-table";
@@ -27,6 +26,7 @@ const colDefs: Record<
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
+
   name: {
     id: "name",
     accessorKey: "name",
@@ -37,11 +37,13 @@ const colDefs: Record<
       </div>
     ),
   },
+
   description: {
     id: "description",
     accessorKey: "description",
     header: "Description",
   },
+
   updatedAt: {
     id: "updatedAt",
     accessorKey: "updatedAt",
@@ -53,7 +55,7 @@ const colDefs: Record<
   },
 };
 
-const Page = () => {
+const DatalistsPage = () => {
   const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
@@ -89,6 +91,7 @@ const Page = () => {
 
   return (
     <CrudDataTable
+      title="Datalists"
       ref={tableRef}
       columns={[
         colDefs.id!,
@@ -107,4 +110,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default DatalistsPage;
