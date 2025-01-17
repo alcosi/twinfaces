@@ -2,14 +2,14 @@
 
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { CrudDataTable } from "../../widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import {
   FactoryBranches,
   useFactoryBranchesSearch,
 } from "@/entities/factoryBranches";
 import { toast } from "sonner";
 import { GuidWithCopy } from "@/shared/ui";
-import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
+import { FactoryResourceLink } from "@/entities/factory";
 import { Factory } from "@/entities/factory";
 import { Check } from "lucide-react";
 import { useBreadcrumbs } from "@/features/breadcrumb";
