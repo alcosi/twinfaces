@@ -59,8 +59,8 @@ import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
 import {
-  createFactoryBranchesApi,
-  FactoryBranchesApi,
+  createFactoryBrancheApi,
+  FactoryBrancheApi,
 } from "@/entities/factoryBranches";
 import {
   createDatalistOptionApi,
@@ -89,7 +89,7 @@ export interface ApiContextProps {
   assigneePropagation: PermissionAssigneePropagationApi;
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
-  factoryBranches: FactoryBranchesApi;
+  factoryBranches: FactoryBrancheApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
 }
@@ -132,7 +132,7 @@ export function ApiContextProvider({
         assigneePropagation: createPermissionAssigneePropagationApi(settings),
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
-        factoryBranches: createFactoryBranchesApi(settings),
+        factoryBranches: createFactoryBrancheApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
       }}

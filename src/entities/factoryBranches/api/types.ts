@@ -15,10 +15,10 @@ export type FactoryBranche_DETAILED = RequireFields<
   | "nextFactoryId"
   | "nextFactory"
 >;
-export type FactoryBranchesSearchRq =
+export type FactoryBranchSearchRq =
   components["schemas"]["FactoryBranchSearchRqV1"];
 
-export type FactoryBranchesFilterKeys =
+export type FactoryBranchFilterKeys =
   | "idList"
   | "idExcludeList"
   | "factoryIdList"
@@ -29,6 +29,6 @@ export type FactoryBranchesFilterKeys =
   | "nextFactoryIdExcludeList"
   | "active";
 
-export type FactoryBranchesFilters = Partial<
-  Pick<FactoryBranchesSearchRq, FactoryBranchesFilterKeys>
+export type FactoryBranchFilters = Partial<
+  Pick<FactoryBranchSearchRq, FactoryBranchFilterKeys>
 >;

@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryBranche, FactoryBranche_DETAILED, FactoryBranchesFilters } from "../../api";
+import { FactoryBranche, FactoryBranche_DETAILED, FactoryBranchFilters } from "../../api";
 
 export function useFactoryBranchesSearch() {
   const api = useContext(ApiContext);
@@ -11,7 +11,7 @@ export function useFactoryBranchesSearch() {
       filters = {},
     }: {
       pagination: PaginationState;
-      filters?: FactoryBranchesFilters;
+      filters?: FactoryBranchFilters;
     }): Promise<PagedResponse<FactoryBranche>> => {  //TODO replase to the FactoryBranche_DETAILED type after hydration
       try {
         const { data, error } = await api.factoryBranches.search({

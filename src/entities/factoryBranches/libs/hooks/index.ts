@@ -1,1 +1,1 @@
-export * from "./useFactoryBranchesSearch";
+export * from "./useSearchV1";
