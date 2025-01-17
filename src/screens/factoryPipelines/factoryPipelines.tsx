@@ -1,9 +1,7 @@
 "use client";
 
-import { Factory } from "@/entities/factory";
 import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
 import {
-  FactoryPipeline,
   FactoryPipeline_DETAILED,
   useFactoryPipelineFilters,
   useFactoryPipelineSearch,
@@ -24,7 +22,7 @@ import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Omit<
-    FactoryPipeline,
+    FactoryPipeline_DETAILED,
     | "factoryId"
     | "factoryConditionSetId"
     | "nextFactoryId"
@@ -47,7 +45,7 @@ const colDefs: Record<
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
         {original.factory && (
-          <FactoryResourceLink data={original.factory as Factory} withTooltip />
+          <FactoryResourceLink data={original.factory} withTooltip />
         )}
       </div>
     ),
@@ -100,7 +98,7 @@ const colDefs: Record<
       original.outputTwinStatus && (
         <div className="max-w-48 inline-flex">
           <TwinClassStatusResourceLink
-            data={original.outputTwinStatus as TwinStatus}
+            data={original.outputTwinStatus}
             twinClassId={original.inputTwinClassId!}
             withTooltip
           />
@@ -115,10 +113,7 @@ const colDefs: Record<
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
         {original.nextFactory && (
-          <FactoryResourceLink
-            data={original.nextFactory as Factory}
-            withTooltip
-          />
+          <FactoryResourceLink data={original.nextFactory} withTooltip />
         )}
       </div>
     ),

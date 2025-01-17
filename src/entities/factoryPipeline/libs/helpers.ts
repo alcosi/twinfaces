@@ -25,5 +25,17 @@ export const hydrateFactoryPipelineFromMap = (
     hydrated.factory = relatedObjects.factoryMap[dto.factoryId] as Factory;
   }
 
+  if (dto.nextFactoryId && relatedObjects?.factoryMap) {
+    hydrated.nextFactory = relatedObjects.factoryMap[
+      dto.nextFactoryId
+    ] as Factory;
+  }
+
+  if (dto.outputTwinStatusId && relatedObjects?.statusMap) {
+    hydrated.outputTwinStatus = relatedObjects.statusMap[
+      dto.outputTwinStatusId
+    ] as TwinClass_DETAILED;
+  }
+
   return hydrated;
 };
