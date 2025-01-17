@@ -39,7 +39,6 @@ export const usePermissionSearchV1 = () => {
           data.permissions?.map((dto) =>
             hydratePermissionFromMap(dto, data.relatedObjects)
           ) ?? [];
-
         return { data: permissions, pagination: data.pagination ?? {} };
       } catch (error) {
         console.error("Failed to fetch twin classes:", error);

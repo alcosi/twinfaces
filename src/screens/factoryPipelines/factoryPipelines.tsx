@@ -1,9 +1,8 @@
 "use client";
 
-import { Factory } from "@/entities/factory";
 import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
 import {
-  FactoryPipeline,
+  FactoryPipeline_DETAILED,
   useFactoryPipelineFilters,
   useFactoryPipelineSearch,
 } from "@/entities/factoryPipeline";
@@ -11,7 +10,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
+import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -23,14 +22,14 @@ import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Omit<
-    FactoryPipeline,
-    | "inputTwinClassId"
+    FactoryPipeline_DETAILED,
     | "factoryId"
     | "factoryConditionSetId"
     | "nextFactoryId"
     | "outputTwinStatusId"
+    | "inputTwinClass"
   >,
-  ColumnDef<FactoryPipeline>
+  ColumnDef<FactoryPipeline_DETAILED>
 > = {
   id: {
     id: "id",
@@ -38,11 +37,7 @@ const colDefs: Record<
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
-  description: {
-    id: "description",
-    accessorKey: "description",
-    header: "Description",
-  },
+
   factory: {
     id: "factory",
     accessorKey: "factory",
@@ -50,54 +45,67 @@ const colDefs: Record<
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
         {original.factory && (
-          <FactoryResourceLink data={original.factory as Factory} withTooltip />
+          <FactoryResourceLink data={original.factory} withTooltip />
         )}
       </div>
     ),
   },
+
+  inputTwinClassId: {
+    id: "inputTwinClassId",
+    accessorKey: "inputTwinClassId",
+    header: "Input Class",
+    cell: ({ row: { original } }) =>
+      original.inputTwinClass && (
+        <div className="max-w-48 inline-flex">
+          <TwinClassResourceLink
+            data={original.inputTwinClass as TwinClass_DETAILED}
+            withTooltip
+          />
+        </div>
+      ),
+  },
+
   // TODO: Replace with a condition set resource link
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
-    header: "Factory Condition Set",
+    header: "Condition Set",
     cell: ({ row: { original } }) => (
       <span>{original.factoryConditionSet?.name}</span>
     ),
   },
+
   factoryConditionSetInvert: {
     id: "factoryConditionSetInvert",
     accessorKey: "factoryConditionSetInvert",
-    header: "Factory Condition Set Invert",
+    header: "Condition Invert",
     cell: (data) => data.getValue() && <Check />,
   },
-  inputTwinClass: {
-    id: "inputTwinClass",
-    accessorKey: "inputTwinClass",
-    header: "Input Twin Class",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinClassResourceLink
-          data={original.inputTwinClass as TwinClass_DETAILED}
-          withTooltip
-        />
-      </div>
-    ),
+
+  active: {
+    id: "active",
+    accessorKey: "active",
+    header: "Active",
+    cell: (data) => data.getValue() && <Check />,
   },
+
   outputTwinStatus: {
     id: "outputTwinStatus",
     accessorKey: "outputTwinStatus",
-    header: "Output Twin Status",
+    header: "Output Status",
     cell: ({ row: { original } }) =>
       original.outputTwinStatus && (
         <div className="max-w-48 inline-flex">
           <TwinClassStatusResourceLink
-            data={original.outputTwinStatus as TwinStatus}
+            data={original.outputTwinStatus}
             twinClassId={original.inputTwinClassId!}
             withTooltip
           />
         </div>
       ),
   },
+
   nextFactory: {
     id: "nextFactory",
     accessorKey: "nextFactory",
@@ -105,26 +113,25 @@ const colDefs: Record<
     cell: ({ row: { original } }) => (
       <div className="max-w-48 inline-flex">
         {original.nextFactory && (
-          <FactoryResourceLink
-            data={original.nextFactory as Factory}
-            withTooltip
-          />
+          <FactoryResourceLink data={original.nextFactory} withTooltip />
         )}
       </div>
     ),
   },
-  active: {
-    id: "active",
-    accessorKey: "active",
-    header: "Active",
-    cell: (data) => data.getValue() && <Check />,
+
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
   },
+
   nextFactoryLimitScope: {
     id: "nextFactoryLimitScope",
     accessorKey: "nextFactoryLimitScope",
     header: "Next Factory Limit Scope",
     cell: (data) => data.getValue() && <Check />,
   },
+
   pipelineStepsCount: {
     id: "pipelineStepsCount",
     accessorKey: "pipelineStepsCount",
@@ -162,18 +169,30 @@ export function FactoryPipelines() {
 
   return (
     <CrudDataTable
-      columns={Object.values(colDefs) as ColumnDef<FactoryPipeline>[]}
+      title="Factory Pipelines"
+      columns={[
+        colDefs.id,
+        colDefs.factory,
+        colDefs.inputTwinClassId,
+        colDefs.factoryConditionSet,
+        colDefs.factoryConditionSetInvert,
+        colDefs.active,
+        colDefs.outputTwinStatus,
+        colDefs.nextFactory,
+        colDefs.description,
+      ]}
       fetcher={fetchFactoryPipelines}
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.factory,
+        colDefs.inputTwinClassId,
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
-        colDefs.inputTwinClass,
+        colDefs.active,
         colDefs.outputTwinStatus,
         colDefs.nextFactory,
-        colDefs.active,
+        colDefs.description,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
     />

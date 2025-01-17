@@ -14,13 +14,15 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
-          lazyRelation: true,
+          lazyRelation: false,
           showFactoryPipelineMode: "DETAILED",
           showFactoryPipeline2FactoryConditionSetMode: "DETAILED",
           showFactoryPipelineNextTwinFactory2FactoryMode: "DETAILED",
           showFactoryPipelineTwinFactory2FactoryMode: "DETAILED",
           showFactoryPipeline2TwinClassMode: "DETAILED",
           showFactoryPipelineOutputTwinStatus2StatusMode: "DETAILED",
+
+          showFactoryPipeline2FactoryMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

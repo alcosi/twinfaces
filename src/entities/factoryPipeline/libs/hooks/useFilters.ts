@@ -1,4 +1,10 @@
-import { FilterFeature, mapToChoice, toArrayOfString } from "@/shared/libs";
+import {
+  FilterFeature,
+  mapToChoice,
+  toArray,
+  toArrayOfString,
+  wrapWithPercent,
+} from "@/shared/libs";
 import {
   FactoryPipelineFilterKeys,
   FactoryPipelineFilters,
@@ -40,18 +46,6 @@ export function useFactoryPipelineFilters(): FilterFeature<
         multi: true,
         ...twinClassAdapter,
       },
-      nextFactoryIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Next Factory",
-        multi: true,
-        ...factorySelectAdapter,
-      },
-      outputTwinStatusIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Output Twin Status",
-        multi: true,
-        ...twinStatusAdapter,
-      },
       // TODO: Change to combobox when factoryConditionSet is implemented
       // https://alcosi.atlassian.net/browse/TWINS-241
       factoryConditionSetIdList: {
@@ -60,17 +54,31 @@ export function useFactoryPipelineFilters(): FilterFeature<
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
       },
+
       active: {
         type: AutoFormValueType.boolean,
         label: "Active",
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
-      nextFactoryLimitScope: {
-        type: AutoFormValueType.boolean,
-        label: "Limit Next Factory Scope",
-        hasIndeterminate: true,
-        defaultValue: "indeterminate",
+
+      outputTwinStatusIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Output Twin Status",
+        multi: true,
+        ...twinStatusAdapter,
+      },
+
+      nextFactoryIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Next Factory",
+        multi: true,
+        ...factorySelectAdapter,
+      },
+
+      descriptionLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Description",
       },
     };
   }
@@ -91,7 +99,10 @@ export function useFactoryPipelineFilters(): FilterFeature<
         filters.factoryConditionSetIdList
       ),
       active: mapToChoice(filters.active),
-      nextFactoryLimitScope: mapToChoice(filters.nextFactoryLimitScope),
+      descriptionLikeList: toArrayOfString(
+        toArray(filters.descriptionLikeList),
+        "description"
+      ).map(wrapWithPercent),
     };
   }
 

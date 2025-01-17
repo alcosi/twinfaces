@@ -1,7 +1,11 @@
 import { useCallback, useContext } from "react";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { Factory, FactoryFilters } from "@/entities/factory";
+import { FactoryFilters } from "@/entities/factory";
+import {
+  FactoryPipeline_DETAILED,
+  hydrateFactoryPipelineFromMap,
+} from "@/entities/factoryPipeline";
 
 // TODO: Turn off lazy-relation for twinClasses and factories, implement hydration
 // https://alcosi.atlassian.net/browse/TWINFACES-419
@@ -14,7 +18,7 @@ export function useFactoryPipelineSearch() {
     }: {
       pagination: PaginationState;
       filters?: FactoryFilters;
-    }): Promise<PagedResponse<Factory>> => {
+    }): Promise<PagedResponse<FactoryPipeline_DETAILED>> => {
       try {
         const { data, error } = await api.factoryPipeline.search({
           pagination,
@@ -25,8 +29,13 @@ export function useFactoryPipelineSearch() {
           throw error;
         }
 
+        const pipelines =
+          data.pipelines?.map((dto) =>
+            hydrateFactoryPipelineFromMap(dto, data.relatedObjects)
+          ) ?? [];
+
         return {
-          data: data.pipelines ?? [],
+          data: pipelines,
           pagination: data.pagination ?? {},
         };
       } catch (error) {
