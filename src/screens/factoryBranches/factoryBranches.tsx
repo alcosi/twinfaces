@@ -4,7 +4,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { CrudDataTable } from "@/widgets/crud-data-table";
 import {
-  FactoryBranches,
+  FactoryBranche,
   useFactoryBranchesSearch,
 } from "@/entities/factoryBranches";
 import { toast } from "sonner";
@@ -17,10 +17,10 @@ import { useEffect } from "react";
 
 const colDefs: Record<
   keyof Omit<
-    FactoryBranches,
+    FactoryBranche,
     "factoryId" | "factoryConditionSetId" | "nextFactoryId"
   >,
-  ColumnDef<FactoryBranches>
+  ColumnDef<FactoryBranche>
 > = {
   id: {
     id: "id",
