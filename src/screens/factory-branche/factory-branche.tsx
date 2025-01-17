@@ -6,7 +6,7 @@ import { CrudDataTable } from "@/widgets/crud-data-table";
 import {
   FactoryBranche,
   useFactoryBranchesSearch,
-} from "@/entities/factoryBranches";
+} from "@/entities/factory-branche";
 import { toast } from "sonner";
 import { GuidWithCopy } from "@/shared/ui";
 import { FactoryResourceLink } from "@/entities/factory";
@@ -83,7 +83,7 @@ const colDefs: Record<
   },
 };
 
-export function FactoryBranchesScreen() {
+export function FactoryBrancheScreen() {
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
 

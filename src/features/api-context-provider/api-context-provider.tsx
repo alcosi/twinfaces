@@ -61,7 +61,7 @@ import { useAuthUser } from "../auth";
 import {
   createFactoryBrancheApi,
   FactoryBrancheApi,
-} from "@/entities/factoryBranches";
+} from "@/entities/factory-branche";
 import {
   createDatalistOptionApi,
   DatalistOptionApi,
