@@ -58,7 +58,10 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
-import { createDatalistOptionApi, DatalistOptionApi } from "@/entities/option";
+import {
+  createDatalistOptionApi,
+  DatalistOptionApi,
+} from "@/entities/datalist-option";
 
 export interface ApiContextProps {
   domain: DomainApi;

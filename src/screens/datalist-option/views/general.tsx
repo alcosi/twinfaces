@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { GuidWithCopy } from "@/shared/ui";
-import { DataListOptionV3 } from "@/entities/option";
+import { DataListOptionV3 } from "@/entities/datalist-option";
 
 export function DatalistOptionGeneral({
   datalistOption,

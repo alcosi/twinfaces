@@ -5,7 +5,7 @@ import {
   DataListOptionFilters,
   DataListOptionV3,
   hydrateDatalistOptionFromMap,
-} from "@/entities/option";
+} from "@/entities/datalist-option";
 
 export const useDatalistOptionsSearch = () => {
   const api = useContext(ApiContext);

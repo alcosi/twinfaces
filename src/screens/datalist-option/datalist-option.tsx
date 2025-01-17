@@ -1,6 +1,9 @@
 "use client";
 
-import { DataListOptionV3, useDatalistOption } from "@/entities/option";
+import {
+  DataListOptionV3,
+  useDatalistOption,
+} from "@/entities/datalist-option";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { DatalistContext } from "@/features/datalist";
 import { LoadingOverlay } from "@/shared/ui";

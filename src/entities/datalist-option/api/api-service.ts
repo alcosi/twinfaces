@@ -1,6 +1,6 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { DataListOptionFilters } from "@/entities/option";
+import { DataListOptionFilters } from "@/entities/datalist-option";
 
 export function createDatalistOptionApi(settings: ApiSettings) {
   function search({

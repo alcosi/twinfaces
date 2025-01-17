@@ -15,7 +15,7 @@ import {
   DataListOptionV3,
   useDatalistOptionFilters,
   useDatalistOptionsSearch,
-} from "@/entities/option";
+} from "@/entities/datalist-option";
 import { DatalistResourceLink } from "@/entities/datalist";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";

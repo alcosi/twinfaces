@@ -3,7 +3,7 @@ import { useDatalistSelectAdapter } from "@/entities/datalist";
 import {
   DataListOptionFilterKeys,
   DataListOptionFilters,
-} from "@/entities/option";
+} from "@/entities/datalist-option";
 import {
   type FilterFeature,
   isPopulatedArray,

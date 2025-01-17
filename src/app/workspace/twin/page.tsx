@@ -25,7 +25,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { DatalistOptionResourceLink } from "@/entities/option";
+import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 
 const colDefs: Record<
   keyof Pick<

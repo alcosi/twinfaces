@@ -20,7 +20,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
 import { TwinContext } from "../twin-context";
-import { DatalistOptionResourceLink } from "@/entities/option";
+import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);

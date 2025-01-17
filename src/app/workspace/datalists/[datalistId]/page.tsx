@@ -7,6 +7,7 @@ import { DatalistOptionsTable } from "@/widgets/tables";
 import { useContext, useEffect } from "react";
 import { DatalistGeneral } from "./views";
 
+//TODO: implement <DatalistScreen />
 export default function DatalistPage() {
   const { datalistId, datalist } = useContext(DatalistContext);
   const { setBreadcrumbs } = useBreadcrumbs();

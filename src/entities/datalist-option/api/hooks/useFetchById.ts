@@ -1,7 +1,7 @@
 import { ApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext, useState } from "react";
-import { DataListOptionV3 } from "@/entities/option";
+import { DataListOptionV3 } from "@/entities/datalist-option";
 
 // TODO: Apply caching-strategy
 export const useDatalistOption = () => {
