@@ -14,5 +14,9 @@ export const hydrateFactoryBrancheFromMap = (
     hydrated.factory = relatedObjects.factoryMap[dto.factoryId]!;
   }
 
+  if (dto.nextFactoryId && relatedObjects?.factoryMap) {
+    hydrated.nextFactory = relatedObjects.factoryMap[dto.nextFactoryId]!;
+  }
+
   return hydrated;
 };

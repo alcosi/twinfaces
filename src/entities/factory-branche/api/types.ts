@@ -6,7 +6,6 @@ export type FactoryBranche_SHORT = RequireFields<
   FactoryBranche,
   "id" | "factoryId" | "factory" | "factoryConditionSetInvert" | "active"
 >;
-
 export type FactoryBranche_DETAILED = RequireFields<
   FactoryBranche_SHORT,
   | "description"
@@ -15,6 +14,7 @@ export type FactoryBranche_DETAILED = RequireFields<
   | "nextFactoryId"
   | "nextFactory"
 >;
+
 export type FactoryBranchSearchRq =
   components["schemas"]["FactoryBranchSearchRqV1"];
 

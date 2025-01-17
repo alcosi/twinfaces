@@ -1,19 +1,18 @@
 "use client";
 
-import { PaginationState } from "@tanstack/react-table";
-import { ColumnDef } from "@tanstack/table-core";
-import { CrudDataTable } from "@/widgets/crud-data-table";
+import { Factory, FactoryResourceLink } from "@/entities/factory";
 import {
   FactoryBranche,
   useFactoryBranchesSearch,
 } from "@/entities/factory-branche";
-import { toast } from "sonner";
-import { GuidWithCopy } from "@/shared/ui";
-import { FactoryResourceLink } from "@/entities/factory";
-import { Factory } from "@/entities/factory";
-import { Check } from "lucide-react";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { GuidWithCopy } from "@/shared/ui";
+import { CrudDataTable } from "@/widgets/crud-data-table";
+import { PaginationState } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Omit<
@@ -64,16 +63,15 @@ const colDefs: Record<
     id: "nextFactory",
     accessorKey: "nextFactory",
     header: "Next Factory",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        {original.nextFactory && (
+    cell: ({ row: { original } }) =>
+      original.nextFactory && (
+        <div className="max-w-48 inline-flex">
           <FactoryResourceLink
             data={original.nextFactory as Factory}
             withTooltip
           />
-        )}
-      </div>
-    ),
+        </div>
+      ),
   },
   active: {
     id: "active",

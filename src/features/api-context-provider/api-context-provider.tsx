@@ -6,8 +6,16 @@ import {
 } from "@/entities/assigneePropagation";
 import { CommentApi, createCommentApi } from "@/entities/comment";
 import { createDatalistApi, DatalistApi } from "@/entities/datalist";
+import {
+  createDatalistOptionApi,
+  DatalistOptionApi,
+} from "@/entities/datalist-option";
 import { createDomainApi, DomainApi } from "@/entities/domain";
 import { createFactoryApi, FactoryApi } from "@/entities/factory";
+import {
+  createFactoryBrancheApi,
+  FactoryBrancheApi,
+} from "@/entities/factory-branche";
 import {
   createFactoryPipelineApi,
   FactoryPipelineApi,
@@ -58,14 +66,6 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
-import {
-  createFactoryBrancheApi,
-  FactoryBrancheApi,
-} from "@/entities/factory-branche";
-import {
-  createDatalistOptionApi,
-  DatalistOptionApi,
-} from "@/entities/datalist-option";
 
 export interface ApiContextProps {
   domain: DomainApi;

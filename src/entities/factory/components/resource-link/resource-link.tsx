@@ -1,8 +1,8 @@
+import { Factory } from "@/entities/factory";
+import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 import { Factory as FactoryIcon } from "lucide-react";
-import { isPopulatedString } from "@/shared/libs";
-import { FactoryResourceTooltip } from "@/entities/factory/components/resource-link/tooltip";
-import { Factory } from "@/entities/factory";
+import { FactoryResourceTooltip } from "./tooltip";
 
 type Props = {
   data: Factory;
