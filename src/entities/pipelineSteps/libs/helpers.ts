@@ -19,6 +19,5 @@ export const hydratePipelineStepsFromMap = (
     ] as FactoryPipeline;
   }
 
-  console.log(pipelineSteps)
   return pipelineSteps;
 };

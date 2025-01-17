@@ -37,7 +37,10 @@ const colDefs: Record<
     id: "factory",
     accessorKey: "factory",
     header: "Factory",
-    cell: ({ row: { original } }) => <GuidWithCopy value={original.factoryPipeline?.factoryId}/>},
+    cell: ({ row: { original } }) => (
+      <GuidWithCopy value={original.factoryPipeline?.factoryId} />
+    ),
+  },
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",

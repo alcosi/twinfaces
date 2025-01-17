@@ -26,10 +26,6 @@ export function usePipelineStepsSearch() {
           throw error;
         }
 
-        // const pipelineSteps = data.steps?.map(
-        //   (dto) => hydratePipelineStepsFromMap(dto, data.relatedObjects) ?? []
-        // );
-
         const pipelineSteps = (data.steps || []).map(
           (dto) => hydratePipelineStepsFromMap(dto, data.relatedObjects) ?? []
         );
