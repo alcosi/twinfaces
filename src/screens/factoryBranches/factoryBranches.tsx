@@ -45,18 +45,14 @@ const colDefs: Record<
       </div>
     ),
   },
-  // TODO: Replace with a condition set resource link
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
     header: "Condition set",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        {original.factory && (
-          <FactoryResourceLink data={original.factory as Factory} withTooltip />
-        )}
-      </div>
-    ),
+    cell: ({ row: { original } }) =>
+      original.factoryConditionSet && (
+        <GuidWithCopy value={original.factoryConditionSet?.id} />
+      ),
   },
   factoryConditionSetInvert: {
     id: "factoryConditionSetInvert",
