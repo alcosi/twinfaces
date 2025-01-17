@@ -12,10 +12,9 @@ export function DatalistOptionScreen({ optionId }: { optionId: string }) {
   const [datalistOption, setDatalistOption] = useState<
     DataListOptionV3 | undefined
   >(undefined);
-  const { fetchDatalistOptionById } = useDatalistOption();
+  const { fetchDatalistOptionById, loading } = useDatalistOption();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { datalist } = useContext(DatalistContext);
-  const { loading } = useDatalistOption();
 
   useEffect(() => {
     fetchDatalistOptions();
