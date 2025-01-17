@@ -6,8 +6,16 @@ import {
 } from "@/entities/assigneePropagation";
 import { CommentApi, createCommentApi } from "@/entities/comment";
 import { createDatalistApi, DatalistApi } from "@/entities/datalist";
+import {
+  createDatalistOptionApi,
+  DatalistOptionApi,
+} from "@/entities/datalist-option";
 import { createDomainApi, DomainApi } from "@/entities/domain";
 import { createFactoryApi, FactoryApi } from "@/entities/factory";
+import {
+  createFactoryBrancheApi,
+  FactoryBrancheApi,
+} from "@/entities/factory-branche";
 import {
   createFactoryPipelineApi,
   FactoryPipelineApi,
@@ -58,10 +66,6 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
-import {
-  createDatalistOptionApi,
-  DatalistOptionApi,
-} from "@/entities/datalist-option";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -85,6 +89,7 @@ export interface ApiContextProps {
   assigneePropagation: PermissionAssigneePropagationApi;
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
+  factoryBranches: FactoryBrancheApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
 }
@@ -127,6 +132,7 @@ export function ApiContextProvider({
         assigneePropagation: createPermissionAssigneePropagationApi(settings),
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
+        factoryBranches: createFactoryBrancheApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
       }}

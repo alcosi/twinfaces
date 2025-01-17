@@ -1,5 +1,5 @@
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { FactoryBrancheScreen } from "@/screens/factory-branche";
 
-export default function BranchesPage() {
-  return <UnderConstruction />;
+export default function BranchePage() {
+  return <FactoryBrancheScreen />;
 }
