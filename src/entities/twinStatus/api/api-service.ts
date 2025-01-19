@@ -65,7 +65,9 @@ export function createTwinStatusApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
+          lazyRelation: false,
           showStatusMode: "DETAILED",
+          showTwinStatus2TwinClassMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: true,

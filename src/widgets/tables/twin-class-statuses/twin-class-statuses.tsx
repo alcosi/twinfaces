@@ -1,9 +1,13 @@
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
+import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
   TwinClassStatusResourceLink,
-  TwinStatus,
+  TwinStatus_DETAILED,
   TwinStatusCreateRq,
   useTwinStatusSearchV1,
 } from "@/entities/twinStatus";
@@ -22,7 +26,7 @@ import { CrudDataTable, DataTableHandle } from "../../crud-data-table";
 import { TwinClassStatusFormFields } from "./form-fields";
 
 function buildColumnDefs() {
-  const colDefs: ColumnDef<TwinStatus>[] = [
+  const colDefs: ColumnDef<TwinStatus_DETAILED>[] = [
     {
       accessorKey: "logo",
       header: "Logo",
@@ -44,6 +48,20 @@ function buildColumnDefs() {
       accessorKey: "id",
       header: "ID",
       cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    },
+    {
+      id: "twinClassId",
+      accessorKey: "twinClassId",
+      header: "Class",
+      cell: ({ row: { original } }) =>
+        original.twinClass && (
+          <div className="max-w-48 inline-flex">
+            <TwinClassResourceLink
+              data={original.twinClass as TwinClass_DETAILED}
+              withTooltip
+            />
+          </div>
+        ),
     },
     {
       accessorKey: "key",
@@ -123,7 +141,7 @@ export function TwinClassStatusesTable({
 
   async function fetchStatuses(
     pagination: PaginationState
-  ): Promise<PagedResponse<TwinStatus>> {
+  ): Promise<PagedResponse<TwinStatus_DETAILED>> {
     try {
       return await searchTwinStatuses({
         pagination,
