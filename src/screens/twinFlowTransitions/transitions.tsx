@@ -205,38 +205,6 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
     toast.success("Twinflow transition created successfully!");
   }
 
-  async function handleUpdate(
-    transitionId: string,
-    formValues: z.infer<typeof TWIN_FLOW_TRANSITION_SCHEMA>
-  ) {
-    const body: TwinFlowTransitionUpdateRq = {
-      alias: formValues.alias,
-      nameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      descriptionI18n: formValues.description
-        ? {
-            translations: {
-              en: formValues.description,
-            },
-          }
-        : undefined,
-      srcStatusId: formValues.srcTwinStatusId,
-      dstStatusId: formValues.dstTwinStatusId,
-      permissionId: formValues.permissionId,
-    };
-
-    const { error } = await api.twinFlowTransition.update({
-      transitionId,
-      body,
-    });
-    if (error) {
-      throw error;
-    }
-    toast.success("Twinflow transition updated successfully!");
-  }
   return (
     <CrudDataTable
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
@@ -265,7 +233,6 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
       orderedColumns={Object.values(colDefs)}
       dialogForm={form}
       onCreateSubmit={handleCreate}
-      onUpdateSubmit={handleUpdate}
       renderFormFields={() => (
         <TwinFlowTransitionFormFields
           twinClassId={twinClassId}

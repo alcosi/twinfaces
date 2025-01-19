@@ -209,30 +209,6 @@ export function TwinClassLinks() {
     toast.success("Link created successfully!");
   };
 
-  const handleOnUpdateSubmit = async (
-    linkId: string,
-    formValues: z.infer<typeof twinLinkSchema>
-  ) => {
-    const body: UpdateLinkRequestBody = {
-      forwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      backwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      ...formValues,
-    };
-    const { error } = await api.twinClassLink.update({ linkId, body });
-    if (error) {
-      throw error;
-    }
-    toast.success("Link updated successfully!");
-  };
-
   return (
     <>
       <CrudDataTable
@@ -262,7 +238,6 @@ export function TwinClassLinks() {
         ]}
         dialogForm={forwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
-        onUpdateSubmit={handleOnUpdateSubmit}
         renderFormFields={() => (
           <TwinClassLinkFormFields
             control={forwardLinkForm.control}
@@ -297,7 +272,6 @@ export function TwinClassLinks() {
         ]}
         dialogForm={backwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
-        onUpdateSubmit={handleOnUpdateSubmit}
         renderFormFields={() => (
           <TwinClassLinkFormFields control={backwardLinkForm.control} />
         )}

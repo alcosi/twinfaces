@@ -20,6 +20,6 @@ export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
   fetcher: (pagination: PaginationState) => Promise<PagedResponse<TData>>;
   disablePagination?: boolean;
   pageSizes?: number[];
-  onFetchError?: (e: Error) => any;
-  onRowClick?: (row: TData) => any;
+  onFetchError?: (e: Error) => void;
+  onRowClick?: (row: TData) => void;
 }
