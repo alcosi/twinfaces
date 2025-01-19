@@ -42,7 +42,6 @@ type CrudDataTableProps<
     groupableColumns?: DataTableProps<TData, TValue>["columns"];
     dialogForm?: UseFormReturn<any>;
     onCreateSubmit?: (values: any) => Promise<void>;
-    onUpdateSubmit?: (id: string, values: any) => Promise<void>;
     renderFormFields?: () => ReactNode;
   };
 
@@ -54,7 +53,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     fetcher,
     dialogForm,
     onCreateSubmit,
-    onUpdateSubmit,
     renderFormFields,
     onRowClick,
     ...props
@@ -126,11 +124,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     ? () => dialogRef.current?.open()
     : undefined;
 
-  let handleOnRowClick = onRowClick;
-  if (handleOnRowClick === undefined && onUpdateSubmit) {
-    handleOnRowClick = (row: TData) => dialogRef.current?.open(row);
-  }
-
   return (
     <div className={cn("flex-1 py-4", className)}>
       <CrudDataTableHeader
@@ -152,7 +145,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         {...props}
         columns={visibleColumns}
         fetcher={fetchWrapper}
-        onRowClick={handleOnRowClick}
+        onRowClick={onRowClick}
       />
 
       <CrudDataTableDialog
@@ -160,7 +153,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         dialogForm={dialogForm}
         renderFormFields={renderFormFields}
         onCreateSubmit={onCreateSubmit}
-        onUpdateSubmit={onUpdateSubmit}
         onSubmitSuccess={() => tableRef.current?.refresh()}
       />
     </div>

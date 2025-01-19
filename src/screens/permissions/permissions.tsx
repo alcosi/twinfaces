@@ -4,28 +4,30 @@ import {
   Permission_DETAILED,
   PERMISSION_SCHEMA,
   PermissionFormValues,
-  UpdatePermissionRequestBody,
   usePermissionFilters,
   usePermissionSearchV1,
 } from "@/entities/permission";
 import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
+import {
+  PermissionGroup,
+  PermissionGroupResourceLink,
+} from "@/entities/permissionGroup";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { FiltersState } from "@/widgets/crud-data-table";
-import { DataTableHandle } from "@/widgets/crud-data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { CrudDataTable } from "@/widgets/crud-data-table";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { PermissionsFormFields } from "./form-fields";
-import {
-  PermissionGroup,
-  PermissionGroupResourceLink,
-} from "@/entities/permissionGroup";
 
 const colDefs: Record<
   keyof Omit<Permission, "group">,
@@ -76,6 +78,7 @@ const colDefs: Record<
 export function Permissions() {
   const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
+  const router = useRouter();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissions } = usePermissionSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
@@ -139,34 +142,6 @@ export function Permissions() {
     toast.success("Link created successfully!");
   }
 
-  async function handleUpdate(
-    permissionId: string,
-    formValues: z.infer<typeof PERMISSION_SCHEMA>
-  ) {
-    const body: UpdatePermissionRequestBody = {
-      groupId: formValues.groupId,
-      key: formValues.key,
-      nameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      descriptionI18n: formValues.description
-        ? {
-            translations: {
-              en: formValues.description,
-            },
-          }
-        : undefined,
-    };
-
-    const { error } = await api.permission.update({ permissionId, body });
-    if (error) {
-      throw error;
-    }
-    toast.success("Permission updated successfully!");
-  }
-
   return (
     <CrudDataTable
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
@@ -180,6 +155,7 @@ export function Permissions() {
       ]}
       fetcher={fetchPermissions}
       getRowId={(row) => row.id!}
+      onRowClick={(row) => router.push(`/workspace/permission/${row.id}`)}
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
@@ -201,7 +177,6 @@ export function Permissions() {
       groupableColumns={[colDefs.name, colDefs.groupId, colDefs.description]}
       dialogForm={form}
       onCreateSubmit={handleCreate}
-      onUpdateSubmit={handleUpdate}
       renderFormFields={() => <PermissionsFormFields control={form.control} />}
     />
   );

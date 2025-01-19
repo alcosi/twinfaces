@@ -6,15 +6,14 @@ import {
   TwinFlowTransitionTriggerUpdate,
   useTwinFlowTransitionTriggersSearch,
 } from "@/entities/twinFlowTransition";
-import { useContext, useRef } from "react";
-import { DataTableHandle } from "@/widgets/crud-data-table";
-import { ColumnDef } from "@tanstack/table-core";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { CrudDataTable } from "@/widgets/crud-data-table";
-import { Check } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { ApiContext } from "@/shared/api";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
+import { useContext, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { TriggersFormFields } from "./form-fields";
 
@@ -107,35 +106,6 @@ export function TwinflowTransitionTriggers({
     }
   }
 
-  async function updateTrigger(id: string, formValues: TriggersFormValues) {
-    if (!transition.id) {
-      console.error("Update trigger: no transition");
-      return;
-    }
-
-    const body: TwinFlowTransitionTriggerUpdate = {
-      order: formValues.order,
-      triggerFeaturerId: formValues.triggerFeaturerId,
-      active: formValues.active,
-      triggerParams: formValues.triggerParams,
-    };
-
-    try {
-      const result = await api.twinFlowTransition.update({
-        transitionId: transition.id,
-        body: {
-          triggers: { update: [{ ...body, id: id }] },
-        },
-      });
-      if (result.error) {
-        throw new Error("Failed to update trigger");
-      }
-    } catch (e) {
-      toast.error("Failed to update trigger");
-      throw e;
-    }
-  }
-
   return (
     <CrudDataTable
       ref={tableRef}
@@ -158,7 +128,6 @@ export function TwinflowTransitionTriggers({
       ]}
       dialogForm={triggersForm}
       onCreateSubmit={createTrigger}
-      onUpdateSubmit={updateTrigger}
       renderFormFields={() => (
         <TriggersFormFields control={triggersForm.control} />
       )}
