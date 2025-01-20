@@ -9,6 +9,8 @@ import { TwinClassSelectField } from "@/features/twinClass";
 import { isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
 import { Control, Path, PathValue, useWatch } from "react-hook-form";
+import { DatalistSelectField } from "@/features/datalist";
+import { PermissionSelectField } from "@/features/permission";
 
 export function TwinClassFormFields<T extends TwinClassFieldValues>({
   control,
@@ -30,27 +32,33 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         label="Key"
         autoFocus={true}
       />
+
       <TextFormField control={control} name={"name" as Path<T>} label="Name" />
+
       <TextAreaFormField
         control={control}
         name={"description" as Path<T>}
         label="Description"
       />
+
       <CheckboxFormField
         control={control}
         name={"abstractClass" as Path<T>}
         label="Is abstract"
       />
+
       <TextFormField
         control={control}
         name={"logo" as Path<T>}
         label="Logo URL"
       />
+
       <TwinClassSelectField
         control={control}
         name={"headTwinClass" as Path<T>}
         label="Head"
       />
+
       {isPopulatedArray(headTwinClass) && (
         <FeaturerFormField
           typeId={FeaturerTypes.headHunter}
@@ -59,45 +67,53 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           label={"Head Hunter"}
         />
       )}
+
       <TwinClassSelectField
         control={control}
         name={"extendsTwinClassId" as Path<T>}
         label="Extends"
       />
+
       <CheckboxFormField
         control={control}
         name={"permissionSchemaSpace" as Path<T>}
         label="Permission schema space"
       />
+
       <CheckboxFormField
         control={control}
         name={"twinflowSchemaSpace" as Path<T>}
         label="Twinflow schema space"
       />
+
       <CheckboxFormField
         control={control}
         name={"twinClassSchemaSpace" as Path<T>}
         label="Twin class schema space"
       />
+
       <CheckboxFormField
         control={control}
         name={"aliasSpace" as Path<T>}
         label="Alias space"
       />
-      <TextFormField
+
+      <DatalistSelectField
         control={control}
         name={"markerDataListId" as Path<T>}
-        label="Marker data list ID"
+        label="Markers List"
       />
-      <TextFormField
+
+      <DatalistSelectField
         control={control}
         name={"tagDataListId" as Path<T>}
-        label="Tag data list ID"
+        label="Tags list"
       />
-      <TextFormField
+
+      <PermissionSelectField
         control={control}
         name={"viewPermissionId" as Path<T>}
-        label="View permission ID"
+        label="Permission"
       />
     </>
   );

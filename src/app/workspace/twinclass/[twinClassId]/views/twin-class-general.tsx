@@ -1,8 +1,11 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import { DataList, DatalistResourceLink } from "@/entities/datalist";
-import { FeaturerTypes } from "@/entities/featurer";
-import { Permission, PermissionResourceLink } from "@/entities/permission";
+import {
+  Featurer_DETAILED,
+  FeaturerResourceLink,
+  FeaturerTypes,
+} from "@/entities/featurer";
 import {
   TwinClass_DETAILED,
   TwinClassContext,
@@ -21,11 +24,11 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
+import { Permission, PermissionResourceLink } from "@/entities/permission";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
-  const { twinClass, relatedObjects, fetchClassData } =
-    useContext(TwinClassContext);
+  const { twinClass, fetchClassData } = useContext(TwinClassContext);
   const tcAdapter = useTwinClassSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
@@ -180,13 +183,9 @@ export function TwinClassGeneral() {
           >
             <TableCell>Head</TableCell>
             <TableCell>
-              {twinClass.headClassId && relatedObjects?.twinClassMap && (
+              {twinClass.headClass && (
                 <TwinClassResourceLink
-                  data={
-                    relatedObjects.twinClassMap[
-                      twinClass.headClassId
-                    ] as TwinClass_DETAILED
-                  }
+                  data={twinClass.headClass as TwinClass_DETAILED}
                   withTooltip
                 />
               )}
@@ -198,19 +197,22 @@ export function TwinClassGeneral() {
             onClick={() => openWithSettings(classValues.head!)}
           >
             <TableCell>Head hunter</TableCell>
-            <TableCell>{twinClass.headHunterFeaturerId}</TableCell>
+            <TableCell>
+              {twinClass.headHunterFeaturer && (
+                <FeaturerResourceLink
+                  data={twinClass.headHunterFeaturer as Featurer_DETAILED}
+                  withTooltip
+                />
+              )}
+            </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Extends</TableCell>
             <TableCell>
-              {twinClass.extendsClassId && relatedObjects?.twinClassMap && (
+              {twinClass.extendsClass && (
                 <TwinClassResourceLink
-                  data={
-                    relatedObjects.twinClassMap[
-                      twinClass.extendsClassId
-                    ] as TwinClass_DETAILED
-                  }
+                  data={twinClass.extendsClass as TwinClass_DETAILED}
                   withTooltip
                 />
               )}
@@ -220,13 +222,9 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell>Markers list</TableCell>
             <TableCell>
-              {twinClass.markersDataListId && relatedObjects?.dataListsMap && (
+              {twinClass.markerMap && (
                 <DatalistResourceLink
-                  data={
-                    relatedObjects.dataListsMap[
-                      twinClass.markersDataListId
-                    ] as DataList
-                  }
+                  data={twinClass.markerMap as DataList}
                   withTooltip
                 />
               )}
@@ -236,13 +234,9 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell>Tags list</TableCell>
             <TableCell>
-              {twinClass.tagsDataListId && relatedObjects?.dataListsMap && (
+              {twinClass.tagMap && (
                 <DatalistResourceLink
-                  data={
-                    relatedObjects.dataListsMap[
-                      twinClass.tagsDataListId
-                    ] as DataList
-                  }
+                  data={twinClass.tagMap as DataList}
                   withTooltip
                 />
               )}

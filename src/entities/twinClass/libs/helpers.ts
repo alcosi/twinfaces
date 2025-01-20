@@ -2,39 +2,51 @@ import { RelatedObjects } from "@/shared/api";
 import { TwinClass } from "../api";
 import { TwinClass_DETAILED } from "./types";
 import { DataListsMap } from "@/entities/datalist";
+import { Featurer_DETAILED } from "@/entities/featurer";
+import { Permission } from "@/entities/permission";
 
 export const hydrateTwinClassFromMap = (
-  twinClassDTO: TwinClass,
+  dto: TwinClass,
   relatedObjects?: RelatedObjects
 ): TwinClass_DETAILED => {
-  const twinClass: TwinClass_DETAILED = Object.assign(
+  const hydrated: TwinClass_DETAILED = Object.assign(
     {},
-    twinClassDTO
+    dto
   ) as TwinClass_DETAILED;
 
-  if (!relatedObjects?.twinClassMap) return twinClass;
+  if (!relatedObjects?.twinClassMap) return hydrated;
 
-  if (twinClassDTO.headClassId) {
-    twinClass.headClass = relatedObjects.twinClassMap[twinClassDTO.headClassId];
+  if (dto.headClassId) {
+    hydrated.headClass = relatedObjects.twinClassMap[dto.headClassId];
   }
 
-  if (twinClassDTO.extendsClassId) {
-    twinClass.extendsClass =
-      relatedObjects.twinClassMap[twinClassDTO.extendsClassId];
+  if (dto.extendsClassId) {
+    hydrated.extendsClass = relatedObjects.twinClassMap[dto.extendsClassId];
   }
 
-  if (twinClassDTO.markersDataListId && relatedObjects.dataListsMap) {
-    twinClass.markerMap = relatedObjects.dataListsMap[
-      twinClassDTO.markersDataListId
-    ] as DataListsMap;
-    // twinClass.markerList = twinClass.markerMap?.optionIdList as string[];
-  }
-
-  if (twinClassDTO.tagsDataListId && relatedObjects.dataListsMap) {
-    twinClass.tagMap = relatedObjects.dataListsMap[
-      twinClassDTO.tagsDataListId
+  if (dto.markersDataListId && relatedObjects.dataListsMap) {
+    hydrated.markerMap = relatedObjects.dataListsMap[
+      dto.markersDataListId
     ] as DataListsMap;
   }
 
-  return twinClass;
+  if (dto.tagsDataListId && relatedObjects.dataListsMap) {
+    hydrated.tagMap = relatedObjects.dataListsMap[
+      dto.tagsDataListId
+    ] as DataListsMap;
+  }
+
+  if (dto.headHunterFeaturerId && relatedObjects.featurerMap) {
+    hydrated.headHunterFeaturer = relatedObjects.featurerMap[
+      dto.headHunterFeaturerId
+    ] as Featurer_DETAILED;
+  }
+
+  if (dto.viewPermissionId && relatedObjects.permissionMap) {
+    hydrated.viewPermission = relatedObjects.permissionMap[
+      dto.viewPermissionId
+    ] as Permission;
+  }
+
+  return hydrated;
 };
