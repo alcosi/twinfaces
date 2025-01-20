@@ -2,7 +2,7 @@ import { useCallback, useContext } from "react";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
 import { FactoryFilters } from "../../../factory/api/types";
-import { hydratePipelineStepsFromMap } from "../helpers";
+import { hydratePipelineStepFromMap } from "../helpers";
 import { PipelineStep_DETAILED } from "../../api";
 
 export function usePipelineStepSearch() {
@@ -27,7 +27,7 @@ export function usePipelineStepSearch() {
         }
 
         const pipelineSteps = (data.steps || []).map(
-          (dto) => hydratePipelineStepsFromMap(dto, data.relatedObjects) ?? []
+          (dto) => hydratePipelineStepFromMap(dto, data.relatedObjects) ?? []
         );
 
         return {

@@ -1,23 +1,23 @@
 import { RelatedObjects } from "@/shared/api";
-import { PipelineSteps, PipelineSteps_DETAILED } from "../api";
+import { PipelineStep, PipelineStep_DETAILED } from "../api";
 import { FactoryPipeline } from "../../factoryPipeline";
 
-export const hydratePipelineStepsFromMap = (
-  pipelineStepsDTO: PipelineSteps,
+export const hydratePipelineStepFromMap = (
+  dto: PipelineStep,
   relatedObjects?: RelatedObjects
-): PipelineSteps_DETAILED => {
-  const pipelineSteps: PipelineSteps_DETAILED = Object.assign(
+): PipelineStep_DETAILED => {
+  const hydrated: PipelineStep_DETAILED = Object.assign(
     {},
-    pipelineStepsDTO
-  ) as PipelineSteps_DETAILED;
+    dto
+  ) as PipelineStep_DETAILED;
 
-  if (!relatedObjects?.factoryPipelineMap) return pipelineSteps;
+  if (!relatedObjects?.factoryPipelineMap) return hydrated;
 
-  if (pipelineStepsDTO.factoryPipelineId) {
-    pipelineSteps.factoryPipeline = relatedObjects.factoryPipelineMap[
-      pipelineStepsDTO.factoryPipelineId
+  if (dto.factoryPipelineId) {
+    hydrated.factoryPipeline = relatedObjects.factoryPipelineMap[
+      hydrated.factoryPipelineId
     ] as FactoryPipeline;
   }
 
-  return pipelineSteps;
+  return hydrated;
 };
