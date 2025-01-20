@@ -1,21 +1,21 @@
 import { useCallback, useContext } from "react";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { Factory, FactoryFilters } from "../../../factory/api/types";
+import { FactoryFilters } from "../../../factory/api/types";
 import { hydratePipelineStepsFromMap } from "../helpers";
-import { PipelineSteps_DETAILED } from "../../api";
+import { PipelineStep_DETAILED } from "../../api";
 
-export function usePipelineStepsSearch() {
+export function usePipelineStepSearch() {
   const api = useContext(ApiContext);
 
-  const searchPipelineSteps = useCallback(
+  const searchPipelineStep = useCallback(
     async ({
       pagination,
       filters = {},
     }: {
       pagination: PaginationState;
       filters?: FactoryFilters;
-    }): Promise<PagedResponse<PipelineSteps_DETAILED>> => {
+    }): Promise<PagedResponse<PipelineStep_DETAILED>> => {
       try {
         const { data, error } = await api.pipelineSteps.search({
           pagination,
@@ -44,5 +44,5 @@ export function usePipelineStepsSearch() {
     [api]
   );
 
-  return { searchPipelineSteps };
+  return { searchPipelineStep };
 }

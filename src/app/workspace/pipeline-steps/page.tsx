@@ -1,4 +1,4 @@
-import { PipelineStepsScreen } from "../../../screens/pipelineSteps";
+import { PipelineStepsScreen } from "@/screens/pipelineSteps";
 
 export default function PipelineStepsPage() {
   return <PipelineStepsScreen />;

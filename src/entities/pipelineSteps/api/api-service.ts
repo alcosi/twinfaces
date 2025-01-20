@@ -1,14 +1,14 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { PipelineStepsFilters } from "./types";
+import { PipelineStepFilters } from "./types";
 
-export function createPipelineStepsApi(settings: ApiSettings) {
+export function createPipelineStepApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
   }: {
     pagination: PaginationState;
-    filters: PipelineStepsFilters;
+    filters: PipelineStepFilters;
   }) {
     return settings.client.POST("/private/factory_pipeline_step/search/v1", {
       params: {
@@ -46,4 +46,4 @@ export function createPipelineStepsApi(settings: ApiSettings) {
   return { search };
 }
 
-export type PipelineStepsApi = ReturnType<typeof createPipelineStepsApi>;
+export type PipelineStepApi = ReturnType<typeof createPipelineStepApi>;

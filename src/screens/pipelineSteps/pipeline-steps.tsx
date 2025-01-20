@@ -1,13 +1,10 @@
 "use client";
 
-import {
-  PipelineSteps,
-  usePipelineStepsSearch,
-} from "@/entities/pipelineSteps";
+import { PipelineStep, usePipelineStepSearch } from "@/entities/pipelineSteps";
 import { ColumnDef } from "@tanstack/table-core";
 import { PaginationState } from "@tanstack/react-table";
 import { GuidWithCopy } from "@/shared/ui";
-import { FactoryResourceLink } from "../../entities/factory/components/resource-link/resource-link";
+import { FactoryResourceLink } from "@/entities/factory";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { CrudDataTable } from "@/widgets/crud-data-table";
@@ -16,10 +13,10 @@ import { useEffect } from "react";
 
 const colDefs: Record<
   keyof Omit<
-    PipelineSteps,
+    PipelineStep,
     "factoryConditionSetId" | "order" | "fillerParams" | "factoryPipelineId"
   >,
-  ColumnDef<PipelineSteps>
+  ColumnDef<PipelineStep>
 > = {
   id: {
     id: "id",
@@ -76,7 +73,7 @@ const colDefs: Record<
 };
 
 export function PipelineStepsScreen() {
-  const { searchPipelineSteps } = usePipelineStepsSearch();
+  const { searchPipelineStep } = usePipelineStepSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
@@ -85,9 +82,9 @@ export function PipelineStepsScreen() {
     ]);
   }, [setBreadcrumbs]);
 
-  async function fetchPipelineSteps(pagination: PaginationState, filters: {}) {
+  async function fetchPipelineStep(pagination: PaginationState, filters: {}) {
     try {
-      return searchPipelineSteps({ pagination });
+      return searchPipelineStep({ pagination });
     } catch (error) {
       toast.error("An error occured while fetching pipeline steps: " + error);
       throw new Error(
@@ -107,7 +104,7 @@ export function PipelineStepsScreen() {
         colDefs.fillerFeaturerId,
         colDefs.optional,
       ]}
-      fetcher={fetchPipelineSteps}
+      fetcher={fetchPipelineStep}
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
         colDefs.id,

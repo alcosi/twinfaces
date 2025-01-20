@@ -66,7 +66,10 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
-import { createPipelineStepsApi, PipelineStepsApi } from "@/entities/pipelineSteps/api";
+import {
+  createPipelineStepApi,
+  PipelineStepApi,
+} from "@/entities/pipelineSteps/api";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -91,7 +94,7 @@ export interface ApiContextProps {
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
   factoryBranches: FactoryBrancheApi;
-  pipelineSteps: PipelineStepsApi;
+  pipelineSteps: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
 }
@@ -135,7 +138,7 @@ export function ApiContextProvider({
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
         factoryBranches: createFactoryBrancheApi(settings),
-        pipelineSteps: createPipelineStepsApi(settings),
+        pipelineSteps: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
       }}

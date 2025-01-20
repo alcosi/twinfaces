@@ -1,15 +1,12 @@
 import { components } from "@/shared/api/generated/schema";
-import { FactoryPipeline } from "../../factoryPipeline";
 
-export type PipelineSteps = components["schemas"]["FactoryPipelineStepV2"];
-export type PipelineSteps_DETAILED = Required<PipelineSteps>;
+export type PipelineStep = components["schemas"]["FactoryPipelineStepV2"];
+export type PipelineStep_DETAILED = Required<PipelineStep>;
 
-// export type PipelineSteps_DETAILED = PipelineSteps & {factoryPipeline?: FactoryPipeline}
-
-export type PipelineStepsSearchRq =
+export type PipelineStepSearchRq =
   components["schemas"]["FactoryPipelineStepSearchRqV1"];
 
-export type PipelineStepsFilterKeys =
+export type PipelineStepFilterKeys =
   | "idList"
   | "idExcludeList"
   | "factoryIdList"
@@ -24,6 +21,6 @@ export type PipelineStepsFilterKeys =
   | "fillerFeaturerIdExcludeList"
   | "optional";
 
-export type PipelineStepsFilters = Partial<
-  Pick<PipelineStepsSearchRq, PipelineStepsFilterKeys>
+export type PipelineStepFilters = Partial<
+  Pick<PipelineStepSearchRq, PipelineStepFilterKeys>
 >;
