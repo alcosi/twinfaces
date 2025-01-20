@@ -11,9 +11,7 @@ export const hydratePipelineStepFromMap = (
     dto
   ) as PipelineStep_DETAILED;
 
-  if (!relatedObjects?.factoryPipelineMap) return hydrated;
-
-  if (dto.factoryPipelineId) {
+  if (dto.factoryPipelineId && relatedObjects?.factoryPipelineMap) {
     hydrated.factoryPipeline = relatedObjects.factoryPipelineMap[
       hydrated.factoryPipelineId
     ] as FactoryPipeline;
