@@ -29,13 +29,16 @@ const colDefs: Record<
     accessorKey: "description",
     header: "Description",
   },
-  //TODO: Replace with a Factory field
   factoryPipeline: {
     id: "factory",
     accessorKey: "factory",
     header: "Factory",
     cell: ({ row: { original } }) => (
-      <GuidWithCopy value={original.factoryPipeline?.factoryId} />
+      <div className="max-w-48 inline-flex">
+        {original.factoryPipeline && (
+          <FactoryResourceLink data={original.factoryPipeline} withTooltip />
+        )}
+      </div>
     ),
   },
   factoryConditionSet: {
@@ -62,7 +65,7 @@ const colDefs: Record<
   fillerFeaturerId: {
     id: "fillerFeaturerId",
     accessorKey: "fillerFeaturerId",
-    header: "FillerFeaturerId",
+    header: "Filler featurer",
   },
   optional: {
     id: "optional",
@@ -97,8 +100,8 @@ export function PipelineStepsScreen() {
     <CrudDataTable
       columns={[
         colDefs.id,
-        colDefs.description,
         colDefs.factoryPipeline,
+        colDefs.description,
         colDefs.factoryConditionSet,
         colDefs.active,
         colDefs.fillerFeaturerId,

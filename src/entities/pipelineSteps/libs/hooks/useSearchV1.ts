@@ -4,6 +4,7 @@ import { PaginationState } from "@tanstack/table-core";
 import { FactoryFilters } from "../../../factory/api/types";
 import { hydratePipelineStepFromMap } from "../helpers";
 import { PipelineStep_DETAILED } from "../../api";
+import { log } from "console";
 
 export function usePipelineStepSearch() {
   const api = useContext(ApiContext);
@@ -25,7 +26,6 @@ export function usePipelineStepSearch() {
         if (error) {
           throw error;
         }
-
         const pipelineSteps = (data.steps || []).map(
           (dto) => hydratePipelineStepFromMap(dto, data.relatedObjects) ?? []
         );
