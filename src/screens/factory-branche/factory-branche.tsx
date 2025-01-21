@@ -13,6 +13,10 @@ import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import {
+  FactoryConditionSet,
+  FactoryConditionSetResourceLink,
+} from "@/entities/factory-condition-set/components";
 
 const colDefs: Record<
   keyof Omit<
@@ -48,10 +52,16 @@ const colDefs: Record<
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
     header: "Condition set",
-    cell: ({ row: { original } }) =>
-      original.factoryConditionSet && (
-        <GuidWithCopy value={original.factoryConditionSet?.id} />
-      ),
+    cell: ({ row: { original } }) => (
+      <div className="max-w-48 inline-flex">
+        {original.factoryConditionSet && (
+          <FactoryConditionSetResourceLink
+            data={original.factoryConditionSet as FactoryConditionSet}
+            withTooltip
+          />
+        )}
+      </div>
+    ),
   },
   factoryConditionSetInvert: {
     id: "factoryConditionSetInvert",
