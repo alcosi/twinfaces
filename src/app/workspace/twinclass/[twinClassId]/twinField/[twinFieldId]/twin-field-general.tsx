@@ -98,6 +98,41 @@ export function TwinFieldGeneral({
               <InPlaceEdit {...descriptionSettings} />
             </TableCell>
           </TableRow>
+
+          <TableRow className="cursor-pointer">
+            <TableCell>Class</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
+          </TableRow>
+
+          <TableRow className="cursor-pointer">
+            <TableCell>Field typer</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
+          </TableRow>
+
+          <TableRow className="cursor-pointer">
+            <TableCell>Required</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
+          </TableRow>
+
+          <TableRow className="cursor-pointer">
+            <TableCell>View Permission</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
+          </TableRow>
+
+          <TableRow className="cursor-pointer">
+            <TableCell>Edit Permission</TableCell>
+            <TableCell className="text-destructive">
+              Not Implemented Yet
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </InPlaceEditContextProvider>
