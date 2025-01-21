@@ -1,6 +1,6 @@
 "use client";
 
-import { PipelineStep, usePipelineStepSearch } from "@/entities/pipelineSteps";
+import { PipelineStep, usePipelineStepSearch } from "@/entities/pipeline-step";
 import { ColumnDef } from "@tanstack/table-core";
 import { PaginationState } from "@tanstack/react-table";
 import { GuidWithCopy } from "@/shared/ui";
@@ -33,28 +33,26 @@ const colDefs: Record<
     id: "factory",
     accessorKey: "factory",
     header: "Factory",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        {original.factoryPipeline && (
+    cell: ({ row: { original } }) =>
+      original.factoryPipeline && (
+        <div className="max-w-48 inline-flex">
           <FactoryResourceLink data={original.factoryPipeline} withTooltip />
-        )}
-      </div>
-    ),
+        </div>
+      ),
   },
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
     header: "Condition Set",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        {original.factoryConditionSet && (
+    cell: ({ row: { original } }) =>
+      original.factoryConditionSet && (
+        <div className="max-w-48 inline-flex">
           <FactoryResourceLink
             data={original.factoryConditionSet}
             withTooltip
           />
-        )}
-      </div>
-    ),
+        </div>
+      ),
   },
   active: {
     id: "active",

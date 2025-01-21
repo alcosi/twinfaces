@@ -69,7 +69,7 @@ import { useAuthUser } from "../auth";
 import {
   createPipelineStepApi,
   PipelineStepApi,
-} from "@/entities/pipelineSteps/api";
+} from "@/entities/pipeline-step/api";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -93,8 +93,8 @@ export interface ApiContextProps {
   assigneePropagation: PermissionAssigneePropagationApi;
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
-  factoryBranches: FactoryBrancheApi;
-  pipelineSteps: PipelineStepApi;
+  factoryBranche: FactoryBrancheApi;
+  pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
 }
@@ -137,8 +137,8 @@ export function ApiContextProvider({
         assigneePropagation: createPermissionAssigneePropagationApi(settings),
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
-        factoryBranches: createFactoryBrancheApi(settings),
-        pipelineSteps: createPipelineStepApi(settings),
+        factoryBranche: createFactoryBrancheApi(settings),
+        pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
       }}
