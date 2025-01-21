@@ -13,10 +13,7 @@ import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import {
-  FactoryConditionSet,
-  FactoryConditionSetResourceLink,
-} from "@/entities/factory-condition-set/components";
+import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 
 const colDefs: Record<
   keyof Omit<
@@ -40,28 +37,26 @@ const colDefs: Record<
     id: "factory",
     accessorKey: "factory",
     header: "Factory",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        {original.factory && (
-          <FactoryResourceLink data={original.factory as Factory} withTooltip />
-        )}
-      </div>
-    ),
+    cell: ({ row: { original } }) =>
+      original.factory && (
+        <div className="max-w-48 inline-flex">
+          <FactoryResourceLink data={original.factory} withTooltip />
+        </div>
+      ),
   },
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
     header: "Condition set",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        {original.factoryConditionSet && (
+    cell: ({ row: { original } }) =>
+      original.factoryConditionSet && (
+        <div className="max-w-48 inline-flex">
           <FactoryConditionSetResourceLink
-            data={original.factoryConditionSet as FactoryConditionSet}
+            data={original.factoryConditionSet}
             withTooltip
           />
-        )}
-      </div>
-    ),
+        </div>
+      ),
   },
   factoryConditionSetInvert: {
     id: "factoryConditionSetInvert",

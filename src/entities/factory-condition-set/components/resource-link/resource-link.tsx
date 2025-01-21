@@ -1,11 +1,8 @@
-import { components } from "@/shared/api/generated/schema";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { FactoryIcon } from "lucide-react";
+import { PencilRulerIcon } from "lucide-react";
 import { FactoryConditionSetResourceTooltip } from "./tooltip";
-
-export type FactoryConditionSet =
-  components["schemas"]["FactoryConditionSetV1"];
+import { FactoryConditionSet } from "../../api";
 
 type Props = {
   data: FactoryConditionSet;
@@ -19,13 +16,13 @@ export function FactoryConditionSetResourceLink({
   withTooltip,
 }: Props) {
   let title: string = "N/A";
-  const link = `/workspace/factories/${data.id}`;
+  const link = `/workspace/condition-sets/${data.id}`;
 
   if (isPopulatedString(data.name)) title = data.name;
 
   return (
     <ResourceLink
-      IconComponent={() => <FactoryIcon className="h-4 w-4" />}
+      IconComponent={() => <PencilRulerIcon className="h-4 w-4" />}
       data={data}
       link={link}
       disabled={disabled}
