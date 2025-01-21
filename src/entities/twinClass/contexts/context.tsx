@@ -1,4 +1,8 @@
-import { TwinClass, useFetchTwinClassById } from "@/entities/twinClass";
+import {
+  hydrateTwinClassFromMap,
+  TwinClass,
+  useFetchTwinClassById,
+} from "@/entities/twinClass";
 import { TwinClassLink } from "@/entities/twinClassLink";
 import { RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
@@ -69,7 +73,12 @@ export function TwinClassContextProvider({
         },
       });
 
-      setTwinClass(data?.twinClass);
+      if (data?.twinClass && data?.relatedObjects) {
+        setTwinClass(
+          hydrateTwinClassFromMap(data.twinClass, data.relatedObjects)
+        );
+      }
+
       setRelatedObjects(data?.relatedObjects);
 
       if (linkId) {
