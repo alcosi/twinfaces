@@ -13,7 +13,7 @@ import { useEffect } from "react";
 
 const colDefs: Record<
   keyof Omit<
-    PipelineStep,
+    PipelineStep & {"factoryConditionSetInvert" : boolean},
     "factoryConditionSetId" | "order" | "fillerParams" | "factoryPipelineId"
   >,
   ColumnDef<PipelineStep>
@@ -39,6 +39,12 @@ const colDefs: Record<
           <FactoryResourceLink data={original.factoryPipeline} withTooltip />
         </div>
       ),
+  },
+  factoryConditionSetInvert: {
+    id: "factoryConditionSetInvert",
+    accessorKey: "factoryConditionSetInvert",
+    header: "Condition invert",
+    cell: (data) => data.row.original.factoryPipeline?.factoryConditionSetInvert && <Check />,
   },
   factoryConditionSet: {
     id: "factoryConditionSet",
@@ -104,6 +110,7 @@ export function PipelineStepsScreen() {
         colDefs.active,
         colDefs.fillerFeaturerId,
         colDefs.optional,
+        colDefs.factoryConditionSetInvert,
       ]}
       fetcher={fetchPipelineStep}
       getRowId={(row) => row.id!}
@@ -111,6 +118,7 @@ export function PipelineStepsScreen() {
         colDefs.id,
         colDefs.factoryPipeline,
         colDefs.factoryConditionSet,
+        colDefs.factoryConditionSetInvert,
         colDefs.fillerFeaturerId,
         colDefs.active,
       ]}
