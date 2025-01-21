@@ -15,10 +15,8 @@ export function FactoryConditionSetResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  let title: string = "N/A";
+  const title = isPopulatedString(data.name) ? data.name : "N/A";
   const link = `/workspace/condition-sets/${data.id}`;
-
-  if (isPopulatedString(data.name)) title = data.name;
 
   return (
     <ResourceLink

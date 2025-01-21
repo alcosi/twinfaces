@@ -9,9 +9,7 @@ type Props = {
 };
 
 export function FactoryConditionSetResourceTooltip({ data, link }: Props) {
-  let title: string = "N/A";
-
-  if (isPopulatedString(data.name)) title = data.name;
+  const title = isPopulatedString(data.name) ? data.name : "N/A";
 
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
