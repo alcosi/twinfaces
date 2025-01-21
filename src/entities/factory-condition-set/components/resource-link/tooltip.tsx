@@ -1,6 +1,6 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { Split } from "lucide-react";
+import { PencilRulerIcon } from "lucide-react";
 import { FactoryConditionSet } from "../../api";
 
 type Props = {
@@ -18,7 +18,7 @@ export function FactoryConditionSetResourceTooltip({ data, link }: Props) {
       <ResourceLinkTooltip.Header
         title={title}
         subTitle={data.description}
-        iconSource={Split}
+        iconSource={PencilRulerIcon}
       />
 
       <ResourceLinkTooltip.Main>
