@@ -9,8 +9,9 @@ import { TwinClassSelectField } from "@/features/twinClass";
 import { isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
 import { Control, Path, PathValue, useWatch } from "react-hook-form";
-import { DatalistSelectField } from "@/features/datalist";
-import { PermissionSelectField } from "@/features/permission";
+import { ComboboxFormField } from "@/components/form-fields/combobox";
+import { useDatalistSelectAdapter } from "@/entities/datalist";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 
 export function TwinClassFormFields<T extends TwinClassFieldValues>({
   control,
@@ -23,6 +24,8 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
     // TODO: Fix type for `defaultValue`, ensuring it matches `PathValue<T, "headTwinClass">`.
     defaultValue: [] as PathValue<T, any>,
   });
+  const dlAdapter = useDatalistSelectAdapter();
+  const pAdapter = usePermissionSelectAdapter();
 
   return (
     <>
@@ -98,22 +101,34 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         label="Alias space"
       />
 
-      <DatalistSelectField
+      <ComboboxFormField
         control={control}
         name={"markerDataListId" as Path<T>}
-        label="Markers List"
+        label="Markers list"
+        selectPlaceholder="Select datalist"
+        searchPlaceholder="Search datalist..."
+        noItemsText="No datalist found"
+        {...dlAdapter}
       />
 
-      <DatalistSelectField
+      <ComboboxFormField
         control={control}
         name={"tagDataListId" as Path<T>}
         label="Tags list"
+        selectPlaceholder="Select datalist"
+        searchPlaceholder="Search datalist..."
+        noItemsText="No datalist found"
+        {...dlAdapter}
       />
 
-      <PermissionSelectField
+      <ComboboxFormField
         control={control}
         name={"viewPermissionId" as Path<T>}
         label="Permission"
+        selectPlaceholder="Select permission"
+        searchPlaceholder="Search permission..."
+        noItemsText="No permission found"
+        {...pAdapter}
       />
     </>
   );
