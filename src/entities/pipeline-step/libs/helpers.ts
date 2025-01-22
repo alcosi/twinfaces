@@ -19,7 +19,7 @@ export const hydratePipelineStepFromMap = (
 
   if (hydrated.factoryPipeline?.factoryId && relatedObjects?.factoryMap) {
     hydrated.factoryPipeline.factory =
-      relatedObjects.factoryMap[hydrated.factoryPipeline.factoryId]
+      relatedObjects.factoryMap[hydrated.factoryPipeline.factoryId];
   }
 
   return hydrated;

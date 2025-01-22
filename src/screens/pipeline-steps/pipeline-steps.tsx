@@ -52,7 +52,10 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.factoryPipeline && (
         <div className="max-w-48 inline-flex">
-          <FactoryPipelineResourceLink data={original.factoryPipeline} withTooltip />
+          <FactoryPipelineResourceLink
+            data={original.factoryPipeline}
+            withTooltip
+          />
         </div>
       ),
   },

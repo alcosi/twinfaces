@@ -21,15 +21,15 @@ export function FactoryPipelineResourceTooltip({ data, link }: Props) {
 
       <ResourceLinkTooltip.Main>
         {data.inputTwinClass?.name && (
-            <ResourceLinkTooltip.Item title="Input class name">
-              {data.inputTwinClass?.name}
-            </ResourceLinkTooltip.Item>
+          <ResourceLinkTooltip.Item title="Input class name">
+            {data.inputTwinClass?.name}
+          </ResourceLinkTooltip.Item>
         )}
 
         {data.factoryConditionSet?.name && (
-            <ResourceLinkTooltip.Item title="Condition set name">
-              {data.factoryConditionSet?.name}
-            </ResourceLinkTooltip.Item>
+          <ResourceLinkTooltip.Item title="Condition set name">
+            {data.factoryConditionSet?.name}
+          </ResourceLinkTooltip.Item>
         )}
 
         {data.active && (
