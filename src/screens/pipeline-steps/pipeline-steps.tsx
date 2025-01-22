@@ -10,10 +10,11 @@ import { toast } from "sonner";
 import { CrudDataTable } from "@/widgets/crud-data-table";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { useEffect } from "react";
+import { FactoryConditionSetResourceLink } from "../../entities/factory-condition-set";
 
 const colDefs: Record<
   keyof Omit<
-    PipelineStep & {"factoryConditionSetInvert" : boolean},
+    PipelineStep & { factoryConditionSetInvert: boolean },
     "factoryConditionSetId" | "order" | "fillerParams" | "factoryPipelineId"
   >,
   ColumnDef<PipelineStep>
@@ -44,7 +45,8 @@ const colDefs: Record<
     id: "factoryConditionSetInvert",
     accessorKey: "factoryConditionSetInvert",
     header: "Condition invert",
-    cell: (data) => data.row.original.factoryPipeline?.factoryConditionSetInvert && <Check />,
+    cell: (data) =>
+      data.row.original.factoryPipeline?.factoryConditionSetInvert && <Check />,
   },
   factoryConditionSet: {
     id: "factoryConditionSet",
@@ -53,7 +55,7 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
         <div className="max-w-48 inline-flex">
-          <FactoryResourceLink
+          <FactoryConditionSetResourceLink
             data={original.factoryConditionSet}
             withTooltip
           />
