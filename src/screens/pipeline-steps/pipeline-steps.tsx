@@ -4,18 +4,23 @@ import { PipelineStep, usePipelineStepSearch } from "@/entities/pipeline-step";
 import { ColumnDef } from "@tanstack/table-core";
 import { PaginationState } from "@tanstack/react-table";
 import { GuidWithCopy } from "@/shared/ui";
-import { FactoryResourceLink } from "@/entities/factory";
+import { Factory, FactoryResourceLink } from "@/entities/factory";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { CrudDataTable } from "@/widgets/crud-data-table";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { useEffect } from "react";
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
+import { FactoryPipelineResourceLink } from "@/entities/factory-pipeline";
 
 const colDefs: Record<
   keyof Omit<
-    PipelineStep & { factoryConditionSetInvert: boolean },
-    "factoryConditionSetId" | "order" | "fillerParams" | "factoryPipelineId"
+    PipelineStep & { factoryConditionSetInvert: boolean; factory: Factory },
+    | "factoryConditionSetId"
+    | "order"
+    | "fillerParams"
+    | "factoryPipelineId"
+    | "factory"
   >,
   ColumnDef<PipelineStep>
 > = {
@@ -30,14 +35,28 @@ const colDefs: Record<
     accessorKey: "description",
     header: "Description",
   },
+  // factory: {
+  //   id: "factory",
+  //   accessorKey: "factory",
+  //   header: "Factory",
+  //   cell: ({ row: { original } }) =>
+  //     original.factoryPipeline?.factory && (
+  //       <div className="max-w-48 inline-flex">
+  //         <FactoryResourceLink
+  //           data={original.factoryPipeline.factory}
+  //           withTooltip
+  //         />
+  //       </div>
+  //     ),
+  // },
   factoryPipeline: {
-    id: "factory",
-    accessorKey: "factory",
-    header: "Factory",
+    id: "factoryPipeline",
+    accessorKey: "factoryPipeline",
+    header: "Pipeline",
     cell: ({ row: { original } }) =>
       original.factoryPipeline && (
         <div className="max-w-48 inline-flex">
-          <FactoryResourceLink data={original.factoryPipeline} withTooltip />
+          <FactoryPipelineResourceLink data={original.factoryPipeline} withTooltip />
         </div>
       ),
   },
