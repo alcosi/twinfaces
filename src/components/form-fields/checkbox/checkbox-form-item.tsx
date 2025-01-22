@@ -1,43 +1,7 @@
 import { Checkbox } from "@/shared/ui/checkbox";
-import { FormField } from "@/shared/ui/form";
-import {
-  FormFieldProps,
-  FormItemDescription,
-  FormItemLabel,
-} from "@/components/form-fields/form-fields-common";
-import { ReactNode } from "react";
-import { FieldValues } from "react-hook-form";
 import { CheckboxProps } from "@radix-ui/react-checkbox";
-
-export function CheckboxFormField<T extends FieldValues>({
-  name,
-  control,
-  label,
-  description,
-  hasIndeterminate,
-  ...props
-}: FormFieldProps<T> & { hasIndeterminate?: boolean } & Omit<
-    CheckboxProps,
-    "checked" | "onCheckedChange" | "type" | "onChange"
-  >) {
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <CheckboxFormItem
-          fieldValue={field.value}
-          onChange={(x) => field.onChange(x)}
-          label={label}
-          description={description}
-          hasIndeterminate={hasIndeterminate}
-          inForm={true}
-          {...props}
-        />
-      )}
-    />
-  );
-}
+import { FormItemProps } from "../types";
+import { FormItemDescription, FormItemLabel } from "../form-items-common";
 
 export function CheckboxFormItem({
   fieldValue,
@@ -47,14 +11,10 @@ export function CheckboxFormItem({
   inForm,
   hasIndeterminate,
   ...props
-}: {
+}: FormItemProps & {
+  inputId?: string;
   fieldValue?: boolean | "indeterminate";
   onChange?: (value: boolean | "indeterminate") => any;
-  label?: ReactNode;
-  description?: ReactNode;
-  required?: boolean;
-  inputId?: string;
-  inForm?: boolean;
   hasIndeterminate?: boolean;
 } & Omit<CheckboxProps, "checked" | "onCheckedChange" | "type">) {
   function onCheckedChange(x: boolean) {

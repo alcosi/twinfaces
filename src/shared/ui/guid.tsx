@@ -1,6 +1,6 @@
 import { CopyButton } from "@/shared/ui/copy-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { cn } from "../libs";
+import { cn, shortenUUID } from "../libs";
 
 export interface GuidProps {
   value: string | undefined;
@@ -11,10 +11,7 @@ export interface GuidProps {
 function Guid({ value, disableTooltip, variant = "short" }: GuidProps) {
   if (!value) return null;
 
-  const displayValue =
-    variant === "short"
-      ? `${value.substring(0, 8)}...${value.slice(-2)}`
-      : value;
+  const displayValue = variant === "short" ? shortenUUID(value) : value;
 
   return disableTooltip ? (
     <span>{displayValue}</span>

@@ -1,7 +1,9 @@
-import { CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
-import { ComboboxFormItem } from "@/components/form-fields/combobox";
-import { TagsFormItem } from "@/components/form-fields/tags-form-field";
-import { TextFormItem } from "@/components/form-fields/text-form-field";
+import {
+  CheckboxFormItem,
+  ComboboxFormItem,
+  TagsFormItem,
+  TextFormItem,
+} from "@/components/form-fields";
 import { FeaturerParam, FeaturerParamType } from "@/entities/featurer";
 import { Button } from "@/shared/ui";
 import { useFeaturerParamTypesSelectAdapter } from "./hooks";

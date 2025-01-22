@@ -4,8 +4,21 @@ export type DataListOptionV3 = components["schemas"]["DataListOptionV3"];
 
 export type DataListOptionFilterKeys =
   | "idList"
-  | "optionI18nLikeList"
-  | "dataListIdList";
+  // | "idExcludeList"
+  | "dataListIdList"
+  // | "dataListIdExcludeList"
+  // | "dataListKeyList"
+  // | "dataListKeyExcludeList"
+  // | "optionLikeList"
+  // | "optionNotLikeList"
+  | "optionI18nLikeList";
+// | "optionI18nNotLikeList"
+// | "businessAccountIdList"
+// | "businessAccountIdExcludeList"
+// | "dataListSubsetIdList"
+// | "dataListSubsetIdExcludeList"
+// | "dataListSubsetKeyList"
+// | "dataListSubsetKeyExcludeList"
 
 export type DataListOptionFilters = Partial<
   Pick<

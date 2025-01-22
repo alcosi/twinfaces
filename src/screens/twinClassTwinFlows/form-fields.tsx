@@ -1,7 +1,4 @@
-import {
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields/text-form-field";
+import { TextAreaFormField, TextFormField } from "@/components/form-fields";
 import { TwinStatusSelectField } from "@/features/twinStatus";
 import { Control, FieldValues, Path } from "react-hook-form";
 

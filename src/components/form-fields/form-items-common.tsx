@@ -1,19 +1,7 @@
-import { Control, FieldPath, FieldValues } from "react-hook-form";
-import { ReactNode } from "react";
+import { cn } from "@/shared/libs";
 import { FormDescription, FormLabel } from "@/shared/ui/form";
 import { Label } from "@/shared/ui/label";
-import * as React from "react";
-import { cn } from "@/shared/libs";
-
-export interface FormFieldProps<T extends FieldValues> {
-  name: FieldPath<T>;
-  control: Control<T>;
-  idPrefix?: string;
-  label?: ReactNode;
-  placeholder?: string;
-  description?: ReactNode;
-  required?: boolean;
-}
+import { ReactNode } from "react";
 
 export function FormItemLabel({
   children,

@@ -1,6 +1,19 @@
-import { TwinField, useFetchFields } from "@/entities/twinField";
+import { AutoFormValueType } from "@/components/auto-field";
+import {
+  TwinFieldUI,
+  useFetchFields,
+  useUpsertField,
+} from "@/entities/twinField";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+} from "@/features/inPlaceEdit";
 import { PagedResponse } from "@/shared/api";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
+import {
+  renderTwinFieldPreview,
+  resolveTwinFieldSchema,
+} from "@/widgets/form-fields";
 import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
@@ -10,8 +23,9 @@ export function TwinFields() {
   const { twinId } = useContext(TwinContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { fetchFieldsByTwinId } = useFetchFields();
+  const { upsertTwinField } = useUpsertField();
 
-  const columns: ColumnDef<TwinField>[] = [
+  const columns: ColumnDef<TwinFieldUI>[] = [
     {
       id: "key",
       accessorKey: "key",
@@ -21,10 +35,31 @@ export function TwinFields() {
       id: "value",
       accessorKey: "value",
       header: "Value",
+      cell: ({ row: { original } }) => {
+        return (
+          <InPlaceEdit
+            id={original.key}
+            value={original.value}
+            valueInfo={{
+              type: AutoFormValueType.twinField,
+              descriptor: original.descriptor,
+            }}
+            schema={resolveTwinFieldSchema(original)}
+            renderPreview={(_) => renderTwinFieldPreview(original)}
+            onSubmit={(fieldValue) =>
+              upsertTwinField({
+                twinId,
+                fieldKey: original.key,
+                fieldValue,
+              }).then(tableRef.current?.refresh)
+            }
+          />
+        );
+      },
     },
   ];
 
-  async function fetchFields(): Promise<PagedResponse<TwinField>> {
+  async function fetchFields(): Promise<PagedResponse<TwinFieldUI>> {
     try {
       const response = await fetchFieldsByTwinId({ twinId });
       return response;
@@ -35,13 +70,14 @@ export function TwinFields() {
   }
 
   return (
-    <CrudDataTable
-      ref={tableRef}
-      title="Fields"
-      columns={columns}
-      getRowId={(row) => row.key!}
-      fetcher={fetchFields}
-      disablePagination={true}
-    />
+    <InPlaceEditContextProvider>
+      <CrudDataTable
+        ref={tableRef}
+        columns={columns}
+        getRowId={(row) => row.key!}
+        fetcher={fetchFields}
+        disablePagination={true}
+      />
+    </InPlaceEditContextProvider>
   );
 }

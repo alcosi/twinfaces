@@ -1,10 +1,10 @@
-import { Control } from "react-hook-form";
-import { TwinClassStatusFormValues } from "@/entities/twinStatus";
 import {
+  ColorPickerFormField,
   TextAreaFormField,
   TextFormField,
-} from "@/components/form-fields/text-form-field";
-import { ColorPickerFormField } from "@/components/form-fields/color-form-field";
+} from "@/components/form-fields";
+import { TwinClassStatusFormValues } from "@/entities/twinStatus";
+import { Control } from "react-hook-form";
 
 export function TwinClassStatusFormFields({
   control,

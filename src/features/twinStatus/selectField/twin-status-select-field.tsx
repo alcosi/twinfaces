@@ -1,5 +1,5 @@
 import { ComboboxFormField } from "@/components/form-fields/combobox";
-import { FormFieldProps } from "@/components/form-fields/form-fields-common";
+import { FormFieldProps } from "@/components/form-fields/types";
 import {
   TwinStatus,
   useFetchTwinStatusById,
