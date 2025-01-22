@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { FactoryPipeline } from "../../api";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { Check, FootprintsIcon } from "lucide-react";
+import { FootprintsIcon } from "lucide-react";
 
 type Props = {
   data: FactoryPipeline;
@@ -20,15 +20,27 @@ export function FactoryPipelineResourceTooltip({ data, link }: Props) {
       />
 
       <ResourceLinkTooltip.Main>
-        {data.description && (
-          <ResourceLinkTooltip.Item title="Description">
-            {data.description}
-          </ResourceLinkTooltip.Item>
+        {data.inputTwinClass?.name && (
+            <ResourceLinkTooltip.Item title="Input class name">
+              {data.inputTwinClass?.name}
+            </ResourceLinkTooltip.Item>
+        )}
+
+        {data.factoryConditionSet?.name && (
+            <ResourceLinkTooltip.Item title="Condition set name">
+              {data.factoryConditionSet?.name}
+            </ResourceLinkTooltip.Item>
         )}
 
         {data.active && (
           <ResourceLinkTooltip.Item title="Active">
             {data.active.valueOf().toString()}
+          </ResourceLinkTooltip.Item>
+        )}
+
+        {data.description && (
+          <ResourceLinkTooltip.Item title="Description">
+            {data.description}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>
