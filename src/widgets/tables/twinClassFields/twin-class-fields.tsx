@@ -8,13 +8,19 @@ import {
   useTwinClassFieldSearchV1,
 } from "@/entities/twinClassField";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { REGEX_PATTERNS, toArray, toArrayOfString } from "@/shared/libs";
+import {
+  isFalsy,
+  isTruthy,
+  REGEX_PATTERNS,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -24,7 +30,6 @@ import {
   FiltersState,
 } from "../../crud-data-table";
 import { TwinClassFieldFormFields } from "./form-fields";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 
 const colDefs: Record<
   keyof Pick<
@@ -125,13 +130,20 @@ export function TwinClassFieldsTable({
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const api = useContext(ApiContext);
-  const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters();
+  const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters({
+    enabledFilters: isTruthy(twinClassId)
+      ? [
+          "idList",
+          "keyLikeList",
+          "nameI18nLikeList",
+          "descriptionI18nLikeList",
+          "fieldTyperIdList",
+          "viewPermissionIdList",
+          "editPermissionIdList",
+        ]
+      : undefined,
+  });
   const { searchTwinClassFields } = useTwinClassFieldSearchV1();
-  const { setBreadcrumbs } = useBreadcrumbs();
-
-  useEffect(() => {
-    setBreadcrumbs([{ label: "Fields", href: "/workspace/fields" }]);
-  }, [setBreadcrumbs]);
 
   const twinClassFieldchema = z.object({
     twinClassId: z.string().uuid().nullable(),
@@ -232,7 +244,7 @@ export function TwinClassFieldsTable({
       ref={tableRef}
       columns={[
         colDefs.id,
-        colDefs.twinClassId,
+        ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
         colDefs.key,
         colDefs.name,
         colDefs.description,
@@ -254,7 +266,7 @@ export function TwinClassFieldsTable({
       }}
       defaultVisibleColumns={[
         colDefs.id,
-        colDefs.twinClassId,
+        ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
         colDefs.key,
         colDefs.name,
         colDefs.description,
