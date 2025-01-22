@@ -28,11 +28,6 @@ const colDefs: Record<
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
-  description: {
-    id: "description",
-    accessorKey: "description",
-    header: "Description",
-  },
   factory: {
     id: "factory",
     accessorKey: "factory",
@@ -64,6 +59,12 @@ const colDefs: Record<
     header: "Condition invert",
     cell: (data) => data.getValue() && <Check />,
   },
+  active: {
+    id: "active",
+    accessorKey: "active",
+    header: "Active",
+    cell: (data) => data.getValue() && <Check />,
+  },
   nextFactory: {
     id: "nextFactory",
     accessorKey: "nextFactory",
@@ -78,11 +79,10 @@ const colDefs: Record<
         </div>
       ),
   },
-  active: {
-    id: "active",
-    accessorKey: "active",
-    header: "Active",
-    cell: (data) => data.getValue() && <Check />,
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
   },
 };
 
@@ -110,12 +110,12 @@ export function FactoryBrancheScreen() {
     <CrudDataTable
       columns={[
         colDefs.id,
-        colDefs.description,
         colDefs.factory,
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
-        colDefs.nextFactory,
         colDefs.active,
+        colDefs.nextFactory,
+        colDefs.description,
       ]}
       fetcher={fetchFactoryBranches}
       getRowId={(row) => row.id!}
@@ -124,8 +124,8 @@ export function FactoryBrancheScreen() {
         colDefs.factory,
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
-        colDefs.nextFactory,
         colDefs.active,
+        colDefs.nextFactory,
       ]}
     />
   );

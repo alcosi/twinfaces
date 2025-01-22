@@ -1,7 +1,6 @@
 import { RelatedObjects } from "@/shared/api";
 import { PipelineStep, PipelineStep_DETAILED } from "../api";
 import { FactoryPipeline } from "../../factory-pipeline";
-// import { FactoryPipeline } from "../../factoryPipeline";
 
 export const hydratePipelineStepFromMap = (
   dto: PipelineStep,
@@ -16,6 +15,10 @@ export const hydratePipelineStepFromMap = (
     hydrated.factoryPipeline = relatedObjects.factoryPipelineMap[
       dto.factoryPipelineId
     ] as FactoryPipeline;
+  }
+
+  if (hydrated.factoryPipeline?.factoryId && relatedObjects?.factoryMap) {
+    hydrated.factoryPipeline.factory = relatedObjects.factoryMap[hydrated.factoryPipeline.factoryId]
   }
 
   return hydrated;

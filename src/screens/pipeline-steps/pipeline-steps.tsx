@@ -20,7 +20,6 @@ const colDefs: Record<
     | "order"
     | "fillerParams"
     | "factoryPipelineId"
-    | "factory"
   >,
   ColumnDef<PipelineStep>
 > = {
@@ -35,20 +34,20 @@ const colDefs: Record<
     accessorKey: "description",
     header: "Description",
   },
-  // factory: {
-  //   id: "factory",
-  //   accessorKey: "factory",
-  //   header: "Factory",
-  //   cell: ({ row: { original } }) =>
-  //     original.factoryPipeline?.factory && (
-  //       <div className="max-w-48 inline-flex">
-  //         <FactoryResourceLink
-  //           data={original.factoryPipeline.factory}
-  //           withTooltip
-  //         />
-  //       </div>
-  //     ),
-  // },
+  factory: {
+    id: "factory",
+    accessorKey: "factory",
+    header: "Factory",
+    cell: ({ row: { original } }) =>
+      original.factoryPipeline?.factory && (
+        <div className="max-w-48 inline-flex">
+          <FactoryResourceLink
+            data={original.factoryPipeline?.factory}
+            withTooltip
+          />
+        </div>
+      ),
+  },
   factoryPipeline: {
     id: "factoryPipeline",
     accessorKey: "factoryPipeline",
@@ -125,6 +124,7 @@ export function PipelineStepsScreen() {
     <CrudDataTable
       columns={[
         colDefs.id,
+        colDefs.factory,
         colDefs.factoryPipeline,
         colDefs.description,
         colDefs.factoryConditionSet,
@@ -137,6 +137,7 @@ export function PipelineStepsScreen() {
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
         colDefs.id,
+        colDefs.factory,
         colDefs.factoryPipeline,
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
