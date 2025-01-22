@@ -19,6 +19,7 @@ import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 
 const colDefs: Record<
   keyof Omit<
@@ -71,9 +72,15 @@ const colDefs: Record<
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
     header: "Condition Set",
-    cell: ({ row: { original } }) => (
-      <span>{original.factoryConditionSet?.name}</span>
-    ),
+    cell: ({ row: { original } }) =>
+      original.factoryConditionSet && (
+        <div className="max-w-48 inline-flex">
+          <FactoryConditionSetResourceLink
+            data={original.factoryConditionSet}
+            withTooltip
+          />
+        </div>
+      ),
   },
 
   factoryConditionSetInvert: {

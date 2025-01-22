@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { CrudDataTable } from "@/widgets/crud-data-table";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { useEffect } from "react";
-import { FactoryConditionSetResourceLink } from "../../entities/factory-condition-set";
+import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 
 const colDefs: Record<
   keyof Omit<
