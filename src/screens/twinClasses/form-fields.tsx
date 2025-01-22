@@ -1,8 +1,5 @@
-import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
-import {
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields/text-form-field";
+import { CheckboxFormField } from "@/components/form-fields";
+import { TextAreaFormField, TextFormField } from "@/components/form-fields";
 import { FeaturerTypes } from "@/entities/featurer";
 import { TwinClassFieldValues } from "@/entities/twinClass";
 import { TwinClassSelectField } from "@/features/twinClass";

@@ -1,7 +1,9 @@
 import {
   createFixedSelectAdapter,
+  isPopulatedArray,
   isPopulatedString,
   SelectAdapter,
+  shortenUUID,
 } from "@/shared/libs";
 import { Twin_DETAILED } from "../../api";
 import { useTwinFetchByIdV2, useTwinSearchV3 } from "../../api/hooks";
@@ -21,8 +23,14 @@ export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
     return response.data as Twin_DETAILED[];
   }
 
-  function renderItem({ name, id }: Twin_DETAILED) {
-    return isPopulatedString(name) ? name : id;
+  function renderItem({ aliases, name, id }: Twin_DETAILED) {
+    const twinName = isPopulatedString(name) ? name : shortenUUID(id);
+
+    if (isPopulatedArray(aliases)) {
+      return `${aliases?.slice(-1)} : ${twinName}`;
+    }
+
+    return twinName;
   }
 
   return {

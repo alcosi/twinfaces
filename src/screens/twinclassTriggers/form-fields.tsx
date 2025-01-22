@@ -1,5 +1,5 @@
-import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
-import { TextFormField } from "@/components/form-fields/text-form-field";
+import { CheckboxFormField } from "@/components/form-fields";
+import { TextFormField } from "@/components/form-fields";
 import { FeaturerTypes } from "@/entities/featurer";
 import { FeaturerFormField } from "@/widgets/form-fields";
 import { Control, FieldValues, Path } from "react-hook-form";

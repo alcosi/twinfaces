@@ -1,5 +1,5 @@
 import { ComboboxFormField } from "@/components/form-fields/combobox";
-import { TextFormField } from "@/components/form-fields/text-form-field";
+import { TextFormField } from "@/components/form-fields";
 import {
   useTwinClassLinkStrengthSelectAdapter,
   useTwinClassLinkTypeSelectAdapter,

@@ -1,52 +1,38 @@
 "use client";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
-import { z } from "zod";
-import { ReactNode, useContext, useEffect, useState } from "react";
-import { Form } from "@/shared/ui/form";
-import { Alert } from "@/shared/ui/alert";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { isFalsy } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
-import { Check, X } from "lucide-react";
+import { Form } from "@/shared/ui/form";
 import { LoadingSpinner } from "@/shared/ui/loading";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, X } from "lucide-react";
+import { ReactNode, useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { InPlaceEditContext } from "./in-place-edit-context";
+import { toast } from "sonner";
 
-export interface InPlaceEditProps {
+export interface InPlaceEditProps<T = unknown> {
   id: string;
-  value: unknown;
-  renderView?: (value: unknown) => ReactNode;
+  value: T;
+  renderPreview?: (value: T) => ReactNode;
   valueInfo: AutoFormValueInfo;
-  onSubmit: (value: unknown) => Promise<any>;
+  onSubmit: (value: T) => Promise<void>;
   schema?: z.ZodType<any, any>;
 }
 
-export function InPlaceEdit({
+export function InPlaceEdit<T>({
   id,
   value,
-  renderView,
+  renderPreview,
   valueInfo,
   onSubmit,
   schema,
-}: InPlaceEditProps) {
+}: InPlaceEditProps<T>) {
   const context = useContext(InPlaceEditContext);
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  function onValueClick() {
-    setIsEdited(true);
-    if (context) {
-      context.setCurrent(id);
-    }
-  }
-
-  useEffect(() => {
-    if (context && context.current !== id) {
-      setIsEdited(false);
-    }
-  }, [context, id, setIsEdited]);
-
   const form = useForm({
     defaultValues: {
       value: value,
@@ -54,30 +40,16 @@ export function InPlaceEdit({
     resolver: schema ? zodResolver(z.object({ value: schema })) : undefined,
   });
 
-  function cancelEdit() {
-    setIsEdited(false);
-    form.reset(undefined, { keepDefaultValues: true });
-  }
-
-  function internalSubmit(values: { value: unknown }) {
-    setIsLoading(true);
-    return onSubmit(values.value)
-      .then(() => {
-        setIsEdited(false);
-        setError(null);
-      })
-      .catch((e) => {
-        setError(e.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
+  useEffect(() => {
+    if (context && context.current !== id) {
+      setIsEdited(false);
+    }
+  }, [context, id, setIsEdited]);
 
   useEffect(() => {
     const handleEsc = (event: any) => {
       if (event.key === "Escape") {
-        cancelEdit();
+        handleCancel();
       }
     };
     window.addEventListener("keydown", handleEsc);
@@ -87,61 +59,86 @@ export function InPlaceEdit({
     };
   }, []);
 
-  if (!isEdited) {
+  function handleEdit() {
+    setIsEdited(true);
+    if (context) {
+      context.setCurrent(id);
+    }
+  }
+
+  function handleConfirm(values: { value: T }) {
+    setIsLoading(true);
+    return onSubmit(values.value)
+      .then(() => {
+        setIsEdited(false);
+      })
+      .catch((e) => {
+        toast.error(e.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  function handleCancel() {
+    setIsEdited(false);
+    form.reset(undefined, { keepDefaultValues: true });
+  }
+
+  if (isFalsy(isEdited)) {
     return (
       <div
-        onClick={onValueClick}
+        onClick={handleEdit}
         className="hover:bg-muted/50 cursor-pointer h-full min-h-8 flex flex-row items-center"
       >
-        {renderView ? (
-          renderView(value)
+        {renderPreview ? (
+          renderPreview(value)
         ) : (
           <>
             {(value as ReactNode) || (
-              <div className="text-gray-700 font-light">None</div>
+              <div className="italic text-gray-700 font-light">None</div>
             )}
           </>
         )}
       </div>
     );
-  } else {
-    return (
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(internalSubmit)}
-          onAbort={cancelEdit}
-          className="max-w-80"
-        >
-          <div className="flex flex-row space-x-2 items-center">
-            <AutoField
-              info={valueInfo}
-              name={"value"}
-              control={form.control}
-              autoFocus
-              // TODO auto cancel edit on lost focus/on closed for popups
-            />
-
-            <Button
-              type="submit"
-              variant="outline"
-              size="iconSm"
-              onClick={form.handleSubmit(internalSubmit)}
-            >
-              {isLoading ? <LoadingSpinner /> : <Check />}
-            </Button>
-            <Button
-              type="reset"
-              variant="outline"
-              size="iconSm"
-              onClick={cancelEdit}
-            >
-              <X />
-            </Button>
-          </div>
-
-          {error && <Alert variant="destructive">{error}</Alert>}
-        </form>
-      </Form>
-    );
   }
+
+  return (
+    // TODO: inner form does not allow using html-validations
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleConfirm)}
+        onAbort={handleCancel}
+        className="max-w-80"
+      >
+        <div className="flex flex-row space-x-2 items-center">
+          <AutoField
+            info={valueInfo}
+            name={"value"}
+            control={form.control}
+            autoFocus
+            // TODO auto cancel edit on lost focus/on closed for popups
+          />
+
+          <Button
+            type="submit"
+            variant="outline"
+            size="iconSm"
+            onClick={form.handleSubmit(handleConfirm)}
+          >
+            {isLoading ? <LoadingSpinner /> : <Check />}
+          </Button>
+          <Button
+            type="reset"
+            variant="outline"
+            size="iconSm"
+            onClick={handleCancel}
+          >
+            <X />
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
 }

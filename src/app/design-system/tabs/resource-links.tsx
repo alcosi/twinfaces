@@ -15,7 +15,7 @@ import { Fake } from "../seeds";
 
 export function ResourceLinksTab() {
   return (
-    <div className="h-screen">
+    <div className="h-screen overflow-y-auto max-h-98">
       <div className="space-y-4 p-4">
         <UiSection title="Class">
           <UiSection.Item

@@ -1,6 +1,5 @@
+import { CheckboxFormField, TextFormField } from "@/components/form-fields";
 import { Control, FieldValues, Path } from "react-hook-form";
-import { TextFormField } from "@/components/form-fields/text-form-field";
-import { CheckboxFormField } from "@/components/form-fields/checkbox-form-field";
 
 export function TransitionValidatorFormFields<T extends FieldValues>({
   control,

@@ -1,4 +1,4 @@
-import { CheckboxFormItem } from "@/components/form-fields/checkbox-form-field";
+import { CheckboxFormItem } from "@/components/form-fields";
 import { cn } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";

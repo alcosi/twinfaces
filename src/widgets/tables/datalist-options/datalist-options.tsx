@@ -14,7 +14,7 @@ import {
   DatalistOptionResourceLink,
   DataListOptionV3,
   useDatalistOptionFilters,
-  useDatalistOptionsSearch,
+  useDatalistOptionSearch,
 } from "@/entities/datalist-option";
 import { DatalistResourceLink } from "@/entities/datalist";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
-  const { searchDatalistOptions } = useDatalistOptionsSearch();
+  const { searchDatalistOptions } = useDatalistOptionSearch();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
     enabledFilters: isTruthy(dataListId)
       ? ["idList", "optionI18nLikeList"]

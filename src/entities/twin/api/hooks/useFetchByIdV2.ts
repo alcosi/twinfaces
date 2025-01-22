@@ -9,7 +9,13 @@ export const useTwinFetchByIdV2 = () => {
 
   const fetchTwinById = useCallback(
     async (id: string): Promise<Twin> => {
-      const { data, error } = await api.twin.getById({ id });
+      const { data, error } = await api.twin.getById({
+        id,
+        query: {
+          showTwinMode: "SHORT",
+          showTwinAliasMode: "ALL",
+        },
+      });
 
       if (error) {
         throw new Error("Failed to fetch twin due to API error");

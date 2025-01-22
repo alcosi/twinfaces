@@ -1,12 +1,12 @@
 import {
-  FormFieldProps,
   FormItemDescription,
   FormItemLabel,
-} from "@/components/form-fields/form-fields-common";
+  FormItemProps,
+} from "@/components/form-fields";
+import { FormFieldProps } from "@/components/form-fields/types";
 import { FeaturerValue } from "@/entities/featurer";
 import { FormFieldValidationError, isPopulatedArray } from "@/shared/libs";
 import { FormField, FormItem, FormMessage } from "@/shared/ui/form";
-import { ReactNode } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { FeaturerInput } from "./featurer-input";
 import { validateParamTypes } from "./helpers";
@@ -74,14 +74,11 @@ export function FeaturerFormItem({
   required,
   inForm,
   ...props
-}: Omit<FeaturerInputProps, "onChange"> & {
-  typeId: number;
-  onChange?: (value: FeaturerValue | null) => void;
-  label?: ReactNode;
-  description?: ReactNode;
-  required?: boolean;
-  inForm?: boolean;
-}) {
+}: Omit<FeaturerInputProps, "onChange"> &
+  FormItemProps & {
+    typeId: number;
+    onChange?: (value: FeaturerValue | null) => void;
+  }) {
   return (
     <FormItem>
       {label && (

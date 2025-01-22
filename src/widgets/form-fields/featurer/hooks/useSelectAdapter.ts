@@ -6,7 +6,7 @@ import {
   useTwinBasicFieldSelectAdapter,
   useTwinSelectAdapter,
   useTwinTouchIdSelectAdapter,
-} from "@/entities/twin/libs/hooks/useSelectAdapter";
+} from "@/entities/twin";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twinClassField";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";

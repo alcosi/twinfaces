@@ -1,6 +1,6 @@
 "use client";
 
-import { TextFormField } from "@/components/form-fields/text-form-field";
+import { TextFormField } from "@/components/form-fields";
 import { useAuthUser } from "@/features/auth";
 import { Button, Form } from "@/shared/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
