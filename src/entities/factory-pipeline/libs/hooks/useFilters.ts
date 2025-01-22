@@ -8,7 +8,7 @@ import {
 import {
   FactoryPipelineFilterKeys,
   FactoryPipelineFilters,
-} from "@/entities/factoryPipeline";
+} from "@/entities/factory-pipeline";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
 import { useFactorySelectAdapter } from "@/entities/factory";

@@ -19,7 +19,7 @@ import {
 import {
   createFactoryPipelineApi,
   FactoryPipelineApi,
-} from "@/entities/factoryPipeline";
+} from "@/entities/factory-pipeline";
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
 import {

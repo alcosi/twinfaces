@@ -1,6 +1,7 @@
 import { RelatedObjects } from "@/shared/api";
 import { PipelineStep, PipelineStep_DETAILED } from "../api";
-import { FactoryPipeline } from "../../factoryPipeline";
+import { FactoryPipeline } from "../../factory-pipeline";
+// import { FactoryPipeline } from "../../factoryPipeline";
 
 export const hydratePipelineStepFromMap = (
   dto: PipelineStep,

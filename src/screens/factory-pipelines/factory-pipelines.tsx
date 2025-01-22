@@ -1,11 +1,11 @@
 "use client";
 
 import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
-import {
-  FactoryPipeline_DETAILED,
-  useFactoryPipelineFilters,
-  useFactoryPipelineSearch,
-} from "@/entities/factoryPipeline";
+// import {
+//   FactoryPipeline_DETAILED,
+//   useFactoryPipelineFilters,
+//   useFactoryPipelineSearch,
+// } from "@/entities/factoryPipeline";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
@@ -20,6 +20,11 @@ import { Check } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
+import {
+  FactoryPipeline_DETAILED,
+  useFactoryPipelineFilters,
+  useFactoryPipelineSearch,
+} from "@/entities/factory-pipeline";
 
 const colDefs: Record<
   keyof Omit<
@@ -67,7 +72,6 @@ const colDefs: Record<
       ),
   },
 
-  // TODO: Replace with a condition set resource link
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
