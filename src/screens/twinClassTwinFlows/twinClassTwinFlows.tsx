@@ -6,7 +6,7 @@ import {
   useTwinFlowFilters,
   useTwinFlowSearchV1,
 } from "@/entities/twinFlow";
-import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";

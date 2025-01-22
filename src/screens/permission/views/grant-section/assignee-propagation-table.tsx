@@ -11,7 +11,7 @@ import {
   PermissionGrantAssigneePropagation_DETAILED,
   usePermissionGrantAssigneePropagationSearchV1,
 } from "@/entities/assigneePropagation";
-import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { useContext } from "react";
 import { PermissionContext } from "@/features/permission";
 

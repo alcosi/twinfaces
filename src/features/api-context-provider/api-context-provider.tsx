@@ -57,7 +57,7 @@ import {
   createPermissionTwinRoleApi,
   PermissionTwinRoleApi,
 } from "@/entities/twinRole";
-import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinStatus";
+import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
 import { createUserApi, UserApi } from "@/entities/user";
 import { createUserGroupApi, UserGroupApi } from "@/entities/userGroup";
 import { ApiContext, ApiSettings } from "@/shared/api";

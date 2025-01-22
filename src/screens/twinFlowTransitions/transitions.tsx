@@ -6,11 +6,13 @@ import {
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFormValues,
   TwinFlowTransitionResourceLink,
-  TwinFlowTransitionUpdateRq,
   useTwinFlowTransitionFilters,
   useTwinFlowTransitionSearchV1,
 } from "@/entities/twinFlowTransition";
-import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
+import {
+  TwinClassStatusResourceLink,
+  TwinStatus,
+} from "@/entities/twin-status";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";

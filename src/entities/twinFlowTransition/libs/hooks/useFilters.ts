@@ -1,6 +1,6 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { usePermissionSelectAdapter } from "@/entities/permission";
-import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
   toArray,
   toArrayOfString,

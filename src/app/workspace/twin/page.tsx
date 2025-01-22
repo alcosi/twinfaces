@@ -10,7 +10,10 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
+import {
+  TwinClassStatusResourceLink,
+  TwinStatus,
+} from "@/entities/twin-status";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";

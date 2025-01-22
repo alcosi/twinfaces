@@ -1,4 +1,4 @@
-import { TwinStatus } from "@/entities/twinStatus";
+import { TwinStatus } from "@/entities/twin-status";
 import { RelatedObjects } from "@/shared/api";
 import { TwinClass_DETAILED } from "../../twinClass";
 import { User } from "../../user";

@@ -4,7 +4,7 @@ import {
   TwinStatus,
   useFetchTwinStatusById,
   useTwinStatusSelectAdapter,
-} from "@/entities/twinStatus";
+} from "@/entities/twin-status";
 import { useEffect, useState } from "react";
 import { Control, FieldValues, Path, useWatch } from "react-hook-form";
 

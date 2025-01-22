@@ -1,7 +1,7 @@
 "use client";
 
 import { TwinClassContext } from "@/entities/twinClass";
-import { TwinStatus, useFetchTwinStatusById } from "@/entities/twinStatus";
+import { TwinStatus, useFetchTwinStatusById } from "@/entities/twin-status";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";

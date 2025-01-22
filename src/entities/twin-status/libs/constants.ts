@@ -4,6 +4,7 @@ import { REGEX_PATTERNS } from "@/shared/libs";
 export const ENTITY_COLOR = "#0EA5E9"; // text-sky-500
 
 export const TWIN_CLASS_STATUS_SCHEMA = z.object({
+  twinClassId: z.string().uuid().nullable(),
   key: z
     .string()
     .min(1)

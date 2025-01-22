@@ -5,7 +5,7 @@ import {
   TwinClassStatusResourceLink,
   TwinStatus,
   TwinStatusUpdateRq,
-} from "@/entities/twinStatus";
+} from "@/entities/twin-status";
 import { ApiContext } from "@/shared/api";
 import { ColorPicker } from "@/shared/ui/color-picker";
 import { GuidWithCopy } from "@/shared/ui/guid";
