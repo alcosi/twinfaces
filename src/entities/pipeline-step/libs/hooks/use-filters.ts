@@ -1,4 +1,10 @@
-import { FilterFeature, toArrayOfString } from "@/shared/libs";
+import {
+  FilterFeature,
+  mapToChoice,
+  toArray,
+  toArrayOfString,
+  wrapWithPercent,
+} from "@/shared/libs";
 import { PipelineStepFilterKeys, PipelineStepFilters } from "../../api";
 import { useFactorySelectAdapter } from "../../../factory";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
@@ -27,6 +33,16 @@ export function usePipelineStepFilters(): FilterFeature<
         multi: true,
         ...factorySelectAdapter,
       },
+      descriptionLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Description",
+      },
+      optional: {
+        type: AutoFormValueType.boolean,
+        label: "Optional",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
     };
   }
 
@@ -36,6 +52,11 @@ export function usePipelineStepFilters(): FilterFeature<
     return {
       idList: toArrayOfString(filters.idList),
       factoryIdList: toArrayOfString(filters.factoryIdList, "id"),
+      descriptionLikeList: toArrayOfString(
+        toArray(filters.descriptionLikeList),
+        "description"
+      ).map(wrapWithPercent),
+      optional: mapToChoice(filters.optional),
     };
   }
 

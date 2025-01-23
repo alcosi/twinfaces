@@ -6,12 +6,14 @@ export type PipelineStep_DETAILED = Required<PipelineStep>;
 export type PipelineStepSearchRq =
   components["schemas"]["FactoryPipelineStepSearchRqV1"];
 
-export type PipelineStepFilterKeys = "idList" | "factoryIdList";
+export type PipelineStepFilterKeys =
+  | "idList"
+  | "factoryIdList"
+  | "descriptionLikeList"
+  | "optional";
 // | "factoryPipelineIdList"
 // | "factoryConditionSetIdList"
-// | "descriptionLikeList"
-// | "fillerFeaturerIdList"
-// | "optional";
+// | "fillerFeaturerIdList";
 
 export type PipelineStepFilters = Partial<
   Pick<PipelineStepSearchRq, PipelineStepFilterKeys>
