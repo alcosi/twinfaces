@@ -1,3 +1,4 @@
+import { DataListOptionV3 } from "@/entities/datalist-option";
 import { TwinClassField } from "@/entities/twinClassField";
 import { RequireFields } from "@/shared/libs";
 
@@ -5,7 +6,7 @@ export type TwinFieldUI = RequireFields<
   TwinClassField,
   "id" | "key" | "name" | "description" | "required" | "descriptor"
 > & {
-  value: string;
+  value: string | DataListOptionV3;
 };
 
 export enum TwinFieldType {
