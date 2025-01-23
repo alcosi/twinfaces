@@ -13,7 +13,7 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
-import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 
 export function useFactoryPipelineFilters(): FilterFeature<
   FactoryPipelineFilterKeys,

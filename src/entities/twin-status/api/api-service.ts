@@ -68,6 +68,7 @@ export function createTwinStatusApi(settings: ApiSettings) {
           lazyRelation: false,
           showStatusMode: "DETAILED",
           showTwinStatus2TwinClassMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: true,

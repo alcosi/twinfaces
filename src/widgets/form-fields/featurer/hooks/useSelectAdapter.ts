@@ -10,7 +10,7 @@ import {
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twinClassField";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
-import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup";
 import { createFixedSelectAdapter, SelectAdapter } from "@/shared/libs";
 import { useMemo } from "react";

@@ -12,15 +12,10 @@ export type TwinStatusUpdateRq = components["schemas"]["TwinStatusUpdateRqV1"];
 
 export type TwinStatusFilterKeys =
   | "idList"
-  | "idExcludeList"
   | "twinClassIdList"
-  | "twinClassIdExcludeList"
   | "keyLikeList"
-  | "keyNotLikeList"
   | "nameI18nLikeList"
-  | "nameI18nNotLikeList"
-  | "descriptionI18nLikeList"
-  | "descriptionI18nNotLikeList";
+  | "descriptionI18nLikeList";
 
 export type TwinStatusFilters = Partial<
   Pick<components["schemas"]["TwinStatusSearchRqV1"], TwinStatusFilterKeys>

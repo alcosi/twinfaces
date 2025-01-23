@@ -7,7 +7,7 @@ import { TwinClassLinkResourceLink } from "@/entities/twinClassLink";
 import { TwinFlowResourceLink } from "@/entities/twinFlow";
 import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
 import { TwinFlowTransitionResourceLink } from "@/entities/twinFlowTransition";
-import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
 import { UserGroupResourceLink } from "@/entities/userGroup";
 import { UiSection } from "../components/ui-section";
