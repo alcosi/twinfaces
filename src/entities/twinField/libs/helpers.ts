@@ -1,5 +1,5 @@
 import { RelatedObjects } from "@/shared/api";
-import { TwinFieldUI } from "./types";
+import { TwinFieldType, TwinFieldUI } from "./types";
 
 export const hydrateTwinFieldFromMap = ({
   dto,
@@ -12,13 +12,23 @@ export const hydrateTwinFieldFromMap = ({
 }): TwinFieldUI => {
   const [key, value] = dto;
 
-  const initValue: TwinFieldUI = { key, value } as TwinFieldUI;
+  const twinFieldKeyValue: TwinFieldUI = { key, value } as TwinFieldUI;
 
-  if (!relatedObjects?.twinClassMap || !twinClassId) return initValue;
+  if (!relatedObjects?.twinClassMap || !twinClassId) return twinFieldKeyValue;
 
   const twinClassField = (
     relatedObjects.twinClassMap[twinClassId]?.fields ?? []
   ).find((field) => field.key === key);
 
-  return { ...initValue, ...twinClassField };
+  // NOTE: To support preview state for diff `fieldType`(s)
+  switch (twinClassField?.descriptor?.fieldType) {
+    case TwinFieldType.selectListV1:
+    case TwinFieldType.selectListLongV1:
+    case TwinFieldType.selectLongV1:
+      twinFieldKeyValue.value =
+        relatedObjects?.dataListsOptionMap?.[value] ?? value;
+      break;
+  }
+
+  return { ...twinFieldKeyValue, ...twinClassField };
 };

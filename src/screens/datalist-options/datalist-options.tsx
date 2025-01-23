@@ -8,7 +8,7 @@ export function DatalistOptionsScreen() {
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Options", href: "/workspace/options" }]);
+    setBreadcrumbs([{ label: "Options", href: "/workspace/datalist-options" }]);
   }, [setBreadcrumbs]);
 
   return <DatalistOptionsTable />;

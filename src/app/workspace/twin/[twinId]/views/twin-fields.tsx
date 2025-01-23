@@ -9,6 +9,7 @@ import {
   InPlaceEditContextProvider,
 } from "@/features/inPlaceEdit";
 import { PagedResponse } from "@/shared/api";
+import { isPopulatedString } from "@/shared/libs";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import {
   renderTwinFieldPreview,
@@ -50,7 +51,9 @@ export function TwinFields() {
               upsertTwinField({
                 twinId,
                 fieldKey: original.key,
-                fieldValue,
+                fieldValue: isPopulatedString(fieldValue)
+                  ? fieldValue
+                  : fieldValue.id!,
               }).then(tableRef.current?.refresh)
             }
           />

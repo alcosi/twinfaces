@@ -1,7 +1,11 @@
 import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
 import { TwinResourceLink } from "@/entities/twin";
 import { z, ZodType } from "zod";
-import { DatalistOptionResourceLink } from "@/entities/datalist-option";
+import {
+  DatalistOptionResourceLink,
+  DataListOptionV3,
+} from "@/entities/datalist-option";
+import { isPopulatedString } from "@/shared/libs";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI
@@ -21,7 +25,7 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
       return (
         <TwinResourceLink
           data={{
-            id: twinField.value,
+            id: twinField.value as string,
             name: twinField.name,
             description: twinField.description,
           }}
@@ -31,9 +35,14 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
 
     case TwinFieldType.selectListV1:
     case TwinFieldType.selectListLongV1:
-      return <DatalistOptionResourceLink data={twinField} withTooltip />;
+      return (
+        <DatalistOptionResourceLink
+          data={twinField.value as DataListOptionV3}
+          withTooltip
+        />
+      );
 
     default:
-      return twinField.value;
+      return twinField.value as string;
   }
 }
