@@ -8,7 +8,7 @@ import {
   useTwinTouchIdSelectAdapter,
 } from "@/entities/twin";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
-import { useTwinClassFieldSelectAdapter } from "@/entities/twinClassField";
+import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup";

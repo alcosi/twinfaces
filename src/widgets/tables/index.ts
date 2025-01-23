@@ -1,3 +1,3 @@
 export * from "./twin-class-statuses";
-export * from "./twinClassFields";
+export * from "./twin-class-fields";
 export * from "./datalist-options";

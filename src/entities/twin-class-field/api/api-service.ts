@@ -58,10 +58,12 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
           header: getApiDomainHeaders(settings),
           path: { twinClassFieldId: fieldId },
           query: {
-            // lazyRelation: false,
+            lazyRelation: false,
             showTwinClassFieldMode: "MANAGED",
-            // showTwinClassMode: "MANAGED",
-            // showTwin2TwinClassMode: "MANAGED",
+            showTwinClass2PermissionMode: "DETAILED",
+            showTwinClassField2TwinClassMode: "DETAILED",
+            showTwinClassField2FeaturerMode: "DETAILED",
+            showTwinClassField2PermissionMode: "DETAILED",
           },
         },
       }

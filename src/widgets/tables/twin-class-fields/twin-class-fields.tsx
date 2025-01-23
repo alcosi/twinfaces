@@ -6,7 +6,7 @@ import {
   TwinClassFieldV2_DETAILED,
   useTwinClassFieldFilters,
   useTwinClassFieldSearchV1,
-} from "@/entities/twinClassField";
+} from "@/entities/twin-class-field";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import {
   isFalsy,
