@@ -37,7 +37,6 @@ export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline
     return isPopulatedString(id) ? id : factoryId;
   }
 
-
   return {
     getById,
     getItems: (search, options) =>

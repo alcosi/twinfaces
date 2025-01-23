@@ -65,7 +65,10 @@ export function usePipelineStepFilters(): FilterFeature<
         "description"
       ).map(wrapWithPercent),
       optional: mapToChoice(filters.optional),
-      factoryPipelineIdList: toArrayOfString(filters.factoryPipelineIdList, "id"),
+      factoryPipelineIdList: toArrayOfString(
+        filters.factoryPipelineIdList,
+        "id"
+      ),
     };
   }
 
