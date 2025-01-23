@@ -1,5 +1,10 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import {
+  TwinStatusFilterKeys,
+  TwinStatusFilters,
+} from "@/entities/twin-status";
+import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import {
   type FilterFeature,
   isPopulatedArray,
   toArray,
@@ -7,11 +12,6 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 import { z } from "zod";
-import {
-  TwinStatusFilterKeys,
-  TwinStatusFilters,
-} from "@/entities/twin-status";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 
 export function useStatusFilters({
   enabledFilters,

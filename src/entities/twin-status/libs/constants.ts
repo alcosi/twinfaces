@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { REGEX_PATTERNS } from "@/shared/libs";
+import { z } from "zod";
 
 export const ENTITY_COLOR = "#0EA5E9"; // text-sky-500
 

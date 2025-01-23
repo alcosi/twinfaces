@@ -1,9 +1,5 @@
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
-  TwinClass_DETAILED,
-  TwinClassResourceLink,
-} from "@/entities/twinClass";
-import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
   TwinClassStatusResourceLink,
@@ -12,7 +8,12 @@ import {
   useStatusFilters,
   useTwinStatusSearchV1,
 } from "@/entities/twin-status";
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
+import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
@@ -29,7 +30,6 @@ import {
   FiltersState,
 } from "../../crud-data-table";
 import { TwinClassStatusFormFields } from "./form-fields";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 
 const colDefs: Record<
   keyof Pick<
