@@ -4,8 +4,9 @@ import {
   isPopulatedString,
   SelectAdapter,
   shortenUUID,
+  wrapWithPercent,
 } from "@/shared/libs";
-import { Twin_DETAILED } from "../../api";
+import { Twin_DETAILED, TwinFilters } from "../../api";
 import { useTwinFetchByIdV2, useTwinSearchV3 } from "../../api/hooks";
 import { TwinBasicFields, TwinTouchIds } from "../constants";
 
@@ -18,8 +19,15 @@ export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
     return data as Twin_DETAILED;
   }
 
-  async function getItems(search: string) {
-    const response = await searchTwins({ search });
+  async function getItems(search: string, filters?: TwinFilters) {
+    const response = await searchTwins({
+      filters: {
+        twinNameLikeList: isPopulatedString(search)
+          ? [wrapWithPercent(search)]
+          : filters?.twinNameLikeList,
+        ...filters,
+      },
+    });
     return response.data as Twin_DETAILED[];
   }
 
@@ -35,7 +43,7 @@ export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
 
   return {
     getById,
-    getItems,
+    getItems: (search, options) => getItems(search, options as TwinFilters),
     renderItem,
   };
 }

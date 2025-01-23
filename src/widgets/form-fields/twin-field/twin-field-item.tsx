@@ -65,9 +65,11 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
       case TwinFieldType.selectLinkLongV1:
         return (
           <ComboboxFormItem
+            getById={twinAdapter.getById}
+            getItems={(search) => twinAdapter.getItems(search)}
+            renderItem={twinAdapter.renderItem}
             onSelect={handleOnTwinSelect}
             {...props}
-            {...twinAdapter}
           />
         );
       case TwinFieldType.selectListV1:

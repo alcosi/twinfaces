@@ -6,11 +6,9 @@ import { TwinFilters, TwinUpdateRq } from "./types";
 export function createTwinApi(settings: ApiSettings) {
   function search({
     pagination,
-    search,
     filters,
   }: {
     pagination: PaginationState;
-    search?: string;
     filters?: TwinFilters;
   }) {
     return settings.client.POST("/private/twin/search/v3", {
@@ -26,18 +24,13 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinMarker2DataListOptionMode: "DETAILED",
           showTwinTag2DataListOptionMode: "DETAILED",
           showTwinByHeadMode: "YELLOW",
-          showTwinAliasMode: "ALL",
+          showTwinAliasMode: "D",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
         },
       },
-      body: [
-        {
-          twinNameLikeList: search ? ["%" + search + "%"] : undefined,
-          ...filters,
-        },
-      ],
+      body: [{ ...filters }],
     });
   }
 
@@ -78,6 +71,7 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinClass2TwinClassFieldMode: "DETAILED",
           showTwinFieldCollectionMode: "ALL_FIELDS",
           showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
+          showTwinClass2LinkMode: "DETAILED",
         },
       },
     });

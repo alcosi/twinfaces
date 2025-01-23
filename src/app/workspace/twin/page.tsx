@@ -192,11 +192,9 @@ export default function TwinsPage() {
   }, []);
 
   async function fetchTwin({
-    search,
     pagination,
     filters,
   }: {
-    search?: string;
     pagination?: PaginationState;
     filters: FiltersState;
   }): Promise<PagedResponse<Twin>> {
@@ -204,7 +202,6 @@ export default function TwinsPage() {
 
     try {
       return await searchTwins({
-        search: search,
         pagination: pagination,
         filters: _filters,
       });
