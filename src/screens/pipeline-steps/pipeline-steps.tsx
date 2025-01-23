@@ -1,13 +1,17 @@
 "use client";
 
-import { PipelineStep, usePipelineStepSearch } from "@/entities/pipeline-step";
+import {
+  PipelineStep,
+  usePipelineStepFilters,
+  usePipelineStepSearch,
+} from "@/entities/pipeline-step";
 import { ColumnDef } from "@tanstack/table-core";
 import { PaginationState } from "@tanstack/react-table";
 import { GuidWithCopy } from "@/shared/ui";
 import { Factory, FactoryResourceLink } from "@/entities/factory";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
-import { CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { useEffect } from "react";
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
@@ -102,6 +106,7 @@ const colDefs: Record<
 export function PipelineStepsScreen() {
   const { searchPipelineStep } = usePipelineStepSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { buildFilterFields, mapFiltersToPayload } = usePipelineStepFilters();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -109,9 +114,14 @@ export function PipelineStepsScreen() {
     ]);
   }, [setBreadcrumbs]);
 
-  async function fetchPipelineStep(pagination: PaginationState, filters: {}) {
+  async function fetchPipelineStep(
+    pagination: PaginationState,
+    filters: FiltersState
+  ) {
+    const _filters = mapFiltersToPayload(filters.filters);
+
     try {
-      return searchPipelineStep({ pagination });
+      return searchPipelineStep({ pagination, filters: _filters });
     } catch (error) {
       toast.error("An error occured while fetching pipeline steps: " + error);
       throw new Error(
@@ -144,6 +154,7 @@ export function PipelineStepsScreen() {
         colDefs.fillerFeaturerId,
         colDefs.active,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }
