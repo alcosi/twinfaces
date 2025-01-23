@@ -23,7 +23,7 @@ import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { TwinClassLinkFormFields } from "./form-fields";
+import { TwinClassRelationsFormFields } from "./form-fields";
 
 const twinLinkSchema = z.object({
   srcTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
@@ -62,7 +62,7 @@ const mapLinkToFormPayload = (
   };
 };
 
-export function TwinClassLinks() {
+export function TwinClassRelations() {
   const api = useContext(ApiContext);
   const { twinClass, twinClassId } = useContext(TwinClassContext);
   const router = useRouter();
@@ -239,7 +239,7 @@ export function TwinClassLinks() {
         dialogForm={forwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
-          <TwinClassLinkFormFields
+          <TwinClassRelationsFormFields
             control={forwardLinkForm.control}
             isForward
           />
@@ -273,7 +273,7 @@ export function TwinClassLinks() {
         dialogForm={backwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
-          <TwinClassLinkFormFields control={backwardLinkForm.control} />
+          <TwinClassRelationsFormFields control={backwardLinkForm.control} />
         )}
       />
     </>

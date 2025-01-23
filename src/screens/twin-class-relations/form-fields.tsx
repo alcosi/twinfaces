@@ -7,7 +7,7 @@ import {
 import { TwinClassSelectField } from "@/features/twinClass";
 import { Control, FieldValues, Path } from "react-hook-form";
 
-export function TwinClassLinkFormFields<T extends FieldValues>({
+export function TwinClassRelationsFormFields<T extends FieldValues>({
   control,
   isForward,
 }: {

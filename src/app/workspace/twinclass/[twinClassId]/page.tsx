@@ -2,7 +2,7 @@
 
 import { TwinClassContext } from "@/entities/twinClass";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { TwinClassLinks } from "@/screens/twinClassLinks";
+import { TwinClassRelations } from "@/screens/twin-class-relations";
 import { TwinClassTwinFlows } from "@/screens/twinClassTwinFlows";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinClassFieldsTable, TwinClassStatusesTable } from "@/widgets/tables";
@@ -35,9 +35,9 @@ export default function TwinClassPage() {
       content: <TwinClassTwinFlows />,
     },
     {
-      key: "links",
-      label: "Links",
-      content: <TwinClassLinks />,
+      key: "relations",
+      label: "Relations",
+      content: <TwinClassRelations />,
     },
   ];
 
