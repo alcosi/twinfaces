@@ -94,7 +94,7 @@ export function TwinFieldGeneral({
       label: "",
     },
     schema: z.boolean(),
-    renderView: (value) => (value ? "Yes" : "No"),
+    renderPreview: (value) => (value ? "Yes" : "No"),
     onSubmit: (value) => {
       return updateField({
         required: value as boolean,

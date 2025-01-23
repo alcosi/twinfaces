@@ -1,7 +1,10 @@
 "use client";
 
 import { TwinClassContext } from "@/entities/twinClass";
-import { TwinClassFieldV2_DETAILED, useTwinClassField } from "@/entities/twin-class-field";
+import {
+  TwinClassFieldV2_DETAILED,
+  useTwinClassField,
+} from "@/entities/twin-class-field";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
