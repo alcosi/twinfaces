@@ -9,12 +9,14 @@ import { PipelineStepFilterKeys, PipelineStepFilters } from "../../api";
 import { useFactorySelectAdapter } from "../../../factory";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
+import { useFactoryPipelineSelectAdapter } from "../../../factory-pipeline/libs/hooks/use-factory-pipeline-select-adapter";
 
 export function usePipelineStepFilters(): FilterFeature<
   PipelineStepFilterKeys,
   PipelineStepFilters
 > {
   const factorySelectAdapter = useFactorySelectAdapter();
+  const factoryPipelineSelectAdapter = useFactoryPipelineSelectAdapter();
 
   function buildFilterFields(): Record<
     PipelineStepFilterKeys,
@@ -43,6 +45,12 @@ export function usePipelineStepFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
+      factoryPipelineIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Pipeline",
+        multi: true,
+        ...factoryPipelineSelectAdapter,
+      },
     };
   }
 
@@ -57,6 +65,7 @@ export function usePipelineStepFilters(): FilterFeature<
         "description"
       ).map(wrapWithPercent),
       optional: mapToChoice(filters.optional),
+      factoryPipelineIdList: toArrayOfString(filters.factoryPipelineIdList, "id"),
     };
   }
 
