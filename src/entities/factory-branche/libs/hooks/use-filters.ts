@@ -1,12 +1,21 @@
 import { z } from "zod";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import { FilterFeature, toArrayOfString } from "@/shared/libs";
+import {
+  FilterFeature,
+  mapToChoice,
+  toArray,
+  toArrayOfString,
+  wrapWithPercent,
+} from "@/shared/libs";
 import { FactoryBranchFilterKeys, FactoryBranchFilters } from "../../api";
+import { useFactorySelectAdapter } from "../../../factory/libs";
 
 export function useFactoryBrancheFilters(): FilterFeature<
   FactoryBranchFilterKeys,
   FactoryBranchFilters
 > {
+  const factorySelectAdapter = useFactorySelectAdapter();
+
   function buildFilterFields(): Record<
     FactoryBranchFilterKeys,
     AutoFormValueInfo
@@ -18,6 +27,28 @@ export function useFactoryBrancheFilters(): FilterFeature<
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
       },
+      factoryIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Factory",
+        multi: true,
+        ...factorySelectAdapter,
+      },
+      active: {
+        type: AutoFormValueType.boolean,
+        label: "Active",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
+      descriptionLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Description",
+      },
+      nextFactoryIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Next Factory",
+        multi: true,
+        ...factorySelectAdapter,
+      },
     };
   }
 
@@ -26,6 +57,13 @@ export function useFactoryBrancheFilters(): FilterFeature<
   ): FactoryBranchFilters {
     return {
       idList: toArrayOfString(filters.idList),
+      factoryIdList: toArrayOfString(filters.factoryIdList, "id"),
+      active: mapToChoice(filters.active),
+      descriptionLikeList: toArrayOfString(
+        toArray(filters.descriptionLikeList),
+        "description"
+      ).map(wrapWithPercent),
+      nextFactoryIdList: toArrayOfString(filters.nextFactoryIdList, "id"),
     };
   }
 
