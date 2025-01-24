@@ -3,11 +3,12 @@
 import { Factory, FactoryResourceLink } from "@/entities/factory";
 import {
   FactoryBranche,
+  useFactoryBrancheFilters,
   useFactoryBranchesSearch,
 } from "@/entities/factory-branche";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
-import { CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
@@ -89,6 +90,7 @@ const colDefs: Record<
 export function FactoryBranchesScreen() {
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { buildFilterFields, mapFiltersToPayload } = useFactoryBrancheFilters();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Branches", href: "/workspace/branches" }]);
@@ -96,10 +98,12 @@ export function FactoryBranchesScreen() {
 
   async function fetchFactoryBranches(
     pagination: PaginationState,
-    filters: {}
+    filters: FiltersState
   ) {
+    const _filters = mapFiltersToPayload(filters.filters);
+
     try {
-      return await searchFactoryBranches({ pagination });
+      return await searchFactoryBranches({ pagination, filters: _filters });
     } catch (error) {
       toast.error("An error occurred while factory branches: " + error);
       throw new Error("An error occurred while factory branches: " + error);
@@ -127,6 +131,7 @@ export function FactoryBranchesScreen() {
         colDefs.active,
         colDefs.nextFactory,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }

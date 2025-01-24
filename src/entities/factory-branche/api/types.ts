@@ -18,16 +18,12 @@ export type FactoryBranche_DETAILED = RequireFields<
 export type FactoryBranchSearchRq =
   components["schemas"]["FactoryBranchSearchRqV1"];
 
-export type FactoryBranchFilterKeys =
-  | "idList"
-  | "idExcludeList"
-  | "factoryIdList"
-  | "factoryIdExcludeList"
-  | "factoryConditionSetIdList"
-  | "factoryConditionSetIdExcludeList"
-  | "nextFactoryIdList"
-  | "nextFactoryIdExcludeList"
-  | "active";
+export type FactoryBranchFilterKeys = "idList";
+//"factoryIdList"
+// | "factoryConditionSetIdList"
+// | "nextFactoryIdList"
+// | "descriptionLikeList"
+// | "active";
 
 export type FactoryBranchFilters = Partial<
   Pick<FactoryBranchSearchRq, FactoryBranchFilterKeys>
