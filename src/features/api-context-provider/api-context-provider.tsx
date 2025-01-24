@@ -69,7 +69,7 @@ import { useAuthUser } from "../auth";
 import {
   createPipelineStepApi,
   PipelineStepApi,
-} from "@/entities/pipeline-step/api";
+} from "@/entities/pipeline-step";
 
 export interface ApiContextProps {
   domain: DomainApi;
