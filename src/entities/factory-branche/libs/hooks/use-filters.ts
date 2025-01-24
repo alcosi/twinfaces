@@ -47,15 +47,15 @@ export function useFactoryBrancheFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
-      descriptionLikeList: {
-        type: AutoFormValueType.tag,
-        label: "Description",
-      },
       nextFactoryIdList: {
         type: AutoFormValueType.combobox,
         label: "Next Factory",
         multi: true,
         ...factorySelectAdapter,
+      },
+      descriptionLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Description",
       },
     };
   }

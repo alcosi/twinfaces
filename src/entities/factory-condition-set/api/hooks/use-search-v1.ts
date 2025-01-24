@@ -3,7 +3,7 @@ import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from '@tanstack/react-table';
 import { FactoryConditionSet, FactoryConditionSetFilters } from '../types';
 
-// TODO: Turn off lazy-relation for users, implement hydration
+// TODO: Turn off lazy-relation, implement hydration
 export function useFactoryConditionSetSearch() {
   const api = useContext(ApiContext);
 
