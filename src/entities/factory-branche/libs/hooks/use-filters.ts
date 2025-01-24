@@ -9,12 +9,14 @@ import {
 } from "@/shared/libs";
 import { FactoryBranchFilterKeys, FactoryBranchFilters } from "../../api";
 import { useFactorySelectAdapter } from "../../../factory/libs";
+import { useFactoryConditionSetSelectAdapter } from "../../../factory-condition-set";
 
 export function useFactoryBrancheFilters(): FilterFeature<
   FactoryBranchFilterKeys,
   FactoryBranchFilters
 > {
   const factorySelectAdapter = useFactorySelectAdapter();
+  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
 
   function buildFilterFields(): Record<
     FactoryBranchFilterKeys,
@@ -32,6 +34,12 @@ export function useFactoryBrancheFilters(): FilterFeature<
         label: "Factory",
         multi: true,
         ...factorySelectAdapter,
+      },
+      factoryConditionSetIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Condition set",
+        multi: true,
+        ...factoryConditionSetAdapter,
       },
       active: {
         type: AutoFormValueType.boolean,
@@ -58,6 +66,7 @@ export function useFactoryBrancheFilters(): FilterFeature<
     return {
       idList: toArrayOfString(filters.idList),
       factoryIdList: toArrayOfString(filters.factoryIdList, "id"),
+      factoryConditionSetIdList: toArrayOfString(filters.factoryConditionSetIdList, "id"),
       active: mapToChoice(filters.active),
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),
