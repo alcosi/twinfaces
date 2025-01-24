@@ -1,4 +1,8 @@
-import { isPopulatedString, SelectAdapter, wrapWithPercent } from "@/shared/libs";
+import {
+  isPopulatedString,
+  SelectAdapter,
+  wrapWithPercent,
+} from "@/shared/libs";
 import { FactoryConditionSet, FactoryConditionSetFilters } from "../../api";
 import { useFactoryConditionSetSearch } from "../../api/hooks";
 import { useFetchFactoryConditionSetById } from "./use-fetch-factory-condition-set-by-id";
@@ -11,7 +15,10 @@ export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryCond
     return await fetchFactoryConditionSetById(id);
   }
 
-  async function getItems(search: string, filters?: FactoryConditionSetFilters) {
+  async function getItems(
+    search: string,
+    filters?: FactoryConditionSetFilters
+  ) {
     const response = await searchFactoryConditionSet({
       pagination: {
         pageIndex: 0,
@@ -32,7 +39,8 @@ export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryCond
 
   return {
     getById,
-    getItems: (search, options) => getItems(search, options as FactoryConditionSetFilters),
+    getItems: (search, options) =>
+      getItems(search, options as FactoryConditionSetFilters),
     renderItem,
   };
 }

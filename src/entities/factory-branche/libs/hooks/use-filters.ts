@@ -66,7 +66,10 @@ export function useFactoryBrancheFilters(): FilterFeature<
     return {
       idList: toArrayOfString(filters.idList),
       factoryIdList: toArrayOfString(filters.factoryIdList, "id"),
-      factoryConditionSetIdList: toArrayOfString(filters.factoryConditionSetIdList, "id"),
+      factoryConditionSetIdList: toArrayOfString(
+        filters.factoryConditionSetIdList,
+        "id"
+      ),
       active: mapToChoice(filters.active),
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),

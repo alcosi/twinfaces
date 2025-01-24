@@ -26,7 +26,10 @@ export function useFetchFactoryConditionSetById() {
 
         return data.conditionSets[0]!;
       } catch (error) {
-        console.error(`Failed to find factory condition set by ID: ${id}`, error);
+        console.error(
+          `Failed to find factory condition set by ID: ${id}`,
+          error
+        );
         throw new Error(`Failed to find factory condition set with ID ${id}`);
       }
     },
