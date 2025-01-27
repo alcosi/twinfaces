@@ -1,12 +1,16 @@
-import { SelectAdapter, wrapWithPercent } from "@/shared/libs";
 import {
-  FactoryPipeline,
+  isPopulatedString,
+  SelectAdapter,
+  wrapWithPercent,
+} from "@/shared/libs";
+import {
+  FactoryPipeline_DETAILED,
   FactoryPipelineFilters,
   useFactoryPipelineSearch,
 } from "../../api";
 import { useFetchFactoryPipelineById } from "./use-fetch-factory-pipeline-by-id";
 
-export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline> {
+export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline_DETAILED> {
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
   const { fetchFactoryPipelineById } = useFetchFactoryPipelineById();
 
@@ -29,8 +33,8 @@ export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline
     return response.data;
   }
 
-  function renderItem({ id }: FactoryPipeline) {
-    return id;
+  function renderItem({ factory, inputTwinClass }: FactoryPipeline_DETAILED) {
+    return `${isPopulatedString(factory.name) ? factory.name : "N/A"} | ${inputTwinClass.name}`;
   }
 
   return {
