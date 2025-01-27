@@ -59,11 +59,12 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
+          disabled={props.disabled}
           variant="outline"
           role="combobox"
           aria-expanded={isOpen}
           className={cn(
-            "flex w-auto min-w-[120px] h-auto min-h-10 justify-between truncate",
+            "flex w-auto min-w-[120px] h-auto min-h-10 justify-between truncat disabled:cursor-not-allowed",
             props.buttonClassName
           )}
         >
