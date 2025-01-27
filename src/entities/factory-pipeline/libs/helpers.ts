@@ -2,7 +2,7 @@ import { RelatedObjects } from "@/shared/api";
 import {
   FactoryPipeline,
   FactoryPipeline_DETAILED,
-} from "@/entities/factoryPipeline";
+} from "@/entities/factory-pipeline";
 import { TwinClass_DETAILED } from "@/entities/twinClass";
 import { Factory } from "@/entities/factory";
 

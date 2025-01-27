@@ -15,7 +15,7 @@ export function useFactoryBranchesSearch() {
       filters?: FactoryBranchFilters;
     }): Promise<PagedResponse<FactoryBranche_DETAILED>> => {
       try {
-        const { data, error } = await api.factoryBranches.search({
+        const { data, error } = await api.factoryBranche.search({
           pagination,
           filters,
         });

@@ -19,7 +19,7 @@ import {
 import {
   createFactoryPipelineApi,
   FactoryPipelineApi,
-} from "@/entities/factoryPipeline";
+} from "@/entities/factory-pipeline";
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
 import {
@@ -66,6 +66,10 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
+import {
+  createPipelineStepApi,
+  PipelineStepApi,
+} from "@/entities/pipeline-step";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -89,7 +93,8 @@ export interface ApiContextProps {
   assigneePropagation: PermissionAssigneePropagationApi;
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
-  factoryBranches: FactoryBrancheApi;
+  factoryBranche: FactoryBrancheApi;
+  pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
 }
@@ -132,7 +137,8 @@ export function ApiContextProvider({
         assigneePropagation: createPermissionAssigneePropagationApi(settings),
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
-        factoryBranches: createFactoryBrancheApi(settings),
+        factoryBranche: createFactoryBrancheApi(settings),
+        pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
       }}

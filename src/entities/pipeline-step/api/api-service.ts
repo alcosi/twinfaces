@@ -1,28 +1,26 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryPipelineFilters } from "@/entities/factoryPipeline";
+import { PipelineStepFilters } from "./types";
 
-export function createFactoryPipelineApi(settings: ApiSettings) {
+export function createPipelineStepApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
   }: {
     pagination: PaginationState;
-    filters: FactoryPipelineFilters;
+    filters: PipelineStepFilters;
   }) {
-    return settings.client.POST("/private/factory_pipeline/search/v1", {
+    return settings.client.POST("/private/factory_pipeline_step/search/v1", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
-          showFactoryPipelineMode: "DETAILED",
           showFactoryPipeline2FactoryConditionSetMode: "DETAILED",
-          showFactoryPipelineNextTwinFactory2FactoryMode: "DETAILED",
-          showFactoryPipelineTwinFactory2FactoryMode: "DETAILED",
-          showFactoryPipeline2TwinClassMode: "DETAILED",
-          showFactoryPipelineOutputTwinStatus2StatusMode: "DETAILED",
-
           showFactoryPipeline2FactoryMode: "DETAILED",
+          showFactoryPipelineNextTwinFactory2FactoryMode: "DETAILED",
+          showFactoryPipelineStep2FactoryConditionSetMode: "DETAILED",
+          showFactoryPipelineStep2FactoryPipelineMode: "DETAILED",
+          showFactoryPipelineStepMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
@@ -36,4 +34,4 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
   return { search };
 }
 
-export type FactoryPipelineApi = ReturnType<typeof createFactoryPipelineApi>;
+export type PipelineStepApi = ReturnType<typeof createPipelineStepApi>;

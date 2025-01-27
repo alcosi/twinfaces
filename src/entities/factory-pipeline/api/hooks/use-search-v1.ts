@@ -5,7 +5,7 @@ import { FactoryFilters } from "@/entities/factory";
 import {
   FactoryPipeline_DETAILED,
   hydrateFactoryPipelineFromMap,
-} from "@/entities/factoryPipeline";
+} from "@/entities/factory-pipeline";
 
 // TODO: Turn off lazy-relation for twinClasses and factories, implement hydration
 // https://alcosi.atlassian.net/browse/TWINFACES-419
