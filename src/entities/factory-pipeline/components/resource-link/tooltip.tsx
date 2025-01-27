@@ -1,4 +1,4 @@
-import { isPopulatedString } from "@/shared/libs";
+import { isPopulatedString, shortenUUID } from "@/shared/libs";
 import { FactoryPipeline } from "../../api";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { FenceIcon } from "lucide-react";
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function FactoryPipelineResourceTooltip({ data, link }: Props) {
-  const title = isPopulatedString(data.id) ? data.id : "N/A";
+  const title = isPopulatedString(data.id) ? shortenUUID(data.id) : "N/A";
 
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>

@@ -18,10 +18,15 @@ import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-se
 import { FactoryPipelineResourceLink } from "@/entities/factory-pipeline";
 
 const colDefs: Record<
-  keyof Omit<
-    PipelineStep & { factoryConditionSetInvert: boolean; factory: Factory },
-    "factoryConditionSetId" | "order" | "fillerParams" | "factoryPipelineId"
-  >,
+  | "id"
+  | "description"
+  | "factory"
+  | "factoryPipeline"
+  | "factoryConditionSetInvert"
+  | "factoryConditionSet"
+  | "active"
+  | "fillerFeaturerId"
+  | "optional",
   ColumnDef<PipelineStep>
 > = {
   id: {

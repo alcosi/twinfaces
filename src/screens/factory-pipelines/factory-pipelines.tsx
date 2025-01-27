@@ -1,11 +1,6 @@
 "use client";
 
 import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
-// import {
-//   FactoryPipeline_DETAILED,
-//   useFactoryPipelineFilters,
-//   useFactoryPipelineSearch,
-// } from "@/entities/factoryPipeline";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,

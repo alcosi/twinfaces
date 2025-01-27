@@ -6,10 +6,10 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 import { PipelineStepFilterKeys, PipelineStepFilters } from "../../api";
-import { useFactorySelectAdapter } from "../../../factory";
+import { useFactorySelectAdapter } from "@/entities/factory";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
-import { useFactoryPipelineSelectAdapter } from "../../../factory-pipeline/libs/hooks/use-factory-pipeline-select-adapter";
+import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
 
 export function usePipelineStepFilters(): FilterFeature<
   PipelineStepFilterKeys,

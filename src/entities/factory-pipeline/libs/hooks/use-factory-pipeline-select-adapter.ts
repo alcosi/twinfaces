@@ -33,8 +33,12 @@ export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline
     return response.data;
   }
 
-  function renderItem({ factoryId, id }: FactoryPipeline) {
-    return isPopulatedString(id) ? id : factoryId;
+  // function renderItem({ factoryId, id }: FactoryPipeline) {
+  //   return isPopulatedString(id) ? id : factoryId;
+  // }
+
+  function renderItem({ id }: FactoryPipeline) {
+    return id;
   }
 
   return {

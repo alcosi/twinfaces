@@ -86,7 +86,7 @@ const colDefs: Record<
   },
 };
 
-export function FactoryBrancheScreen() {
+export function FactoryBranchesScreen() {
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
 
