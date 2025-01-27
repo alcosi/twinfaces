@@ -8,7 +8,7 @@ import {
 import { ColumnDef } from "@tanstack/table-core";
 import { PaginationState } from "@tanstack/react-table";
 import { GuidWithCopy } from "@/shared/ui";
-import { Factory, FactoryResourceLink } from "@/entities/factory";
+import { FactoryResourceLink } from "@/entities/factory";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -16,6 +16,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { useEffect } from "react";
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 import { FactoryPipelineResourceLink } from "@/entities/factory-pipeline";
+import { Featurer_DETAILED, FeaturerResourceLink } from "@/entities/featurer";
 
 const colDefs: Record<
   | "id"
@@ -25,7 +26,7 @@ const colDefs: Record<
   | "factoryConditionSetInvert"
   | "factoryConditionSet"
   | "active"
-  | "fillerFeaturerId"
+  | "fillerFeaturer"
   | "optional",
   ColumnDef<PipelineStep>
 > = {
@@ -95,10 +96,19 @@ const colDefs: Record<
     header: "Active",
     cell: (data) => data.getValue() && <Check />,
   },
-  fillerFeaturerId: {
-    id: "fillerFeaturerId",
-    accessorKey: "fillerFeaturerId",
+  fillerFeaturer: {
+    id: "fillerFeaturer",
+    accessorKey: "fillerFeaturer",
     header: "Filler featurer",
+    cell: ({ row: { original } }) =>
+      original.fillerFeaturer && (
+        <div className="max-w-48 inline-flex">
+          <FeaturerResourceLink
+            data={original.fillerFeaturer as Featurer_DETAILED}
+            withTooltip
+          />
+        </div>
+      ),
   },
   optional: {
     id: "optional",
@@ -144,7 +154,7 @@ export function PipelineStepsScreen() {
         colDefs.description,
         colDefs.factoryConditionSet,
         colDefs.active,
-        colDefs.fillerFeaturerId,
+        colDefs.fillerFeaturer,
         colDefs.optional,
         colDefs.factoryConditionSetInvert,
       ]}
@@ -156,7 +166,7 @@ export function PipelineStepsScreen() {
         colDefs.factoryPipeline,
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
-        colDefs.fillerFeaturerId,
+        colDefs.fillerFeaturer,
         colDefs.active,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
