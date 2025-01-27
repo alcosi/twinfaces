@@ -1,4 +1,4 @@
-import { TextFormField } from "@/components/form-fields";
+import { TextFormField } from "@/components/form-fields/text-form-field";
 import { PermissionFormValues } from "@/entities/permission";
 import { PermissionGroupSelectField } from "@/features/permissionGroup";
 import { Control } from "react-hook-form";

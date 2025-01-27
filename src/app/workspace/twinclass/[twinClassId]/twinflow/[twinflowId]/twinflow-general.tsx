@@ -9,7 +9,7 @@ import {
   TwinClassStatusResourceLink,
   TwinStatus,
   useTwinStatusSelectAdapter,
-} from "@/entities/twin-status";
+} from "@/entities/twinStatus";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,

@@ -10,10 +10,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import {
-  TwinClassStatusResourceLink,
-  TwinStatus,
-} from "@/entities/twin-status";
+import { TwinClassStatusResourceLink, TwinStatus } from "@/entities/twinStatus";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
@@ -195,9 +192,11 @@ export default function TwinsPage() {
   }, []);
 
   async function fetchTwin({
+    search,
     pagination,
     filters,
   }: {
+    search?: string;
     pagination?: PaginationState;
     filters: FiltersState;
   }): Promise<PagedResponse<Twin>> {
@@ -205,6 +204,7 @@ export default function TwinsPage() {
 
     try {
       return await searchTwins({
+        search: search,
         pagination: pagination,
         filters: _filters,
       });

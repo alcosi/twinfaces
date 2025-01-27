@@ -1,27 +1,26 @@
+import {
+  CheckboxFormField,
+  CheckboxFormItem,
+} from "@/components/form-fields/checkbox-form-field";
+import {
+  ColorPickerFormField,
+  ColorPickerFormItem,
+} from "@/components/form-fields/color-form-field";
+import {
+  ComboboxFormField,
+  ComboboxFormItem,
+} from "@/components/form-fields/combobox";
+import {
+  TextFormField,
+  TextFormItem,
+} from "@/components/form-fields/text-form-field";
 import { type FeaturerTypeId } from "@/entities/featurer/libs";
 import { TagBoxProps } from "@/shared/ui";
 import { ComboboxProps } from "@/shared/ui/combobox";
 import { InputProps } from "@/shared/ui/input";
-import {
-  FeaturerFormField,
-  FeaturerFormItem,
-  TwinFieldFormField,
-  TwinFieldFormItem,
-  TwinFieldFormItemProps,
-} from "@/widgets/form-fields";
+import { FeaturerFormField, FeaturerFormItem } from "@/widgets/form-fields";
 import { Control, FieldPath } from "react-hook-form";
-import {
-  CheckboxFormField,
-  CheckboxFormItem,
-  ColorPickerFormField,
-  ColorPickerFormItem,
-  ComboboxFormField,
-  ComboboxFormItem,
-  TagsFormField,
-  TagsFormItem,
-  TextFormField,
-  TextFormItem,
-} from "./form-fields";
+import { TagsFormField, TagsFormItem } from "./form-fields/tags-form-field";
 
 export enum AutoFormValueType {
   string = "string",
@@ -33,7 +32,6 @@ export enum AutoFormValueType {
   select = "select",
   color = "color",
   tag = "tag",
-  twinField = "twinField",
 }
 
 /* eslint-enable no-unused-vars */
@@ -46,7 +44,6 @@ export type AutoFormValueInfo = AutoFormCommonInfo &
     | AutoFormSelectValueInfo
     | AutoFormComboboxValueInfo
     | AutoFormTagValueInfo
-    | AutoFormTwinFieldValueInfo
     | AutoFormFeaturerValueInfo
     | AutoFormColorValueInfo
   );
@@ -79,10 +76,6 @@ export interface AutoFormTagValueInfo
   extends Partial<Pick<HTMLInputElement, "placeholder">> {
   type: AutoFormValueType.tag;
   schema?: TagBoxProps<string>["schema"];
-}
-
-export interface AutoFormTwinFieldValueInfo extends TwinFieldFormItemProps {
-  type: AutoFormValueType.twinField;
 }
 
 export interface AutoFormFeaturerValueInfo {
@@ -167,24 +160,6 @@ export function AutoField({
           <TagsFormField name={name} control={control} {...info} />
         ) : (
           <TagsFormItem fieldValue={value} {...info} />
-        );
-
-      case AutoFormValueType.twinField:
-        return name && control ? (
-          <TwinFieldFormField
-            name={name}
-            control={control}
-            label={info.label}
-            description={info.description}
-            descriptor={info.descriptor}
-          />
-        ) : (
-          <TwinFieldFormItem
-            fieldValue={value}
-            label={info.label}
-            description={info.description}
-            descriptor={info.descriptor}
-          />
         );
 
       default:

@@ -128,7 +128,7 @@ export function TwinClassGeneral() {
       label: "",
     },
     schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
+    renderView: (value) => (value ? "Yes" : "No"),
     onSubmit: (value) => {
       return updateTwinClass({
         abstractClass: value as boolean,

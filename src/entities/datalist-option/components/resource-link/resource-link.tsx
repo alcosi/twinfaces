@@ -15,7 +15,7 @@ export function DatalistOptionResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  const link = `/workspace/datalist-options/${data.id}`;
+  const link = `/workspace/datalists/${data.dataListId}/options/${data.id}`;
 
   return (
     <ResourceLink

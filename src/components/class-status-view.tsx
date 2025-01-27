@@ -1,5 +1,5 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { TwinStatus } from "@/entities/twin-status";
+import { TwinStatus } from "@/entities/twinStatus";
 import { ColorTile } from "@/shared/ui";
 
 export interface TwinflowStatusViewProps {

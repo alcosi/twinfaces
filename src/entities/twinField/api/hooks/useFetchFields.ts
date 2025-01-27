@@ -1,8 +1,7 @@
-import { TwinFieldUI } from "@/entities/twinField";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext } from "react";
-import { hydrateTwinFieldFromMap } from "../../libs";
+import { TwinField } from "@/entities/twinField";
 
 // TODO: Apply caching-strategy
 export const useFetchFields = () => {
@@ -13,8 +12,8 @@ export const useFetchFields = () => {
       twinId,
     }: {
       twinId: string;
-    }): Promise<PagedResponse<TwinFieldUI>> => {
-      const { data, error } = await api.twin.getFieldsById({ twinId });
+    }): Promise<PagedResponse<TwinField>> => {
+      const { data, error } = await api.twin.getFieldById({ twinId });
 
       if (error) {
         throw new Error("Failed to fetch twin due to API error");
@@ -24,13 +23,11 @@ export const useFetchFields = () => {
         throw new Error("Invalid response data while fetching twin");
       }
 
-      const twinFields = Object.entries(data?.twin?.fields ?? []).map((dto) =>
-        hydrateTwinFieldFromMap({
-          dto,
-          relatedObjects: data.relatedObjects,
-          twinClassId: data?.twin?.twinClassId,
-        })
-      );
+      const fields = data?.twin?.fields || [];
+      const twinFields = Object.entries(fields).map(([key, value]) => ({
+        key,
+        value,
+      }));
 
       return { data: twinFields, pagination: {} };
     },

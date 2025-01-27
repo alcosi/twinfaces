@@ -1,10 +1,10 @@
 import { ComboboxFormField } from "@/components/form-fields/combobox";
-import { FormFieldProps } from "@/components/form-fields/types";
+import { FormFieldProps } from "@/components/form-fields/form-fields-common";
 import {
   TwinStatus,
   useFetchTwinStatusById,
   useTwinStatusSelectAdapter,
-} from "@/entities/twin-status";
+} from "@/entities/twinStatus";
 import { useEffect, useState } from "react";
 import { Control, FieldValues, Path, useWatch } from "react-hook-form";
 

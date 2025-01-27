@@ -5,10 +5,10 @@ import {
   useDatalistOption,
 } from "@/entities/datalist-option";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { isPopulatedString } from "@/shared/libs";
+import { DatalistContext } from "@/features/datalist";
 import { LoadingOverlay } from "@/shared/ui";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DatalistOptionGeneral } from "./views";
 
 export function DatalistOptionScreen({ optionId }: { optionId: string }) {
@@ -17,6 +17,7 @@ export function DatalistOptionScreen({ optionId }: { optionId: string }) {
   >(undefined);
   const { fetchDatalistOptionById, loading } = useDatalistOption();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { datalist } = useContext(DatalistContext);
 
   useEffect(() => {
     fetchDatalistOptions();
@@ -31,15 +32,18 @@ export function DatalistOptionScreen({ optionId }: { optionId: string }) {
 
   useEffect(() => {
     setBreadcrumbs([
+      { label: "Datalist", href: "/workspace/datalists" },
       {
-        label: "Options",
-        href: `/workspace/datalist-options`,
+        label: datalist?.name!,
+        href: `/workspace/datalists/${datalist?.id}`,
       },
       {
-        label: isPopulatedString(datalistOption?.name)
-          ? datalistOption.name
-          : "N/A",
-        href: `/workspace/datalist-options/${optionId}`,
+        label: "Options",
+        href: `/workspace/datalists/${datalist?.id}#options`,
+      },
+      {
+        label: datalistOption?.name!,
+        href: `/workspace/datalists/${datalist?.id}/options/${datalistOption?.id}`,
       },
     ]);
   }, [datalistOption, setBreadcrumbs]);

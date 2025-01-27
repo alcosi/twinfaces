@@ -19,7 +19,7 @@ import {
 import {
   createFactoryPipelineApi,
   FactoryPipelineApi,
-} from "@/entities/factory-pipeline";
+} from "@/entities/factoryPipeline";
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
 import {
@@ -57,7 +57,7 @@ import {
   createPermissionTwinRoleApi,
   PermissionTwinRoleApi,
 } from "@/entities/twinRole";
-import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
+import { createTwinStatusApi, TwinStatusApi } from "@/entities/twinStatus";
 import { createUserApi, UserApi } from "@/entities/user";
 import { createUserGroupApi, UserGroupApi } from "@/entities/userGroup";
 import { ApiContext, ApiSettings } from "@/shared/api";
@@ -66,10 +66,6 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
-import {
-  createPipelineStepApi,
-  PipelineStepApi,
-} from "@/entities/pipeline-step";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -93,8 +89,7 @@ export interface ApiContextProps {
   assigneePropagation: PermissionAssigneePropagationApi;
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
-  factoryBranche: FactoryBrancheApi;
-  pipelineStep: PipelineStepApi;
+  factoryBranches: FactoryBrancheApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
 }
@@ -137,8 +132,7 @@ export function ApiContextProvider({
         assigneePropagation: createPermissionAssigneePropagationApi(settings),
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
-        factoryBranche: createFactoryBrancheApi(settings),
-        pipelineStep: createPipelineStepApi(settings),
+        factoryBranches: createFactoryBrancheApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
       }}

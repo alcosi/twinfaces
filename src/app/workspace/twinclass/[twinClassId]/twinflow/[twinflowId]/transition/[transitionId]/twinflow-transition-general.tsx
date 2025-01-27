@@ -6,7 +6,7 @@ import {
   TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
 } from "@/entities/twinFlowTransition";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
 import { formatToTwinfaceDate, NULLIFY_UUID_VALUE } from "@/shared/libs";

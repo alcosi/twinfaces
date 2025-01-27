@@ -1,5 +1,5 @@
 import { PermissionResourceLink } from "@/entities/permission";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";

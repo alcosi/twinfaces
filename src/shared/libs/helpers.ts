@@ -1,5 +1,5 @@
 import React from "react";
-import { isBoolean, isPopulatedString, SelectAdapter } from "./types";
+import { isBoolean, SelectAdapter } from "./types";
 
 export const mapToChoice = (input: unknown): "ONLY" | "ONLY_NOT" | "ANY" => {
   if (input === "indeterminate" || input === undefined) return "ANY";
@@ -113,11 +113,4 @@ export function pluckProperty<
   return Object.fromEntries(
     Object.entries(obj).map(([key, nestedObj]) => [key, nestedObj[prop]])
   ) as Record<keyof T, T[string][K]>;
-}
-
-export function shortenUUID(uuid: string): string {
-  if (isPopulatedString(uuid) && uuid.length >= 8) {
-    return `${uuid.slice(0, 8)}...${uuid.slice(-2)}`;
-  }
-  return uuid;
 }

@@ -7,7 +7,7 @@ import { TwinClassLinkResourceLink } from "@/entities/twinClassLink";
 import { TwinFlowResourceLink } from "@/entities/twinFlow";
 import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
 import { TwinFlowTransitionResourceLink } from "@/entities/twinFlowTransition";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { UserGroupResourceLink } from "@/entities/userGroup";
 import { UiSection } from "../components/ui-section";
@@ -15,7 +15,7 @@ import { Fake } from "../seeds";
 
 export function ResourceLinksTab() {
   return (
-    <div className="h-screen overflow-y-auto max-h-98">
+    <div className="h-screen">
       <div className="space-y-4 p-4">
         <UiSection title="Class">
           <UiSection.Item

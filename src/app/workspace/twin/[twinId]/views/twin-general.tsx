@@ -5,7 +5,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { TwinClassStatusResourceLink } from "@/entities/twinStatus";
 import { UserResourceLink } from "@/entities/user";
 import { useUserSelectAdapter } from "@/entities/user/libs";
 import {

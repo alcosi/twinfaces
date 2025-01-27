@@ -6,11 +6,11 @@ import {
   useTwinBasicFieldSelectAdapter,
   useTwinSelectAdapter,
   useTwinTouchIdSelectAdapter,
-} from "@/entities/twin";
+} from "@/entities/twin/libs/hooks/useSelectAdapter";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twinClassField";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import { useTwinStatusSelectAdapter } from "@/entities/twinStatus";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup";
 import { createFixedSelectAdapter, SelectAdapter } from "@/shared/libs";
 import { useMemo } from "react";

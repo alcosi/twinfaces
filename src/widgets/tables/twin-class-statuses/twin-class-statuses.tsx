@@ -1,19 +1,17 @@
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
+import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
   TwinClassStatusResourceLink,
   TwinStatus_DETAILED,
   TwinStatusCreateRq,
-  useStatusFilters,
   useTwinStatusSearchV1,
-} from "@/entities/twin-status";
-import {
-  TwinClass_DETAILED,
-  TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twinStatus";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
@@ -24,127 +22,100 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import {
-  CrudDataTable,
-  DataTableHandle,
-  FiltersState,
-} from "../../crud-data-table";
+import { CrudDataTable, DataTableHandle } from "../../crud-data-table";
 import { TwinClassStatusFormFields } from "./form-fields";
 
-const colDefs: Record<
-  keyof Pick<
-    TwinStatus_DETAILED,
-    | "logo"
-    | "id"
-    | "key"
-    | "name"
-    | "twinClassId"
-    | "description"
-    | "backgroundColor"
-    | "fontColor"
-  >,
-  ColumnDef<TwinStatus_DETAILED>
-> = {
-  logo: {
-    id: "logo",
-    accessorKey: "logo",
-    header: "Logo",
-    cell: (data) => {
-      const value = data.row.original.logo;
-      return (
-        <ImageWithFallback
-          src={value as string}
-          alt={value as string}
-          fallbackContent={<Unplug />}
-          width={32}
-          height={32}
-          className="text-[0]"
-        />
-      );
+function buildColumnDefs() {
+  const colDefs: ColumnDef<TwinStatus_DETAILED>[] = [
+    {
+      accessorKey: "logo",
+      header: "Logo",
+      cell: (data) => {
+        const value = data.row.original.logo;
+        return (
+          <ImageWithFallback
+            src={value as string}
+            alt={value as string}
+            fallbackContent={<Unplug />}
+            width={32}
+            height={32}
+            className="text-[0]"
+          />
+        );
+      },
     },
-  },
-
-  id: {
-    id: "id",
-    accessorKey: "id",
-    header: "ID",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-  },
-
-  twinClassId: {
-    id: "twinClassId",
-    accessorKey: "twinClassId",
-    header: "Class",
-    cell: ({ row: { original } }) =>
-      original.twinClass && (
+    {
+      accessorKey: "id",
+      header: "ID",
+      cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    },
+    {
+      id: "twinClassId",
+      accessorKey: "twinClassId",
+      header: "Class",
+      cell: ({ row: { original } }) =>
+        original.twinClass && (
+          <div className="max-w-48 inline-flex">
+            <TwinClassResourceLink
+              data={original.twinClass as TwinClass_DETAILED}
+              withTooltip
+            />
+          </div>
+        ),
+    },
+    {
+      accessorKey: "key",
+      header: "Key",
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: ({ row: { original } }) => (
         <div className="max-w-48 inline-flex">
-          <TwinClassResourceLink
-            data={original.twinClass as TwinClass_DETAILED}
+          <TwinClassStatusResourceLink
+            data={original}
+            twinClassId={original.twinClassId!}
             withTooltip
           />
         </div>
       ),
-  },
-
-  key: {
-    id: "key",
-    accessorKey: "key",
-    header: "Key",
-  },
-
-  name: {
-    id: "name",
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinClassStatusResourceLink
-          data={original}
-          twinClassId={original.twinClassId!}
-          withTooltip
-        />
-      </div>
-    ),
-  },
-
-  description: {
-    id: "description",
-    accessorKey: "description",
-    header: "Description",
-  },
-
-  backgroundColor: {
-    id: "backgroundColor",
-    accessorKey: "backgroundColor",
-    header: "Background Color",
-    cell: (data) => {
-      return (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <ColorTile color={data.getValue<string>()} />
-          </TooltipTrigger>
-          <TooltipContent>{data.getValue<string>()}</TooltipContent>
-        </Tooltip>
-      );
     },
-  },
-
-  fontColor: {
-    id: "fontColor",
-    accessorKey: "fontColor",
-    header: "Font Color",
-    cell: (data) => {
-      return (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <ColorTile color={data.getValue<string>()} />
-          </TooltipTrigger>
-          <TooltipContent>{data.getValue<string>()}</TooltipContent>
-        </Tooltip>
-      );
+    {
+      accessorKey: "description",
+      header: "Description",
     },
-  },
-};
+    {
+      accessorKey: "backgroundColor",
+      header: "Background Color",
+      cell: (data) => {
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <ColorTile color={data.getValue<string>()} />
+            </TooltipTrigger>
+            <TooltipContent>{data.getValue<string>()}</TooltipContent>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      accessorKey: "fontColor",
+      header: "Font Color",
+      cell: (data) => {
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <ColorTile color={data.getValue<string>()} />
+            </TooltipTrigger>
+            <TooltipContent>{data.getValue<string>()}</TooltipContent>
+          </Tooltip>
+        );
+      },
+    },
+  ];
+
+  return colDefs;
+}
 
 export function TwinClassStatusesTable({
   twinClassId,
@@ -155,16 +126,10 @@ export function TwinClassStatusesTable({
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinStatuses } = useTwinStatusSearchV1();
-  const { buildFilterFields, mapFiltersToPayload } = useStatusFilters({
-    enabledFilters: isTruthy(twinClassId)
-      ? ["idList", "keyLikeList", "nameI18nLikeList", "descriptionI18nLikeList"]
-      : undefined,
-  });
 
   const form = useForm<TwinClassStatusFormValues>({
     resolver: zodResolver(TWIN_CLASS_STATUS_SCHEMA),
     defaultValues: {
-      twinClassId: null,
       key: "",
       name: "",
       description: "",
@@ -175,16 +140,13 @@ export function TwinClassStatusesTable({
   });
 
   async function fetchStatuses(
-    pagination: PaginationState,
-    filters: FiltersState
+    pagination: PaginationState
   ): Promise<PagedResponse<TwinStatus_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
     try {
       return await searchTwinStatuses({
         pagination,
         filters: {
-          ..._filters,
-          twinClassIdList: toArrayOfString(toArray(twinClassId), "id"),
+          twinClassIdList: twinClassId ? [twinClassId] : [],
         },
       });
     } catch (e) {
@@ -215,8 +177,8 @@ export function TwinClassStatusesTable({
     }
 
     const { error } = await api.twinStatus.create({
-      twinClassId: twinClassId || formValues.twinClassId!,
-      data,
+      twinClassId,
+      data: data,
     });
 
     if (error) {
@@ -224,23 +186,14 @@ export function TwinClassStatusesTable({
     }
 
     toast.success("Link created successfully!");
-    fetchStatuses({ pageIndex: 0, pageSize: 10 }, { filters: {} });
+    fetchStatuses({ pageIndex: 0, pageSize: 10 });
   }
 
   return (
     <CrudDataTable
       title="Statuses"
       ref={tableRef}
-      columns={[
-        colDefs.logo,
-        colDefs.id,
-        ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
-        colDefs.key,
-        colDefs.name,
-        colDefs.description,
-        colDefs.backgroundColor,
-        colDefs.fontColor,
-      ]}
+      columns={buildColumnDefs()}
       getRowId={(row) => row.key!}
       fetcher={fetchStatuses}
       onRowClick={(row) =>
@@ -248,28 +201,12 @@ export function TwinClassStatusesTable({
           `/workspace/twinclass/${row.twinClassId}/twinStatus/${row.id}`
         )
       }
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
-      pageSizes={[10, 20, 50]}
-      defaultVisibleColumns={[
-        colDefs.logo,
-        colDefs.id,
-        ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
-        colDefs.key,
-        colDefs.name,
-        colDefs.description,
-        colDefs.backgroundColor,
-        colDefs.fontColor,
-      ]}
       dialogForm={form}
       onCreateSubmit={handleCreate}
       renderFormFields={() => (
-        <TwinClassStatusFormFields
-          control={form.control}
-          twinClassId={twinClassId}
-        />
+        <TwinClassStatusFormFields control={form.control} />
       )}
+      pageSizes={[10, 20, 50]}
     />
   );
 }

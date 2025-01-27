@@ -7,7 +7,7 @@ import {
   hydrateDatalistOptionFromMap,
 } from "@/entities/datalist-option";
 
-export const useDatalistOptionSearch = () => {
+export const useDatalistOptionsSearch = () => {
   const api = useContext(ApiContext);
 
   const searchDatalistOptions = useCallback(

@@ -6,9 +6,11 @@ import { TwinFilters, TwinUpdateRq } from "./types";
 export function createTwinApi(settings: ApiSettings) {
   function search({
     pagination,
+    search,
     filters,
   }: {
     pagination: PaginationState;
+    search?: string;
     filters?: TwinFilters;
   }) {
     return settings.client.POST("/private/twin/search/v3", {
@@ -24,13 +26,17 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinMarker2DataListOptionMode: "DETAILED",
           showTwinTag2DataListOptionMode: "DETAILED",
           showTwinByHeadMode: "YELLOW",
-          showTwinAliasMode: "D",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
         },
       },
-      body: [{ ...filters }],
+      body: [
+        {
+          twinNameLikeList: search ? ["%" + search + "%"] : undefined,
+          ...filters,
+        },
+      ],
     });
   }
 
@@ -60,18 +66,13 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function getFieldsById({ twinId }: { twinId: string }) {
+  function getFieldById({ twinId }: { twinId: string }) {
     return settings.client.GET("/private/twin/{twinId}/v2", {
       params: {
         header: getApiDomainHeaders(settings),
         path: { twinId: twinId },
         query: {
-          lazyRelation: false,
-          showTwin2TwinClassMode: "DETAILED",
-          showTwinClass2TwinClassFieldMode: "DETAILED",
           showTwinFieldCollectionMode: "ALL_FIELDS",
-          showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
-          showTwinClass2LinkMode: "DETAILED",
         },
       },
     });
@@ -115,34 +116,13 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function upsertField({
-    twinId,
-    fieldKey,
-    fieldValue,
-  }: {
-    twinId: string;
-    fieldKey: string;
-    fieldValue: string;
-  }) {
-    return settings.client.POST("/private/twin/{twinId}/field/{fieldKey}/v2", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { twinId, fieldKey },
-        query: {
-          fieldValue,
-        },
-      },
-    });
-  }
-
   return {
     search,
     getById,
     update,
-    getFieldsById,
+    getFieldById,
     getHistory,
     getLinks,
-    upsertField,
   };
 }
 

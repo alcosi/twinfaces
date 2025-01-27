@@ -101,7 +101,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       },
       {
         title: "Options",
-        url: "/workspace/datalist-options",
+        url: "/workspace/options",
         icon: Option,
       },
       {

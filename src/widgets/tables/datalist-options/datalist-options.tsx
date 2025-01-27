@@ -14,7 +14,7 @@ import {
   DatalistOptionResourceLink,
   DataListOptionV3,
   useDatalistOptionFilters,
-  useDatalistOptionSearch,
+  useDatalistOptionsSearch,
 } from "@/entities/datalist-option";
 import { DatalistResourceLink } from "@/entities/datalist";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
-  const { searchDatalistOptions } = useDatalistOptionSearch();
+  const { searchDatalistOptions } = useDatalistOptionsSearch();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
     enabledFilters: isTruthy(dataListId)
       ? ["idList", "optionI18nLikeList"]
@@ -135,7 +135,13 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       columns={columns}
       fetcher={fetchDatalistOptions}
       getRowId={(row) => row.id!}
-      onRowClick={(row) => router.push(`workspace/datalist-options/${row.id}`)}
+      onRowClick={(row) =>
+        router.push(
+          dataListId
+            ? `${row.dataListId}/options/${row.id}`
+            : `datalists/${row.dataListId}/options/${row.id}`
+        )
+      }
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

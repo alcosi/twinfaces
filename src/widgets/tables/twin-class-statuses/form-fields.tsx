@@ -1,59 +1,44 @@
+import { Control } from "react-hook-form";
+import { TwinClassStatusFormValues } from "@/entities/twinStatus";
 import {
-  ColorPickerFormField,
   TextAreaFormField,
   TextFormField,
-} from "@/components/form-fields";
-import { TwinClassStatusFormValues } from "@/entities/twin-status";
-import { TwinClassSelectField } from "@/features/twinClass";
-import { isTruthy } from "@/shared/libs";
-import { Control, Path } from "react-hook-form";
+} from "@/components/form-fields/text-form-field";
+import { ColorPickerFormField } from "@/components/form-fields/color-form-field";
 
-export function TwinClassStatusFormFields<T extends TwinClassStatusFormValues>({
+export function TwinClassStatusFormFields({
   control,
-  twinClassId,
 }: {
-  control: Control<T>;
-  twinClassId?: string;
+  control: Control<TwinClassStatusFormValues>;
 }) {
   return (
     <>
-      <TwinClassSelectField
-        control={control}
-        name={"TwinClassId" as Path<T>}
-        label="Class"
-        disabled={isTruthy(twinClassId)}
-      />
-
       <TextFormField
         control={control}
-        name={"key" as Path<T>}
+        name="key"
         label="Key"
         autoFocus={true}
       />
 
-      <TextFormField control={control} name={"name" as Path<T>} label="Name" />
+      <TextFormField control={control} name="name" label="Name" />
 
       <TextAreaFormField
         control={control}
-        name={"description" as Path<T>}
+        name="description"
         label="Description"
       />
 
-      <TextFormField
-        control={control}
-        name={"logo" as Path<T>}
-        label="Logo URL"
-      />
+      <TextFormField control={control} name="logo" label="Logo URL" />
 
       <ColorPickerFormField
         control={control}
-        name={"backgroundColor" as Path<T>}
+        name="backgroundColor"
         label="Background color"
       />
 
       <ColorPickerFormField
         control={control}
-        name={"fontColor" as Path<T>}
+        name="fontColor"
         label="Font color"
       />
     </>
