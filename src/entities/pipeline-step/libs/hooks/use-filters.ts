@@ -51,6 +51,18 @@ export function usePipelineStepFilters(): FilterFeature<
         multi: true,
         ...factoryPipelineSelectAdapter,
       },
+      conditionInvert: {
+        type: AutoFormValueType.boolean,
+        label: "Condition invert",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
+      active: {
+        type: AutoFormValueType.boolean,
+        label: "Active",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
     };
   }
 
@@ -69,6 +81,8 @@ export function usePipelineStepFilters(): FilterFeature<
         filters.factoryPipelineIdList,
         "id"
       ),
+      conditionInvert: mapToChoice(filters.conditionInvert),
+      active: mapToChoice(filters.active),
     };
   }
 

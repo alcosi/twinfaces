@@ -7096,13 +7096,13 @@ export interface components {
       fillerFeaturerIdExcludeList?: number[];
       /**
        * @description condition invert
-       * @example ANY
+       * @example ONLY
        * @enum {string}
        */
       conditionInvert?: "ONLY" | "ONLY_NOT" | "ANY";
       /**
        * @description active
-       * @example ANY
+       * @example ONLY
        * @enum {string}
        */
       active?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -7649,7 +7649,7 @@ export interface components {
       descriptionNotLikeList?: string[];
       /**
        * @description condition invert
-       * @example ANY
+       * @example ONLY
        * @enum {string}
        */
       conditionInvert?: "ONLY" | "ONLY_NOT" | "ANY";

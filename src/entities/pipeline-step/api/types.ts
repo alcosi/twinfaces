@@ -11,7 +11,9 @@ export type PipelineStepFilterKeys =
   | "factoryIdList"
   | "descriptionLikeList"
   | "optional"
-  | "factoryPipelineIdList";
+  | "factoryPipelineIdList"
+  | "conditionInvert"
+  | "active";
 // | "factoryConditionSetIdList"
 // | "fillerFeaturerIdList";
 
