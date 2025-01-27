@@ -17,7 +17,13 @@ export function TwinClassSelectField<T extends FieldValues>(props: Props<T>) {
   const { twinClass } = useContext(TwinClassContext);
   const tcAdapter = useTwinClassSelectAdapter();
 
-  return (
+  // TODO: to refactor after https://alcosi.atlassian.net/browse/TWINFACES-76
+  return props.disabled ? (
+    <TextFormItem
+      {...props}
+      value={`${twinClass?.key}${twinClass?.name ? ` (${twinClass?.name})` : ""}`}
+    />
+  ) : (
     <ComboboxFormField
       selectPlaceholder="Select twin class"
       searchPlaceholder="Search twin class..."
