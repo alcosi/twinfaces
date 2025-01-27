@@ -33,7 +33,23 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function getById({ pipelineId }: { pipelineId: string }) {
+    return settings.client.GET("/private/factory_pipeline/{pipelineId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { pipelineId: pipelineId },
+        query: {
+          lazyRelation: false,
+          showFactoryPipeline2FactoryConditionSetMode: "DETAILED",
+          showFactoryPipeline2FactoryMode: "DETAILED",
+          showFactoryPipelineMode: "DETAILED",
+          showFactoryPipelineNextTwinFactory2FactoryMode: "DETAILED",
+        },
+      },
+    });
+  }
+
+  return { search, getById };
 }
 
 export type FactoryPipelineApi = ReturnType<typeof createFactoryPipelineApi>;
