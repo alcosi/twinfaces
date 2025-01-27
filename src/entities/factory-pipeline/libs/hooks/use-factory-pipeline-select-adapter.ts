@@ -1,7 +1,4 @@
-import {
-  SelectAdapter,
-  wrapWithPercent,
-} from "@/shared/libs";
+import { SelectAdapter, wrapWithPercent } from "@/shared/libs";
 import {
   FactoryPipeline,
   FactoryPipelineFilters,
