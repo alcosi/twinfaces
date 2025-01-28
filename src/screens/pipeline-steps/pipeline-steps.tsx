@@ -1,22 +1,22 @@
 "use client";
 
+import { FactoryResourceLink } from "@/entities/factory";
+import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
+import { FactoryPipelineResourceLink } from "@/entities/factory-pipeline";
+import { Featurer_DETAILED, FeaturerResourceLink } from "@/entities/featurer";
 import {
   PipelineStep,
   usePipelineStepFilters,
   usePipelineStepSearch,
 } from "@/entities/pipeline-step";
-import { ColumnDef } from "@tanstack/table-core";
-import { PaginationState } from "@tanstack/react-table";
-import { GuidWithCopy } from "@/shared/ui";
-import { FactoryResourceLink } from "@/entities/factory";
-import { Check } from "lucide-react";
-import { toast } from "sonner";
-import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { GuidWithCopy } from "@/shared/ui";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+import { PaginationState } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
 import { useEffect } from "react";
-import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
-import { FactoryPipelineResourceLink } from "@/entities/factory-pipeline";
-import { Featurer_DETAILED, FeaturerResourceLink } from "@/entities/featurer";
+import { toast } from "sonner";
 
 const colDefs: Record<
   | "id"

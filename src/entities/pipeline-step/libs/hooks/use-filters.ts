@@ -1,3 +1,8 @@
+import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+import { useFactorySelectAdapter } from "@/entities/factory";
+import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
+import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
   FilterFeature,
   mapToChoice,
@@ -5,13 +10,8 @@ import {
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { PipelineStepFilterKeys, PipelineStepFilters } from "../../api";
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
-import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
-import { useFeaturerSelectAdapter } from "../../../featurer";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import { PipelineStepFilterKeys, PipelineStepFilters } from "../../api";
 
 export function usePipelineStepFilters(): FilterFeature<
   PipelineStepFilterKeys,
