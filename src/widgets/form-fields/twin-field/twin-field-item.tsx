@@ -4,7 +4,10 @@ import {
   TextFormItem,
 } from "@/components/form-fields";
 import { ComboboxFormItem } from "@/components/form-fields/combobox";
-import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
+import {
+  DataListOptionV3,
+  useDatalistOptionSelectAdapter,
+} from "@/entities/datalist-option";
 import { Twin, useTwinSelectAdapter } from "@/entities/twin";
 import { TwinClassFieldDescriptor } from "@/entities/twinClassField";
 import { TwinFieldType } from "@/entities/twinField";
@@ -35,10 +38,10 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
     }
   }
 
-  //TODO: replace with another function to processing data
-  function handleOnDataListSelect(v: any) {
-    //TODO another logic
-    return v;
+  function handleOnDataListSelect(datalistOptions?: DataListOptionV3[]) {
+    if (isPopulatedArray<DataListOptionV3>(datalistOptions)) {
+      return onChange?.(datalistOptions[0].id!);
+    }
   }
 
   function renderByType() {

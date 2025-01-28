@@ -4,11 +4,12 @@ import {
   shortenUUID,
   wrapWithPercent,
 } from "@/shared/libs";
-import { FactoryConditionSet, FactoryConditionSetFilters } from "../../api";
 import {
+  FactoryConditionSet,
+  FactoryConditionSetFilters,
   useFactoryConditionSetSearch,
   useFetchFactoryConditionSetById,
-} from "../../api/hooks";
+} from "../../api";
 
 export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryConditionSet> {
   const { searchFactoryConditionSet } = useFactoryConditionSetSearch();
