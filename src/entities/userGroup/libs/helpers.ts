@@ -15,7 +15,10 @@ export function hydrateUserGroupFromMap(
     dto
   ) as UserGroup_DETAILED;
 
-  // Add valid logic here
+  if (dto.businessAccountId && relatedObjects?.businessAccountMap) {
+    hydrated.businessAccount =
+      relatedObjects.businessAccountMap[dto.businessAccountId];
+  }
 
   return hydrated;
 }
