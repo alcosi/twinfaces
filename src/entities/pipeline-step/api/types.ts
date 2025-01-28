@@ -13,9 +13,9 @@ export type PipelineStepFilterKeys =
   | "optional"
   | "factoryPipelineIdList"
   | "conditionInvert"
-  | "active";
+  | "active"
+  | "fillerFeaturerIdList";
 // | "factoryConditionSetIdList"
-// | "fillerFeaturerIdList";
 
 export type PipelineStepFilters = Partial<
   Pick<PipelineStepSearchRq, PipelineStepFilterKeys>

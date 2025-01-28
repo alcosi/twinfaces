@@ -151,12 +151,12 @@ export function PipelineStepsScreen() {
         colDefs.id,
         colDefs.factory,
         colDefs.factoryPipeline,
-        colDefs.description,
         colDefs.factoryConditionSet,
+        colDefs.factoryConditionSetInvert,
         colDefs.active,
         colDefs.fillerFeaturer,
         colDefs.optional,
-        colDefs.factoryConditionSetInvert,
+        colDefs.description,
       ]}
       fetcher={fetchPipelineStep}
       getRowId={(row) => row.id!}

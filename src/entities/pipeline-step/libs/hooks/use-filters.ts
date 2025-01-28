@@ -10,6 +10,7 @@ import { useFactorySelectAdapter } from "@/entities/factory";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
 import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
+import { useFeaturerSelectAdapter } from "../../../featurer";
 
 export function usePipelineStepFilters(): FilterFeature<
   PipelineStepFilterKeys,
@@ -17,6 +18,7 @@ export function usePipelineStepFilters(): FilterFeature<
 > {
   const factorySelectAdapter = useFactorySelectAdapter();
   const factoryPipelineSelectAdapter = useFactoryPipelineSelectAdapter();
+  const featurerSelectAdapter = useFeaturerSelectAdapter(13);
 
   function buildFilterFields(): Record<
     PipelineStepFilterKeys,
@@ -35,16 +37,6 @@ export function usePipelineStepFilters(): FilterFeature<
         multi: true,
         ...factorySelectAdapter,
       },
-      descriptionLikeList: {
-        type: AutoFormValueType.tag,
-        label: "Description",
-      },
-      optional: {
-        type: AutoFormValueType.boolean,
-        label: "Optional",
-        hasIndeterminate: true,
-        defaultValue: "indeterminate",
-      },
       factoryPipelineIdList: {
         type: AutoFormValueType.combobox,
         label: "Pipeline",
@@ -62,6 +54,22 @@ export function usePipelineStepFilters(): FilterFeature<
         label: "Active",
         hasIndeterminate: true,
         defaultValue: "indeterminate",
+      },
+      optional: {
+        type: AutoFormValueType.boolean,
+        label: "Optional",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
+      fillerFeaturerIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Filler featurer",
+        multi: true,
+        ...featurerSelectAdapter,
+      },
+      descriptionLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Description",
       },
     };
   }
@@ -83,6 +91,10 @@ export function usePipelineStepFilters(): FilterFeature<
       ),
       conditionInvert: mapToChoice(filters.conditionInvert),
       active: mapToChoice(filters.active),
+      fillerFeaturerIdList: toArrayOfString(
+        toArray(filters.fillerFeaturerIdList),
+        "id"
+      ).map(Number),
     };
   }
 
