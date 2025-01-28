@@ -31,7 +31,7 @@ export function DatalistOptionGeneral({
 
         <TableRow>
           <TableCell>Disabled</TableCell>
-          <TableCell>{datalistOption.disabled}</TableCell>
+          <TableCell>{JSON.stringify(datalistOption.status)}</TableCell>
         </TableRow>
 
         {attributeKeys.map((key) => (

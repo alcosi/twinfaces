@@ -135,7 +135,7 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       columns={columns}
       fetcher={fetchDatalistOptions}
       getRowId={(row) => row.id!}
-      onRowClick={(row) => router.push(`workspace/datalist-options/${row.id}`)}
+      onRowClick={(row) => router.push(`/workspace/datalist-options/${row.id}`)}
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
