@@ -39,7 +39,7 @@ import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
 import {
   createTwinClassFieldApi,
   TwinClassFieldApi,
-} from "@/entities/twinClassField";
+} from "@/entities/twin-class-field";
 import {
   createTwinClassLinksApi,
   TwinClassLinkApi,

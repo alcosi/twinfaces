@@ -1,13 +1,14 @@
 "use client";
 
 import { TwinClassContext } from "@/entities/twinClass";
-import { TwinClassField } from "@/entities/twinClassField";
+import {
+  TwinClassFieldV2_DETAILED,
+  useFetchTwinClassFieldById,
+} from "@/entities/twin-class-field";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect, useState } from "react";
-import { toast } from "sonner";
 import { TwinFieldGeneral } from "./twin-field-general";
 
 interface TwinFieldPageProps {
@@ -19,13 +20,12 @@ interface TwinFieldPageProps {
 export default function TwinClassPage({
   params: { twinFieldId },
 }: TwinFieldPageProps) {
-  const api = useContext(ApiContext);
   const { twinClass } = useContext(TwinClassContext);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [twinField, setTwinField] = useState<TwinClassField | undefined>(
-    undefined
-  );
+  const [twinField, setTwinField] = useState<
+    TwinClassFieldV2_DETAILED | undefined
+  >(undefined);
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { fetchTwinClassFieldById, loading } = useFetchTwinClassFieldById();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -49,30 +49,10 @@ export default function TwinClassPage({
     fetchTwinClassData();
   }, [twinFieldId]);
 
-  function fetchTwinClassData() {
+  async function fetchTwinClassData() {
     if (twinFieldId) {
-      setLoading(true);
-
-      api.twinClassField
-        .getById({
-          fieldId: twinFieldId,
-        })
-        .then((response) => {
-          const data = response.data;
-          if (!data || data.status != 0) {
-            console.error("failed to fetch twin class", data);
-            let message = "Failed to load twin class";
-            if (data?.msg) message += `: ${data.msg}`;
-            toast.error(message);
-            return;
-          }
-          setTwinField(data.field);
-        })
-        .catch((e) => {
-          console.error("exception while fetching twin class", e);
-          toast.error("Failed to fetch twin class");
-        })
-        .finally(() => setLoading(false));
+      const response = await fetchTwinClassFieldById(twinFieldId);
+      setTwinField(response);
     }
   }
 

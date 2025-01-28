@@ -9,7 +9,7 @@ import {
   useDatalistOptionSelectAdapter,
 } from "@/entities/datalist-option";
 import { Twin, useTwinSelectAdapter } from "@/entities/twin";
-import { TwinClassFieldDescriptor } from "@/entities/twinClassField";
+import { TwinClassFieldDescriptor } from "@/entities/twin-class-field";
 import { TwinFieldType } from "@/entities/twinField";
 import { isPopulatedArray } from "@/shared/libs";
 import React from "react";

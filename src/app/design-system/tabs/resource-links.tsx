@@ -2,7 +2,7 @@ import { CommentResourceLink } from "@/entities/comment";
 import { FeaturerResourceLink } from "@/entities/featurer";
 import { TwinResourceLink } from "@/entities/twin";
 import { TwinClassResourceLink } from "@/entities/twinClass";
-import { TwinClassFieldResourceLink } from "@/entities/twinClassField";
+import { TwinClassFieldResourceLink } from "@/entities/twin-class-field";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink";
 import { TwinFlowResourceLink } from "@/entities/twinFlow";
 import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
