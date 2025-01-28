@@ -1,3 +1,8 @@
+import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+import { useFactorySelectAdapter } from "@/entities/factory";
+import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
+import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
   FilterFeature,
   mapToChoice,
@@ -5,11 +10,8 @@ import {
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { PipelineStepFilterKeys, PipelineStepFilters } from "../../api";
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
-import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
+import { PipelineStepFilterKeys, PipelineStepFilters } from "../../api";
 
 export function usePipelineStepFilters(): FilterFeature<
   PipelineStepFilterKeys,
@@ -17,6 +19,9 @@ export function usePipelineStepFilters(): FilterFeature<
 > {
   const factorySelectAdapter = useFactorySelectAdapter();
   const factoryPipelineSelectAdapter = useFactoryPipelineSelectAdapter();
+  const featurerSelectAdapter = useFeaturerSelectAdapter(23);
+  const factoryConditionSetSelectAdapter =
+    useFactoryConditionSetSelectAdapter();
 
   function buildFilterFields(): Record<
     PipelineStepFilterKeys,
@@ -35,9 +40,29 @@ export function usePipelineStepFilters(): FilterFeature<
         multi: true,
         ...factorySelectAdapter,
       },
-      descriptionLikeList: {
-        type: AutoFormValueType.tag,
-        label: "Description",
+      factoryPipelineIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Pipeline",
+        multi: true,
+        ...factoryPipelineSelectAdapter,
+      },
+      factoryConditionSetIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Condition set",
+        multi: true,
+        ...factoryConditionSetSelectAdapter,
+      },
+      conditionInvert: {
+        type: AutoFormValueType.boolean,
+        label: "Condition invert",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
+      active: {
+        type: AutoFormValueType.boolean,
+        label: "Active",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
       },
       optional: {
         type: AutoFormValueType.boolean,
@@ -45,11 +70,15 @@ export function usePipelineStepFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
-      factoryPipelineIdList: {
+      fillerFeaturerIdList: {
         type: AutoFormValueType.combobox,
-        label: "Pipeline",
+        label: "Filler featurer",
         multi: true,
-        ...factoryPipelineSelectAdapter,
+        ...featurerSelectAdapter,
+      },
+      descriptionLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Description",
       },
     };
   }
@@ -69,6 +98,16 @@ export function usePipelineStepFilters(): FilterFeature<
         filters.factoryPipelineIdList,
         "id"
       ),
+      factoryConditionSetIdList: toArrayOfString(
+        filters.factoryConditionSetIdList,
+        "id"
+      ),
+      conditionInvert: mapToChoice(filters.conditionInvert),
+      active: mapToChoice(filters.active),
+      fillerFeaturerIdList: toArrayOfString(
+        toArray(filters.fillerFeaturerIdList),
+        "id"
+      ).map(Number),
     };
   }
 

@@ -22,5 +22,10 @@ export const hydratePipelineStepFromMap = (
       relatedObjects.factoryMap[hydrated.factoryPipeline.factoryId];
   }
 
+  if (hydrated.fillerFeaturerId && relatedObjects?.featurerMap) {
+    hydrated.fillerFeaturer =
+      relatedObjects.featurerMap[hydrated.fillerFeaturerId]!;
+  }
+
   return hydrated;
 };

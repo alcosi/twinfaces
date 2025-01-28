@@ -7162,6 +7162,11 @@ export interface components {
        */
       factoryConditionSetId?: string;
       /**
+       * @description factory condition invert
+       * @example true
+       */
+      factoryConditionInvert?: boolean;
+      /**
        * @description is active
        * @example true
        */
