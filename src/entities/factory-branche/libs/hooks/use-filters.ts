@@ -41,6 +41,12 @@ export function useFactoryBrancheFilters(): FilterFeature<
         multi: true,
         ...factoryConditionSetAdapter,
       },
+      conditionInvert: {
+        type: AutoFormValueType.boolean,
+        label: "Condition invert",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
       active: {
         type: AutoFormValueType.boolean,
         label: "Active",
@@ -76,6 +82,7 @@ export function useFactoryBrancheFilters(): FilterFeature<
         "description"
       ).map(wrapWithPercent),
       nextFactoryIdList: toArrayOfString(filters.nextFactoryIdList, "id"),
+      conditionInvert: mapToChoice(filters.conditionInvert),
     };
   }
 

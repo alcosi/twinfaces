@@ -24,7 +24,8 @@ export type FactoryBranchFilterKeys =
   | "active"
   | "descriptionLikeList"
   | "nextFactoryIdList"
-  | "factoryConditionSetIdList";
+  | "factoryConditionSetIdList"
+  | "conditionInvert";
 
 export type FactoryBranchFilters = Partial<
   Pick<FactoryBranchSearchRq, FactoryBranchFilterKeys>

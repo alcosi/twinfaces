@@ -83,6 +83,12 @@ export interface paths {
     /** Commit draft by id */
     put: operations["draftCommitV1"];
   };
+  "/private/data_list_option/{dataListOptionId}/v1": {
+    /** Returns list data */
+    get: operations["dataListOptionViewV1"];
+    /** Data list option for update */
+    put: operations["dataListOptionUpdateV1"];
+  };
   "/private/data_list/{dataListId}/v1": {
     /** Returns list data */
     get: operations["dataListViewV1"];
@@ -449,6 +455,10 @@ export interface paths {
     /** Returns domain business account search result */
     post: operations["domainBusinessAccountSearchV1"];
   };
+  "/private/data_list_option/v1": {
+    /** Create data list option data */
+    post: operations["dataListOptionCreateV1"];
+  };
   "/private/data_list_option/search/v1": {
     /** Return a list of all data list option for the current domain */
     post: operations["dataListOptionSearchListV1"];
@@ -658,10 +668,6 @@ export interface paths {
   "/private/domain/business_account/{businessAccountId}/v1": {
     /** Returns domain business account result */
     get: operations["domainBusinessAccountViewV1"];
-  };
-  "/private/data_list_option/{dataListOptionId}/v1": {
-    /** Returns list data */
-    get: operations["dataListOptionViewV1"];
   };
   "/private/data_list_by_key/{dataListKey}/v1": {
     /** Returns list data */
@@ -1213,12 +1219,12 @@ export interface components {
        */
       icon?: string;
       /**
-       * @description description
-       * @default false
-       * @example false
+       * @description status
+       * @example active
+       * @enum {string}
        */
-      disabled?: boolean;
-      /** @description attributes */
+      status?: "active" | "disabled" | "hidden";
+      /** @description map attributes (key : value) */
       attributes?: {
         [key: string]: string;
       };
@@ -3403,27 +3409,26 @@ export interface components {
       status?: "UNDER_CONSTRUCTION" | "CONSTRUCTION_EXCEPTION" | "ERASE_SCOPE_COLLECT_PLANNED" | "ERASE_SCOPE_COLLECT_NEED_START" | "ERASE_SCOPE_COLLECT_IN_PROGRESS" | "ERASE_SCOPE_COLLECT_EXCEPTION" | "NORMALIZE_EXCEPTION" | "CHECK_CONFLICTS_EXCEPTION" | "UNCOMMITED" | "COMMIT_NEED_START" | "COMMIT_IN_PROGRESS" | "COMMIT_EXCEPTION" | "LOCKED" | "OUT_OF_DATE" | "COMMITED";
       createdByUser?: components["schemas"]["UserV1"];
     };
-    /** @description attribute4 */
-    DataListAttributeSaveV1: {
+    DataListOptionUpdateRqV1: {
+      /** @description icon */
+      icon?: string;
+      optionI18n?: components["schemas"]["I18nV1"];
+      /** @description attributes map */
+      attributesMap?: {
+        [key: string]: string;
+      };
       /**
-       * @description key
-       * @example color
+       * Format: uuid
+       * @description data list id
+       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
        */
-      key?: string;
-      nameI18n?: components["schemas"]["I18nV1"];
-    };
-    DataListUpdateRqV1: {
+      dataListId?: string;
       /**
-       * @description key
-       * @example country
+       * @description status
+       * @example active
+       * @enum {string}
        */
-      key?: string;
-      nameI18n?: components["schemas"]["I18nV1"];
-      descriptionI18n?: components["schemas"]["I18nV1"];
-      attribute1?: components["schemas"]["DataListAttributeSaveV1"];
-      attribute2?: components["schemas"]["DataListAttributeSaveV1"];
-      attribute3?: components["schemas"]["DataListAttributeSaveV1"];
-      attribute4?: components["schemas"]["DataListAttributeSaveV1"];
+      status?: "active" | "disabled" | "hidden";
     };
     DataListRsV1: {
       /**
@@ -3484,6 +3489,28 @@ export interface components {
       options?: {
         [key: string]: components["schemas"]["DataListOptionV1"];
       };
+    };
+    /** @description attribute4 */
+    DataListAttributeSaveV1: {
+      /**
+       * @description key
+       * @example color
+       */
+      key?: string;
+      nameI18n?: components["schemas"]["I18nV1"];
+    };
+    DataListUpdateRqV1: {
+      /**
+       * @description key
+       * @example country
+       */
+      key?: string;
+      nameI18n?: components["schemas"]["I18nV1"];
+      descriptionI18n?: components["schemas"]["I18nV1"];
+      attribute1?: components["schemas"]["DataListAttributeSaveV1"];
+      attribute2?: components["schemas"]["DataListAttributeSaveV1"];
+      attribute3?: components["schemas"]["DataListAttributeSaveV1"];
+      attribute4?: components["schemas"]["DataListAttributeSaveV1"];
     };
     CommentUpdateRqV1: {
       text?: string;
@@ -3621,12 +3648,12 @@ export interface components {
        */
       icon?: string;
       /**
-       * @description description
-       * @default false
-       * @example false
+       * @description status
+       * @example active
+       * @enum {string}
        */
-      disabled?: boolean;
-      /** @description attributes */
+      status?: "active" | "disabled" | "hidden";
+      /** @description map attributes (key : value) */
       attributes?: {
         [key: string]: string;
       };
@@ -4502,7 +4529,7 @@ export interface components {
       editPermissionIdExcludeList?: string[];
       /**
        * @description required
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       required?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -4768,31 +4795,31 @@ export interface components {
       ownerTypeExcludeList?: ("SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER")[];
       /**
        * @description twin class is abstract
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       abstractt?: "ONLY" | "ONLY_NOT" | "ANY";
       /**
        * @description twin class has twinflow schema space
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       twinflowSchemaSpace?: "ONLY" | "ONLY_NOT" | "ANY";
       /**
        * @description twin class has schema space
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       twinClassSchemaSpace?: "ONLY" | "ONLY_NOT" | "ANY";
       /**
        * @description twin class has permission schema space
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       permissionSchemaSpace?: "ONLY" | "ONLY_NOT" | "ANY";
       /**
        * @description twin class has alias space
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       aliasSpace?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -7068,8 +7095,20 @@ export interface components {
       /** @description filler featurer id exclude list */
       fillerFeaturerIdExcludeList?: number[];
       /**
+       * @description condition invert
+       * @example ANY
+       * @enum {string}
+       */
+      conditionInvert?: "ONLY" | "ONLY_NOT" | "ANY";
+      /**
+       * @description active
+       * @example ANY
+       * @enum {string}
+       */
+      active?: "ONLY" | "ONLY_NOT" | "ANY";
+      /**
        * @description optional
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       optional?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -7256,13 +7295,13 @@ export interface components {
       descriptionNotLikeList?: string[];
       /**
        * @description is active
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       active?: "ONLY" | "ONLY_NOT" | "ANY";
       /**
        * @description next factory limit scope
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       nextFactoryLimitScope?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -7316,7 +7355,7 @@ export interface components {
       descriptionNotLikeList?: string[];
       /**
        * @description active
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       active?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -7419,7 +7458,7 @@ export interface components {
       descriptionNotLikeList?: string[];
       /**
        * @description is active
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       active?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -7473,7 +7512,7 @@ export interface components {
       eraseActionNotLikeList?: ("NOT_SPECIFIED" | "RESTRICT" | "ERASE_IRREVOCABLE" | "ERASE_CANDIDATE")[];
       /**
        * @description active
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       active?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -7609,8 +7648,14 @@ export interface components {
       /** @description description not like list */
       descriptionNotLikeList?: string[];
       /**
+       * @description condition invert
+       * @example ANY
+       * @enum {string}
+       */
+      conditionInvert?: "ONLY" | "ONLY_NOT" | "ANY";
+      /**
        * @description active
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       active?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -8032,6 +8077,47 @@ export interface components {
       createdAt?: string;
       businessAccount?: components["schemas"]["BusinessAccountV1"];
     };
+    DataListOptionCreateRqDV1: {
+      /** @description icon */
+      icon?: string;
+      optionI18n?: components["schemas"]["I18nV1"];
+      /** @description attributes map */
+      attributesMap?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: uuid
+       * @description data list id
+       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
+       */
+      dataListId?: string;
+    };
+    DataListOptionRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /**
+       * Format: uuid
+       * @description id
+       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
+       */
+      dataListId?: string;
+      option?: components["schemas"]["DataListOptionV1"];
+    };
     DataListCreateRqV1: {
       /**
        * @description key
@@ -8326,31 +8412,6 @@ export interface components {
       statusDetails?: string;
       /** @description locales in domain */
       localeList?: components["schemas"]["LocaleV1"][];
-    };
-    DataListOptionRsV1: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description User friendly, localized request processing status description
-       * @example success
-       */
-      msg?: string;
-      /**
-       * @description request processing status description, technical
-       * @example success
-       */
-      statusDetails?: string;
-      /**
-       * Format: uuid
-       * @description id
-       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
-       */
-      dataListId?: string;
-      option?: components["schemas"]["DataListOptionV1"];
     };
     /** @description permission groups list */
     PermissionGroupV2: {
@@ -10360,6 +10421,83 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["DraftRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns list data */
+  dataListOptionViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 7de977d4-df6d-4250-9cb2-088363d139a1 */
+        dataListOptionId: string;
+      };
+    };
+    responses: {
+      /** @description List details prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DataListOptionRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Data list option for update */
+  dataListOptionUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 7de977d4-df6d-4250-9cb2-088363d139a1 */
+        dataListOptionId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DataListOptionUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Updated data list option data */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DataListRsV1"];
         };
       };
       /** @description Access is denied */
@@ -15113,6 +15251,44 @@ export interface operations {
       };
     };
   };
+  /** Create data list option data */
+  dataListOptionCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DataListOptionCreateRqDV1"];
+      };
+    };
+    responses: {
+      /** @description The data list option was created successfully */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DataListOptionRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Return a list of all data list option for the current domain */
   dataListOptionSearchListV1: {
     parameters: {
@@ -15496,6 +15672,7 @@ export interface operations {
   dataListOptionPublicViewV1: {
     parameters: {
       query?: {
+        lazyRelation?: boolean;
         showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
       };
       header: {
@@ -17615,40 +17792,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["DomainBusinessAccountViewRsV1"];
-        };
-      };
-      /** @description Access is denied */
-      401: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  /** Returns list data */
-  dataListOptionViewV1: {
-    parameters: {
-      query?: {
-        showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-      };
-      header: {
-        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-        DomainId: string;
-        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-        AuthToken: string;
-        /** @example WEB */
-        Channel: string;
-      };
-      path: {
-        /** @example 7de977d4-df6d-4250-9cb2-088363d139a1 */
-        dataListOptionId: string;
-      };
-    };
-    responses: {
-      /** @description List details prepared */
-      200: {
-        content: {
-          "application/json": components["schemas"]["DataListOptionRsV1"];
         };
       };
       /** @description Access is denied */

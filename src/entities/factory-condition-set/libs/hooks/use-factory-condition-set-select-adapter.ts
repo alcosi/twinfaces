@@ -4,8 +4,10 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 import { FactoryConditionSet, FactoryConditionSetFilters } from "../../api";
-import { useFactoryConditionSetSearch } from "../../api/hooks";
-import { useFetchFactoryConditionSetById } from "./use-fetch-factory-condition-set-by-id";
+import {
+  useFactoryConditionSetSearch,
+  useFetchFactoryConditionSetById,
+} from "../../api/hooks";
 
 export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryConditionSet> {
   const { searchFactoryConditionSet } = useFactoryConditionSetSearch();
