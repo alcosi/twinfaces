@@ -1,5 +1,4 @@
 import {
-  UserGroup,
   UserGroup_DETAILED,
   useUserGroupSearchV1,
   useUserGroupsFilters,
@@ -15,9 +14,10 @@ import {
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { formatToTwinfaceDate } from "@/shared/libs";
 
 const colDefs: Record<
-  keyof Pick<UserGroup, "id" | "name" | "type" | "description">,
+  "id" | "name" | "type" | "description" | "createdAt" | "businessAccount",
   ColumnDef<UserGroup_DETAILED>
 > = {
   id: {
@@ -43,6 +43,21 @@ const colDefs: Record<
     id: "type",
     accessorKey: "type",
     header: "Type",
+  },
+
+  businessAccount: {
+    id: "businessAccount",
+    accessorKey: "businessAccount",
+    header: "Business account",
+  },
+
+  createdAt: {
+    id: "createdAt",
+    accessorKey: "createdAt",
+    header: "Created at",
+    cell: ({ row: { original } }) =>
+      original.businessAccount?.createdAt &&
+      formatToTwinfaceDate(original.businessAccount.createdAt),
   },
 };
 
@@ -79,7 +94,14 @@ export function UserGroups() {
     <CrudDataTable
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
-      columns={[colDefs.id, colDefs.name, colDefs.description, colDefs.type]}
+      columns={[
+        colDefs.id,
+        colDefs.name,
+        colDefs.type,
+        colDefs.businessAccount,
+        colDefs.description,
+        colDefs.createdAt,
+      ]}
       fetcher={fetchUserGroups}
       getRowId={(row) => row.id}
       pageSizes={[10, 20, 50]}
@@ -90,13 +112,17 @@ export function UserGroups() {
         colDefs.id,
         colDefs.name,
         colDefs.description,
+        colDefs.businessAccount,
         colDefs.type,
+        colDefs.createdAt,
       ]}
       orderedColumns={[
         colDefs.id,
         colDefs.name,
-        colDefs.description,
         colDefs.type,
+        colDefs.businessAccount,
+        colDefs.description,
+        colDefs.createdAt,
       ]}
     />
   );
