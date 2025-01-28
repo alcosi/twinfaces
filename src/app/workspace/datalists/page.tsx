@@ -2,8 +2,11 @@
 
 import {
   DataList,
+  DATALIST_SCHEMA,
+  DataListCreateRqV1,
   DatalistResourceLink,
   useDatalistFilters,
+  useDatalistSearchV1,
 } from "@/entities/datalist";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext } from "@/shared/api";
@@ -15,9 +18,13 @@ import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { DatalistFormFields } from "@/screens/datalist";
 
 const colDefs: Record<
-  keyof Pick<DataList, "id" | "name" | "updatedAt" | "description">,
+  keyof Pick<DataList, "id" | "key" | "name" | "updatedAt" | "description">,
   ColumnDef<DataList>
 > = {
   id: {
@@ -25,6 +32,11 @@ const colDefs: Record<
     accessorKey: "id",
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+  },
+
+  key: {
+    id: "key",
+    accessorKey: "key",
   },
 
   name: {
@@ -61,6 +73,7 @@ const DatalistsPage = () => {
   const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { searchDatalist } = useDatalistSearchV1();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Datalists", href: "/workspace/datalists" }]);
@@ -72,32 +85,56 @@ const DatalistsPage = () => {
   ): Promise<PagedResponse<DataList>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
-    try {
-      const response = await api.datalist.search({
-        pagination,
-        filters: _filters,
-      });
-
-      return {
-        data: response.data?.dataListList ?? [],
-        pagination: response.data?.pagination ?? {},
-      };
-    } catch (e) {
-      console.error("Failed to fetch datalists", e);
-      toast.error("Failed to fetch datalists");
-      return { data: [], pagination: {} };
-    }
+    return searchDatalist({ pagination, filters: _filters });
   }
+
+  const datalistForm = useForm<z.infer<typeof DATALIST_SCHEMA>>({
+    resolver: zodResolver(DATALIST_SCHEMA),
+    defaultValues: {
+      key: "",
+      name: "",
+      description: "",
+    },
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof DATALIST_SCHEMA>
+  ) => {
+    const { key, name, description, ...rest } = formValues;
+
+    const requestBody: DataListCreateRqV1 = {
+      ...rest,
+      key: key,
+      nameI18n: {
+        translationInCurrentLocale: name,
+        translations: {},
+      },
+      descriptionI18n: description
+        ? {
+            translationInCurrentLocale: description,
+            translations: {},
+          }
+        : undefined,
+    };
+
+    const { error } = await api.datalist.create({ body: requestBody });
+
+    if (error) {
+      throw error;
+    }
+    toast.success("Datalist created successfully!");
+  };
 
   return (
     <CrudDataTable
       title="Datalists"
       ref={tableRef}
       columns={[
-        colDefs.id!,
-        colDefs.name!,
-        colDefs.description!,
-        colDefs.updatedAt!,
+        colDefs.id,
+        colDefs.key,
+        colDefs.name,
+        colDefs.description,
+        colDefs.updatedAt,
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchDataLists}
@@ -106,6 +143,18 @@ const DatalistsPage = () => {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.key,
+        colDefs.name,
+        colDefs.description,
+        colDefs.updatedAt,
+      ]}
+      dialogForm={datalistForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <DatalistFormFields control={datalistForm.control} />
+      )}
     />
   );
 };

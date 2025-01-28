@@ -6,6 +6,7 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 import { DatalistFilters, DatalistFilterKeys } from "@/entities/datalist";
+import { z } from "zod";
 
 export function useDatalistFilters(): FilterFeature<
   DatalistFilterKeys,
@@ -14,20 +15,22 @@ export function useDatalistFilters(): FilterFeature<
   function buildFilterFields(): Record<DatalistFilterKeys, AutoFormValueInfo> {
     return {
       idList: {
-        type: AutoFormValueType.uuid,
+        type: AutoFormValueType.tag,
         label: "Id",
+        schema: z.string().uuid("Please enter a valid UUID"),
+        placeholder: "Enter UUID",
+      },
+      keyLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Key",
       },
       nameLikeList: {
-        type: AutoFormValueType.string,
+        type: AutoFormValueType.tag,
         label: "Name",
       },
       descriptionLikeList: {
-        type: AutoFormValueType.string,
+        type: AutoFormValueType.tag,
         label: "Description",
-      },
-      keyLikeList: {
-        type: AutoFormValueType.string,
-        label: "Key",
       },
     };
   }
@@ -37,6 +40,9 @@ export function useDatalistFilters(): FilterFeature<
   ): DatalistFilters {
     const result: DatalistFilters = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
+      keyLikeList: toArrayOfString(toArray(filters.keyLikeList), "key").map(
+        wrapWithPercent
+      ),
       nameLikeList: toArrayOfString(toArray(filters.nameLikeList), "name").map(
         wrapWithPercent
       ),
@@ -44,9 +50,6 @@ export function useDatalistFilters(): FilterFeature<
         toArray(filters.descriptionLikeList),
         "description"
       ).map(wrapWithPercent),
-      keyLikeList: toArrayOfString(toArray(filters.keyLikeList), "key").map(
-        wrapWithPercent
-      ),
     };
     return result;
   }

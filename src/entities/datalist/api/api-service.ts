@@ -1,7 +1,7 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
 import { operations } from "@/shared/api/generated/schema";
-import { DatalistFilters } from "@/entities/datalist";
+import { DataListCreateRqV1, DatalistFilters } from "@/entities/datalist";
 
 export function createDatalistApi(settings: ApiSettings) {
   function search({
@@ -44,7 +44,16 @@ export function createDatalistApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById };
+  function create({ body }: { body: DataListCreateRqV1 }) {
+    return settings.client.POST("/private/data_list/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  return { search, getById, create };
 }
 
 export type DatalistApi = ReturnType<typeof createDatalistApi>;
