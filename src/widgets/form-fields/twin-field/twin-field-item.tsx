@@ -35,6 +35,12 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
     }
   }
 
+  //TODO: replace with another function to processing data
+  function handleOnDataListSelect(v: any) {
+    //TODO another logic
+    return v;
+  }
+
   function renderByType() {
     switch (descriptor.fieldType) {
       case TwinFieldType.textV1:
@@ -84,7 +90,7 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
               })
             }
             renderItem={optionAdapter.renderItem}
-            onSelect={handleOnTwinSelect}
+            onSelect={handleOnDataListSelect}
             {...props}
           />
         );

@@ -1,6 +1,7 @@
 import {
   isPopulatedString,
   SelectAdapter,
+  shortenUUID,
   wrapWithPercent,
 } from "@/shared/libs";
 import { FactoryConditionSet, FactoryConditionSetFilters } from "../../api";
@@ -35,8 +36,8 @@ export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryCond
     return response.data;
   }
 
-  function renderItem({ id, name }: FactoryConditionSet) {
-    return isPopulatedString(name) ? name : id;
+  function renderItem({ id = "", name }: FactoryConditionSet) {
+    return isPopulatedString(name) ? name : shortenUUID(id);
   }
 
   return {

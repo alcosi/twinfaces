@@ -1,6 +1,7 @@
 import { useCallback, useContext } from "react";
 import { ApiContext } from "@/shared/api";
 import { FactoryConditionSet } from "../../api";
+import { isEmptyArray, isUndefined } from "@/shared/libs";
 
 export function useFetchFactoryConditionSetById() {
   const api = useContext(ApiContext);
@@ -18,9 +19,10 @@ export function useFetchFactoryConditionSetById() {
           },
         });
 
-        if (error) throw error;
-
-        if (data.conditionSets == null || data.conditionSets.length == 0) {
+        if (
+          isUndefined(data?.conditionSets) ||
+          isEmptyArray(data.conditionSets)
+        ) {
           throw new Error(`Factory with ID ${id} not found.`);
         }
 
