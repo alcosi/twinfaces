@@ -11,6 +11,7 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
 import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
 import { useFeaturerSelectAdapter } from "../../../featurer";
+import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 
 export function usePipelineStepFilters(): FilterFeature<
   PipelineStepFilterKeys,
@@ -18,7 +19,9 @@ export function usePipelineStepFilters(): FilterFeature<
 > {
   const factorySelectAdapter = useFactorySelectAdapter();
   const factoryPipelineSelectAdapter = useFactoryPipelineSelectAdapter();
-  const featurerSelectAdapter = useFeaturerSelectAdapter(13);
+  const featurerSelectAdapter = useFeaturerSelectAdapter(23);
+  const factoryConditionSetSelectAdapter =
+    useFactoryConditionSetSelectAdapter();
 
   function buildFilterFields(): Record<
     PipelineStepFilterKeys,
@@ -42,6 +45,12 @@ export function usePipelineStepFilters(): FilterFeature<
         label: "Pipeline",
         multi: true,
         ...factoryPipelineSelectAdapter,
+      },
+      factoryConditionSetIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Condition set",
+        multi: true,
+        ...factoryConditionSetSelectAdapter,
       },
       conditionInvert: {
         type: AutoFormValueType.boolean,
@@ -87,6 +96,10 @@ export function usePipelineStepFilters(): FilterFeature<
       optional: mapToChoice(filters.optional),
       factoryPipelineIdList: toArrayOfString(
         filters.factoryPipelineIdList,
+        "id"
+      ),
+      factoryConditionSetIdList: toArrayOfString(
+        filters.factoryConditionSetIdList,
         "id"
       ),
       conditionInvert: mapToChoice(filters.conditionInvert),

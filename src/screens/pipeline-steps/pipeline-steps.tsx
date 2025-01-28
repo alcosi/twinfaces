@@ -73,8 +73,7 @@ const colDefs: Record<
     id: "factoryConditionSetInvert",
     accessorKey: "factoryConditionSetInvert",
     header: "Condition invert",
-    cell: (data) =>
-      data.row.original.factoryPipeline?.factoryConditionSetInvert && <Check />,
+    cell: (data) => data.row.original.factoryConditionInvert && <Check />,
   },
   factoryConditionSet: {
     id: "factoryConditionSet",

@@ -7096,13 +7096,13 @@ export interface components {
       fillerFeaturerIdExcludeList?: number[];
       /**
        * @description condition invert
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       conditionInvert?: "ONLY" | "ONLY_NOT" | "ANY";
       /**
        * @description active
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       active?: "ONLY" | "ONLY_NOT" | "ANY";
@@ -7161,6 +7161,11 @@ export interface components {
        * @example 69856a15-6858-40ba-b0aa-b123c54e250d
        */
       factoryConditionSetId?: string;
+      /**
+       * @description factory condition invert
+       * @example true
+       */
+      factoryConditionInvert?: boolean;
       /**
        * @description is active
        * @example true
@@ -7649,7 +7654,7 @@ export interface components {
       descriptionNotLikeList?: string[];
       /**
        * @description condition invert
-       * @example ONLY
+       * @example ANY
        * @enum {string}
        */
       conditionInvert?: "ONLY" | "ONLY_NOT" | "ANY";
