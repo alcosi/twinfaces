@@ -24,13 +24,13 @@ import {
   usePermissionSelectAdapter,
 } from "@/entities/permission";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
+import { toast } from "sonner";
 
 export function TwinFieldGeneral({
   field,
   onChange,
 }: {
   field: TwinClassFieldV2_DETAILED;
-
   onChange: () => any;
 }) {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
@@ -42,7 +42,15 @@ export function TwinFieldGeneral({
 
   async function updateField(newField: TwinClassFieldUpdateRq) {
     try {
-      await api.twinClassField.update({ fieldId: field.id!, body: newField });
+      const response = await api.twinClassField.update({
+        fieldId: field.id!,
+        body: newField,
+      });
+
+      if (response.error) {
+        toast.error(response.error.statusDetails);
+      }
+
       onChange?.();
     } catch (e) {
       console.error(e);
@@ -102,35 +110,35 @@ export function TwinFieldGeneral({
     },
   };
 
-  const viewPermissionAutoDialogSettings: AutoEditDialogSettings = {
-    value: { viewPermissionId: field.viewPermissionId },
-    title: "Update view permission",
-    onSubmit: (values) => {
-      return updateField({ viewPermissionId: values.viewPermissionId[0].id });
+  const viewPermissionSettings: InPlaceEditProps<any> = {
+    id: "viewPermissionId",
+    value: field.viewPermissionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select permission...",
+      ...pAdapter,
     },
-    valuesInfo: {
-      viewPermissionId: {
-        type: AutoFormValueType.combobox,
-        label: "View permission",
-        selectPlaceholder: "Select permission...",
-        ...pAdapter,
-      },
+    renderPreview: field.viewPermission
+      ? (_) => <PermissionResourceLink data={field.viewPermission} />
+      : undefined,
+    onSubmit: async (value) => {
+      return updateField({ viewPermissionId: value[0].id });
     },
   };
 
-  const editPermissionAutoDialogSettings: AutoEditDialogSettings = {
-    value: { editPermissionId: field.editPermissionId },
-    title: "Update edit permission",
-    onSubmit: (values) => {
-      return updateField({ editPermissionId: values.editPermissionId[0].id });
+  const editPermissionSettings: InPlaceEditProps<any> = {
+    id: "editPermissionId",
+    value: field.editPermissionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select permission...",
+      ...pAdapter,
     },
-    valuesInfo: {
-      editPermissionId: {
-        type: AutoFormValueType.combobox,
-        label: "Edit permission",
-        selectPlaceholder: "Select permission...",
-        ...pAdapter,
-      },
+    renderPreview: field.editPermission
+      ? (_) => <PermissionResourceLink data={field.editPermission} />
+      : undefined,
+    onSubmit: async (value) => {
+      return updateField({ editPermissionId: value[0].id });
     },
   };
 
@@ -141,8 +149,8 @@ export function TwinFieldGeneral({
     title: "Update field typer",
     onSubmit: (values) => {
       return updateField({
-        fieldTyperFeaturerId: values.fieldTyperFeaturerId,
-        fieldTyperParams: values.fieldTyperFeaturer,
+        fieldTyperFeaturerId: values.fieldTyperFeaturerId.id,
+        fieldTyperParams: values.fieldTyperParams,
       });
     },
     valuesInfo: {
@@ -173,7 +181,7 @@ export function TwinFieldGeneral({
 
           <TableRow>
             <TableCell>Class</TableCell>
-            <TableCell className="cursor-pointer">
+            <TableCell>
               {field.twinClass && (
                 <TwinClassResourceLink data={field.twinClass} withTooltip />
               )}
@@ -221,33 +229,17 @@ export function TwinFieldGeneral({
             </TableCell>
           </TableRow>
 
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(viewPermissionAutoDialogSettings)}
-          >
+          <TableRow className="cursor-pointer">
             <TableCell>View Permission</TableCell>
             <TableCell>
-              {field.viewPermission && (
-                <PermissionResourceLink
-                  data={field.viewPermission}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...viewPermissionSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(editPermissionAutoDialogSettings)}
-          >
+          <TableRow className="cursor-pointer">
             <TableCell>Edit Permission</TableCell>
             <TableCell>
-              {field.editPermission && (
-                <PermissionResourceLink
-                  data={field.editPermission}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...editPermissionSettings} />
             </TableCell>
           </TableRow>
         </TableBody>

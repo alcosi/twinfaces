@@ -7,7 +7,7 @@ import {
 } from "@/entities/twin-class-field";
 
 // TODO: Apply caching-strategy after discussing with team
-export const useTwinClassField = () => {
+export const useFetchTwinClassFieldById = () => {
   const api = useContext(ApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 

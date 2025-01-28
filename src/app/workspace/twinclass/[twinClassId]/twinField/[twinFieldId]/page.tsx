@@ -3,7 +3,7 @@
 import { TwinClassContext } from "@/entities/twinClass";
 import {
   TwinClassFieldV2_DETAILED,
-  useTwinClassField,
+  useFetchTwinClassFieldById,
 } from "@/entities/twin-class-field";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -25,7 +25,7 @@ export default function TwinClassPage({
     TwinClassFieldV2_DETAILED | undefined
   >(undefined);
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { fetchTwinClassFieldById, loading } = useTwinClassField();
+  const { fetchTwinClassFieldById, loading } = useFetchTwinClassFieldById();
 
   useEffect(() => {
     setBreadcrumbs([
