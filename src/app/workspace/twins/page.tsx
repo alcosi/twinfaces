@@ -191,7 +191,7 @@ export default function TwinsPage() {
   const { searchTwins } = useTwinSearchV3();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Twins", href: "/workspace/twin" }]);
+    setBreadcrumbs([{ label: "Twins", href: "/workspace/twins" }]);
   }, []);
 
   async function fetchTwin({
@@ -234,7 +234,7 @@ export default function TwinsPage() {
       getRowId={(row) => row.id!}
       fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
       pageSizes={[10, 20, 50]}
-      onRowClick={(row) => router.push(`/workspace/twin/${row.id}`)}
+      onRowClick={(row) => router.push(`/workspace/twins/${row.id}`)}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

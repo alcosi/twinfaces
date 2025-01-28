@@ -61,7 +61,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Twins",
-        url: "/workspace/twin",
+        url: "/workspace/twins",
         icon: Braces,
       },
       {
