@@ -15,6 +15,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { formatToTwinfaceDate } from "@/shared/libs";
+import { BusinessAccountResourceLink } from "@/entities/business-account";
 
 const colDefs: Record<
   "id" | "name" | "type" | "description" | "createdAt" | "businessAccount",
@@ -49,6 +50,15 @@ const colDefs: Record<
     id: "businessAccount",
     accessorKey: "businessAccount",
     header: "Business account",
+    cell: ({ row: { original } }) =>
+      original.businessAccount && (
+        <div className="max-w-48 inline-flex">
+          <BusinessAccountResourceLink
+            data={original.businessAccount}
+            withTooltip
+          />
+        </div>
+      ),
   },
 
   createdAt: {
