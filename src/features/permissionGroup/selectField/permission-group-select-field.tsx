@@ -48,19 +48,8 @@ export function PermissionGroupSelectField<T extends FieldValues>(
     }
   }
 
-  // TODO: to refactor after https://alcosi.atlassian.net/browse/TWINFACES-76
   // TODO: Refactor after TWINFACES-207 - Combobox/select should fetch object value from field ID.
-  return props.disabled ? (
-    <TextFormItem
-      {...props}
-      placeholder="Group..."
-      value={
-        initVals[0]?.key
-          ? `${initVals[0]?.key}${initVals[0]?.name ? ` (${initVals[0]?.name})` : ""}`
-          : undefined
-      }
-    />
-  ) : (
+  return (
     <ComboboxFormField
       getById={getById}
       getItems={getItems}
