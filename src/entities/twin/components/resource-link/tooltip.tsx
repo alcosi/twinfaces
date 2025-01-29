@@ -15,10 +15,18 @@ type Props = {
 };
 
 export function TwinResourceTooltip({ data, link }: Props) {
+  function createTwinName(data: Twin) {
+    const twinAliasType = data.aliases?.length ? data.aliases[0] : "N/A";
+
+    const twinName = isPopulatedString(data.name) ? data.name : "N/A";
+
+    return `${twinAliasType} | ${twinName}`;
+  }
+
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
-        title={isPopulatedString(data.name) ? data.name : "N/A"}
+        title={createTwinName(data)}
         iconSource={Braces}
       />
 

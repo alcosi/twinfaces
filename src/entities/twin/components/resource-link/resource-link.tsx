@@ -13,6 +13,14 @@ type Props = {
 export function TwinResourceLink({ data, disabled, withTooltip }: Props) {
   const link = `/workspace/twin/${data.id}`;
 
+  function createTwinName(data: Twin) {
+    const twinAliasType = data.aliases?.length ? data.aliases[0] : "N/A";
+
+    const twinName = isPopulatedString(data.name) ? data.name : "N/A";
+
+    return `${twinAliasType} | ${twinName}`;
+  }
+
   return (
     <ResourceLink
       IconComponent={Braces}
@@ -23,9 +31,7 @@ export function TwinResourceLink({ data, disabled, withTooltip }: Props) {
           ? (data) => <TwinResourceTooltip data={data} link={link} />
           : undefined
       }
-      getDisplayName={(data) =>
-        isPopulatedString(data.name) ? data.name : "N/A"
-      }
+      getDisplayName={(data) => createTwinName(data)}
       link={link}
     />
   );
