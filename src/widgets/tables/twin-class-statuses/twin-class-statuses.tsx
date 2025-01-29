@@ -120,7 +120,7 @@ const colDefs: Record<
     cell: (data) => {
       return (
         <Tooltip>
-          <TooltipTrigger asChild>
+          <TooltipTrigger>
             <ColorTile color={data.getValue<string>()} />
           </TooltipTrigger>
           <TooltipContent>{data.getValue<string>()}</TooltipContent>
@@ -136,7 +136,7 @@ const colDefs: Record<
     cell: (data) => {
       return (
         <Tooltip>
-          <TooltipTrigger asChild>
+          <TooltipTrigger>
             <ColorTile color={data.getValue<string>()} />
           </TooltipTrigger>
           <TooltipContent>{data.getValue<string>()}</TooltipContent>
@@ -241,7 +241,7 @@ export function TwinClassStatusesTable({
         colDefs.backgroundColor,
         colDefs.fontColor,
       ]}
-      getRowId={(row) => row.key!}
+      getRowId={(row) => row.id!}
       fetcher={fetchStatuses}
       onRowClick={(row) =>
         router.push(

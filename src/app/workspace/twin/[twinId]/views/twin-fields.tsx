@@ -71,13 +71,12 @@ export function TwinFields() {
       return { data: [], pagination: {} };
     }
   }
-
   return (
     <InPlaceEditContextProvider>
       <CrudDataTable
         ref={tableRef}
         columns={columns}
-        getRowId={(row) => row.key!}
+        getRowId={(row) => row.id}
         fetcher={fetchFields}
         disablePagination={true}
       />
