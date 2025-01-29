@@ -20,7 +20,11 @@ type ResourceLinkProps<T> = {
   link: string;
 } & Pick<
   ResourceLinkContentProps,
-  "IconComponent" | "disabled" | "backgroundColor" | "fontColor" | "withoutAvatar"
+  | "IconComponent"
+  | "disabled"
+  | "backgroundColor"
+  | "fontColor"
+  | "withoutAvatar"
 >;
 
 const ResourceLinkContent = ({
@@ -60,16 +64,18 @@ const ResourceLinkContent = ({
         `
       )}
     >
-      {withoutAvatar ? null : (<i
-        className={cn(
-          "h-4 w-4 flex items-center",
-          css`
-            color: ${fontColor};
-          `
-        )}
-      >
-        <IconComponent className="h-4 w-4" />
-      </i>)}
+      {withoutAvatar ? null : (
+        <i
+          className={cn(
+            "h-4 w-4 flex items-center",
+            css`
+              color: ${fontColor};
+            `
+          )}
+        >
+          <IconComponent className="h-4 w-4" />
+        </i>
+      )}
 
       <span
         className={cn(

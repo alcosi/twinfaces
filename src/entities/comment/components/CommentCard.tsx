@@ -32,7 +32,11 @@ export function CommentCard({ item }: CommentCardProps) {
             )}
 
             <h2 className="text-base font-semibold">
-              <UserResourceLink data={item.authorUser!} withTooltip withoutAvatar />
+              <UserResourceLink
+                data={item.authorUser!}
+                withTooltip
+                withoutAvatar
+              />
             </h2>
             <span className="text-xs text-gray-500">
               {formatToTwinfaceDate(item.createdAt!)}

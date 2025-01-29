@@ -11,7 +11,12 @@ type Props = {
   withoutAvatar?: boolean;
 };
 
-export const UserResourceLink = ({ data, disabled, withTooltip, withoutAvatar = false }: Props) => {
+export const UserResourceLink = ({
+  data,
+  disabled,
+  withTooltip,
+  withoutAvatar = false,
+}: Props) => {
   if (isUndefined(data)) return null;
 
   const link = `/under-construction`;
@@ -36,7 +41,7 @@ export const UserResourceLink = ({ data, disabled, withTooltip, withoutAvatar = 
         isPopulatedString(data.fullName) ? data.fullName : "N/A"
       }
       link={link}
-      withoutAvatar= {withoutAvatar}
+      withoutAvatar={withoutAvatar}
     />
   );
 };
