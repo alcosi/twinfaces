@@ -13,6 +13,7 @@ import {
   PopoverTrigger,
 } from "@/shared/ui";
 import { CircleUserRound, EllipsisVertical } from "lucide-react";
+import { UserResourceLink } from "../../user";
 
 interface CommentCardProps {
   item: CommentView_DETAILED;
@@ -31,7 +32,7 @@ export function CommentCard({ item }: CommentCardProps) {
             )}
 
             <h2 className="text-base font-semibold">
-              {item.authorUser?.fullName}
+              <UserResourceLink data={item.authorUser!} withTooltip withoutAvatar />
             </h2>
             <span className="text-xs text-gray-500">
               {formatToTwinfaceDate(item.createdAt!)}

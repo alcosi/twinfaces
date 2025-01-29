@@ -10,6 +10,7 @@ type ResourceLinkContentProps = {
   disabled?: boolean;
   backgroundColor?: string;
   fontColor?: string;
+  withoutAvatar?: boolean;
 };
 
 type ResourceLinkProps<T> = {
@@ -19,7 +20,7 @@ type ResourceLinkProps<T> = {
   link: string;
 } & Pick<
   ResourceLinkContentProps,
-  "IconComponent" | "disabled" | "backgroundColor" | "fontColor"
+  "IconComponent" | "disabled" | "backgroundColor" | "fontColor" | "withoutAvatar"
 >;
 
 const ResourceLinkContent = ({
@@ -28,6 +29,7 @@ const ResourceLinkContent = ({
   disabled,
   backgroundColor = "transparent",
   fontColor,
+  withoutAvatar,
 }: ResourceLinkContentProps) => {
   const styles = {
     base: "inline-flex items-center h-6 max-w-full border rounded-lg px-2 transition-colors",
@@ -58,7 +60,7 @@ const ResourceLinkContent = ({
         `
       )}
     >
-      <i
+      {withoutAvatar ? null : (<i
         className={cn(
           "h-4 w-4 flex items-center",
           css`
@@ -67,10 +69,11 @@ const ResourceLinkContent = ({
         )}
       >
         <IconComponent className="h-4 w-4" />
-      </i>
+      </i>)}
+
       <span
         className={cn(
-          "ml-2 text-sm font-medium truncate",
+          `${withoutAvatar ? "text-sm font-medium truncate" : "ml-2 text-sm font-medium truncate"}`,
           css`
             color: ${fontColor};
           `
@@ -91,6 +94,7 @@ export const ResourceLink = <T,>({
   disabled,
   backgroundColor,
   fontColor,
+  withoutAvatar,
 }: ResourceLinkProps<T>) => {
   const displayName = getDisplayName(data);
 
@@ -101,6 +105,7 @@ export const ResourceLink = <T,>({
       disabled={disabled}
       backgroundColor={backgroundColor}
       fontColor={fontColor}
+      withoutAvatar={withoutAvatar}
     />
   ) : (
     <Link
@@ -114,6 +119,7 @@ export const ResourceLink = <T,>({
         displayName={displayName}
         backgroundColor={backgroundColor}
         fontColor={fontColor}
+        withoutAvatar={withoutAvatar}
       />
     </Link>
   );
