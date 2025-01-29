@@ -1,13 +1,13 @@
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
-import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { Braces } from "lucide-react";
 import { Twin } from "../../api";
+import { formatTwinDisplay } from "../../libs";
 
 type Props = {
   data: Twin;
@@ -15,18 +15,10 @@ type Props = {
 };
 
 export function TwinResourceTooltip({ data, link }: Props) {
-  function createTwinName(data: Twin) {
-    const twinAliasType = data.aliases?.length ? data.aliases[0] : "N/A";
-
-    const twinName = isPopulatedString(data.name) ? data.name : "N/A";
-
-    return `${twinAliasType} | ${twinName}`;
-  }
-
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
-        title={createTwinName(data)}
+        title={formatTwinDisplay(data)}
         iconSource={Braces}
       />
 

@@ -3,6 +3,7 @@ import { RelatedObjects } from "@/shared/api";
 import { TwinClass_DETAILED } from "../../twinClass";
 import { User } from "../../user";
 import { Twin, Twin_DETAILED } from "../api";
+import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
 
 export const hydrateTwinFromMap = (
   twinDTO: Twin,
@@ -36,3 +37,9 @@ export const hydrateTwinFromMap = (
 
   return twin;
 };
+
+export function formatTwinDisplay({ aliases, name }: Twin): string {
+  const aliasText = isPopulatedArray(aliases) ? `${aliases[0]} | ` : "";
+  const twinName = isPopulatedString(name) ? `${name}` : "N/A";
+  return `${aliasText}${twinName}`;
+}
