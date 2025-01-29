@@ -253,7 +253,7 @@ export function TwinClassFieldsTable({
         colDefs.editPermissionId,
         colDefs.required,
       ]}
-      getRowId={(row) => row.id!}
+      getRowId={(row) => row.id}
       fetcher={fetchFields}
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
