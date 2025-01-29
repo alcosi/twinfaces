@@ -71,7 +71,7 @@ export function TwinFields() {
       return { data: [], pagination: {} };
     }
   }
-
+//todo there may be a problem with the operation of filters and displaying extra rows in the table recommended change getRowId={(row) => row.key!} -> getRowId={(row) => row.id!} as was done in "twin-class-statuses" and "twin-class-fields"
   return (
     <InPlaceEditContextProvider>
       <CrudDataTable
