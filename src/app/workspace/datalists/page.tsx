@@ -5,19 +5,21 @@ import {
   DATALIST_SCHEMA,
   DataListCreateRqV1,
   DatalistResourceLink,
+  useDatalistCreate,
   useDatalistFilters,
   useDatalistSearchV1,
 } from "@/entities/datalist";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext } from "@/shared/api";
-import { DataTableHandle, FiltersState } from "@/widgets/crud-data-table";
-import { toast } from "sonner";
 import { PagedResponse } from "@/shared/api";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -68,12 +70,12 @@ const colDefs: Record<
 };
 
 const DatalistsPage = () => {
-  const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchDatalist } = useDatalistSearchV1();
+  const { createDatalist } = useDatalistCreate();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Datalists", href: "/workspace/datalists" }]);
@@ -117,12 +119,7 @@ const DatalistsPage = () => {
         : undefined,
     };
 
-    const { error } = await api.datalist.create({ body: requestBody });
-
-    if (error) {
-      throw error;
-    }
-    toast.success("Datalist created successfully!");
+    return createDatalist({ body: requestBody });
   };
 
   return (
