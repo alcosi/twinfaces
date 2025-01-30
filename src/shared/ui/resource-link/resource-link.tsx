@@ -1,5 +1,5 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { cn } from "@/shared/libs";
+import { cn, isFalsy } from "@/shared/libs";
 import { css } from "@emotion/css";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
@@ -10,6 +10,7 @@ type ResourceLinkContentProps = {
   disabled?: boolean;
   backgroundColor?: string;
   fontColor?: string;
+  hideIcon?: boolean;
 };
 
 type ResourceLinkProps<T> = {
@@ -19,7 +20,7 @@ type ResourceLinkProps<T> = {
   link: string;
 } & Pick<
   ResourceLinkContentProps,
-  "IconComponent" | "disabled" | "backgroundColor" | "fontColor"
+  "IconComponent" | "disabled" | "backgroundColor" | "fontColor" | "hideIcon"
 >;
 
 const ResourceLinkContent = ({
@@ -28,6 +29,7 @@ const ResourceLinkContent = ({
   disabled,
   backgroundColor = "transparent",
   fontColor,
+  hideIcon,
 }: ResourceLinkContentProps) => {
   const styles = {
     base: "inline-flex items-center h-6 max-w-full border rounded-lg px-2 transition-colors",
@@ -58,19 +60,22 @@ const ResourceLinkContent = ({
         `
       )}
     >
-      <i
-        className={cn(
-          "h-4 w-4 flex items-center",
-          css`
-            color: ${fontColor};
-          `
-        )}
-      >
-        <IconComponent className="h-4 w-4" />
-      </i>
+      {isFalsy(hideIcon) && (
+        <i
+          className={cn(
+            "h-4 w-4 flex items-center",
+            css`
+              color: ${fontColor};
+            `
+          )}
+        >
+          <IconComponent className="h-4 w-4" />
+        </i>
+      )}
+
       <span
         className={cn(
-          "ml-2 text-sm font-medium truncate",
+          `${hideIcon ? "text-sm font-medium truncate" : "ml-2 text-sm font-medium truncate"}`,
           css`
             color: ${fontColor};
           `
@@ -91,6 +96,7 @@ export const ResourceLink = <T,>({
   disabled,
   backgroundColor,
   fontColor,
+  hideIcon,
 }: ResourceLinkProps<T>) => {
   const displayName = getDisplayName(data);
 
@@ -101,6 +107,7 @@ export const ResourceLink = <T,>({
       disabled={disabled}
       backgroundColor={backgroundColor}
       fontColor={fontColor}
+      hideIcon={hideIcon}
     />
   ) : (
     <Link
@@ -114,6 +121,7 @@ export const ResourceLink = <T,>({
         displayName={displayName}
         backgroundColor={backgroundColor}
         fontColor={fontColor}
+        hideIcon={hideIcon}
       />
     </Link>
   );

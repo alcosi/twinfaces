@@ -8,9 +8,15 @@ type Props = {
   data: User;
   disabled?: boolean;
   withTooltip?: boolean;
+  hideAvatar?: boolean;
 };
 
-export const UserResourceLink = ({ data, disabled, withTooltip }: Props) => {
+export const UserResourceLink = ({
+  data,
+  disabled,
+  withTooltip,
+  hideAvatar = false,
+}: Props) => {
   if (isUndefined(data)) return null;
 
   const link = `/under-construction`;
@@ -18,7 +24,7 @@ export const UserResourceLink = ({ data, disabled, withTooltip }: Props) => {
   return (
     <ResourceLink
       IconComponent={() =>
-        data?.avatar ? (
+        hideAvatar ? undefined : data?.avatar ? (
           <Avatar url={data.avatar} size="sm" />
         ) : (
           <UserIcon className="h-4 w-4" />
@@ -35,6 +41,7 @@ export const UserResourceLink = ({ data, disabled, withTooltip }: Props) => {
         isPopulatedString(data.fullName) ? data.fullName : "N/A"
       }
       link={link}
+      hideIcon={hideAvatar}
     />
   );
 };
