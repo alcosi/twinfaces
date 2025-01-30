@@ -18,6 +18,7 @@ export function createCommentApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         path: { twinId },
         query: {
+          lazyRelation: false,
           showStatusMode: "DETAILED",
           showCommentMode: "DETAILED",
           showComment2UserMode: "DETAILED",

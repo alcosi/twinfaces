@@ -26,7 +26,9 @@ export const hydrateCommentViewFromMap = (
     dto
   ) as CommentView_DETAILED;
 
-  // TODO: Add hydration logic here
+  if (dto.authorUserId && relatedObjects?.userMap) {
+    hydrated.authorUser = relatedObjects.userMap[dto.authorUserId]!;
+  }
 
   return hydrated;
 };

@@ -1,5 +1,5 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { cn } from "@/shared/libs";
+import { cn, isFalsy } from "@/shared/libs";
 import { css } from "@emotion/css";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
@@ -10,7 +10,7 @@ type ResourceLinkContentProps = {
   disabled?: boolean;
   backgroundColor?: string;
   fontColor?: string;
-  withoutAvatar?: boolean;
+  hideIcon?: boolean;
 };
 
 type ResourceLinkProps<T> = {
@@ -20,11 +20,7 @@ type ResourceLinkProps<T> = {
   link: string;
 } & Pick<
   ResourceLinkContentProps,
-  | "IconComponent"
-  | "disabled"
-  | "backgroundColor"
-  | "fontColor"
-  | "withoutAvatar"
+  "IconComponent" | "disabled" | "backgroundColor" | "fontColor" | "hideIcon"
 >;
 
 const ResourceLinkContent = ({
@@ -33,7 +29,7 @@ const ResourceLinkContent = ({
   disabled,
   backgroundColor = "transparent",
   fontColor,
-  withoutAvatar,
+  hideIcon,
 }: ResourceLinkContentProps) => {
   const styles = {
     base: "inline-flex items-center h-6 max-w-full border rounded-lg px-2 transition-colors",
@@ -64,7 +60,7 @@ const ResourceLinkContent = ({
         `
       )}
     >
-      {withoutAvatar ? null : (
+      {isFalsy(hideIcon) && (
         <i
           className={cn(
             "h-4 w-4 flex items-center",
@@ -79,7 +75,7 @@ const ResourceLinkContent = ({
 
       <span
         className={cn(
-          `${withoutAvatar ? "text-sm font-medium truncate" : "ml-2 text-sm font-medium truncate"}`,
+          `${hideIcon ? "text-sm font-medium truncate" : "ml-2 text-sm font-medium truncate"}`,
           css`
             color: ${fontColor};
           `
@@ -100,7 +96,7 @@ export const ResourceLink = <T,>({
   disabled,
   backgroundColor,
   fontColor,
-  withoutAvatar,
+  hideIcon,
 }: ResourceLinkProps<T>) => {
   const displayName = getDisplayName(data);
 
@@ -111,7 +107,7 @@ export const ResourceLink = <T,>({
       disabled={disabled}
       backgroundColor={backgroundColor}
       fontColor={fontColor}
-      withoutAvatar={withoutAvatar}
+      hideIcon={hideIcon}
     />
   ) : (
     <Link
@@ -125,7 +121,7 @@ export const ResourceLink = <T,>({
         displayName={displayName}
         backgroundColor={backgroundColor}
         fontColor={fontColor}
-        withoutAvatar={withoutAvatar}
+        hideIcon={hideIcon}
       />
     </Link>
   );
