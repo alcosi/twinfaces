@@ -9,6 +9,7 @@ import { Control, Path, PathValue, useWatch } from "react-hook-form";
 import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { usePermissionSelectAdapter } from "@/entities/permission";
+import { useState } from "react";
 
 export function TwinClassFormFields<T extends TwinClassFieldValues>({
   control,
@@ -23,6 +24,8 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
   });
   const dlAdapter = useDatalistSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
+
+  const [isSpaceChecked, setIsSpaceChecked] = useState<boolean>(false);
 
   return (
     <>
@@ -76,27 +79,38 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
       <CheckboxFormField
         control={control}
-        name={"permissionSchemaSpace" as Path<T>}
-        label="Permission schema space"
+        name={"space" as Path<T>}
+        label="Space"
+        onClick={() => setIsSpaceChecked((prev) => !prev)}
       />
 
-      <CheckboxFormField
-        control={control}
-        name={"twinflowSchemaSpace" as Path<T>}
-        label="Twinflow schema space"
-      />
+      {isSpaceChecked && (
+        <>
+          <CheckboxFormField
+            control={control}
+            name={"permissionSchemaSpace" as Path<T>}
+            label="Permission schema space"
+          />
 
-      <CheckboxFormField
-        control={control}
-        name={"twinClassSchemaSpace" as Path<T>}
-        label="Twin class schema space"
-      />
+          <CheckboxFormField
+            control={control}
+            name={"twinflowSchemaSpace" as Path<T>}
+            label="Twinflow schema space"
+          />
 
-      <CheckboxFormField
-        control={control}
-        name={"aliasSpace" as Path<T>}
-        label="Alias space"
-      />
+          <CheckboxFormField
+            control={control}
+            name={"twinClassSchemaSpace" as Path<T>}
+            label="Twin class schema space"
+          />
+
+          <CheckboxFormField
+            control={control}
+            name={"aliasSpace" as Path<T>}
+            label="Alias space"
+          />
+        </>
+      )}
 
       <ComboboxFormField
         control={control}
