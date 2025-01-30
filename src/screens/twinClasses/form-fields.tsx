@@ -1,4 +1,4 @@
-import { CheckboxFormField } from "@/components/form-fields";
+import { CheckboxFormField, CheckboxFormItem } from "@/components/form-fields";
 import { TextAreaFormField, TextFormField } from "@/components/form-fields";
 import { FeaturerTypes } from "@/entities/featurer";
 import { TwinClassFieldValues } from "@/entities/twinClass";
@@ -29,6 +29,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
   const [isSpaceChecked, setIsSpaceChecked] = useState<boolean>(false);
   const [isAutoCreatePermission, setIsAutoCreatePermission] =
     useState<boolean>(true);
+    console.log(isAutoCreatePermission)
 
   return (
     <>
@@ -100,14 +101,15 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         {...dlAdapter}
       />
 
-      <CheckboxFormField
-        control={control}
-        name={"autoCreatePermissions" as Path<T>}
+      <CheckboxFormItem
+        inForm
+        name={"autoCreatePermissions"}
         label="Auto create permissions"
+        fieldValue={isAutoCreatePermission}
         onClick={() => setIsAutoCreatePermission((prev) => !prev)}
       />
 
-      {isAutoCreatePermission && (
+      {!isAutoCreatePermission && (
         <ComboboxFormField
           control={control}
           name={"viewPermissionId" as Path<T>}
