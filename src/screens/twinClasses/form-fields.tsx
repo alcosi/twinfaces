@@ -22,10 +22,13 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
     // TODO: Fix type for `defaultValue`, ensuring it matches `PathValue<T, "headTwinClass">`.
     defaultValue: [] as PathValue<T, any>,
   });
+
   const dlAdapter = useDatalistSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
 
   const [isSpaceChecked, setIsSpaceChecked] = useState<boolean>(false);
+  const [isAutoCreatePermission, setIsAutoCreatePermission] =
+    useState<boolean>(true);
 
   return (
     <>
@@ -77,6 +80,45 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         label="Extends"
       />
 
+      <ComboboxFormField
+        control={control}
+        name={"markerDataListId" as Path<T>}
+        label="Markers list"
+        selectPlaceholder="Select datalist"
+        searchPlaceholder="Search datalist..."
+        noItemsText="No datalist found"
+        {...dlAdapter}
+      />
+
+      <ComboboxFormField
+        control={control}
+        name={"tagDataListId" as Path<T>}
+        label="Tags list"
+        selectPlaceholder="Select datalist"
+        searchPlaceholder="Search datalist..."
+        noItemsText="No datalist found"
+        {...dlAdapter}
+      />
+
+      <CheckboxFormField
+        control={control}
+        name={"autoCreatePermissions" as Path<T>}
+        label="Auto create permissions"
+        onClick={() => setIsAutoCreatePermission((prev) => !prev)}
+      />
+
+      {isAutoCreatePermission && (
+        <ComboboxFormField
+          control={control}
+          name={"viewPermissionId" as Path<T>}
+          label="Permission"
+          selectPlaceholder="Select permission"
+          searchPlaceholder="Search permission..."
+          noItemsText="No permission found"
+          {...pAdapter}
+        />
+      )}
+
       <CheckboxFormField
         control={control}
         name={"space" as Path<T>}
@@ -111,36 +153,6 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           />
         </>
       )}
-
-      <ComboboxFormField
-        control={control}
-        name={"markerDataListId" as Path<T>}
-        label="Markers list"
-        selectPlaceholder="Select datalist"
-        searchPlaceholder="Search datalist..."
-        noItemsText="No datalist found"
-        {...dlAdapter}
-      />
-
-      <ComboboxFormField
-        control={control}
-        name={"tagDataListId" as Path<T>}
-        label="Tags list"
-        selectPlaceholder="Select datalist"
-        searchPlaceholder="Search datalist..."
-        noItemsText="No datalist found"
-        {...dlAdapter}
-      />
-
-      <ComboboxFormField
-        control={control}
-        name={"viewPermissionId" as Path<T>}
-        label="Permission"
-        selectPlaceholder="Select permission"
-        searchPlaceholder="Search permission..."
-        noItemsText="No permission found"
-        {...pAdapter}
-      />
     </>
   );
 }
