@@ -20,6 +20,14 @@ export function createDomainApi(settings: ApiSettings) {
     });
   }
 
+  function fetchTwinClassOwnerType() {
+    return settings.client.GET("/private/domain/class_owner_type/list/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+    });
+  }
+
   function getById() {
     // TODO: Add implementation
   }
@@ -43,6 +51,7 @@ export function createDomainApi(settings: ApiSettings) {
     getById,
     create,
     update,
+    fetchTwinClassOwnerType,
   };
 }
 

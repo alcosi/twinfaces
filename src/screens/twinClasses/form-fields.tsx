@@ -10,6 +10,7 @@ import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useState } from "react";
+import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";
 
 export function TwinClassFormFields<T extends TwinClassFieldValues>({
   control,
@@ -25,11 +26,11 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
   const dlAdapter = useDatalistSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
+  const twinClassOwnerTypeAdapter = useTwinClassOwnerTypeSelectAdapter();
 
   const [isSpaceChecked, setIsSpaceChecked] = useState<boolean>(false);
   const [isAutoCreatePermission, setIsAutoCreatePermission] =
     useState<boolean>(true);
-    console.log(isAutoCreatePermission)
 
   return (
     <>
@@ -46,6 +47,16 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         control={control}
         name={"description" as Path<T>}
         label="Description"
+      />
+
+      <ComboboxFormField
+        control={control}
+        name={"twinClassOwnerTypes" as Path<T>}
+        label="Owner type"
+        selectPlaceholder="Select owner type"
+        searchPlaceholder="Search owner type..."
+        noItemsText="No owner type found"
+        {...twinClassOwnerTypeAdapter}
       />
 
       <CheckboxFormField
