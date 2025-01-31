@@ -6,7 +6,7 @@ import {
 import { TwinClassStatusFormValues } from "@/entities/twin-status";
 import { TwinClassSelectField } from "@/features/twinClass";
 import { isTruthy } from "@/shared/libs";
-import { Control, Path } from "react-hook-form";
+import { Control, Path, useWatch } from "react-hook-form";
 
 export function TwinClassStatusFormFields<T extends TwinClassStatusFormValues>({
   control,
@@ -15,13 +15,15 @@ export function TwinClassStatusFormFields<T extends TwinClassStatusFormValues>({
   control: Control<T>;
   twinClassId?: string;
 }) {
+  const twinClassID = useWatch({ control, name: "TwinClassId" as Path<T> });
+
   return (
     <>
       <TwinClassSelectField
         control={control}
         name={"TwinClassId" as Path<T>}
         label="Class"
-        disabled={isTruthy(twinClassId)}
+        disabled={isTruthy(twinClassID)}
       />
 
       <TextFormField
