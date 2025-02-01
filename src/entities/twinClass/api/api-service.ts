@@ -1,7 +1,11 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { components, operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
-import { TwinClassCreateRq, TwinClassUpdateRq } from "./types";
+import {
+  TwinClassCreateRq,
+  TwinClassUpdateRq,
+  TwinClassValidHeadQuery,
+} from "./types";
 
 type TwinClassApiFilters = Partial<
   Pick<
@@ -41,6 +45,7 @@ export function createTwinClassApi(settings: ApiSettings) {
           showTwinClassExtends2TwinClassMode: "DETAILED",
           showTwinClassMarker2DataListOptionMode: "DETAILED",
           showTwinClassTag2DataListOptionMode: "DETAILED",
+          showTwinClass2TwinClassFieldMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
@@ -104,12 +109,33 @@ export function createTwinClassApi(settings: ApiSettings) {
       body: body,
     });
   }
+
+  function getValidHeads({
+    twinClassId,
+    query = {},
+  }: {
+    twinClassId: string;
+    query?: TwinClassValidHeadQuery;
+  }) {
+    return settings.client.GET(
+      `/private/twin_class/{twinClassId}/valid_heads/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { twinClassId },
+          query: query,
+        },
+      }
+    );
+  }
+
   return {
     search,
     getByKey,
     getById,
     create,
     update,
+    getValidHeads,
   };
 }
 

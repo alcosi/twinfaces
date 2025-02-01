@@ -1,9 +1,8 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { TwinClassFilters } from "../../api";
-import { hydrateTwinClassFromMap } from "../helpers";
-import { TwinClass_DETAILED } from "../types";
+import { hydrateTwinClassFromMap } from "../../libs";
+import { TwinClass_DETAILED, TwinClassFilters } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTwinClassSearchV1 = () => {

@@ -1,10 +1,10 @@
+import { isPopulatedString, SelectAdapter } from "@/shared/libs";
 import {
   TwinClass_DETAILED,
   TwinClassFilters,
   useFetchTwinClassById,
   useTwinClassSearchV1,
-} from "@/entities/twinClass";
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+} from "../../api";
 
 export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
   const { searchTwinClasses } = useTwinClassSearchV1();

@@ -1,6 +1,5 @@
 import { RelatedObjects } from "@/shared/api";
-import { TwinClass } from "../api";
-import { TwinClass_DETAILED } from "./types";
+import { TwinClass, TwinClass_DETAILED } from "../api";
 import { DataListsMap } from "@/entities/datalist";
 import { Featurer_DETAILED } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";

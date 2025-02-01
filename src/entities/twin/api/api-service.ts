@@ -1,7 +1,7 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
-import { TwinFilters, TwinUpdateRq } from "./types";
+import { TwinCreateRq, TwinFilters, TwinUpdateRq } from "./types";
 
 export function createTwinApi(settings: ApiSettings) {
   function search({
@@ -47,6 +47,15 @@ export function createTwinApi(settings: ApiSettings) {
         path: { twinId: id },
         query: query,
       },
+    });
+  }
+
+  function create({ body }: { body: TwinCreateRq }) {
+    return settings.client.POST("/private/twin/v2", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
     });
   }
 
@@ -138,6 +147,7 @@ export function createTwinApi(settings: ApiSettings) {
   return {
     search,
     getById,
+    create,
     update,
     getFieldsById,
     getHistory,

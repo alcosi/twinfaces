@@ -36,7 +36,7 @@ export function isBoolean(value: unknown): value is boolean {
   return typeof value === "boolean";
 }
 
-export function isTruthy<T>(value: T): boolean {
+export function isTruthy<T>(value: T): value is Exclude<T, Falsy> {
   return Boolean(value);
 }
 

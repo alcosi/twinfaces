@@ -6,8 +6,12 @@ import {
   shortenUUID,
   wrapWithPercent,
 } from "@/shared/libs";
-import { Twin_DETAILED, TwinFilters } from "../../api";
-import { useTwinFetchByIdV2, useTwinSearchV3 } from "../../api/hooks";
+import { Twin, Twin_DETAILED, TwinFilters } from "../../api";
+import {
+  useFetchValidHeadTwins,
+  useTwinFetchByIdV2,
+  useTwinSearchV3,
+} from "../../api/hooks";
 import { TwinBasicFields, TwinTouchIds } from "../constants";
 
 export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
@@ -58,4 +62,34 @@ export function useTwinTouchIdSelectAdapter(): SelectAdapter<
   (typeof TwinTouchIds)[number]
 > {
   return createFixedSelectAdapter(TwinTouchIds);
+}
+
+export function useTwinHeadSelectAdapter(): SelectAdapter<Twin> {
+  const { fetchValidHeadTwins } = useFetchValidHeadTwins();
+
+  async function getById(id: string) {
+    return { id } as Twin;
+  }
+
+  async function getItems(search: string, filters?: { twinClassId: string }) {
+    // !!! TODO: search is not used
+    const response = await fetchValidHeadTwins({
+      twinClassId: filters?.twinClassId ?? "",
+    });
+
+    return response.data;
+  }
+
+  function renderItem({ aliases, name }: Twin) {
+    // TODO: use function from `shared`
+    const aliasText = isPopulatedArray(aliases) ? `${aliases[0]} | ` : "";
+    const twinName = isPopulatedString(name) ? `${name}` : "N/A";
+    return `${aliasText}${twinName}`;
+  }
+
+  return {
+    getById,
+    getItems: (search, options) => getItems(search, options as any),
+    renderItem,
+  };
 }
