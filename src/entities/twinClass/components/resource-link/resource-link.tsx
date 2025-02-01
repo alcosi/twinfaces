@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
 import { LayoutTemplate } from "lucide-react";
-import { TwinClass_DETAILED } from "../../libs";
+import { TwinClass_DETAILED } from "../../api";
 import { TwinClassResourceTooltip } from "./tooltip";
 
 type Props = {

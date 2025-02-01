@@ -22,7 +22,6 @@ export const useFetchTwinClassById = () => {
       try {
         return await api.twinClass.getById({ id, query: _query });
       } catch (error) {
-        console.error(`Failed to find twin class by ID: ${id}`, error);
         throw new Error(`Failed to find twin class with ID ${id}`);
       }
     },

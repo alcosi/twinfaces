@@ -18,6 +18,11 @@ export type Twin_DETAILED = RequireFields<
   "createdAt" | "headTwinId"
 >;
 
+export type TwinCreateRq = RequireFields<
+  components["schemas"]["TwinCreateRqV2"],
+  "classId" | "name" | "assignerUserId"
+>;
+export type TwinCreateRsV1 = components["schemas"]["TwinCreateRsV1"];
 export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
 export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];
 export type HistoryV1 = components["schemas"]["HistoryV1"];

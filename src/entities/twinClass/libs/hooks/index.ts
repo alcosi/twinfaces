@@ -1,4 +1,2 @@
-export * from "./useFilters";
-export * from "./useFindTwinClassById";
-export * from "./useSelectAdapter";
-export * from "./useTwinClassSearchV1";
+export * from "./use-select-adapter";
+export * from "./use-filters";

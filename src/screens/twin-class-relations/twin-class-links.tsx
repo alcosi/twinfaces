@@ -28,7 +28,7 @@ import { TwinClassRelationsFormFields } from "./form-fields";
 const twinLinkSchema = z.object({
   srcTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
   dstTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
-  name: z.string().min(1, "Name must not be empty"),
+  name: z.string().min(1, "Name can not be empty"),
   type: z.enum(
     [LinkTypesEnum.ManyToMany, LinkTypesEnum.ManyToOne, LinkTypesEnum.OneToOne],
     { message: "Invalid type" }

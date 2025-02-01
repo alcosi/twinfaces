@@ -1,19 +1,24 @@
 "use client";
 
+import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import {
   Twin,
+  TWIN_SCHEMA,
+  TwinCreateRq,
+  TwinFormValues,
   TwinResourceLink,
+  useCreateTwin,
   useTwinFilters,
   useTwinSearchV3,
 } from "@/entities/twin";
 import {
-  TwinClass_DETAILED,
-  TwinClassResourceLink,
-} from "@/entities/twinClass";
-import {
   TwinClassStatusResourceLink,
   TwinStatus,
 } from "@/entities/twin-status";
+import {
+  TwinClass_DETAILED,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
@@ -24,11 +29,14 @@ import {
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { DatalistOptionResourceLink } from "@/entities/datalist-option";
+import { z } from "zod";
+import { TwinFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -183,16 +191,26 @@ const colDefs: Record<
   },
 };
 
-export default function TwinsPage() {
+export function TwinsScreen() {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } = useTwinFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchTwins } = useTwinSearchV3();
+  const { createTwin } = useCreateTwin();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Twins", href: "/workspace/twin" }]);
+    setBreadcrumbs([{ label: "Twins", href: "/workspace/twins" }]);
   }, []);
+
+  const form = useForm<TwinFormValues>({
+    resolver: zodResolver(TWIN_SCHEMA),
+    defaultValues: {
+      classId: "",
+      name: "",
+      description: "",
+    },
+  });
 
   async function fetchTwin({
     pagination,
@@ -209,10 +227,15 @@ export default function TwinsPage() {
         filters: _filters,
       });
     } catch (e) {
-      console.error("Failed to fetch twins", e);
       toast.error("Failed to fetch twins");
       return { data: [], pagination: {} };
     }
+  }
+
+  async function handleOnCreateSubmit(formValues: z.infer<typeof TWIN_SCHEMA>) {
+    const body: TwinCreateRq = { ...formValues };
+    await createTwin({ body });
+    toast.success(`Twin ${body.name} is created successfully!`);
   }
 
   return (
@@ -234,7 +257,7 @@ export default function TwinsPage() {
       getRowId={(row) => row.id!}
       fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
       pageSizes={[10, 20, 50]}
-      onRowClick={(row) => router.push(`/workspace/twin/${row.id}`)}
+      onRowClick={(row) => router.push(`/workspace/twins/${row.id}`)}
       filters={{
         filtersInfo: buildFilterFields(),
       }}
@@ -251,6 +274,9 @@ export default function TwinsPage() {
         colDefs.markers,
         colDefs.createdAt,
       ]}
+      dialogForm={form}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => <TwinFormFields control={form.control} />}
     />
   );
 }

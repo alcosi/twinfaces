@@ -45,10 +45,10 @@ export default function TwinPage() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Twins", href: "/workspace/twin" },
+      { label: "Twins", href: "/workspace/twins" },
       {
         label: twin?.name!,
-        href: `/workspace/twin/${twinId}`,
+        href: `/workspace/twins/${twinId}`,
       },
     ]);
   }, [twinId, twin?.name]);

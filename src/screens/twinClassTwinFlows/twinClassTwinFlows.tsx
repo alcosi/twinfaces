@@ -25,7 +25,7 @@ import { z } from "zod";
 import { TwinClassTwinFlowFormFields } from "./form-fields";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name must not be empty"),
+  name: z.string().min(1, "Name can not be empty"),
   description: z.string(),
   initialStatus: z.string().uuid("Status ID must be a valid UUID"),
 });
