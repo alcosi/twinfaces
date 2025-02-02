@@ -164,7 +164,7 @@ export function TwinClassStatusesTable({
   const form = useForm<TwinClassStatusFormValues>({
     resolver: zodResolver(TWIN_CLASS_STATUS_SCHEMA),
     defaultValues: {
-      twinClassId: null,
+      twinClassId: twinClassId || "",
       key: "",
       name: "",
       description: "",
@@ -265,10 +265,7 @@ export function TwinClassStatusesTable({
       dialogForm={form}
       onCreateSubmit={handleCreate}
       renderFormFields={() => (
-        <TwinClassStatusFormFields
-          control={form.control}
-          twinClassId={twinClassId}
-        />
+        <TwinClassStatusFormFields control={form.control} />
       )}
     />
   );
