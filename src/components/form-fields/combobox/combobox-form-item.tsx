@@ -4,6 +4,7 @@ import {
   isEmptyString,
   isFalsy,
   isPopulatedString,
+  isTruthy,
 } from "@/shared/libs";
 import { Combobox, ComboboxHandle, ComboboxProps } from "@/shared/ui/combobox";
 import { FormControl, FormItem, FormMessage } from "@/shared/ui/form";
@@ -44,7 +45,9 @@ export function ComboboxFormItem<TFieldModel>({
       if (isFalsy(props.multi)) {
         if (isPopulatedString(values)) {
           const result = await props.getById(values);
-          comboboxRef.current?.setSelected(result ? [result] : undefined);
+          comboboxRef.current?.setSelected(
+            isTruthy(result) ? [result] : undefined
+          );
           return;
         }
 

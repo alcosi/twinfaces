@@ -7,6 +7,7 @@ import { FormFieldProps } from "@/components/form-fields/types";
 import { FeaturerValue } from "@/entities/featurer";
 import { FormFieldValidationError, isPopulatedArray } from "@/shared/libs";
 import { FormField, FormItem, FormMessage } from "@/shared/ui/form";
+import { useEffect } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { FeaturerInput } from "./featurer-input";
 import { validateParamTypes } from "./helpers";
@@ -32,6 +33,10 @@ export function FeaturerFormField<TFormModel extends TFeaturerFormModel>({
   Omit<FeaturerInputProps, "defaultId" | "defaultParams" | "onChange">) {
   const methods = useFormContext();
 
+  useEffect(() => {
+    methods.register("fieldTyperParams");
+  }, []);
+
   function onChange(value: FeaturerValue | null) {
     methods.clearErrors();
 
@@ -41,10 +46,10 @@ export function FeaturerFormField<TFormModel extends TFeaturerFormModel>({
       methods.setError(name, { message: `${key}: ${message}` });
     }
 
+    methods.setValue(name, value?.featurer?.id as any);
     methods.setValue(
-      name,
-      // TODO: Replace `any` with the appropriate type for `value` to ensure type safety.
-      value ? ({ id: value.featurer?.id, params: value.params } as any) : null
+      "fieldTyperParams",
+      value?.params ? mapFeaturerParams(value.params) : {}
     );
   }
 
@@ -93,5 +98,17 @@ export function FeaturerFormItem({
       )}
       {inForm && <FormMessage />}
     </FormItem>
+  );
+}
+
+function mapFeaturerParams(
+  params: Record<string, { value: any; type: string }>
+): Record<string, string> {
+  return Object.entries(params).reduce(
+    (acc, [key, { value }]) => {
+      acc[key] = String(value);
+      return acc;
+    },
+    {} as Record<string, string>
   );
 }

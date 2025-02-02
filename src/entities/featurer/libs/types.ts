@@ -38,10 +38,12 @@ export enum FeaturerParamType {
   STRING_TWINS_TWIN_BASIC_FIELD = "STRING:TWINS_TWIN_BASIC_FIELD",
 }
 
+export type FeaturerParamValue = string | boolean | number;
+
 export type FeaturerParams = Record<
   string,
   {
-    value: string;
+    value: FeaturerParamValue;
     type: FeaturerParamType;
   }
 >;

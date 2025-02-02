@@ -2,6 +2,7 @@ import {
   Featurer,
   FeaturerParams,
   FeaturerParamType,
+  FeaturerParamValue,
   FeaturerValue,
 } from "@/entities/featurer";
 import { ApiContext } from "@/shared/api";
@@ -72,7 +73,7 @@ export function FeaturerInput({
     setState(next);
   };
 
-  const handleParamChange = (key: string, newValue?: string) => {
+  const handleParamChange = (key: string, newValue?: FeaturerParamValue) => {
     setState((prev) => {
       const nextParams: FeaturerParams = {
         ...prev.params,

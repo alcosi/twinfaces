@@ -4,14 +4,18 @@ import {
   TagsFormItem,
   TextFormItem,
 } from "@/components/form-fields";
-import { FeaturerParam, FeaturerParamType } from "@/entities/featurer";
+import {
+  FeaturerParam,
+  FeaturerParamType,
+  FeaturerParamValue,
+} from "@/entities/featurer";
 import { Button } from "@/shared/ui";
 import { useFeaturerParamTypesSelectAdapter } from "./hooks";
 
 interface FeaturerParamInputProps {
   param: FeaturerParam;
-  value: string;
-  onChange: (key: string, value: string) => void;
+  value: FeaturerParamValue;
+  onChange: (key: string, value: FeaturerParamValue) => void;
 }
 
 export function FeaturerParamInput({
@@ -23,7 +27,7 @@ export function FeaturerParamInput({
     param.type as FeaturerParamType
   );
 
-  function setValue(newValue: string) {
+  function setValue(newValue: FeaturerParamValue) {
     onChange(param.key!, newValue);
   }
 
@@ -34,8 +38,8 @@ export function FeaturerParamInput({
           <CheckboxFormItem
             label={param.name}
             description={param.description}
-            fieldValue={value === "true"}
-            onChange={(newChecked) => setValue(newChecked ? "true" : "false")}
+            fieldValue={value as boolean}
+            onChange={(newChecked) => setValue(newChecked as boolean)}
           />
         );
       case FeaturerParamType.WORD_LIST:
@@ -43,7 +47,7 @@ export function FeaturerParamInput({
           <TagsFormItem
             label={param.name}
             description={param.description}
-            value={value}
+            value={value as string}
           />
         );
       case FeaturerParamType.STRING_TWINS_TWIN_TOUCH_ID:
@@ -82,8 +86,8 @@ export function FeaturerParamInput({
         return (
           <TextFormItem
             type="number"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            value={Number(value)}
+            onChange={(e) => setValue(Number(e.target.value))}
             label={param.name}
             description={param.description}
           />
@@ -108,7 +112,7 @@ export function FeaturerParamInput({
       default:
         return (
           <TextFormItem
-            value={value}
+            value={value as string}
             onChange={(e) => setValue(e.target.value)}
             label={param.name}
             description={param.description}
