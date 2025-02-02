@@ -4,7 +4,7 @@ import {
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twinClass";
-import { useUserSelectAdapter } from "@/entities/user/libs";
+import { useUserSelectAdapter } from "@/entities/user";
 import { isArray, isPopulatedArray } from "@/shared/libs";
 import { Control, useWatch } from "react-hook-form";
 

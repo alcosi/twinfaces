@@ -1,13 +1,13 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
+import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import { TwinResourceLink, TwinUpdateRq } from "@/entities/twin";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { UserResourceLink } from "@/entities/user";
-import { useUserSelectAdapter } from "@/entities/user/libs";
+import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
@@ -20,7 +20,6 @@ import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
 import { TwinContext } from "../twin-context";
-import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);
