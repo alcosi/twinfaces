@@ -1,20 +1,14 @@
 import { FeaturerResourceLink } from "@/entities/featurer/components";
 import { PermissionResourceLink } from "@/entities/permission";
-import { TwinClassResourceLink } from "@/entities/twinClass";
 import {
   TwinClassFieldCreateRq,
   TwinClassFieldV2_DETAILED,
   useTwinClassFieldFilters,
   useTwinClassFieldSearchV1,
 } from "@/entities/twin-class-field";
+import { TwinClassResourceLink } from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import {
-  isFalsy,
-  isTruthy,
-  REGEX_PATTERNS,
-  toArray,
-  toArrayOfString,
-} from "@/shared/libs";
+import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -23,13 +17,14 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import {
   CrudDataTable,
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
+import { TWIN_CLASS_FIELD_SCHEMA } from "./constants";
 import { TwinClassFieldFormFields } from "./form-fields";
+import { TwinClassFieldFormValues } from "./types";
 
 const colDefs: Record<
   keyof Pick<
@@ -145,33 +140,6 @@ export function TwinClassFieldsTable({
   });
   const { searchTwinClassFields } = useTwinClassFieldSearchV1();
 
-  const twinClassFieldchema = z.object({
-    twinClassId: z.string().uuid().nullable(),
-    key: z
-      .string()
-      .min(1)
-      .max(100)
-      .regex(
-        REGEX_PATTERNS.ALPHANUMERIC_WITH_DASHES,
-        "Key can only contain latin letters, numbers, underscores and dashes"
-      ),
-    name: z.string().min(0).max(100),
-    description: z.string(),
-    required: z.boolean(),
-    fieldTyperFeaturerId: z.number(),
-    fieldTyperParams: z.record(z.string()),
-    viewPermissionId: z
-      .string()
-      .uuid()
-      .optional()
-      .or(z.literal("").transform(() => undefined)),
-    editPermissionId: z
-      .string()
-      .uuid()
-      .optional()
-      .or(z.literal("").transform(() => undefined)),
-  });
-
   async function fetchFields(
     pagination: PaginationState,
     filters: FiltersState
@@ -196,10 +164,10 @@ export function TwinClassFieldsTable({
     }
   }
 
-  const form = useForm<z.infer<typeof twinClassFieldchema>>({
-    resolver: zodResolver(twinClassFieldchema),
+  const form = useForm<TwinClassFieldFormValues>({
+    resolver: zodResolver(TWIN_CLASS_FIELD_SCHEMA),
     defaultValues: {
-      twinClassId: null,
+      twinClassId: twinClassId || "",
       key: "",
       name: "",
       description: "",
@@ -210,9 +178,7 @@ export function TwinClassFieldsTable({
     },
   });
 
-  const handleOnCreateSubmit = async (
-    formValues: z.infer<typeof twinClassFieldchema>
-  ) => {
+  const handleOnCreateSubmit = async (formValues: TwinClassFieldFormValues) => {
     const body: TwinClassFieldCreateRq = {
       key: formValues.key,
       required: formValues.required,
@@ -278,10 +244,7 @@ export function TwinClassFieldsTable({
       dialogForm={form}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
-        <TwinClassFieldFormFields
-          control={form.control}
-          twinClassId={twinClassId}
-        />
+        <TwinClassFieldFormFields control={form.control} />
       )}
     />
   );

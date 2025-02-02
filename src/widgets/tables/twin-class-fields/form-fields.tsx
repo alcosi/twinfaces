@@ -1,61 +1,67 @@
-import { CheckboxFormField } from "@/components/form-fields";
-import { TextAreaFormField, TextFormField } from "@/components/form-fields";
+import {
+  CheckboxFormField,
+  ComboboxFormField,
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields";
 import { FeaturerTypes } from "@/entities/featurer";
-import { Control, FieldValues, Path } from "react-hook-form";
+import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { isPopulatedString } from "@/shared/libs";
+import { Control, useWatch } from "react-hook-form";
 import { FeaturerFormField } from "../../form-fields";
-import { TwinClassSelectField } from "@/features/twinClass";
-import { isTruthy } from "@/shared/libs";
+import { TwinClassFieldFormValues } from "./types";
 
-export function TwinClassFieldFormFields<T extends FieldValues>({
+export function TwinClassFieldFormFields({
   control,
-  twinClassId,
 }: {
-  control: Control<T>;
-  twinClassId?: string;
+  control: Control<TwinClassFieldFormValues>;
 }) {
+  const tcAdapter = useTwinClassSelectAdapter();
+  const twinClassId = useWatch({ control, name: "twinClassId" });
+
   return (
     <>
-      <TwinClassSelectField
+      <ComboboxFormField
         control={control}
-        name={"TwinClassId" as Path<T>}
+        name="twinClassId"
         label="Class"
-        disabled={isTruthy(twinClassId)}
+        selectPlaceholder="Select twin class"
+        searchPlaceholder="Search twin class..."
+        noItemsText="No classes found"
+        disabled={isPopulatedString(twinClassId)}
+        {...tcAdapter}
       />
 
-      <TextFormField control={control} name={"key" as Path<T>} label="Key" />
+      <TextFormField control={control} name="key" label="Key" />
 
-      <TextFormField control={control} name={"name" as Path<T>} label="Name" />
+      <TextFormField control={control} name="name" label="Name" />
 
       <TextAreaFormField
         control={control}
-        name={"description" as Path<T>}
+        name="description"
         label="Description"
       />
 
       <FeaturerFormField
         typeId={FeaturerTypes.fieldTyper}
         control={control}
-        name={"fieldTyperFeaturerId" as Path<T>}
+        name="fieldTyperFeaturerId"
         label={"Featurer"}
       />
 
       <TextFormField
         control={control}
-        name={"viewPermissionId" as Path<T>}
+        name="viewPermissionId"
         label="View permission ID"
       />
 
       <TextFormField
         control={control}
-        name={"editPermissionId" as Path<T>}
+        name="editPermissionId"
         label="Edit permission ID"
       />
 
-      <CheckboxFormField
-        control={control}
-        name={"required" as Path<T>}
-        label="Required"
-      />
+      <CheckboxFormField control={control} name="required" label="Required" />
     </>
   );
 }
