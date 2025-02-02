@@ -6,7 +6,7 @@ import {
 import { TwinClassStatusFormValues } from "@/entities/twin-status";
 import { TwinClassSelectField } from "@/features/twinClass";
 import { isPopulatedString } from "@/shared/libs";
-import { Control, Path, useWatch } from "react-hook-form";
+import { Control, useWatch } from "react-hook-form";
 
 export function TwinClassStatusFormFields({
   control,
@@ -14,7 +14,6 @@ export function TwinClassStatusFormFields({
   control: Control<TwinClassStatusFormValues>;
 }) {
   const twinClassId = useWatch({ control, name: "twinClassId" });
-  console.log("foobar twinClassId", twinClassId);
 
   return (
     <>
