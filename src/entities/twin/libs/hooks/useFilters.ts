@@ -1,7 +1,7 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { useUserSelectAdapter } from "@/entities/user/libs";
+import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useUserSelectAdapter } from "@/entities/user";
 import {
   toArray,
   toArrayOfString,

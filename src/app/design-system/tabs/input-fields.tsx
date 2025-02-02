@@ -1,3 +1,4 @@
+import { AutoField, AutoFormValueType } from "@/components/auto-field";
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { FeaturerTypes } from "@/entities/featurer";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
@@ -8,7 +9,7 @@ import {
 import { TwinFieldType } from "@/entities/twinField";
 import { useTwinFlowSelectAdapter } from "@/entities/twinFlow";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
-import { useUserSelectAdapter } from "@/entities/user/libs";
+import { useUserSelectAdapter } from "@/entities/user";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup/libs/hooks";
 import { Button, Form } from "@/shared/ui";
 import { FeaturerFormField } from "@/widgets/form-fields";
@@ -18,7 +19,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UiSection } from "../components/ui-section";
 import { Fake } from "../seeds";
-import { AutoField, AutoFormValueType } from "@/components/auto-field";
 
 const FORM_SCHEMA = z.any();
 type FormValues = z.infer<typeof FORM_SCHEMA>;

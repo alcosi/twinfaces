@@ -11,6 +11,7 @@ import {
 import { Twin, useTwinSelectAdapter } from "@/entities/twin";
 import { TwinClassFieldDescriptor } from "@/entities/twin-class-field";
 import { TwinFieldType } from "@/entities/twinField";
+import { useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";
 import React from "react";
 
@@ -27,6 +28,7 @@ type Props = FormItemProps &
 export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
   const twinAdapter = useTwinSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
+  const userAdapter = useUserSelectAdapter();
 
   function handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
     return onChange?.(event.target.value);
@@ -99,7 +101,6 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
         );
       case TwinFieldType.selectSharedInHeadV1:
       case TwinFieldType.selectUserV1:
-      case TwinFieldType.selectUserLongV1:
         return (
           <TextFormItem
             onChange={handleTextChange}
@@ -107,6 +108,14 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
             fieldValue="not implemented"
             disabled
             className="text-destructive"
+          />
+        );
+      case TwinFieldType.selectUserLongV1:
+        return (
+          <ComboboxFormItem
+            {...userAdapter}
+            onSelect={handleOnDataListSelect}
+            {...props}
           />
         );
       default:
