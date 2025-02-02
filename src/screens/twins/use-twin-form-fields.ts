@@ -1,11 +1,15 @@
 import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
 import { TwinFormValues, useTwinHeadSelectAdapter } from "@/entities/twin";
-import { TwinClass_DETAILED } from "@/entities/twinClass";
+import {
+  TwinClass_DETAILED,
+  useTwinClassSelectAdapter,
+} from "@/entities/twinClass";
 import { useUserSelectAdapter } from "@/entities/user/libs";
 import { isArray, isPopulatedArray } from "@/shared/libs";
 import { Control, useWatch } from "react-hook-form";
 
 export function useTwinClassFields(control: Control<TwinFormValues>) {
+  const twinClassAdapter = useTwinClassSelectAdapter();
   const userAdapter = useUserSelectAdapter();
   const headAdapter = useTwinHeadSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
@@ -19,6 +23,12 @@ export function useTwinClassFields(control: Control<TwinFormValues>) {
     : null;
 
   return {
+    twinClassAdapter: {
+      ...twinClassAdapter,
+      getItems: (search: string) => {
+        return twinClassAdapter.getItems(search, { abstractt: "ONLY_NOT" });
+      },
+    },
     fields: selectedTwinClass?.fields ?? [],
     userAdapter,
     hasHeadClass: Boolean(selectedTwinClass?.headClass),
