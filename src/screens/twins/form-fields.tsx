@@ -4,7 +4,6 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 import { TwinFormValues } from "@/entities/twin";
-import { TwinClassSelectField } from "@/features/twinClass";
 import { TwinFieldFormField } from "@/widgets/form-fields";
 import { Control } from "react-hook-form";
 import { useTwinClassFields } from "./use-twin-form-fields";
@@ -15,6 +14,7 @@ export function TwinFormFields({
   control: Control<TwinFormValues>;
 }) {
   const {
+    twinClassAdapter,
     fields,
     userAdapter,
     hasHeadClass,
@@ -25,7 +25,15 @@ export function TwinFormFields({
 
   return (
     <>
-      <TwinClassSelectField control={control} name="classId" label="Class" />
+      <ComboboxFormField
+        control={control}
+        name="classId"
+        label="Class"
+        selectPlaceholder="Select twin class"
+        searchPlaceholder="Search twin class..."
+        noItemsText={"No classes found"}
+        {...twinClassAdapter}
+      />
 
       {hasHeadClass && (
         <ComboboxFormField
