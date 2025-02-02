@@ -29,17 +29,17 @@ export function createDatalistApi(settings: ApiSettings) {
   }
 
   function getById({
-    id,
+    dataListId,
     query = {},
   }: {
-    id: string;
+    dataListId: string;
     query: operations["dataListPublicViewV1"]["parameters"]["query"];
   }) {
     return settings.client.GET(`/public/data_list/{dataListId}/v1`, {
       params: {
         header: { ...getApiDomainHeaders(settings), Locale: "en" },
-        path: { dataListId: id },
-        query: query,
+        path: { dataListId },
+        query,
       },
     });
   }
@@ -49,11 +49,27 @@ export function createDatalistApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
       },
-      body: body,
+      body,
     });
   }
 
-  return { search, getById, create };
+  function update({
+    dataListId,
+    body,
+  }: {
+    dataListId: string;
+    body: DataListCreateRqV1;
+  }) {
+    return settings.client.PUT("/private/data_list/{dataListId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { dataListId },
+      },
+      body,
+    });
+  }
+
+  return { search, getById, create, update };
 }
 
 export type DatalistApi = ReturnType<typeof createDatalistApi>;

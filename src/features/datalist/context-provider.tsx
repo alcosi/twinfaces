@@ -1,8 +1,7 @@
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { ApiContext } from "@/shared/api";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { DataList } from "@/entities/datalist";
+import { DataList, useFetchDatalistById } from "@/entities/datalist";
 import { isUndefined } from "@/shared/libs";
 
 interface DatalistContextProps {
@@ -22,40 +21,27 @@ export function DatalistContextProvider({
   datalistId: string;
   children: React.ReactNode;
 }) {
-  const api = useContext(ApiContext);
-  const [loading, setLoading] = useState<boolean>(false);
   const [datalist, setDatalist] = useState<DataList | undefined>(undefined);
+  const { fetchDatalistById, loading } = useFetchDatalistById();
 
   useEffect(() => {
     fetchDatalist();
   }, [datalistId]);
 
   function fetchDatalist() {
-    setLoading(true);
-    api.datalist
-      .getById({
-        id: datalistId,
-        query: {
-          showDataListMode: "DETAILED",
-          showDataListOptionMode: "DETAILED",
-        },
-      })
+    fetchDatalistById({
+      dataListId: datalistId,
+      query: {
+        showDataListMode: "MANAGED",
+      },
+    })
       .then((response) => {
-        const data = response.data;
-        if (!data || data.status != 0) {
-          console.error("failed to fetch datalist", data);
-          let message = "Failed to load datalist";
-          if (data?.msg) message += `: ${data.msg}`;
-          toast.error(message);
-          return;
-        }
-        setDatalist(data.dataList);
+        setDatalist(response);
       })
       .catch((e) => {
         console.error("exception while fetching datalist", e);
         toast.error("Failed to fetch datalist");
-      })
-      .finally(() => setLoading(false));
+      });
   }
 
   if (isUndefined(datalist)) return <>{loading && <LoadingOverlay />}</>;

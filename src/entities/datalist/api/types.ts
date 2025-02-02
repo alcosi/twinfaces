@@ -2,6 +2,13 @@ import { components } from "@/shared/api/generated/schema";
 
 export type DataList = components["schemas"]["DataListV2"];
 export type DataListCreateRqV1 = components["schemas"]["DataListCreateRqV1"];
+export type DataListUpdateRqV1 = components["schemas"]["DataListUpdateRqV1"];
+
+export type DataListAttribute = {
+  index: string;
+  name: string;
+  key: string;
+};
 
 export type DatalistFilterKeys =
   | "idList"

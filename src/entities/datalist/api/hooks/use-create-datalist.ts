@@ -1,7 +1,6 @@
 import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
 import { DataListCreateRqV1 } from "../types";
-import { toast } from "sonner";
 
 // TODO: Apply caching-strategy
 export const useDatalistCreate = () => {
@@ -14,8 +13,6 @@ export const useDatalistCreate = () => {
       if (error) {
         throw error;
       }
-
-      toast.success("Datalist created successfully!");
     },
     [api]
   );
