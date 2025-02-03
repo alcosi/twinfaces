@@ -66,7 +66,7 @@ export function TwinFormFields({
           control={control}
           label={field.name}
           descriptor={field.descriptor}
-          // required={field.required}
+          required={field.required}
         />
       ))}
 
