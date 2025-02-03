@@ -121,11 +121,12 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
       />
 
       {!isAutoCreatePermission && (
-        <>
+        <fieldset className="px-1.5 py-2.5 rounded-md border border-dashed">
+          <legend className="text-sm font-medium italic">Permissions</legend>
           <ComboboxFormField
             control={control}
             name={"createPermission" as Path<T>}
-            label="Create permission"
+            label="Create"
             selectPlaceholder="Select create permission"
             searchPlaceholder="Search create permission..."
             noItemsText="No create permission found"
@@ -135,7 +136,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           <ComboboxFormField
             control={control}
             name={"viewPermission" as Path<T>}
-            label="View permission"
+            label="View"
             selectPlaceholder="Select view permission"
             searchPlaceholder="Search view permission..."
             noItemsText="No view permission found"
@@ -145,7 +146,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           <ComboboxFormField
             control={control}
             name={"editPermission" as Path<T>}
-            label="Edit permission"
+            label="Edit"
             selectPlaceholder="Select edit permission"
             searchPlaceholder="Search edit permission..."
             noItemsText="No edit permission found"
@@ -155,13 +156,13 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           <ComboboxFormField
             control={control}
             name={"deletePermission" as Path<T>}
-            label=" Delete permission"
+            label=" Delete"
             selectPlaceholder="Select delete permission"
             searchPlaceholder="Search delete permission..."
             noItemsText="No delete permission found"
             {...pAdapter}
           />
-        </>
+        </fieldset>
       )}
 
       <CheckboxFormField
