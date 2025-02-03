@@ -30,7 +30,7 @@ export const useFetchValidHeadTwins = () => {
         }
 
         return {
-          data: (data.twinList ?? []) as Twin[],
+          data: data.twinList ?? [],
           pagination: {},
         };
       } catch (error) {
