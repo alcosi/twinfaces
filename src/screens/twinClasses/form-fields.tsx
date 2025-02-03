@@ -121,15 +121,47 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
       />
 
       {!isAutoCreatePermission && (
-        <ComboboxFormField
-          control={control}
-          name={"viewPermissionId" as Path<T>}
-          label="Permission"
-          selectPlaceholder="Select permission"
-          searchPlaceholder="Search permission..."
-          noItemsText="No permission found"
-          {...pAdapter}
-        />
+        <>
+          <ComboboxFormField
+            control={control}
+            name={"createPermission" as Path<T>}
+            label="Create permission"
+            selectPlaceholder="Select create permission"
+            searchPlaceholder="Search create permission..."
+            noItemsText="No create permission found"
+            {...pAdapter}
+          />
+
+          <ComboboxFormField
+            control={control}
+            name={"viewPermission" as Path<T>}
+            label="View permission"
+            selectPlaceholder="Select view permission"
+            searchPlaceholder="Search view permission..."
+            noItemsText="No view permission found"
+            {...pAdapter}
+          />
+
+          <ComboboxFormField
+            control={control}
+            name={"editPermission" as Path<T>}
+            label="Edit permission"
+            selectPlaceholder="Select edit permission"
+            searchPlaceholder="Search edit permission..."
+            noItemsText="No edit permission found"
+            {...pAdapter}
+          />
+
+          <ComboboxFormField
+            control={control}
+            name={"deletePermission" as Path<T>}
+            label=" Delete permission"
+            selectPlaceholder="Select delete permission"
+            searchPlaceholder="Search delete permission..."
+            noItemsText="No delete permission found"
+            {...pAdapter}
+          />
+        </>
       )}
 
       <CheckboxFormField
