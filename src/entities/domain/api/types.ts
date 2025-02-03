@@ -14,3 +14,5 @@ export type DomainView_DETAILED = RequireFields<
   | "twinflowSchemaId"
   | "type"
 >;
+
+export type DomainAddRqV1 = components["schemas"]["DomainCreateRqDTOv1"];

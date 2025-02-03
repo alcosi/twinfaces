@@ -2,10 +2,12 @@
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
 import { useAuthUser } from "@/features/auth";
+import { CreateDomainButton } from "@/features/domain";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
   Sidebar,
   SidebarContent,
@@ -54,15 +56,19 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                  {data?.map((domain) => (
-                    <DropdownMenuItem
-                      key={domain.id}
-                      disabled={domain.id === currentDomain?.id}
-                      onClick={() => onDomainSwitch(domain)}
-                    >
-                      <span>{domain.key}</span>
-                    </DropdownMenuItem>
-                  ))}
+                  <>
+                    {data?.map((domain) => (
+                      <DropdownMenuItem
+                        key={domain.id}
+                        disabled={domain.id === currentDomain?.id}
+                        onClick={() => onDomainSwitch(domain)}
+                      >
+                        <span>{domain.key}</span>
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                    <CreateDomainButton />
+                  </>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
