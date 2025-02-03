@@ -172,7 +172,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
       />
 
       {isSpaceChecked && (
-        <>
+        <div className="px-1.5 py-2.5 rounded-md border border-dashed flex flex-col gap-4">
           <CheckboxFormField
             control={control}
             name={"permissionSchemaSpace" as Path<T>}
@@ -196,7 +196,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
             name={"aliasSpace" as Path<T>}
             label="Alias space"
           />
-        </>
+        </div>
       )}
     </>
   );
