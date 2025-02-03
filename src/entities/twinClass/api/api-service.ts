@@ -4,6 +4,7 @@ import { PaginationState } from "@tanstack/table-core";
 import {
   TwinClassCreateRq,
   TwinClassUpdateRq,
+  TwinClassValidHeadFilters,
   TwinClassValidHeadQuery,
 } from "./types";
 
@@ -113,17 +114,22 @@ export function createTwinClassApi(settings: ApiSettings) {
   function getValidHeads({
     twinClassId,
     query = {},
+    filters,
   }: {
     twinClassId: string;
     query?: TwinClassValidHeadQuery;
+    filters?: TwinClassValidHeadFilters;
   }) {
-    return settings.client.GET(
+    return settings.client.POST(
       `/private/twin_class/{twinClassId}/valid_heads/v1`,
       {
         params: {
           header: getApiDomainHeaders(settings),
           path: { twinClassId },
           query: query,
+        },
+        body: {
+          ...filters,
         },
       }
     );

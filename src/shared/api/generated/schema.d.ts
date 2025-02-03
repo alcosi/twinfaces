@@ -153,6 +153,10 @@ export interface paths {
     /** Return a list of all twin class field for the current domain */
     post: operations["twinClassFieldSearchV1"];
   };
+  "/private/twin_class/{twinClassId}/valid_heads/v1": {
+    /** Get valid heads of given class */
+    post: operations["validHeadV1"];
+  };
   "/private/twin_class/{twinClassId}/twinflow/v1": {
     /** Create new twinflow */
     post: operations["twinflowCreateV1"];
@@ -160,6 +164,10 @@ export interface paths {
   "/private/twin_class/{twinClassId}/twin_status/v1": {
     /** Create new twin status */
     post: operations["twinStatusCreateV1"];
+  };
+  "/private/twin_class/{twinClassId}/link/{linkId}/valid_twins/v1": {
+    /** Get valid twins list for link of new (not created) twin */
+    post: operations["validLinkedTwinV1"];
   };
   "/private/twin_class/{twinClassId}/field/v1": {
     /** Create new twin class field */
@@ -177,9 +185,17 @@ export interface paths {
     /** Returns twin class search result */
     post: operations["twinClassSearchV1"];
   };
+  "/private/twin/{twinId}/valid_heads/v1": {
+    /** Get valid twins list for link of existed twin */
+    post: operations["validLinkedTwinsV1"];
+  };
   "/private/twin/{twinId}/permisson_check_overview/v1": {
     /** Permisson check overview by twinId & userId */
     post: operations["permissonCheckOverviewV1"];
+  };
+  "/private/twin/{twinId}/link/{linkId}/valid_twins/v1": {
+    /** Get valid twins list for link of new (not created) twin */
+    post: operations["validLinkedTwinsV1_1"];
   };
   "/private/twin/{twinId}/link/v1": {
     /** Add link to twin */
@@ -387,9 +403,9 @@ export interface paths {
     /** Link search */
     post: operations["linkSearchV1"];
   };
-  "/private/featurer/v1": {
+  "/private/featurer/search/v1": {
     /** Featurer search */
-    post: operations["featurerListV1"];
+    post: operations["featurerSearchV1"];
   };
   "/private/factory_pipeline_step/search/v1": {
     /** Factory pipeline step search */
@@ -445,7 +461,7 @@ export interface paths {
   };
   "/private/domain/v1": {
     /** Add new domain. */
-    post: operations["domainAddV1"];
+    post: operations["domainAddV1_1_1"];
   };
   "/private/domain/user/search/v1": {
     /** Return a list of users by current domain */
@@ -492,6 +508,10 @@ export interface paths {
   "/private/attachment/validate_cud/v1": {
     /** Validate attachment CUD operations */
     post: operations["attachmentValidateV1"];
+  };
+  "/public/resource/{id}/v1": {
+    /** File in attachment */
+    get: operations["getResourceFile"];
   };
   "/public/locale/list/v1": {
     /** Return list of locales */
@@ -541,12 +561,11 @@ export interface paths {
     /** Returns widget list */
     get: operations["twinClassWidgetListV1"];
   };
-  "/private/twin_class/{twinClassId}/valid_heads/v1": {
-    /** Get valid heads of given class */
-    get: operations["twinClassValidHeadV1"];
-  };
   "/private/twin_class/{twinClassId}/link/v1": {
-    /** Returns twin class link list */
+    /**
+     * Returns twin class link list
+     * @deprecated
+     */
     get: operations["twinClassLinkListV1"];
   };
   "/private/twin_class/{twinClassId}/field/list/v1": {
@@ -664,6 +683,10 @@ export interface paths {
   "/private/domain/list/v1": {
     /** Return a list of domains for current user */
     get: operations["domainListV1"];
+  };
+  "/private/domain/class_owner_type/list/v1": {
+    /** Returns the owner type of the domain class */
+    get: operations["twinClassOwnerTypeListV1"];
   };
   "/private/domain/business_account/{businessAccountId}/v1": {
     /** Returns domain business account result */
@@ -1257,6 +1280,11 @@ export interface components {
       key?: string;
       /**
        * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
+       * Format: date-time
        * @description updated at
        */
       updatedAt?: string;
@@ -1418,6 +1446,11 @@ export interface components {
       description?: string;
       /** @description type */
       type?: string;
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
     };
     /** @description head hunter featurer */
     FeaturerV1: {
@@ -2608,6 +2641,26 @@ export interface components {
        * @description [optional] this field helps to set extra permission, needed by users to view twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
        */
       viewPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description [optional] this field helps to set extra permission, needed by users to create twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      createPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description [optional] this field helps to set extra permission, needed by users to edit twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      editPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description [optional] this field helps to set extra permission, needed by users to delete twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      deletePermissionId?: string;
+      /**
+       * @description [optional] owner typ of class
+       * @enum {string}
+       */
+      ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
       markerDataListUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
       tagDataListUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
       extendsTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
@@ -2747,10 +2800,19 @@ export interface components {
     TwinTagManageV1: {
       /**
        * @description add already existing tags by their ids
-       * @example cf8b1aec-c07c-4131-b834-8024462cfc93
+       * @example [
+       *   "11a4c3f8-c780-4421-9aee-9e7eec20c67d",
+       *   "83050c4b-ef17-4d7d-8792-6e5a86557ab9"
+       * ]
        */
       existingTags?: string[];
-      /** @description add new tags by name (in current locale). If tag with given name is already exist, it will be used */
+      /**
+       * @description add new tags by name (in current locale). If tag with given name is already exist, it will be used
+       * @example [
+       *   "String 1",
+       *   "String 2"
+       * ]
+       */
       newTags?: string[];
       /**
        * @description delete already existing tags by their ids
@@ -2929,6 +2991,15 @@ export interface components {
        * @enum {string}
        */
       linkStrength?: "MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE";
+      /**
+       * Format: int32
+       * @description [optional] an id of linker featurer
+       */
+      linkerFeaturerId?: number;
+      /** @description [optional] linker featurer params */
+      linkerParams?: {
+        [key: string]: string;
+      };
       srcTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
       dstTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
     };
@@ -3430,6 +3501,91 @@ export interface components {
        */
       status?: "active" | "disabled" | "hidden";
     };
+    DataListOptionRsV3: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      option?: components["schemas"]["DataListOptionV3"];
+    };
+    /** @description data lists option */
+    DataListOptionV3: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 7de977d4-df6d-4250-9cb2-088363d139a1
+       */
+      id?: string;
+      /**
+       * @description name
+       * @example Bharat
+       */
+      name?: string;
+      /**
+       * @description icon
+       * @example Icon path
+       */
+      icon?: string;
+      /**
+       * @description status
+       * @example active
+       * @enum {string}
+       */
+      status?: "active" | "disabled" | "hidden";
+      /** @description map attributes (key : value) */
+      attributes?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: uuid
+       * @description id
+       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
+       */
+      dataListId?: string;
+      /**
+       * Format: uuid
+       * @description business account id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      businessAccountId?: string;
+      dataList?: components["schemas"]["DataListV1"];
+      businessAccount?: components["schemas"]["BusinessAccountV1"];
+    };
+    /** @description attribute4 */
+    DataListAttributeSaveV1: {
+      /**
+       * @description key
+       * @example color
+       */
+      key?: string;
+      nameI18n?: components["schemas"]["I18nV1"];
+    };
+    DataListUpdateRqV1: {
+      /**
+       * @description key
+       * @example country
+       */
+      key?: string;
+      nameI18n?: components["schemas"]["I18nV1"];
+      descriptionI18n?: components["schemas"]["I18nV1"];
+      attribute1?: components["schemas"]["DataListAttributeSaveV1"];
+      attribute2?: components["schemas"]["DataListAttributeSaveV1"];
+      attribute3?: components["schemas"]["DataListAttributeSaveV1"];
+      attribute4?: components["schemas"]["DataListAttributeSaveV1"];
+    };
     DataListRsV1: {
       /**
        * Format: int32
@@ -3475,6 +3631,11 @@ export interface components {
       key?: string;
       /**
        * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
+       * Format: date-time
        * @description updated at
        */
       updatedAt?: string;
@@ -3489,28 +3650,6 @@ export interface components {
       options?: {
         [key: string]: components["schemas"]["DataListOptionV1"];
       };
-    };
-    /** @description attribute4 */
-    DataListAttributeSaveV1: {
-      /**
-       * @description key
-       * @example color
-       */
-      key?: string;
-      nameI18n?: components["schemas"]["I18nV1"];
-    };
-    DataListUpdateRqV1: {
-      /**
-       * @description key
-       * @example country
-       */
-      key?: string;
-      nameI18n?: components["schemas"]["I18nV1"];
-      descriptionI18n?: components["schemas"]["I18nV1"];
-      attribute1?: components["schemas"]["DataListAttributeSaveV1"];
-      attribute2?: components["schemas"]["DataListAttributeSaveV1"];
-      attribute3?: components["schemas"]["DataListAttributeSaveV1"];
-      attribute4?: components["schemas"]["DataListAttributeSaveV1"];
     };
     CommentUpdateRqV1: {
       text?: string;
@@ -3606,6 +3745,10 @@ export interface components {
       dataListSubsetKeyList?: string[];
       /** @description data list class subset key exclude list */
       dataListSubsetKeyExcludeList?: string[];
+      /** @description data list option status id list */
+      statusIdList?: ("active" | "disabled" | "hidden")[];
+      /** @description data list option status id exclude list */
+      statusIdExcludeList?: ("active" | "disabled" | "hidden")[];
     };
     DataListOptionSearchRsV1: {
       /**
@@ -3628,49 +3771,6 @@ export interface components {
       pagination?: components["schemas"]["PaginationV1"];
       /** @description data list */
       options?: components["schemas"]["DataListOptionV3"][];
-    };
-    /** @description data list */
-    DataListOptionV3: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example 7de977d4-df6d-4250-9cb2-088363d139a1
-       */
-      id?: string;
-      /**
-       * @description name
-       * @example Bharat
-       */
-      name?: string;
-      /**
-       * @description icon
-       * @example Icon path
-       */
-      icon?: string;
-      /**
-       * @description status
-       * @example active
-       * @enum {string}
-       */
-      status?: "active" | "disabled" | "hidden";
-      /** @description map attributes (key : value) */
-      attributes?: {
-        [key: string]: string;
-      };
-      /**
-       * Format: uuid
-       * @description id
-       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
-       */
-      dataListId?: string;
-      /**
-       * Format: uuid
-       * @description business account id
-       * @example 9a3f6075-f175-41cd-a804-934201ec969c
-       */
-      businessAccountId?: string;
-      dataList?: components["schemas"]["DataListV1"];
-      businessAccount?: components["schemas"]["BusinessAccountV1"];
     };
     /** @description pagination data */
     PaginationV1: {
@@ -3759,6 +3859,10 @@ export interface components {
       dataListSubsetKeyList?: string[];
       /** @description data list class subset key exclude list */
       dataListSubsetKeyExcludeList?: string[];
+      /** @description data list option status id list */
+      statusIdList?: ("active" | "disabled" | "hidden")[];
+      /** @description data list option status id exclude list */
+      statusIdExcludeList?: ("active" | "disabled" | "hidden")[];
     };
     DataListSearchRqV1: {
       /** @description datalist id list */
@@ -4556,6 +4660,34 @@ export interface components {
       /** @description results - twin class field list */
       fields?: components["schemas"]["TwinClassFieldV2"][];
     };
+    TwinSearchSimpleV1: {
+      /** @description Twin name like */
+      nameLike?: string;
+      /** @description Twin alias like */
+      aliasLike?: string;
+    };
+    TwinSearchRsV2: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - transfers list */
+      twinList?: components["schemas"]["TwinV2"][];
+    };
     TwinflowCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
       descriptionI18n?: components["schemas"]["I18nV1"];
@@ -4727,6 +4859,26 @@ export interface components {
       viewPermissionId?: string;
       /**
        * Format: uuid
+       * @description [optional] this field helps to set extra permission, needed by users to create twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      createPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description [optional] this field helps to set extra permission, needed by users to edit twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      editPermissionId?: string;
+      /**
+       * Format: uuid
+       * @description [optional] this field helps to set extra permission, needed by users to delete twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+       */
+      deletePermissionId?: string;
+      /**
+       * @description [optional] owner typ of class
+       * @enum {string}
+       */
+      ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
+      /**
+       * Format: uuid
        * @description [optional] link to extends class. All fields and links will be valid for current class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
        */
       extendsTwinClassId?: string;
@@ -4745,6 +4897,8 @@ export interface components {
        * @description [optional] id of linked tags cloud. Tags differ from markers in that new tags can be added to the cloud by the users themselves. And the list of markers is configured only by the domain manager. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
        */
       tagDataListId?: string;
+      /** @description [optional] if true - permissions will be created and assign to class (if not specified another permission ids in this dto) */
+      autoCreatePermissions?: boolean;
     };
     TwinClassCreateRsV1: {
       /**
@@ -4793,6 +4947,14 @@ export interface components {
       ownerTypeList?: ("SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER")[];
       /** @description owner type exclude list */
       ownerTypeExcludeList?: ("SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER")[];
+      /** @description marker data list id list */
+      markerDatalistIdList?: string[];
+      /** @description marker data list id exclude list */
+      markerDatalistIdExcludeList?: string[];
+      /** @description tag data list id list */
+      tagDatalistIdList?: string[];
+      /** @description tag data list id exclude list */
+      tagDatalistIdExcludeList?: string[];
       /**
        * @description twin class is abstract
        * @example ANY
@@ -4827,6 +4989,18 @@ export interface components {
       viewPermissionIdList?: string[];
       /** @description permission id exclude list */
       viewPermissionIdExcludeList?: string[];
+      /** @description create permission id list */
+      createPermissionIdList?: string[];
+      /** @description create permission id exclude list */
+      createPermissionIdExcludeList?: string[];
+      /** @description edit permission id list */
+      editPermissionIdList?: string[];
+      /** @description edit permission id exclude list */
+      editPermissionIdExcludeList?: string[];
+      /** @description delete permission id list */
+      deletePermissionIdList?: string[];
+      /** @description delete permission id exclude list */
+      deletePermissionIdExcludeList?: string[];
     };
     TwinClassListRsV1: {
       /**
@@ -5140,10 +5314,19 @@ export interface components {
     TwinTagAddV1: {
       /**
        * @description add already existing tags by their ids
-       * @example cf8b1aec-c07c-4131-b834-8024462cfc93
+       * @example [
+       *   "11a4c3f8-c780-4421-9aee-9e7eec20c67d",
+       *   "83050c4b-ef17-4d7d-8792-6e5a86557ab9"
+       * ]
        */
       existingTags?: string[];
-      /** @description add new tags by name (in current locale). If tag with given name is already exist, it will be used */
+      /**
+       * @description add new tags by name (in current locale). If tag with given name is already exist, it will be used
+       * @example [
+       *   "String 1",
+       *   "String 2"
+       * ]
+       */
       newTags?: string[];
     };
     TwinCreateRsV1: {
@@ -5442,28 +5625,6 @@ export interface components {
       fields?: {
         [key: string]: components["schemas"]["TwinFieldSearchDataListOptionsV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumberV1"] | components["schemas"]["TwinFieldSearchTextV1"];
       };
-    };
-    TwinSearchRsV2: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description User friendly, localized request processing status description
-       * @example success
-       */
-      msg?: string;
-      /**
-       * @description request processing status description, technical
-       * @example success
-       */
-      statusDetails?: string;
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      pagination?: components["schemas"]["PaginationV1"];
-      /** @description results - transfers list */
-      twinList?: components["schemas"]["TwinV2"][];
     };
     TwinSearchByAliasBatchRqV1: {
       /** @description Search alias ref alias request body(TwinSearchByAliasRqV1) */
@@ -6953,6 +7114,15 @@ export interface components {
        */
       linkStrength?: "MANDATORY" | "OPTIONAL" | "OPTIONAL_BUT_DELETE_CASCADE";
       /**
+       * Format: int32
+       * @description [optional] an id of linker featurer
+       */
+      linkerFeaturerId?: number;
+      /** @description [optional] linker featurer params */
+      linkerParams?: {
+        [key: string]: string;
+      };
+      /**
        * Format: uuid
        * @description Source twin class id
        */
@@ -7815,7 +7985,8 @@ export interface components {
       /** @description Name */
       name?: string;
     };
-    DomainAddRqV1: {
+    /** @description request json */
+    DomainCreateRqDTOv1: {
       /**
        * @description will be used for url generation and for twins aliases
        * @example alcosi
@@ -7837,6 +8008,18 @@ export interface components {
        * @example en
        */
       defaultLocale?: string;
+      /**
+       * Format: uuid
+       * @description Resource storage type
+       * @example 00000000-0000-0000-0007-000000000001
+       */
+      resourceStorageId?: string;
+      /**
+       * Format: uuid
+       * @description Attachment storage type
+       * @example 00000000-0000-0000-0007-000000000001
+       */
+      attachmentStorageId?: string;
     };
     /** @description domain list */
     DomainViewRsv1: {
@@ -7887,6 +8070,10 @@ export interface components {
       createdAt?: string;
       /** @description default locale */
       defaultLocale?: string;
+      /** @description Icon dark uri. Might be relative */
+      iconDark?: string;
+      /** @description Icon light uri. Might be relative */
+      iconLight?: string;
     };
     DomainUserSearchRqV1: {
       /** @description user id list */
@@ -7978,11 +8165,9 @@ export interface components {
        * @example en
        */
       currentLocale?: {
-        language?: string;
-        displayName?: string;
+        script?: string;
         country?: string;
         variant?: string;
-        script?: string;
         unicodeLocaleAttributes?: string[];
         unicodeLocaleKeys?: string[];
         displayLanguage?: string;
@@ -7992,6 +8177,8 @@ export interface components {
         extensionKeys?: string[];
         iso3Language?: string;
         iso3Country?: string;
+        language?: string;
+        displayName?: string;
       };
       /**
        * Format: date-time
@@ -8096,32 +8283,6 @@ export interface components {
        * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
        */
       dataListId?: string;
-    };
-    DataListOptionRsV1: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description User friendly, localized request processing status description
-       * @example success
-       */
-      msg?: string;
-      /**
-       * @description request processing status description, technical
-       * @example success
-       */
-      statusDetails?: string;
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      /**
-       * Format: uuid
-       * @description id
-       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
-       */
-      dataListId?: string;
-      option?: components["schemas"]["DataListOptionV1"];
     };
     DataListCreateRqV1: {
       /**
@@ -8417,6 +8578,32 @@ export interface components {
       statusDetails?: string;
       /** @description locales in domain */
       localeList?: components["schemas"]["LocaleV1"][];
+    };
+    DataListOptionRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /**
+       * Format: uuid
+       * @description id
+       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
+       */
+      dataListId?: string;
+      option?: components["schemas"]["DataListOptionV1"];
     };
     /** @description permission groups list */
     PermissionGroupV2: {
@@ -9229,6 +9416,45 @@ export interface components {
       /** @description domain list */
       domainList?: components["schemas"]["DomainViewRsv1"][];
     };
+    DomainClassOwnerTypeListRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - twin class owner types */
+      twinClassOwnerTypes?: components["schemas"]["TwinClassOwnerTypeV1"][];
+    };
+    /** @description results - twin class owner types */
+    TwinClassOwnerTypeV1: {
+      /**
+       * @description owner type
+       * @example SYSTEM
+       * @enum {string}
+       */
+      id?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+    };
     DomainBusinessAccountViewRsV1: {
       /**
        * Format: int32
@@ -9533,7 +9759,28 @@ export interface operations {
   twinStatusViewV1: {
     parameters: {
       query?: {
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -9613,7 +9860,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9671,7 +9918,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9734,7 +9981,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9788,7 +10035,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9859,8 +10106,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -9932,8 +10179,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10110,7 +10357,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10167,7 +10414,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10441,6 +10688,8 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
       };
       header: {
@@ -10460,7 +10709,7 @@ export interface operations {
       /** @description List details prepared */
       200: {
         content: {
-          "application/json": components["schemas"]["DataListOptionRsV1"];
+          "application/json": components["schemas"]["DataListOptionRsV3"];
         };
       };
       /** @description Access is denied */
@@ -10502,7 +10751,7 @@ export interface operations {
       /** @description Updated data list option data */
       200: {
         content: {
-          "application/json": components["schemas"]["DataListRsV1"];
+          "application/json": components["schemas"]["DataListOptionRsV3"];
         };
       };
       /** @description Access is denied */
@@ -10554,19 +10803,8 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
-        showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
-        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
-        showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
-        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
-        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
-        showFactoryBranch2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
-        showFactoryBranch2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
-        showFactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
-        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
-        showFactoryErasersCountMode?: "HIDE" | "SHOW";
-        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
-        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
-        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+        showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -11156,7 +11394,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11215,7 +11453,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11256,6 +11494,88 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinClassFieldSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Get valid heads of given class */
+  validHeadV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinActionMode?: "HIDE" | "SHOW";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        twinClassId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TwinSearchSimpleV1"];
+      };
+    };
+    responses: {
+      /** @description Twin class data */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinSearchRsV2"];
         };
       };
       /** @description Access is denied */
@@ -11348,6 +11668,91 @@ export interface operations {
       };
     };
   };
+  /** Get valid twins list for link of new (not created) twin */
+  validLinkedTwinV1: {
+    parameters: {
+      query?: {
+        headTwinId?: string;
+        lazyRelation?: boolean;
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinActionMode?: "HIDE" | "SHOW";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        twinClassId: string;
+        /** @example f6606fa2-c047-4ba9-a92c-84051df681ab */
+        linkId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TwinSearchSimpleV1"];
+      };
+    };
+    responses: {
+      /** @description Twin class data */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinSearchRsV2"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Create new twin class field */
   twinClassFieldCreateV1: {
     parameters: {
@@ -11359,7 +11764,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11422,7 +11827,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11481,7 +11886,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11536,7 +11941,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11583,6 +11988,88 @@ export interface operations {
       };
     };
   };
+  /** Get valid twins list for link of existed twin */
+  validLinkedTwinsV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinActionMode?: "HIDE" | "SHOW";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        twinId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TwinSearchSimpleV1"];
+      };
+    };
+    responses: {
+      /** @description Twin class data */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinSearchRsV2"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Permisson check overview by twinId & userId */
   permissonCheckOverviewV1: {
     parameters: {
@@ -11603,7 +12090,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11642,6 +12129,90 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Get valid twins list for link of new (not created) twin */
+  validLinkedTwinsV1_1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinActionMode?: "HIDE" | "SHOW";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 1b2091e3-971a-41bc-b343-1f980227d02f */
+        twinId: string;
+        /** @example f6606fa2-c047-4ba9-a92c-84051df681ab */
+        linkId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TwinSearchSimpleV1"];
+      };
+    };
+    responses: {
+      /** @description Twin class data */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TwinSearchRsV2"];
         };
       };
       /** @description Access is denied */
@@ -11708,8 +12279,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11814,7 +12385,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12059,8 +12630,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12173,8 +12744,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12255,8 +12826,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12333,8 +12904,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12411,8 +12982,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12513,7 +13084,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12619,8 +13190,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12702,8 +13273,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12784,8 +13355,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -12867,8 +13438,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13126,8 +13697,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13209,8 +13780,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13291,8 +13862,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13374,8 +13945,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13575,7 +14146,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13762,7 +14333,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13827,7 +14398,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13891,7 +14462,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13951,7 +14522,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14014,7 +14585,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14081,7 +14652,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14147,7 +14718,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14208,7 +14779,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14339,7 +14910,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14400,7 +14971,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14458,7 +15029,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14506,7 +15077,7 @@ export interface operations {
     };
   };
   /** Featurer search */
-  featurerListV1: {
+  featurerSearchV1: {
     parameters: {
       query?: {
         lazyRelation?: boolean;
@@ -15143,7 +15714,7 @@ export interface operations {
     };
   };
   /** Add new domain. */
-  domainAddV1: {
+  domainAddV1_1_1: {
     parameters: {
       header: {
         /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
@@ -15154,7 +15725,20 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["DomainAddRqV1"];
+        "multipart/form-data": {
+          request: components["schemas"]["DomainCreateRqDTOv1"];
+          /**
+           * Format: binary
+           * @description Dark icon
+           */
+          iconDark: string;
+          /**
+           * Format: binary
+           * @description Light icon
+           */
+          iconLight: string;
+        };
+        "application/json": components["schemas"]["DomainCreateRqDTOv1"];
       };
     };
     responses: {
@@ -15283,7 +15867,7 @@ export interface operations {
       /** @description The data list option was created successfully */
       200: {
         content: {
-          "application/json": components["schemas"]["DataListOptionRsV1"];
+          "application/json": components["schemas"]["DataListOptionRsV3"];
         };
       };
       /** @description Access is denied */
@@ -15648,6 +16232,38 @@ export interface operations {
       };
     };
   };
+  /** File in attachment */
+  getResourceFile: {
+    parameters: {
+      path: {
+        /**
+         * @description Resource Id
+         * @example 09cd9a50-dcbe-4c73-b39e-65d2000a8e85
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description File */
+      200: {
+        content: {
+          "application/octet-stream": unknown;
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description File is not exist */
+      404: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Return list of locales */
   localeListPublicViewV1: {
     parameters: {
@@ -15827,7 +16443,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -15884,7 +16500,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16002,7 +16618,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16056,7 +16672,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16133,84 +16749,10 @@ export interface operations {
       };
     };
   };
-  /** Get valid heads of given class */
-  twinClassValidHeadV1: {
-    parameters: {
-      query?: {
-        lazyRelation?: boolean;
-        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showFeaturerParamMode?: "HIDE" | "SHOW";
-        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
-        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinActionMode?: "HIDE" | "SHOW";
-        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinAttachmentActionMode?: "HIDE" | "SHOW";
-        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinField2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-        offset?: number;
-        limit?: number;
-        sortAsc?: boolean;
-      };
-      header: {
-        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-        DomainId: string;
-        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-        AuthToken: string;
-        /** @example WEB */
-        Channel: string;
-      };
-      path: {
-        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
-        twinClassId: string;
-      };
-    };
-    responses: {
-      /** @description Twin class data */
-      200: {
-        content: {
-          "application/json": components["schemas"]["TwinSearchRsV2"];
-        };
-      };
-      /** @description Access is denied */
-      401: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  /** Returns twin class link list */
+  /**
+   * Returns twin class link list
+   * @deprecated
+   */
   twinClassLinkListV1: {
     parameters: {
       query?: {
@@ -16222,7 +16764,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16276,7 +16818,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16369,7 +16911,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16431,8 +16973,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16504,8 +17046,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16577,8 +17119,8 @@ export interface operations {
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
         showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
-        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16645,7 +17187,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16704,7 +17246,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16819,7 +17361,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -16879,7 +17421,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -17011,7 +17553,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -17067,7 +17609,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -17128,7 +17670,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -17187,7 +17729,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -17250,7 +17792,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -17312,7 +17854,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -17369,7 +17911,7 @@ export interface operations {
         showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "LAVENDER";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
         showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
         showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -17761,6 +18303,33 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["DomainListRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns the owner type of the domain class */
+  twinClassOwnerTypeListV1: {
+    parameters: {
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainClassOwnerTypeListRsV1"];
         };
       };
       /** @description Access is denied */

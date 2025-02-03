@@ -34,7 +34,14 @@ export type TwinClassCreateRq = components["schemas"]["TwinClassCreateRqV1"];
 export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"];
 
 export type TwinClassValidHeadQuery =
-  operations["twinClassValidHeadV1"]["parameters"]["query"];
+  operations["validHeadV1"]["parameters"]["query"];
+export type TwinClassValidHeadFilterKeys = "nameLike" | "aliasLike";
+export type TwinClassValidHeadFilters = Partial<
+  Pick<
+    components["schemas"]["TwinSearchSimpleV1"],
+    TwinClassValidHeadFilterKeys
+  >
+>;
 
 export type TwinClassFilterKeys =
   | "twinClassIdList"

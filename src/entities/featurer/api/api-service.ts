@@ -1,19 +1,16 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
+import { FeaturerFilters } from "./types";
 
 export function createFeaturerApi(settings: ApiSettings) {
-  type SearchOptions =
-    operations["featurerListV1"]["requestBody"]["content"]["application/json"];
-
   function search({
     pagination,
     options,
   }: {
     pagination: PaginationState;
-    options: SearchOptions;
+    options: FeaturerFilters;
   }) {
-    return settings.client.POST("/private/featurer/v1", {
+    return settings.client.POST("/private/featurer/search/v1", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
