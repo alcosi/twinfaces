@@ -106,6 +106,17 @@ export function formatToTwinfaceDate(
   return date.toLocaleDateString();
 }
 
+export function formateToTwinfaceTime(
+  dateInput: Date | string | number
+): string {
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid date input");
+  }
+
+  return date.toLocaleTimeString();
+}
+
 export function pluckProperty<
   T extends Record<string, Record<K, unknown>>,
   K extends keyof T[string],

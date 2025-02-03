@@ -22,6 +22,8 @@ export function createCommentApi(settings: ApiSettings) {
           showStatusMode: "DETAILED",
           showCommentMode: "DETAILED",
           showComment2UserMode: "DETAILED",
+          showTwinCommentActionMode: "SHOW",
+          showTwinAttachmentActionMode: "SHOW",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

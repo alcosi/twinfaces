@@ -1,5 +1,5 @@
 import { CommentView_DETAILED } from "@/entities/comment";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formateToTwinfaceTime, formatToTwinfaceDate } from "@/shared/libs";
 import {
   Avatar,
   Button,
@@ -35,7 +35,8 @@ export function CommentCard({ item }: CommentCardProps) {
               <UserResourceLink data={item.authorUser} withTooltip hideAvatar />
             </h2>
             <span className="text-xs text-gray-500">
-              {formatToTwinfaceDate(item.createdAt!)}
+              {formatToTwinfaceDate(item.createdAt!)} |{" "}
+              {formateToTwinfaceTime(item.createdAt)}
             </span>
           </div>
 
@@ -47,28 +48,12 @@ export function CommentCard({ item }: CommentCardProps) {
             </PopoverTrigger>
 
             <PopoverContent className={"w-auto"}>
-              <div className={"flex flex-col items-start gap-2"}>
-                <div key="Id" className="flex items-center">
-                  <span className="text-black-500 font-bold mr-2.5">ID</span>
-                  <GuidWithCopy value={item.id} />
-                </div>
-
-                <div key="Author" className="flex items-center">
-                  <span className="text-black-500 font-bold mr-2.5">
-                    Author
-                  </span>
-                  <GuidWithCopy value={item.authorUserId} />
-                </div>
-
-                {item.authorUser?.email && (
-                  <div key="Email" className="flex items-center">
-                    <span className="text-black-500 font-bold mr-2.5">
-                      Email
-                    </span>
-                    {item.authorUser.email}
-                    <CopyButton textToCopy={item.authorUser.email} />
-                  </div>
-                )}
+              <div className="flex flex-col items-start gap-2">
+                {item.commentActions?.map((item, index) => (
+                  <button key={index} className="text-black-500 mr-2.5">
+                    {item}
+                  </button>
+                ))}
               </div>
             </PopoverContent>
           </Popover>
