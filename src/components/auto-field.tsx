@@ -30,7 +30,6 @@ export enum AutoFormValueType {
   uuid = "uuid",
   combobox = "combobox",
   featurer = "featurer",
-  select = "select",
   color = "color",
   tag = "tag",
   twinField = "twinField",
@@ -43,7 +42,6 @@ export type AutoFormValueInfo = AutoFormCommonInfo &
     | AutoFormSimpleValueInfo
     | AutoFormTextValueInfo
     | AutoFormCheckboxValueInfo
-    | AutoFormSelectValueInfo
     | AutoFormComboboxValueInfo
     | AutoFormTagValueInfo
     | AutoFormTwinFieldValueInfo
@@ -88,11 +86,6 @@ export interface AutoFormTwinFieldValueInfo extends TwinFieldFormItemProps {
 export interface AutoFormFeaturerValueInfo {
   type: AutoFormValueType.featurer;
   typeId: FeaturerTypeId;
-}
-
-export interface AutoFormSelectValueInfo {
-  type: AutoFormValueType.select;
-  options: string[];
 }
 
 export interface AutoFormFieldProps {

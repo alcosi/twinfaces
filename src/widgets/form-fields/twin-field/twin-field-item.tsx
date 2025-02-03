@@ -80,6 +80,7 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
             getItems={(search) => twinAdapter.getItems(search)}
             renderItem={twinAdapter.renderItem}
             onSelect={handleOnTwinSelect}
+            multi={descriptor.multiple}
             {...props}
           />
         );
@@ -96,25 +97,26 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
             }
             renderItem={optionAdapter.renderItem}
             onSelect={handleOnDataListSelect}
+            multi={descriptor.multiple}
             {...props}
           />
         );
       case TwinFieldType.selectSharedInHeadV1:
+        return <TextFormItem onChange={handleTextChange} {...props} />;
       case TwinFieldType.selectUserV1:
-        return (
-          <TextFormItem
-            onChange={handleTextChange}
-            {...props}
-            fieldValue="not implemented"
-            disabled
-            className="text-destructive"
-          />
-        );
       case TwinFieldType.selectUserLongV1:
         return (
           <ComboboxFormItem
             {...userAdapter}
+            getById={userAdapter.getById}
+            getItems={(search) =>
+              userAdapter.getItems(search, {
+                userIdList: descriptor.userIdList ?? [],
+              })
+            }
+            renderItem={userAdapter.renderItem}
             onSelect={handleOnDataListSelect}
+            multi={descriptor.multiple}
             {...props}
           />
         );

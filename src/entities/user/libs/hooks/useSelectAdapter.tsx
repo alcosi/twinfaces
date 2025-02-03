@@ -5,7 +5,11 @@ import {
 } from "@/shared/libs";
 import { Avatar } from "@/shared/ui";
 import { UserIcon } from "lucide-react";
-import { DomainUser_DETAILED, useDomainUserSearchV1 } from "../../api";
+import {
+  DomainUser_DETAILED,
+  DomainUserFilters,
+  useDomainUserSearchV1,
+} from "../../api";
 
 export function useUserSelectAdapter(): SelectAdapter<DomainUser_DETAILED> {
   const { searchUsers } = useDomainUserSearchV1();
@@ -23,13 +27,14 @@ export function useUserSelectAdapter(): SelectAdapter<DomainUser_DETAILED> {
     return data[0];
   }
 
-  async function getItems(search: string) {
+  async function getItems(search: string, filters?: DomainUserFilters) {
     const { data } = await searchUsers({
       pagination: { pageIndex: 0, pageSize: 10 },
       filters: {
         nameLikeList: isPopulatedString(search)
           ? [wrapWithPercent(search)]
-          : undefined,
+          : filters?.nameLikeList,
+        ...filters,
       },
     });
 
@@ -55,7 +60,8 @@ export function useUserSelectAdapter(): SelectAdapter<DomainUser_DETAILED> {
 
   return {
     getById,
-    getItems,
+    getItems: (search, options) =>
+      getItems(search, options as DomainUserFilters),
     renderItem,
   };
 }
