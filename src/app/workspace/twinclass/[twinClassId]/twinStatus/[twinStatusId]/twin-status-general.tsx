@@ -1,6 +1,10 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { TwinClassContext } from "@/entities/twinClass";
+import {
+  TwinClass_DETAILED,
+  TwinClassContext,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import {
   TwinClassStatusResourceLink,
   TwinStatus,
@@ -126,6 +130,16 @@ export function TwinStatusGeneral({
             <TableCell width={300}>ID</TableCell>
             <TableCell>
               <GuidWithCopy value={status.id} variant="long" />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Class</TableCell>
+            <TableCell>
+              <TwinClassResourceLink
+                data={status as TwinClass_DETAILED}
+                withTooltip
+              />
             </TableCell>
           </TableRow>
 
