@@ -1,7 +1,36 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { CreateLinkRequestBody, UpdateLinkRequestBody } from "./types";
+import { PaginationState } from "@tanstack/react-table";
+import {
+  CreateLinkRequestBody,
+  LinkSearchFilters,
+  UpdateLinkRequestBody,
+} from "./types";
 
 export function createTwinClassLinksApi(settings: ApiSettings) {
+  function search({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: LinkSearchFilters;
+  }) {
+    return settings.client.POST("/private/link/search/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showLinkMode: "MANAGED",
+          showLinkSrc2TwinClassMode: "DETAILED",
+          showLinkDst2TwinClassMode: "DETAILED",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+        },
+      },
+      body: { ...filters },
+    });
+  }
+
   const getLinks = async ({ twinClassId }: { twinClassId: string }) => {
     return settings.client.GET("/private/twin_class/{twinClassId}/link/v1", {
       params: {
@@ -40,7 +69,7 @@ export function createTwinClassLinksApi(settings: ApiSettings) {
     });
   }
 
-  return { getLinks, create, update };
+  return { search, getLinks, create, update };
 }
 
 export type TwinClassLinkApi = ReturnType<typeof createTwinClassLinksApi>;

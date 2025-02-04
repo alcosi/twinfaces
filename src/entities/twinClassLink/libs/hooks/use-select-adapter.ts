@@ -1,4 +1,6 @@
 import { SelectAdapter } from "@/shared/libs";
+import { TwinClassLink_MANAGED } from "../../api";
+import { useLinkSearchV1 } from "../../api/hooks";
 import { TWIN_CLASS_LINK_STRENGTH, TWIN_CLASS_LINK_TYPES } from "../constants";
 import { LinkStrength, LinkTypes } from "../types";
 
@@ -39,6 +41,33 @@ export function useTwinClassLinkStrengthSelectAdapter(): SelectAdapter<{
 
   function renderItem({ label }: { label: string }) {
     return label;
+  }
+
+  return {
+    getById,
+    getItems,
+    renderItem,
+  };
+}
+
+export function useLinkSelectAdapter(): SelectAdapter<TwinClassLink_MANAGED> {
+  const { searchLinks } = useLinkSearchV1();
+
+  async function getById(id: string) {
+    return { id } as TwinClassLink_MANAGED;
+  }
+
+  async function getItems(search: string) {
+    const response = await searchLinks({ search });
+    return response.data;
+  }
+
+  function renderItem({
+    srcTwinClass,
+    dstTwinClass,
+    name,
+  }: TwinClassLink_MANAGED) {
+    return `${srcTwinClass.name} -> ${dstTwinClass.name} : ${name}`;
   }
 
   return {

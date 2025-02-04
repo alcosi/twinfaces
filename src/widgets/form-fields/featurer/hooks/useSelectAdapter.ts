@@ -7,10 +7,11 @@ import {
   useTwinSelectAdapter,
   useTwinTouchIdSelectAdapter,
 } from "@/entities/twin";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
-import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useLinkSelectAdapter } from "@/entities/twinClassLink";
+import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup";
 import { createFixedSelectAdapter, SelectAdapter } from "@/shared/libs";
 import { useMemo } from "react";
@@ -28,6 +29,7 @@ type FeaturerParamTypesSelectAdapter =
       | typeof usePermissionSchemaSelectAdapter
       | typeof useTwinBasicFieldSelectAdapter
       | typeof useTwinTouchIdSelectAdapter
+      | typeof useLinkSelectAdapter
     >
   | SelectAdapter<never>;
 
@@ -35,6 +37,7 @@ export function useFeaturerParamTypesSelectAdapter(
   type?: FeaturerParamType
 ): FeaturerParamTypesSelectAdapter {
   const statusAdapter = useTwinStatusSelectAdapter();
+  const linkAdapter = useLinkSelectAdapter();
 
   const adapters = {
     [FeaturerParamType.UUID_SET_TWINS_USER_GROUP_ID]:
@@ -56,6 +59,8 @@ export function useFeaturerParamTypesSelectAdapter(
       useTwinBasicFieldSelectAdapter(),
     [FeaturerParamType.STRING_TWINS_TWIN_TOUCH_ID]:
       useTwinTouchIdSelectAdapter(),
+    [FeaturerParamType.UUID_TWINS_LINK_ID]: linkAdapter,
+    [FeaturerParamType.UUID_SET_TWINS_LINK_ID]: linkAdapter,
   };
 
   const adapter = useMemo(() => {
