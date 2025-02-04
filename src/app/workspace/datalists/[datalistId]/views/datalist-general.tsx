@@ -46,8 +46,6 @@ export function DatalistGeneral() {
   });
 
   useEffect(() => {
-    if (!datalist) return;
-
     const totalKeyAttributes = Object.values(datalist).reduce((acc, value) => {
       return (
         acc +
@@ -58,17 +56,7 @@ export function DatalistGeneral() {
     setKeyCountAttribute(totalKeyAttributes);
   }, [datalist]);
 
-  if (!datalist) {
-    console.error("DatalistGeneral: no datalist");
-    return null;
-  }
-
   async function update(newDatalist: DataListUpdateRqV1) {
-    if (!datalist) {
-      console.error("updateDatalist: no datalist");
-      return;
-    }
-
     updateDatalist({ dataListId: datalist.id!, body: newDatalist })
       .then(() => {
         fetchDatalist();
@@ -141,10 +129,6 @@ export function DatalistGeneral() {
   function buildAttributeSetting(index: number, field: "key" | "name") {
     const attributeValue = `attribute${index}`;
 
-    if (!datalist) {
-      throw new Error("datalist is undefined");
-    }
-
     const dataListAttributeTyped = datalist as Record<
       string,
       { key?: string; name?: string } | undefined
@@ -193,7 +177,7 @@ export function DatalistGeneral() {
     index: {
       id: "index",
       accessorKey: "index",
-      header: "№",
+      header: "#",
       cell: ({ row }) => row.index + 1,
     },
 
@@ -251,11 +235,6 @@ export function DatalistGeneral() {
   async function handleOnCreateSubmit(
     formValues: z.infer<typeof DATALIST_ATTRIBUTE_SCHEMA>
   ) {
-    if (!datalist) {
-      console.error("updateDatalist: no datalist");
-      return;
-    }
-
     const { key, name, ...rest } = formValues;
 
     const requestBody: DataListCreateRqV1 = {
@@ -271,8 +250,9 @@ export function DatalistGeneral() {
 
     updateDatalist({ dataListId: datalist.id!, body: requestBody })
       .then(() => {
-        fetchDatalist();
-        toast.success("Datalist attribute created successfully!");
+        fetchDatalist().then(() => {
+          toast.success("Datalist attribute created successfully!");
+        });
       })
       .catch(() => {
         toast.error("not updated datalist");

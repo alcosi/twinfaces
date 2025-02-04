@@ -1,7 +1,11 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
 import { operations } from "@/shared/api/generated/schema";
-import { DataListCreateRqV1, DatalistFilters } from "@/entities/datalist";
+import {
+  DataListCreateRqV1,
+  DatalistFilters,
+  DataListRqQuery,
+} from "@/entities/datalist";
 
 export function createDatalistApi(settings: ApiSettings) {
   function search({
@@ -33,7 +37,7 @@ export function createDatalistApi(settings: ApiSettings) {
     query = {},
   }: {
     dataListId: string;
-    query: operations["dataListPublicViewV1"]["parameters"]["query"];
+    query: DataListRqQuery;
   }) {
     return settings.client.GET(`/public/data_list/{dataListId}/v1`, {
       params: {

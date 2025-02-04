@@ -6,8 +6,8 @@ import { isUndefined } from "@/shared/libs";
 
 interface DatalistContextProps {
   datalistId: string;
-  datalist: DataList | undefined;
-  fetchDatalist: () => void;
+  datalist: DataList;
+  fetchDatalist: () => Promise<void>;
 }
 
 export const DatalistContext = createContext<DatalistContextProps>(
@@ -29,7 +29,7 @@ export function DatalistContextProvider({
   }, [datalistId]);
 
   function fetchDatalist() {
-    fetchDatalistById({
+    return fetchDatalistById({
       dataListId: datalistId,
       query: {
         showDataListMode: "MANAGED",

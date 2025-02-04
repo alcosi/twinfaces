@@ -43,17 +43,13 @@ const colDefs: Record<
   key: {
     id: "key",
     accessorKey: "key",
+    header: "Key",
   },
 
   name: {
     id: "name",
     accessorKey: "name",
     header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <DatalistResourceLink data={original} withTooltip />
-      </div>
-    ),
   },
 
   description: {
@@ -83,7 +79,7 @@ const colDefs: Record<
   },
 };
 
-export const Datalists = () => {
+export const DatalistsScreen = () => {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistFilters();

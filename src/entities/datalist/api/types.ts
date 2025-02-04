@@ -1,6 +1,11 @@
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 
 export type DataList = components["schemas"]["DataListV2"];
+
+export type DataListRqQuery =
+  operations["dataListPublicViewV1"]["parameters"]["query"];
+
+export type DataListSearchRqV1 = components["schemas"]["DataListSearchRqV1"];
 export type DataListCreateRqV1 = components["schemas"]["DataListCreateRqV1"];
 export type DataListUpdateRqV1 = components["schemas"]["DataListUpdateRqV1"];
 

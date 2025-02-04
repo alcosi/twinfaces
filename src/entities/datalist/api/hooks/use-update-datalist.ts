@@ -14,12 +14,7 @@ export const useDatalistUpdate = () => {
       dataListId: string;
       body: DataListUpdateRqV1;
     }) => {
-      try {
-        await api.datalist.update({ dataListId, body });
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
+      return await api.datalist.update({ dataListId, body });
     },
     [api]
   );

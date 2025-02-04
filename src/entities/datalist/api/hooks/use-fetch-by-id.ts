@@ -1,8 +1,7 @@
-import { useCallback, useContext, useState } from "react";
+import { DataList, DataListRqQuery } from "@/entities/datalist";
 import { ApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-import { DataList } from "@/entities/datalist";
-import { operations } from "@/shared/api/generated/schema";
+import { useCallback, useContext, useState } from "react";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchDatalistById = () => {
@@ -15,7 +14,7 @@ export const useFetchDatalistById = () => {
       query,
     }: {
       dataListId: string;
-      query: operations["dataListPublicViewV1"]["parameters"]["query"];
+      query: DataListRqQuery;
     }): Promise<DataList> => {
       setLoading(true);
 
