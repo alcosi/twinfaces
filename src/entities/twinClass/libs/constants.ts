@@ -58,4 +58,19 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .uuid()
     .optional()
     .or(z.literal("").transform(() => undefined)),
+  createPermissionId: z
+    .string()
+    .uuid()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  editPermissionId: z
+    .string()
+    .uuid()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  deletePermissionId: z
+    .string()
+    .uuid()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
 });

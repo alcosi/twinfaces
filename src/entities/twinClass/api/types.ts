@@ -14,6 +14,10 @@ export type TwinClass_DETAILED = RequireFields<
   | "abstractClass"
   | "markersDataListId"
   | "tagsDataListId"
+  | "viewPermission"
+  | "createPermission"
+  | "editPermission"
+  | "deletePermission"
 >;
 export type TwinClass_MANAGED = RequireFields<
   TwinClass,
