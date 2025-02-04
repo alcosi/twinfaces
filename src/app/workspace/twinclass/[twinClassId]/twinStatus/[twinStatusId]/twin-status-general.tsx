@@ -68,6 +68,24 @@ export function TwinStatusGeneral({
     },
   };
 
+  const keySettings: InPlaceEditProps = {
+    id: "key",
+    value: status.key,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      label: "",
+      inputProps: {
+        fieldSize: "sm",
+      },
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateStatus({
+        key: value as string,
+      });
+    },
+  };
+
   const descriptionSettings: InPlaceEditProps = {
     id: "description",
     value: status.description,
@@ -145,7 +163,9 @@ export function TwinStatusGeneral({
 
           <TableRow>
             <TableCell>Key</TableCell>
-            <TableCell>{status.key}</TableCell>
+            <TableCell>
+              <InPlaceEdit {...keySettings} />
+            </TableCell>
           </TableRow>
 
           <TableRow
