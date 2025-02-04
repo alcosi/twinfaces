@@ -70,7 +70,7 @@ export function TwinClassRelations() {
   const tableRefBackward = useRef<DataTableHandle>(null);
 
   const columnsMap: Record<
-    Exclude<keyof TwinClassLink, "dstTwinClass">,
+    "id" | "name" | "dstTwinClassId" | "type" | "linkStrengthId",
     ColumnDef<TwinClassLink>
   > = {
     id: {

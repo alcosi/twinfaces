@@ -1,5 +1,6 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+import { DomainAddRqV1 } from "@/entities/domain";
 
 export function createDomainApi(settings: ApiSettings) {
   function search() {
@@ -23,8 +24,13 @@ export function createDomainApi(settings: ApiSettings) {
     // TODO: Add implementation
   }
 
-  function create() {
-    // TODO: Add implementation
+  function create({ body }: { body: DomainAddRqV1 }) {
+    return settings.client.POST("/private/domain/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
   }
 
   function update() {
