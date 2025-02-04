@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinClassFormFields } from "./form-fields";
+import { PermissionResourceLink } from "@/entities/permission";
 
 const colDefs: Record<
   keyof Pick<
@@ -47,6 +48,10 @@ const colDefs: Record<
     | "aliasSpace"
     | "markersDataListId"
     | "tagsDataListId"
+    | "viewPermissionId"
+    | "createPermissionId"
+    | "editPermissionId"
+    | "deletePermissionId"
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
@@ -174,6 +179,50 @@ const colDefs: Record<
         </div>
       ) : null,
   },
+  viewPermissionId: {
+    id: "viewPermissionId",
+    accessorKey: "viewPermissionId",
+    header: "View permission",
+    cell: ({ row: { original } }) =>
+      original.viewPermission && (
+        <div className="max-w-48 column-flex space-y-2">
+          <PermissionResourceLink data={original.viewPermission} withTooltip />
+        </div>
+      ),
+  },
+  createPermissionId: {
+    id: "createPermissionId",
+    accessorKey: "createPermissionId",
+    header: "Create permission",
+    cell: ({ row: { original } }) =>
+      original.createPermission && (
+        <div className="max-w-48 column-flex space-y-2">
+          <PermissionResourceLink data={original.createPermission} withTooltip />
+        </div>
+      ),
+  },
+  editPermissionId: {
+    id: "editPermissionId",
+    accessorKey: "editPermissionId",
+    header: "Edit permission",
+    cell: ({ row: { original } }) =>
+      original.editPermission && (
+        <div className="max-w-48 column-flex space-y-2">
+          <PermissionResourceLink data={original.editPermission} withTooltip />
+        </div>
+      ),
+  },
+  deletePermissionId: {
+    id: "deletePermissionId",
+    accessorKey: "deletePermissionId",
+    header: "Delete permission",
+    cell: ({ row: { original } }) =>
+      original.deletePermission && (
+        <div className="max-w-48 column-flex space-y-2">
+          <PermissionResourceLink data={original.deletePermission} withTooltip />
+        </div>
+      ),
+  },
 };
 
 export function TwinClasses() {
@@ -223,6 +272,9 @@ export function TwinClasses() {
       markerDataListId: "",
       tagDataListId: "",
       viewPermissionId: "",
+      createPermissionId: "",
+      editPermissionId: "",
+      deletePermissionId: "",
     },
   });
 
@@ -280,6 +332,10 @@ export function TwinClasses() {
           colDefs.aliasSpace,
           colDefs.markersDataListId,
           colDefs.tagsDataListId,
+          colDefs.viewPermissionId,
+          colDefs.createPermissionId,
+          colDefs.editPermissionId,
+          colDefs.deletePermissionId,
         ]}
         getRowId={(row) => row.id!}
         pageSizes={[10, 20, 50]}
