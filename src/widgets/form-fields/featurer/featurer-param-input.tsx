@@ -59,6 +59,7 @@ export function FeaturerParamInput({
       case FeaturerParamType.UUID_TWINS_TWIN_CLASS_ID:
       case FeaturerParamType.UUID_TWINS_PERMISSION_ID:
       case FeaturerParamType.UUID_TWINS_PERMISSION_SCHEMA_ID:
+      case FeaturerParamType.UUID_TWINS_LINK_ID:
         return (
           <ComboboxFormItem
             label={param.name}
@@ -72,6 +73,7 @@ export function FeaturerParamInput({
       case FeaturerParamType.UUID_SET_TWINS_TWIN_CLASS_ID:
       case FeaturerParamType.UUID_SET_TWINS_TWIN_CLASS_FIELD_ID:
       case FeaturerParamType.WORD_LIST_TWINS_TWIN_BASIC_FIELD:
+      case FeaturerParamType.UUID_SET_TWINS_LINK_ID:
         return (
           <ComboboxFormItem
             label={param.name}
@@ -93,11 +95,9 @@ export function FeaturerParamInput({
           />
         );
       case FeaturerParamType.UUID_TWINS_TWIN_CLASS_SCHEMA_ID:
-      case FeaturerParamType.UUID_TWINS_LINK_ID:
-      case FeaturerParamType.UUID_SET_TWINS_LINK_ID:
         return (
           <Button variant="destructive" className="block" disabled>
-            Blocked
+            Blocked type - {param.type}
           </Button>
         );
       case FeaturerParamType.UUID_TWINS_TWIN_CLASS_FIELD_ID:
