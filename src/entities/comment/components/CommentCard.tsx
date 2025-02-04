@@ -1,13 +1,11 @@
 import { CommentView_DETAILED } from "@/entities/comment";
-import { formateToTwinfaceTime, formatToTwinfaceDate } from "@/shared/libs";
+import { formatToTwinfaceDate, isPopulatedArray } from "@/shared/libs";
 import {
   Avatar,
   Button,
   Card,
   CardContent,
   CardHeader,
-  CopyButton,
-  GuidWithCopy,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -35,28 +33,29 @@ export function CommentCard({ item }: CommentCardProps) {
               <UserResourceLink data={item.authorUser} withTooltip hideAvatar />
             </h2>
             <span className="text-xs text-gray-500">
-              {formatToTwinfaceDate(item.createdAt!)} |{" "}
-              {formateToTwinfaceTime(item.createdAt)}
+              {formatToTwinfaceDate(item.createdAt!, true)}
             </span>
           </div>
 
-          <Popover>
-            <PopoverTrigger className="flex" asChild>
-              <Button size="iconSm" variant="outline">
-                <EllipsisVertical />
-              </Button>
-            </PopoverTrigger>
+          {isPopulatedArray(item.commentActions) && (
+            <Popover>
+              <PopoverTrigger className="flex" asChild>
+                <Button size="iconSm" variant="outline">
+                  <EllipsisVertical />
+                </Button>
+              </PopoverTrigger>
 
-            <PopoverContent className={"w-auto"}>
-              <div className="flex flex-col items-start gap-2">
-                {item.commentActions?.map((item, index) => (
-                  <button key={index} className="text-black-500 mr-2.5">
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
+              <PopoverContent className={"w-auto"}>
+                <div className="flex flex-col items-start gap-2">
+                  {item.commentActions?.map((item, index) => (
+                    <button key={index} className="text-black-500 mr-2.5">
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
       </CardHeader>
       <CardContent className={"break-words"}>{item.text}</CardContent>

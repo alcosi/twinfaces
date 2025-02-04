@@ -9,8 +9,8 @@ export function useTwinClassOwnerTypeSelectAdapter(): SelectAdapter<TwinClassOwn
   }
 
   async function getItems() {
-    const response = await fetchClassOwnerTypeList();
-    return response.twinClassOwnerTypes as TwinClassOwnerType[];
+    const items = await fetchClassOwnerTypeList();
+    return items;
   }
 
   function renderItem({ id, name }: TwinClassOwnerType) {

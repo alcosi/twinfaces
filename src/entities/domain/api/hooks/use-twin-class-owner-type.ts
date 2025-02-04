@@ -1,5 +1,6 @@
 import { useCallback, useContext } from "react";
 import { ApiContext } from "@/shared/api";
+import { isUndefined } from "../../../../shared/libs";
 
 export const useTwinClassOwnerType = () => {
   const api = useContext(ApiContext);
@@ -14,7 +15,13 @@ export const useTwinClassOwnerType = () => {
         );
       }
 
-      return data;
+      if (isUndefined(data.twinClassOwnerTypes)) {
+        throw new Error(
+          "Failed to fetch class owner type list due to API error"
+        );
+      }
+
+      return data.twinClassOwnerTypes;
     } catch (error) {
       throw new Error("Failed to fetch class owner type list due to API error");
     }

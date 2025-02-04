@@ -11,6 +11,7 @@ import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useState } from "react";
 import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";
+import { Checkbox } from "../../shared/ui";
 
 export function TwinClassFormFields<T extends TwinClassFieldValues>({
   control,
@@ -165,10 +166,9 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         </fieldset>
       )}
 
-      <CheckboxFormField
-        control={control}
-        name={"space" as Path<T>}
+      <CheckboxFormItem
         label="Space"
+        name={"space" as Path<T>}
         onClick={() => setIsSpaceChecked((prev) => !prev)}
       />
 
