@@ -52,6 +52,7 @@ const colDefs: Record<
     | "tags"
     | "markers"
     | "createdAt"
+    | "aliases"
   >,
   ColumnDef<Twin>
 > = {
@@ -77,15 +78,16 @@ const colDefs: Record<
       ),
   },
 
+  aliases: {
+    id: "aliases",
+    accessorKey: "aliases",
+    header: "Alias",
+  },
+
   name: {
     id: "name",
     accessorKey: "name",
     header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinResourceLink data={original} withTooltip />
-      </div>
-    ),
   },
 
   statusId: {
@@ -243,6 +245,7 @@ export function TwinsScreen() {
       ref={tableRef}
       columns={[
         colDefs.id,
+        colDefs.aliases,
         colDefs.twinClassId,
         colDefs.name,
         colDefs.statusId,
@@ -263,6 +266,7 @@ export function TwinsScreen() {
       }}
       defaultVisibleColumns={[
         colDefs.id,
+        colDefs.aliases,
         colDefs.twinClassId,
         colDefs.name,
         colDefs.statusId,
