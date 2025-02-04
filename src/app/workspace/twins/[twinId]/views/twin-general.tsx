@@ -119,9 +119,7 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Alias</TableCell>
-            <TableCell className="text-destructive">
-              Not Implemented Yet
-            </TableCell>
+            <TableCell>{twin.aliases}</TableCell>
           </TableRow>
 
           <TableRow>
