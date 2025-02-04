@@ -11,26 +11,34 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { toast } from "sonner";
 import React, { useRef, useState } from "react";
 import {
+  DATALIST_OPTION_SCHEMA,
+  DataListOptionCreateRqDV1,
   DatalistOptionResourceLink,
   DataListOptionV3,
+  useCreateDatalistOption,
   useDatalistOptionFilters,
   useDatalistOptionSearch,
 } from "@/entities/datalist-option";
 import { DatalistResourceLink } from "@/entities/datalist";
 import { useRouter } from "next/navigation";
-import { Check } from "lucide-react";
 import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { DatalistOptionFormFields } from "./form-fields";
 
 export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { searchDatalistOptions } = useDatalistOptionSearch();
+  const { createDatalistOption } = useCreateDatalistOption();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
     enabledFilters: isTruthy(dataListId)
-      ? ["idList", "optionI18nLikeList"]
+      ? ["idList", "optionI18nLikeList", "statusIdList"]
       : undefined,
   });
   const [columns, setColumns] = useState<ColumnDef<DataListOptionV3>[]>([]);
+  const [attributeNames, setAttributeNames] = useState<string[]>([]);
 
   async function fetchDatalistOptions(
     pagination: PaginationState,
@@ -111,10 +119,9 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
         },
 
         {
-          id: "disabled",
-          accessorKey: "disabled",
-          header: "Disabled",
-          cell: (data) => data.getValue() && <Check />,
+          id: "status",
+          accessorKey: "status",
+          header: "Status",
         },
 
         ...dynamicColumns,
@@ -126,6 +133,48 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       return { data: [], pagination: {} };
     }
   }
+
+  const twinClassesForm = useForm<z.infer<typeof DATALIST_OPTION_SCHEMA>>({
+    resolver: zodResolver(DATALIST_OPTION_SCHEMA),
+    defaultValues: {
+      dataListId: dataListId || "",
+      name: "",
+      icon: "",
+      attribute1: "",
+      attribute2: "",
+      attribute3: "",
+      attribute4: "",
+    },
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof DATALIST_OPTION_SCHEMA> & {
+      [key: string]: string;
+    }
+  ) => {
+    const { name, icon } = formValues;
+
+    const attributesMap = attributeNames.reduce(
+      (acc, attrName, index) => {
+        const fieldKey = `attribute${index + 1}`;
+        acc[attrName] = formValues[fieldKey] as string; // Берём значение из формы
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
+    const requestBody: DataListOptionCreateRqDV1 = {
+      dataListId: dataListId ? dataListId : formValues.dataListId!,
+      optionI18n: {
+        translationInCurrentLocale: name,
+        translations: {},
+      },
+      icon: icon,
+      attributesMap,
+    };
+
+    return createDatalistOption({ body: requestBody });
+  };
 
   return (
     <CrudDataTable
@@ -140,6 +189,14 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      dialogForm={twinClassesForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <DatalistOptionFormFields
+          control={twinClassesForm.control}
+          setAttributeNames={setAttributeNames}
+        />
+      )}
     />
   );
 }

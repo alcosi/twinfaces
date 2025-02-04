@@ -1,6 +1,9 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { DataListOptionFilters } from "@/entities/datalist-option";
+import {
+  DataListOptionCreateRqDV1,
+  DataListOptionFilters,
+} from "@/entities/datalist-option";
 
 export function createDatalistOptionApi(settings: ApiSettings) {
   function search({
@@ -16,7 +19,7 @@ export function createDatalistOptionApi(settings: ApiSettings) {
         query: {
           lazyRelation: false,
           showDataListOptionMode: "DETAILED",
-          showDataListOption2DataListMode: "DETAILED",
+          showDataListOption2DataListMode: "MANAGED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
@@ -37,13 +40,42 @@ export function createDatalistOptionApi(settings: ApiSettings) {
           path: { dataListOptionId },
           query: {
             showDataListOptionMode: "DETAILED",
+            showDataListOption2DataListMode: "DETAILED",
           },
         },
       }
     );
   }
 
-  return { search, getById };
+  function create({ body }: { body: DataListOptionCreateRqDV1 }) {
+    return settings.client.POST("/private/data_list_option/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  function update({
+    dataListOptionId,
+    body,
+  }: {
+    dataListOptionId: string;
+    body: DataListOptionCreateRqDV1;
+  }) {
+    return settings.client.PUT(
+      "/private/data_list_option/{dataListOptionId}/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { dataListOptionId },
+        },
+        body,
+      }
+    );
+  }
+
+  return { search, getById, create, update };
 }
 
 export type DatalistOptionApi = ReturnType<typeof createDatalistOptionApi>;

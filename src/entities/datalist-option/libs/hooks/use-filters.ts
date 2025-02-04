@@ -1,6 +1,7 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import {
+  DATALIST_OPTION_STATUS_TYPES,
   DataListOptionFilterKeys,
   DataListOptionFilters,
 } from "@/entities/datalist-option";
@@ -39,6 +40,21 @@ export function useDatalistOptionFilters({
       type: AutoFormValueType.tag,
       label: "Name",
     },
+
+    statusIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Status",
+      getById: async (key: string) =>
+        DATALIST_OPTION_STATUS_TYPES?.find((o) => o === key),
+      getItems: async (needle: string) => {
+        return DATALIST_OPTION_STATUS_TYPES?.filter((type) =>
+          type.toLowerCase().includes(needle.toLowerCase())
+        );
+      },
+      getItemKey: (o: unknown) => o as string,
+      renderItem: (o: unknown) => o as string,
+      multi: true,
+    },
   };
 
   function buildFilterFields(): Record<
@@ -66,6 +82,9 @@ export function useDatalistOptionFilters({
       dataListIdList: toArrayOfString(toArray(filters.dataListIdList), "id"),
       optionI18nLikeList: toArrayOfString(filters.optionI18nLikeList).map(
         wrapWithPercent
+      ),
+      statusIdList: toArray(
+        filters.statusIdList as DataListOptionFilters["statusIdList"]
       ),
     };
 
