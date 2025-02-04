@@ -1,7 +1,11 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
 import { operations } from "@/shared/api/generated/schema";
-import { DatalistFilters } from "@/entities/datalist";
+import {
+  DataListCreateRqV1,
+  DatalistFilters,
+  DataListRqQuery,
+} from "@/entities/datalist";
 
 export function createDatalistApi(settings: ApiSettings) {
   function search({
@@ -29,22 +33,47 @@ export function createDatalistApi(settings: ApiSettings) {
   }
 
   function getById({
-    id,
+    dataListId,
     query = {},
   }: {
-    id: string;
-    query: operations["dataListPublicViewV1"]["parameters"]["query"];
+    dataListId: string;
+    query: DataListRqQuery;
   }) {
     return settings.client.GET(`/public/data_list/{dataListId}/v1`, {
       params: {
         header: { ...getApiDomainHeaders(settings), Locale: "en" },
-        path: { dataListId: id },
-        query: query,
+        path: { dataListId },
+        query,
       },
     });
   }
 
-  return { search, getById };
+  function create({ body }: { body: DataListCreateRqV1 }) {
+    return settings.client.POST("/private/data_list/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function update({
+    dataListId,
+    body,
+  }: {
+    dataListId: string;
+    body: DataListCreateRqV1;
+  }) {
+    return settings.client.PUT("/private/data_list/{dataListId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { dataListId },
+      },
+      body,
+    });
+  }
+
+  return { search, getById, create, update };
 }
 
 export type DatalistApi = ReturnType<typeof createDatalistApi>;
