@@ -100,9 +100,27 @@ export function useTwinClassFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
+      createPermissionIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Create permission",
+        multi: true,
+        ...pAdapter,
+      },
       viewPermissionIdList: {
         type: AutoFormValueType.combobox,
         label: "View permission",
+        multi: true,
+        ...pAdapter,
+      },
+      editPermissionIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Edit permission",
+        multi: true,
+        ...pAdapter,
+      },
+      deletePermissionIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Delete permission",
         multi: true,
         ...pAdapter,
       },
@@ -142,6 +160,18 @@ export function useTwinClassFilters(): FilterFeature<
       abstractt: mapToChoice(filters.abstractt),
       viewPermissionIdList: toArrayOfString(
         toArray(filters.viewPermissionIdList),
+        "id"
+      ),
+      createPermissionIdList: toArrayOfString(
+        toArray(filters.createPermissionIdList),
+        "id"
+      ),
+      editPermissionIdList: toArrayOfString(
+        toArray(filters.editPermissionIdList),
+        "id"
+      ),
+      deletePermissionIdList: toArrayOfString(
+        toArray(filters.deletePermissionIdList),
         "id"
       ),
     };

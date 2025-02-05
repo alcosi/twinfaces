@@ -60,7 +60,10 @@ export type TwinClassFilterKeys =
   | "twinClassSchemaSpace"
   | "permissionSchemaSpace"
   | "aliasSpace"
-  | "viewPermissionIdList";
+  | "viewPermissionIdList"
+  | "createPermissionIdList"
+  | "editPermissionIdList"
+  | "deletePermissionIdList";
 
 export type TwinClassFilters = Partial<
   Pick<components["schemas"]["TwinClassListRqV1"], TwinClassFilterKeys>
