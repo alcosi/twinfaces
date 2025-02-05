@@ -154,38 +154,48 @@ export function TwinClassGeneral() {
       selectPlaceholder: "Select permission...",
       ...pAdapter,
     },
-    renderPreview: twinClass.viewPermission ? (_) => <PermissionResourceLink data={twinClass.viewPermission!} /> : undefined,
+    renderPreview: twinClass.viewPermission
+      ? (_) => <PermissionResourceLink data={twinClass.viewPermission!} />
+      : undefined,
     onSubmit: async (value) => {
-      console.log(value)
-      return updateTwinClass({ viewPermissionId: value[0].id})
+      console.log(value);
+      return updateTwinClass({ viewPermissionId: value[0].id });
     },
-  }
+  };
 
-  const tagListSettings:  InPlaceEditProps<any> = {
+  const tagListSettings: InPlaceEditProps<any> = {
     id: "tagsDataListId",
-    value: twinClass.tagMap ? [{name: twinClass.tagMap.name, key: twinClass.tagMap.key}] : undefined,
+    value: twinClass.tagMap
+      ? [{ name: twinClass.tagMap.name, key: twinClass.tagMap.key }]
+      : undefined,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select tag...",
       ...dlAdapter,
     },
-    renderPreview: twinClass.tagMap ? (_) => <DatalistResourceLink data={twinClass.tagMap as DataList} /> : undefined,
+    renderPreview: twinClass.tagMap
+      ? (_) => <DatalistResourceLink data={twinClass.tagMap as DataList} />
+      : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ tagDataListUpdate: { newId: value[0].id }})
+      return updateTwinClass({ tagDataListUpdate: { newId: value[0].id } });
     },
   };
 
   const markerListSettings: InPlaceEditProps<any> = {
     id: "markersDataListId",
-    value: twinClass.markerMap ? [{name: twinClass.markerMap.name, key: twinClass.markerMap.key}] : undefined,
+    value: twinClass.markerMap
+      ? [{ name: twinClass.markerMap.name, key: twinClass.markerMap.key }]
+      : undefined,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select marker...",
       ...dlAdapter,
     },
-    renderPreview: twinClass.markerMap ? (_) => <DatalistResourceLink data={twinClass.markerMap as DataList} /> : undefined,
+    renderPreview: twinClass.markerMap
+      ? (_) => <DatalistResourceLink data={twinClass.markerMap as DataList} />
+      : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ markerDataListUpdate: { newId: value[0].id } })
+      return updateTwinClass({ markerDataListUpdate: { newId: value[0].id } });
     },
   };
 
@@ -279,18 +289,14 @@ export function TwinClassGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow
-            className={"cursor-pointer"}
-          >
+          <TableRow className={"cursor-pointer"}>
             <TableCell>Tags list</TableCell>
             <TableCell>
               <InPlaceEdit {...tagListSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow
-            className={"cursor-pointer"}
-          >
+          <TableRow className={"cursor-pointer"}>
             <TableCell>View Permission</TableCell>
             <TableCell>
               <InPlaceEdit {...viewPermissionSettings} />
