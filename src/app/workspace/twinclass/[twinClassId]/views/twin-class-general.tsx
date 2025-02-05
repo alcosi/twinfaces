@@ -163,7 +163,7 @@ export function TwinClassGeneral() {
 
   const tagListSettings:  InPlaceEditProps<any> = {
     id: "tagsDataListId",
-    value: twinClass.tagMap ? [{name: twinClass.tagMap.name, key: twinClass.tagMap.key}] : [],
+    value: twinClass.tagMap ? [{name: twinClass.tagMap.name, key: twinClass.tagMap.key}] : undefined,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select tag...",
