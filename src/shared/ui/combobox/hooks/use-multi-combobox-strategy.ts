@@ -19,7 +19,7 @@ export function useMultiComboboxStrategy<T>(
     }
 
     setSelected(updatedSelection);
-    console.log("foobar updatedSelection", updatedSelection);
+
     return updatedSelection;
   };
 

@@ -11,7 +11,6 @@ export function useSingleComboboxStrategy<T>(
     const updatedSelection = isSelected ? [] : [newItem];
     setSelected(updatedSelection);
 
-    console.log("foobar updatedSelection", updatedSelection);
     return updatedSelection;
   };
 

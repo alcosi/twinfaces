@@ -58,7 +58,6 @@ export function DatalistOptionGeneral({
     },
     schema: z.string().min(1),
     onSubmit: (value) => {
-      console.log(value);
       return update({
         optionI18n: {
           translationInCurrentLocale: value as string,

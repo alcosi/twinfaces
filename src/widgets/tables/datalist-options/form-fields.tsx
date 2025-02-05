@@ -18,9 +18,6 @@ export function DatalistOptionFormFields({
     ? dlWatched[0]
     : dlWatched;
 
-  console.log("foobar controll", {
-    dlWatched,
-  });
   return (
     <>
       <ComboboxFormField
@@ -30,7 +27,7 @@ export function DatalistOptionFormFields({
         selectPlaceholder="Select datalist"
         searchPlaceholder="Search datalist..."
         noItemsText="No datalist found"
-        disabled={!isPopulatedArray(dlWatched)}
+        disabled={false}
         {...dlAdapter}
       />
 

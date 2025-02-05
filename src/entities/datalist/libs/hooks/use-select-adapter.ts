@@ -13,7 +13,6 @@ export function useDatalistSelectAdapter(): SelectAdapter<DataList> {
       },
     });
 
-    console.log("foobar getById", datalist);
     return datalist;
   }
 

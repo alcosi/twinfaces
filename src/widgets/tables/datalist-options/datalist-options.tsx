@@ -27,20 +27,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { DatalistOptionFormFields } from "./form-fields";
 
-export function DatalistOptionsTable({
-  dataListId,
-  datalist,
-}: {
-  // TODO: remove `dataListId`
-  dataListId?: string;
-  datalist: DataList;
-}) {
+export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { searchDatalistOptions } = useDatalistOptionSearch();
   const { createDatalistOption } = useCreateDatalistOption();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
-    enabledFilters: isTruthy(dataListId)
+    enabledFilters: isTruthy(datalist?.id)
       ? ["idList", "optionI18nLikeList", "statusIdList"]
       : undefined,
   });
@@ -57,7 +50,7 @@ export function DatalistOptionsTable({
         pagination,
         filters: {
           ..._filters,
-          dataListIdList: toArrayOfString(toArray(dataListId), "id"),
+          dataListIdList: toArrayOfString(toArray(datalist?.id), "id"),
         },
       });
 
@@ -93,7 +86,7 @@ export function DatalistOptionsTable({
           header: "Icon",
         },
 
-        ...(!dataListId
+        ...(!datalist?.id
           ? [
               {
                 id: "dataListId",
@@ -143,7 +136,7 @@ export function DatalistOptionsTable({
   const twinClassesForm = useForm<z.infer<typeof DATALIST_OPTION_SCHEMA>>({
     resolver: zodResolver(DATALIST_OPTION_SCHEMA),
     defaultValues: {
-      dataListId: datalist || dataListId || "",
+      dataListId: datalist || "",
       name: "",
       icon: "",
     },
@@ -167,7 +160,7 @@ export function DatalistOptionsTable({
     const attributesMap = {};
 
     const requestBody: DataListOptionCreateRqDV1 = {
-      dataListId: dataListId ? dataListId : formValues.dataListId!,
+      dataListId: datalist?.id ? datalist.id : formValues.dataListId!,
       optionI18n: {
         translationInCurrentLocale: name,
         translations: {},
@@ -178,6 +171,11 @@ export function DatalistOptionsTable({
 
     // return createDatalistOption({ body: requestBody });
   };
+
+  if (!datalist || !datalist.id) {
+    console.error("DataList: no datalist");
+    return;
+  }
 
   return (
     <CrudDataTable
