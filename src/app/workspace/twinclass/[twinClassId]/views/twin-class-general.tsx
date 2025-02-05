@@ -174,6 +174,20 @@ export function TwinClassGeneral() {
     },
   };
 
+  const markerListSettings: InPlaceEditProps<any> = {
+    id: "markersDataListId",
+    value: twinClass.markerMap && [{name: twinClass.markerMap.name, key: twinClass.markerMap.key}],
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select marker...",
+      ...dlAdapter,
+    },
+    renderPreview: twinClass.markerMap ? (_) => <DatalistResourceLink data={twinClass.markerMap as DataList} /> : undefined,
+    onSubmit: async (value) => {
+      return updateTwinClass({ markerDataListUpdate: { newId: value.markersDataListId.id } })
+    },
+  };
+
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
     setEditFieldDialogOpen(true);
@@ -257,15 +271,10 @@ export function TwinClassGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow className={"cursor-pointer"}>
             <TableCell>Markers list</TableCell>
             <TableCell>
-              {twinClass.markerMap && (
-                <DatalistResourceLink
-                  data={twinClass.markerMap as DataList}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...markerListSettings} />
             </TableCell>
           </TableRow>
 
