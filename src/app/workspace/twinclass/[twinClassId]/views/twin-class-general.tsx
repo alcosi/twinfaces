@@ -24,12 +24,17 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
-import { Permission, PermissionResourceLink } from "@/entities/permission";
+import {
+  Permission,
+  PermissionResourceLink,
+  usePermissionSelectAdapter,
+} from "@/entities/permission";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
   const { twinClass, fetchClassData } = useContext(TwinClassContext);
   const tcAdapter = useTwinClassSelectAdapter();
+  const pAdapter = usePermissionSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -133,6 +138,26 @@ export function TwinClassGeneral() {
       return updateTwinClass({
         abstractClass: value as boolean,
       });
+    },
+  };
+
+  const initViewPermissonAutoDialogSettings: AutoEditDialogSettings = {
+    value: {
+      viewPermissionId: twinClass.viewPermissionId,
+    },
+    title: "Update permission",
+    onSubmit: (values) => {
+      return updateTwinClass({
+        viewPermissionId: values.viewPermissionId[0].id,
+      });
+    },
+    valuesInfo: {
+      viewPermissionId: {
+        type: AutoFormValueType.combobox,
+        label: "View permission",
+        selectPlaceholder: "Select permission...",
+        ...pAdapter,
+      },
     },
   };
 
@@ -243,7 +268,12 @@ export function TwinClassGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() =>
+              openWithSettings(initViewPermissonAutoDialogSettings)
+            }
+          >
             <TableCell>View Permission</TableCell>
             <TableCell>
               {twinClass.viewPermission && (
