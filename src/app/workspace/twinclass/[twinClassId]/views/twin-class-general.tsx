@@ -156,13 +156,14 @@ export function TwinClassGeneral() {
     },
     renderPreview: twinClass.viewPermission ? (_) => <PermissionResourceLink data={twinClass.viewPermission!} /> : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ viewPermissionId: value.viewPermissionId[0].id})
+      console.log(value)
+      return updateTwinClass({ viewPermissionId: value[0].id})
     },
   }
 
   const tagListSettings:  InPlaceEditProps<any> = {
     id: "tagsDataListId",
-    value: twinClass.tagMap && [{name: twinClass.tagMap.name, key: twinClass.tagMap.key}],
+    value: twinClass.tagMap ? [{name: twinClass.tagMap.name, key: twinClass.tagMap.key}] : [],
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select tag...",
@@ -170,13 +171,13 @@ export function TwinClassGeneral() {
     },
     renderPreview: twinClass.tagMap ? (_) => <DatalistResourceLink data={twinClass.tagMap as DataList} /> : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ tagDataListUpdate: { newId: value.tagsDataListId.id } })
+      return updateTwinClass({ tagDataListUpdate: { newId: value[0].id }})
     },
   };
 
   const markerListSettings: InPlaceEditProps<any> = {
     id: "markersDataListId",
-    value: twinClass.markerMap && [{name: twinClass.markerMap.name, key: twinClass.markerMap.key}],
+    value: twinClass.markerMap ? [{name: twinClass.markerMap.name, key: twinClass.markerMap.key}] : undefined,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select marker...",
@@ -184,7 +185,7 @@ export function TwinClassGeneral() {
     },
     renderPreview: twinClass.markerMap ? (_) => <DatalistResourceLink data={twinClass.markerMap as DataList} /> : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ markerDataListUpdate: { newId: value.markersDataListId.id } })
+      return updateTwinClass({ markerDataListUpdate: { newId: value[0].id } })
     },
   };
 
