@@ -28,7 +28,6 @@ export function useUserFilters(): FilterFeature<Keys, Filters> {
   }
 
   function mapFiltersToPayload(filters: Record<Keys, unknown>): Filters {
-    console.log("foobar map", filters);
     const result: DomainUserFilters = {
       userIdList: toArrayOfString(filters.userIdList),
       nameLikeList: toArrayOfString(filters.nameLikeList).map(wrapWithPercent),

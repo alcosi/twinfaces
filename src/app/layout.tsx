@@ -1,5 +1,4 @@
 import { ThemeProvider } from "@/components/theme-provider";
-import { ApiContextProvider } from "@/features/api-context-provider";
 import { cn } from "@/shared/libs";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { Metadata } from "next";
@@ -35,18 +34,16 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <ApiContextProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider delayDuration={700} skipDelayDuration={0}>
-              {children}
-            </TooltipProvider>
-          </ThemeProvider>
-        </ApiContextProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TooltipProvider delayDuration={700} skipDelayDuration={0}>
+            {children}
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -78,6 +78,10 @@ export function CreateDomainForm() {
     });
 
     toast.success("Domain created successfully!");
+    closeQuickView();
+    setTimeout(() => {
+      window.location.reload();
+    }, 750);
   }
 
   return (
