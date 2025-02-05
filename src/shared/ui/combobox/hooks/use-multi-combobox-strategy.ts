@@ -19,6 +19,7 @@ export function useMultiComboboxStrategy<T>(
     }
 
     setSelected(updatedSelection);
+
     return updatedSelection;
   };
 

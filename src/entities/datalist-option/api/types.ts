@@ -1,24 +1,16 @@
 import { components } from "@/shared/api/generated/schema";
 
 export type DataListOptionV3 = components["schemas"]["DataListOptionV3"];
+export type DataListOptionCreateRqDV1 =
+  components["schemas"]["DataListOptionCreateRqDV1"];
+export type DataListOptionUpdateRqV1 =
+  components["schemas"]["DataListOptionUpdateRqV1"];
 
 export type DataListOptionFilterKeys =
   | "idList"
-  // | "idExcludeList"
   | "dataListIdList"
-  // | "dataListIdExcludeList"
-  // | "dataListKeyList"
-  // | "dataListKeyExcludeList"
-  // | "optionLikeList"
-  // | "optionNotLikeList"
-  | "optionI18nLikeList";
-// | "optionI18nNotLikeList"
-// | "businessAccountIdList"
-// | "businessAccountIdExcludeList"
-// | "dataListSubsetIdList"
-// | "dataListSubsetIdExcludeList"
-// | "dataListSubsetKeyList"
-// | "dataListSubsetKeyExcludeList"
+  | "optionI18nLikeList"
+  | "statusIdList";
 
 export type DataListOptionFilters = Partial<
   Pick<

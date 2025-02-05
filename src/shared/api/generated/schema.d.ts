@@ -459,9 +459,13 @@ export interface paths {
     /** Add businessAccount to domain. If business account is not exist it will be created. Domain must be already present. */
     post: operations["domainBusinessAccountAddV1"];
   };
+  "/private/domain/v2": {
+    /** Add new domain with icons */
+    post: operations["domainAddV2"];
+  };
   "/private/domain/v1": {
     /** Add new domain. */
-    post: operations["domainAddV1_1_1"];
+    post: operations["domainAddV1"];
   };
   "/private/domain/user/search/v1": {
     /** Return a list of users by current domain */
@@ -8165,9 +8169,11 @@ export interface components {
        * @example en
        */
       currentLocale?: {
-        script?: string;
+        language?: string;
+        displayName?: string;
         country?: string;
         variant?: string;
+        script?: string;
         unicodeLocaleAttributes?: string[];
         unicodeLocaleKeys?: string[];
         displayLanguage?: string;
@@ -8177,8 +8183,6 @@ export interface components {
         extensionKeys?: string[];
         iso3Language?: string;
         iso3Country?: string;
-        language?: string;
-        displayName?: string;
       };
       /**
        * Format: date-time
@@ -15713,8 +15717,8 @@ export interface operations {
       };
     };
   };
-  /** Add new domain. */
-  domainAddV1_1_1: {
+  /** Add new domain with icons */
+  domainAddV2: {
     parameters: {
       header: {
         /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
@@ -15723,7 +15727,7 @@ export interface operations {
         Channel: string;
       };
     };
-    requestBody: {
+    requestBody?: {
       content: {
         "multipart/form-data": {
           request: components["schemas"]["DomainCreateRqDTOv1"];
@@ -15738,6 +15742,35 @@ export interface operations {
            */
           iconLight: string;
         };
+      };
+    };
+    responses: {
+      /** @description Domain was added */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainViewRsv1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Add new domain. */
+  domainAddV1: {
+    parameters: {
+      header: {
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
         "application/json": components["schemas"]["DomainCreateRqDTOv1"];
       };
     };

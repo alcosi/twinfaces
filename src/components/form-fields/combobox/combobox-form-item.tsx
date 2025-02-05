@@ -1,5 +1,6 @@
 import {
   cn,
+  isArray,
   isEmptyArray,
   isEmptyString,
   isFalsy,
@@ -51,7 +52,11 @@ export function ComboboxFormItem<TFieldModel>({
           return;
         }
 
-        comboboxRef.current?.setSelected(values.slice(-1));
+        if (isArray(values)) {
+          comboboxRef.current?.setSelected(values.slice(-1));
+        } else {
+          comboboxRef.current?.setSelected(values);
+        }
       } else {
         comboboxRef.current?.setSelected(values);
       }

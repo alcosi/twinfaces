@@ -1,6 +1,5 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { operations } from "@/shared/api/generated/schema";
 import {
   DataListCreateRqV1,
   DatalistFilters,
@@ -20,7 +19,7 @@ export function createDatalistApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
-          showDataListMode: "DETAILED",
+          showDataListMode: "MANAGED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

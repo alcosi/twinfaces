@@ -1,10 +1,12 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import {
+  DATALIST_OPTION_STATUS_TYPES,
   DataListOptionFilterKeys,
   DataListOptionFilters,
 } from "@/entities/datalist-option";
 import {
+  createFixedSelectAdapter,
   type FilterFeature,
   isPopulatedArray,
   toArray,
@@ -39,6 +41,13 @@ export function useDatalistOptionFilters({
       type: AutoFormValueType.tag,
       label: "Name",
     },
+
+    statusIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Status",
+      ...createFixedSelectAdapter(DATALIST_OPTION_STATUS_TYPES),
+      multi: true,
+    },
   };
 
   function buildFilterFields(): Record<
@@ -66,6 +75,9 @@ export function useDatalistOptionFilters({
       dataListIdList: toArrayOfString(toArray(filters.dataListIdList), "id"),
       optionI18nLikeList: toArrayOfString(filters.optionI18nLikeList).map(
         wrapWithPercent
+      ),
+      statusIdList: toArray(
+        filters.statusIdList as DataListOptionFilters["statusIdList"]
       ),
     };
 

@@ -49,7 +49,12 @@ export function DatalistOptionScreen({ optionId }: { optionId: string }) {
         {
           key: "general",
           label: "General",
-          content: <DatalistOptionGeneral datalistOption={datalistOption} />,
+          content: (
+            <DatalistOptionGeneral
+              datalistOption={datalistOption}
+              onChange={fetchDatalistOptions}
+            />
+          ),
         },
       ]
     : [];

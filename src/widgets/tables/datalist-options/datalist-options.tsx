@@ -1,33 +1,40 @@
 "use client";
 
+import { DataList, DatalistResourceLink } from "@/entities/datalist";
+import {
+  DATALIST_OPTION_SCHEMA,
+  DataListOptionCreateRqDV1,
+  DatalistOptionResourceLink,
+  DataListOptionV3,
+  useCreateDatalistOption,
+  useDatalistOptionFilters,
+  useDatalistOptionSearch,
+} from "@/entities/datalist-option";
 import { PagedResponse } from "@/shared/api";
+import { isPopulatedArray, isPopulatedString, isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import {
   CrudDataTable,
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { toast } from "sonner";
-import React, { useRef, useState } from "react";
-import {
-  DatalistOptionResourceLink,
-  DataListOptionV3,
-  useDatalistOptionFilters,
-  useDatalistOptionSearch,
-} from "@/entities/datalist-option";
-import { DatalistResourceLink } from "@/entities/datalist";
-import { useRouter } from "next/navigation";
-import { Check } from "lucide-react";
-import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { DatalistOptionFormFields } from "./form-fields";
 
-export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
+export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { searchDatalistOptions } = useDatalistOptionSearch();
+  const { createDatalistOption } = useCreateDatalistOption();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
-    enabledFilters: isTruthy(dataListId)
-      ? ["idList", "optionI18nLikeList"]
+    enabledFilters: isTruthy(datalist?.id)
+      ? ["idList", "optionI18nLikeList", "statusIdList"]
       : undefined,
   });
   const [columns, setColumns] = useState<ColumnDef<DataListOptionV3>[]>([]);
@@ -41,10 +48,7 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
     try {
       const response = await searchDatalistOptions({
         pagination,
-        filters: {
-          ..._filters,
-          dataListIdList: toArrayOfString(toArray(dataListId), "id"),
-        },
+        filters: _filters,
       });
 
       const datalistOption = Object.values(response.data);
@@ -79,7 +83,7 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
           header: "Icon",
         },
 
-        ...(!dataListId
+        ...(!datalist?.id
           ? [
               {
                 id: "dataListId",
@@ -111,10 +115,9 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
         },
 
         {
-          id: "disabled",
-          accessorKey: "disabled",
-          header: "Disabled",
-          cell: (data) => data.getValue() && <Check />,
+          id: "status",
+          accessorKey: "status",
+          header: "Status",
         },
 
         ...dynamicColumns,
@@ -126,6 +129,59 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       return { data: [], pagination: {} };
     }
   }
+
+  const twinClassesForm = useForm<z.infer<typeof DATALIST_OPTION_SCHEMA>>({
+    resolver: zodResolver(DATALIST_OPTION_SCHEMA),
+    defaultValues: {
+      dataList: datalist,
+      name: "",
+      icon: "",
+      attribute1: undefined,
+      attribute2: undefined,
+      attribute3: undefined,
+      attribute4: undefined,
+    },
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof DATALIST_OPTION_SCHEMA> & {
+      [key: string]: string;
+    }
+  ) => {
+    const { name, icon, attribute1, attribute2, attribute3, attribute4 } =
+      formValues;
+
+    const datalist: DataList = isPopulatedArray<DataList>(formValues.dataList)
+      ? formValues.dataList[0]
+      : (formValues.dataList as DataList);
+
+    const attributesMap = [
+      { key: datalist.attribute1?.key, value: attribute1 },
+      { key: datalist.attribute2?.key, value: attribute2 },
+      { key: datalist.attribute3?.key, value: attribute3 },
+      { key: datalist.attribute4?.key, value: attribute4 },
+    ].reduce(
+      (acc, { key, value }) => {
+        if (isPopulatedString(key)) {
+          acc[key] = value!;
+        }
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
+    const requestBody: DataListOptionCreateRqDV1 = {
+      dataListId: datalist.id,
+      optionI18n: {
+        translationInCurrentLocale: name,
+        translations: {},
+      },
+      icon: icon,
+      attributesMap,
+    };
+
+    return createDatalistOption({ body: requestBody });
+  };
 
   return (
     <CrudDataTable
@@ -140,6 +196,11 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      dialogForm={twinClassesForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <DatalistOptionFormFields control={twinClassesForm.control} />
+      )}
     />
   );
 }
