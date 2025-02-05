@@ -5,10 +5,10 @@ import {
   useDatalistOption,
 } from "@/entities/datalist-option";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { isPopulatedString, isUndefined } from "@/shared/libs";
+import { isPopulatedString } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DatalistOptionGeneral } from "./views";
 
 export function DatalistOptionScreen({ optionId }: { optionId: string }) {
@@ -52,7 +52,7 @@ export function DatalistOptionScreen({ optionId }: { optionId: string }) {
           content: (
             <DatalistOptionGeneral
               datalistOption={datalistOption}
-              fetchDatalistOptions={fetchDatalistOptions}
+              onChange={fetchDatalistOptions}
             />
           ),
         },

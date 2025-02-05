@@ -1,63 +1,26 @@
 import { TextFormField } from "@/components/form-fields";
-import { Control, useWatch } from "react-hook-form";
 import { ComboboxFormField } from "@/components/form-fields/combobox";
-import {
-  useDatalistSelectAdapter,
-  useFetchDatalistById,
-} from "@/entities/datalist";
+import { DataList, useDatalistSelectAdapter } from "@/entities/datalist";
+import { DATALIST_OPTION_SCHEMA } from "@/entities/datalist-option";
+import { isPopulatedArray } from "@/shared/libs";
+import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
-import {
-  DATALIST_OPTION_SCHEMA,
-  FormFieldNames,
-} from "@/entities/datalist-option";
-import { isPopulatedString } from "@/shared/libs";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export function DatalistOptionFormFields({
   control,
-  setAttributeNames,
 }: {
   control: Control<z.infer<typeof DATALIST_OPTION_SCHEMA>>;
-  setAttributeNames: (names: string[]) => void;
 }) {
-  const dataListID = useWatch({ control, name: "dataListId" });
+  const dlWatched = useWatch({ control, name: "dataListId" });
   const dlAdapter = useDatalistSelectAdapter();
-  const { fetchDatalistById } = useFetchDatalistById();
 
-  const id = Array.isArray(dataListID) ? dataListID[0].id : dataListID;
-  const [countAttributes, setCountAttributes] = useState<string[]>([]);
+  const datalist: DataList = isPopulatedArray<DataList>(dlWatched)
+    ? dlWatched[0]
+    : dlWatched;
 
-  useEffect(() => {
-    const fetchDatalist = async () => {
-      if (!id) return;
-
-      try {
-        const response = await fetchDatalistById({
-          dataListId: id,
-          query: { showDataListMode: "MANAGED" },
-        });
-
-        const dataList = response;
-
-        if (dataList) {
-          const attributes = Object.keys(dataList)
-            .filter((key) => key.startsWith("attribute"))
-            .map(
-              (key) => (dataList as unknown as Record<string, any>)[key]?.key
-            );
-
-          setCountAttributes(attributes);
-          setAttributeNames(attributes);
-        }
-      } catch (error) {
-        toast.error("Failed to fetch datalist");
-      }
-    };
-
-    fetchDatalist();
-  }, [id]);
-
+  console.log("foobar controll", {
+    dlWatched,
+  });
   return (
     <>
       <ComboboxFormField
@@ -67,7 +30,7 @@ export function DatalistOptionFormFields({
         selectPlaceholder="Select datalist"
         searchPlaceholder="Search datalist..."
         noItemsText="No datalist found"
-        disabled={isPopulatedString(dataListID)}
+        disabled={!isPopulatedArray(dlWatched)}
         {...dlAdapter}
       />
 
@@ -75,14 +38,38 @@ export function DatalistOptionFormFields({
 
       <TextFormField control={control} name="icon" label="Icon" />
 
-      {countAttributes.map((name, index) => (
+      {datalist?.attribute1 && (
         <TextFormField
-          key={index}
           control={control}
-          name={`attribute${index + 1}` as FormFieldNames}
-          label={name ?? `Attribute ${index + 1}`}
+          key="attribute1"
+          name="attribute1"
+          label={datalist?.attribute1.name ?? "Attribute 1"}
         />
-      ))}
+      )}
+      {datalist?.attribute2 && (
+        <TextFormField
+          control={control}
+          key="attribute2"
+          name="attribute2"
+          label={datalist?.attribute2.name ?? "Attribute 2"}
+        />
+      )}
+      {datalist?.attribute3 && (
+        <TextFormField
+          control={control}
+          key="attribute3"
+          name="attribute3"
+          label={datalist?.attribute3.name ?? "Attribute 3"}
+        />
+      )}
+      {datalist?.attribute4 && (
+        <TextFormField
+          control={control}
+          key="attribute4"
+          name="attribute4"
+          label={datalist?.attribute4.name ?? "Attribute 4"}
+        />
+      )}
     </>
   );
 }

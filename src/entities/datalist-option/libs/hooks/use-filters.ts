@@ -6,6 +6,7 @@ import {
   DataListOptionFilters,
 } from "@/entities/datalist-option";
 import {
+  createFixedSelectAdapter,
   type FilterFeature,
   isPopulatedArray,
   toArray,
@@ -44,15 +45,7 @@ export function useDatalistOptionFilters({
     statusIdList: {
       type: AutoFormValueType.combobox,
       label: "Status",
-      getById: async (key: string) =>
-        DATALIST_OPTION_STATUS_TYPES?.find((o) => o === key),
-      getItems: async (needle: string) => {
-        return DATALIST_OPTION_STATUS_TYPES?.filter((type) =>
-          type.toLowerCase().includes(needle.toLowerCase())
-        );
-      },
-      getItemKey: (o: unknown) => o as string,
-      renderItem: (o: unknown) => o as string,
+      ...createFixedSelectAdapter(DATALIST_OPTION_STATUS_TYPES),
       multi: true,
     },
   };

@@ -31,7 +31,7 @@ export default function DatalistPage() {
     {
       key: "options",
       label: "Options",
-      content: <DatalistOptionsTable dataListId={datalistId} />,
+      content: <DatalistOptionsTable datalist={datalist} />,
     },
   ];
 

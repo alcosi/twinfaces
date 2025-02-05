@@ -16,13 +16,14 @@ import {
 import { toast } from "sonner";
 import { AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
+import { createFixedSelectAdapter } from "@/shared/libs";
 
 export function DatalistOptionGeneral({
   datalistOption,
-  fetchDatalistOptions,
+  onChange,
 }: {
   datalistOption: DataListOptionV3;
-  fetchDatalistOptions: () => void;
+  onChange?: () => void;
 }) {
   const { updateDatalistOption } = useUpdateDatalistOption();
   const attributeKeys = Object.keys(datalistOption.attributes ?? {});
@@ -33,17 +34,16 @@ export function DatalistOptionGeneral({
       return;
     }
 
-    updateDatalistOption({
-      dataListOptionId: datalistOption.id,
-      body: newDatalistOption,
-    })
-      .then(() => {
-        toast.success("Datalist option created successfully!");
-        fetchDatalistOptions();
-      })
-      .catch(() => {
-        toast.error("not updated datalist option");
+    try {
+      await updateDatalistOption({
+        dataListOptionId: datalistOption.id,
+        body: newDatalistOption,
       });
+      toast.success("Datalist option created successfully!");
+      onChange?.();
+    } catch (e) {
+      toast.error("Failed to update datalist option");
+    }
   }
 
   const nameSettings: InPlaceEditProps = {
@@ -73,15 +73,7 @@ export function DatalistOptionGeneral({
     value: datalistOption.status,
     valueInfo: {
       type: AutoFormValueType.combobox,
-      getById: async (key: string) =>
-        DATALIST_OPTION_STATUS_TYPES?.find((o) => o === key),
-      getItems: async (needle: string) => {
-        return DATALIST_OPTION_STATUS_TYPES?.filter((type) =>
-          type.toLowerCase().includes(needle.toLowerCase())
-        );
-      },
-      getItemKey: (o: unknown) => o as string,
-      renderItem: (o: unknown) => o as string,
+      ...createFixedSelectAdapter(DATALIST_OPTION_STATUS_TYPES),
     },
     onSubmit: async (value) => {
       return update({ status: value[0] });

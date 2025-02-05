@@ -11,5 +11,5 @@ export function DatalistOptionsScreen() {
     setBreadcrumbs([{ label: "Options", href: "/workspace/datalist-options" }]);
   }, [setBreadcrumbs]);
 
-  return <DatalistOptionsTable />;
+  return <DatalistOptionsTable datalist={{} as any} />;
 }

@@ -6,19 +6,20 @@ export function useDatalistSelectAdapter(): SelectAdapter<DataList> {
   const { fetchDatalistById } = useFetchDatalistById();
 
   async function getById(id: string) {
-    const response = fetchDatalistById({
+    const datalist = await fetchDatalistById({
       dataListId: id,
       query: {
         showDataListMode: "MANAGED",
       },
     });
 
-    return response;
+    console.log("foobar getById", datalist);
+    return datalist;
   }
 
   async function getItems(search: string) {
     const response = await searchDatalist({ search });
-    return response.data as DataList[];
+    return response.data;
   }
 
   function renderItem({ key, name }: DataList) {

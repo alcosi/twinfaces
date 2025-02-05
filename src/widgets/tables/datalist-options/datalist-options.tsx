@@ -19,7 +19,7 @@ import {
   useDatalistOptionFilters,
   useDatalistOptionSearch,
 } from "@/entities/datalist-option";
-import { DatalistResourceLink } from "@/entities/datalist";
+import { DataList, DatalistResourceLink } from "@/entities/datalist";
 import { useRouter } from "next/navigation";
 import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { useForm } from "react-hook-form";
@@ -27,7 +27,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { DatalistOptionFormFields } from "./form-fields";
 
-export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
+export function DatalistOptionsTable({
+  dataListId,
+  datalist,
+}: {
+  // TODO: remove `dataListId`
+  dataListId?: string;
+  datalist: DataList;
+}) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { searchDatalistOptions } = useDatalistOptionSearch();
@@ -38,7 +45,6 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       : undefined,
   });
   const [columns, setColumns] = useState<ColumnDef<DataListOptionV3>[]>([]);
-  const [attributeNames, setAttributeNames] = useState<string[]>([]);
 
   async function fetchDatalistOptions(
     pagination: PaginationState,
@@ -137,13 +143,9 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
   const twinClassesForm = useForm<z.infer<typeof DATALIST_OPTION_SCHEMA>>({
     resolver: zodResolver(DATALIST_OPTION_SCHEMA),
     defaultValues: {
-      dataListId: dataListId || "",
+      dataListId: datalist || dataListId || "",
       name: "",
       icon: "",
-      attribute1: "",
-      attribute2: "",
-      attribute3: "",
-      attribute4: "",
     },
   });
 
@@ -152,16 +154,17 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       [key: string]: string;
     }
   ) => {
-    const { name, icon } = formValues;
+    const { name, icon, attribute1, attribute2, attribute3, attribute4 } =
+      formValues;
 
-    const attributesMap = attributeNames.reduce(
-      (acc, attrName, index) => {
-        const fieldKey = `attribute${index + 1}`;
-        acc[attrName] = formValues[fieldKey] as string; // Берём значение из формы
-        return acc;
-      },
-      {} as Record<string, string>
-    );
+    // TODO: complete `attributesMap`
+    console.log("foobar attrs", {
+      attribute1,
+      attribute2,
+      attribute3,
+      attribute4,
+    });
+    const attributesMap = {};
 
     const requestBody: DataListOptionCreateRqDV1 = {
       dataListId: dataListId ? dataListId : formValues.dataListId!,
@@ -173,7 +176,7 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       attributesMap,
     };
 
-    return createDatalistOption({ body: requestBody });
+    // return createDatalistOption({ body: requestBody });
   };
 
   return (
@@ -192,10 +195,7 @@ export function DatalistOptionsTable({ dataListId }: { dataListId?: string }) {
       dialogForm={twinClassesForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
-        <DatalistOptionFormFields
-          control={twinClassesForm.control}
-          setAttributeNames={setAttributeNames}
-        />
+        <DatalistOptionFormFields control={twinClassesForm.control} />
       )}
     />
   );
