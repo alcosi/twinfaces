@@ -1,6 +1,10 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { DataList, DatalistResourceLink } from "@/entities/datalist";
+import {
+  DataList,
+  DatalistResourceLink,
+  useDatalistSelectAdapter,
+} from "@/entities/datalist";
 import {
   Featurer_DETAILED,
   FeaturerResourceLink,
@@ -24,12 +28,18 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
-import { Permission, PermissionResourceLink } from "@/entities/permission";
+import {
+  Permission,
+  PermissionResourceLink,
+  usePermissionSelectAdapter,
+} from "@/entities/permission";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
   const { twinClass, fetchClassData } = useContext(TwinClassContext);
   const tcAdapter = useTwinClassSelectAdapter();
+  const pAdapter = usePermissionSelectAdapter();
+  const dlAdapter = useDatalistSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -64,7 +74,7 @@ export function TwinClassGeneral() {
       title: "Update head",
       onSubmit: (values) => {
         return updateTwinClass({
-          headTwinClassUpdate: { newId: values.headClassId },
+          headTwinClassUpdate: { newId: values.headClassId[0].id },
           headHunterFeaturerId: values.headHunterFeaturerId,
           headHunterParams: values.headHunterParams,
         });
@@ -133,6 +143,59 @@ export function TwinClassGeneral() {
       return updateTwinClass({
         abstractClass: value as boolean,
       });
+    },
+  };
+
+  const viewPermissionSettings: InPlaceEditProps<any> = {
+    id: "viewPermissionId",
+    value: twinClass.viewPermissionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select permission...",
+      ...pAdapter,
+    },
+    renderPreview: twinClass.viewPermission
+      ? (_) => <PermissionResourceLink data={twinClass.viewPermission!} />
+      : undefined,
+    onSubmit: async (value) => {
+      console.log(value);
+      return updateTwinClass({ viewPermissionId: value[0].id });
+    },
+  };
+
+  const tagListSettings: InPlaceEditProps<any> = {
+    id: "tagsDataListId",
+    value: twinClass.tagMap
+      ? [{ name: twinClass.tagMap.name, key: twinClass.tagMap.key }]
+      : undefined,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select tag...",
+      ...dlAdapter,
+    },
+    renderPreview: twinClass.tagMap
+      ? (_) => <DatalistResourceLink data={twinClass.tagMap as DataList} />
+      : undefined,
+    onSubmit: async (value) => {
+      return updateTwinClass({ tagDataListUpdate: { newId: value[0].id } });
+    },
+  };
+
+  const markerListSettings: InPlaceEditProps<any> = {
+    id: "markersDataListId",
+    value: twinClass.markerMap
+      ? [{ name: twinClass.markerMap.name, key: twinClass.markerMap.key }]
+      : undefined,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select marker...",
+      ...dlAdapter,
+    },
+    renderPreview: twinClass.markerMap
+      ? (_) => <DatalistResourceLink data={twinClass.markerMap as DataList} />
+      : undefined,
+    onSubmit: async (value) => {
+      return updateTwinClass({ markerDataListUpdate: { newId: value[0].id } });
     },
   };
 
@@ -219,39 +282,24 @@ export function TwinClassGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow className={"cursor-pointer"}>
             <TableCell>Markers list</TableCell>
             <TableCell>
-              {twinClass.markerMap && (
-                <DatalistResourceLink
-                  data={twinClass.markerMap as DataList}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...markerListSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow className={"cursor-pointer"}>
             <TableCell>Tags list</TableCell>
             <TableCell>
-              {twinClass.tagMap && (
-                <DatalistResourceLink
-                  data={twinClass.tagMap as DataList}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...tagListSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow className={"cursor-pointer"}>
             <TableCell>View Permission</TableCell>
             <TableCell>
-              {twinClass.viewPermission && (
-                <PermissionResourceLink
-                  data={twinClass.viewPermission as Permission}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...viewPermissionSettings} />
             </TableCell>
           </TableRow>
 
