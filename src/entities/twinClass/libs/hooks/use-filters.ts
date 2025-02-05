@@ -14,6 +14,7 @@ import {
 } from "@/shared/libs";
 import { z } from "zod";
 import { usePermissionSelectAdapter } from "@/entities/permission";
+import { useDatalistSelectAdapter } from "../../../datalist";
 
 export function useTwinClassFilters(): FilterFeature<
   TwinClassFilterKeys,
@@ -21,6 +22,7 @@ export function useTwinClassFilters(): FilterFeature<
 > {
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
+  const dlAdapter = useDatalistSelectAdapter();
 
   function buildFilterFields(): Record<TwinClassFilterKeys, AutoFormValueInfo> {
     return {
@@ -100,11 +102,41 @@ export function useTwinClassFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
+      createPermissionIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Create permission",
+        multi: true,
+        ...pAdapter,
+      },
       viewPermissionIdList: {
         type: AutoFormValueType.combobox,
         label: "View permission",
         multi: true,
         ...pAdapter,
+      },
+      editPermissionIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Edit permission",
+        multi: true,
+        ...pAdapter,
+      },
+      deletePermissionIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Delete permission",
+        multi: true,
+        ...pAdapter,
+      },
+      markerDatalistIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Markers list",
+        multi: true,
+        ...dlAdapter,
+      },
+      tagDatalistIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Tags list",
+        multi: true,
+        ...dlAdapter,
       },
     };
   }
@@ -142,6 +174,26 @@ export function useTwinClassFilters(): FilterFeature<
       abstractt: mapToChoice(filters.abstractt),
       viewPermissionIdList: toArrayOfString(
         toArray(filters.viewPermissionIdList),
+        "id"
+      ),
+      createPermissionIdList: toArrayOfString(
+        toArray(filters.createPermissionIdList),
+        "id"
+      ),
+      editPermissionIdList: toArrayOfString(
+        toArray(filters.editPermissionIdList),
+        "id"
+      ),
+      deletePermissionIdList: toArrayOfString(
+        toArray(filters.deletePermissionIdList),
+        "id"
+      ),
+      markerDatalistIdList: toArrayOfString(
+        toArray(filters.markerDatalistIdList),
+        "id"
+      ),
+      tagDatalistIdList: toArrayOfString(
+        toArray(filters.tagDatalistIdList),
         "id"
       ),
     };

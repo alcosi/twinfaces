@@ -52,6 +52,7 @@ const colDefs: Record<
     | "createPermissionId"
     | "editPermissionId"
     | "deletePermissionId"
+    | "ownerType"
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
@@ -132,6 +133,11 @@ const colDefs: Record<
     accessorKey: "abstractClass",
     header: "Abstract",
     cell: (data) => data.getValue() && <Check />,
+  },
+  ownerType: {
+    id: "ownerType",
+    accessorKey: "ownerType",
+    header: "Owner type",
   },
   permissionSchemaSpace: {
     id: "permissionSchemaSpace",
@@ -332,6 +338,7 @@ export function TwinClasses() {
           colDefs.headClassId,
           colDefs.extendsClassId,
           colDefs.abstractClass,
+          colDefs.ownerType,
           colDefs.permissionSchemaSpace,
           colDefs.twinflowSchemaSpace,
           colDefs.twinClassSchemaSpace,
