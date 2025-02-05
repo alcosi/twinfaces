@@ -1,6 +1,10 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { TwinClassContext } from "@/entities/twinClass";
+import {
+  TwinClass_DETAILED,
+  TwinClassContext,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import {
   TwinClassStatusResourceLink,
   TwinStatus,
@@ -61,6 +65,24 @@ export function TwinStatusGeneral({
         type: AutoFormValueType.string,
         label: "Name",
       },
+    },
+  };
+
+  const keySettings: InPlaceEditProps = {
+    id: "key",
+    value: status.key,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      label: "",
+      inputProps: {
+        fieldSize: "sm",
+      },
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return updateStatus({
+        key: value as string,
+      });
     },
   };
 
@@ -130,8 +152,20 @@ export function TwinStatusGeneral({
           </TableRow>
 
           <TableRow>
+            <TableCell>Class</TableCell>
+            <TableCell>
+              <TwinClassResourceLink
+                data={status as TwinClass_DETAILED}
+                withTooltip
+              />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
             <TableCell>Key</TableCell>
-            <TableCell>{status.key}</TableCell>
+            <TableCell>
+              <InPlaceEdit {...keySettings} />
+            </TableCell>
           </TableRow>
 
           <TableRow
