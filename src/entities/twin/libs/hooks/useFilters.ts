@@ -82,11 +82,11 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
       statusIdList: toArrayOfString(toArray(filters.statusIdList), "id"),
       createdByUserIdList: toArrayOfString(
         toArray(filters.createdByUserIdList),
-        "id"
+        "userId"
       ),
       assignerUserIdList: toArrayOfString(
         toArray(filters.assignerUserIdList),
-        "id"
+        "userId"
       ),
       headTwinIdList: toArrayOfString(toArray(filters.headTwinIdList), "id"),
       tagDataListOptionIdList: toArrayOfString(
