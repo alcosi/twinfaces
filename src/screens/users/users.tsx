@@ -1,9 +1,9 @@
-import { usePermissionFilters } from "@/entities/permission";
 import {
   DomainUser,
   DomainUser_DETAILED,
   useDomainUserSearchV1,
   UserResourceLink,
+  useUserFilters,
 } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
@@ -24,14 +24,14 @@ const colDefs: Record<
 > = {
   id: {
     id: "id",
-    accessorKey: "id",
+    accessorKey: "userId",
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   userId: {
     id: "userId",
     accessorKey: "userId",
-    header: "User Id",
+    header: "User",
     cell: ({ row: { original } }) =>
       original.user && (
         <div className="max-w-48 inline-flex">
@@ -52,7 +52,7 @@ export function Users() {
   const tableRef = useRef<DataTableHandle>(null);
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchUsers } = useDomainUserSearchV1();
-  const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
+  const { buildFilterFields, mapFiltersToPayload } = useUserFilters();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Users", href: "/workspace/users" }]);
