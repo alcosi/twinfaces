@@ -14,6 +14,7 @@ import {
 } from "@/shared/libs";
 import { z } from "zod";
 import { usePermissionSelectAdapter } from "@/entities/permission";
+import { useDatalistSelectAdapter } from "../../../datalist";
 
 export function useTwinClassFilters(): FilterFeature<
   TwinClassFilterKeys,
@@ -21,6 +22,7 @@ export function useTwinClassFilters(): FilterFeature<
 > {
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
+  const dlAdapter = useDatalistSelectAdapter();
 
   function buildFilterFields(): Record<TwinClassFilterKeys, AutoFormValueInfo> {
     return {
@@ -124,6 +126,18 @@ export function useTwinClassFilters(): FilterFeature<
         multi: true,
         ...pAdapter,
       },
+      markerDatalistIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Markers list",
+        multi: true,
+        ...dlAdapter,
+      },
+      tagDatalistIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Tags list",
+        multi: true,
+        ...dlAdapter,
+      },
     };
   }
 
@@ -172,6 +186,14 @@ export function useTwinClassFilters(): FilterFeature<
       ),
       deletePermissionIdList: toArrayOfString(
         toArray(filters.deletePermissionIdList),
+        "id"
+      ),
+      markerDatalistIdList: toArrayOfString(
+        toArray(filters.markerDatalistIdList),
+        "id"
+      ),
+      tagDatalistIdList: toArrayOfString(
+        toArray(filters.tagDatalistIdList),
         "id"
       ),
     };
