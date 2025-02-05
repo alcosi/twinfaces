@@ -1,6 +1,10 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { DataList, DatalistResourceLink } from "@/entities/datalist";
+import {
+  DataList,
+  DatalistResourceLink,
+  useDatalistSelectAdapter,
+} from "@/entities/datalist";
 import {
   Featurer_DETAILED,
   FeaturerResourceLink,
@@ -35,6 +39,7 @@ export function TwinClassGeneral() {
   const { twinClass, fetchClassData } = useContext(TwinClassContext);
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
+  const dlAdapter = useDatalistSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -161,6 +166,26 @@ export function TwinClassGeneral() {
     },
   };
 
+  const initTagListAutoDialogSettings: AutoEditDialogSettings = {
+    value: {
+      tagsDataListId: twinClass.tagMap ? [{ name: twinClass.tagMap.name, key: twinClass.tagMap.key }] : [],
+    },
+    title: "Update tag",
+    onSubmit: (values) => {
+      return updateTwinClass({
+        tagDataListUpdate: { newId: values.tagsDataListId.id }
+      });
+    },
+    valuesInfo: {
+      tagsDataListId: {
+        type: AutoFormValueType.combobox,
+        label: "Tags list",
+        selectPlaceholder: "Select tag...",
+        ...dlAdapter,
+      },
+    },
+  };
+
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
     setEditFieldDialogOpen(true);
@@ -256,7 +281,10 @@ export function TwinClassGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(initTagListAutoDialogSettings)}
+          >
             <TableCell>Tags list</TableCell>
             <TableCell>
               {twinClass.tagMap && (
