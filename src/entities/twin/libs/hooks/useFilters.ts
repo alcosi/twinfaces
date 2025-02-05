@@ -10,11 +10,13 @@ import {
 } from "@/shared/libs";
 import { z } from "zod";
 import { TwinFilterKeys, TwinFilters } from "../../api";
+import { useTwinSelectAdapter } from "./use-select-adapter";
 
 export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
   const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
   const uAdapter = useUserSelectAdapter();
+  const tAdapter = useTwinSelectAdapter();
 
   function buildFilterFields(): Record<TwinFilterKeys, AutoFormValueInfo> {
     return {
@@ -40,6 +42,16 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
         type: AutoFormValueType.tag,
         label: "Name",
       },
+      descriptionLikeList: {
+        type: AutoFormValueType.string,
+        label: "Description",
+      },
+      headTwinIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Head",
+        multi: true,
+        ...tAdapter,
+      },
       createdByUserIdList: {
         type: AutoFormValueType.combobox,
         label: "Author",
@@ -51,20 +63,6 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
         label: "Assignee",
         multi: true,
         ...uAdapter,
-      },
-      headTwinIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Head",
-        multi: true,
-        ...tcAdapter,
-      },
-      tagDataListOptionIdList: {
-        type: AutoFormValueType.string,
-        label: "Tags",
-      },
-      markerDataListOptionIdList: {
-        type: AutoFormValueType.string,
-        label: "Markers",
       },
     } as const;
   }
@@ -88,13 +86,11 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
         toArray(filters.assignerUserIdList),
         "userId"
       ),
+      descriptionLikeList: toArrayOfString(
+        toArray(filters.descriptionLikeList),
+        "description"
+      ).map(wrapWithPercent),
       headTwinIdList: toArrayOfString(toArray(filters.headTwinIdList), "id"),
-      tagDataListOptionIdList: toArrayOfString(
-        toArray(filters.tagDataListOptionIdList)
-      ),
-      markerDataListOptionIdList: toArrayOfString(
-        toArray(filters.markerDataListOptionIdList)
-      ),
     };
 
     return result;

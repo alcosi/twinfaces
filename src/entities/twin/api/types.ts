@@ -32,11 +32,10 @@ export type TwinFilterKeys =
   | "twinNameLikeList"
   | "twinClassIdList"
   | "statusIdList"
-  | "createdByUserIdList"
-  | "assignerUserIdList"
+  | "descriptionLikeList"
   | "headTwinIdList"
-  | "tagDataListOptionIdList"
-  | "markerDataListOptionIdList";
+  | "createdByUserIdList"
+  | "assignerUserIdList";
 
 export type TwinFilters = Partial<
   Pick<components["schemas"]["TwinSearchRqV1"], TwinFilterKeys>
