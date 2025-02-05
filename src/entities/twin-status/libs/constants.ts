@@ -1,10 +1,10 @@
-import { FIRST_UUID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
 import { z } from "zod";
 
 export const ENTITY_COLOR = "#0EA5E9"; // text-sky-500
 
 export const TWIN_CLASS_STATUS_SCHEMA = z.object({
-  twinClassId: z.string().uuid().nullable().or(FIRST_UUID_EXTRACTOR),
+  twinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),
   key: z
     .string()
     .min(1)

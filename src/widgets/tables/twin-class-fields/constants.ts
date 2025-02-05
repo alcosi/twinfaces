@@ -1,8 +1,8 @@
-import { FIRST_UUID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
 import { z } from "zod";
 
 export const TWIN_CLASS_FIELD_SCHEMA = z.object({
-  twinClassId: z.string().uuid().nullable().or(FIRST_UUID_EXTRACTOR),
+  twinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),
   key: z
     .string()
     .min(1)

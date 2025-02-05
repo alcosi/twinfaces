@@ -1,8 +1,8 @@
 import {
-  FIRST_UUID_EXTRACTOR,
+  FIRST_ID_EXTRACTOR,
+  FIRST_USER_ID_EXTRACTOR,
   isPopulatedString,
   isTruthy,
-  isUndefined,
 } from "@/shared/libs";
 import { z } from "zod";
 
@@ -16,10 +16,10 @@ export const TwinBasicFields = [
 ] as const;
 
 export const TWIN_SCHEMA = z.object({
-  classId: FIRST_UUID_EXTRACTOR,
-  headTwinId: FIRST_UUID_EXTRACTOR.optional(),
+  classId: FIRST_ID_EXTRACTOR,
+  headTwinId: FIRST_ID_EXTRACTOR.optional(),
   name: z.string().min(1, "Name can not be empty"),
-  assignerUserId: FIRST_UUID_EXTRACTOR,
+  assignerUserId: FIRST_USER_ID_EXTRACTOR,
   description: z.string().optional(),
   fields: z.record(z.string(), z.string().default("")).optional(),
   tags: z
