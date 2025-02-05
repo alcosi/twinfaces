@@ -160,23 +160,17 @@ export function TwinClassGeneral() {
     },
   }
 
-  const initTagListAutoDialogSettings: AutoEditDialogSettings = {
-    value: {
-      tagsDataListId: twinClass.tagMap ? [{ name: twinClass.tagMap.name, key: twinClass.tagMap.key }] : [],
+  const tagListSettings:  InPlaceEditProps<any> = {
+    id: "tagsDataListId",
+    value: twinClass.tagMap && [{name: twinClass.tagMap.name, key: twinClass.tagMap.key}],
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select tag...",
+      ...dlAdapter,
     },
-    title: "Update tag",
-    onSubmit: (values) => {
-      return updateTwinClass({
-        tagDataListUpdate: { newId: values.tagsDataListId.id }
-      });
-    },
-    valuesInfo: {
-      tagsDataListId: {
-        type: AutoFormValueType.combobox,
-        label: "Tags list",
-        selectPlaceholder: "Select tag...",
-        ...dlAdapter,
-      },
+    renderPreview: twinClass.tagMap ? (_) => <DatalistResourceLink data={twinClass.tagMap as DataList} /> : undefined,
+    onSubmit: async (value) => {
+      return updateTwinClass({ tagDataListUpdate: { newId: value.tagsDataListId.id } })
     },
   };
 
@@ -277,16 +271,10 @@ export function TwinClassGeneral() {
 
           <TableRow
             className={"cursor-pointer"}
-            onClick={() => openWithSettings(initTagListAutoDialogSettings)}
           >
             <TableCell>Tags list</TableCell>
             <TableCell>
-              {twinClass.tagMap && (
-                <DatalistResourceLink
-                  data={twinClass.tagMap as DataList}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...tagListSettings} />
             </TableCell>
           </TableRow>
 
