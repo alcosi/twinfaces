@@ -1,3 +1,5 @@
+// NOTE: importing from '@/entities/datalist' triggers an excaption
+import { DATALIST_SCHEMA } from "@/entities/datalist/libs/constans";
 import { z } from "zod";
 
 export const DATALIST_OPTION_STATUS_TYPES = [
@@ -7,8 +9,13 @@ export const DATALIST_OPTION_STATUS_TYPES = [
 ] as const;
 
 export const DATALIST_OPTION_SCHEMA = z.object({
-  // TODO: replace any with something like `z.object(DataList).or(FIRST_UUID_EXTRACTOR)
-  dataListId: z.any(),
+  dataList: DATALIST_SCHEMA.extend({
+    id: z.string().uuid(),
+    attribute1: z.object({ key: z.string(), name: z.string() }).optional(),
+    attribute2: z.object({ key: z.string(), name: z.string() }).optional(),
+    attribute3: z.object({ key: z.string(), name: z.string() }).optional(),
+    attribute4: z.object({ key: z.string(), name: z.string() }).optional(),
+  }),
   name: z.string().min(1).max(100),
   icon: z
     .string()

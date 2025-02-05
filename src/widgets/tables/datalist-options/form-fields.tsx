@@ -2,7 +2,8 @@ import { TextFormField } from "@/components/form-fields";
 import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { DataList, useDatalistSelectAdapter } from "@/entities/datalist";
 import { DATALIST_OPTION_SCHEMA } from "@/entities/datalist-option";
-import { isPopulatedArray } from "@/shared/libs";
+import { isPopulatedArray, isTruthy } from "@/shared/libs";
+import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -11,8 +12,9 @@ export function DatalistOptionFormFields({
 }: {
   control: Control<z.infer<typeof DATALIST_OPTION_SCHEMA>>;
 }) {
-  const dlWatched = useWatch({ control, name: "dataListId" });
+  const dlWatched = useWatch({ control, name: "dataList" });
   const dlAdapter = useDatalistSelectAdapter();
+  const disabled = useRef(isTruthy(dlWatched)).current;
 
   const datalist: DataList = isPopulatedArray<DataList>(dlWatched)
     ? dlWatched[0]
@@ -22,12 +24,12 @@ export function DatalistOptionFormFields({
     <>
       <ComboboxFormField
         control={control}
-        name="dataListId"
+        name="dataList"
         label="Datalist"
         selectPlaceholder="Select datalist"
         searchPlaceholder="Search datalist..."
         noItemsText="No datalist found"
-        disabled={false}
+        disabled={disabled}
         {...dlAdapter}
       />
 

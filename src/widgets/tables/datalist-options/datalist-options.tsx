@@ -1,15 +1,6 @@
 "use client";
 
-import { PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui";
-import {
-  CrudDataTable,
-  DataTableHandle,
-  FiltersState,
-} from "../../crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { toast } from "sonner";
-import React, { useRef, useState } from "react";
+import { DataList, DatalistResourceLink } from "@/entities/datalist";
 import {
   DATALIST_OPTION_SCHEMA,
   DataListOptionCreateRqDV1,
@@ -19,12 +10,26 @@ import {
   useDatalistOptionFilters,
   useDatalistOptionSearch,
 } from "@/entities/datalist-option";
-import { DataList, DatalistResourceLink } from "@/entities/datalist";
-import { useRouter } from "next/navigation";
-import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { useForm } from "react-hook-form";
+import { PagedResponse } from "@/shared/api";
+import {
+  isPopulatedString,
+  isTruthy,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "../../crud-data-table";
 import { DatalistOptionFormFields } from "./form-fields";
 
 export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
@@ -136,9 +141,13 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   const twinClassesForm = useForm<z.infer<typeof DATALIST_OPTION_SCHEMA>>({
     resolver: zodResolver(DATALIST_OPTION_SCHEMA),
     defaultValues: {
-      dataListId: datalist || "",
+      dataList: datalist,
       name: "",
       icon: "",
+      attribute1: undefined,
+      attribute2: undefined,
+      attribute3: undefined,
+      attribute4: undefined,
     },
   });
 
@@ -150,14 +159,20 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
     const { name, icon, attribute1, attribute2, attribute3, attribute4 } =
       formValues;
 
-    // TODO: complete `attributesMap`
-    console.log("foobar attrs", {
-      attribute1,
-      attribute2,
-      attribute3,
-      attribute4,
-    });
-    const attributesMap = {};
+    const attributesMap = [
+      { key: formValues.dataList.attribute1?.key, value: attribute1 },
+      { key: formValues.dataList.attribute2?.key, value: attribute2 },
+      { key: formValues.dataList.attribute3?.key, value: attribute3 },
+      { key: formValues.dataList.attribute4?.key, value: attribute4 },
+    ].reduce(
+      (acc, { key, value }) => {
+        if (isPopulatedString(key)) {
+          acc[key] = value!;
+        }
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
     const requestBody: DataListOptionCreateRqDV1 = {
       dataListId: datalist?.id ? datalist.id : formValues.dataListId!,
@@ -169,13 +184,8 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       attributesMap,
     };
 
-    // return createDatalistOption({ body: requestBody });
+    return createDatalistOption({ body: requestBody });
   };
-
-  if (!datalist || !datalist.id) {
-    console.error("DataList: no datalist");
-    return;
-  }
 
   return (
     <CrudDataTable
