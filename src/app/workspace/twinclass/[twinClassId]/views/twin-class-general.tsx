@@ -74,7 +74,7 @@ export function TwinClassGeneral() {
       title: "Update head",
       onSubmit: (values) => {
         return updateTwinClass({
-          headTwinClassUpdate: { newId: values.headClassId },
+          headTwinClassUpdate: { newId: values.headClassId[0].id },
           headHunterFeaturerId: values.headHunterFeaturerId,
           headHunterParams: values.headHunterParams,
         });
