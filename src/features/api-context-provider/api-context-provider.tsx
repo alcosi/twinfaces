@@ -17,6 +17,10 @@ import {
   FactoryBrancheApi,
 } from "@/entities/factory-branche";
 import {
+  createFactoryConditionSetApi,
+  FactoryConditionSetApi,
+} from "@/entities/factory-condition-set";
+import {
   createFactoryPipelineApi,
   FactoryPipelineApi,
 } from "@/entities/factory-pipeline";
@@ -31,15 +35,20 @@ import {
   PermissionSchemaApi,
 } from "@/entities/permissionSchema";
 import {
+  createPipelineStepApi,
+  PipelineStepApi,
+} from "@/entities/pipeline-step";
+import {
   createPermissionSpaceRoleApi,
   PermissionSpaceRoleApi,
 } from "@/entities/spaceRole";
 import { createTwinApi, TwinApi } from "@/entities/twin";
-import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
 import {
   createTwinClassFieldApi,
   TwinClassFieldApi,
 } from "@/entities/twin-class-field";
+import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
+import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
 import {
   createTwinClassLinksApi,
   TwinClassLinkApi,
@@ -57,23 +66,15 @@ import {
   createPermissionTwinRoleApi,
   PermissionTwinRoleApi,
 } from "@/entities/twinRole";
-import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
 import { createUserApi, UserApi } from "@/entities/user";
 import { createUserGroupApi, UserGroupApi } from "@/entities/userGroup";
 import { ApiContext, ApiSettings } from "@/shared/api";
 import { paths } from "@/shared/api/generated/schema";
+import { LoadingOverlay } from "@/shared/ui";
 import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
-import {
-  createFactoryConditionSetApi,
-  FactoryConditionSetApi,
-} from "@/entities/factory-condition-set";
-import {
-  createPipelineStepApi,
-  PipelineStepApi,
-} from "@/entities/pipeline-step";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -112,11 +113,13 @@ export function ApiContextProvider({
   const { authUser } = useAuthUser();
 
   const settings: ApiSettings = {
-    authToken: authUser?.authToken ?? env("NEXT_PUBLIC_AUTH_TOKEN") ?? "",
-    domain: authUser?.domainId ?? env("NEXT_PUBLIC_DOMAIN") ?? "",
-    channel: env("NEXT_PUBLIC_CHANNEL") ?? "",
+    authToken: authUser?.authToken ?? "",
+    domain: authUser?.domainId ?? "",
+    channel: "WEB",
     client: createClient<paths>({ baseUrl: env("NEXT_PUBLIC_TWINS_API_URL") }),
   };
+
+  if (!authUser?.authToken) return <LoadingOverlay />;
 
   return (
     <ApiContext.Provider
