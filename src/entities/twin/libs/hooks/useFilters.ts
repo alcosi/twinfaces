@@ -90,10 +90,7 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
         toArray(filters.descriptionLikeList),
         "description"
       ).map(wrapWithPercent),
-      headTwinIdList: toArrayOfString(
-        toArray(filters.headTwinIdList),
-        "id"
-      ),
+      headTwinIdList: toArrayOfString(toArray(filters.headTwinIdList), "id"),
     };
 
     return result;
