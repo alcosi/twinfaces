@@ -146,25 +146,19 @@ export function TwinClassGeneral() {
     },
   };
 
-  const initViewPermissonAutoDialogSettings: AutoEditDialogSettings = {
-    value: {
-      viewPermissionId: twinClass.viewPermissionId,
+  const viewPermissionSettings: InPlaceEditProps<any> = {
+    id: "viewPermissionId",
+    value: twinClass.viewPermissionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select permission...",
+      ...pAdapter,
     },
-    title: "Update permission",
-    onSubmit: (values) => {
-      return updateTwinClass({
-        viewPermissionId: values.viewPermissionId[0].id,
-      });
+    renderPreview: twinClass.viewPermission ? (_) => <PermissionResourceLink data={twinClass.viewPermission!} /> : undefined,
+    onSubmit: async (value) => {
+      return updateTwinClass({ viewPermissionId: value.viewPermissionId[0].id})
     },
-    valuesInfo: {
-      viewPermissionId: {
-        type: AutoFormValueType.combobox,
-        label: "View permission",
-        selectPlaceholder: "Select permission...",
-        ...pAdapter,
-      },
-    },
-  };
+  }
 
   const initTagListAutoDialogSettings: AutoEditDialogSettings = {
     value: {
@@ -298,18 +292,10 @@ export function TwinClassGeneral() {
 
           <TableRow
             className={"cursor-pointer"}
-            onClick={() =>
-              openWithSettings(initViewPermissonAutoDialogSettings)
-            }
           >
             <TableCell>View Permission</TableCell>
             <TableCell>
-              {twinClass.viewPermission && (
-                <PermissionResourceLink
-                  data={twinClass.viewPermission as Permission}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...viewPermissionSettings} />
             </TableCell>
           </TableRow>
 
