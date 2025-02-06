@@ -1,9 +1,24 @@
+import { z } from "zod";
 import {
   LinkStrength,
   LinkStrengthEnum,
   LinkTypes,
   LinkTypesEnum,
 } from "./types";
+
+export const LINK_TYPES_SCHEMA = z.enum(
+  [LinkTypesEnum.ManyToMany, LinkTypesEnum.ManyToOne, LinkTypesEnum.OneToOne],
+  { message: "Invalid type" }
+);
+
+export const LINK_STRENGTH_SCHEMA = z.enum(
+  [
+    LinkStrengthEnum.MANDATORY,
+    LinkStrengthEnum.OPTIONAL,
+    LinkStrengthEnum.OPTIONAL_BUT_DELETE_CASCADE,
+  ],
+  { message: "Invalid link strength" }
+);
 
 export const TWIN_CLASS_LINK_TYPES: Array<{
   id: LinkTypes;
