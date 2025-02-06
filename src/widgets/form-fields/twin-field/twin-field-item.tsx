@@ -14,9 +14,11 @@ import { TwinFieldType } from "@/entities/twinField";
 import { useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";
 import React from "react";
+import { TwinForLinkSelectFormItem } from "@/entities/twinLink";
 
 export type TwinFieldFormItemProps = {
   descriptor: TwinClassFieldDescriptor;
+  twinClassId: string;
 };
 
 type Props = FormItemProps &
@@ -25,7 +27,12 @@ type Props = FormItemProps &
     onChange?: (value: string) => void;
   };
 
-export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
+export function TwinFieldFormItem({
+  twinClassId,
+  descriptor,
+  onChange,
+  ...props
+}: Props) {
   const twinAdapter = useTwinSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
   const userAdapter = useUserSelectAdapter();
@@ -73,7 +80,6 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
           <TextFormItem type="file" onChange={handleTextChange} {...props} />
         );
       case TwinFieldType.selectLinkV1:
-      case TwinFieldType.selectLinkLongV1:
         return (
           <ComboboxFormItem
             getById={twinAdapter.getById}
@@ -81,6 +87,15 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
             renderItem={twinAdapter.renderItem}
             onSelect={handleOnTwinSelect}
             multi={descriptor.multiple}
+            {...props}
+          />
+        );
+      case TwinFieldType.selectLinkLongV1:
+        return (
+          <TwinForLinkSelectFormItem
+            multiple={descriptor.multiple}
+            linkId={descriptor.linkId}
+            twinClassId={twinClassId}
             {...props}
           />
         );

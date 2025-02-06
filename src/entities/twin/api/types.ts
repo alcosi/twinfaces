@@ -40,3 +40,5 @@ export type TwinFilterKeys =
 export type TwinFilters = Partial<
   Pick<components["schemas"]["TwinSearchRqV1"], TwinFilterKeys>
 >;
+
+export type TwinSimpleFilters = components["schemas"]["TwinSearchSimpleV1"];

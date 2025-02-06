@@ -71,6 +71,8 @@ export function InputFieldsTab() {
     });
   }
 
+  const mockTwinClassId = "e2b4b9c0-4cdd-42a0-a52a-a8e439b1c17b";
+
   return (
     <>
       <Form {...twinFieldsForm}>
@@ -93,6 +95,7 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.textV1.descriptor}
                       name={TwinFieldType.textV1}
                       label={TwinFieldType.textV1}
+                      twinClassId={mockTwinClassId}
                     />
 
                     <TwinFieldFormField
@@ -100,6 +103,7 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.urlV1.descriptor}
                       name={TwinFieldType.urlV1}
                       label={TwinFieldType.urlV1}
+                      twinClassId={mockTwinClassId}
                     />
 
                     <TwinFieldFormField
@@ -107,6 +111,7 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.immutableV1.descriptor}
                       name={TwinFieldType.immutableV1}
                       label={TwinFieldType.immutableV1}
+                      twinClassId={mockTwinClassId}
                     />
                   </div>
                 }
@@ -121,6 +126,7 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.numericV1.descriptor}
                       name={TwinFieldType.numericV1}
                       label={TwinFieldType.numericV1}
+                      twinClassId={mockTwinClassId}
                     />
 
                     <TwinFieldFormField
@@ -128,6 +134,7 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.numericFieldV1.descriptor}
                       name={TwinFieldType.numericFieldV1}
                       label={TwinFieldType.numericFieldV1}
+                      twinClassId={mockTwinClassId}
                     />
                   </div>
                 }
@@ -142,30 +149,35 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.selectLinkV1.descriptor}
                       name={TwinFieldType.selectLinkV1}
                       label={TwinFieldType.selectLinkV1}
+                      twinClassId={mockTwinClassId}
                     />
                     <TwinFieldFormField
                       control={form.control}
                       descriptor={Fake.FieldInputs.selectLinkLongV1.descriptor}
                       name={TwinFieldType.selectLinkLongV1}
                       label={TwinFieldType.selectLinkLongV1}
+                      twinClassId={mockTwinClassId}
                     />
                     <TwinFieldFormField
                       control={form.control}
                       descriptor={Fake.FieldInputs.selectListV1.descriptor}
                       name={TwinFieldType.selectListV1}
                       label={TwinFieldType.selectListV1}
+                      twinClassId={mockTwinClassId}
                     />
                     <TwinFieldFormField
                       control={form.control}
                       descriptor={Fake.FieldInputs.selectListLongV1.descriptor}
                       name={TwinFieldType.selectListLongV1}
                       label={TwinFieldType.selectListLongV1}
+                      twinClassId={mockTwinClassId}
                     />
                     <TwinFieldFormField
                       control={form.control}
                       descriptor={Fake.FieldInputs.selectLongV1.descriptor}
                       name={TwinFieldType.selectLongV1}
                       label={TwinFieldType.selectLongV1}
+                      twinClassId={mockTwinClassId}
                     />
                     <TwinFieldFormField
                       control={form.control}
@@ -174,12 +186,14 @@ export function InputFieldsTab() {
                       }
                       name={TwinFieldType.selectSharedInHeadV1}
                       label={TwinFieldType.selectSharedInHeadV1}
+                      twinClassId={mockTwinClassId}
                     />
                     <TwinFieldFormField
                       control={form.control}
                       descriptor={Fake.FieldInputs.selectUserV1.descriptor}
                       name={TwinFieldType.selectUserV1}
                       label={TwinFieldType.selectUserV1}
+                      twinClassId={mockTwinClassId}
                     />
 
                     <TwinFieldFormField
@@ -187,6 +201,7 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.selectUserLongV1.descriptor}
                       name={TwinFieldType.selectUserLongV1}
                       label={TwinFieldType.selectUserLongV1}
+                      twinClassId={mockTwinClassId}
                     />
                   </div>
                 }
@@ -201,12 +216,14 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.attachmentFieldV1.descriptor}
                       name={TwinFieldType.attachmentFieldV1}
                       label={TwinFieldType.attachmentFieldV1}
+                      twinClassId={mockTwinClassId}
                     />
                     <TwinFieldFormField
                       control={form.control}
                       descriptor={Fake.FieldInputs.attachmentV1.descriptor}
                       name={TwinFieldType.attachmentFieldV1}
                       label={TwinFieldType.attachmentFieldV1}
+                      twinClassId={mockTwinClassId}
                     />
                   </div>
                 }
@@ -221,6 +238,7 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.colorHexV1.descriptor}
                       name={TwinFieldType.colorHexV1}
                       label={TwinFieldType.colorHexV1}
+                      twinClassId={mockTwinClassId}
                     />
 
                     <TwinFieldFormField
@@ -228,6 +246,7 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.dateScrollV1.descriptor}
                       name={TwinFieldType.dateScrollV1}
                       label="dabeScrollV1"
+                      twinClassId={mockTwinClassId}
                     />
 
                     <TwinFieldFormField
@@ -235,6 +254,7 @@ export function InputFieldsTab() {
                       descriptor={{ fieldType: "random" }}
                       name=""
                       label="not supported type"
+                      twinClassId={mockTwinClassId}
                     />
                   </div>
                 }

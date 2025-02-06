@@ -14,6 +14,7 @@ export function TwinFormFields({
   control: Control<TwinFormValues>;
 }) {
   const {
+    selectedTwinClass,
     twinClassAdapter,
     fields,
     userAdapter,
@@ -66,6 +67,7 @@ export function TwinFormFields({
           name={`fields.${field.key!}`}
           control={control}
           label={field.name}
+          twinClassId={selectedTwinClass!.id}
           descriptor={field.descriptor}
           required={field.required}
         />

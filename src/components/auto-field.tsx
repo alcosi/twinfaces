@@ -170,6 +170,7 @@ export function AutoField({
             label={info.label}
             description={info.description}
             descriptor={info.descriptor}
+            twinClassId={info.twinClassId}
           />
         ) : (
           <TwinFieldFormItem
@@ -177,6 +178,7 @@ export function AutoField({
             label={info.label}
             description={info.description}
             descriptor={info.descriptor}
+            twinClassId={info.twinClassId}
           />
         );
 

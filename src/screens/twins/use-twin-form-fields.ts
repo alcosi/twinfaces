@@ -23,6 +23,7 @@ export function useTwinClassFields(control: Control<TwinFormValues>) {
     : null;
 
   return {
+    selectedTwinClass,
     twinClassAdapter: {
       ...twinClassAdapter,
       getItems: (search: string) => {

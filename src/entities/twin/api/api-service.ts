@@ -1,7 +1,12 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
-import { TwinCreateRq, TwinFilters, TwinUpdateRq } from "./types";
+import {
+  TwinCreateRq,
+  TwinFilters,
+  TwinSimpleFilters,
+  TwinUpdateRq,
+} from "./types";
 
 export function createTwinApi(settings: ApiSettings) {
   function search({
@@ -145,6 +150,64 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
+  function getNewTwinLinkOptions({
+    twinClassId,
+    linkId,
+    pagination,
+    filters,
+  }: {
+    twinClassId: string;
+    linkId: string;
+    pagination: PaginationState;
+    filters?: TwinSimpleFilters;
+  }) {
+    return settings.client.POST(
+      "/private/twin_class/{twinClassId}/link/{linkId}/valid_twins/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { twinClassId, linkId },
+          query: {
+            showTwinMode: "DETAILED",
+            showTwinClassMode: "DETAILED",
+            offset: pagination.pageIndex * pagination.pageSize,
+            limit: pagination.pageSize,
+          },
+        },
+        body: filters ?? {},
+      }
+    );
+  }
+
+  function getExistingTwinLinkOptions({
+    twinId,
+    linkId,
+    pagination,
+    filters,
+  }: {
+    twinId: string;
+    linkId: string;
+    pagination: PaginationState;
+    filters?: TwinSimpleFilters;
+  }) {
+    return settings.client.POST(
+      "/private/twin/{twinId}/link/{linkId}/valid_twins/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { twinId, linkId },
+          query: {
+            showTwinMode: "DETAILED",
+            showTwinClassMode: "DETAILED",
+            offset: pagination.pageIndex * pagination.pageSize,
+            limit: pagination.pageSize,
+          },
+        },
+        body: filters ?? {},
+      }
+    );
+  }
+
   return {
     search,
     getById,
@@ -154,6 +217,8 @@ export function createTwinApi(settings: ApiSettings) {
     getHistory,
     getLinks,
     upsertField,
+    getNewTwinLinkOptions,
+    getExistingTwinLinkOptions,
   };
 }
 
