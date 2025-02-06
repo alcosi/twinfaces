@@ -180,7 +180,9 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       attributesMap,
     };
 
-    return createDatalistOption({ body: requestBody });
+    return createDatalistOption({ body: requestBody }).then(() => {
+      toast.success("Datalist option created successfully!");
+    });
   };
 
   return (

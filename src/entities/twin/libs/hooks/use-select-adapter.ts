@@ -74,6 +74,7 @@ export function useTwinHeadSelectAdapter(): SelectAdapter<Twin> {
   async function getItems(search: string, filters?: { twinClassId: string }) {
     // !!! TODO: search is not used
     const response = await fetchValidHeadTwins({
+      search,
       twinClassId: filters?.twinClassId ?? "",
     });
 

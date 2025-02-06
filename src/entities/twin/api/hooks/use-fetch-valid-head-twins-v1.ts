@@ -10,8 +10,10 @@ export const useFetchValidHeadTwins = () => {
   const fetchValidHeadTwins = useCallback(
     async ({
       twinClassId,
+      search,
     }: {
       twinClassId: string;
+      search?: string;
     }): Promise<PagedResponse<Twin>> => {
       const _query: TwinClassValidHeadQuery = {
         lazyRelation: false,
@@ -23,6 +25,7 @@ export const useFetchValidHeadTwins = () => {
         const { data, error } = await api.twinClass.getValidHeads({
           twinClassId,
           query: _query,
+          search,
         });
 
         if (error) {
