@@ -29,7 +29,6 @@ import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
 import { z } from "zod";
 import {
-  Permission,
   PermissionResourceLink,
   usePermissionSelectAdapter,
 } from "@/entities/permission";
@@ -146,6 +145,23 @@ export function TwinClassGeneral() {
     },
   };
 
+  const createPermissionSettings: InPlaceEditProps<any> = {
+    id: "createPermissionId",
+    value: twinClass.createPermissionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select permission...",
+      ...pAdapter,
+    },
+    renderPreview: twinClass.createPermission
+      ? (_) => <PermissionResourceLink data={twinClass.createPermission!} />
+      : undefined,
+    onSubmit: async (value) => {
+      console.log(value);
+      return updateTwinClass({ createPermissionId: value[0].id });
+    },
+  };
+
   const viewPermissionSettings: InPlaceEditProps<any> = {
     id: "viewPermissionId",
     value: twinClass.viewPermissionId,
@@ -160,6 +176,40 @@ export function TwinClassGeneral() {
     onSubmit: async (value) => {
       console.log(value);
       return updateTwinClass({ viewPermissionId: value[0].id });
+    },
+  };
+
+  const editPermissionSettings: InPlaceEditProps<any> = {
+    id: "editPermissionId",
+    value: twinClass.editPermissionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select permission...",
+      ...pAdapter,
+    },
+    renderPreview: twinClass.editPermission
+      ? (_) => <PermissionResourceLink data={twinClass.editPermission!} />
+      : undefined,
+    onSubmit: async (value) => {
+      console.log(value);
+      return updateTwinClass({ editPermissionId: value[0].id });
+    },
+  };
+
+  const deletePermissionSettings: InPlaceEditProps<any> = {
+    id: "deletePermissionId",
+    value: twinClass.deletePermissionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select permission...",
+      ...pAdapter,
+    },
+    renderPreview: twinClass.deletePermission
+      ? (_) => <PermissionResourceLink data={twinClass.deletePermission!} />
+      : undefined,
+    onSubmit: async (value) => {
+      console.log(value);
+      return updateTwinClass({ deletePermissionId: value[0].id });
     },
   };
 
@@ -297,9 +347,30 @@ export function TwinClassGeneral() {
           </TableRow>
 
           <TableRow className={"cursor-pointer"}>
+            <TableCell>Create Permission</TableCell>
+            <TableCell>
+              <InPlaceEdit {...createPermissionSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow className={"cursor-pointer"}>
             <TableCell>View Permission</TableCell>
             <TableCell>
               <InPlaceEdit {...viewPermissionSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow className={"cursor-pointer"}>
+            <TableCell>Edit Permission</TableCell>
+            <TableCell>
+              <InPlaceEdit {...editPermissionSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow className={"cursor-pointer"}>
+            <TableCell>Delete Permission</TableCell>
+            <TableCell>
+              <InPlaceEdit {...deletePermissionSettings} />
             </TableCell>
           </TableRow>
 
