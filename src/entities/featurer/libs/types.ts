@@ -38,7 +38,7 @@ export enum FeaturerParamType {
   STRING_TWINS_TWIN_BASIC_FIELD = "STRING:TWINS:TWIN_BASIC_FIELD",
 }
 
-export type FeaturerParamValue = string | boolean | number;
+export type FeaturerParamValue = string | string[] | boolean | number;
 
 export type FeaturerParams = Record<
   string,
@@ -51,4 +51,21 @@ export type FeaturerParams = Record<
 export interface FeaturerValue {
   featurer: Featurer;
   params: FeaturerParams;
+}
+
+export function getDefaultFeaturerParamValue(type: FeaturerParamType) {
+  switch (type) {
+    case FeaturerParamType.BOOLEAN:
+      return false;
+    case FeaturerParamType.INT:
+      return 0;
+    case FeaturerParamType.DOUBLE:
+      return 0.0;
+
+    default:
+      if (type.startsWith("UUID_SET") || type.startsWith("WORD_LIST")) {
+        return [] as string[];
+      }
+      return "";
+  }
 }
