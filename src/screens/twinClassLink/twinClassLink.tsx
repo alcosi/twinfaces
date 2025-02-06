@@ -26,7 +26,7 @@ export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
     setBreadcrumbs([
       { label: "Classes", href: "/workspace/twinclass" },
       { label: twinClass?.name!, href: `/workspace/twinclass/${twinClassId}` },
-      { label: "Links", href: `/workspace/twinclass/${twinClassId}#links` },
+      { label: "Relations", href: `/workspace/twinclass/${twinClassId}#links` },
       {
         label: link?.name ?? "N/A",
         href: `/workspace/twinclass/${twinClassId}/link/${linkId}`,
