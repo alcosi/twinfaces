@@ -13,6 +13,7 @@ import {
   useTwinSearchV3,
 } from "../../api/hooks";
 import { TwinBasicFields, TwinTouchIds } from "../constants";
+import { formatTwinDisplay } from "../helpers";
 
 export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
   const { searchTwins } = useTwinSearchV3();
@@ -72,7 +73,6 @@ export function useTwinHeadSelectAdapter(): SelectAdapter<Twin> {
   }
 
   async function getItems(search: string, filters?: { twinClassId: string }) {
-    // !!! TODO: search is not used
     const response = await fetchValidHeadTwins({
       search,
       twinClassId: filters?.twinClassId ?? "",
@@ -81,11 +81,8 @@ export function useTwinHeadSelectAdapter(): SelectAdapter<Twin> {
     return response.data;
   }
 
-  function renderItem({ aliases, name }: Twin) {
-    // TODO: use function from `shared`
-    const aliasText = isPopulatedArray(aliases) ? `${aliases[0]} | ` : "";
-    const twinName = isPopulatedString(name) ? `${name}` : "N/A";
-    return `${aliasText}${twinName}`;
+  function renderItem(twin: Twin) {
+    return formatTwinDisplay(twin);
   }
 
   return {

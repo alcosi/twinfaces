@@ -1,6 +1,7 @@
 import { Twin } from "@/entities/twin";
 import { TwinClassValidHeadQuery } from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { useCallback, useContext } from "react";
 
 // TODO: Apply caching-strategy
@@ -25,7 +26,11 @@ export const useFetchValidHeadTwins = () => {
         const { data, error } = await api.twinClass.getValidHeads({
           twinClassId,
           query: _query,
-          search,
+          filters: {
+            nameLike: isPopulatedString(search)
+              ? wrapWithPercent(search)
+              : undefined,
+          },
         });
 
         if (error) {

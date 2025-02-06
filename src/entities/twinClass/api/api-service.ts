@@ -116,12 +116,10 @@ export function createTwinClassApi(settings: ApiSettings) {
     twinClassId,
     query = {},
     filters,
-    search,
   }: {
     twinClassId: string;
     query?: TwinClassValidHeadQuery;
     filters?: TwinClassValidHeadFilters;
-    search?: string;
   }) {
     return settings.client.POST(
       `/private/twin_class/{twinClassId}/valid_heads/v1`,
@@ -131,10 +129,7 @@ export function createTwinClassApi(settings: ApiSettings) {
           path: { twinClassId },
           query: query,
         },
-        body: {
-          ...filters,
-          nameLike: "%" + search + "%",
-        },
+        body: { ...filters },
       }
     );
   }
