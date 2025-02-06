@@ -5,13 +5,18 @@ import {
 } from "@/entities/twinClass";
 import {
   CreateLinkRequestBody,
+  LINK_STRENGTH_SCHEMA,
+  LINK_TYPES_SCHEMA,
+  LinkStrength,
   LinkStrengthEnum,
+  LinkTypes,
   LinkTypesEnum,
   TwinClassLink,
   UpdateLinkRequestBody,
 } from "@/entities/twinClassLink";
 import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
 import { ApiContext, PagedResponse } from "@/shared/api";
+import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
 import { Badge } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -26,21 +31,33 @@ import { z } from "zod";
 import { TwinClassRelationsFormFields } from "./form-fields";
 
 const twinLinkSchema = z.object({
-  srcTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
-  dstTwinClassId: z.string().uuid("Twin Class ID must be a valid UUID"),
+  srcTwinClassId: z
+    .string()
+    .uuid("Twin Class ID must be a valid UUID")
+    .or(FIRST_ID_EXTRACTOR),
+  dstTwinClassId: z
+    .string()
+    .uuid("Twin Class ID must be a valid UUID")
+    .or(FIRST_ID_EXTRACTOR),
   name: z.string().min(1, "Name can not be empty"),
-  type: z.enum(
-    [LinkTypesEnum.ManyToMany, LinkTypesEnum.ManyToOne, LinkTypesEnum.OneToOne],
-    { message: "Invalid type" }
-  ),
-  linkStrength: z.enum(
-    [
-      LinkStrengthEnum.MANDATORY,
-      LinkStrengthEnum.OPTIONAL,
-      LinkStrengthEnum.OPTIONAL_BUT_DELETE_CASCADE,
-    ],
-    { message: "Invalid link strength" }
-  ),
+  type: z
+    .array(z.object({ id: LINK_TYPES_SCHEMA }))
+    .min(1, "Required")
+    .transform<LinkTypes>((arr) =>
+      isPopulatedArray<{ id: string }>(arr)
+        ? (arr[0].id as LinkTypes)
+        : LinkTypesEnum.OneToOne
+    )
+    .or(LINK_TYPES_SCHEMA),
+  linkStrength: z
+    .array(z.object({ id: LINK_STRENGTH_SCHEMA }))
+    .min(1, "Required")
+    .transform<LinkStrength>((arr) =>
+      isPopulatedArray<{ id: string }>(arr)
+        ? (arr[0].id as LinkStrength)
+        : LinkStrengthEnum.MANDATORY
+    )
+    .or(LINK_STRENGTH_SCHEMA),
 });
 
 const mapLinkToFormPayload = (
