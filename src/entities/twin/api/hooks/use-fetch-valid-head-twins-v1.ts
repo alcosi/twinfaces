@@ -1,6 +1,7 @@
 import { Twin } from "@/entities/twin";
 import { TwinClassValidHeadQuery } from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { useCallback, useContext } from "react";
 
 // TODO: Apply caching-strategy
@@ -10,8 +11,10 @@ export const useFetchValidHeadTwins = () => {
   const fetchValidHeadTwins = useCallback(
     async ({
       twinClassId,
+      search,
     }: {
       twinClassId: string;
+      search?: string;
     }): Promise<PagedResponse<Twin>> => {
       const _query: TwinClassValidHeadQuery = {
         lazyRelation: false,
@@ -23,6 +26,11 @@ export const useFetchValidHeadTwins = () => {
         const { data, error } = await api.twinClass.getValidHeads({
           twinClassId,
           query: _query,
+          filters: {
+            nameLike: isPopulatedString(search)
+              ? wrapWithPercent(search)
+              : undefined,
+          },
         });
 
         if (error) {

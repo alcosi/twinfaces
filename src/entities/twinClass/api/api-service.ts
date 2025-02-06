@@ -129,9 +129,7 @@ export function createTwinClassApi(settings: ApiSettings) {
           path: { twinClassId },
           query: query,
         },
-        body: {
-          ...filters,
-        },
+        body: { ...filters },
       }
     );
   }

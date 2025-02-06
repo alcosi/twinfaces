@@ -41,6 +41,7 @@ export function TwinFormFields({
           control={control}
           label="Head"
           {...headAdapter}
+          required
         />
       )}
 

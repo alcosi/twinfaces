@@ -131,6 +131,7 @@ export const DatalistsScreen = () => {
 
     createDatalist({ body: requestBody }).then(() => {
       toast.success("Datalist created successfully!");
+      tableRef.current?.refresh();
     });
   };
 
