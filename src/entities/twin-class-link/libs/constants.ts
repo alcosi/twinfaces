@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   LinkStrength,
   LinkStrengthEnum,
-  LinkTypes,
+  LinkType,
   LinkTypesEnum,
 } from "./types";
 
@@ -21,7 +21,7 @@ export const LINK_STRENGTH_SCHEMA = z.enum(
 );
 
 export const TWIN_CLASS_LINK_TYPES: Array<{
-  id: LinkTypes;
+  id: LinkType;
   label: string;
 }> = [
   { id: LinkTypesEnum.OneToOne, label: "OneToOne" },

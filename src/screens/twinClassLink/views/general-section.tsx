@@ -6,8 +6,8 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
 import {
-  LINK_STRENGTH_TYPES,
-  LINK_TYPE_TYPES,
+  LINK_STRENGTHS,
+  LINK_TYPES,
   TwinClassLink,
   UpdateLinkRequestBody,
   useLinkUpdate,
@@ -138,7 +138,7 @@ export function GeneralSection({
     value: link.type,
     valueInfo: {
       type: AutoFormValueType.combobox,
-      ...createFixedSelectAdapter(LINK_TYPE_TYPES),
+      ...createFixedSelectAdapter(LINK_TYPES),
     },
     onSubmit: async (value) => {
       return update({ type: value[0] });
@@ -150,7 +150,7 @@ export function GeneralSection({
     value: link.linkStrengthId,
     valueInfo: {
       type: AutoFormValueType.combobox,
-      ...createFixedSelectAdapter(LINK_STRENGTH_TYPES),
+      ...createFixedSelectAdapter(LINK_STRENGTHS),
     },
     onSubmit: async (value) => {
       return update({ linkStrength: value[0] });

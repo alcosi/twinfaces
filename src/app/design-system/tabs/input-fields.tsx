@@ -1,11 +1,11 @@
 import { AutoField, AutoFormValueType } from "@/components/auto-field";
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { FeaturerTypes } from "@/entities/featurer";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import {
   useTwinClassLinkStrengthSelectAdapter,
   useTwinClassLinkTypeSelectAdapter,
-} from "../../../entities/twin-class-link";
+} from "@/entities/twin-class-link";
+import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { TwinFieldType } from "@/entities/twinField";
 import { useTwinFlowSelectAdapter } from "@/entities/twinFlow";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";

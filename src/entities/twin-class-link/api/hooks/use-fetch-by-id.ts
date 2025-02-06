@@ -1,8 +1,8 @@
 import { ApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext, useState } from "react";
-import { QueryLinkViewV1, TwinClassLink } from "../types";
 import { hydrateLinkFromMap } from "../../libs";
+import { QueryLinkViewV1, TwinClassLink } from "../types";
 
 // TODO: Apply caching-strategy
 export const useLinkFetchById = () => {
