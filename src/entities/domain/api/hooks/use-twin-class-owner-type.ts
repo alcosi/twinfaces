@@ -1,6 +1,6 @@
-import { useCallback, useContext } from "react";
 import { ApiContext } from "@/shared/api";
-import { isUndefined } from "../../../../shared/libs";
+import { isUndefined } from "@/shared/libs";
+import { useCallback, useContext } from "react";
 
 export const useTwinClassOwnerType = () => {
   const api = useContext(ApiContext);

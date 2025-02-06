@@ -4,6 +4,7 @@ import {
   isEmptyArray,
   isEmptyString,
   isFalsy,
+  isPopulatedArray,
   isPopulatedString,
   isTruthy,
 } from "@/shared/libs";
@@ -52,11 +53,9 @@ export function ComboboxFormItem<TFieldModel>({
           return;
         }
 
-        if (isArray(values)) {
-          comboboxRef.current?.setSelected(values.slice(-1));
-        } else {
-          comboboxRef.current?.setSelected(values);
-        }
+        comboboxRef.current?.setSelected(
+          isPopulatedArray(values) ? values.slice(-1) : []
+        );
       } else {
         comboboxRef.current?.setSelected(values);
       }

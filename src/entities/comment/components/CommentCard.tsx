@@ -33,7 +33,7 @@ export function CommentCard({ item }: CommentCardProps) {
               <UserResourceLink data={item.authorUser} withTooltip hideAvatar />
             </h2>
             <span className="text-xs text-gray-500">
-              {formatToTwinfaceDate(item.createdAt!, true)}
+              {formatToTwinfaceDate(item.createdAt, "datetime")}
             </span>
           </div>
 

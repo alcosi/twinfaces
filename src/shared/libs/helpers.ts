@@ -98,7 +98,7 @@ export function debounce<T extends (...args: any[]) => void>(
 
 export function formatToTwinfaceDate(
   dateInput: Date | string | number,
-  includeTime: boolean = false
+  format: "date" | "datetime" | "time" = "date"
 ): string {
   const date = new Date(dateInput);
   if (isNaN(date.getTime())) {
@@ -108,7 +108,15 @@ export function formatToTwinfaceDate(
   const formattedDate = date.toLocaleDateString();
   const formattedTime = date.toLocaleTimeString();
 
-  return includeTime ? `${formattedDate} | ${formattedTime}` : formattedDate;
+  switch (format) {
+    case "datetime":
+      return `${formattedDate} | ${formattedTime}`;
+    case "time":
+      return formattedTime;
+    case "date":
+    default:
+      return formattedDate;
+  }
 }
 
 export function pluckProperty<

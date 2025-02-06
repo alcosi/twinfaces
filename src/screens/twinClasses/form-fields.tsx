@@ -1,17 +1,20 @@
-import { CheckboxFormField, CheckboxFormItem } from "@/components/form-fields";
-import { TextAreaFormField, TextFormField } from "@/components/form-fields";
+import {
+  CheckboxFormField,
+  CheckboxFormItem,
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields";
+import { ComboboxFormField } from "@/components/form-fields/combobox";
+import { useDatalistSelectAdapter } from "@/entities/datalist";
+import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";
 import { FeaturerTypes } from "@/entities/featurer";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 import { TwinClassFieldValues } from "@/entities/twinClass";
 import { TwinClassSelectField } from "@/features/twinClass";
 import { isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
-import { Control, Path, PathValue, useWatch } from "react-hook-form";
-import { ComboboxFormField } from "@/components/form-fields/combobox";
-import { useDatalistSelectAdapter } from "@/entities/datalist";
-import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useState } from "react";
-import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";
-import { Checkbox } from "../../shared/ui";
+import { Control, Path, PathValue, useWatch } from "react-hook-form";
 
 export function TwinClassFormFields<T extends TwinClassFieldValues>({
   control,
