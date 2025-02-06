@@ -64,7 +64,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col text-center sm:text-left bg-background z-30 h-16",
+      "flex flex-col text-center sm:text-left z-30 h-16",
       className
     )}
     {...props}
