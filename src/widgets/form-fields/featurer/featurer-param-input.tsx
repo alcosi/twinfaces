@@ -9,6 +9,7 @@ import {
   FeaturerParamType,
   FeaturerParamValue,
 } from "@/entities/featurer";
+import { isPopulatedArray } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 import { useFeaturerParamTypesSelectAdapter } from "./hooks";
 
@@ -38,8 +39,8 @@ export function FeaturerParamInput({
           <CheckboxFormItem
             label={param.name}
             description={param.description}
-            fieldValue={value as boolean}
-            onChange={(newChecked) => setValue(newChecked as boolean)}
+            fieldValue={Boolean(value)}
+            onChange={(newChecked) => setValue(Boolean(newChecked))}
           />
         );
       case FeaturerParamType.WORD_LIST:
@@ -66,6 +67,9 @@ export function FeaturerParamInput({
             description={param.description}
             // TODO: find solution to remove `any`
             {...(adapter as any)}
+            onSelect={(item: [{ id: string }, ...{ id: string }[]]) => {
+              setValue(isPopulatedArray(item) ? item[0].id : item);
+            }}
           />
         );
       case FeaturerParamType.UUID_SET_TWINS_USER_GROUP_ID:
@@ -81,6 +85,10 @@ export function FeaturerParamInput({
             // TODO: find solution to remove `any`
             {...(adapter as any)}
             multi={true}
+            onSelect={(items: [{ id: string }, ...{ id: string }[]]) => {
+              const ids = items.map((item) => item.id).join(",");
+              setValue(ids);
+            }}
           />
         );
       case FeaturerParamType.INT:
