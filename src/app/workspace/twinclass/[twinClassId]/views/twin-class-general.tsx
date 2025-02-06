@@ -157,7 +157,6 @@ export function TwinClassGeneral() {
       ? (_) => <PermissionResourceLink data={twinClass.createPermission!} />
       : undefined,
     onSubmit: async (value) => {
-      console.log(value);
       return updateTwinClass({ createPermissionId: value[0].id });
     },
   };
@@ -174,7 +173,6 @@ export function TwinClassGeneral() {
       ? (_) => <PermissionResourceLink data={twinClass.viewPermission!} />
       : undefined,
     onSubmit: async (value) => {
-      console.log(value);
       return updateTwinClass({ viewPermissionId: value[0].id });
     },
   };
@@ -191,7 +189,6 @@ export function TwinClassGeneral() {
       ? (_) => <PermissionResourceLink data={twinClass.editPermission!} />
       : undefined,
     onSubmit: async (value) => {
-      console.log(value);
       return updateTwinClass({ editPermissionId: value[0].id });
     },
   };
@@ -208,7 +205,6 @@ export function TwinClassGeneral() {
       ? (_) => <PermissionResourceLink data={twinClass.deletePermission!} />
       : undefined,
     onSubmit: async (value) => {
-      console.log(value);
       return updateTwinClass({ deletePermissionId: value[0].id });
     },
   };
