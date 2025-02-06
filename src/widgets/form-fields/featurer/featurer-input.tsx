@@ -4,6 +4,7 @@ import {
   FeaturerParamType,
   FeaturerParamValue,
   FeaturerValue,
+  getDefaultFeaturerParamValue,
 } from "@/entities/featurer";
 import { ApiContext } from "@/shared/api";
 import {
@@ -54,7 +55,9 @@ export function FeaturerInput({
       selectedFeaturer?.params?.reduce((acc, param) => {
         if (param.key) {
           acc[param.key] = {
-            value: "",
+            value: getDefaultFeaturerParamValue(
+              param.type as FeaturerParamType
+            ),
             type: param.type as FeaturerParamType,
           };
         }
