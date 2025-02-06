@@ -127,11 +127,10 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         {...dlAdapter}
       />
 
-      <CheckboxFormItem
-        inForm
-        name={"autoCreatePermissions"}
+      <CheckboxFormField
+        control={control}
+        name={"autoCreatePermissions" as Path<T>}
         label="Auto create permissions"
-        fieldValue={isAutoCreatePermission}
         onClick={() => setIsAutoCreatePermission((prev) => !prev)}
       />
 

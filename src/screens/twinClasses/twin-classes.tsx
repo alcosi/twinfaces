@@ -287,6 +287,7 @@ export function TwinClasses() {
       createPermissionId: "",
       editPermissionId: "",
       deletePermissionId: "",
+      autoCreatePermissions: true,
     },
   });
 
