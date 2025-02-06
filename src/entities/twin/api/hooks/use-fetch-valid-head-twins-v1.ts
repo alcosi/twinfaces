@@ -18,7 +18,7 @@ export const useFetchValidHeadTwins = () => {
     }): Promise<PagedResponse<Twin>> => {
       const _query: TwinClassValidHeadQuery = {
         lazyRelation: false,
-        showTwinAliasMode: "ALL",
+        showTwinAliasMode: "C",
         showTwinMode: "DETAILED",
       };
 
