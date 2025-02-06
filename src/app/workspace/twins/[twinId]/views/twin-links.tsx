@@ -1,5 +1,5 @@
 import { TwinResourceLink } from "@/entities/twin";
-import { TwinClassLinkResourceLink } from "@/entities/twinClassLink";
+import { TwinClassLinkResourceLink } from "@/entities/twin-class-link";
 import { TwinLinkView, useFetchTwinLinks } from "@/entities/twinLink";
 import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";

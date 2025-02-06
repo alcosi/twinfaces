@@ -1,4 +1,4 @@
-import { TwinClassLink } from "@/entities/twinClassLink";
+import { TwinClassLink } from "@/entities/twin-class-link";
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { Badge, ResourceLinkTooltip } from "@/shared/ui";
 import { Link2 } from "lucide-react";

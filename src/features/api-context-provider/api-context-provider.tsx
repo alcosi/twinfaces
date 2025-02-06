@@ -52,7 +52,7 @@ import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
 import {
   createTwinClassLinksApi,
   TwinClassLinkApi,
-} from "@/entities/twinClassLink";
+} from "@/entities/twin-class-link";
 import { createTwinFlowApi, TwinFlowApi } from "@/entities/twinFlow";
 import {
   createTwinFlowSchemaApi,

@@ -13,8 +13,8 @@ import {
   LinkTypesEnum,
   TwinClassLink,
   UpdateLinkRequestBody,
-} from "@/entities/twinClassLink";
-import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
+  TwinClassLinkResourceLink,
+} from "@/entities/twin-class-link";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
 import { Badge } from "@/shared/ui";

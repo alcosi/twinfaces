@@ -14,3 +14,11 @@ export const LinkStrengthEnum = createEnum<LinkStrength>([
   "OPTIONAL",
   "OPTIONAL_BUT_DELETE_CASCADE",
 ] as const);
+
+export const LINK_TYPE_TYPES = ["ManyToOne", "ManyToMany", "OneToOne"] as const;
+
+export const LINK_STRENGTH_TYPES = [
+  "MANDATORY",
+  "OPTIONAL",
+  "OPTIONAL_BUT_DELETE_CASCADE",
+] as const;

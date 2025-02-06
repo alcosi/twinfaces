@@ -25,5 +25,9 @@ export function hydrateLinkFromMap(
     ] as TwinClass;
   }
 
+  if (dto.createdByUserId && relatedObjects.userMap) {
+    hydrated.createdByUser = relatedObjects.userMap[dto.createdByUserId];
+  }
+
   return hydrated;
 }

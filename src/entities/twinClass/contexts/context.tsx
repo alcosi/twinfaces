@@ -3,7 +3,7 @@ import {
   TwinClass,
   useFetchTwinClassById,
 } from "@/entities/twinClass";
-import { TwinClassLink } from "@/entities/twinClassLink";
+import { TwinClassLink } from "@/entities/twin-class-link";
 import { RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
