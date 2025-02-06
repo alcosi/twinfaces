@@ -3,7 +3,7 @@ import { TextFormField } from "@/components/form-fields";
 import {
   useTwinClassLinkStrengthSelectAdapter,
   useTwinClassLinkTypeSelectAdapter,
-} from "@/entities/twinClassLink";
+} from "@/entities/twin-class-link";
 import { TwinClassSelectField } from "@/features/twinClass";
 import { Control, FieldValues, Path } from "react-hook-form";
 

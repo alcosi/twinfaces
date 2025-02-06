@@ -1,11 +1,10 @@
 import { SelectAdapter } from "@/shared/libs";
-import { TwinClassLink_MANAGED } from "../../api";
-import { useLinkSearchV1 } from "../../api/hooks";
+import { TwinClassLink_MANAGED, useLinkSearchV1 } from "../../api";
 import { TWIN_CLASS_LINK_STRENGTH, TWIN_CLASS_LINK_TYPES } from "../constants";
-import { LinkStrength, LinkTypes } from "../types";
+import { LinkStrength, LinkType } from "../types";
 
 export function useTwinClassLinkTypeSelectAdapter(): SelectAdapter<{
-  id: LinkTypes;
+  id: LinkType;
   label: string;
 }> {
   async function getById(id: string) {

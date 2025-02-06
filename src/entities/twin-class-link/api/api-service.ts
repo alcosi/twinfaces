@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/react-table";
 import {
   CreateLinkRequestBody,
   LinkSearchFilters,
+  QueryLinkViewV1,
   UpdateLinkRequestBody,
 } from "./types";
 
@@ -69,7 +70,23 @@ export function createTwinClassLinksApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getLinks, create, update };
+  function getById({
+    linkId,
+    query = {},
+  }: {
+    linkId: string;
+    query: QueryLinkViewV1;
+  }) {
+    return settings.client.GET("/private/link/{linkId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { linkId },
+        query: query,
+      },
+    });
+  }
+
+  return { search, getLinks, create, update, getById };
 }
 
 export type TwinClassLinkApi = ReturnType<typeof createTwinClassLinksApi>;

@@ -1,20 +1,20 @@
 import {
-  TwinClass_DETAILED,
-  TwinClassContext,
-  TwinClassResourceLink,
-} from "@/entities/twinClass";
-import {
   CreateLinkRequestBody,
   LINK_STRENGTH_SCHEMA,
   LINK_TYPES_SCHEMA,
   LinkStrength,
   LinkStrengthEnum,
-  LinkTypes,
+  LinkType,
   LinkTypesEnum,
   TwinClassLink,
+  TwinClassLinkResourceLink,
   UpdateLinkRequestBody,
-} from "@/entities/twinClassLink";
-import { TwinClassLinkResourceLink } from "@/entities/twinClassLink/components";
+} from "@/entities/twin-class-link";
+import {
+  TwinClass_DETAILED,
+  TwinClassContext,
+  TwinClassResourceLink,
+} from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
 import { Badge } from "@/shared/ui";
@@ -43,9 +43,9 @@ const twinLinkSchema = z.object({
   type: z
     .array(z.object({ id: LINK_TYPES_SCHEMA }))
     .min(1, "Required")
-    .transform<LinkTypes>((arr) =>
+    .transform<LinkType>((arr) =>
       isPopulatedArray<{ id: string }>(arr)
-        ? (arr[0].id as LinkTypes)
+        ? (arr[0].id as LinkType)
         : LinkTypesEnum.OneToOne
     )
     .or(LINK_TYPES_SCHEMA),

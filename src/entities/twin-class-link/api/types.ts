@@ -39,3 +39,5 @@ export type LinkSearchFilterKeys =
 export type LinkSearchFilters = Partial<
   Pick<components["schemas"]["LinkSearchRqV1"], LinkSearchFilterKeys>
 >;
+
+export type QueryLinkViewV1 = operations["linkViewV1"]["parameters"]["query"];
