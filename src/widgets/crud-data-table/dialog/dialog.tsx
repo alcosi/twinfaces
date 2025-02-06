@@ -105,7 +105,7 @@ function Component(
               {renderFormFields && renderFormFields()}
             </div>
 
-            <DialogFooter className="sm:justify-end bg-background p-6">
+            <DialogFooter className="sm:justify-end bg-background p-6 rounded-b-md">
               <Button
                 type="submit"
                 loading={dialogForm.formState.isSubmitting}
