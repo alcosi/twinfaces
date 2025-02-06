@@ -10,6 +10,7 @@ import { isPopulatedString } from "@/shared/libs";
 import { Control, useWatch } from "react-hook-form";
 import { FeaturerFormField } from "../../form-fields";
 import { TwinClassFieldFormValues } from "./types";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 
 export function TwinClassFieldFormFields({
   control,
@@ -18,6 +19,7 @@ export function TwinClassFieldFormFields({
 }) {
   const tcAdapter = useTwinClassSelectAdapter();
   const twinClassId = useWatch({ control, name: "twinClassId" });
+  const pAdapter = usePermissionSelectAdapter();
 
   return (
     <>
@@ -42,26 +44,34 @@ export function TwinClassFieldFormFields({
         label="Description"
       />
 
+      <CheckboxFormField control={control} name="required" label="Required" />
+
       <FeaturerFormField
         typeId={FeaturerTypes.fieldTyper}
         control={control}
         name="fieldTyperFeaturerId"
-        label={"Featurer"}
+        label={"Field typer"}
       />
 
-      <TextFormField
+      <ComboboxFormField
         control={control}
-        name="viewPermissionId"
-        label="View permission ID"
+        name={"viewPermissionId"}
+        label="View permission"
+        selectPlaceholder="Select view permission"
+        searchPlaceholder="Search view permission..."
+        noItemsText="No permission found"
+        {...pAdapter}
       />
 
-      <TextFormField
+      <ComboboxFormField
         control={control}
-        name="editPermissionId"
-        label="Edit permission ID"
+        name={"editPermissionId"}
+        label="Edit permission"
+        selectPlaceholder="Select edit permission"
+        searchPlaceholder="Search edit permission..."
+        noItemsText="No permission found"
+        {...pAdapter}
       />
-
-      <CheckboxFormField control={control} name="required" label="Required" />
     </>
   );
 }

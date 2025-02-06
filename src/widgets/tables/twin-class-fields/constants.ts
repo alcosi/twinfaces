@@ -16,14 +16,7 @@ export const TWIN_CLASS_FIELD_SCHEMA = z.object({
   required: z.boolean(),
   fieldTyperFeaturerId: z.number(),
   fieldTyperParams: z.record(z.string()),
-  viewPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  editPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+  //TODO fix any
+  viewPermissionId: z.any(),
+  editPermissionId: z.any(),
 });
