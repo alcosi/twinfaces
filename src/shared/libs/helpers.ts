@@ -97,13 +97,26 @@ export function debounce<T extends (...args: any[]) => void>(
 }
 
 export function formatToTwinfaceDate(
-  dateInput: Date | string | number
+  dateInput: Date | string | number,
+  format: "date" | "datetime" | "time" = "date"
 ): string {
   const date = new Date(dateInput);
   if (isNaN(date.getTime())) {
     throw new Error("Invalid date input");
   }
-  return date.toLocaleDateString();
+
+  const formattedDate = date.toLocaleDateString();
+  const formattedTime = date.toLocaleTimeString();
+
+  switch (format) {
+    case "datetime":
+      return `${formattedDate} | ${formattedTime}`;
+    case "time":
+      return formattedTime;
+    case "date":
+    default:
+      return formattedDate;
+  }
 }
 
 export function pluckProperty<

@@ -1,14 +1,20 @@
-import { CheckboxFormField } from "@/components/form-fields";
-import { TextAreaFormField, TextFormField } from "@/components/form-fields";
+import {
+  CheckboxFormField,
+  CheckboxFormItem,
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields";
+import { ComboboxFormField } from "@/components/form-fields/combobox";
+import { useDatalistSelectAdapter } from "@/entities/datalist";
+import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";
 import { FeaturerTypes } from "@/entities/featurer";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 import { TwinClassFieldValues } from "@/entities/twinClass";
 import { TwinClassSelectField } from "@/features/twinClass";
 import { isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
+import { useState } from "react";
 import { Control, Path, PathValue, useWatch } from "react-hook-form";
-import { ComboboxFormField } from "@/components/form-fields/combobox";
-import { useDatalistSelectAdapter } from "@/entities/datalist";
-import { usePermissionSelectAdapter } from "@/entities/permission";
 
 export function TwinClassFormFields<T extends TwinClassFieldValues>({
   control,
@@ -21,8 +27,14 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
     // TODO: Fix type for `defaultValue`, ensuring it matches `PathValue<T, "headTwinClass">`.
     defaultValue: [] as PathValue<T, any>,
   });
+
   const dlAdapter = useDatalistSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
+  const twinClassOwnerTypeAdapter = useTwinClassOwnerTypeSelectAdapter();
+
+  const [isSpaceChecked, setIsSpaceChecked] = useState<boolean>(false);
+  const [isAutoCreatePermission, setIsAutoCreatePermission] =
+    useState<boolean>(true);
 
   return (
     <>
@@ -39,6 +51,16 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         control={control}
         name={"description" as Path<T>}
         label="Description"
+      />
+
+      <ComboboxFormField
+        control={control}
+        name={"twinClassOwnerTypes" as Path<T>}
+        label="Owner type"
+        selectPlaceholder="Select owner type"
+        searchPlaceholder="Search owner type..."
+        noItemsText="No owner type found"
+        {...twinClassOwnerTypeAdapter}
       />
 
       <CheckboxFormField
@@ -74,30 +96,6 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         label="Extends"
       />
 
-      <CheckboxFormField
-        control={control}
-        name={"permissionSchemaSpace" as Path<T>}
-        label="Permission schema space"
-      />
-
-      <CheckboxFormField
-        control={control}
-        name={"twinflowSchemaSpace" as Path<T>}
-        label="Twinflow schema space"
-      />
-
-      <CheckboxFormField
-        control={control}
-        name={"twinClassSchemaSpace" as Path<T>}
-        label="Twin class schema space"
-      />
-
-      <CheckboxFormField
-        control={control}
-        name={"aliasSpace" as Path<T>}
-        label="Alias space"
-      />
-
       <ComboboxFormField
         control={control}
         name={"markerDataListId" as Path<T>}
@@ -118,15 +116,92 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         {...dlAdapter}
       />
 
-      <ComboboxFormField
-        control={control}
-        name={"viewPermissionId" as Path<T>}
-        label="Permission"
-        selectPlaceholder="Select permission"
-        searchPlaceholder="Search permission..."
-        noItemsText="No permission found"
-        {...pAdapter}
+      <CheckboxFormItem
+        inForm
+        name={"autoCreatePermissions"}
+        label="Auto create permissions"
+        fieldValue={isAutoCreatePermission}
+        onClick={() => setIsAutoCreatePermission((prev) => !prev)}
       />
+
+      {!isAutoCreatePermission && (
+        <fieldset className="px-1.5 py-2.5 rounded-md border border-dashed">
+          <legend className="text-sm font-medium italic">Permissions</legend>
+          <ComboboxFormField
+            control={control}
+            name={"createPermission" as Path<T>}
+            label="Create"
+            selectPlaceholder="Select create permission"
+            searchPlaceholder="Search create permission..."
+            noItemsText="No create permission found"
+            {...pAdapter}
+          />
+
+          <ComboboxFormField
+            control={control}
+            name={"viewPermission" as Path<T>}
+            label="View"
+            selectPlaceholder="Select view permission"
+            searchPlaceholder="Search view permission..."
+            noItemsText="No view permission found"
+            {...pAdapter}
+          />
+
+          <ComboboxFormField
+            control={control}
+            name={"editPermission" as Path<T>}
+            label="Edit"
+            selectPlaceholder="Select edit permission"
+            searchPlaceholder="Search edit permission..."
+            noItemsText="No edit permission found"
+            {...pAdapter}
+          />
+
+          <ComboboxFormField
+            control={control}
+            name={"deletePermission" as Path<T>}
+            label=" Delete"
+            selectPlaceholder="Select delete permission"
+            searchPlaceholder="Search delete permission..."
+            noItemsText="No delete permission found"
+            {...pAdapter}
+          />
+        </fieldset>
+      )}
+
+      <CheckboxFormItem
+        label="Space"
+        name={"space" as Path<T>}
+        onClick={() => setIsSpaceChecked((prev) => !prev)}
+      />
+
+      {isSpaceChecked && (
+        <div className="px-1.5 py-2.5 rounded-md border border-dashed flex flex-col gap-4">
+          <CheckboxFormField
+            control={control}
+            name={"permissionSchemaSpace" as Path<T>}
+            label="Permission schema space"
+          />
+
+          <CheckboxFormField
+            control={control}
+            name={"twinflowSchemaSpace" as Path<T>}
+            label="Twinflow schema space"
+          />
+
+          <CheckboxFormField
+            control={control}
+            name={"twinClassSchemaSpace" as Path<T>}
+            label="Twin class schema space"
+          />
+
+          <CheckboxFormField
+            control={control}
+            name={"aliasSpace" as Path<T>}
+            label="Alias space"
+          />
+        </div>
+      )}
     </>
   );
 }
