@@ -181,8 +181,8 @@ export function CreateDomainForm() {
               /> */}
           </main>
 
-          <footer className="flex justify-start">
-            <Button type="submit">Save</Button>
+          <footer className="flex justify-end">
+            <Button type="submit">Create</Button>
           </footer>
         </section>
       </form>
