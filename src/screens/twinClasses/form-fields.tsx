@@ -139,7 +139,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           <legend className="text-sm font-medium italic">Permissions</legend>
           <ComboboxFormField
             control={control}
-            name={"createPermission" as Path<T>}
+            name={"createPermissionId" as Path<T>}
             label="Create"
             selectPlaceholder="Select create permission"
             searchPlaceholder="Search create permission..."
@@ -149,7 +149,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
           <ComboboxFormField
             control={control}
-            name={"viewPermission" as Path<T>}
+            name={"viewPermissionId" as Path<T>}
             label="View"
             selectPlaceholder="Select view permission"
             searchPlaceholder="Search view permission..."
@@ -159,7 +159,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
           <ComboboxFormField
             control={control}
-            name={"editPermission" as Path<T>}
+            name={"editPermissionId" as Path<T>}
             label="Edit"
             selectPlaceholder="Select edit permission"
             searchPlaceholder="Search edit permission..."
@@ -169,7 +169,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
           <ComboboxFormField
             control={control}
-            name={"deletePermission" as Path<T>}
+            name={"deletePermissionId" as Path<T>}
             label=" Delete"
             selectPlaceholder="Select delete permission"
             searchPlaceholder="Search delete permission..."

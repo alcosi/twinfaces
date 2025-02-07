@@ -50,24 +50,20 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .optional()
     .or(z.literal("").transform(() => undefined)),
   viewPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .array(z.object({ id: z.string() }))
+    .nonempty()
+    .transform((arr) => arr[0].id),
   createPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .array(z.object({ id: z.string() }))
+    .nonempty()
+    .transform((arr) => arr[0].id),
   editPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .array(z.object({ id: z.string() }))
+    .nonempty()
+    .transform((arr) => arr[0].id),
   deletePermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .array(z.object({ id: z.string() }))
+    .nonempty()
+    .transform((arr) => arr[0].id),
   autoCreatePermissions: z.boolean(),
 });
