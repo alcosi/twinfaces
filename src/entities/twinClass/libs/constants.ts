@@ -40,15 +40,15 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   twinClassSchemaSpace: z.boolean(),
   aliasSpace: z.boolean(),
   markerDataListId: z
-    .string()
-    .uuid()
+    .array(z.object({ id: z.string() }))
     .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .transform((arr) => arr?.[0]?.id ?? undefined)
+    .or(z.string()),
   tagDataListId: z
-    .string()
-    .uuid()
+    .array(z.object({ id: z.string() }))
     .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .transform((arr) => arr?.[0]?.id ?? undefined)
+    .or(z.string()),
   viewPermissionId: z
     .array(z.object({ id: z.string() }))
     .optional()

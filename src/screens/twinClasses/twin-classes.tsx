@@ -304,6 +304,8 @@ export function TwinClasses() {
       createPermissionId,
       editPermissionId,
       deletePermissionId,
+      tagDataListId,
+      markerDataListId,
       ...rest
     } = formValues;
 
@@ -329,6 +331,8 @@ export function TwinClasses() {
       createPermissionId: createPermissionId,
       editPermissionId: editPermissionId,
       deletePermissionId: deletePermissionId,
+      tagDataListId: tagDataListId,
+      markerDataListId: markerDataListId,
     };
 
     const { error } = await api.twinClass.create({ body: requestBody });
