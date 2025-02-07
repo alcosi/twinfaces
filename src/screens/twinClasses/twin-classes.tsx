@@ -300,6 +300,10 @@ export function TwinClasses() {
       headTwinClass,
       headHunterFeaturer,
       extendsTwinClassId,
+      viewPermissionId,
+      createPermissionId,
+      editPermissionId,
+      deletePermissionId,
       ...rest
     } = formValues;
 
@@ -321,10 +325,10 @@ export function TwinClasses() {
             translations: {},
           }
         : undefined,
-      viewPermissionId: formValues.viewPermissionId,
-      createPermissionId: formValues.createPermissionId,
-      editPermissionId: formValues.editPermissionId,
-      deletePermissionId: formValues.deletePermissionId,
+      viewPermissionId: viewPermissionId,
+      createPermissionId: createPermissionId,
+      editPermissionId: editPermissionId,
+      deletePermissionId: deletePermissionId,
     };
 
     const { error } = await api.twinClass.create({ body: requestBody });

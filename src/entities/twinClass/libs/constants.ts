@@ -51,19 +51,23 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .or(z.literal("").transform(() => undefined)),
   viewPermissionId: z
     .array(z.object({ id: z.string() }))
-    .nonempty()
-    .transform((arr) => arr[0].id),
+    .optional()
+    .transform((arr) => arr?.[0]?.id ?? undefined)
+    .or(z.string()),
   createPermissionId: z
     .array(z.object({ id: z.string() }))
-    .nonempty()
-    .transform((arr) => arr[0].id),
+    .optional()
+    .transform((arr) => arr?.[0]?.id ?? undefined)
+    .or(z.string()),
   editPermissionId: z
     .array(z.object({ id: z.string() }))
-    .nonempty()
-    .transform((arr) => arr[0].id),
+    .optional()
+    .transform((arr) => arr?.[0]?.id ?? undefined)
+    .or(z.string()),
   deletePermissionId: z
     .array(z.object({ id: z.string() }))
-    .nonempty()
-    .transform((arr) => arr[0].id),
+    .optional()
+    .transform((arr) => arr?.[0]?.id ?? undefined)
+    .or(z.string()),
   autoCreatePermissions: z.boolean(),
 });
