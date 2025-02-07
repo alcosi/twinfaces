@@ -1,5 +1,9 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { Factory, FactoryFilters } from "@/entities/factory";
+import {
+  Factory,
+  FactoryFilters,
+  hydrateFactoryFromMap,
+} from "@/entities/factory";
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
@@ -26,8 +30,13 @@ export function useFactorySearch() {
           throw error;
         }
 
+        const factory =
+          data.factories?.map((dto) =>
+            hydrateFactoryFromMap(dto, data.relatedObjects)
+          ) ?? [];
+
         return {
-          data: data.factories ?? [],
+          data: factory,
           pagination: data.pagination ?? {},
         };
       } catch (error) {
