@@ -2,8 +2,8 @@ import { ApiContext, PagedResponse } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { hydrateLinkFromMap } from "../../libs";
-import { LinkSearchFilters, TwinClassLink_MANAGED } from "../types";
+import { hydrateLinkFromMap } from "@/entities/link/libs/helpers";
+import { Link_MANAGED, LinkFilters } from "@/entities/link";
 
 // TODO: Apply caching-strategy
 export const useLinkSearchV1 = () => {
@@ -17,10 +17,10 @@ export const useLinkSearchV1 = () => {
     }: {
       search?: string;
       pagination?: PaginationState;
-      filters?: LinkSearchFilters;
-    }): Promise<PagedResponse<TwinClassLink_MANAGED>> => {
+      filters?: LinkFilters;
+    }): Promise<PagedResponse<Link_MANAGED>> => {
       try {
-        const { data, error } = await api.twinClassLink.search({
+        const { data, error } = await api.link.search({
           pagination,
           filters: {
             ...filters,

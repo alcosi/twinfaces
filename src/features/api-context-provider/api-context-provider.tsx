@@ -75,6 +75,7 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
+import { createLinkApi, LinkApi } from "@/entities/link/api";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -103,6 +104,7 @@ export interface ApiContextProps {
   pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
+  link: LinkApi;
 }
 
 export function ApiContextProvider({
@@ -150,6 +152,7 @@ export function ApiContextProvider({
         pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
+        link: createLinkApi(settings),
       }}
     >
       {children}

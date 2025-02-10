@@ -1,18 +1,23 @@
 import { SelectAdapter } from "@/shared/libs";
-import { TwinClassLink_MANAGED, useLinkSearchV1 } from "../../api";
-import { TWIN_CLASS_LINK_STRENGTH, TWIN_CLASS_LINK_TYPES } from "../constants";
-import { LinkStrength, LinkType } from "../types";
+import { useLinkSearchV1 } from "../../../twin-class-link/api";
+import {
+  Link_MANAGED,
+  LINK_STRENGTH_ENUM,
+  LINK_TYPES_ENUM,
+  LinkStrength,
+  LinkType,
+} from "@/entities/link";
 
-export function useTwinClassLinkTypeSelectAdapter(): SelectAdapter<{
+export function useLinkTypeSelectAdapter(): SelectAdapter<{
   id: LinkType;
   label: string;
 }> {
   async function getById(id: string) {
-    return TWIN_CLASS_LINK_TYPES.find((i) => i.id === id);
+    return LINK_TYPES_ENUM.find((i) => i.id === id);
   }
 
   async function getItems() {
-    return TWIN_CLASS_LINK_TYPES;
+    return LINK_TYPES_ENUM;
   }
 
   function renderItem({ label }: { label: string }) {
@@ -26,16 +31,16 @@ export function useTwinClassLinkTypeSelectAdapter(): SelectAdapter<{
   };
 }
 
-export function useTwinClassLinkStrengthSelectAdapter(): SelectAdapter<{
+export function useLinkStrengthSelectAdapter(): SelectAdapter<{
   id: LinkStrength;
   label: string;
 }> {
   async function getById(id: string) {
-    return TWIN_CLASS_LINK_STRENGTH.find((i) => i.id === id);
+    return LINK_STRENGTH_ENUM.find((i) => i.id === id);
   }
 
   async function getItems() {
-    return TWIN_CLASS_LINK_STRENGTH;
+    return LINK_STRENGTH_ENUM;
   }
 
   function renderItem({ label }: { label: string }) {
@@ -49,11 +54,11 @@ export function useTwinClassLinkStrengthSelectAdapter(): SelectAdapter<{
   };
 }
 
-export function useLinkSelectAdapter(): SelectAdapter<TwinClassLink_MANAGED> {
+export function useLinkSelectAdapter(): SelectAdapter<Link_MANAGED> {
   const { searchLinks } = useLinkSearchV1();
 
   async function getById(id: string) {
-    return { id } as TwinClassLink_MANAGED;
+    return { id } as Link_MANAGED;
   }
 
   async function getItems(search: string) {
@@ -61,12 +66,8 @@ export function useLinkSelectAdapter(): SelectAdapter<TwinClassLink_MANAGED> {
     return response.data;
   }
 
-  function renderItem({
-    srcTwinClass,
-    dstTwinClass,
-    name,
-  }: TwinClassLink_MANAGED) {
-    return `${srcTwinClass.name} -> ${dstTwinClass.name} : ${name}`;
+  function renderItem({ srcTwinClass, dstTwinClass, name }: Link_MANAGED) {
+    return `${srcTwinClass?.name} -> ${dstTwinClass?.name} : ${name}`;
   }
 
   return {

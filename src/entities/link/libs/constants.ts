@@ -20,7 +20,7 @@ export const LINK_STRENGTH_SCHEMA = z.enum(
   { message: "Invalid link strength" }
 );
 
-export const TWIN_CLASS_LINK_TYPES: Array<{
+export const LINK_TYPES_ENUM: Array<{
   id: LinkType;
   label: string;
 }> = [
@@ -29,7 +29,7 @@ export const TWIN_CLASS_LINK_TYPES: Array<{
   { id: LinkTypesEnum.ManyToOne, label: "ManyToOne" },
 ] as const;
 
-export const TWIN_CLASS_LINK_STRENGTH: Array<{
+export const LINK_STRENGTH_ENUM: Array<{
   id: LinkStrength;
   label: string;
 }> = [

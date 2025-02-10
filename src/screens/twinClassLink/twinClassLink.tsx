@@ -8,7 +8,8 @@ import { GeneralSection } from "./views/general-section";
 import { toast } from "sonner";
 import { LoadingOverlay } from "@/shared/ui";
 import { isUndefined } from "@/shared/libs";
-import { TwinClassLink, useLinkFetchById } from "@/entities/twin-class-link";
+import { useLinkFetchById } from "@/entities/twin-class-link";
+import { Link } from "@/entities/link";
 
 export type PageProps = {
   params: {
@@ -19,7 +20,7 @@ export type PageProps = {
 export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
   const { twinClassId, twinClass } = useContext(TwinClassContext);
   const { setBreadcrumbs } = useBreadcrumbs();
-  const [link, setLink] = useState<TwinClassLink | undefined>(undefined);
+  const [link, setLink] = useState<Link | undefined>(undefined);
   const { fetchLinkById, loading } = useLinkFetchById();
 
   useEffect(() => {
