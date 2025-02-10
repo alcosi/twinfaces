@@ -275,7 +275,7 @@ export function TwinClasses() {
       abstractClass: false,
       headTwinClass: null,
       headHunterFeaturer: {},
-      extendsTwinClassId: "",
+      extendsTwinClassId: null,
       logo: "",
       permissionSchemaSpace: false,
       twinflowSchemaSpace: false,
@@ -293,11 +293,18 @@ export function TwinClasses() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof TWIN_CLASSES_SCHEMA>
   ) => {
-    const { name, description, headTwinClass, headHunterFeaturer, ...rest } =
-      formValues;
+    const {
+      name,
+      description,
+      headTwinClass,
+      headHunterFeaturer,
+      extendsTwinClassId,
+      ...rest
+    } = formValues;
 
     const requestBody: TwinClassCreateRq = {
       ...rest,
+      extendsTwinClassId: extendsTwinClassId ?? "",
       headTwinClassId: headTwinClass?.[0]?.id,
       headHunterFeaturerId: headHunterFeaturer?.id,
       headHunterParams: headHunterFeaturer?.params
