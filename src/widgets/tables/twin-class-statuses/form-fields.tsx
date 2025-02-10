@@ -1,10 +1,11 @@
 import {
   ColorPickerFormField,
+  ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 import { TwinClassStatusFormValues } from "@/entities/twin-status";
-import { TwinClassSelectField } from "@/features/twinClass";
+import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { isPopulatedString } from "@/shared/libs";
 import { Control, useWatch } from "react-hook-form";
 
@@ -14,14 +15,19 @@ export function TwinClassStatusFormFields({
   control: Control<TwinClassStatusFormValues>;
 }) {
   const twinClassId = useWatch({ control, name: "twinClassId" });
+  const tcAdapter = useTwinClassSelectAdapter();
 
   return (
     <>
-      <TwinClassSelectField
+      <ComboboxFormField
         control={control}
         name="twinClassId"
         label="Class"
         disabled={isPopulatedString(twinClassId)}
+        selectPlaceholder="Select twin class"
+        searchPlaceholder="Search twin class..."
+        noItemsText={"No classes found"}
+        {...tcAdapter}
       />
 
       <TextFormField

@@ -1,5 +1,5 @@
 import { FEATURER_FIELD_SCHEMA } from "@/entities/featurer";
-import { REGEX_PATTERNS } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
 import { z } from "zod";
 
 export const OWNER_TYPES = [
@@ -29,11 +29,7 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   abstractClass: z.boolean(),
   headTwinClass: z.array(z.object({ id: z.string().uuid() })).nullable(),
   headHunterFeaturer: FEATURER_FIELD_SCHEMA,
-  extendsTwinClassId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+  extendsTwinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),
   logo: z
     .string()
     .url()

@@ -9,8 +9,10 @@ import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";
 import { FeaturerTypes } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
-import { TwinClassFieldValues } from "@/entities/twinClass";
-import { TwinClassSelectField } from "@/features/twinClass";
+import {
+  TwinClassFieldValues,
+  useTwinClassSelectAdapter,
+} from "@/entities/twinClass";
 import { isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
 import { useState } from "react";
@@ -28,6 +30,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
     defaultValue: [] as PathValue<T, any>,
   });
 
+  const tcAdapter = useTwinClassSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
   const twinClassOwnerTypeAdapter = useTwinClassOwnerTypeSelectAdapter();
@@ -75,10 +78,14 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         label="Logo URL"
       />
 
-      <TwinClassSelectField
+      <ComboboxFormField
         control={control}
         name={"headTwinClass" as Path<T>}
         label="Head"
+        selectPlaceholder="Select twin class"
+        searchPlaceholder="Search twin class..."
+        noItemsText={"No classes found"}
+        {...tcAdapter}
       />
 
       {isPopulatedArray(headTwinClass) && (
@@ -90,10 +97,14 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         />
       )}
 
-      <TwinClassSelectField
+      <ComboboxFormField
         control={control}
         name={"extendsTwinClassId" as Path<T>}
         label="Extends"
+        selectPlaceholder="Select twin class"
+        searchPlaceholder="Search twin class..."
+        noItemsText={"No classes found"}
+        {...tcAdapter}
       />
 
       <ComboboxFormField
