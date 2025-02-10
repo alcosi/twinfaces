@@ -5,7 +5,7 @@ import {
   DatalistOptionResourceLink,
   DataListOptionV3,
 } from "@/entities/datalist-option";
-import { isPopulatedString } from "@/shared/libs";
+import { User, UserResourceLink } from "@/entities/user";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI
@@ -35,12 +35,17 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
 
     case TwinFieldType.selectListV1:
     case TwinFieldType.selectListLongV1:
+    case TwinFieldType.selectSharedInHeadV1:
       return (
         <DatalistOptionResourceLink
           data={twinField.value as DataListOptionV3}
           withTooltip
         />
       );
+
+    case TwinFieldType.selectUserV1:
+    case TwinFieldType.selectUserLongV1:
+      return <UserResourceLink data={twinField.value as User} />;
 
     default:
       return twinField.value as string;
