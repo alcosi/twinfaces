@@ -1,12 +1,4 @@
 import {
-  CreateLinkRequestBody,
-  LINK_STRENGTH_SCHEMA,
-  LINK_TYPES_SCHEMA,
-  LinkStrength,
-  LinkStrengthEnum,
-  LinkType,
-  LinkTypesEnum,
-  TwinClassLink,
   TwinClassLinkResourceLink,
   UpdateLinkRequestBody,
 } from "@/entities/twin-class-link";
@@ -16,7 +8,6 @@ import {
   TwinClassResourceLink,
 } from "@/entities/twin-class";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
 import { Badge } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -28,40 +19,17 @@ import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { TwinClassRelationsFormFields } from "./form-fields";
-
-const twinLinkSchema = z.object({
-  srcTwinClassId: z
-    .string()
-    .uuid("Twin Class ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR),
-  dstTwinClassId: z
-    .string()
-    .uuid("Twin Class ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR),
-  name: z.string().min(1, "Name can not be empty"),
-  type: z
-    .array(z.object({ id: LINK_TYPES_SCHEMA }))
-    .min(1, "Required")
-    .transform<LinkType>((arr) =>
-      isPopulatedArray<{ id: string }>(arr)
-        ? (arr[0].id as LinkType)
-        : LinkTypesEnum.OneToOne
-    )
-    .or(LINK_TYPES_SCHEMA),
-  linkStrength: z
-    .array(z.object({ id: LINK_STRENGTH_SCHEMA }))
-    .min(1, "Required")
-    .transform<LinkStrength>((arr) =>
-      isPopulatedArray<{ id: string }>(arr)
-        ? (arr[0].id as LinkStrength)
-        : LinkStrengthEnum.MANDATORY
-    )
-    .or(LINK_STRENGTH_SCHEMA),
-});
+import {
+  CreateLinkRequestBody,
+  Link,
+  linkSchema,
+  LinkStrengthEnum,
+  LinkTypesEnum,
+} from "@/entities/link";
+import { CreateLinkFormFields } from "../links";
 
 const mapLinkToFormPayload = (
-  link: TwinClassLink,
+  link: Link,
   options: {
     twinClassId: string;
     isBackward?: boolean;
@@ -88,7 +56,7 @@ export function TwinClassRelations() {
 
   const columnsMap: Record<
     "id" | "name" | "dstTwinClassId" | "type" | "linkStrengthId",
-    ColumnDef<TwinClassLink>
+    ColumnDef<Link>
   > = {
     id: {
       accessorKey: "id",
@@ -132,8 +100,8 @@ export function TwinClassRelations() {
     },
   };
 
-  const forwardLinkForm = useForm<z.infer<typeof twinLinkSchema>>({
-    resolver: zodResolver(twinLinkSchema),
+  const forwardLinkForm = useForm<z.infer<typeof linkSchema>>({
+    resolver: zodResolver(linkSchema),
     defaultValues: {
       srcTwinClassId: twinClass?.id,
       dstTwinClassId: "",
@@ -143,8 +111,8 @@ export function TwinClassRelations() {
     },
   });
 
-  const backwardLinkForm = useForm<z.infer<typeof twinLinkSchema>>({
-    resolver: zodResolver(twinLinkSchema),
+  const backwardLinkForm = useForm<z.infer<typeof linkSchema>>({
+    resolver: zodResolver(linkSchema),
     defaultValues: {
       srcTwinClassId: "",
       dstTwinClassId: twinClass?.id,
@@ -157,7 +125,7 @@ export function TwinClassRelations() {
   async function fetchLinks(
     type: "forward" | "backward",
     _: PaginationState
-  ): Promise<PagedResponse<TwinClassLink>> {
+  ): Promise<PagedResponse<Link>> {
     if (!twinClass?.id) {
       toast.error("Twin class ID is missing");
       return { data: [], pagination: {} };
@@ -203,7 +171,7 @@ export function TwinClassRelations() {
   }
 
   const handleOnCreateSubmit = async (
-    formValues: z.infer<typeof twinLinkSchema>
+    formValues: z.infer<typeof linkSchema>
   ) => {
     const body: CreateLinkRequestBody = {
       forwardNameI18n: {
@@ -219,7 +187,7 @@ export function TwinClassRelations() {
       ...formValues,
     };
 
-    const { error } = await api.twinClassLink.create({ body });
+    const { error } = await api.link.create({ body });
     if (error) {
       throw error;
     }
@@ -256,10 +224,7 @@ export function TwinClassRelations() {
         dialogForm={forwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
-          <TwinClassRelationsFormFields
-            control={forwardLinkForm.control}
-            isForward
-          />
+          <CreateLinkFormFields control={forwardLinkForm.control} isForward />
         )}
       />
 
@@ -290,7 +255,7 @@ export function TwinClassRelations() {
         dialogForm={backwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
-          <TwinClassRelationsFormFields control={backwardLinkForm.control} />
+          <CreateLinkFormFields control={backwardLinkForm.control} />
         )}
       />
     </>

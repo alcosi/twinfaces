@@ -1,10 +1,6 @@
 import { AutoField, AutoFormValueType } from "@/components/auto-field";
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { FeaturerTypes } from "@/entities/featurer";
-import {
-  useTwinClassLinkStrengthSelectAdapter,
-  useTwinClassLinkTypeSelectAdapter,
-} from "@/entities/twin-class-link";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { TwinFieldType } from "@/entities/twinField";
 import { useTwinFlowSelectAdapter } from "@/entities/twinFlow";
@@ -18,6 +14,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UiSection } from "../components/ui-section";
 import { Fake } from "../seeds";
+import {
+  useLinkStrengthSelectAdapter,
+  useLinkTypeSelectAdapter,
+} from "@/entities/link";
 
 const FORM_SCHEMA = z.any();
 type FormValues = z.infer<typeof FORM_SCHEMA>;
@@ -42,8 +42,8 @@ export function InputFieldsTab() {
   const tcAdapter = useTwinClassSelectAdapter();
   const uAdapter = useUserSelectAdapter();
   const ugAdapter = useUserGroupSelectAdapter();
-  const linkTypeAdapter = useTwinClassLinkTypeSelectAdapter();
-  const linkStrengthAdapter = useTwinClassLinkStrengthSelectAdapter();
+  const linkTypeAdapter = useLinkTypeSelectAdapter();
+  const linkStrengthAdapter = useLinkStrengthSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
   const tfAdapter = useTwinFlowSelectAdapter();
   const tfsAdapter = useTwinFlowSchemaSelectAdapter();

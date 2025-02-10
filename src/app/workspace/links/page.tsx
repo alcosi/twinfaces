@@ -1,7 +1,7 @@
 "use client";
 
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { LinksScreen } from "@/screens/links";
 
 export default function LinksPage() {
-  return <UnderConstruction />;
+  return <LinksScreen />;
 }

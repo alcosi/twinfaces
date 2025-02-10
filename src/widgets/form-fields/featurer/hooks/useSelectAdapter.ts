@@ -1,5 +1,6 @@
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { FeaturerParamType } from "@/entities/featurer";
+import { useLinkSelectAdapter } from "@/entities/link";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import {

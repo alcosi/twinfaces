@@ -1,9 +1,9 @@
+import { Link } from "@/entities/link";
 import {
   hydrateTwinClassFromMap,
   TwinClass,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
-import { TwinClassLink } from "@/entities/twin-class-link";
 import { RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -17,7 +17,7 @@ interface TwinClassContextProps {
   loading: boolean;
   fetchClassData: () => void;
   linkId?: string;
-  link?: TwinClassLink;
+  link?: Link;
   isForwardLink?: boolean;
 }
 
@@ -43,7 +43,7 @@ export function TwinClassContextProvider({
   // `Link` related logic
   // TODO: Consider extracting `linkId`, `link` and `isForwardLink`
   // into a separate hook or component for better maintainability.
-  const [link, setLink] = useState<TwinClassLink | undefined>();
+  const [link, setLink] = useState<Link | undefined>();
   const [isForwardLink, setIsForwardLink] = useState<boolean>();
 
   useEffect(() => {

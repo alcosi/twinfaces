@@ -1,45 +1,36 @@
-import { TextFormField } from "@/components/form-fields";
-import { ComboboxFormField } from "@/components/form-fields/combobox";
+import { ComboboxFormField, TextFormField } from "@/components/form-fields";
 import {
-  useTwinClassLinkStrengthSelectAdapter,
-  useTwinClassLinkTypeSelectAdapter,
-} from "@/entities/twin-class-link";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+  useLinkStrengthSelectAdapter,
+  useLinkTypeSelectAdapter,
+} from "@/entities/link";
 import { Control, FieldValues, Path } from "react-hook-form";
 
-export function TwinClassRelationsFormFields<T extends FieldValues>({
+export function CreateLinkFormFields<T extends FieldValues>({
   control,
   isForward,
+  enableAllTwinClasses,
 }: {
   control: Control<T>;
   isForward?: boolean;
+  enableAllTwinClasses?: boolean;
 }) {
-  const tcAdapter = useTwinClassSelectAdapter();
-  const typeAdapter = useTwinClassLinkTypeSelectAdapter();
-  const strengthAdapter = useTwinClassLinkStrengthSelectAdapter();
+  const typeAdapter = useLinkTypeSelectAdapter();
+  const strengthAdapter = useLinkStrengthSelectAdapter();
 
   return (
     <>
-      <ComboboxFormField
+      {/* <TwinClassSelectField
         control={control}
         name={"srcTwinClassId" as Path<T>}
         label="Source Twin Class"
-        disabled={isForward}
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
-        {...tcAdapter}
+        disabled={!enableAllTwinClasses && isForward}
       />
-      <ComboboxFormField
+      <TwinClassSelectField
         control={control}
         name={"dstTwinClassId" as Path<T>}
         label="Destination Twin Class"
-        disabled={!isForward}
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
-        {...tcAdapter}
-      />
+        disabled={!enableAllTwinClasses && !isForward}
+      /> */}
       <TextFormField
         control={control}
         name={"name" as Path<T>}
