@@ -14,6 +14,7 @@ export function createFactoryApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
+          lazyRelation: false,
           showFactoryMode: "DETAILED",
           showFactory2UserMode: "DETAILED",
           showFactoryUsagesCountMode: "SHOW",
