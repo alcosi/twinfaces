@@ -39,34 +39,11 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   twinflowSchemaSpace: z.boolean(),
   twinClassSchemaSpace: z.boolean(),
   aliasSpace: z.boolean(),
-  markerDataListId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  tagDataListId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  viewPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  createPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  editPermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  deletePermissionId: z
-    .string()
-    .uuid()
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+  markerDataListId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
+  tagDataListId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
+  viewPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
+  createPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
+  editPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
+  deletePermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
+  autoCreatePermissions: z.boolean(),
 });

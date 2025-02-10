@@ -281,12 +281,7 @@ export function TwinClasses() {
       twinflowSchemaSpace: false,
       twinClassSchemaSpace: false,
       aliasSpace: false,
-      markerDataListId: "",
-      tagDataListId: "",
-      viewPermissionId: "",
-      createPermissionId: "",
-      editPermissionId: "",
-      deletePermissionId: "",
+      autoCreatePermissions: true,
     },
   });
 
@@ -299,6 +294,13 @@ export function TwinClasses() {
       headTwinClass,
       headHunterFeaturer,
       extendsTwinClassId,
+      autoCreatePermissions,
+      viewPermissionId,
+      createPermissionId,
+      editPermissionId,
+      deletePermissionId,
+      tagDataListId,
+      markerDataListId,
       ...rest
     } = formValues;
 
@@ -320,6 +322,17 @@ export function TwinClasses() {
             translations: {},
           }
         : undefined,
+      autoCreatePermissions,
+      viewPermissionId: autoCreatePermissions ? undefined : viewPermissionId,
+      createPermissionId: autoCreatePermissions
+        ? undefined
+        : createPermissionId,
+      editPermissionId: autoCreatePermissions ? undefined : editPermissionId,
+      deletePermissionId: autoCreatePermissions
+        ? undefined
+        : deletePermissionId,
+      tagDataListId: tagDataListId,
+      markerDataListId: markerDataListId,
     };
 
     const { error } = await api.twinClass.create({ body: requestBody });
