@@ -281,12 +281,6 @@ export function TwinClasses() {
       twinflowSchemaSpace: false,
       twinClassSchemaSpace: false,
       aliasSpace: false,
-      markerDataListId: "",
-      tagDataListId: "",
-      viewPermissionId: "",
-      createPermissionId: "",
-      editPermissionId: "",
-      deletePermissionId: "",
       autoCreatePermissions: true,
     },
   });
@@ -300,6 +294,7 @@ export function TwinClasses() {
       headTwinClass,
       headHunterFeaturer,
       extendsTwinClassId,
+      autoCreatePermissions,
       viewPermissionId,
       createPermissionId,
       editPermissionId,
@@ -327,10 +322,15 @@ export function TwinClasses() {
             translations: {},
           }
         : undefined,
-      viewPermissionId: viewPermissionId,
-      createPermissionId: createPermissionId,
-      editPermissionId: editPermissionId,
-      deletePermissionId: deletePermissionId,
+      autoCreatePermissions,
+      viewPermissionId: autoCreatePermissions ? undefined : viewPermissionId,
+      createPermissionId: autoCreatePermissions
+        ? undefined
+        : createPermissionId,
+      editPermissionId: autoCreatePermissions ? undefined : editPermissionId,
+      deletePermissionId: autoCreatePermissions
+        ? undefined
+        : deletePermissionId,
       tagDataListId: tagDataListId,
       markerDataListId: markerDataListId,
     };

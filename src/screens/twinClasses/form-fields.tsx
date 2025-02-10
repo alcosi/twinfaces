@@ -13,7 +13,7 @@ import {
   TwinClassFieldValues,
   useTwinClassSelectAdapter,
 } from "@/entities/twinClass";
-import { isPopulatedArray } from "@/shared/libs";
+import { isFalsy, isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
 import { useState } from "react";
 import { Control, Path, PathValue, useWatch } from "react-hook-form";
@@ -134,7 +134,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         onClick={() => setIsAutoCreatePermission((prev) => !prev)}
       />
 
-      {!isAutoCreatePermission && (
+      {isFalsy(isAutoCreatePermission) && (
         <fieldset className="px-1.5 py-2.5 rounded-md border border-dashed">
           <legend className="text-sm font-medium italic">Permissions</legend>
           <ComboboxFormField
