@@ -87,6 +87,7 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
       case TwinFieldType.selectListV1:
       case TwinFieldType.selectListLongV1:
       case TwinFieldType.selectLongV1:
+      case TwinFieldType.selectSharedInHeadV1:
         return (
           <ComboboxFormItem
             getById={optionAdapter.getById}
@@ -101,8 +102,6 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
             {...props}
           />
         );
-      case TwinFieldType.selectSharedInHeadV1:
-        return <TextFormItem onChange={handleTextChange} {...props} />;
       case TwinFieldType.selectUserV1:
       case TwinFieldType.selectUserLongV1:
         return (
