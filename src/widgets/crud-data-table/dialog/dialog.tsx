@@ -101,7 +101,7 @@ function Component(
 
         <Form {...dialogForm}>
           <form onSubmit={dialogForm.handleSubmit(handleFormSubmit)}>
-            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
+            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-5 my-1">
               {renderFormFields && renderFormFields()}
             </div>
 
