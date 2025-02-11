@@ -142,7 +142,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   const twinClassesForm = useForm<z.infer<typeof DATALIST_OPTION_SCHEMA>>({
     resolver: zodResolver(DATALIST_OPTION_SCHEMA),
     defaultValues: {
-      dataList: datalist,
+      dataList: datalist ? [datalist] : [],
       name: "",
       icon: "",
       attribute1: undefined,

@@ -44,18 +44,6 @@ export function ComboboxFormItem<TFieldModel>({
 
     if (isEmptyArray(selected)) {
       if (isFalsy(props.multi)) {
-        if (typeof values === "object" && values !== null && "id" in values) {
-          const id = (values as { id: string }).id;
-
-          if (id.trim() !== "") {
-            const result = await props.getById(id);
-            comboboxRef.current?.setSelected(
-              isTruthy(result) ? [result] : undefined
-            );
-          }
-          return;
-        }
-
         if (isPopulatedString(values)) {
           const result = await props.getById(values);
           comboboxRef.current?.setSelected(
