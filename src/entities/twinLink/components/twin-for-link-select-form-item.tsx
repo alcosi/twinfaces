@@ -1,6 +1,5 @@
-import { useTwinsFromLinkSelectAdapter } from "@/entities/twinLink";
 import { ComboboxFormItem, FormItemProps } from "@/components/form-fields";
-import React from "react";
+import { useTwinsForLinkSelectAdapter } from "@/entities/twinLink";
 
 export interface TwinForLinkSelectFormItemProps extends FormItemProps {
   twinClassId?: string;
@@ -16,7 +15,7 @@ export function TwinForLinkSelectFormItem({
   multiple,
   ...props
 }: TwinForLinkSelectFormItemProps) {
-  const twinsFromLinkAdapter = useTwinsFromLinkSelectAdapter({
+  const twinsForLinkAdapter = useTwinsForLinkSelectAdapter({
     twinClassId,
     twinId,
     linkId,
@@ -24,10 +23,10 @@ export function TwinForLinkSelectFormItem({
 
   return (
     <ComboboxFormItem
-      {...twinsFromLinkAdapter}
-      getById={twinsFromLinkAdapter.getById}
-      getItems={(search) => twinsFromLinkAdapter.getItems(search)}
-      renderItem={twinsFromLinkAdapter.renderItem}
+      {...twinsForLinkAdapter}
+      getById={twinsForLinkAdapter.getById}
+      getItems={(search) => twinsForLinkAdapter.getItems(search)}
+      renderItem={twinsForLinkAdapter.renderItem}
       multi={multiple}
       {...props}
     />

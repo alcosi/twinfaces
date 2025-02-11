@@ -11,10 +11,10 @@ import {
 import { Twin, useTwinSelectAdapter } from "@/entities/twin";
 import { TwinClassFieldDescriptor } from "@/entities/twin-class-field";
 import { TwinFieldType } from "@/entities/twinField";
+import { TwinForLinkSelectFormItem } from "@/entities/twinLink";
 import { useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";
 import React from "react";
-import { TwinForLinkSelectFormItem } from "@/entities/twinLink";
 
 export type TwinFieldFormItemProps = {
   descriptor: TwinClassFieldDescriptor;

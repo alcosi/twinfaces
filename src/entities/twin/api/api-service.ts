@@ -150,6 +150,8 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
+  // TODO: move to `src/entities/twinClass/api/api-service.ts`
+  // TODO: rename to `getValidTwinsForLink`
   function getNewTwinLinkOptions({
     twinClassId,
     linkId,
@@ -179,6 +181,7 @@ export function createTwinApi(settings: ApiSettings) {
     );
   }
 
+  // TODO: rename to `getValidTwinsForLink`
   function getExistingTwinLinkOptions({
     twinId,
     linkId,

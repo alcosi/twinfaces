@@ -1,13 +1,13 @@
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
 import {
   Twin_DETAILED,
   TwinSimpleFilters,
   useTwinFetchByIdV2,
 } from "@/entities/twin";
-import { useFetchTwinsForLink } from "@/entities/twinLink/api/hooks/useFetchTwinsForLink";
 import { PagedResponse } from "@/shared/api";
+import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import { useFetchTwinsForLink } from "../../api";
 
-export function useTwinsFromLinkSelectAdapter({
+export function useTwinsForLinkSelectAdapter({
   twinClassId,
   twinId,
   linkId,
@@ -26,7 +26,9 @@ export function useTwinsFromLinkSelectAdapter({
 
   async function getItems(search: string, filters?: TwinSimpleFilters) {
     if (linkId == null) {
-      throw new Error("linkId must be provided to useLinkSelectAdapter");
+      throw new Error(
+        "linkId must be provided to useTwinsForLinkSelectAdapter"
+      );
     }
 
     if (isPopulatedString(search)) {
