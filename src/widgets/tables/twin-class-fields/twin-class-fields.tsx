@@ -8,7 +8,7 @@ import {
 } from "@/entities/twin-class-field";
 import { TwinClassResourceLink } from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { isFalsy, isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -135,6 +135,7 @@ export function TwinClassFieldsTable({
           "fieldTyperIdList",
           "viewPermissionIdList",
           "editPermissionIdList",
+          "twinClassIdList",
         ]
       : undefined,
   });
@@ -148,10 +149,7 @@ export function TwinClassFieldsTable({
     try {
       const response = await searchTwinClassFields({
         pagination,
-        filters: {
-          ..._filters,
-          twinClassIdList: toArrayOfString(toArray(twinClassId), "id"),
-        },
+        filters: _filters,
       });
 
       return {
