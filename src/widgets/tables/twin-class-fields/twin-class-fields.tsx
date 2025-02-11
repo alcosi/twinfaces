@@ -153,7 +153,7 @@ export function TwinClassFieldsTable({
           twinClassIdList: twinClassId
             ? toArrayOfString(toArray(twinClassId), "id")
             : _filters.twinClassIdList,
-        }
+        },
       });
 
       return {
