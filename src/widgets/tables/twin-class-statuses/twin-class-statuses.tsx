@@ -13,7 +13,7 @@ import {
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { isFalsy, isTruthy } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
@@ -157,7 +157,13 @@ export function TwinClassStatusesTable({
   const { searchTwinStatuses } = useTwinStatusSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = useStatusFilters({
     enabledFilters: isTruthy(twinClassId)
-      ? ["idList", "keyLikeList", "nameI18nLikeList", "descriptionI18nLikeList"]
+      ? [
+          "idList",
+          "keyLikeList",
+          "twinClassIdList",
+          "nameI18nLikeList",
+          "descriptionI18nLikeList",
+        ]
       : undefined,
   });
 
@@ -182,10 +188,7 @@ export function TwinClassStatusesTable({
     try {
       return await searchTwinStatuses({
         pagination,
-        filters: {
-          ..._filters,
-          twinClassIdList: toArrayOfString(toArray(twinClassId), "id"),
-        },
+        filters: _filters,
       });
     } catch (e) {
       toast.error("Failed to fetch statuses");
