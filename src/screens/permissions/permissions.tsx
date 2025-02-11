@@ -4,6 +4,7 @@ import {
   Permission_DETAILED,
   PERMISSION_SCHEMA,
   PermissionFormValues,
+  usePermissionCreate,
   usePermissionFilters,
   usePermissionSearchV1,
 } from "@/entities/permission";
@@ -13,7 +14,7 @@ import {
   PermissionGroupResourceLink,
 } from "@/entities/permissionGroup";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import {
   CrudDataTable,
@@ -23,7 +24,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -39,11 +40,13 @@ const colDefs: Record<
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
+
   key: {
     id: "key",
     accessorKey: "key",
     header: "Key",
   },
+
   name: {
     id: "name",
     accessorKey: "name",
@@ -54,6 +57,7 @@ const colDefs: Record<
       </div>
     ),
   },
+
   groupId: {
     id: "groupId",
     accessorKey: "groupId",
@@ -68,6 +72,7 @@ const colDefs: Record<
         </div>
       ),
   },
+
   description: {
     id: "description",
     accessorKey: "description",
@@ -76,12 +81,12 @@ const colDefs: Record<
 };
 
 export function Permissions() {
-  const api = useContext(ApiContext);
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissions } = usePermissionSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
+  const { createPermission } = usePermissionCreate();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Permissions", href: "/workspace/permission" }]);
@@ -119,7 +124,7 @@ export function Permissions() {
 
   async function handleCreate(formValues: z.infer<typeof PERMISSION_SCHEMA>) {
     const body: CreatePermissionRequestBody = {
-      groupId: formValues.groupId,
+      groupId: formValues.groupId ? formValues.groupId : undefined,
       key: formValues.key,
       nameI18n: {
         translations: {
@@ -135,11 +140,9 @@ export function Permissions() {
         : undefined,
     };
 
-    const { error } = await api.permission.create({ body });
-    if (error) {
-      throw error;
-    }
-    toast.success("Link created successfully!");
+    createPermission({ body }).then(() => {
+      toast.success("Permission created successfully!");
+    });
   }
 
   return (

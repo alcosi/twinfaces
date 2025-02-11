@@ -15,8 +15,8 @@ export function PermissionsFormFields({
         name="groupId"
         label="Group"
       />
-      <TextFormField control={control} name="key" label="Permission Key" />
-      <TextFormField control={control} name="name" label="Permission Name" />
+      <TextFormField control={control} name="key" label="Key" />
+      <TextFormField control={control} name="name" label="Name" />
       <TextFormField control={control} name="description" label="Description" />
     </>
   );

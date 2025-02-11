@@ -297,6 +297,10 @@ export interface paths {
     /** Draft transition for batch of twins by alias. An alias can be useful for Drafting transitions for twins from different statuses. For each incoming twin, the appropriate transition will be selected based on its current status. */
     post: operations["twinTransitionByAliasDraftBatchV1"];
   };
+  "/private/transition_alias/search/v1": {
+    /** Transition alias search request */
+    post: operations["transitionAliasSearchV1"];
+  };
   "/private/transition/{transitionId}/v1": {
     /** Returns transition details */
     get: operations["transitionViewV1"];
@@ -512,6 +516,10 @@ export interface paths {
   "/private/attachment/validate_cud/v1": {
     /** Validate attachment CUD operations */
     post: operations["attachmentValidateV1"];
+  };
+  "/private/attachment/search/v1": {
+    /** Search data list of attachments */
+    post: operations["attachmentSearchV1"];
   };
   "/public/resource/{id}/v1": {
     /** File in attachment */
@@ -1071,8 +1079,14 @@ export interface components {
        */
       twinClassId?: string;
     };
-    /** @description attachments */
-    AttachmentViewV1: {
+    /** @description Attachments */
+    AttachmentV1: {
+      /**
+       * Format: uuid
+       * @description twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      twinId?: string;
       /**
        * @description External storage link
        * @example https://test.filestorage.by/JFUjEFWksfqwf
@@ -1100,38 +1114,42 @@ export interface components {
       size?: number;
       /**
        * Format: uuid
-       * @description link to the field to which attachment was added (if any)
-       */
-      twinClassFieldId?: string;
-      /**
-       * Format: uuid
-       * @description link to the comment to which attachment was added (if any)
-       */
-      commentId?: string;
-      /**
-       * Format: uuid
        * @description id
+       * @example 553ef9bc-3b48-430d-90d3-bdee516c3d87
        */
       id?: string;
       /**
-       * Format: date-time
-       * @description created at
-       */
-      createdAt?: string;
-      /**
        * Format: uuid
        * @description author id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
       authorUserId?: string;
       authorUser?: components["schemas"]["UserV1"];
+      /**
+       * Format: uuid
+       * @description comment id
+       * @example be44e826-ce24-4881-a227-f3f72d915a20
+       */
+      commentId?: string;
+      comment?: components["schemas"]["CommentBaseDTOv2"];
+      /**
+       * Format: uuid
+       * @description twin class field id
+       * @example 2fe95272-afcb-40ee-a6a8-87c5da4d5b8d
+       */
+      twinClassFieldId?: string;
+      twinClassField?: components["schemas"]["TwinClassFieldV1"];
       /**
        * Format: uuid
        * @description twinflow transition id
        */
       twinflowTransitionId?: string;
       twinflowTransition?: components["schemas"]["TwinflowTransitionBaseV1"];
-      comment?: components["schemas"]["CommentBaseDTOv2"];
-      twinClassField?: components["schemas"]["TwinClassFieldV1"];
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
       /** @description attachment action list */
       attachmentActions?: ("VIEW" | "EDIT" | "DELETE")[];
     };
@@ -1227,7 +1245,7 @@ export interface components {
        */
       name?: string;
     };
-    /** @description Map of tags. Will be filled only if lazyRelations mode is true */
+    /** @description Selected option */
     DataListOptionV1: {
       /**
        * Format: uuid
@@ -1482,6 +1500,7 @@ export interface components {
       /** @description params list */
       params?: components["schemas"]["FeaturerParamV1"][];
     };
+    /** @description Link */
     LinkV1: {
       /**
        * Format: uuid
@@ -1764,7 +1783,7 @@ export interface components {
        */
       businessAccountId?: string;
     };
-    /** @description Valid options */
+    /** @description Destination twin */
     TwinBaseV2: {
       /**
        * Format: uuid
@@ -2063,7 +2082,7 @@ export interface components {
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       field?: components["schemas"]["TwinClassFieldV2"];
     };
-    /** @description field */
+    /** @description class field details */
     TwinClassFieldV1: {
       /**
        * Format: uuid
@@ -2189,7 +2208,7 @@ export interface components {
       editPermission?: components["schemas"]["PermissionV1"];
       fieldTyperFeaturer?: components["schemas"]["FeaturerV1"];
     };
-    /** @description class */
+    /** @description Twins of which classes are possible to create as children for given twin */
     TwinClassV1: {
       /**
        * Format: uuid
@@ -2468,7 +2487,7 @@ export interface components {
       /** @description aliases */
       aliases?: string[];
       /** @description Attachments */
-      attachments?: components["schemas"]["AttachmentViewV1"][];
+      attachments?: components["schemas"]["AttachmentV1"][];
       attachmentsCount?: components["schemas"]["AttachmentsCountV1"];
       links?: components["schemas"]["TwinLinkListV1"];
       /** @description TransitionId list. Will be filled only in lazyRelations mode is false */
@@ -2693,6 +2712,12 @@ export interface components {
     /** @description Attachments for adding */
     AttachmentAddV1: {
       /**
+       * Format: uuid
+       * @description twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      twinId?: string;
+      /**
        * @description External storage link
        * @example https://test.filestorage.by/JFUjEFWksfqwf
        */
@@ -2739,6 +2764,12 @@ export interface components {
     };
     /** @description Attachments for updating */
     AttachmentUpdateV1: {
+      /**
+       * Format: uuid
+       * @description twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      twinId?: string;
       /**
        * @description External storage link
        * @example https://test.filestorage.by/JFUjEFWksfqwf
@@ -3705,7 +3736,7 @@ export interface components {
        */
       changedAt?: string;
       /** @description attachments */
-      attachments?: components["schemas"]["AttachmentViewV1"][];
+      attachments?: components["schemas"]["AttachmentV1"][];
       /** @description comment actions */
       commentActions?: ("EDIT" | "DELETE" | "PIN" | "UNPIN" | "VOTE" | "REACT" | "HIDE" | "UNHIDE")[];
     };
@@ -4115,11 +4146,6 @@ export interface components {
        * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
        */
       dstStatusId?: string;
-      /**
-       * @description [optional] name
-       * @example To Do
-       */
-      name?: string;
       /**
        * @description [optional] uniq alias inside twinflow
        * @example start
@@ -5042,7 +5068,7 @@ export interface components {
        */
       permissionId?: string;
     };
-    /** @description field data */
+    /** @description fields */
     TwinFieldV1: {
       value?: components["schemas"]["TwinFieldValueDTO"];
       twinClassField?: components["schemas"]["TwinClassFieldV1"];
@@ -5169,7 +5195,7 @@ export interface components {
       /** @description aliases */
       aliases?: string[];
       /** @description Attachments */
-      attachments?: components["schemas"]["AttachmentViewV1"][];
+      attachments?: components["schemas"]["AttachmentV1"][];
       attachmentsCount?: components["schemas"]["AttachmentsCountV1"];
       links?: components["schemas"]["TwinLinkListV1"];
       /** @description TransitionId list. Will be filled only in lazyRelations mode is false */
@@ -5997,6 +6023,57 @@ export interface components {
       batchComment?: string;
       batchContext?: components["schemas"]["TwinTransitionContextV1"];
     };
+    TransitionAliasSearchRqV1: {
+      /** @description transition alias id */
+      idList?: string[];
+      /** @description transition alias id exclude */
+      idExcludeList?: string[];
+      /** @description alias like list */
+      aliasLikeList?: string[];
+      /** @description alias not like list */
+      aliasNotLikeList?: string[];
+    };
+    TransitionAliasSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description transition alias list */
+      aliasList?: components["schemas"]["TransitionAliasV1"][];
+    };
+    /** @description transition alias list */
+    TransitionAliasV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example da755c8a-248f-4e4f-978a-6474e41c8dca
+       */
+      id?: string;
+      /**
+       * @description alias
+       * @example start
+       */
+      alias?: string;
+      /**
+       * Format: int32
+       * @description usages count
+       * @example 3
+       */
+      usagesCount?: number;
+    };
     TransitionUpdateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
       descriptionI18n?: components["schemas"]["I18nV1"];
@@ -6012,11 +6089,6 @@ export interface components {
        * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
        */
       dstStatusId?: string;
-      /**
-       * @description [optional] name
-       * @example To Do
-       */
-      name?: string;
       /**
        * @description [optional] uniq alias inside twinflow
        * @example start
@@ -6557,6 +6629,11 @@ export interface components {
        * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
       grantedByUserId?: string;
+      /**
+       * Format: date-time
+       * @description granted at
+       */
+      grantedAt?: string;
       permissionSchema?: components["schemas"]["PermissionSchemaV1"];
       permission?: components["schemas"]["PermissionV2"];
       userGroup?: components["schemas"]["UserGroupV1"];
@@ -6646,6 +6723,11 @@ export interface components {
        * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
       grantedByUserId?: string;
+      /**
+       * Format: date-time
+       * @description granted at
+       */
+      grantedAt?: string;
       permission?: components["schemas"]["PermissionV2"];
       permissionSchema?: components["schemas"]["PermissionSchemaV1"];
       user?: components["schemas"]["UserV1"];
@@ -8420,7 +8502,7 @@ export interface components {
       statusDetails?: string;
       cudProblems?: components["schemas"]["AttachmentCUDProblemsDTOv1"];
       /** @description Attachment entities for update and delete operations */
-      attachmentsForUD?: components["schemas"]["AttachmentViewV2"][];
+      attachmentsForUD?: components["schemas"]["AttachmentV2"][];
     };
     /** @description create problems */
     AttachmentFileCreateProblemsDTOv1: {
@@ -8459,7 +8541,13 @@ export interface components {
       problem?: "INVALID_NAME" | "INVALID_TYPE" | "INVALID_SIZE";
     };
     /** @description attachment details */
-    AttachmentViewV2: {
+    AttachmentV2: {
+      /**
+       * Format: uuid
+       * @description twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      twinId?: string;
       /**
        * @description External storage link
        * @example https://test.filestorage.by/JFUjEFWksfqwf
@@ -8487,40 +8575,45 @@ export interface components {
       size?: number;
       /**
        * Format: uuid
-       * @description link to the field to which attachment was added (if any)
-       */
-      twinClassFieldId?: string;
-      /**
-       * Format: uuid
-       * @description link to the comment to which attachment was added (if any)
-       */
-      commentId?: string;
-      /**
-       * Format: uuid
        * @description id
+       * @example 553ef9bc-3b48-430d-90d3-bdee516c3d87
        */
       id?: string;
       /**
-       * Format: date-time
-       * @description created at
-       */
-      createdAt?: string;
-      /**
        * Format: uuid
        * @description author id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
       authorUserId?: string;
       authorUser?: components["schemas"]["UserV1"];
+      /**
+       * Format: uuid
+       * @description comment id
+       * @example be44e826-ce24-4881-a227-f3f72d915a20
+       */
+      commentId?: string;
+      comment?: components["schemas"]["CommentBaseDTOv2"];
+      /**
+       * Format: uuid
+       * @description twin class field id
+       * @example 2fe95272-afcb-40ee-a6a8-87c5da4d5b8d
+       */
+      twinClassFieldId?: string;
+      twinClassField?: components["schemas"]["TwinClassFieldV1"];
       /**
        * Format: uuid
        * @description twinflow transition id
        */
       twinflowTransitionId?: string;
       twinflowTransition?: components["schemas"]["TwinflowTransitionBaseV1"];
-      comment?: components["schemas"]["CommentBaseDTOv2"];
-      twinClassField?: components["schemas"]["TwinClassFieldV1"];
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
       /** @description attachment action list */
       attachmentActions?: ("VIEW" | "EDIT" | "DELETE")[];
+      twin?: components["schemas"]["TwinV1"];
     };
     /** @description comment attachment problems */
     TwinCommentAttachmentProblemsV1: {
@@ -8551,6 +8644,75 @@ export interface components {
        * @enum {string}
        */
       problem?: "NOT_ALLOWED" | "INAVLID_FILES_SIZE" | "INAVLID_FILES_COUNT";
+    };
+    AttachmentSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description twin id list */
+      twinIdList?: string[];
+      /** @description twin id exclude list */
+      twinIdExcludeList?: string[];
+      /** @description twinflow transition id list */
+      twinflowTransitionIdList?: string[];
+      /** @description twinflow transition id exclude list */
+      twinflowTransitionIdExcludeList?: string[];
+      /** @description comment id list */
+      commentIdList?: string[];
+      /** @description comment id exclude list */
+      commentIdExcludeList?: string[];
+      /** @description twin class field id list */
+      twinClassFieldIdList?: string[];
+      /** @description twin class field id exclude list */
+      twinClassFieldIdExcludeList?: string[];
+      /** @description storage link like list */
+      storageLinkLikeList?: string[];
+      /** @description storage link not like list */
+      storageLinkNotLikeList?: string[];
+      /** @description view permission id list */
+      viewPermissionIdList?: string[];
+      /** @description view permission id exclude list */
+      viewPermissionIdExcludeList?: string[];
+      /** @description created by user id list */
+      createdByUserIdList?: string[];
+      /** @description created by user id exclude list */
+      createdByUserIdExcludeList?: string[];
+      /** @description external id like list */
+      externalIdLikeList?: string[];
+      /** @description external id not like list */
+      externalIdNotLikeList?: string[];
+      /** @description title like list */
+      titleLikeList?: string[];
+      /** @description title not like list */
+      titleNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
+      createdAt?: components["schemas"]["DataTimeRangeV1"];
+    };
+    AttachmentSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description attachment list */
+      attachments?: components["schemas"]["AttachmentV2"][];
     };
     /** @description locales in domain */
     LocaleV1: {
@@ -9518,7 +9680,7 @@ export interface components {
        * @example success
        */
       statusDetails?: string;
-      attachment?: components["schemas"]["AttachmentViewV2"];
+      attachment?: components["schemas"]["AttachmentV2"];
     };
     /** @description attachment quotas details */
     AttachmentQuotasBaseV1: {
@@ -13581,6 +13743,44 @@ export interface operations {
       };
     };
   };
+  /** Transition alias search request */
+  transitionAliasSearchV1: {
+    parameters: {
+      query?: {
+        showTransitionAliasMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TransitionAliasSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Transition alias data list */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TransitionAliasSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Returns transition details */
   transitionViewV1: {
     parameters: {
@@ -16121,7 +16321,7 @@ export interface operations {
         Channel: string;
       };
       path: {
-        /** @example be44e826-ce24-4881-a227-f3f72d915a20 */
+        /** @example 1b2091e3-971a-41bc-b343-1f980227d02f */
         twinId: string;
       };
     };
@@ -16229,12 +16429,48 @@ export interface operations {
     parameters: {
       query?: {
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachmentCUDValidate2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showAttachmentValidateProblemsMode?: "HIDE" | "SHOW";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinActionMode?: "HIDE" | "SHOW";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -16255,6 +16491,86 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["AttachmentCUDValidateRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Search data list of attachments */
+  attachmentSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showAttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinActionMode?: "HIDE" | "SHOW";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AttachmentSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description List of attachments */
+      200: {
+        content: {
+          "application/json": components["schemas"]["AttachmentSearchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -18450,11 +18766,47 @@ export interface operations {
     parameters: {
       query?: {
         showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
         showAttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinActionMode?: "HIDE" | "SHOW";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
         showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */

@@ -1,4 +1,4 @@
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 
 export type Permission = components["schemas"]["PermissionV2"];
 export type Permission_DETAILED = Required<Permission>;
@@ -18,3 +18,5 @@ export type PermissionFilterKeys =
 export type PermissionFilters = Partial<
   Pick<components["schemas"]["PermissionSearchRqV1"], PermissionFilterKeys>
 >;
+export type QueryPermissionViewV1 =
+  operations["permissionViewV1"]["parameters"]["query"];
