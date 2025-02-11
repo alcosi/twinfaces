@@ -17,7 +17,7 @@ const DATALIST_SCHEMA_EXTENDED = DATALIST_SCHEMA.extend({
 });
 
 export const DATALIST_OPTION_SCHEMA = z.object({
-  dataList: z.array(DATALIST_SCHEMA_EXTENDED).or(DATALIST_SCHEMA_EXTENDED),
+  dataList: z.array(DATALIST_SCHEMA_EXTENDED),
   name: z.string().min(1).max(100),
   icon: z
     .string()

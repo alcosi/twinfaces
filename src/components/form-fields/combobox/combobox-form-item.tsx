@@ -1,6 +1,5 @@
 import {
   cn,
-  isArray,
   isEmptyArray,
   isEmptyString,
   isFalsy,

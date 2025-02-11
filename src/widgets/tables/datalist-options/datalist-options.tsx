@@ -11,7 +11,13 @@ import {
   useDatalistOptionSearch,
 } from "@/entities/datalist-option";
 import { PagedResponse } from "@/shared/api";
-import { isPopulatedArray, isPopulatedString, isTruthy } from "@/shared/libs";
+import {
+  isPopulatedArray,
+  isPopulatedString,
+  isTruthy,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
@@ -48,7 +54,10 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
     try {
       const response = await searchDatalistOptions({
         pagination,
-        filters: _filters,
+        filters: {
+          ..._filters,
+          dataListIdList: toArrayOfString(toArray(datalist?.id), "id"),
+        },
       });
 
       const datalistOption = Object.values(response.data);
@@ -133,7 +142,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   const twinClassesForm = useForm<z.infer<typeof DATALIST_OPTION_SCHEMA>>({
     resolver: zodResolver(DATALIST_OPTION_SCHEMA),
     defaultValues: {
-      dataList: datalist,
+      dataList: datalist ? [datalist] : [],
       name: "",
       icon: "",
       attribute1: undefined,
