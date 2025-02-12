@@ -15,6 +15,7 @@ export type Factory_DETAILED = RequireFields<
   | "factoryUsagesCount"
 >;
 export type FactorySearchRq = components["schemas"]["FactorySearchRqV1"];
+export type FactoryUpdateRq = components["schemas"]["FactoryUpdateRqV1"];
 
 export type FactoryFilterKeys =
   | "idList"

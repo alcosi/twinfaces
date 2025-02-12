@@ -46,6 +46,7 @@ export function FactoryContextProvider({
         query: {
           lazyRelation: false,
           showFactoryMode: "DETAILED",
+          showFactory2UserMode: "DETAILED",
         },
       })
       .then((resp) => {

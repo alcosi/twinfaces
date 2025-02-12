@@ -1,6 +1,6 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryFilters } from "@/entities/factory";
+import { FactoryFilters, FactoryUpdateRq } from "@/entities/factory";
 import { operations } from "@/shared/api/generated/schema";
 
 export function createFactoryApi(settings: ApiSettings) {
@@ -49,7 +49,17 @@ export function createFactoryApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById };
+  function update({ id, body }: { id: string; body: FactoryUpdateRq }) {
+    return settings.client.PUT("/private/factory/{factoryId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { factoryId: id },
+      },
+      body: body,
+    });
+  }
+
+  return { search, getById, update };
 }
 
 export type FactoryApi = ReturnType<typeof createFactoryApi>;
