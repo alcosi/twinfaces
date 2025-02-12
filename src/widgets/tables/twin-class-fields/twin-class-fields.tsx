@@ -150,7 +150,9 @@ export function TwinClassFieldsTable({
         pagination,
         filters: {
           ..._filters,
-          twinClassIdList: toArrayOfString(toArray(twinClassId), "id"),
+          twinClassIdList: twinClassId
+            ? toArrayOfString(toArray(twinClassId), "id")
+            : _filters.twinClassIdList,
         },
       });
 
