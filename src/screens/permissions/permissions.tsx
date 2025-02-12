@@ -89,7 +89,7 @@ export function Permissions() {
   const { createPermission } = usePermissionCreate();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Permissions", href: "/workspace/permission" }]);
+    setBreadcrumbs([{ label: "Permissions", href: "/workspace/permissions" }]);
   }, []);
 
   const form = useForm<PermissionFormValues>({
@@ -124,7 +124,7 @@ export function Permissions() {
 
   async function handleCreate(formValues: z.infer<typeof PERMISSION_SCHEMA>) {
     const body: CreatePermissionRequestBody = {
-      groupId: formValues.groupId ? formValues.groupId : undefined,
+      groupId: formValues.groupId,
       key: formValues.key,
       nameI18n: {
         translations: {
@@ -140,9 +140,8 @@ export function Permissions() {
         : undefined,
     };
 
-    createPermission({ body }).then(() => {
-      toast.success("Permission created successfully!");
-    });
+    await createPermission({ body });
+    toast.success("Permission created successfully!");
   }
 
   return (
@@ -158,7 +157,7 @@ export function Permissions() {
       ]}
       fetcher={fetchPermissions}
       getRowId={(row) => row.id!}
-      onRowClick={(row) => router.push(`/workspace/permission/${row.id}`)}
+      onRowClick={(row) => router.push(`/workspace/permissions/${row.id}`)}
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

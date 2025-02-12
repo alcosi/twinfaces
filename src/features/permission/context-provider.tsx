@@ -14,7 +14,7 @@ import { isUndefined } from "@/shared/libs";
 type Context = {
   permissionId: string;
   permission: Permission_DETAILED;
-  fetchData: () => void;
+  refresh: () => void;
 };
 
 export type PermissionLayoutProps = PropsWithChildren<{
@@ -33,26 +33,25 @@ export function PermissionContextProvider({
   const { fetchPermissionById, loading } = useFetchPermissionById();
 
   useEffect(() => {
-    fetchData();
+    refresh();
   }, [permissionId]);
 
-  async function fetchData() {
-    fetchPermissionById({
+  async function refresh() {
+    const response = await fetchPermissionById({
       permissionId,
       query: {
         lazyRelation: false,
         showPermission2PermissionGroupMode: "DETAILED",
         showPermissionMode: "DETAILED",
       },
-    }).then((response) => {
-      setPermission(response);
     });
+    setPermission(response);
   }
 
   if (isUndefined(permission)) return <>{loading && <LoadingOverlay />}</>;
 
   return (
-    <PermissionContext.Provider value={{ permissionId, permission, fetchData }}>
+    <PermissionContext.Provider value={{ permissionId, permission, refresh }}>
       {loading && <LoadingOverlay />}
       {!loading && children}
     </PermissionContext.Provider>

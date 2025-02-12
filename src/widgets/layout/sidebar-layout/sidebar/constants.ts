@@ -116,7 +116,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Permissions",
-        url: "/workspace/permission",
+        url: "/workspace/permissions",
         icon: Key,
       },
       {

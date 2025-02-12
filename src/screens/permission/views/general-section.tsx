@@ -18,7 +18,7 @@ import { z } from "zod";
 import { usePermissionGroupSelectAdapter } from "@/entities/permissionGroup";
 
 export function GeneralSection() {
-  const { permission, fetchData } = useContext(PermissionContext);
+  const { permission, refresh } = useContext(PermissionContext);
   const { updatePermission } = usePermissionUpdate();
   const pgAdapter = usePermissionGroupSelectAdapter();
 
@@ -29,7 +29,7 @@ export function GeneralSection() {
         body: newPermission,
       });
       toast.success("Permission update successfully!");
-      fetchData?.();
+      refresh?.();
     } catch (e) {
       toast.error("Failed to update Permission");
     }
