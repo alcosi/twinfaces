@@ -179,12 +179,15 @@ export function TwinClassStatusesTable({
     filters: FiltersState
   ): Promise<PagedResponse<TwinStatus_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
+
     try {
       return await searchTwinStatuses({
         pagination,
         filters: {
           ..._filters,
-          twinClassIdList: toArrayOfString(toArray(twinClassId), "id"),
+          twinClassIdList: twinClassId
+            ? toArrayOfString(toArray(twinClassId), "id")
+            : _filters.twinClassIdList,
         },
       });
     } catch (e) {
