@@ -52,7 +52,6 @@ export function FactoryGeneral() {
     onSubmit: (value) => {
       return updateFactory({
         nameI18n: {
-          translationInCurrentLocale: "",
           translations: {
             en: value as string,
           },
