@@ -1,13 +1,17 @@
 "use client";
 
 import { GuidWithCopy } from "@/shared/ui";
-import { CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 
 interface IProps {
-  fetcher: (pagination: PaginationState, options: {}) => Promise<any>;
+  title: string;
+  fetcher: (
+    pagination: PaginationState,
+    options: FiltersState<string>
+  ) => Promise<any>;
 }
 
 const colDefs: Record<
@@ -38,10 +42,10 @@ const colDefs: Record<
   },
 };
 
-export function FieldTyperTable({ fetcher }: IProps) {
+export function FeaturerTypeTable({ title, fetcher }: IProps) {
   return (
     <CrudDataTable
-      title="Field Typer"
+      title={title}
       columns={[
         colDefs.id,
         colDefs.name,

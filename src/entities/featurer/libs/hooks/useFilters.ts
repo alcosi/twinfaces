@@ -1,4 +1,4 @@
-import { type FilterFeature } from "@/shared/libs";
+import { toArrayOfString, type FilterFeature } from "@/shared/libs";
 import { z } from "zod";
 import {
   AutoFormValueInfo,
@@ -38,11 +38,9 @@ export function useFeaturerFilters(): FilterFeature<
   function mapFiltersToPayload(
     filters: Record<FeaturerFilterKeys, unknown>
   ): FeaturerFilters {
-    const result: FeaturerFilters = {
-      // TODO: add logic here
+    return {
+      typeIdList: toArrayOfString(filters.typeIdList, "id").map(Number),
     };
-
-    return result;
   }
 
   return {

@@ -1,1 +1,1 @@
-export * from "./field-typer-table";
+export * from "./featurer-type-table";
