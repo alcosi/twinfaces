@@ -33,6 +33,7 @@ const colDefs: Record<
     header: "Id",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
+
   permissionSchemaId: {
     id: "permissionSchemaId",
     accessorKey: "permissionSchemaId",
@@ -40,10 +41,14 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.permissionSchema && (
         <div className="max-w-48 inline-flex">
-          <PermissionSchemaResourceLink data={original.permissionSchema} />
+          <PermissionSchemaResourceLink
+            data={original.permissionSchema}
+            withTooltip
+          />
         </div>
       ),
   },
+
   propagationTwinClassId: {
     id: "propagationTwinClassId",
     accessorKey: "propagationTwinClassId",
@@ -58,6 +63,7 @@ const colDefs: Record<
         </div>
       ),
   },
+
   propagationTwinStatusId: {
     id: "propagationTwinStatusId",
     accessorKey: "propagationTwinStatusId",
@@ -73,6 +79,7 @@ const colDefs: Record<
         </div>
       ),
   },
+
   grantedByUserId: {
     id: "grantedByUserId",
     accessorKey: "grantedByUserId",
@@ -84,6 +91,7 @@ const colDefs: Record<
         </div>
       ),
   },
+
   grantedAt: {
     id: "grantedAt",
     accessorKey: "grantedAt",
@@ -129,7 +137,14 @@ export function AssigneePropagationTable() {
       fetcher={fetchData}
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
-      defaultVisibleColumns={[]}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.permissionSchemaId,
+        colDefs.propagationTwinClassId,
+        colDefs.propagationTwinStatusId,
+        colDefs.grantedByUserId,
+        colDefs.grantedAt,
+      ]}
     />
   );
 }

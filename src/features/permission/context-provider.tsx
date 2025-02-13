@@ -1,14 +1,15 @@
-import { LoadingOverlay } from "@/shared/ui/loading";
 import {
-  Permission,
   Permission_DETAILED,
-  usePermissionSearchV1,
+  useFetchPermissionById,
 } from "@/entities/permission";
+import { isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui/loading";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 type Context = {
   permissionId: string;
-  permission?: Permission_DETAILED;
+  permission: Permission_DETAILED;
+  refresh: () => void;
 };
 
 export type PermissionLayoutProps = PropsWithChildren<{
@@ -21,40 +22,31 @@ export function PermissionContextProvider({
   params: { permissionId },
   children,
 }: PermissionLayoutProps) {
-  const { searchPermissions } = usePermissionSearchV1();
-  const [loading, setLoading] = useState<boolean>(false);
   const [permission, setPermission] = useState<Permission_DETAILED | undefined>(
     undefined
   );
+  const { fetchPermissionById, loading } = useFetchPermissionById();
 
   useEffect(() => {
-    fetchData();
+    refresh();
   }, [permissionId]);
 
-  async function fetchData() {
-    setLoading(true);
-    try {
-      const response = await searchPermissions({
-        pagination: {
-          pageIndex: 0,
-          pageSize: 1,
-        },
-        filters: {
-          idList: [permissionId],
-        },
-      });
-      const permissions = response.data ?? [];
-      setPermission(permissions[0]);
-    } catch (e) {
-      console.error("Failed to fetch permissions", e);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
+  async function refresh() {
+    const response = await fetchPermissionById({
+      permissionId,
+      query: {
+        lazyRelation: false,
+        showPermission2PermissionGroupMode: "DETAILED",
+        showPermissionMode: "DETAILED",
+      },
+    });
+    setPermission(response);
   }
 
+  if (isUndefined(permission) || loading) return <LoadingOverlay />;
+
   return (
-    <PermissionContext.Provider value={{ permissionId, permission }}>
+    <PermissionContext.Provider value={{ permissionId, permission, refresh }}>
       {loading && <LoadingOverlay />}
       {!loading && children}
     </PermissionContext.Provider>

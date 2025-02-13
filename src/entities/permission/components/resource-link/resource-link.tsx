@@ -15,7 +15,7 @@ export const PermissionResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/workspace/permission/${data.id}`;
+  const link = `/workspace/permissions/${data.id}`;
 
   return (
     <ResourceLink

@@ -32,6 +32,7 @@ const colDefs: Record<
     header: "Id",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
+
   permissionSchemaId: {
     id: "permissionSchemaId",
     accessorKey: "permissionSchemaId",
@@ -39,10 +40,14 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.permissionSchema && (
         <div className="max-w-48 inline-flex">
-          <PermissionSchemaResourceLink data={original.permissionSchema} />
+          <PermissionSchemaResourceLink
+            data={original.permissionSchema}
+            withTooltip
+          />
         </div>
       ),
   },
+
   twinClassId: {
     id: "twinClassId",
     accessorKey: "twinClassId",
@@ -54,11 +59,13 @@ const colDefs: Record<
         </div>
       ),
   },
+
   twinRole: {
     id: "twinRole",
     accessorKey: "twinRole",
     header: "Twin role",
   },
+
   grantedByUserId: {
     id: "grantedByUserId",
     accessorKey: "grantedByUserId",
@@ -70,6 +77,7 @@ const colDefs: Record<
         </div>
       ),
   },
+
   grantedAt: {
     id: "grantedAt",
     accessorKey: "grantedAt",
@@ -114,7 +122,14 @@ export function TwinRoleTable() {
       fetcher={fetchData}
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
-      defaultVisibleColumns={[]}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.permissionSchemaId,
+        colDefs.twinClassId,
+        colDefs.twinRole,
+        colDefs.grantedByUserId,
+        colDefs.grantedAt,
+      ]}
     />
   );
 }

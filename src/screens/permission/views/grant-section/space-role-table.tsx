@@ -1,6 +1,7 @@
 import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
 import {
   PermissionGrantSpaceRole_DETAILED,
+  SpaceRoleResourceLink,
   usePermissionSpaceRoleSearchV1,
 } from "@/entities/spaceRole";
 import { UserResourceLink } from "@/entities/user";
@@ -30,6 +31,7 @@ const colDefs: Record<
     header: "Id",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
+
   permissionSchemaId: {
     id: "permissionSchemaId",
     accessorKey: "permissionSchemaId",
@@ -41,11 +43,19 @@ const colDefs: Record<
         </div>
       ),
   },
+
   spaceRoleId: {
     id: "spaceRoleId",
     accessorKey: "spaceRoleId",
     header: "Space role",
+    cell: ({ row: { original } }) =>
+      original.spaceRole && (
+        <div className="max-w-48 inline-flex">
+          <SpaceRoleResourceLink data={original.spaceRole} withTooltip />
+        </div>
+      ),
   },
+
   grantedByUserId: {
     id: "grantedByUserId",
     accessorKey: "grantedByUserId",
@@ -57,6 +67,7 @@ const colDefs: Record<
         </div>
       ),
   },
+
   grantedAt: {
     id: "grantedAt",
     accessorKey: "grantedAt",
@@ -101,7 +112,13 @@ export function SpaceRoleTable() {
       fetcher={fetchData}
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
-      defaultVisibleColumns={[]}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.permissionSchemaId,
+        colDefs.spaceRoleId,
+        colDefs.grantedByUserId,
+        colDefs.grantedAt,
+      ]}
     />
   );
 }

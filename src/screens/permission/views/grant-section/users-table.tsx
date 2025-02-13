@@ -8,7 +8,7 @@ import {
 } from "@/entities/user";
 import { PermissionContext } from "@/features/permission";
 import { PagedResponse } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
+import { formatToTwinfaceDate, isUndefined } from "@/shared/libs";
 import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
@@ -17,26 +17,34 @@ import { toast } from "sonner";
 const colDefs: Record<
   keyof Pick<
     PermissionGrantUser,
-    "id" | "permissionSchemaId" | "userId" | "grantedByUserId"
+    "id" | "permissionSchemaId" | "userId" | "grantedByUserId" | "grantedAt"
   >,
   ColumnDef<PermissionGrantUser>
 > = {
   id: {
+    id: "id",
     accessorKey: "id",
     header: "Id",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
+
   permissionSchemaId: {
+    id: "permissionSchemaId",
     accessorKey: "permissionSchemaId",
     header: "Persmission Schema",
     cell: ({ row: { original } }) =>
       original.permissionSchema && (
         <div className="max-w-48 inline-flex">
-          <PermissionSchemaResourceLink data={original.permissionSchema} />
+          <PermissionSchemaResourceLink
+            data={original.permissionSchema}
+            withTooltip
+          />
         </div>
       ),
   },
+
   userId: {
+    id: "userId",
     accessorKey: "userId",
     header: "User",
     cell: ({ row: { original } }) =>
@@ -46,7 +54,9 @@ const colDefs: Record<
         </div>
       ),
   },
+
   grantedByUserId: {
+    id: "grantedByUserId",
     accessorKey: "grantedByUserId",
     header: "Granted by",
     cell: ({ row: { original } }) =>
@@ -55,6 +65,14 @@ const colDefs: Record<
           <UserResourceLink data={original.grantedByUser} withTooltip />
         </div>
       ),
+  },
+
+  grantedAt: {
+    id: "grantedAt",
+    accessorKey: "grantedAt",
+    header: "Granted at",
+    cell: ({ row: { original } }) =>
+      original.grantedAt && formatToTwinfaceDate(original.grantedAt),
   },
 };
 
@@ -92,11 +110,18 @@ export function UsersTable() {
         colDefs.permissionSchemaId,
         colDefs.userId,
         colDefs.grantedByUserId,
+        colDefs.grantedAt,
       ]}
       fetcher={fetchData}
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
-      defaultVisibleColumns={[]}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.permissionSchemaId,
+        colDefs.userId,
+        colDefs.grantedByUserId,
+        colDefs.grantedAt,
+      ]}
     />
   );
 }

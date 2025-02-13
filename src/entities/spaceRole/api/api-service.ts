@@ -16,12 +16,15 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
         params: {
           header: getApiDomainHeaders(settings),
           query: {
-            lazyRelation: false,
+            lazyRelation: true,
             showPermissionGrantSpaceRoleMode: "DETAILED",
             showPermissionGrantUserGroup2PermissionSchemaMode: "DETAILED",
             showPermissionGrantSpaceRole2SpaceRoleMode: "DETAILED",
             showPermissionGrantSpaceRole2PermissionSchemaMode: "DETAILED",
             showPermissionGrantSpaceRole2UserMode: "DETAILED",
+            showSpaceRole2TwinClassMode: "DETAILED",
+            PermissionGrantSpaceRole2SpaceRoleMode: "DETAILED",
+            SpaceRole2TwinClassMode: "DETAILED",
             offset: pagination.pageIndex * pagination.pageSize,
             limit: pagination.pageSize,
             sortAsc: false,

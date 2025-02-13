@@ -7,3 +7,5 @@ export type PermissionGrantSpaceRole_DETAILED =
 
 export type PermissionGrantSpaceRoleFilter =
   components["schemas"]["PermissionGrantSpaceRoleSearchRqV1"];
+
+export type SpaceRole = components["schemas"]["SpaceRoleV2"];

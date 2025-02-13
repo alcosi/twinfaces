@@ -32,12 +32,12 @@ export function PermissionPage({ params: { permissionId } }: PageProps) {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Permissions", href: "/workspace/permission" },
+      { label: "Permissions", href: "/workspace/permissions" },
       {
         label: isPopulatedString(permission?.name)
           ? permission?.name
           : permission?.key!,
-        href: `/workspace/permission/${permissionId}`,
+        href: `/workspace/permissions/${permissionId}`,
       },
     ]);
   }, [permissionId, permission?.name, permission?.key]);

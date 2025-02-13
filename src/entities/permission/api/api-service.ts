@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/react-table";
 import {
   CreatePermissionRequestBody,
   PermissionFilters,
+  QueryPermissionViewV1,
   UpdatePermissionRequestBody,
 } from "./types";
 
@@ -57,7 +58,23 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create, update };
+  function getById({
+    permissionId,
+    query = {},
+  }: {
+    permissionId: string;
+    query?: QueryPermissionViewV1;
+  }) {
+    return settings.client.GET("/private/permission/{permissionId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { permissionId },
+        query,
+      },
+    });
+  }
+
+  return { search, create, update, getById };
 }
 
 export type PermissionApi = ReturnType<typeof createPermissionApi>;
