@@ -1,5 +1,3 @@
-import { Featurer } from "../api";
-
 export const FeaturerTypes = {
   fieldTyper: 13,
   trigger: 15,
@@ -36,36 +34,4 @@ export enum FeaturerParamType {
   UUID_TWINS_PERMISSION_ID = "UUID:TWINS:PERMISSION_ID",
   UUID_SET_TWINS_LINK_ID = "UUID_SET:TWINS:LINK_ID",
   STRING_TWINS_TWIN_BASIC_FIELD = "STRING:TWINS:TWIN_BASIC_FIELD",
-}
-
-export type FeaturerParamValue = string | string[] | boolean | number;
-
-export type FeaturerParams = Record<
-  string,
-  {
-    value: FeaturerParamValue;
-    type: FeaturerParamType;
-  }
->;
-
-export interface FeaturerValue {
-  featurer: Featurer;
-  params: FeaturerParams;
-}
-
-export function getDefaultFeaturerParamValue(type: FeaturerParamType) {
-  switch (type) {
-    case FeaturerParamType.BOOLEAN:
-      return false;
-    case FeaturerParamType.INT:
-      return 0;
-    case FeaturerParamType.DOUBLE:
-      return 0.0;
-
-    default:
-      if (type.startsWith("UUID_SET") || type.startsWith("WORD_LIST")) {
-        return [] as string[];
-      }
-      return "";
-  }
 }

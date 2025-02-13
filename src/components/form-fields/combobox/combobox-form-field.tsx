@@ -28,10 +28,13 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
             description={description}
             required={required}
             buttonClassName={buttonClassName}
-            onSelect={field.onChange}
             fieldValue={_fieldValue}
             inForm={true}
             {...props}
+            onSelect={(event) => {
+              props.onSelect?.(event);
+              return field.onChange(event);
+            }}
           />
         );
       }}

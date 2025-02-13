@@ -274,7 +274,8 @@ export function TwinClasses() {
       description: "",
       abstractClass: false,
       headTwinClass: null,
-      headHunterFeaturer: {},
+      headHunterFeaturerId: 0,
+      headHunterParams: {},
       extendsTwinClassId: null,
       logo: "",
       permissionSchemaSpace: false,
@@ -292,7 +293,8 @@ export function TwinClasses() {
       name,
       description,
       headTwinClass,
-      headHunterFeaturer,
+      headHunterFeaturerId,
+      headHunterParams,
       extendsTwinClassId,
       autoCreatePermissions,
       viewPermissionId,
@@ -308,10 +310,8 @@ export function TwinClasses() {
       ...rest,
       extendsTwinClassId: extendsTwinClassId ?? "",
       headTwinClassId: headTwinClass?.[0]?.id,
-      headHunterFeaturerId: headHunterFeaturer?.id,
-      headHunterParams: headHunterFeaturer?.params
-        ? pluckProperty(headHunterFeaturer.params, "value")
-        : {},
+      headHunterFeaturerId: headHunterFeaturerId,
+      headHunterParams: headHunterParams,
       nameI18n: {
         translationInCurrentLocale: name,
         translations: {},

@@ -5,12 +5,12 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 import { FeaturerTypes } from "@/entities/featurer";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { isPopulatedString } from "@/shared/libs";
 import { Control, useWatch } from "react-hook-form";
 import { FeaturerFormField } from "../../form-fields";
 import { TwinClassFieldFormValues } from "./types";
-import { usePermissionSelectAdapter } from "@/entities/permission";
 
 export function TwinClassFieldFormFields({
   control,
@@ -49,8 +49,9 @@ export function TwinClassFieldFormFields({
       <FeaturerFormField
         typeId={FeaturerTypes.fieldTyper}
         control={control}
+        label="Field typer"
         name="fieldTyperFeaturerId"
-        label={"Field typer"}
+        paramsFieldName="fieldTyperParams"
       />
 
       <ComboboxFormField

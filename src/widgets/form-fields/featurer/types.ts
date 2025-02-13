@@ -1,10 +1,10 @@
-import { FeaturerTypeId, FeaturerValue } from "@/entities/featurer";
+import { FeaturerTypeId } from "@/entities/featurer";
 
-export interface FeaturerInputProps {
+export type FeaturerFieldProps = {
   typeId: FeaturerTypeId;
-  onChange?: (value: FeaturerValue | null) => void;
+  paramsFieldName: string;
   // Misc
   selectPlaceholder?: string;
   searchPlaceholder?: string;
   noItemsText?: string;
-}
+};

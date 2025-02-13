@@ -1,56 +1,57 @@
 import {
   CheckboxFormItem,
   ComboboxFormItem,
+  FormItemProps,
   TagsFormItem,
   TextFormItem,
 } from "@/components/form-fields";
-import {
-  FeaturerParam,
-  FeaturerParamType,
-  FeaturerParamValue,
-} from "@/entities/featurer";
-import { isPopulatedArray } from "@/shared/libs";
+import { FeaturerParam, FeaturerParamType } from "@/entities/featurer";
 import { Button } from "@/shared/ui";
-import { useFeaturerParamTypesSelectAdapter } from "./hooks";
+import React from "react";
+import { useFeaturerParamTypesSelectAdapter } from "../../hooks";
 
-interface FeaturerParamInputProps {
+export type FeaturerParamFormItemProps = {
   param: FeaturerParam;
-  value: FeaturerParamValue;
-  onChange: (key: string, value: FeaturerParamValue) => void;
-}
+};
 
-export function FeaturerParamInput({
-  param,
-  value,
-  onChange,
-}: FeaturerParamInputProps) {
+type Props = FormItemProps &
+  FeaturerParamFormItemProps & {
+    fieldValue: string | undefined;
+    onChange?: (value: unknown) => void;
+  };
+
+export function FeaturerParamFormItem({ param, onChange, ...props }: Props) {
   const adapter = useFeaturerParamTypesSelectAdapter(
     param.type as FeaturerParamType
   );
 
-  function setValue(newValue: FeaturerParamValue) {
-    onChange(param.key!, newValue);
+  function handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+    return onChange?.(event.target.value);
   }
 
-  function renderParamFieldByType() {
+  function handleOnCheckboxChange(value: boolean | "indeterminate") {
+    onChange?.(value);
+  }
+
+  function handleOnComboboxSelect(
+    items: [{ id: string }, ...{ id: string }[]]
+  ) {
+    const ids = items.map((item) => item.id).join(",");
+    onChange?.(ids);
+  }
+
+  function renderByType() {
     switch (param.type) {
       case FeaturerParamType.BOOLEAN:
         return (
           <CheckboxFormItem
-            label={param.name}
-            description={param.description}
-            fieldValue={Boolean(value)}
-            onChange={(newChecked) => setValue(Boolean(newChecked))}
+            onChange={(v) => handleOnCheckboxChange(v as boolean)}
+            {...props}
+            fieldValue={Boolean(props.fieldValue)}
           />
         );
       case FeaturerParamType.WORD_LIST:
-        return (
-          <TagsFormItem
-            label={param.name}
-            description={param.description}
-            value={value as string}
-          />
-        );
+        return <TagsFormItem {...props} fieldValue={props.fieldValue as any} />;
       case FeaturerParamType.STRING_TWINS_TWIN_TOUCH_ID:
       case FeaturerParamType.STRING_TWINS_TWIN_BASIC_FIELD:
       case FeaturerParamType.UUID_TWINS_TWIN_ID:
@@ -63,13 +64,10 @@ export function FeaturerParamInput({
       case FeaturerParamType.UUID_TWINS_LINK_ID:
         return (
           <ComboboxFormItem
-            label={param.name}
-            description={param.description}
             // TODO: find solution to remove `any`
             {...(adapter as any)}
-            onSelect={(item: [{ id: string }, ...{ id: string }[]]) => {
-              setValue(isPopulatedArray(item) ? item[0].id : item);
-            }}
+            onSelect={handleOnComboboxSelect}
+            {...props}
           />
         );
       case FeaturerParamType.UUID_SET_TWINS_USER_GROUP_ID:
@@ -80,27 +78,17 @@ export function FeaturerParamInput({
       case FeaturerParamType.UUID_SET_TWINS_LINK_ID:
         return (
           <ComboboxFormItem
-            label={param.name}
-            description={param.description}
             // TODO: find solution to remove `any`
             {...(adapter as any)}
             multi={true}
-            onSelect={(items: [{ id: string }, ...{ id: string }[]]) => {
-              const ids = items.map((item) => item.id).join(",");
-              setValue(ids);
-            }}
+            onSelect={handleOnComboboxSelect}
+            {...props}
           />
         );
       case FeaturerParamType.INT:
       case FeaturerParamType.DOUBLE:
         return (
-          <TextFormItem
-            type="number"
-            value={Number(value)}
-            onChange={(e) => setValue(Number(e.target.value))}
-            label={param.name}
-            description={param.description}
-          />
+          <TextFormItem type="number" onChange={handleTextChange} {...props} />
         );
       case FeaturerParamType.UUID_TWINS_TWIN_CLASS_SCHEMA_ID:
         return (
@@ -118,16 +106,9 @@ export function FeaturerParamInput({
       case FeaturerParamType.UUID:
       case FeaturerParamType.UUID_TWINS_MARKER_ID:
       default:
-        return (
-          <TextFormItem
-            value={value as string}
-            onChange={(e) => setValue(e.target.value)}
-            label={param.name}
-            description={param.description}
-          />
-        );
+        return <TextFormItem onChange={handleTextChange} {...props} />;
     }
   }
 
-  return renderParamFieldByType();
+  return renderByType();
 }

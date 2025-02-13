@@ -88,6 +88,7 @@ export function TwinClassGeneral() {
           type: AutoFormValueType.featurer,
           label: "Head hunter featurer",
           typeId: FeaturerTypes.headHunter,
+          paramsFieldName: "headHunterFeaturerParams",
         },
       },
     },

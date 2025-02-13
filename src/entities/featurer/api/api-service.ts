@@ -5,10 +5,10 @@ import { FeaturerFilters } from "./types";
 export function createFeaturerApi(settings: ApiSettings) {
   function search({
     pagination,
-    options,
+    filters,
   }: {
     pagination: PaginationState;
-    options: FeaturerFilters;
+    filters: FeaturerFilters;
   }) {
     return settings.client.POST("/private/featurer/search/v1", {
       params: {
@@ -20,7 +20,7 @@ export function createFeaturerApi(settings: ApiSettings) {
           showFeaturerParamMode: "SHOW",
         },
       },
-      body: options,
+      body: filters,
     });
   }
 

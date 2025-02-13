@@ -1,10 +1,9 @@
-import { type FeaturerTypeId } from "@/entities/featurer/libs";
 import { TagBoxProps } from "@/shared/ui";
 import { ComboboxProps } from "@/shared/ui/combobox";
 import { InputProps } from "@/shared/ui/input";
 import {
+  FeaturerFieldProps,
   FeaturerFormField,
-  FeaturerFormItem,
   TwinFieldFormField,
   TwinFieldFormItem,
   TwinFieldFormItemProps,
@@ -83,9 +82,8 @@ export interface AutoFormTwinFieldValueInfo extends TwinFieldFormItemProps {
   type: AutoFormValueType.twinField;
 }
 
-export interface AutoFormFeaturerValueInfo {
+export interface AutoFormFeaturerValueInfo extends FeaturerFieldProps {
   type: AutoFormValueType.featurer;
-  typeId: FeaturerTypeId;
 }
 
 export interface AutoFormFieldProps {
@@ -142,11 +140,13 @@ export function AutoField({
         );
 
       case AutoFormValueType.featurer:
-        return name && control ? (
-          <FeaturerFormField name={name} control={control} {...info} />
-        ) : (
-          <FeaturerFormItem {...info} />
-        );
+        if (name && control) {
+          return <FeaturerFormField name={name} control={control} {...info} />;
+        } else {
+          throw new Error(
+            "AutoFormValueType.featurer requires both 'name' and 'control' properties. Ensure they are provided before rendering this field."
+          );
+        }
 
       case AutoFormValueType.color:
         return name && control ? (

@@ -158,6 +158,7 @@ export function TwinFieldGeneral({
         type: AutoFormValueType.featurer,
         label: "Field typer",
         typeId: FeaturerTypes.fieldTyper,
+        paramsFieldName: "fieldTyperFeaturerParams",
         ...fAdapter,
       },
     },
