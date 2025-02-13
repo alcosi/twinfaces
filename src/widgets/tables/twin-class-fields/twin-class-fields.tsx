@@ -174,7 +174,6 @@ export function TwinClassFieldsTable({
       name: "",
       description: "",
       required: false,
-      fieldTyperFeaturerId: 0,
       fieldTyperParams: {},
       viewPermissionId: "",
       editPermissionId: "",

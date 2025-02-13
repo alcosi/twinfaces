@@ -20,7 +20,6 @@ export const TWIN_CLASS_FIELD_SCHEMA = z.object({
   required: z.boolean(),
   fieldTyperFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
   fieldTyperParams: FEATURER_PARAMS_VALUE,
-  //TODO fix any
-  viewPermissionId: z.any(),
-  editPermissionId: z.any(),
+  viewPermissionId: z.string().optional().or(FIRST_ID_EXTRACTOR),
+  editPermissionId: z.string().optional().or(FIRST_ID_EXTRACTOR),
 });
