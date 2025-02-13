@@ -12,8 +12,7 @@ import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import { useUserSelectAdapter } from "@/entities/user";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup/libs/hooks";
 import { Button, Form } from "@/shared/ui";
-import { FeaturerFormField } from "@/widgets/form-fields";
-import { TwinFieldFormField } from "@/widgets/form-fields/twin-field";
+import { FeaturerFormField, TwinFieldFormField } from "@/widgets/form-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -50,9 +49,7 @@ export function InputFieldsTab() {
   const tfsAdapter = useTwinFlowSchemaSelectAdapter();
 
   const form = useForm<FormValues>({
-    defaultValues: {
-      fieldTyperFeaturer: {},
-    },
+    defaultValues: {},
     resolver: zodResolver(FORM_SCHEMA),
   });
 
@@ -448,9 +445,10 @@ export function InputFieldsTab() {
                 value={
                   <FeaturerFormField
                     typeId={FeaturerTypes.fieldTyper}
-                    control={form.control}
-                    name="fieldTyperFeaturer"
                     label="Featurer fieldTyper"
+                    control={form.control}
+                    name="fieldTyperFeaturerId"
+                    paramsFieldName="fieldTyperParams"
                   />
                 }
               />
@@ -461,8 +459,9 @@ export function InputFieldsTab() {
                   <FeaturerFormField
                     typeId={FeaturerTypes.headHunter}
                     control={form.control}
-                    name="headHunterFeaturerId"
                     label={"Featurer headHunter"}
+                    name="headHunterFeaturerId"
+                    paramsFieldName="headHunterFeaturerParams"
                   />
                 }
               />
@@ -472,8 +471,9 @@ export function InputFieldsTab() {
                   <FeaturerFormField
                     typeId={FeaturerTypes.trigger}
                     control={form.control}
-                    name="triggerFeaturerId"
                     label={"Featurer trigger"}
+                    name="triggerFeaturerId"
+                    paramsFieldName="triggerFeaturerParams"
                   />
                 }
               />
@@ -483,8 +483,9 @@ export function InputFieldsTab() {
                   <FeaturerFormField
                     typeId={FeaturerTypes.validator}
                     control={form.control}
-                    name="validatorFeaturerId"
                     label={"Featurer validator"}
+                    name="validatorFeaturerId"
+                    paramsFieldName="validatorFeaturerParams"
                   />
                 }
               />

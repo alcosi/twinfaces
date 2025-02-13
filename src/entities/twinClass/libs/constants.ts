@@ -1,4 +1,7 @@
-import { FEATURER_FIELD_SCHEMA } from "@/entities/featurer";
+import {
+  FEATURER_ID_EXTRACTOR,
+  FEATURER_PARAMS_VALUE,
+} from "@/entities/featurer";
 import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
 import { z } from "zod";
 
@@ -28,7 +31,8 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .or(z.literal("").transform(() => undefined)),
   abstractClass: z.boolean(),
   headTwinClass: z.array(z.object({ id: z.string().uuid() })).nullable(),
-  headHunterFeaturer: FEATURER_FIELD_SCHEMA,
+  headHunterFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
+  headHunterParams: FEATURER_PARAMS_VALUE,
   extendsTwinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),
   logo: z
     .string()

@@ -14,7 +14,7 @@ export function CheckboxFormItem({
 }: FormItemProps & {
   inputId?: string;
   fieldValue?: boolean | "indeterminate";
-  onChange?: (value: boolean | "indeterminate") => any;
+  onChange?: (value: boolean | "indeterminate") => void;
   hasIndeterminate?: boolean;
 } & Omit<CheckboxProps, "checked" | "onCheckedChange" | "type">) {
   function onCheckedChange(x: boolean) {

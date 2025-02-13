@@ -1,3 +1,7 @@
+import {
+  FEATURER_ID_EXTRACTOR,
+  FEATURER_PARAMS_VALUE,
+} from "@/entities/featurer";
 import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
 import { z } from "zod";
 
@@ -14,8 +18,8 @@ export const TWIN_CLASS_FIELD_SCHEMA = z.object({
   name: z.string().min(0).max(100),
   description: z.string(),
   required: z.boolean(),
-  fieldTyperFeaturerId: z.number(),
-  fieldTyperParams: z.record(z.string()),
+  fieldTyperFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
+  fieldTyperParams: FEATURER_PARAMS_VALUE,
   //TODO fix any
   viewPermissionId: z.any(),
   editPermissionId: z.any(),

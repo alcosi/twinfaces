@@ -1,1 +1,2 @@
-export * from "./featurer-form-field";
+export * from "./components/featurer-form-field";
+export * from "./types";

@@ -93,7 +93,8 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           typeId={FeaturerTypes.headHunter}
           control={control}
           name={"headHunterFeaturer" as Path<T>}
-          label={"Head Hunter"}
+          label="Head Hunter"
+          paramsFieldName="headHunterParams"
         />
       )}
 

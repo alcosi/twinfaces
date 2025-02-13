@@ -1,32 +1,31 @@
-import { CheckboxFormField } from "@/components/form-fields";
-import { TextFormField } from "@/components/form-fields";
+import { CheckboxFormField, TextFormField } from "@/components/form-fields";
 import { FeaturerTypes } from "@/entities/featurer";
 import { FeaturerFormField } from "@/widgets/form-fields";
-import { Control, FieldValues, Path } from "react-hook-form";
+import { Control } from "react-hook-form";
+import { z } from "zod";
 
-export function TriggersFormFields<T extends FieldValues>({
+type TriggersFormValues = z.infer<any>;
+
+export function TriggersFormFields({
   control,
 }: {
-  control: Control<T>;
+  control: Control<TriggersFormValues>;
 }) {
   return (
     <>
       <TextFormField
         control={control}
-        name={"order" as Path<T>}
+        name="order"
         label="Order"
         type="number"
       />
-      <CheckboxFormField
-        control={control}
-        name={"active" as Path<T>}
-        label="Active"
-      />
+      <CheckboxFormField control={control} name={"active"} label="Active" />
       <FeaturerFormField
         typeId={FeaturerTypes.trigger}
         control={control}
-        name={"fieldTyperFeaturerId" as Path<T>}
         label={"Featurer"}
+        name="fieldTyperFeaturerId"
+        paramsFieldName="fieldTyperFeaturerParams"
       />
     </>
   );

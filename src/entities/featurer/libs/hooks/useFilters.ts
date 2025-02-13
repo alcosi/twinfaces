@@ -1,21 +1,12 @@
 import { type FilterFeature } from "@/shared/libs";
 import { z } from "zod";
-import {
-  AutoFormValueInfo,
-  AutoFormValueType,
-} from "../../../../components/auto-field";
+import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { FeaturerFilterKeys, FeaturerFilters } from "../../api";
-import { FeaturerTypes } from "@/entities/featurer";
-import { useFeaturerSelectAdapter } from "./useSelectAdapter";
 
 export function useFeaturerFilters(): FilterFeature<
   FeaturerFilterKeys,
   FeaturerFilters
 > {
-  const { getById, getItems, renderItem } = useFeaturerSelectAdapter(
-    FeaturerTypes.fieldTyper
-  );
-
   function buildFilterFields(): Record<FeaturerFilterKeys, AutoFormValueInfo> {
     return {
       idList: {

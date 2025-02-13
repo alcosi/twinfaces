@@ -1,14 +1,15 @@
-import { ApiContext } from "@/shared/api";
-import { SelectAdapter } from "@/shared/libs";
-import { useContext } from "react";
-import { Featurer_DETAILED } from "../../api";
+import {
+  isPopulatedString,
+  SelectAdapter,
+  wrapWithPercent,
+} from "@/shared/libs";
+import { Featurer_DETAILED, useFeaturerSearch } from "../../api";
 import { FeaturerTypeId } from "../types";
 
 export function useFeaturerSelectAdapter(
   typeId: FeaturerTypeId
 ): SelectAdapter<Featurer_DETAILED> {
-  // TODO: Replace with useSearchHook
-  const api = useContext(ApiContext);
+  const { searchFeaturers } = useFeaturerSearch();
 
   async function getById(id: string) {
     // TODO: Apply valid logic here
@@ -16,22 +17,19 @@ export function useFeaturerSelectAdapter(
   }
 
   async function getItems(search: string) {
-    const response = await api.featurer.search({
+    const { data } = await searchFeaturers({
       pagination: { pageIndex: 0, pageSize: 10 },
-      options: {
+      filters: {
         typeIdList: [typeId],
-        nameLikeList: [search ? "%" + search + "%" : "%"],
+        nameLikeList: [search ? wrapWithPercent(search) : "%"],
       },
     });
 
-    const data: Featurer_DETAILED[] =
-      (response.data?.featurerList as Featurer_DETAILED[]) ?? [];
-
-    return data;
+    return (data as Featurer_DETAILED[]) ?? [];
   }
 
   function renderItem({ id, name }: Featurer_DETAILED) {
-    return `${id} (${name})`;
+    return isPopulatedString(name) ? `${name} : ${id}` : `${id}`;
   }
 
   return {
