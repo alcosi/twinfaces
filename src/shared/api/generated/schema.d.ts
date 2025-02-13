@@ -165,6 +165,10 @@ export interface paths {
     /** Create new twin status */
     post: operations["twinStatusCreateV1"];
   };
+  "/private/twin_class/{twinClassId}/tag/search/v1": {
+    /** Tag search */
+    post: operations["tagSearchV1"];
+  };
   "/private/twin_class/{twinClassId}/link/{linkId}/valid_twins/v1": {
     /** Get valid twins list for link of new (not created) twin */
     post: operations["validLinkedTwinV1"];
@@ -4764,6 +4768,42 @@ export interface components {
        */
       statusDetails?: string;
       twinStatus?: components["schemas"]["TwinStatusV1"];
+    };
+    TagSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description option like list */
+      optionLikeList?: string[];
+      /** @description option not like list */
+      optionNotLikeList?: string[];
+      /** @description option i18n like list */
+      optionI18nLikeList?: string[];
+      /** @description option i18n not like list */
+      optionI18nNotLikeList?: string[];
+    };
+    TagSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description results - tag option list */
+      options?: components["schemas"]["DataListOptionV3"][];
     };
     TwinClassFieldCreateRqV1: {
       /**
@@ -11662,6 +11702,50 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TwinStatusCreateRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Tag search */
+  tagSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        twinClassId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TagSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Tag data result */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TagSearchRsV1"];
         };
       };
       /** @description Access is denied */
