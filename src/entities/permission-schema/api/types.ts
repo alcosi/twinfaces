@@ -1,4 +1,4 @@
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 
 export type PermissionSchema = components["schemas"]["PermissionSchemaV2"];
 
@@ -22,3 +22,6 @@ export type PermissionSchemaFilters = Partial<
     PermissionSchemaFilterKeys
   >
 >;
+
+export type PermissionSchemaRqQuery =
+  operations["permissionSchemaViewV1"]["parameters"]["query"];

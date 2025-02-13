@@ -95,9 +95,9 @@ export function PermissionSchemasScreen() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Permission Schemas", href: "/workspace/permission-schemas" },
+      { label: "Schemas", href: "/workspace/permission-schemas" },
     ]);
-  }, []);
+  }, [setBreadcrumbs]);
 
   async function fetchPermissionSchemas(
     pagination: PaginationState,
@@ -112,7 +112,7 @@ export function PermissionSchemasScreen() {
       });
       return response;
     } catch (e) {
-      toast.error("Failed to fetch permissions schema");
+      toast.error("Failed to fetch permission schemas");
       return { data: [], pagination: {} };
     }
   }
