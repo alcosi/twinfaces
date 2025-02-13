@@ -15,7 +15,9 @@ export function createPermissionSchemaApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
-          showPermissionSchemaMode: "SHORT",
+          showPermissionSchemaMode: "DETAILED",
+          showPermissionSchema2UserMode: "DETAILED",
+          showPermissionSchema2BusinessAccountMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

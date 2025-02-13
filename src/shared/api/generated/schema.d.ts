@@ -1599,6 +1599,11 @@ export interface components {
        * @description createdByUserId
        */
       createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
       businessAccount?: components["schemas"]["BusinessAccountV1"];
       createdByUser?: components["schemas"]["UserV1"];
     };
@@ -6705,6 +6710,11 @@ export interface components {
        * @description createdByUserId
        */
       createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
     };
     /** @description permission */
     PermissionV2: {

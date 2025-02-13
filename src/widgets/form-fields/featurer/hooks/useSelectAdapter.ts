@@ -1,7 +1,7 @@
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { FeaturerParamType } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
-import { usePermissionSchemaSelectAdapter } from "@/entities/permissionSchema";
+import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import {
   useTwinBasicFieldSelectAdapter,
   useTwinSelectAdapter,

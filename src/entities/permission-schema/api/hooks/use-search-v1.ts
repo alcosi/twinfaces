@@ -3,6 +3,7 @@ import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 import { PermissionSchema, PermissionSchemaSearchFilters } from "../types";
+import { hydratePermissionSchemaFromMap } from "@/entities/permission-schema";
 
 // TODO: Apply caching-strategy
 export const usePermissionSchemaSearchV1 = () => {
@@ -22,6 +23,7 @@ export const usePermissionSchemaSearchV1 = () => {
         const { data, error } = await api.permissionSchema.search({
           pagination,
           filters: {
+            ...filters,
             nameLikeList: isPopulatedString(search)
               ? [wrapWithPercent(search)]
               : filters?.nameLikeList,
@@ -34,8 +36,13 @@ export const usePermissionSchemaSearchV1 = () => {
           );
         }
 
+        const permissionSchemas =
+          data.permissionSchemas?.map((dto) =>
+            hydratePermissionSchemaFromMap(dto, data.relatedObjects)
+          ) ?? [];
+
         return {
-          data: data.permissionSchemas ?? [],
+          data: permissionSchemas,
           pagination: data.pagination ?? {},
         };
       } catch (error) {
