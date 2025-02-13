@@ -1,16 +1,19 @@
 "use client";
 
-import { Featurer } from "@/entities/featurer";
 import { GuidWithCopy } from "@/shared/ui";
-import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
+import { CrudDataTable } from "@/widgets/crud-data-table";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
 
 interface IProps {
   fetcher: (pagination: PaginationState, options: {}) => Promise<any>;
 }
 
-const colDefs: Record<"id" | "name", ColumnDef<Featurer>> = {
+const colDefs: Record<
+  "id" | "name" | "description" | "deprecated",
+  ColumnDef<any>
+> = {
   id: {
     id: "id",
     accessorKey: "id",
@@ -22,14 +25,36 @@ const colDefs: Record<"id" | "name", ColumnDef<Featurer>> = {
     accessorKey: "name",
     header: "Name",
   },
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
+  },
+  deprecated: {
+    id: "deprecated",
+    accessorKey: "deprecated",
+    header: "Deprecated",
+    cell: (data) => data.getValue() && <Check />,
+  },
 };
 
 export function FieldTyperTable({ fetcher }: IProps) {
   return (
     <CrudDataTable
-      columns={[colDefs.id, colDefs.name]}
+      title="Field Typer"
+      columns={[
+        colDefs.id,
+        colDefs.name,
+        colDefs.description,
+        colDefs.deprecated,
+      ]}
       getRowId={(row) => row.id!}
-      defaultVisibleColumns={[colDefs.id, colDefs.name]}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.name,
+        colDefs.description,
+        colDefs.deprecated,
+      ]}
       fetcher={fetcher}
     />
   );

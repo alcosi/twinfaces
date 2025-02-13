@@ -22,7 +22,8 @@ export function useFeaturersSearch() {
         if (error) throw error;
 
         return {
-          data: data.featurerList ?? [],
+          //TODO: Remove type assertion
+          data: data.featurerList as Featurer_DETAILED[],
           pagination: data.pagination ?? {},
         };
       } catch (error) {

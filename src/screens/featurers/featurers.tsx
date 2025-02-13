@@ -1,7 +1,9 @@
+"use client";
+
 import { useFeaturersSearch } from "@/entities/featurer";
 import { PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
-import { FieldTyperTable } from "./tables/field-typer-table";
+import { FieldTyperTable } from "./tables";
 
 export function FeaturersScreen() {
   const { searchFeaturers } = useFeaturersSearch();
