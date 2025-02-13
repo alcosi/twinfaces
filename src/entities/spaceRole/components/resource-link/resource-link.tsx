@@ -15,8 +15,6 @@ export const SpaceRoleResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  if (isUndefined(data)) return null;
-
   const link = `/workspace/space-roles/${data.id}`;
 
   return (

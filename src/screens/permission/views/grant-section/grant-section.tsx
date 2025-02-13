@@ -7,13 +7,12 @@ import { useEffect, useState } from "react";
 import { LoadingOverlay } from "@/shared/ui";
 
 export function GrantSection() {
+  // TODO: Remove this useEffect by resolving `https://alcosi.atlassian.net/browse/TWINFACES-467`
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 200);
     return () => clearTimeout(timer);
   }, []);
-
   if (isLoading) return <LoadingOverlay />;
 
   return (

@@ -1,21 +1,21 @@
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { PermissionContext } from "@/features/permission";
-import { useContext } from "react";
-import { UserGroupResourceLink } from "@/entities/userGroup";
-import { toast } from "sonner";
+import { AutoFormValueType } from "@/components/auto-field";
 import {
   UpdatePermissionRequestBody,
   usePermissionUpdate,
 } from "@/entities/permission";
+import { usePermissionGroupSelectAdapter } from "@/entities/permissionGroup";
+import { UserGroupResourceLink } from "@/entities/userGroup";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { AutoFormValueType } from "@/components/auto-field";
+import { PermissionContext } from "@/features/permission";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
+import { useContext } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
-import { usePermissionGroupSelectAdapter } from "@/entities/permissionGroup";
 
 export function GeneralSection() {
   const { permission, refresh } = useContext(PermissionContext);

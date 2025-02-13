@@ -1,15 +1,10 @@
-import { LoadingOverlay } from "@/shared/ui/loading";
 import {
   Permission_DETAILED,
   useFetchPermissionById,
 } from "@/entities/permission";
-import React, {
-  createContext,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from "react";
 import { isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui/loading";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 type Context = {
   permissionId: string;
@@ -48,7 +43,7 @@ export function PermissionContextProvider({
     setPermission(response);
   }
 
-  if (isUndefined(permission)) return <>{loading && <LoadingOverlay />}</>;
+  if (isUndefined(permission) || loading) return <LoadingOverlay />;
 
   return (
     <PermissionContext.Provider value={{ permissionId, permission, refresh }}>
