@@ -1,11 +1,11 @@
 import { SelectAdapter } from "@/shared/libs";
-import { useLinkSearchV1 } from "../../../twin-class-link/api";
 import {
   Link_MANAGED,
   LINK_STRENGTH_ENUM,
   LINK_TYPES_ENUM,
   LinkStrength,
   LinkType,
+  useLinkSearch,
 } from "@/entities/link";
 
 export function useLinkTypeSelectAdapter(): SelectAdapter<{
@@ -55,7 +55,7 @@ export function useLinkStrengthSelectAdapter(): SelectAdapter<{
 }
 
 export function useLinkSelectAdapter(): SelectAdapter<Link_MANAGED> {
-  const { searchLinks } = useLinkSearchV1();
+  const { searchLinks } = useLinkSearch();
 
   async function getById(id: string) {
     return { id } as Link_MANAGED;

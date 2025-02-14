@@ -8,7 +8,7 @@ import {
   LinkTypesEnum,
 } from "./types";
 
-export const linkSchema = z.object({
+export const LINK_SCHEMA = z.object({
   srcTwinClassId: z
     .string()
     .uuid("Twin Class ID must be a valid UUID")

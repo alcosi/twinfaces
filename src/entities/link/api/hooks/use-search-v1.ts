@@ -1,12 +1,11 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
-import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { hydrateLinkFromMap } from "@/entities/link/libs/helpers";
-import { Link_MANAGED, LinkFilters } from "@/entities/link";
+import { PaginationState } from "@tanstack/react-table";
+import { Link_MANAGED, LinkFilters } from "..";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
+import { hydrateLinkFromMap } from "../../libs";
 
-// TODO: Apply caching-strategy
-export const useLinkSearchV1 = () => {
+export function useLinkSearch() {
   const api = useContext(ApiContext);
 
   const searchLinks = useCallback(
@@ -54,4 +53,4 @@ export const useLinkSearchV1 = () => {
   );
 
   return { searchLinks };
-};
+}

@@ -8,8 +8,7 @@ import { GeneralSection } from "./views/general-section";
 import { toast } from "sonner";
 import { LoadingOverlay } from "@/shared/ui";
 import { isUndefined } from "@/shared/libs";
-import { useLinkFetchById } from "@/entities/twin-class-link";
-import { Link } from "@/entities/link";
+import { Link, useLinkFetchById } from "@/entities/link";
 
 export type PageProps = {
   params: {

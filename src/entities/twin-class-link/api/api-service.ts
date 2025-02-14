@@ -1,5 +1,4 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { QueryLinkViewV1, UpdateLinkRequestBody } from "./types";
 
 export function createTwinClassLinksApi(settings: ApiSettings) {
   const getLinks = async ({ twinClassId }: { twinClassId: string }) => {
@@ -15,39 +14,7 @@ export function createTwinClassLinksApi(settings: ApiSettings) {
     });
   };
 
-  async function update({
-    linkId,
-    body,
-  }: {
-    linkId: string;
-    body: UpdateLinkRequestBody;
-  }) {
-    return settings.client.PUT("/private/link/{linkId}/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { linkId },
-      },
-      body: body,
-    });
-  }
-
-  function getById({
-    linkId,
-    query = {},
-  }: {
-    linkId: string;
-    query: QueryLinkViewV1;
-  }) {
-    return settings.client.GET("/private/link/{linkId}/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { linkId },
-        query: query,
-      },
-    });
-  }
-
-  return { getLinks, update, getById };
+  return { getLinks };
 }
 
 export type TwinClassLinkApi = ReturnType<typeof createTwinClassLinksApi>;
