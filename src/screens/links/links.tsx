@@ -122,7 +122,7 @@ export function LinksScreen() {
   const { searchLinks } = useLinkSearch();
   const { buildFilterFields, mapFiltersToPayload } = useLinkFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { createLink } = useCreateLink()
+  const { createLink } = useCreateLink();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Links", href: "/workspace/links" }]);
