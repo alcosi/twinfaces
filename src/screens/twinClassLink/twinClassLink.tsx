@@ -29,7 +29,7 @@ export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
       { label: "Relations", href: `/workspace/twinclass/${twinClassId}#links` },
       {
         label: link?.name ?? "N/A",
-        href: `/workspace/twinclass/${twinClassId}/link/${linkId}`,
+        href: `/workspace/links/${linkId}`,
       },
     ]);
   }, [linkId, twinClassId, twinClass?.name, link?.name]);
