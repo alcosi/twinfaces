@@ -23,6 +23,7 @@ import {
   LinkStrengthEnum,
   LinkTypesEnum,
   UpdateLinkRequestBody,
+  useCreateLink,
 } from "@/entities/link";
 import { CreateLinkFormFields } from "../links";
 
@@ -47,10 +48,11 @@ const mapLinkToFormPayload = (
 
 export function TwinClassRelations() {
   const api = useContext(ApiContext);
-  const { twinClass, twinClassId } = useContext(TwinClassContext);
+  const { twinClass } = useContext(TwinClassContext);
   const router = useRouter();
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
+  const { createLink } = useCreateLink();
 
   const columnsMap: Record<
     "id" | "name" | "dstTwinClassId" | "type" | "linkStrengthId",
@@ -171,25 +173,7 @@ export function TwinClassRelations() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
-    const body: CreateLinkRequestBody = {
-      forwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      backwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      ...formValues,
-    };
-
-    const { error } = await api.link.create({ body });
-    if (error) {
-      throw error;
-    }
-    toast.success("Link created successfully!");
+    await createLink(formValues);
   };
 
   return (

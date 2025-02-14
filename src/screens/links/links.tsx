@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  CreateLinkRequestBody,
   Link,
   LINK_SCHEMA,
   LinkStrengthEnum,
   LinkTypesEnum,
+  useCreateLink,
   useLinkFilters,
   useLinkSearch,
 } from "@/entities/link";
@@ -23,8 +23,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { CreateLinkFormFields } from "./form-fields";
-import { useContext, useEffect } from "react";
-import { ApiContext } from "@/shared/api";
+import { useEffect } from "react";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { useRouter } from "next/navigation";
 
@@ -119,11 +118,11 @@ const colDefs: Record<
 };
 
 export function LinksScreen() {
-  const api = useContext(ApiContext);
   const router = useRouter();
   const { searchLinks } = useLinkSearch();
   const { buildFilterFields, mapFiltersToPayload } = useLinkFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { createLink } = useCreateLink()
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Links", href: "/workspace/links" }]);
@@ -154,24 +153,7 @@ export function LinksScreen() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
-    const body: CreateLinkRequestBody = {
-      forwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      backwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      ...formValues,
-    };
-
-    const { error } = await api.link.create({ body });
-
-    if (error) throw error;
-    toast.success("Link created successfully!");
+    await createLink(formValues);
   };
 
   return (
