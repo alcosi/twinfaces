@@ -1,14 +1,14 @@
 "use client";
 
+import { FactoryContextProvider } from "@/entities/factory";
 import { ReactNode } from "react";
-import { FactoryContextProvider } from "./factory-context";
 
-interface FactoryLayoutProps {
+type FactoryLayoutProps = {
   params: {
     factoryId: string;
   };
   children: ReactNode;
-}
+};
 
 export default function FactoryLayout({
   params: { factoryId },

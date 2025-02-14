@@ -11,36 +11,21 @@ import {
   TableRow,
 } from "@/shared/ui";
 import { useContext } from "react";
-import { FactoryContext } from "../factory-context";
+import { FactoryContext } from "../../../entities/factory/libs/factory-context";
 import { AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
-import { FactoryUpdateRq } from "@/entities/factory";
-import { ApiContext } from "@/shared/api";
+import { useUpdateFactory } from "@/entities/factory";
 import { UserResourceLink } from "@/entities/user";
 import { formatToTwinfaceDate } from "@/shared/libs";
 
 export function FactoryGeneral() {
-  const { factory, fetchFactoryData } = useContext(FactoryContext);
-  const api = useContext(ApiContext);
+  const { factory } = useContext(FactoryContext);
 
-  async function updateFactory(newFactory: FactoryUpdateRq) {
-    if (!factory) {
-      console.error("updateFactory: no factory");
-      return;
-    }
-
-    try {
-      await api.factory.update({ id: factory.id, body: newFactory });
-      fetchFactoryData();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
+  const { updateFactory } = useUpdateFactory();
 
   const nameSettings: InPlaceEditProps = {
     id: "name",
-    value: factory?.name,
+    value: factory.name,
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
@@ -62,7 +47,7 @@ export function FactoryGeneral() {
 
   const descriptionSettings: InPlaceEditProps = {
     id: "description",
-    value: factory?.description,
+    value: factory.description,
     valueInfo: {
       type: AutoFormValueType.string,
       inputProps: {
@@ -89,13 +74,13 @@ export function FactoryGeneral() {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>
-              <GuidWithCopy value={factory?.id} variant="long" />
+              <GuidWithCopy value={factory.id} variant="long" />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Key</TableCell>
-            <TableCell>{factory?.key}</TableCell>
+            <TableCell>{factory.key}</TableCell>
           </TableRow>
 
           <TableRow>
@@ -115,7 +100,7 @@ export function FactoryGeneral() {
           <TableRow>
             <TableCell>Created by</TableCell>
             <TableCell>
-              {factory?.createdByUser && (
+              {factory.createdByUser && (
                 <UserResourceLink data={factory.createdByUser} withTooltip />
               )}
             </TableCell>
@@ -123,7 +108,7 @@ export function FactoryGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(factory?.createdAt!)}</TableCell>
+            <TableCell>{formatToTwinfaceDate(factory.createdAt)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

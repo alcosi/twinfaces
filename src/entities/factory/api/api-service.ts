@@ -1,7 +1,10 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryFilters, FactoryUpdateRq } from "@/entities/factory";
-import { operations } from "@/shared/api/generated/schema";
+import {
+  FactoryFilters,
+  FactoryUpdateRq,
+  FactoryViewhQuery,
+} from "@/entities/factory";
 
 export function createFactoryApi(settings: ApiSettings) {
   function search({
@@ -38,7 +41,7 @@ export function createFactoryApi(settings: ApiSettings) {
     query = {},
   }: {
     id: string;
-    query?: operations["factoryViewV1"]["parameters"]["query"];
+    query?: FactoryViewhQuery;
   }) {
     return settings.client.GET("/private/factory/{factoryId}/v1", {
       params: {
