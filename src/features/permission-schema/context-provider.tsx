@@ -44,7 +44,7 @@ export function PermissionSchemaContextProvider({
     setSchema(response);
   }
 
-  if (isUndefined(schema)) return <>{loading && <LoadingOverlay />}</>;
+  if (isUndefined(schema) || loading) return <LoadingOverlay />;
 
   return (
     <PermissionSchemaContext.Provider
@@ -54,8 +54,7 @@ export function PermissionSchemaContextProvider({
         refresh,
       }}
     >
-      {loading && <LoadingOverlay />}
-      {!loading && children}
+      {children}
     </PermissionSchemaContext.Provider>
   );
 }
