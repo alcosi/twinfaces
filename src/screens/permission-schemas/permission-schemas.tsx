@@ -1,6 +1,13 @@
+import {
+  PermissionSchema,
+  usePermissionSchemaFilters,
+  usePermissionSchemaSearchV1,
+} from "@/entities/permission-schema";
+import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui/guid";
+import { formatToTwinfaceDate } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
   DataTableHandle,
@@ -10,13 +17,6 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import {
-  PermissionSchema,
-  usePermissionSchemaFilters,
-  usePermissionSchemaSearchV1,
-} from "@/entities/permission-schema";
-import { UserResourceLink } from "@/entities/user";
-import { formatToTwinfaceDate } from "@/shared/libs";
 
 const colDefs: Record<
   keyof Pick<
@@ -85,7 +85,7 @@ const colDefs: Record<
   },
 };
 
-export function PermissionSchemas() {
+export function PermissionSchemasScreen() {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -99,7 +99,7 @@ export function PermissionSchemas() {
     ]);
   }, []);
 
-  async function fetchPermissionsSchema(
+  async function fetchPermissionSchemas(
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<PermissionSchema>> {
@@ -119,7 +119,7 @@ export function PermissionSchemas() {
 
   return (
     <CrudDataTable
-      title="Permission Schema"
+      title="Permission Schemas"
       className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
@@ -131,7 +131,7 @@ export function PermissionSchemas() {
         colDefs.businessAccountId,
         colDefs.createdAt,
       ]}
-      fetcher={fetchPermissionsSchema}
+      fetcher={fetchPermissionSchemas}
       getRowId={(row) => row.id!}
       onRowClick={(row) =>
         router.push(`/workspace/permission-schemas/${row.id}`)

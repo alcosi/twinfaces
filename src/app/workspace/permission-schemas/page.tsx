@@ -1,7 +1,7 @@
 "use client";
 
-import { PermissionSchemas } from "@/screens/permission-schema";
+import { PermissionSchemasScreen } from "@/screens/permission-schemas";
 
 export default function PermissionSchemasPage() {
-  return <PermissionSchemas />;
+  return <PermissionSchemasScreen />;
 }
