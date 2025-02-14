@@ -25,7 +25,6 @@ const colDefs: Record<
     | "name"
     | "description"
     | "createdByUserId"
-    | "domainId"
     | "businessAccountId"
     | "createdAt"
   >,
@@ -62,13 +61,6 @@ const colDefs: Record<
       ),
   },
 
-  domainId: {
-    id: "domainId",
-    accessorKey: "domainId",
-    header: "Domain",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-  },
-
   businessAccountId: {
     id: "businessAccountId",
     accessorKey: "businessAccountId",
@@ -95,9 +87,9 @@ export function PermissionSchemasScreen() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Permission Schemas", href: "/workspace/permission-schemas" },
+      { label: "Schemas", href: "/workspace/permission-schemas" },
     ]);
-  }, []);
+  }, [setBreadcrumbs]);
 
   async function fetchPermissionSchemas(
     pagination: PaginationState,
@@ -112,7 +104,7 @@ export function PermissionSchemasScreen() {
       });
       return response;
     } catch (e) {
-      toast.error("Failed to fetch permissions schema");
+      toast.error("Failed to fetch permission schemas");
       return { data: [], pagination: {} };
     }
   }
@@ -127,7 +119,6 @@ export function PermissionSchemasScreen() {
         colDefs.name,
         colDefs.description,
         colDefs.createdByUserId,
-        colDefs.domainId,
         colDefs.businessAccountId,
         colDefs.createdAt,
       ]}
@@ -145,7 +136,6 @@ export function PermissionSchemasScreen() {
         colDefs.name,
         colDefs.description,
         colDefs.createdByUserId,
-        colDefs.domainId,
         colDefs.businessAccountId,
         colDefs.createdAt,
       ]}

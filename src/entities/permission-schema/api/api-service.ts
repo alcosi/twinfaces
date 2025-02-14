@@ -1,6 +1,9 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { PermissionSchemaSearchFilters } from "./types";
+import {
+  PermissionSchemaRqQuery,
+  PermissionSchemaSearchFilters,
+} from "./types";
 
 export function createPermissionSchemaApi(settings: ApiSettings) {
   async function search({
@@ -29,7 +32,23 @@ export function createPermissionSchemaApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function getById({
+    schemaId,
+    query,
+  }: {
+    schemaId: string;
+    query?: PermissionSchemaRqQuery;
+  }) {
+    return settings.client.GET("/private/permission_schema/{schemaId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { schemaId },
+        query,
+      },
+    });
+  }
+
+  return { search, getById };
 }
 
 export type PermissionSchemaApi = ReturnType<typeof createPermissionSchemaApi>;
