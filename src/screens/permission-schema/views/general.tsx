@@ -28,13 +28,6 @@ export function PermissionSchemaGeneral() {
           <TableCell>{schema.description}</TableCell>
         </TableRow>
 
-        <TableRow>
-          <TableCell>Domain ID</TableCell>
-          <TableCell>
-            <GuidWithCopy value={schema.domainId} variant="long" />
-          </TableCell>
-        </TableRow>
-
         {schema.createdByUser && (
           <TableRow>
             <TableCell>Created By</TableCell>

@@ -25,7 +25,6 @@ const colDefs: Record<
     | "name"
     | "description"
     | "createdByUserId"
-    | "domainId"
     | "businessAccountId"
     | "createdAt"
   >,
@@ -60,13 +59,6 @@ const colDefs: Record<
           <UserResourceLink data={original.createdByUser} withTooltip />
         </div>
       ),
-  },
-
-  domainId: {
-    id: "domainId",
-    accessorKey: "domainId",
-    header: "Domain",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
 
   businessAccountId: {
@@ -127,7 +119,6 @@ export function PermissionSchemasScreen() {
         colDefs.name,
         colDefs.description,
         colDefs.createdByUserId,
-        colDefs.domainId,
         colDefs.businessAccountId,
         colDefs.createdAt,
       ]}
@@ -145,7 +136,6 @@ export function PermissionSchemasScreen() {
         colDefs.name,
         colDefs.description,
         colDefs.createdByUserId,
-        colDefs.domainId,
         colDefs.businessAccountId,
         colDefs.createdAt,
       ]}
