@@ -43,7 +43,7 @@ export const SelectedOptions = <T,>({
     <div className="flex flex-wrap items-center w-full">
       {selected.slice(0, MAX_COUNT).map((item, index) => (
         <Badge
-          key={getItemKey(item)}
+          key={typeof item === "string" ? item : getItemKey(item)}
           className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
         >
           <span className="truncate max-w-[130px] mr-2">

@@ -24,17 +24,17 @@ export function useDatalistOptionSelectAdapter(): SelectAdapter<DataListOptionV3
   async function getItems(search: string, filters?: DataListOptionFilters) {
     const response = await searchDatalistOptions({
       filters: {
-        optionI18nLikeList: isPopulatedString(search)
+        optionLikeList: isPopulatedString(search)
           ? [wrapWithPercent(search)]
-          : filters?.optionI18nLikeList,
+          : filters?.optionLikeList,
         ...filters,
       },
     });
     return response.data;
   }
 
-  function renderItem({ name }: DataListOptionV3) {
-    return name;
+  function renderItem(item: DataListOptionV3 | string) {
+    return ((typeof item === "string")  ?  item : item.name)
   }
 
   return {

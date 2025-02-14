@@ -152,6 +152,7 @@ const colDefs: Record<
     id: "tags",
     accessorKey: "tags",
     header: "Tags",
+    //todo incoming data extension is required to display tags in the table
     cell: ({ row: { original } }) =>
       original.tagIdList && original.tags && original.id ? (
         <div className="max-w-48 inline-flex">

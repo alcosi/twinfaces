@@ -11,7 +11,7 @@ import {
   CommandList,
 } from "@/shared/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, CircleFadingPlus, Plus } from "lucide-react";
 import { ForwardedRef } from "react";
 import { useComboboxController } from "./hooks";
 import { SelectedOptions } from "./selected-options";
@@ -90,6 +90,35 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
             onValueChange={setSearchQuery}
             loading={isLoading}
           />
+          {(props.ownItems && searchQuery) &&
+            <Button
+              variant="ghost"
+              className={cn(
+                "flex w-auto min-w-[120px] h-auto min-h-10 justify-between truncate disabled:bg-secondary",
+                props.buttonClassName
+              )}
+              onClick={() => {
+                const newItem =  searchQuery as T // if object({ id: z.string().uuid(), name: z.string() }),
+                const isDuplicate = selectedItems.some(
+                  (item) => (typeof item === "string" ? item === searchQuery : getItemKey(item) === searchQuery)
+                )
+                if (isDuplicate) {
+                  setIsOpen(false)
+                  setSearchQuery('')
+                  return
+                }
+                const updatedSelection = props.multi ? [...selectedItems, newItem] : [newItem]
+                setSelectedItems(updatedSelection)
+                props.onSelect?.(updatedSelection)
+                setIsOpen(false)
+                setSearchQuery('')
+              }}
+            >
+             
+             {`add new tag: "${searchQuery}"`}
+              <CircleFadingPlus className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          }
           <CommandEmpty>{props.noItemsText}</CommandEmpty>
           <CommandList>
             <CommandGroup>
