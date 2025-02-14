@@ -9,3 +9,16 @@ export type PermissionSchemaSearchFilters = Partial<
     PermissionSchemaSearchFilterKeys
   >
 >;
+
+export type PermissionSchemaFilterKeys =
+  | "idList"
+  | "nameLikeList"
+  | "descriptionLikeList"
+  | "createdByUserIdList";
+
+export type PermissionSchemaFilters = Partial<
+  Pick<
+    components["schemas"]["PermissionSchemaSearchRqV1"],
+    PermissionSchemaFilterKeys
+  >
+>;

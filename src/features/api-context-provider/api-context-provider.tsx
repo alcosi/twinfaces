@@ -33,7 +33,7 @@ import {
 import {
   createPermissionSchemaApi,
   PermissionSchemaApi,
-} from "@/entities/permissionSchema";
+} from "@/entities/permission-schema";
 import {
   createPipelineStepApi,
   PipelineStepApi,

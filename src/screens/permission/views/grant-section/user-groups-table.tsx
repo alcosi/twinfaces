@@ -1,5 +1,5 @@
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
+import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import { UserResourceLink } from "@/entities/user";
 import {
   PermissionGrantUserGroup,

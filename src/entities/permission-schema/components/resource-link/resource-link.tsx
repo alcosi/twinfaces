@@ -15,8 +15,6 @@ export const PermissionSchemaResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  if (isUndefined(data)) return null;
-
   const link = `/workspace/permission-schemas/${data.id}`;
 
   return (

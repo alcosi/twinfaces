@@ -1,7 +1,7 @@
 "use client";
 
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { PermissionSchemasScreen } from "@/screens/permission-schemas";
 
 export default function PermissionSchemasPage() {
-  return <UnderConstruction />;
+  return <PermissionSchemasScreen />;
 }

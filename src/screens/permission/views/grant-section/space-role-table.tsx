@@ -1,4 +1,4 @@
-import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
+import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import {
   PermissionGrantSpaceRole_DETAILED,
   SpaceRoleResourceLink,

@@ -6,7 +6,7 @@ import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { TwinClassResourceLink } from "@/entities/twinClass";
-import { PermissionSchemaResourceLink } from "@/entities/permissionSchema";
+import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import {
   PermissionGrantAssigneePropagation_DETAILED,
   usePermissionGrantAssigneePropagationSearchV1,
