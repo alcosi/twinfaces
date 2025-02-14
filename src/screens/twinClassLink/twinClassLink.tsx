@@ -23,6 +23,8 @@ export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
   const { fetchLinkById, loading } = useLinkFetchById();
 
   useEffect(() => {
+    //TODO add missed class name at breadCrumbs
+    //https://alcosi.atlassian.net/browse/TWINFACES-469
     setBreadcrumbs([
       { label: "Classes", href: "/workspace/twinclass" },
       { label: twinClass?.name!, href: `/workspace/twinclass/${twinClassId}` },
