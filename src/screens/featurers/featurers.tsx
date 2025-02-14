@@ -1,22 +1,28 @@
 "use client";
 
-import { useFeaturerFilters, useFeaturersSearch } from "@/entities/featurer";
+import {
+  Featurer,
+  FeaturerTypes,
+  useFeaturerFilters,
+  useFeaturersSearch,
+} from "@/entities/featurer";
 import { PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { FeaturerTypeTable } from "./tables";
 import { FiltersState } from "@/widgets/crud-data-table";
+import { PagedResponse } from "@/shared/api";
 
-interface IFeaturerType {
+type FeaturerType = {
   title: string;
   typeIdList: number[];
-}
+};
 
-const FEATURER_TYPES: IFeaturerType[] = [
-  { title: "Field Typer", typeIdList: [13] },
-  { title: "Trigger", typeIdList: [15] },
-  { title: "Validator", typeIdList: [16] },
-  { title: "Head Hunter", typeIdList: [26] },
-  { title: "Filler", typeIdList: [23] },
+const FEATURER_TYPES: FeaturerType[] = [
+  { title: "Field Typer", typeIdList: [FeaturerTypes.fieldTyper] },
+  { title: "Trigger", typeIdList: [FeaturerTypes.trigger] },
+  { title: "Validator", typeIdList: [FeaturerTypes.validator] },
+  { title: "Head Hunter", typeIdList: [FeaturerTypes.headHunter] },
+  { title: "Filler", typeIdList: [FeaturerTypes.filler] },
 ];
 
 export function FeaturersScreen() {
@@ -27,7 +33,7 @@ export function FeaturersScreen() {
     return async function fetchFeaturers(
       pagination: PaginationState,
       options: FiltersState
-    ) {
+    ): Promise<PagedResponse<Featurer>> {
       const _filters = {
         ...mapFiltersToPayload(options.filters),
         typeIdList,

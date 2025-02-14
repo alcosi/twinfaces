@@ -6,13 +6,13 @@ import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 
-interface IProps {
+type Props = {
   title: string;
   fetcher: (
     pagination: PaginationState,
     options: FiltersState<string>
   ) => Promise<any>;
-}
+};
 
 const colDefs: Record<
   "id" | "name" | "description" | "deprecated",
@@ -42,7 +42,7 @@ const colDefs: Record<
   },
 };
 
-export function FeaturerTypeTable({ title, fetcher }: IProps) {
+export function FeaturerTypeTable({ title, fetcher }: Props) {
   return (
     <CrudDataTable
       title={title}
