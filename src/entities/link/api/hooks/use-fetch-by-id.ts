@@ -1,9 +1,7 @@
 import { ApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext, useState } from "react";
-import { QueryLinkViewV1 } from "../types";
-import { hydrateLinkFromMap } from "@/entities/link/libs/helpers";
-import { Link } from "@/entities/link";
+import { hydrateLinkFromMap, Link, QueryLinkViewV1 } from "@/entities/link";
 
 // TODO: Apply caching-strategy
 export const useLinkFetchById = () => {
@@ -20,7 +18,7 @@ export const useLinkFetchById = () => {
     }): Promise<Link> => {
       setLoading(true);
       try {
-        const { data, error } = await api.twinClassLink.getById({
+        const { data, error } = await api.link.getById({
           linkId,
           query,
         });

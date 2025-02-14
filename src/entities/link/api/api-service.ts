@@ -1,6 +1,11 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { CreateLinkRequestBody, LinkFilters } from "./types";
+import {
+  CreateLinkRequestBody,
+  LinkFilters,
+  QueryLinkViewV1,
+  UpdateLinkRequestBody,
+} from "./types";
 
 export function createLinkApi(settings: ApiSettings) {
   function search({
@@ -29,6 +34,22 @@ export function createLinkApi(settings: ApiSettings) {
     });
   }
 
+  async function update({
+    linkId,
+    body,
+  }: {
+    linkId: string;
+    body: UpdateLinkRequestBody;
+  }) {
+    return settings.client.PUT("/private/link/{linkId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { linkId },
+      },
+      body: body,
+    });
+  }
+
   async function create({ body }: { body: CreateLinkRequestBody }) {
     return settings.client.POST("/private/link/v1", {
       params: {
@@ -38,7 +59,23 @@ export function createLinkApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create };
+  function getById({
+    linkId,
+    query = {},
+  }: {
+    linkId: string;
+    query: QueryLinkViewV1;
+  }) {
+    return settings.client.GET("/private/link/{linkId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { linkId },
+        query: query,
+      },
+    });
+  }
+
+  return { search, create, update, getById };
 }
 
 export type LinkApi = ReturnType<typeof createLinkApi>;

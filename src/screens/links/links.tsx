@@ -3,7 +3,7 @@
 import {
   CreateLinkRequestBody,
   Link,
-  linkSchema,
+  LINK_SCHEMA,
   LinkStrengthEnum,
   LinkTypesEnum,
   useLinkFilters,
@@ -121,7 +121,7 @@ const colDefs: Record<
 export function LinksScreen() {
   const api = useContext(ApiContext);
   const router = useRouter();
-  const { searchLink } = useLinkSearch();
+  const { searchLinks } = useLinkSearch();
   const { buildFilterFields, mapFiltersToPayload } = useLinkFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
 
@@ -129,8 +129,8 @@ export function LinksScreen() {
     setBreadcrumbs([{ label: "Links", href: "/workspace/links" }]);
   }, [setBreadcrumbs]);
 
-  const linkForm = useForm<z.infer<typeof linkSchema>>({
-    resolver: zodResolver(linkSchema),
+  const linkForm = useForm<z.infer<typeof LINK_SCHEMA>>({
+    resolver: zodResolver(LINK_SCHEMA),
     defaultValues: {
       srcTwinClassId: "",
       dstTwinClassId: "",
@@ -144,7 +144,7 @@ export function LinksScreen() {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      return searchLink({ pagination, filters: _filters });
+      return searchLinks({ pagination, filters: _filters });
     } catch (error) {
       toast.error("An error occured while fetching links: " + error);
       throw new Error("An error occured while fetching links: " + error);
@@ -152,7 +152,7 @@ export function LinksScreen() {
   }
 
   const handleOnCreateSubmit = async (
-    formValues: z.infer<typeof linkSchema>
+    formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
     const body: CreateLinkRequestBody = {
       forwardNameI18n: {
@@ -189,9 +189,7 @@ export function LinksScreen() {
       ]}
       fetcher={fetchLink}
       getRowId={(row) => row.id!}
-      onRowClick={(row) =>
-        router.push(`/workspace/twinclass/${row.srcTwinClassId}/link/${row.id}`)
-      }
+      onRowClick={(row) => router.push(`/workspace/links/${row.id}`)}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,

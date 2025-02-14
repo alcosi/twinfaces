@@ -5,10 +5,7 @@ import {
 } from "@/entities/twin-class";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
-import {
-  UpdateLinkRequestBody,
-  useLinkUpdate,
-} from "@/entities/twin-class-link";
+import { useLinkUpdate } from "@/entities/twin-class-link";
 import { UserResourceLink } from "@/entities/user";
 import {
   InPlaceEdit,
@@ -19,7 +16,12 @@ import { AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
 import { GuidWithCopy } from "@/shared/ui";
 import { toast } from "sonner";
-import { Link, LINK_STRENGTHS, LINK_TYPES } from "@/entities/link";
+import {
+  Link,
+  LINK_STRENGTHS,
+  LINK_TYPES,
+  UpdateLinkRequestBody,
+} from "@/entities/link";
 
 export function GeneralSection({
   link,

@@ -1,7 +1,4 @@
-import {
-  TwinClassLinkResourceLink,
-  UpdateLinkRequestBody,
-} from "@/entities/twin-class-link";
+import { TwinClassLinkResourceLink } from "@/entities/twin-class-link";
 import {
   TwinClass_DETAILED,
   TwinClassContext,
@@ -22,9 +19,10 @@ import { z } from "zod";
 import {
   CreateLinkRequestBody,
   Link,
-  linkSchema,
+  LINK_SCHEMA,
   LinkStrengthEnum,
   LinkTypesEnum,
+  UpdateLinkRequestBody,
 } from "@/entities/link";
 import { CreateLinkFormFields } from "../links";
 
@@ -100,8 +98,8 @@ export function TwinClassRelations() {
     },
   };
 
-  const forwardLinkForm = useForm<z.infer<typeof linkSchema>>({
-    resolver: zodResolver(linkSchema),
+  const forwardLinkForm = useForm<z.infer<typeof LINK_SCHEMA>>({
+    resolver: zodResolver(LINK_SCHEMA),
     defaultValues: {
       srcTwinClassId: twinClass?.id,
       dstTwinClassId: "",
@@ -111,8 +109,8 @@ export function TwinClassRelations() {
     },
   });
 
-  const backwardLinkForm = useForm<z.infer<typeof linkSchema>>({
-    resolver: zodResolver(linkSchema),
+  const backwardLinkForm = useForm<z.infer<typeof LINK_SCHEMA>>({
+    resolver: zodResolver(LINK_SCHEMA),
     defaultValues: {
       srcTwinClassId: "",
       dstTwinClassId: twinClass?.id,
@@ -171,7 +169,7 @@ export function TwinClassRelations() {
   }
 
   const handleOnCreateSubmit = async (
-    formValues: z.infer<typeof linkSchema>
+    formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
     const body: CreateLinkRequestBody = {
       forwardNameI18n: {
@@ -208,9 +206,7 @@ export function TwinClassRelations() {
           columnsMap.linkStrengthId,
         ]}
         fetcher={(paginationState) => fetchLinks("forward", paginationState)}
-        onRowClick={(row) =>
-          router.push(`/workspace/twinclass/${twinClassId}/link/${row.id}`)
-        }
+        onRowClick={(row) => router.push(`/workspace/links/${row.id}`)}
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
@@ -239,9 +235,7 @@ export function TwinClassRelations() {
           columnsMap.linkStrengthId,
         ]}
         fetcher={(paginationState) => fetchLinks("backward", paginationState)}
-        onRowClick={(row) =>
-          router.push(`/workspace/twinclass/${twinClassId}/link/${row.id}`)
-        }
+        onRowClick={(row) => router.push(`/workspace/links/${row.id}`)}
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
