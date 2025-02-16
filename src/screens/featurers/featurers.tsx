@@ -1,16 +1,14 @@
 "use client";
 
 import {
-  Featurer,
   FeaturerTypes,
   useFeaturerFilters,
   useFeaturersSearch,
 } from "@/entities/featurer";
+import { FiltersState } from "@/widgets/crud-data-table";
 import { PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { FeaturerTypeTable } from "./tables";
-import { FiltersState } from "@/widgets/crud-data-table";
-import { PagedResponse } from "@/shared/api";
 
 type FeaturerType = {
   title: string;
@@ -33,7 +31,7 @@ export function FeaturersScreen() {
     return async function fetchFeaturers(
       pagination: PaginationState,
       options: FiltersState
-    ): Promise<PagedResponse<Featurer>> {
+    ) {
       const _filters = {
         ...mapFiltersToPayload(options.filters),
         typeIdList,

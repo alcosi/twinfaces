@@ -1,5 +1,5 @@
 export interface Identifiable {
-  id?: string;
+  id?: string | number;
 }
 
 export type RequireFields<Type, Keys extends keyof Type> = Omit<Type, Keys> &
