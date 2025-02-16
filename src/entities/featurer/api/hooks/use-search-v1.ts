@@ -1,38 +1,35 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { useCallback, useContext } from "react";
 import { PaginationState } from "@tanstack/react-table";
-import { Featurer_DETAILED, FeaturerFilters } from "../types";
+import { useCallback, useContext } from "react";
+import { Featurer, FeaturerFilters } from "../types";
 
-export function useFeaturersSearch() {
+// TODO: Apply caching-strategy after discussing with team
+export const useFeaturerSearch = () => {
   const api = useContext(ApiContext);
+
   const searchFeaturers = useCallback(
     async ({
-      pagination,
-      options = {},
+      pagination = { pageIndex: 0, pageSize: 10 },
+      filters = {},
     }: {
-      pagination: PaginationState;
-      options?: FeaturerFilters;
-    }): Promise<PagedResponse<Featurer_DETAILED>> => {
-      try {
-        const { data, error } = await api.featurer.search({
-          pagination,
-          options,
-        });
+      pagination?: PaginationState;
+      filters?: FeaturerFilters;
+    }): Promise<PagedResponse<Featurer>> => {
+      const { data, error } = await api.featurer.search({
+        pagination,
+        filters,
+      });
 
-        if (error) throw error;
-
-        return {
-          //TODO: Remove type assertion
-          data: data.featurerList as Featurer_DETAILED[],
-          pagination: data.pagination ?? {},
-        };
-      } catch (error) {
-        console.error("Failed to fetch featurer:", error);
-        throw new Error("An error occured while fecthing featurers:" + error);
+      if (error) {
+        throw new Error("Failed to fetch statuses due to API error");
       }
+
+      const featurers = data.featurerList ?? [];
+
+      return { data: featurers, pagination: data.pagination ?? {} };
     },
     [api]
   );
 
   return { searchFeaturers };
-}
+};
