@@ -1,7 +1,6 @@
-"use client";
+import { FeaturersScreen } from "@/screens/featurers";
 
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
 
 export default function FeaturersPage() {
-  return <UnderConstruction />;
+  return <FeaturersScreen />;
 }
