@@ -154,6 +154,7 @@ export function LinksScreen() {
     formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
     await createLink(formValues);
+    toast.success("Link created successfully!");
   };
 
   return (

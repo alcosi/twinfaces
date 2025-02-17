@@ -5,6 +5,7 @@ import {
   LINK_TYPES_ENUM,
   LinkStrength,
   LinkType,
+  useLinkFetchById,
   useLinkSearch,
 } from "@/entities/link";
 
@@ -56,9 +57,15 @@ export function useLinkStrengthSelectAdapter(): SelectAdapter<{
 
 export function useLinkSelectAdapter(): SelectAdapter<Link_MANAGED> {
   const { searchLinks } = useLinkSearch();
+  const { fetchLinkById } = useLinkFetchById();
 
   async function getById(id: string) {
-    return { id } as Link_MANAGED;
+    return fetchLinkById({
+      linkId: id,
+      query: {
+        showLinkMode: "MANAGED",
+      },
+    });
   }
 
   async function getItems(search: string) {

@@ -174,6 +174,7 @@ export function TwinClassRelations() {
     formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
     await createLink(formValues);
+    toast.success("Link created successfully!");
   };
 
   return (
