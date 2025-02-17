@@ -1,6 +1,6 @@
 "use client";
 
-import { Featurer_DETAILED } from "@/entities/featurer";
+import { Featurer } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -13,12 +13,12 @@ type Props = {
   fetcher: (
     pagination: PaginationState,
     options: FiltersState
-  ) => Promise<PagedResponse<Featurer_DETAILED>>;
+  ) => Promise<PagedResponse<Featurer>>;
 };
 
 const colDefs: Record<
   "id" | "name" | "description" | "deprecated",
-  ColumnDef<Featurer_DETAILED>
+  ColumnDef<Featurer>
 > = {
   id: {
     id: "id",
@@ -54,7 +54,7 @@ export function FeaturerTypeTable({ title, fetcher }: Props) {
         colDefs.description,
         colDefs.deprecated,
       ]}
-      getRowId={(row) => row.id.toString()}
+      getRowId={(row) => row.id!.toString()}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,

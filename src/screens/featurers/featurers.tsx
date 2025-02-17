@@ -1,10 +1,12 @@
 "use client";
 
 import {
+  Featurer,
   FeaturerTypes,
   useFeaturerFilters,
-  useFeaturersSearch,
+  useFeaturerSearch,
 } from "@/entities/featurer";
+import { PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/widgets/crud-data-table";
 import { PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
@@ -24,20 +26,20 @@ const FEATURER_TYPES: FeaturerType[] = [
 ];
 
 export function FeaturersScreen() {
-  const { searchFeaturers } = useFeaturersSearch();
+  const { searchFeaturers } = useFeaturerSearch();
   const { mapFiltersToPayload } = useFeaturerFilters();
 
   function createFetcher(typeIdList: number[]) {
     return async function fetchFeaturers(
       pagination: PaginationState,
       options: FiltersState
-    ) {
+    ): Promise<PagedResponse<Featurer>> {
       const _filters = {
         ...mapFiltersToPayload(options.filters),
         typeIdList,
       };
       try {
-        return await searchFeaturers({ pagination, options: _filters });
+        return await searchFeaturers({ pagination, filters: _filters });
       } catch (error) {
         toast.error("An error occured while featurers: " + error);
         throw new Error("An error occured while featurers:" + error);
