@@ -1,58 +1,50 @@
-import type {Metadata} from "next";
-import {Inter} from "next/font/google";
-import "../styles/globals.css";
-import {cn} from "@/lib/utils";
-import {ThemeProvider} from "@/components/ThemeProvider";
-import {Toaster} from "sonner";
-import {MainLayout} from "@/components/layout/main-layout";
-import {PublicEnvScript} from "next-runtime-env";
-import {ApiContextProvider} from "@/lib/api/api";
-
-import favicon from "@/assets/img/face.svg";
-import {TooltipProvider} from "@/components/base/tooltip";
+import { ThemeProvider } from "@/components/theme-provider";
+import { cn } from "@/shared/libs";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import type { Metadata } from "next";
+import { PublicEnvScript } from "next-runtime-env";
+import { Inter } from "next/font/google";
+import React from "react";
+import "./globals.css";
 
 const fontSans = Inter({
-    subsets: ["latin"],
-    variable: "--font-sans",
+  subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-    title: "Twin Faces",
-    description: "Admin panel for the Twins framework"
+  title: "Twin Faces",
+  description: "Admin panel for the Twins framework",
 };
 
 export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
-    children: React.ReactNode;
+  children,
+}: Readonly<{
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en" suppressHydrationWarning>
-        <head>
-            <PublicEnvScript/>
-            <link rel="icon" type="image/svg+xml" href={'/favicon.svg'}/>
-            {/*<link rel="icon" type="image/png" href={favicon}/>*/}
-        </head>
-        <body className={cn(
-            "min-h-screen fontSans font-sans antialiased",
-            fontSans.variable
-        )}>
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <PublicEnvScript />
+        <link rel="icon" type="image/svg+xml" href={"/favicon.png"} />
+      </head>
+      <body
+        className={cn(
+          "min-h-screen fontSans font-sans antialiased overflow-hidden",
+          fontSans.variable
+        )}
+      >
         <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
-            <ApiContextProvider>
-                <TooltipProvider>
-                    <MainLayout>
-                        {children}
-                    </MainLayout>
-                </TooltipProvider>
-            </ApiContextProvider>
-
-            <Toaster/>
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TooltipProvider delayDuration={700} skipDelayDuration={0}>
+            {children}
+          </TooltipProvider>
         </ThemeProvider>
-        </body>
-        </html>
-    );
+      </body>
+    </html>
+  );
 }

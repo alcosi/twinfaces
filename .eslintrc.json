@@ -1,3 +1,27 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["fsd-import"],
+  "rules": {
+    "import/no-cycle": ["error", { "maxDepth": 1 }],
+    "fsd-import/layer-imports": [
+      "error",
+      {
+        "alias": "@"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*"],
+      "rules": {
+        "no-unused-vars": "warn",
+        "prettier/prettier": "warn"
+      }
+    }
+  ]
 }
