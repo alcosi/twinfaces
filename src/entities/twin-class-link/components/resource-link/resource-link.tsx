@@ -9,14 +9,15 @@ type Props = {
   disabled?: boolean;
   withTooltip?: boolean;
 };
-
+//TODO LinkResourseLink rename
+//TODO move to entities link
 export function TwinClassLinkResourceLink({
   data,
   disabled,
   withTooltip,
 }: Props) {
-  const { twinClassId } = useContext(TwinClassContext);
-  const link = `/workspace/twinclass/${twinClassId}/link/${data.id}`;
+  // const { twinClassId } = useContext(TwinClassContext);
+  const link = `/workspace/link/${data.id}`;
 
   return (
     <ResourceLink

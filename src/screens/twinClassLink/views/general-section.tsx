@@ -5,7 +5,6 @@ import {
 } from "@/entities/twin-class";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
-import { useLinkUpdate } from "@/entities/twin-class-link";
 import { UserResourceLink } from "@/entities/user";
 import {
   InPlaceEdit,
@@ -21,6 +20,7 @@ import {
   LINK_STRENGTHS,
   LINK_TYPES,
   UpdateLinkRequestBody,
+  useLinkUpdate,
 } from "@/entities/link";
 
 export function GeneralSection({

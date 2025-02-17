@@ -28,7 +28,6 @@ export const useCreateLink = () => {
       if (error) {
         throw error;
       }
-      toast.success("Link created successfully!");
     },
     []
   );
