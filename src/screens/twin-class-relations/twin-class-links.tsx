@@ -1,4 +1,3 @@
-import { TwinClassLinkResourceLink } from "@/entities/twin-class-link";
 import {
   TwinClass_DETAILED,
   TwinClassContext,
@@ -20,6 +19,7 @@ import {
   CreateLinkRequestBody,
   Link,
   LINK_SCHEMA,
+  LinkResourceLink,
   LinkStrengthEnum,
   LinkTypesEnum,
   UpdateLinkRequestBody,
@@ -68,7 +68,7 @@ export function TwinClassRelations() {
       header: "Name",
       cell: ({ row: { original } }) => (
         <div className="max-w-48 inline-flex">
-          <TwinClassLinkResourceLink data={original} withTooltip />
+          <LinkResourceLink data={original} withTooltip />
         </div>
       ),
     },
@@ -132,7 +132,7 @@ export function TwinClassRelations() {
     }
 
     try {
-      const response = await api.twinClassLink.getLinks({
+      const response = await api.twinClass.getLinks({
         twinClassId: twinClass.id,
       });
       const data = response.data;

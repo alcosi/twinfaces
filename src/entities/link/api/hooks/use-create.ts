@@ -2,7 +2,6 @@ import { useCallback, useContext } from "react";
 import { z } from "zod";
 import { LINK_SCHEMA } from "../../libs";
 import { ApiContext } from "@/shared/api";
-import { toast } from "sonner";
 import { CreateLinkRequestBody } from "../types";
 
 export const useCreateLink = () => {

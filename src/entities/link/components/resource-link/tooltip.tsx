@@ -8,7 +8,7 @@ type Props = {
   link: string;
 };
 
-export function TwinClassLinkResourceTooltip({ data, link }: Props) {
+export function LinkResourceTooltip({ data, link }: Props) {
   if (isUndefined(data.id)) return null;
 
   return (
