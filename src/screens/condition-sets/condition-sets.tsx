@@ -9,7 +9,17 @@ import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 
-const colDefs: Record<"id" | "name", ColumnDef<FactoryConditionSet>> = {
+const colDefs: Record<
+  | "id"
+  | "name"
+  | "description"
+  | "inFactoryPipelineUsagesCount"
+  | "inFactoryPipelineStepUsagesCount"
+  | "inFactoryMultiplierFilterUsagesCount"
+  | "inFactoryBranchUsagesCount"
+  | "inFactoryEraserUsagesCount",
+  ColumnDef<FactoryConditionSet>
+> = {
   id: {
     id: "id",
     accessorKey: "id",
@@ -20,6 +30,36 @@ const colDefs: Record<"id" | "name", ColumnDef<FactoryConditionSet>> = {
     id: "name",
     accessorKey: "name",
     header: "Name",
+  },
+  description: {
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
+  },
+  inFactoryPipelineUsagesCount: {
+    id: "inFactoryPipelineUsagesCount",
+    accessorKey: "inFactoryPipelineUsagesCount",
+    header: "In pipelines usages count",
+  },
+  inFactoryPipelineStepUsagesCount: {
+    id: "inFactoryPipelineStepUsagesCount",
+    accessorKey: "inFactoryPipelineStepUsagesCount",
+    header: "In steps usages count",
+  },
+  inFactoryMultiplierFilterUsagesCount: {
+    id: "inFactoryMultiplierFilterUsagesCount",
+    accessorKey: "inFactoryMultiplierFilterUsagesCount",
+    header: "In multiplier filters usages count",
+  },
+  inFactoryBranchUsagesCount: {
+    id: "inFactoryBranchUsagesCount",
+    accessorKey: "inFactoryBranchUsagesCount",
+    header: "In branches usages count",
+  },
+  inFactoryEraserUsagesCount: {
+    id: "inFactoryEraserUsagesCount",
+    accessorKey: "inFactoryEraserUsagesCount",
+    header: "In erasers usages count",
   },
 };
 
@@ -44,10 +84,28 @@ export function ConditionSetsScreen() {
 
   return (
     <CrudDataTable
-      columns={[colDefs.id, colDefs.name]}
+      columns={[
+        colDefs.id,
+        colDefs.name,
+        colDefs.description,
+        colDefs.inFactoryPipelineUsagesCount,
+        colDefs.inFactoryPipelineStepUsagesCount,
+        colDefs.inFactoryMultiplierFilterUsagesCount,
+        colDefs.inFactoryBranchUsagesCount,
+        colDefs.inFactoryEraserUsagesCount,
+      ]}
       fetcher={fetchFactoryConditionSet}
       getRowId={(row) => row.id!}
-      defaultVisibleColumns={[colDefs.id, colDefs.name]}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.name,
+        colDefs.description,
+        colDefs.inFactoryPipelineUsagesCount,
+        colDefs.inFactoryPipelineStepUsagesCount,
+        colDefs.inFactoryMultiplierFilterUsagesCount,
+        colDefs.inFactoryBranchUsagesCount,
+        colDefs.inFactoryEraserUsagesCount,
+      ]}
     />
   );
 }
