@@ -3,7 +3,6 @@ import { FeaturerResourceLink } from "@/entities/featurer";
 import { TwinResourceLink } from "@/entities/twin";
 import { TwinClassResourceLink } from "@/entities/twin-class";
 import { TwinClassFieldResourceLink } from "@/entities/twin-class-field";
-import { TwinClassLinkResourceLink } from "@/entities/twin-class-link";
 import { TwinFlowResourceLink } from "@/entities/twinFlow";
 import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
 import { TwinFlowTransitionResourceLink } from "@/entities/twinFlowTransition";
@@ -12,6 +11,7 @@ import { UserResourceLink } from "@/entities/user";
 import { UserGroupResourceLink } from "@/entities/userGroup";
 import { UiSection } from "../components/ui-section";
 import { Fake } from "../seeds";
+import { LinkResourceLink } from "@/entities/link";
 
 export function ResourceLinksTab() {
   return (
@@ -46,9 +46,7 @@ export function ResourceLinksTab() {
 
           <UiSection.Item
             title="Link"
-            value={
-              <TwinClassLinkResourceLink data={Fake.loremIpsum} withTooltip />
-            }
+            value={<LinkResourceLink data={Fake.loremIpsum} withTooltip />}
           />
         </UiSection>
 

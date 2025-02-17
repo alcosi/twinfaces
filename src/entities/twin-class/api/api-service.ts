@@ -135,6 +135,19 @@ export function createTwinClassApi(settings: ApiSettings) {
     );
   }
 
+  const getLinks = async ({ twinClassId }: { twinClassId: string }) => {
+    return settings.client.GET("/private/twin_class/{twinClassId}/link/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { twinClassId },
+        query: {
+          showLinkDst2TwinClassMode: "MANAGED",
+          showLinkMode: "DETAILED",
+        },
+      },
+    });
+  };
+
   function getValidTwinsForLink({
     twinClassId,
     linkId,
@@ -171,6 +184,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     create,
     update,
     getValidHeads,
+    getLinks,
     getValidTwinsForLink,
   };
 }

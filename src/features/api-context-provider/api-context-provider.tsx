@@ -87,7 +87,6 @@ export interface ApiContextProps {
   twinFlowTransition: TwinFlowTransitionApi;
   featurer: FeaturerApi;
   twin: TwinApi;
-  twinClassLink: TwinClassLinkApi;
   permission: PermissionApi;
   permissionGroup: PermissionGroupApi;
   permissionSchema: PermissionSchemaApi;
@@ -135,7 +134,6 @@ export function ApiContextProvider({
         twinFlowTransition: createTwinFlowTransitionApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
-        twinClassLink: createTwinClassLinksApi(settings),
         permission: createPermissionApi(settings),
         permissionGroup: createPermissionGroupApi(settings),
         permissionSchema: createPermissionSchemaApi(settings),
