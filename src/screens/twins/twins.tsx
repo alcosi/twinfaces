@@ -153,17 +153,7 @@ const colDefs: Record<
     accessorKey: "tags",
     header: "Tags",
     cell: ({ row: { original } }) =>
-      original.tagIdList && original.tags && original.id ? (
-        <div className="max-w-48 inline-flex">
-          <DatalistOptionResourceLink
-            data={{
-              ...original.tags,
-              dataListId: original.twinClass?.tagsDataListId,
-            }}
-            withTooltip
-          />
-        </div>
-      ) : null,
+      original.tags && original.tags.map((tag) => tag.name).join(", "),
   },
 
   markers: {

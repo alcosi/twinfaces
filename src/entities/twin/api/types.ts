@@ -15,7 +15,7 @@ export type Twin_SHORT = RequireFields<
 >;
 export type Twin_DETAILED = RequireFields<
   Twin_SHORT,
-  "createdAt" | "headTwinId"
+  "createdAt" | "headTwinId" | "tags"
 >;
 
 export type TwinCreateRq = RequireFields<

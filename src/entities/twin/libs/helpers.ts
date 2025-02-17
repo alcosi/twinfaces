@@ -35,6 +35,12 @@ export const hydrateTwinFromMap = (
     twin.headTwin = relatedObjects.twinMap[twinDTO.headTwinId];
   }
 
+  if (twinDTO.tagIdList && relatedObjects.dataListsOptionMap) {
+    twin.tags = twinDTO.tagIdList
+      .map((id) => relatedObjects.dataListsOptionMap?.[id])
+      .filter((tag): tag is NonNullable<typeof tag> => tag !== undefined);
+  }
+
   return twin;
 };
 
