@@ -19,9 +19,9 @@ import { formatToTwinfaceDate } from "@/shared/libs";
 import { FactoryContext } from "@/features/factory";
 
 export function FactoryGeneral() {
-  const { factory, fetchFactoryById } = useContext(FactoryContext);
+  const { factory, fetchFactory: refresh } = useContext(FactoryContext);
 
-  const { updateFactory } = useUpdateFactory(factory, fetchFactoryById);
+  const { updateFactory } = useUpdateFactory();
 
   const nameSettings: InPlaceEditProps<typeof factory.name> = {
     id: "name",
@@ -36,12 +36,15 @@ export function FactoryGeneral() {
     schema: z.string().min(3),
     onSubmit: (value) => {
       return updateFactory({
-        nameI18n: {
-          translations: {
-            en: value,
+        factoryId: factory.id,
+        body: {
+          nameI18n: {
+            translations: {
+              en: value,
+            },
           },
         },
-      });
+      }).then(refresh);
     },
   };
 
@@ -58,12 +61,15 @@ export function FactoryGeneral() {
     schema: z.string().min(3),
     onSubmit: (value) => {
       return updateFactory({
-        descriptionI18n: {
-          translations: {
-            en: value ?? "",
+        factoryId: factory.id,
+        body: {
+          descriptionI18n: {
+            translations: {
+              en: value ?? "",
+            },
           },
         },
-      });
+      }).then(refresh);
     },
   };
 
