@@ -1,27 +1,25 @@
 "use client";
 
-import { isPopulatedArray } from "@/shared/libs";
+import { isPopulatedArray, SelectAdapter } from "@/shared/libs";
 import { Badge } from "@/shared/ui/badge";
 import { XCircle } from "lucide-react";
-import { ReactNode } from "react";
+import { ComboboxProps } from "./types";
 
 const MAX_COUNT = 3;
 
-type Props<T> = {
-  selected: T[];
-  getItemKey: (item: T) => string;
-  renderItem: (item: T) => ReactNode | string;
-  onChange: (value: T[]) => void;
-  placeholder?: string;
-  multi?: boolean;
-};
+type Props<T> = Pick<SelectAdapter<T>, "renderItem"> &
+  Pick<ComboboxProps<T>, "selectPlaceholder" | "multi"> & {
+    selected: T[];
+    getItemKey: (item: T) => string;
+    onChange: (value: T[]) => void;
+  };
 
 export const SelectedOptions = <T,>({
   selected,
   getItemKey,
   renderItem,
   onChange,
-  placeholder,
+  selectPlaceholder,
   multi,
 }: Props<T>) => {
   const removeOption = (index: number) => {
@@ -36,14 +34,14 @@ export const SelectedOptions = <T,>({
   };
 
   if (selected.length === 0) {
-    return <span className="opacity-50">{placeholder}</span>;
+    return <span className="opacity-50">{selectPlaceholder}</span>;
   }
 
   return multi ? (
     <div className="flex flex-wrap items-center w-full">
       {selected.slice(0, MAX_COUNT).map((item, index) => (
         <Badge
-          key={typeof item === "string" ? item : getItemKey(item)}
+          key={getItemKey(item)}
           className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
         >
           <span className="truncate max-w-[130px] mr-2">
@@ -77,7 +75,7 @@ export const SelectedOptions = <T,>({
       {isPopulatedArray<T>(selected) ? (
         <span className="truncate max-w-80">{renderItem(selected[0]!)}</span>
       ) : (
-        <span className="opacity-50">{placeholder}</span>
+        <span className="opacity-50">{selectPlaceholder}</span>
       )}
     </>
   );

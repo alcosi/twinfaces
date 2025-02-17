@@ -22,5 +22,5 @@ export interface ComboboxProps<T> extends SelectAdapter<T> {
   selectPlaceholder?: string;
   initialValues?: T[];
   disabled?: boolean;
-  ownItems?: boolean;
+  creatable?: boolean;
 }

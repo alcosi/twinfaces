@@ -76,8 +76,8 @@ export function TwinFormFields({
           control={control}
           name="tags"
           label="Tags"
-          multi={true}
-          ownItems={true}
+          multi
+          creatable
           {...optionAdapter}
         />
       )}

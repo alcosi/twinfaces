@@ -11,7 +11,6 @@ export function createTwinApi(settings: ApiSettings) {
     pagination: PaginationState;
     filters?: TwinFilters;
   }) {
-    //todo incoming data extension is required to display tags in the table
     return settings.client.POST("/private/twin/search/v3", {
       params: {
         header: getApiDomainHeaders(settings),
