@@ -11,19 +11,19 @@ import {
   TableRow,
 } from "@/shared/ui";
 import { useContext } from "react";
-import { FactoryContext } from "../../../entities/factory/libs/factory-context";
 import { AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
 import { useUpdateFactory } from "@/entities/factory";
 import { UserResourceLink } from "@/entities/user";
 import { formatToTwinfaceDate } from "@/shared/libs";
+import { FactoryContext } from "@/features/factory";
 
 export function FactoryGeneral() {
-  const { factory } = useContext(FactoryContext);
+  const { factory, fetchFactoryById } = useContext(FactoryContext);
 
-  const { updateFactory } = useUpdateFactory();
+  const { updateFactory } = useUpdateFactory(factory, fetchFactoryById);
 
-  const nameSettings: InPlaceEditProps = {
+  const nameSettings: InPlaceEditProps<typeof factory.name> = {
     id: "name",
     value: factory.name,
     valueInfo: {
@@ -38,14 +38,14 @@ export function FactoryGeneral() {
       return updateFactory({
         nameI18n: {
           translations: {
-            en: value as string,
+            en: value,
           },
         },
       });
     },
   };
 
-  const descriptionSettings: InPlaceEditProps = {
+  const descriptionSettings: InPlaceEditProps<typeof factory.description> = {
     id: "description",
     value: factory.description,
     valueInfo: {
@@ -60,7 +60,7 @@ export function FactoryGeneral() {
       return updateFactory({
         descriptionI18n: {
           translations: {
-            en: value as string,
+            en: value ?? "",
           },
         },
       });

@@ -1,23 +1,21 @@
 import { ApiContext } from "@/shared/api";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { toast } from "sonner";
 import { Factory_DETAILED } from "./types";
 import { hydrateFactoryFromMap } from "../libs";
 
 type Props = {
   factoryId: string;
-  setFactory: (factory: Factory_DETAILED) => void;
-  setLoading: (loading: boolean) => void;
 };
 
-export const useFetchFactoryData = ({
-  factoryId,
-  setFactory,
-  setLoading,
-}: Props) => {
+export const useFetchFactoryData = ({ factoryId }: Props) => {
   const api = useContext(ApiContext);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [factory, setFactory] = useState<Factory_DETAILED | undefined>(
+    undefined
+  );
 
-  const refresh = useCallback(() => {
+  const fetchFactoryById = useCallback(() => {
     setLoading(true);
     api.factory
       .getById({
@@ -31,17 +29,7 @@ export const useFetchFactoryData = ({
       .then((resp) => {
         const data = resp.data;
 
-        if (!data || data.status !== 0) {
-          console.error("failed to fetch factory", data);
-
-          let message = "Failed to load factory";
-
-          if (data?.msg) message += `: ${data.msg}`;
-          toast.error(message);
-          return;
-        }
-
-        if (data.factory && data.relatedObjects) {
+        if (data?.factory && data.relatedObjects) {
           setFactory(hydrateFactoryFromMap(data.factory, data.relatedObjects));
         }
       })
@@ -50,7 +38,7 @@ export const useFetchFactoryData = ({
         toast.error("Failed to fetch factory");
       })
       .finally(() => setLoading(false));
-  }, [factoryId, setFactory, setLoading]);
+  }, [factoryId]);
 
-  return { refresh };
+  return { fetchFactoryById, loading, factory };
 };

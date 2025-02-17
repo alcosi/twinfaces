@@ -1,6 +1,6 @@
 "use client";
 
-import { FactoryContextProvider } from "@/entities/factory";
+import { FactoryContextProvider } from "@/features/factory";
 import { ReactNode } from "react";
 
 type FactoryLayoutProps = {

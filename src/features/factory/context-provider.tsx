@@ -1,13 +1,13 @@
 import { Factory_DETAILED, useFetchFactoryData } from "@/entities/factory";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect } from "react";
 
-interface FactoryContextProps {
+type FactoryContextProps = {
   factoryId: string;
   factory: Factory_DETAILED;
-  refresh: () => void;
-}
+  fetchFactoryById: () => void;
+};
 
 export const FactoryContext = createContext<FactoryContextProps>(
   {} as FactoryContextProps
@@ -20,25 +20,18 @@ export function FactoryContextProvider({
   factoryId: string;
   children: ReactNode;
 }) {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [factory, setFactory] = useState<Factory_DETAILED | undefined>(
-    undefined
-  );
-
   useEffect(() => {
-    refresh();
+    fetchFactoryById();
   }, []);
 
-  const { refresh } = useFetchFactoryData({
+  const { fetchFactoryById, loading, factory } = useFetchFactoryData({
     factoryId,
-    setFactory,
-    setLoading,
   });
 
   if (isUndefined(factory) || loading) return <LoadingOverlay />;
 
   return (
-    <FactoryContext.Provider value={{ factoryId, factory, refresh }}>
+    <FactoryContext.Provider value={{ factoryId, factory, fetchFactoryById }}>
       {loading ? <LoadingOverlay /> : children}
     </FactoryContext.Provider>
   );
