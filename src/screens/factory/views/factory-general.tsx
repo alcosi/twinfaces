@@ -13,10 +13,10 @@ import {
 import { useContext } from "react";
 import { AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
-import { useUpdateFactory } from "@/entities/factory";
 import { UserResourceLink } from "@/entities/user";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { FactoryContext } from "@/features/factory";
+import { useUpdateFactory } from "@/entities/factory";
 
 export function FactoryGeneral() {
   const { factory, fetchFactory: refresh } = useContext(FactoryContext);

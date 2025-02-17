@@ -1,4 +1,4 @@
-import { Factory_DETAILED, useFetchFactoryData } from "@/entities/factory";
+import { Factory_DETAILED, useFetchFactoryById } from "@/entities/factory";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 import { createContext, ReactNode, useEffect, useState } from "react";
@@ -27,7 +27,7 @@ export function FactoryContextProvider({
   const [factory, setFactory] = useState<Factory_DETAILED | undefined>(
     undefined
   );
-  const { fetchFactoryById, loading } = useFetchFactoryData();
+  const { fetchFactoryById, loading } = useFetchFactoryById();
 
   async function fetchFactory() {
     try {

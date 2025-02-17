@@ -1,6 +1,6 @@
 import { ApiContext } from "@/shared/api";
 import { useContext } from "react";
-import { FactoryUpdateRq } from "./types";
+import { FactoryUpdateRq } from "../types";
 
 export function useUpdateFactory() {
   const api = useContext(ApiContext);
