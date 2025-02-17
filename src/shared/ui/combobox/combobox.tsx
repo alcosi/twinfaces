@@ -90,7 +90,7 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
             onValueChange={setSearchQuery}
             loading={isLoading}
           />
-          {(props.ownItems && searchQuery) &&
+          {props.ownItems && searchQuery && (
             <Button
               variant="ghost"
               className={cn(
@@ -98,27 +98,30 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
                 props.buttonClassName
               )}
               onClick={() => {
-                const newItem =  searchQuery as T // if object({ id: z.string().uuid(), name: z.string() }),
-                const isDuplicate = selectedItems.some(
-                  (item) => (typeof item === "string" ? item === searchQuery : getItemKey(item) === searchQuery)
-                )
+                const newItem = searchQuery as T; // if object({ id: z.string().uuid(), name: z.string() }),
+                const isDuplicate = selectedItems.some((item) =>
+                  typeof item === "string"
+                    ? item === searchQuery
+                    : getItemKey(item) === searchQuery
+                );
                 if (isDuplicate) {
-                  setIsOpen(false)
-                  setSearchQuery('')
-                  return
+                  setIsOpen(false);
+                  setSearchQuery("");
+                  return;
                 }
-                const updatedSelection = props.multi ? [...selectedItems, newItem] : [newItem]
-                setSelectedItems(updatedSelection)
-                props.onSelect?.(updatedSelection)
-                setIsOpen(false)
-                setSearchQuery('')
+                const updatedSelection = props.multi
+                  ? [...selectedItems, newItem]
+                  : [newItem];
+                setSelectedItems(updatedSelection);
+                props.onSelect?.(updatedSelection);
+                setIsOpen(false);
+                setSearchQuery("");
               }}
             >
-             
-             {`add new tag: "${searchQuery}"`}
+              {`add new tag: "${searchQuery}"`}
               <CircleFadingPlus className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
-          }
+          )}
           <CommandEmpty>{props.noItemsText}</CommandEmpty>
           <CommandList>
             <CommandGroup>

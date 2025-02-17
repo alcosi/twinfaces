@@ -34,7 +34,7 @@ export function useDatalistOptionSelectAdapter(): SelectAdapter<DataListOptionV3
   }
 
   function renderItem(item: DataListOptionV3 | string) {
-    return ((typeof item === "string")  ?  item : item.name)
+    return typeof item === "string" ? item : item.name;
   }
 
   return {
