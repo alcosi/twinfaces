@@ -4,9 +4,12 @@ import {
   FactoryConditionSet,
   useFactoryConditionSetSearch,
 } from "@/entities/factory-condition-set";
+import { useFactoryConditionSetFilters } from "@/entities/factory-condition-set/libs/hooks/use-filters";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 const colDefs: Record<
@@ -65,13 +68,24 @@ const colDefs: Record<
 
 export function ConditionSetsScreen() {
   const { searchFactoryConditionSet } = useFactoryConditionSetSearch();
+  const { setBreadcrumbs } = useBreadcrumbs();
+  const { buildFilterFields, mapFiltersToPayload } =
+    useFactoryConditionSetFilters();
+
+  useEffect(() => {
+    setBreadcrumbs([
+      { label: "Condition Sets", href: "/workspace/condition-sets" },
+    ]);
+  }, [setBreadcrumbs]);
 
   async function fetchFactoryConditionSet(
     pagination: PaginationState,
     filters: FiltersState
   ) {
+    const _filters = mapFiltersToPayload(filters.filters);
+
     try {
-      return searchFactoryConditionSet({ pagination, filters: {} });
+      return searchFactoryConditionSet({ pagination, filters: _filters });
     } catch (error) {
       toast.error(
         "An error occured while fetching factory condition sets: " + error
@@ -106,6 +120,7 @@ export function ConditionSetsScreen() {
         colDefs.inFactoryBranchUsagesCount,
         colDefs.inFactoryEraserUsagesCount,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }
