@@ -1,3 +1,4 @@
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { components, operations } from "@/shared/api/generated/schema";
 
 export type DataList = components["schemas"]["DataListV2"];
@@ -26,7 +27,7 @@ export type DatalistFilters = Partial<
 >;
 
 export type DataListOptionMap = {
-  [key: string]: components["schemas"]["DataListOptionV1"];
+  [key: string]: DataListOptionV1;
 };
 // export type DataListV1 = components["schemas"]["DataListV1"];
 export type DataListsMap = {

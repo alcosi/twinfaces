@@ -22,7 +22,7 @@ import {
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatToTwinfaceDate, isPopulatedArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
@@ -153,7 +153,13 @@ const colDefs: Record<
     accessorKey: "tags",
     header: "Tags",
     cell: ({ row: { original } }) =>
-      original.tags && original.tags.map((tag) => tag.name).join(", "),
+      isPopulatedArray(original.tags) && (
+        <div className="max-w-48 inline-flex flex-wrap gap-2">
+          {original.tags.map((tag) => (
+            <DatalistOptionResourceLink key={tag.id} data={tag} />
+          ))}
+        </div>
+      ),
   },
 
   markers: {
