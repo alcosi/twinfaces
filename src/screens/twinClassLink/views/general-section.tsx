@@ -2,7 +2,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
   useTwinClassSelectAdapter,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
 import {

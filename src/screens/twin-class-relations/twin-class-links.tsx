@@ -14,7 +14,7 @@ import {
   TwinClass_DETAILED,
   TwinClassContext,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
 import { Badge } from "@/shared/ui";

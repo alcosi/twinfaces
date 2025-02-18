@@ -1,7 +1,7 @@
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { BookKey } from "lucide-react";

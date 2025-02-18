@@ -150,39 +150,7 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  // TODO: move to `src/entities/twinClass/api/api-service.ts`
-  // TODO: rename to `getValidTwinsForLink`
-  function getNewTwinLinkOptions({
-    twinClassId,
-    linkId,
-    pagination,
-    filters,
-  }: {
-    twinClassId: string;
-    linkId: string;
-    pagination: PaginationState;
-    filters?: TwinSimpleFilters;
-  }) {
-    return settings.client.POST(
-      "/private/twin_class/{twinClassId}/link/{linkId}/valid_twins/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { twinClassId, linkId },
-          query: {
-            showTwinMode: "DETAILED",
-            showTwinClassMode: "DETAILED",
-            offset: pagination.pageIndex * pagination.pageSize,
-            limit: pagination.pageSize,
-          },
-        },
-        body: filters ?? {},
-      }
-    );
-  }
-
-  // TODO: rename to `getValidTwinsForLink`
-  function getExistingTwinLinkOptions({
+  function getValidTwinsForLink({
     twinId,
     linkId,
     pagination,
@@ -220,8 +188,7 @@ export function createTwinApi(settings: ApiSettings) {
     getHistory,
     getLinks,
     upsertField,
-    getNewTwinLinkOptions,
-    getExistingTwinLinkOptions,
+    getValidTwinsForLink,
   };
 }
 

@@ -5,7 +5,7 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 import { TwinClassStatusFormValues } from "@/entities/twin-status";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 import { Control, useWatch } from "react-hook-form";
 

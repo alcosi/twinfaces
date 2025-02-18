@@ -18,7 +18,7 @@ import {
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";

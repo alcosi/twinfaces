@@ -1,5 +1,5 @@
 import { Twin } from "@/entities/twin";
-import { TwinClassValidHeadQuery } from "@/entities/twinClass";
+import { TwinClassValidHeadQuery } from "@/entities/twin-class";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { useCallback, useContext } from "react";

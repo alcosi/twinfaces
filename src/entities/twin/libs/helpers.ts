@@ -1,10 +1,10 @@
+import { DataListOptionV1 } from "@/entities/datalist-option";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinStatus } from "@/entities/twin-status";
 import { RelatedObjects } from "@/shared/api";
-import { TwinClass_DETAILED } from "../../twinClass";
+import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
 import { User } from "../../user";
 import { Twin, Twin_DETAILED } from "../api";
-import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
-import { DataListOptionV1 } from "@/entities/datalist-option";
 
 export const hydrateTwinFromMap = (
   dto: Twin,

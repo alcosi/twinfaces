@@ -12,7 +12,7 @@ import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   TwinClassFieldValues,
   useTwinClassSelectAdapter,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { isFalsy, isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
 import { useState } from "react";

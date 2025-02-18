@@ -4,7 +4,7 @@ import { FactoryResourceLink } from "@/entities/factory/components/resource-link
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";

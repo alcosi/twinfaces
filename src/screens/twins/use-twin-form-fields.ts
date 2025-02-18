@@ -3,7 +3,7 @@ import { TwinFormValues, useTwinHeadSelectAdapter } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { useUserSelectAdapter } from "@/entities/user";
 import { isArray, isPopulatedArray } from "@/shared/libs";
 import { Control, useWatch } from "react-hook-form";

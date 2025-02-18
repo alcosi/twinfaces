@@ -1,6 +1,6 @@
 "use client";
 
-import { TwinClassContext } from "@/entities/twinClass";
+import { TwinClassContext } from "@/entities/twin-class";
 import {
   TwinClassFieldV2_DETAILED,
   useFetchTwinClassFieldById,

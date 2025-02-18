@@ -11,15 +11,17 @@ import {
 import { Twin, useTwinSelectAdapter } from "@/entities/twin";
 import { TwinClassFieldDescriptor } from "@/entities/twin-class-field";
 import { TwinFieldType } from "@/entities/twinField";
-import { TwinForLinkSelectFormItem } from "@/entities/twinLink";
 import { useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";
 import React from "react";
+import { TwinFieldSelectLinkLongFormItem } from "./components";
 
 export type TwinFieldFormItemProps = {
   descriptor: TwinClassFieldDescriptor;
-  twinClassId: string;
-};
+} & (
+  | { twinClassId: string; twinId?: never }
+  | { twinId: string; twinClassId?: never }
+);
 
 type Props = FormItemProps &
   TwinFieldFormItemProps & {
@@ -28,6 +30,7 @@ type Props = FormItemProps &
   };
 
 export function TwinFieldFormItem({
+  twinId,
   twinClassId,
   descriptor,
   onChange,
@@ -91,14 +94,24 @@ export function TwinFieldFormItem({
           />
         );
       case TwinFieldType.selectLinkLongV1:
-        return (
-          <TwinForLinkSelectFormItem
-            multiple={descriptor.multiple}
-            linkId={descriptor.linkId}
-            twinClassId={twinClassId}
-            {...props}
-          />
-        );
+        if (twinId) {
+          return (
+            <TwinFieldSelectLinkLongFormItem
+              linkId={descriptor.linkId}
+              multi={descriptor.multiple}
+              twinId={twinId}
+            />
+          );
+        } else if (twinClassId) {
+          return (
+            <TwinFieldSelectLinkLongFormItem
+              linkId={descriptor.linkId}
+              multi={descriptor.multiple}
+              twinClassId={twinClassId}
+            />
+          );
+        }
+        break;
       case TwinFieldType.selectListV1:
       case TwinFieldType.selectListLongV1:
       case TwinFieldType.selectLongV1:

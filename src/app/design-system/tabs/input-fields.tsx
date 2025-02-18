@@ -5,7 +5,7 @@ import {
   useTwinClassLinkStrengthSelectAdapter,
   useTwinClassLinkTypeSelectAdapter,
 } from "@/entities/twin-class-link";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { TwinFieldType } from "@/entities/twinField";
 import { useTwinFlowSelectAdapter } from "@/entities/twinFlow";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";

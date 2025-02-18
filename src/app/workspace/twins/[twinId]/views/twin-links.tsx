@@ -1,6 +1,6 @@
-import { TwinResourceLink } from "@/entities/twin";
+import { TwinLinkView } from "@/entities/link";
+import { TwinResourceLink, useFetchTwinLinks } from "@/entities/twin";
 import { TwinClassLinkResourceLink } from "@/entities/twin-class-link";
-import { TwinLinkView, useFetchTwinLinks } from "@/entities/twinLink";
 import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
@@ -74,7 +74,7 @@ export function TwinLinks() {
   const { twin } = useContext(TwinContext);
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
-  const { fetchTwinLinksByTwinId } = useFetchTwinLinks();
+  const { fetchTwinLinksById } = useFetchTwinLinks();
 
   async function fetchLinks(
     type: "forward" | "backward"
@@ -85,7 +85,7 @@ export function TwinLinks() {
     }
 
     try {
-      const response = await fetchTwinLinksByTwinId({ twinId: twin.id, type });
+      const response = await fetchTwinLinksById({ twinId: twin.id, type });
       const { data } = response;
 
       return { data, pagination: {} };

@@ -1,4 +1,4 @@
-import { TwinClass, TwinClassContext } from "@/entities/twinClass";
+import { TwinClass, TwinClassContext } from "@/entities/twin-class";
 import { ResourceLink } from "@/shared/ui";
 import { Link2 } from "lucide-react";
 import { useContext } from "react";

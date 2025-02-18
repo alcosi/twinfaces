@@ -3,7 +3,7 @@
 import {
   TwinClassContextProvider,
   TwinClassLayoutProps,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { TwinFlowContextProvider } from "@/features/twinFlow";
 import { useParams } from "next/navigation";
 import { PropsWithChildren } from "react";

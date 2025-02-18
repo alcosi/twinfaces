@@ -4,7 +4,7 @@ import {
   TwinClassFilterKeys,
   TwinClassFilters,
   useTwinClassSelectAdapter,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import {
   mapToChoice,
   toArray,

@@ -48,7 +48,7 @@ import {
   TwinClassFieldApi,
 } from "@/entities/twin-class-field";
 import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
-import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
+import { createTwinClassApi, TwinClassApi } from "@/entities/twin-class";
 import {
   createTwinClassLinksApi,
   TwinClassLinkApi,
