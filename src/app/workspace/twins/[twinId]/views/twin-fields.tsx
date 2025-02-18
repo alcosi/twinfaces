@@ -19,6 +19,10 @@ import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 import { TwinContext } from "../twin-context";
+import {
+  TwinClassField_DETAILED,
+  TwinClassFieldResourceLink,
+} from "@/entities/twin-class-field";
 
 export function TwinFields() {
   const { twinId } = useContext(TwinContext);
@@ -30,7 +34,16 @@ export function TwinFields() {
     {
       id: "key",
       accessorKey: "key",
-      header: "Key",
+      header: "Fields",
+      cell: ({ row: { original } }) =>
+        original && (
+          <div className="max-w-48 inline-flex">
+            <TwinClassFieldResourceLink
+              data={original as TwinClassField_DETAILED}
+              withTooltip
+            />
+          </div>
+        ),
     },
     {
       id: "value",
@@ -71,6 +84,7 @@ export function TwinFields() {
       return { data: [], pagination: {} };
     }
   }
+
   return (
     <InPlaceEditContextProvider>
       <CrudDataTable
