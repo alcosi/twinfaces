@@ -10,7 +10,7 @@ import {
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/widgets/crud-data-table";

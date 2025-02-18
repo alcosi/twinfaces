@@ -7,6 +7,7 @@ import { TwinFormValues } from "@/entities/twin";
 import { TwinFieldFormField } from "@/widgets/form-fields";
 import { Control } from "react-hook-form";
 import { useTwinClassFields } from "./use-twin-form-fields";
+import { DevTool } from "@hookform/devtools";
 
 export function TwinFormFields({
   control,
@@ -14,6 +15,7 @@ export function TwinFormFields({
   control: Control<TwinFormValues>;
 }) {
   const {
+    selectedTwinClass,
     twinClassAdapter,
     fields,
     userAdapter,
@@ -66,6 +68,7 @@ export function TwinFormFields({
           name={`fields.${field.key!}`}
           control={control}
           label={field.name}
+          twinClassId={selectedTwinClass!.id}
           descriptor={field.descriptor}
           required={field.required}
         />
@@ -81,6 +84,8 @@ export function TwinFormFields({
           {...optionAdapter}
         />
       )}
+
+      <DevTool control={control} />
     </>
   );
 }

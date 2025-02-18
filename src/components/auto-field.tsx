@@ -78,9 +78,9 @@ export interface AutoFormTagValueInfo
   schema?: TagBoxProps<string>["schema"];
 }
 
-export interface AutoFormTwinFieldValueInfo extends TwinFieldFormItemProps {
+export type AutoFormTwinFieldValueInfo = TwinFieldFormItemProps & {
   type: AutoFormValueType.twinField;
-}
+};
 
 export interface AutoFormFeaturerValueInfo extends FeaturerFieldProps {
   type: AutoFormValueType.featurer;
@@ -163,22 +163,25 @@ export function AutoField({
         );
 
       case AutoFormValueType.twinField:
-        return name && control ? (
-          <TwinFieldFormField
-            name={name}
-            control={control}
-            label={info.label}
-            description={info.description}
-            descriptor={info.descriptor}
-          />
-        ) : (
-          <TwinFieldFormItem
-            fieldValue={value}
-            label={info.label}
-            description={info.description}
-            descriptor={info.descriptor}
-          />
-        );
+        if (info.twinClassId || info.twinId) {
+          return name && control ? (
+            <TwinFieldFormField
+              name={name}
+              control={control}
+              label={info.label}
+              description={info.description}
+              {...info}
+            />
+          ) : (
+            <TwinFieldFormItem
+              fieldValue={value}
+              label={info.label}
+              description={info.description}
+              {...info}
+            />
+          );
+        }
+        break;
 
       default:
         return name && control ? (

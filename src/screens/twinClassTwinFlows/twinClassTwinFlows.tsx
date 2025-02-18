@@ -1,4 +1,4 @@
-import { TwinClassContext } from "@/entities/twinClass";
+import { TwinClassContext } from "@/entities/twin-class";
 import {
   TwinFlow,
   TwinFlow_DETAILED,

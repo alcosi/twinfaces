@@ -1,6 +1,6 @@
 "use client";
 
-import { TwinClassContext } from "@/entities/twinClass";
+import { TwinClassContext } from "@/entities/twin-class";
 import { TwinStatus, useFetchTwinStatusById } from "@/entities/twin-status";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { LoadingOverlay } from "@/shared/ui/loading";

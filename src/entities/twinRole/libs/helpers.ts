@@ -3,7 +3,7 @@ import {
   PermissionGrantTwinRoles,
   PermissionGrantTwinRoles_DETAILED,
 } from "@/entities/twinRole";
-import { TwinClass_DETAILED } from "@/entities/twinClass";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 
 export const hydratePermissionGrantTwinRolesFromMap = (
   dto: PermissionGrantTwinRoles,

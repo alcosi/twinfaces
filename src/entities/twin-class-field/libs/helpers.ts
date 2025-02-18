@@ -1,6 +1,6 @@
 import { RelatedObjects } from "@/shared/api";
 import { TwinClassField, TwinClassFieldV2_DETAILED } from "../api";
-import { TwinClass_DETAILED } from "@/entities/twinClass";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { Featurer_DETAILED } from "@/entities/featurer";
 
 export const hydrateTwinClassFieldFromMap = (

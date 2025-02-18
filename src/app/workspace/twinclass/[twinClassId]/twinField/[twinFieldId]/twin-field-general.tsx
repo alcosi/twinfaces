@@ -13,7 +13,7 @@ import {
   TwinClassFieldV2_DETAILED,
 } from "@/entities/twin-class-field";
 import { ApiContext } from "@/shared/api";
-import { TwinClassResourceLink } from "@/entities/twinClass";
+import { TwinClassResourceLink } from "@/entities/twin-class";
 import {
   FeaturerResourceLink,
   FeaturerTypes,

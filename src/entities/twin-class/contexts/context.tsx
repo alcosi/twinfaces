@@ -2,7 +2,7 @@ import {
   hydrateTwinClassFromMap,
   TwinClass,
   useFetchTwinClassById,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { TwinClassLink } from "@/entities/twin-class-link";
 import { RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";

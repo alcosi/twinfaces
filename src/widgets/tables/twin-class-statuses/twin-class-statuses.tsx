@@ -11,7 +11,7 @@ import {
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";

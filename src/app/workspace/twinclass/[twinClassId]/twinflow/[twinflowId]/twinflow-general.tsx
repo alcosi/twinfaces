@@ -3,7 +3,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twinFlow";
 import {
   TwinClassStatusResourceLink,

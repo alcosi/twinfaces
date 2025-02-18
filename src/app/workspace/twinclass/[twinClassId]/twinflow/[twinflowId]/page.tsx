@@ -1,6 +1,6 @@
 "use client";
 
-import { TwinClassContext } from "@/entities/twinClass";
+import { TwinClassContext } from "@/entities/twin-class";
 import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twinFlow";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowTransitions } from "@/screens/twinFlowTransitions";

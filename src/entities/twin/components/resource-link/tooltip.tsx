@@ -2,7 +2,7 @@ import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { UserResourceLink } from "@/entities/user";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { Braces } from "lucide-react";

@@ -1,6 +1,6 @@
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
-import { TwinClass_DETAILED } from "@/entities/twinClass";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { Featurer_DETAILED } from "@/entities/featurer";
 
 export type TwinClassField = components["schemas"]["TwinClassFieldV1"];

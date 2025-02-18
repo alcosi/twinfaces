@@ -4,7 +4,7 @@ import {
   useTwinClassLinkStrengthSelectAdapter,
   useTwinClassLinkTypeSelectAdapter,
 } from "@/entities/twin-class-link";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { Control, FieldValues, Path } from "react-hook-form";
 
 export function TwinClassRelationsFormFields<T extends FieldValues>({

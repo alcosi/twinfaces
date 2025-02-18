@@ -16,7 +16,7 @@ import {
   TwinClassResourceLink,
   TwinClassUpdateRq,
   useTwinClassSelectAdapter,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,

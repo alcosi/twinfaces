@@ -1,4 +1,4 @@
-import { TwinClass } from "@/entities/twinClass/api";
+import { TwinClass } from "@/entities/twin-class/api";
 import { RelatedObjects } from "@/shared/api";
 import { TwinClassLink, TwinClassLink_MANAGED } from "../api";
 

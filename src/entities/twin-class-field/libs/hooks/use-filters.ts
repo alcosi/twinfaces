@@ -8,7 +8,7 @@ import {
 } from "@/shared/libs";
 import { z } from "zod";
 import { TwinClassFieldV2FilterKeys, TwinClassFieldV2Filters } from "../../api";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 

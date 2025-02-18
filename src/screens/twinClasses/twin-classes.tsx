@@ -10,7 +10,7 @@ import {
   TwinClassResourceLink,
   useTwinClassFilters,
   useTwinClassSearchV1,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { pluckProperty } from "@/shared/libs";

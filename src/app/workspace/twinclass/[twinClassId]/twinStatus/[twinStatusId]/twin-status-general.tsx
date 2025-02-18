@@ -4,7 +4,7 @@ import {
   TwinClass_DETAILED,
   TwinClassContext,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import {
   TwinClassStatusResourceLink,
   TwinStatus,

@@ -6,7 +6,7 @@ import {
   useTwinClassFieldFilters,
   useTwinClassFieldSearchV1,
 } from "@/entities/twin-class-field";
-import { TwinClassResourceLink } from "@/entities/twinClass";
+import { TwinClassResourceLink } from "@/entities/twin-class";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";

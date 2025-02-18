@@ -3,7 +3,7 @@ import {
   TwinStatusFilterKeys,
   TwinStatusFilters,
 } from "@/entities/twin-status";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
   type FilterFeature,
   isPopulatedArray,

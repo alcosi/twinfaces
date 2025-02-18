@@ -5,7 +5,7 @@ import { SpaceRole } from "../../api";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 
 type Props = {
   data: SpaceRole;

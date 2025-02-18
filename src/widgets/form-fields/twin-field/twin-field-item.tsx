@@ -14,10 +14,14 @@ import { TwinFieldType } from "@/entities/twinField";
 import { useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";
 import React from "react";
+import { TwinFieldSelectLinkLongFormItem } from "./components";
 
 export type TwinFieldFormItemProps = {
   descriptor: TwinClassFieldDescriptor;
-};
+} & (
+  | { twinClassId: string; twinId?: never }
+  | { twinId: string; twinClassId?: never }
+);
 
 type Props = FormItemProps &
   TwinFieldFormItemProps & {
@@ -25,7 +29,13 @@ type Props = FormItemProps &
     onChange?: (value: string) => void;
   };
 
-export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
+export function TwinFieldFormItem({
+  twinId,
+  twinClassId,
+  descriptor,
+  onChange,
+  ...props
+}: Props) {
   const twinAdapter = useTwinSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
   const userAdapter = useUserSelectAdapter();
@@ -73,7 +83,6 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
           <TextFormItem type="file" onChange={handleTextChange} {...props} />
         );
       case TwinFieldType.selectLinkV1:
-      case TwinFieldType.selectLinkLongV1:
         return (
           <ComboboxFormItem
             getById={twinAdapter.getById}
@@ -84,6 +93,25 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
             {...props}
           />
         );
+      case TwinFieldType.selectLinkLongV1:
+        if (twinId) {
+          return (
+            <TwinFieldSelectLinkLongFormItem
+              linkId={descriptor.linkId}
+              multi={descriptor.multiple}
+              twinId={twinId}
+            />
+          );
+        } else if (twinClassId) {
+          return (
+            <TwinFieldSelectLinkLongFormItem
+              linkId={descriptor.linkId}
+              multi={descriptor.multiple}
+              twinClassId={twinClassId}
+            />
+          );
+        }
+        break;
       case TwinFieldType.selectListV1:
       case TwinFieldType.selectListLongV1:
       case TwinFieldType.selectLongV1:

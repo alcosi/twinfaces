@@ -1,5 +1,5 @@
 import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
-import { TwinClassResourceLink } from "@/entities/twinClass";
+import { TwinClassResourceLink } from "@/entities/twin-class";
 import {
   PermissionGrantTwinRoles_DETAILED,
   usePermissionGrantTwinRolesSearchV1,

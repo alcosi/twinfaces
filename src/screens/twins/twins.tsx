@@ -18,7 +18,7 @@ import {
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { User, UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
@@ -232,7 +232,12 @@ export function TwinsScreen() {
 
   async function handleOnCreateSubmit(formValues: z.infer<typeof TWIN_SCHEMA>) {
     const body: TwinCreateRq = { ...formValues };
-    await createTwin({ body });
+    await createTwin({
+      body: {
+        ...body,
+        assignerUserId: "608c6d7d-99c8-4d87-89c6-2f72d0f5d673",
+      },
+    });
     toast.success(`Twin ${body.name} is created successfully!`);
   }
 

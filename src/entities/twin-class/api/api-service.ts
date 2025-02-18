@@ -1,3 +1,4 @@
+import { TwinSimpleFilters } from "@/entities/twin/api";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { components, operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
@@ -134,6 +135,35 @@ export function createTwinClassApi(settings: ApiSettings) {
     );
   }
 
+  function getValidTwinsForLink({
+    twinClassId,
+    linkId,
+    pagination,
+    filters,
+  }: {
+    twinClassId: string;
+    linkId: string;
+    pagination: PaginationState;
+    filters?: TwinSimpleFilters;
+  }) {
+    return settings.client.POST(
+      "/private/twin_class/{twinClassId}/link/{linkId}/valid_twins/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { twinClassId, linkId },
+          query: {
+            showTwinMode: "DETAILED",
+            showTwinClassMode: "DETAILED",
+            offset: pagination.pageIndex * pagination.pageSize,
+            limit: pagination.pageSize,
+          },
+        },
+        body: filters ?? {},
+      }
+    );
+  }
+
   return {
     search,
     getByKey,
@@ -141,6 +171,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     create,
     update,
     getValidHeads,
+    getValidTwinsForLink,
   };
 }
 
