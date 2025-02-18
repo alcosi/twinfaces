@@ -9,11 +9,8 @@ export type FactoryConditionSetSearchRq =
 
 export type FactoryConditionSetFilterKeys =
   | "idList"
-  | "idExcludeList"
   | "nameLikeList"
-  | "nameNotLikeList"
-  | "descriptionLikeList"
-  | "descriptionNotLikeList";
+  | "descriptionLikeList";
 
 export type FactoryConditionSetFilters = Partial<
   Pick<FactoryConditionSetSearchRq, FactoryConditionSetFilterKeys>
