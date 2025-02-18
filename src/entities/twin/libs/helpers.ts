@@ -4,38 +4,45 @@ import { TwinClass_DETAILED } from "../../twinClass";
 import { User } from "../../user";
 import { Twin, Twin_DETAILED } from "../api";
 import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
+import { DataListOptionV1 } from "@/entities/datalist-option";
 
 export const hydrateTwinFromMap = (
-  twinDTO: Twin,
+  dto: Twin,
   relatedObjects?: RelatedObjects
 ): Twin_DETAILED => {
-  const twin: Twin_DETAILED = Object.assign({}, twinDTO) as Twin_DETAILED;
+  const hydrated: Twin_DETAILED = Object.assign({}, dto) as Twin_DETAILED;
 
-  if (!relatedObjects?.twinClassMap) return twin;
+  if (!relatedObjects?.twinClassMap) return hydrated;
 
-  if (twinDTO.statusId && relatedObjects.statusMap) {
-    twin.status = relatedObjects.statusMap[twinDTO.statusId] as TwinStatus;
+  if (dto.statusId && relatedObjects.statusMap) {
+    hydrated.status = relatedObjects.statusMap[dto.statusId] as TwinStatus;
   }
 
-  if (twinDTO.twinClassId) {
-    twin.twinClass = relatedObjects.twinClassMap[
-      twinDTO.twinClassId
+  if (dto.twinClassId) {
+    hydrated.twinClass = relatedObjects.twinClassMap[
+      dto.twinClassId
     ] as TwinClass_DETAILED;
   }
 
-  if (twinDTO.authorUserId && relatedObjects.userMap) {
-    twin.authorUser = relatedObjects.userMap[twinDTO.authorUserId] as User;
+  if (dto.authorUserId && relatedObjects.userMap) {
+    hydrated.authorUser = relatedObjects.userMap[dto.authorUserId] as User;
   }
 
-  if (twinDTO.assignerUserId && relatedObjects.userMap) {
-    twin.assignerUser = relatedObjects.userMap[twinDTO.assignerUserId] as User;
+  if (dto.assignerUserId && relatedObjects.userMap) {
+    hydrated.assignerUser = relatedObjects.userMap[dto.assignerUserId] as User;
   }
 
-  if (twinDTO.headTwinId && relatedObjects.twinMap) {
-    twin.headTwin = relatedObjects.twinMap[twinDTO.headTwinId];
+  if (dto.headTwinId && relatedObjects.twinMap) {
+    hydrated.headTwin = relatedObjects.twinMap[dto.headTwinId];
   }
 
-  return twin;
+  if (dto.tagIdList && relatedObjects.dataListsOptionMap) {
+    hydrated.tags = dto.tagIdList.map<DataListOptionV1>(
+      (id) => relatedObjects.dataListsOptionMap![id]!
+    );
+  }
+
+  return hydrated;
 };
 
 export function formatTwinDisplay({ aliases, name }: Twin): string {
