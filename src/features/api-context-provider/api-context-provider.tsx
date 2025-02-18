@@ -49,10 +49,6 @@ import {
 } from "@/entities/twin-class-field";
 import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
 import { createTwinClassApi, TwinClassApi } from "@/entities/twinClass";
-import {
-  createTwinClassLinksApi,
-  TwinClassLinkApi,
-} from "@/entities/twin-class-link";
 import { createTwinFlowApi, TwinFlowApi } from "@/entities/twinFlow";
 import {
   createTwinFlowSchemaApi,
@@ -75,6 +71,7 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
+import { createLinkApi, LinkApi } from "@/entities/link/api";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -86,7 +83,6 @@ export interface ApiContextProps {
   twinFlowTransition: TwinFlowTransitionApi;
   featurer: FeaturerApi;
   twin: TwinApi;
-  twinClassLink: TwinClassLinkApi;
   permission: PermissionApi;
   permissionGroup: PermissionGroupApi;
   permissionSchema: PermissionSchemaApi;
@@ -103,6 +99,7 @@ export interface ApiContextProps {
   pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
+  link: LinkApi;
 }
 
 export function ApiContextProvider({
@@ -133,7 +130,6 @@ export function ApiContextProvider({
         twinFlowTransition: createTwinFlowTransitionApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
-        twinClassLink: createTwinClassLinksApi(settings),
         permission: createPermissionApi(settings),
         permissionGroup: createPermissionGroupApi(settings),
         permissionSchema: createPermissionSchemaApi(settings),
@@ -150,6 +146,7 @@ export function ApiContextProvider({
         pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
+        link: createLinkApi(settings),
       }}
     >
       {children}

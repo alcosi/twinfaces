@@ -1,14 +1,14 @@
-import { TwinClassLink } from "@/entities/twin-class-link";
+import { Link } from "@/entities/link";
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { Badge, ResourceLinkTooltip } from "@/shared/ui";
 import { Link2 } from "lucide-react";
 
 type Props = {
-  data: TwinClassLink;
+  data: Link;
   link: string;
 };
 
-export function TwinClassLinkResourceTooltip({ data, link }: Props) {
+export function LinkResourceTooltip({ data, link }: Props) {
   if (isUndefined(data.id)) return null;
 
   return (

@@ -1,22 +1,9 @@
 import {
-  CreateLinkRequestBody,
-  LINK_STRENGTH_SCHEMA,
-  LINK_TYPES_SCHEMA,
-  LinkStrength,
-  LinkStrengthEnum,
-  LinkType,
-  LinkTypesEnum,
-  TwinClassLink,
-  TwinClassLinkResourceLink,
-  UpdateLinkRequestBody,
-} from "@/entities/twin-class-link";
-import {
   TwinClass_DETAILED,
   TwinClassContext,
   TwinClassResourceLink,
 } from "@/entities/twinClass";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
 import { Badge } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -28,40 +15,20 @@ import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { TwinClassRelationsFormFields } from "./form-fields";
-
-const twinLinkSchema = z.object({
-  srcTwinClassId: z
-    .string()
-    .uuid("Twin Class ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR),
-  dstTwinClassId: z
-    .string()
-    .uuid("Twin Class ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR),
-  name: z.string().min(1, "Name can not be empty"),
-  type: z
-    .array(z.object({ id: LINK_TYPES_SCHEMA }))
-    .min(1, "Required")
-    .transform<LinkType>((arr) =>
-      isPopulatedArray<{ id: string }>(arr)
-        ? (arr[0].id as LinkType)
-        : LinkTypesEnum.OneToOne
-    )
-    .or(LINK_TYPES_SCHEMA),
-  linkStrength: z
-    .array(z.object({ id: LINK_STRENGTH_SCHEMA }))
-    .min(1, "Required")
-    .transform<LinkStrength>((arr) =>
-      isPopulatedArray<{ id: string }>(arr)
-        ? (arr[0].id as LinkStrength)
-        : LinkStrengthEnum.MANDATORY
-    )
-    .or(LINK_STRENGTH_SCHEMA),
-});
+import {
+  CreateLinkRequestBody,
+  Link,
+  LINK_SCHEMA,
+  LinkResourceLink,
+  LinkStrengthEnum,
+  LinkTypesEnum,
+  UpdateLinkRequestBody,
+  useCreateLink,
+} from "@/entities/link";
+import { CreateLinkFormFields } from "../links";
 
 const mapLinkToFormPayload = (
-  link: TwinClassLink,
+  link: Link,
   options: {
     twinClassId: string;
     isBackward?: boolean;
@@ -81,14 +48,15 @@ const mapLinkToFormPayload = (
 
 export function TwinClassRelations() {
   const api = useContext(ApiContext);
-  const { twinClass, twinClassId } = useContext(TwinClassContext);
+  const { twinClass } = useContext(TwinClassContext);
   const router = useRouter();
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
+  const { createLink } = useCreateLink();
 
   const columnsMap: Record<
     "id" | "name" | "dstTwinClassId" | "type" | "linkStrengthId",
-    ColumnDef<TwinClassLink>
+    ColumnDef<Link>
   > = {
     id: {
       accessorKey: "id",
@@ -100,7 +68,7 @@ export function TwinClassRelations() {
       header: "Name",
       cell: ({ row: { original } }) => (
         <div className="max-w-48 inline-flex">
-          <TwinClassLinkResourceLink data={original} withTooltip />
+          <LinkResourceLink data={original} withTooltip />
         </div>
       ),
     },
@@ -132,8 +100,8 @@ export function TwinClassRelations() {
     },
   };
 
-  const forwardLinkForm = useForm<z.infer<typeof twinLinkSchema>>({
-    resolver: zodResolver(twinLinkSchema),
+  const forwardLinkForm = useForm<z.infer<typeof LINK_SCHEMA>>({
+    resolver: zodResolver(LINK_SCHEMA),
     defaultValues: {
       srcTwinClassId: twinClass?.id,
       dstTwinClassId: "",
@@ -143,8 +111,8 @@ export function TwinClassRelations() {
     },
   });
 
-  const backwardLinkForm = useForm<z.infer<typeof twinLinkSchema>>({
-    resolver: zodResolver(twinLinkSchema),
+  const backwardLinkForm = useForm<z.infer<typeof LINK_SCHEMA>>({
+    resolver: zodResolver(LINK_SCHEMA),
     defaultValues: {
       srcTwinClassId: "",
       dstTwinClassId: twinClass?.id,
@@ -157,14 +125,14 @@ export function TwinClassRelations() {
   async function fetchLinks(
     type: "forward" | "backward",
     _: PaginationState
-  ): Promise<PagedResponse<TwinClassLink>> {
+  ): Promise<PagedResponse<Link>> {
     if (!twinClass?.id) {
       toast.error("Twin class ID is missing");
       return { data: [], pagination: {} };
     }
 
     try {
-      const response = await api.twinClassLink.getLinks({
+      const response = await api.twinClass.getLinks({
         twinClassId: twinClass.id,
       });
       const data = response.data;
@@ -203,26 +171,9 @@ export function TwinClassRelations() {
   }
 
   const handleOnCreateSubmit = async (
-    formValues: z.infer<typeof twinLinkSchema>
+    formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
-    const body: CreateLinkRequestBody = {
-      forwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      backwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      ...formValues,
-    };
-
-    const { error } = await api.twinClassLink.create({ body });
-    if (error) {
-      throw error;
-    }
+    await createLink(formValues);
     toast.success("Link created successfully!");
   };
 
@@ -240,9 +191,7 @@ export function TwinClassRelations() {
           columnsMap.linkStrengthId,
         ]}
         fetcher={(paginationState) => fetchLinks("forward", paginationState)}
-        onRowClick={(row) =>
-          router.push(`/workspace/twinclass/${twinClassId}/link/${row.id}`)
-        }
+        onRowClick={(row) => router.push(`/workspace/links/${row.id}`)}
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
@@ -256,10 +205,7 @@ export function TwinClassRelations() {
         dialogForm={forwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
-          <TwinClassRelationsFormFields
-            control={forwardLinkForm.control}
-            isForward
-          />
+          <CreateLinkFormFields control={forwardLinkForm.control} isForward />
         )}
       />
 
@@ -274,9 +220,7 @@ export function TwinClassRelations() {
           columnsMap.linkStrengthId,
         ]}
         fetcher={(paginationState) => fetchLinks("backward", paginationState)}
-        onRowClick={(row) =>
-          router.push(`/workspace/twinclass/${twinClassId}/link/${row.id}`)
-        }
+        onRowClick={(row) => router.push(`/workspace/links/${row.id}`)}
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
@@ -290,7 +234,7 @@ export function TwinClassRelations() {
         dialogForm={backwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
-          <TwinClassRelationsFormFields control={backwardLinkForm.control} />
+          <CreateLinkFormFields control={backwardLinkForm.control} />
         )}
       />
     </>

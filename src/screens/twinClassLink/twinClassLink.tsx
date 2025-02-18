@@ -8,7 +8,7 @@ import { GeneralSection } from "./views/general-section";
 import { toast } from "sonner";
 import { LoadingOverlay } from "@/shared/ui";
 import { isUndefined } from "@/shared/libs";
-import { TwinClassLink, useLinkFetchById } from "@/entities/twin-class-link";
+import { Link, useLinkFetchById } from "@/entities/link";
 
 export type PageProps = {
   params: {
@@ -19,17 +19,19 @@ export type PageProps = {
 export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
   const { twinClassId, twinClass } = useContext(TwinClassContext);
   const { setBreadcrumbs } = useBreadcrumbs();
-  const [link, setLink] = useState<TwinClassLink | undefined>(undefined);
+  const [link, setLink] = useState<Link | undefined>(undefined);
   const { fetchLinkById, loading } = useLinkFetchById();
 
   useEffect(() => {
+    //TODO add missed class name at breadCrumbs
+    //https://alcosi.atlassian.net/browse/TWINFACES-469
     setBreadcrumbs([
       { label: "Classes", href: "/workspace/twinclass" },
       { label: twinClass?.name!, href: `/workspace/twinclass/${twinClassId}` },
       { label: "Relations", href: `/workspace/twinclass/${twinClassId}#links` },
       {
         label: link?.name ?? "N/A",
-        href: `/workspace/twinclass/${twinClassId}/link/${linkId}`,
+        href: `/workspace/links/${linkId}`,
       },
     ]);
   }, [linkId, twinClassId, twinClass?.name, link?.name]);
