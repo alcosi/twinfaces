@@ -7,8 +7,6 @@ import {
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
-// TODO: Turn off lazy-relation for users, implement hydration
-// https://alcosi.atlassian.net/browse/TWINFACES-418
 export function useFactorySearch() {
   const api = useContext(ApiContext);
 

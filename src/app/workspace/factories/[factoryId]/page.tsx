@@ -1,5 +1,5 @@
-import { UnderConstructionPage } from "@/screens/underConstruction";
+import { FactoryScreen } from "@/screens/factory";
 
-export default function FactoryPage() {
-  return <UnderConstructionPage />;
+export default function Page() {
+  return <FactoryScreen />;
 }
