@@ -76,22 +76,9 @@ export function TwinFormFields({
           control={control}
           name="tags"
           label="Tags"
-          multi={true}
+          multi
+          creatable
           {...optionAdapter}
-          noItemsText="New tag feature is not implmented yet"
-          // renderNoItem={(searchQuery: string) => {
-          //   return (
-          //     <Button
-          //       disabled
-          //       variant="ghost"
-          //       className="w-full gap-x-2 justify-start font-semibold"
-          //     >
-          //       <Plus className="w-4 h-4" />
-          //       <b>New tag:</b>
-          //       <span className="">{searchQuery}</span>
-          //     </Button>
-          //   );
-          // }}
         />
       )}
     </>

@@ -1,20 +1,25 @@
-import { isArray, isUndefined, useDebouncedValue } from "@/shared/libs";
+import {
+  isArray,
+  isUndefined,
+  SelectAdapter,
+  useDebouncedValue,
+} from "@/shared/libs";
 import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
-import { ComboboxHandle } from "../types";
+import { ComboboxHandle, ComboboxProps } from "../types";
 import { useMultiComboboxStrategy } from "./use-multi-combobox-strategy";
 import { useSingleComboboxStrategy } from "./use-single-combobox-strategy";
 
+type Props<T> = Pick<SelectAdapter<T>, "getItems"> &
+  Pick<ComboboxProps<T>, "searchDelay" | "multi"> & {
+    ref: ForwardedRef<ComboboxHandle<T>>;
+  };
+
 export function useComboboxController<T>({
   getItems,
-  searchDelay,
+  searchDelay = 3000,
   multi,
   ref,
-}: {
-  getItems: (search: string) => Promise<T[]>;
-  searchDelay: number;
-  multi: boolean;
-  ref: ForwardedRef<ComboboxHandle<T>>;
-}) {
+}: Props<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState<T[]>([]);
   const [availableItems, setAvailableItems] = useState<T[]>([]);

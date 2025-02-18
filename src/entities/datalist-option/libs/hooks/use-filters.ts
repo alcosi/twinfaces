@@ -37,7 +37,7 @@ export function useDatalistOptionFilters({
       ...dAdapter,
     },
 
-    optionI18nLikeList: {
+    optionLikeList: {
       type: AutoFormValueType.tag,
       label: "Name",
     },
@@ -73,7 +73,7 @@ export function useDatalistOptionFilters({
     const result: DataListOptionFilters = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
       dataListIdList: toArrayOfString(toArray(filters.dataListIdList), "id"),
-      optionI18nLikeList: toArrayOfString(filters.optionI18nLikeList).map(
+      optionLikeList: toArrayOfString(filters.optionLikeList).map(
         wrapWithPercent
       ),
       statusIdList: toArray(

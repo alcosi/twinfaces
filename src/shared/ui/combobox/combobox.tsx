@@ -1,6 +1,12 @@
 "use client";
 
-import { cn, fixedForwardRef } from "@/shared/libs";
+import {
+  cn,
+  fixedForwardRef,
+  isFalsy,
+  isPopulatedString,
+  isTruthy,
+} from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
 import {
   Command,
@@ -11,7 +17,8 @@ import {
   CommandList,
 } from "@/shared/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Separator } from "@/shared/ui/separator";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { ForwardedRef } from "react";
 import { useComboboxController } from "./hooks";
 import { SelectedOptions } from "./selected-options";
@@ -71,12 +78,12 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
           <SelectedOptions
             selected={selectedItems}
             getItemKey={getItemKey}
-            renderItem={props.renderItem}
             onChange={(newSelected) => {
               setSelectedItems(newSelected);
               props.onSelect?.(newSelected);
             }}
-            placeholder={props.selectPlaceholder}
+            renderItem={props.renderItem}
+            selectPlaceholder={props.selectPlaceholder}
             multi={props.multi}
           />
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -90,7 +97,9 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
             onValueChange={setSearchQuery}
             loading={isLoading}
           />
-          <CommandEmpty>{props.noItemsText}</CommandEmpty>
+          <CommandEmpty className="text-center">
+            <i>{props.noItemsText || "No items..."}</i>
+          </CommandEmpty>
           <CommandList>
             <CommandGroup>
               {availableItems.map((item) => (
@@ -116,6 +125,40 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
             </CommandGroup>
           </CommandList>
         </Command>
+        {props.creatable && isTruthy(searchQuery.trim()) && (
+          <>
+            <Separator />
+            <Button
+              variant="ghost"
+              className="flex w-full font-bold justify-start truncate"
+              onClick={() => {
+                // TODO: Reevaluate `as T` type assertion.
+                // `ComboboxProps<T>` depends on `SelectAdapter<T>`, but `T` lacks `T & string` support.
+                // Consider extending `T` with `id` and `name` or updating `SelectAdapter<T>` to handle strings.
+                const newItem = searchQuery as T;
+                const isDuplicate = selectedItems.some((item) =>
+                  isPopulatedString(item)
+                    ? item === searchQuery
+                    : getItemKey(item) === searchQuery
+                );
+
+                if (!isDuplicate) {
+                  const updatedSelection = props.multi
+                    ? [...selectedItems, newItem]
+                    : [newItem];
+                  setSelectedItems(updatedSelection);
+                  props.onSelect?.(updatedSelection);
+                }
+
+                setIsOpen(false);
+                setSearchQuery("");
+              }}
+            >
+              <Plus className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+              {`${searchQuery} (New)`}
+            </Button>
+          </>
+        )}
       </PopoverContent>
     </Popover>
   );
