@@ -6394,6 +6394,14 @@ export interface components {
       idList?: string[];
       /** @description id exclude list */
       idExcludeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name not like list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
       /** @description twin class id list */
       twinClassIdList?: string[];
       /** @description twin class id exclude list */
@@ -8117,7 +8125,73 @@ export interface components {
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - condition list */
-      conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
+      conditionSets?: components["schemas"]["FactoryConditionSetV2"][];
+    };
+    /** @description results - condition list */
+    FactoryConditionSetV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      id?: string;
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description created by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description updated at
+       */
+      updatedAt?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
+       * Format: int32
+       * @description count in factory pipeline usages
+       * @example 3
+       */
+      inFactoryPipelineUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory pipeline step usages
+       * @example 3
+       */
+      inFactoryPipelineStepUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory multiplier filter usages
+       * @example 3
+       */
+      inFactoryMultiplierFilterUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory branch usages
+       * @example 3
+       */
+      inFactoryBranchUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory eraser usages
+       * @example 3
+       */
+      inFactoryEraserUsagesCount?: number;
+      createdByUser?: components["schemas"]["UserV1"];
     };
     FactoryBranchSearchRqV1: {
       /** @description id list */
@@ -15954,6 +16028,7 @@ export interface operations {
         showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
         offset?: number;
         limit?: number;

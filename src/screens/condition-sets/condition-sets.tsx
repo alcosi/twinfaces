@@ -5,6 +5,7 @@ import {
   useFactoryConditionSetFilters,
   useFactoryConditionSetSearch,
 } from "@/entities/factory-condition-set";
+import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
@@ -22,6 +23,7 @@ const colDefs: Record<
   | "inFactoryMultiplierFilterUsagesCount"
   | "inFactoryBranchUsagesCount"
   | "inFactoryEraserUsagesCount"
+  | "createdByUserId"
   | "createdAt",
   ColumnDef<FactoryConditionSet>
 > = {
@@ -65,6 +67,17 @@ const colDefs: Record<
     id: "inFactoryEraserUsagesCount",
     accessorKey: "inFactoryEraserUsagesCount",
     header: "In erasers usages count",
+  },
+  createdByUserId: {
+    id: "createdByUserId",
+    accessorKey: "createdByUserId",
+    header: "Created by",
+    cell: ({ row: { original } }) =>
+      original.createdByUser && (
+        <div className="max-w-48 inline-flex">
+          <UserResourceLink data={original.createdByUser} withTooltip />
+        </div>
+      ),
   },
   createdAt: {
     id: "createdBy",
@@ -116,6 +129,7 @@ export function ConditionSetsScreen() {
         colDefs.inFactoryMultiplierFilterUsagesCount,
         colDefs.inFactoryBranchUsagesCount,
         colDefs.inFactoryEraserUsagesCount,
+        colDefs.createdByUserId,
         colDefs.createdAt,
       ]}
       fetcher={fetchFactoryConditionSet}
@@ -129,6 +143,7 @@ export function ConditionSetsScreen() {
         colDefs.inFactoryMultiplierFilterUsagesCount,
         colDefs.inFactoryBranchUsagesCount,
         colDefs.inFactoryEraserUsagesCount,
+        colDefs.createdByUserId,
         colDefs.createdAt,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}

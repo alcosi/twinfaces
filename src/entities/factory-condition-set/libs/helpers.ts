@@ -11,7 +11,7 @@ export const hydrateFactoryConditionSetFromMap = (
   ) as FactoryConditionSet_DETAILED;
 
   if (dto.createdByUserId && relatedObjects?.userMap) {
-    hydrated.updatedAt = relatedObjects.userMap[dto.createdByUserId];
+    hydrated.createdByUser = relatedObjects.userMap[dto.createdByUserId]!;
   }
 
   return hydrated;

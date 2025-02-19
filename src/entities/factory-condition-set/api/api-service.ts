@@ -21,6 +21,7 @@ export function createFactoryConditionSetApi(settings: ApiSettings) {
           showConditionSetInFactoryPipelineStepUsagesCountMode: "SHOW",
           showConditionSetInFactoryPipelineUsagesCountMode: "SHOW",
           showFactoryConditionSetMode: "DETAILED",
+          showFactoryConditionSet2UserMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
