@@ -15,7 +15,7 @@ export function FactoryBrancheFormFields<T extends FieldValues>({
 }) {
   const fcsAdapter = useFactoryConditionSetSelectAdapter();
   const fAdapter = useFactorySelectAdapter();
-  const fWatch = useWatch({ control, name: "factoryId" as Path<T>});
+  const fWatch = useWatch({ control, name: "factoryId" as Path<T> });
   const disabled = isPopulatedArray(fWatch);
 
   return (
