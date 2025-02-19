@@ -63,7 +63,7 @@ const config = {
           },
           dark: {
             disabled: "#a6c5e229",
-            active: "#579dff",
+            active: "#ffc030",
           },
         },
         sidebar: {
