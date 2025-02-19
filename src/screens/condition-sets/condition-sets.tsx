@@ -2,10 +2,11 @@
 
 import {
   FactoryConditionSet,
+  useFactoryConditionSetFilters,
   useFactoryConditionSetSearch,
 } from "@/entities/factory-condition-set";
-import { useFactoryConditionSetFilters } from "@/entities/factory-condition-set/libs/hooks/use-filters";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
@@ -20,7 +21,8 @@ const colDefs: Record<
   | "inFactoryPipelineStepUsagesCount"
   | "inFactoryMultiplierFilterUsagesCount"
   | "inFactoryBranchUsagesCount"
-  | "inFactoryEraserUsagesCount",
+  | "inFactoryEraserUsagesCount"
+  | "createdAt",
   ColumnDef<FactoryConditionSet>
 > = {
   id: {
@@ -63,6 +65,13 @@ const colDefs: Record<
     id: "inFactoryEraserUsagesCount",
     accessorKey: "inFactoryEraserUsagesCount",
     header: "In erasers usages count",
+  },
+  createdAt: {
+    id: "createdBy",
+    accessorKey: "createdAt",
+    header: "Created at",
+    cell: ({ row: { original } }) =>
+      original.createdAt && formatToTwinfaceDate(original.createdAt),
   },
 };
 
@@ -107,6 +116,7 @@ export function ConditionSetsScreen() {
         colDefs.inFactoryMultiplierFilterUsagesCount,
         colDefs.inFactoryBranchUsagesCount,
         colDefs.inFactoryEraserUsagesCount,
+        colDefs.createdAt,
       ]}
       fetcher={fetchFactoryConditionSet}
       getRowId={(row) => row.id!}
@@ -119,6 +129,7 @@ export function ConditionSetsScreen() {
         colDefs.inFactoryMultiplierFilterUsagesCount,
         colDefs.inFactoryBranchUsagesCount,
         colDefs.inFactoryEraserUsagesCount,
+        colDefs.createdAt,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
     />

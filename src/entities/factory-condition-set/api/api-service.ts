@@ -14,7 +14,7 @@ export function createFactoryConditionSetApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
-          lazyRelation: true,
+          lazyRelation: false,
           showConditionSetInFactoryBranchUsagesCountMode: "SHOW",
           showConditionSetInFactoryEraserUsagesCountMode: "SHOW",
           showConditionSetInFactoryMultiplierFilterUsagesCountMode: "SHOW",

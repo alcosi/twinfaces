@@ -1,4 +1,9 @@
-import { FilterFeature, toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
+import {
+  FilterFeature,
+  toArray,
+  toArrayOfString,
+  wrapWithPercent,
+} from "@/shared/libs";
 import {
   FactoryConditionSetFilterKeys,
   FactoryConditionSetFilters,

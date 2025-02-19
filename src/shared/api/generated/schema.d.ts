@@ -345,6 +345,10 @@ export interface paths {
     /** Returns transition search result */
     post: operations["transitionSearchV1"];
   };
+  "/private/tier/search/v1": {
+    /** Return a list of tiers by search criteria */
+    post: operations["tierSearchV1"];
+  };
   "/private/space/{spaceId}/users/search/v1": {
     /** Search users within their roles of specific space */
     post: operations["spaceRoleWithinUsersMapV1"];
@@ -1473,6 +1477,21 @@ export interface components {
       /** @description type */
       type?: string;
       /**
+       * @description optional
+       * @example true
+       */
+      optional?: boolean;
+      /** @description defaultValue */
+      defaultValue?: string;
+      /**
+       * @description exampleValues
+       * @example [
+       *   "GREEN,RED,BLUE",
+       *   6000
+       * ]
+       */
+      exampleValues?: string[];
+      /**
        * Format: int32
        * @description order
        */
@@ -1599,11 +1618,6 @@ export interface components {
        * @description createdByUserId
        */
       createdByUserId?: string;
-      /**
-       * Format: date-time
-       * @description created at
-       */
-      createdAt?: string;
       businessAccount?: components["schemas"]["BusinessAccountV1"];
       createdByUser?: components["schemas"]["UserV1"];
     };
@@ -1744,6 +1758,13 @@ export interface components {
        */
       factoryPipelineMap?: {
         [key: string]: components["schemas"]["FactoryPipelineV1"];
+      };
+      /**
+       * @description related twinclass schema map
+       * @example {twin class schema map}
+       */
+      twinClassSchemaMap?: {
+        [key: string]: components["schemas"]["TwinClassSchemaV1"];
       };
       /**
        * @description related featurer map
@@ -2216,6 +2237,31 @@ export interface components {
       viewPermission?: components["schemas"]["PermissionV1"];
       editPermission?: components["schemas"]["PermissionV1"];
       fieldTyperFeaturer?: components["schemas"]["FeaturerV1"];
+    };
+    /**
+     * @description related twinclass schema map
+     * @example {twin class schema map}
+     */
+    TwinClassSchemaV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description domainId
+       */
+      domainId?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
     };
     /** @description Twins of which classes are possible to create as children for given twin */
     TwinClassV1: {
@@ -3236,6 +3282,22 @@ export interface components {
        */
       description?: string;
       /**
+       * Format: uuid
+       * @description created by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description updated at
+       */
+      updatedAt?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
        * Format: int32
        * @description count in factory pipeline usages
        * @example 3
@@ -4056,6 +4118,11 @@ export interface components {
        */
       domainId?: string;
       user?: components["schemas"]["UserV1"];
+      /**
+       * @description locale [optional]
+       * @example en
+       */
+      locale?: string;
     };
     TwinflowSchemaSearchRqV1: {
       /** @description id list */
@@ -4101,7 +4168,7 @@ export interface components {
       /** @description results - twinflow schema list */
       twinflowSchemas?: components["schemas"]["TwinflowSchemaV1"][];
     };
-    /** @description results - twinflow schema list */
+    /** @description twinflow schema */
     TwinflowSchemaV1: {
       /**
        * Format: uuid
@@ -4137,8 +4204,6 @@ export interface components {
        * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
       createdByUserId?: string;
-      businessAccount?: components["schemas"]["BusinessAccountV1"];
-      createdByUser?: components["schemas"]["UserV1"];
     };
     TransitionCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
@@ -4292,6 +4357,20 @@ export interface components {
        * @description createdByUserId
        */
       createdByUserId?: string;
+      /**
+       * Format: uuid
+       * @description inbuilt factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      inbuiltTwinFactoryId?: string;
+      inbuiltTwinFactory?: components["schemas"]["FactoryV1"];
+      /**
+       * Format: uuid
+       * @description drafting factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      draftingTwinFactoryId?: string;
+      draftingTwinFactory?: components["schemas"]["FactoryV1"];
     };
     TwinflowListRqV1: {
       /** @description id list */
@@ -4551,6 +4630,20 @@ export interface components {
        * @description createdByUserId
        */
       createdByUserId?: string;
+      /**
+       * Format: uuid
+       * @description inbuilt factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      inbuiltTwinFactoryId?: string;
+      inbuiltTwinFactory?: components["schemas"]["FactoryV1"];
+      /**
+       * Format: uuid
+       * @description drafting factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      draftingTwinFactoryId?: string;
+      draftingTwinFactory?: components["schemas"]["FactoryV1"];
       /** @description validators */
       validatorRules?: components["schemas"]["TransitionValidatorRuleBaseV1"][];
       /** @description triggers */
@@ -4833,8 +4926,8 @@ export interface components {
       statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
-      /** @description results - tag option list */
-      options?: components["schemas"]["DataListOptionV3"][];
+      /** @description tiers */
+      tiers?: components["schemas"]["TierDTOv2"][];
     };
     TwinClassFieldCreateRqV1: {
       /**
@@ -6354,6 +6447,127 @@ export interface components {
       /** @description results - transition list */
       transition?: components["schemas"]["TwinflowTransitionBaseV2"][];
     };
+    /** @description user count quota range */
+    LongRangeDTOv1: {
+      /**
+       * Format: int64
+       * @description from
+       */
+      from?: number;
+      /**
+       * Format: int64
+       * @description to
+       */
+      to?: number;
+    };
+    TierSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description permission schema id list */
+      permissionSchemaIdList?: string[];
+      /** @description permission schema id exclude list */
+      permissionSchemaIdExcludeList?: string[];
+      /** @description twinflow schema id list */
+      twinflowSchemaIdList?: string[];
+      /** @description twinflow schema id exclude list */
+      twinflowSchemaIdExcludeList?: string[];
+      /** @description twinclass schema id list */
+      twinclassSchemaIdList?: string[];
+      /** @description twinclass schema id exclude list */
+      twinclassSchemaIdExcludeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name not like list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
+      attachmentsStorageQuotaCountRange?: components["schemas"]["LongRangeDTOv1"];
+      attachmentsStorageQuotaSizeRange?: components["schemas"]["LongRangeDTOv1"];
+      userCountQuotaRange?: components["schemas"]["LongRangeDTOv1"];
+      /**
+       * @description custom
+       * @enum {string}
+       */
+      custom?: "ONLY" | "ONLY_NOT" | "ANY";
+    };
+    /** @description permission schema */
+    PermissionSchemaV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description domainId
+       */
+      domainId?: string;
+      /**
+       * Format: uuid
+       * @description businessAccountId
+       */
+      businessAccountId?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+    };
+    /** @description tiers */
+    TierDTOv2: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinflow schema id
+       */
+      twinflowSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinclass schema id
+       */
+      twinclassSchemaId?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /** @description custom */
+      custom?: boolean;
+      /**
+       * Format: int32
+       * @description attachments storage quota count
+       */
+      attachmentsStorageQuotaCount?: number;
+      /**
+       * Format: int64
+       * @description attachments storage quota size
+       */
+      attachmentsStorageQuotaSize?: number;
+      /**
+       * Format: int32
+       * @description user count quota
+       */
+      userCountQuota?: number;
+      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
+      twinflowSchema?: components["schemas"]["TwinflowSchemaV1"];
+      twinclassSchema?: components["schemas"]["TwinClassSchemaV1"];
+    };
     UserRefSpaceRoleSearchV1: {
       /**
        * @description Filter by user name, case ignore
@@ -6683,38 +6897,6 @@ export interface components {
       permission?: components["schemas"]["PermissionV2"];
       userGroup?: components["schemas"]["UserGroupV1"];
       grantedByUser?: components["schemas"]["UserV1"];
-    };
-    /** @description permission schema */
-    PermissionSchemaV1: {
-      /**
-       * Format: uuid
-       * @description id
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @description domainId
-       */
-      domainId?: string;
-      /**
-       * Format: uuid
-       * @description businessAccountId
-       */
-      businessAccountId?: string;
-      /** @description name */
-      name?: string;
-      /** @description description */
-      description?: string;
-      /**
-       * Format: uuid
-       * @description createdByUserId
-       */
-      createdByUserId?: string;
-      /**
-       * Format: date-time
-       * @description created at
-       */
-      createdAt?: string;
     };
     /** @description permission */
     PermissionV2: {
@@ -8078,6 +8260,11 @@ export interface components {
        * @example c2a7f81f-d7da-43e8-a1d3-18d6f632878b
        */
       userId?: string;
+      /**
+       * @description locale [optional]
+       * @example en
+       */
+      locale?: string;
     };
     DomainBusinessAccountUpdateV1: {
       /**
@@ -9883,7 +10070,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showFeaturerParamMode?: "HIDE" | "SHOW";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11501,7 +11694,13 @@ export interface operations {
   transitionCreateV1: {
     parameters: {
       query?: {
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11549,7 +11748,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showFeaturerParamMode?: "HIDE" | "SHOW";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13880,8 +14085,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showFeaturerParamMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13929,7 +14140,13 @@ export interface operations {
   transitionUpdateV1: {
     parameters: {
       query?: {
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14387,7 +14604,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14419,6 +14642,48 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TransitionSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Return a list of tiers by search criteria */
+  tierSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showTier2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTier2TwinclassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTier2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTierMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TierSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TagSearchRsV1"];
         };
       };
       /** @description Access is denied */
