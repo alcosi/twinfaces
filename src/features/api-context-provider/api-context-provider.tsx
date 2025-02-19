@@ -36,6 +36,10 @@ import {
   PermissionGroupApi,
 } from "@/entities/permission-group";
 import {
+  createPermissionGroupApi,
+  PermissionGroupApi,
+} from "@/entities/permissionGroup";
+import {
   createPipelineStepApi,
   PipelineStepApi,
 } from "@/entities/factory-pipeline-step";

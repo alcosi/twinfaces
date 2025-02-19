@@ -14,6 +14,7 @@ import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
@@ -160,6 +161,9 @@ export function FactoryBranchesScreen() {
         colDefs.nextFactory,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      onRowClick={(row) => {
+        router.push(`/workspace/branches/${row.id}`);
+      }}
       dialogForm={factoryBranchForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
