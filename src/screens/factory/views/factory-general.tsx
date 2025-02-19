@@ -19,7 +19,7 @@ import { FactoryContext } from "@/features/factory";
 import { useUpdateFactory } from "@/entities/factory";
 
 export function FactoryGeneral() {
-  const { factory, fetchFactory: refresh } = useContext(FactoryContext);
+  const { factory, refresh } = useContext(FactoryContext);
 
   const { updateFactory } = useUpdateFactory();
 

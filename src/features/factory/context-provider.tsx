@@ -6,7 +6,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 type FactoryContextProps = {
   factoryId: string;
   factory: Factory_DETAILED;
-  fetchFactory: () => Promise<void>;
+  refresh: () => Promise<void>;
 };
 
 export const FactoryContext = createContext<FactoryContextProps>(
@@ -21,7 +21,7 @@ export function FactoryContextProvider({
   children: ReactNode;
 }) {
   useEffect(() => {
-    fetchFactory();
+    refresh();
   }, [factoryId]);
 
   const [factory, setFactory] = useState<Factory_DETAILED | undefined>(
@@ -29,7 +29,7 @@ export function FactoryContextProvider({
   );
   const { fetchFactoryById, loading } = useFetchFactoryById();
 
-  async function fetchFactory() {
+  async function refresh() {
     try {
       const fetchedFactory = await fetchFactoryById(factoryId);
       if (fetchedFactory) {
@@ -43,7 +43,7 @@ export function FactoryContextProvider({
   if (isUndefined(factory) || loading) return <LoadingOverlay />;
 
   return (
-    <FactoryContext.Provider value={{ factoryId, factory, fetchFactory }}>
+    <FactoryContext.Provider value={{ factoryId, factory, refresh }}>
       {loading ? <LoadingOverlay /> : children}
     </FactoryContext.Provider>
   );

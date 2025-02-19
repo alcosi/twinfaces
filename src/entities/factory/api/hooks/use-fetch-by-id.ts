@@ -29,7 +29,7 @@ export const useFetchFactoryById = () => {
           throw new Error("Response does not have factory data", error);
         }
 
-        if (data?.factory && data.relatedObjects) {
+        if (data.factory && data.relatedObjects) {
           return hydrateFactoryFromMap(data.factory, data.relatedObjects);
         }
       } finally {
