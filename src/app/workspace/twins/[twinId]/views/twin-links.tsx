@@ -1,6 +1,5 @@
 import { TwinLinkView } from "@/entities/link";
 import { TwinResourceLink, useFetchTwinLinks } from "@/entities/twin";
-import { TwinClassLinkResourceLink } from "@/entities/twin-class-link";
 import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
@@ -10,6 +9,7 @@ import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 import { TwinContext } from "../twin-context";
+import { LinkResourceLink } from "@/entities/link";
 
 const colDefs: Record<
   keyof Pick<
@@ -32,7 +32,7 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.link && (
         <div className="max-w-48 inline-flex">
-          <TwinClassLinkResourceLink data={original.link} withTooltip />
+          <LinkResourceLink data={original.link} withTooltip />
         </div>
       ),
   },

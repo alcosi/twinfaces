@@ -5,13 +5,6 @@ import {
 } from "@/entities/twin-class";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
-import {
-  LINK_STRENGTHS,
-  LINK_TYPES,
-  TwinClassLink,
-  UpdateLinkRequestBody,
-  useLinkUpdate,
-} from "@/entities/twin-class-link";
 import { UserResourceLink } from "@/entities/user";
 import {
   InPlaceEdit,
@@ -22,12 +15,19 @@ import { AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
 import { GuidWithCopy } from "@/shared/ui";
 import { toast } from "sonner";
+import {
+  Link,
+  LINK_STRENGTHS,
+  LINK_TYPES,
+  UpdateLinkRequestBody,
+  useLinkUpdate,
+} from "@/entities/link";
 
 export function GeneralSection({
   link,
   onChange,
 }: {
-  link: TwinClassLink;
+  link: Link;
   onChange: () => any;
 }) {
   const tcAdapter = useTwinClassSelectAdapter();

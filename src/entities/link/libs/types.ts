@@ -1,7 +1,8 @@
 import { createEnum } from "@/shared/libs";
-import { TwinClassLink } from "../api";
+import { z } from "zod";
+import { Link } from "../api";
 
-export type LinkType = NonNullable<TwinClassLink["type"]>;
+export type LinkType = NonNullable<Link["type"]>;
 export const LINK_TYPES: LinkType[] = [
   "ManyToOne",
   "ManyToMany",
@@ -9,7 +10,7 @@ export const LINK_TYPES: LinkType[] = [
 ] as const;
 export const LinkTypesEnum = createEnum<LinkType>(LINK_TYPES);
 
-export type LinkStrength = NonNullable<TwinClassLink["linkStrengthId"]>;
+export type LinkStrength = NonNullable<Link["linkStrengthId"]>;
 export const LINK_STRENGTHS: LinkStrength[] = [
   "MANDATORY",
   "OPTIONAL",

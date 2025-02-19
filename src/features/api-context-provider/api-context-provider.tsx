@@ -25,15 +25,16 @@ import {
   FactoryPipelineApi,
 } from "@/entities/factory-pipeline";
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
+import { createLinkApi, LinkApi } from "@/entities/link";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
-import {
-  createPermissionGroupApi,
-  PermissionGroupApi,
-} from "@/entities/permissionGroup";
 import {
   createPermissionSchemaApi,
   PermissionSchemaApi,
 } from "@/entities/permission-schema";
+import {
+  createPermissionGroupApi,
+  PermissionGroupApi,
+} from "@/entities/permissionGroup";
 import {
   createPipelineStepApi,
   PipelineStepApi,
@@ -43,16 +44,12 @@ import {
   PermissionSpaceRoleApi,
 } from "@/entities/spaceRole";
 import { createTwinApi, TwinApi } from "@/entities/twin";
+import { createTwinClassApi, TwinClassApi } from "@/entities/twin-class";
 import {
   createTwinClassFieldApi,
   TwinClassFieldApi,
 } from "@/entities/twin-class-field";
 import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
-import { createTwinClassApi, TwinClassApi } from "@/entities/twin-class";
-import {
-  createTwinClassLinksApi,
-  TwinClassLinkApi,
-} from "@/entities/twin-class-link";
 import { createTwinFlowApi, TwinFlowApi } from "@/entities/twinFlow";
 import {
   createTwinFlowSchemaApi,
@@ -86,7 +83,6 @@ export interface ApiContextProps {
   twinFlowTransition: TwinFlowTransitionApi;
   featurer: FeaturerApi;
   twin: TwinApi;
-  twinClassLink: TwinClassLinkApi;
   permission: PermissionApi;
   permissionGroup: PermissionGroupApi;
   permissionSchema: PermissionSchemaApi;
@@ -103,6 +99,7 @@ export interface ApiContextProps {
   pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
+  link: LinkApi;
 }
 
 export function ApiContextProvider({
@@ -133,7 +130,6 @@ export function ApiContextProvider({
         twinFlowTransition: createTwinFlowTransitionApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
-        twinClassLink: createTwinClassLinksApi(settings),
         permission: createPermissionApi(settings),
         permissionGroup: createPermissionGroupApi(settings),
         permissionSchema: createPermissionSchemaApi(settings),
@@ -150,6 +146,7 @@ export function ApiContextProvider({
         pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
+        link: createLinkApi(settings),
       }}
     >
       {children}

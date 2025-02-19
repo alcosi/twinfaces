@@ -1,6 +1,6 @@
+import { UpdateLinkRequestBody } from "@/entities/link";
 import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
-import { UpdateLinkRequestBody } from "../types";
 
 // TODO: Apply caching-strategy
 export const useLinkUpdate = () => {
@@ -14,7 +14,7 @@ export const useLinkUpdate = () => {
       linkId: string;
       body: UpdateLinkRequestBody;
     }) => {
-      return await api.twinClassLink.update({ linkId, body });
+      return await api.link.update({ linkId, body });
     },
     [api]
   );

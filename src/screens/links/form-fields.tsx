@@ -1,62 +1,65 @@
-import { TextFormField } from "@/components/form-fields";
-import { ComboboxFormField } from "@/components/form-fields/combobox";
+import { ComboboxFormField, TextFormField } from "@/components/form-fields";
 import {
-  useTwinClassLinkStrengthSelectAdapter,
-  useTwinClassLinkTypeSelectAdapter,
-} from "@/entities/twin-class-link";
+  LINK_SCHEMA,
+  useLinkStrengthSelectAdapter,
+  useLinkTypeSelectAdapter,
+} from "@/entities/link";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { Control, FieldValues, Path } from "react-hook-form";
+import { isPopulatedString } from "@/shared/libs";
+import { Control, useWatch } from "react-hook-form";
+import { z } from "zod";
 
-export function TwinClassRelationsFormFields<T extends FieldValues>({
+export function CreateLinkFormFields({
   control,
-  isForward,
 }: {
-  control: Control<T>;
-  isForward?: boolean;
+  control: Control<z.infer<typeof LINK_SCHEMA>>;
 }) {
   const tcAdapter = useTwinClassSelectAdapter();
-  const typeAdapter = useTwinClassLinkTypeSelectAdapter();
-  const strengthAdapter = useTwinClassLinkStrengthSelectAdapter();
+  const typeAdapter = useLinkTypeSelectAdapter();
+  const strengthAdapter = useLinkStrengthSelectAdapter();
+
+  const srcTwinClassId = useWatch({ name: "srcTwinClassId", control });
+  const dstTwinClassId = useWatch({ name: "dstTwinClassId", control });
 
   return (
     <>
       <ComboboxFormField
         control={control}
-        name={"srcTwinClassId" as Path<T>}
+        name="srcTwinClassId"
         label="Source Twin Class"
-        disabled={isForward}
+        disabled={isPopulatedString(srcTwinClassId)}
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
         noItemsText={"No classes found"}
         {...tcAdapter}
       />
+
       <ComboboxFormField
         control={control}
-        name={"dstTwinClassId" as Path<T>}
+        name="dstTwinClassId"
         label="Destination Twin Class"
-        disabled={!isForward}
+        disabled={isPopulatedString(dstTwinClassId)}
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
         noItemsText={"No classes found"}
         {...tcAdapter}
       />
-      <TextFormField
-        control={control}
-        name={"name" as Path<T>}
-        label="Link Name"
-      />
+
+      <TextFormField control={control} name="name" label="Link Name" />
+
       <ComboboxFormField
         control={control}
-        name={"type" as Path<T>}
+        name="type"
         label="Link Type"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
         {...typeAdapter}
       />
+
       <ComboboxFormField
         control={control}
-        name={"linkStrength" as Path<T>}
+        name="linkStrength"
         label="Link Strength"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
