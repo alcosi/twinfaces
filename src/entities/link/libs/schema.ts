@@ -9,14 +9,8 @@ import {
 } from "./types";
 
 export const LINK_SCHEMA = z.object({
-  srcTwinClassId: z
-    .string()
-    .uuid("Twin Class ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR),
-  dstTwinClassId: z
-    .string()
-    .uuid("Twin Class ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR),
+  srcTwinClassId: z.string().uuid().or(FIRST_ID_EXTRACTOR),
+  dstTwinClassId: z.string().uuid().or(FIRST_ID_EXTRACTOR),
   name: z.string().min(1, "Name can not be empty"),
   type: z
     .array(z.object({ id: LINK_TYPES_SCHEMA }))

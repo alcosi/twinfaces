@@ -1,13 +1,13 @@
+import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
   FilterFeature,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { LinkFilterKeys, LinkFilters } from "../../api";
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { z } from "zod";
-import { useTwinClassSelectAdapter } from "../../../twinClass/libs/hooks/use-select-adapter";
+import { LinkFilterKeys, LinkFilters } from "../../api";
 import {
   useLinkStrengthSelectAdapter,
   useLinkTypeSelectAdapter,

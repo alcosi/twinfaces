@@ -1,4 +1,14 @@
 import {
+  CreateLinkRequestBody,
+  Link,
+  LINK_SCHEMA,
+  LinkResourceLink,
+  LinkStrengthEnum,
+  LinkTypesEnum,
+  UpdateLinkRequestBody,
+  useCreateLink,
+} from "@/entities/link";
+import {
   TwinClass_DETAILED,
   TwinClassContext,
   TwinClassResourceLink,
@@ -15,16 +25,6 @@ import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import {
-  CreateLinkRequestBody,
-  Link,
-  LINK_SCHEMA,
-  LinkResourceLink,
-  LinkStrengthEnum,
-  LinkTypesEnum,
-  UpdateLinkRequestBody,
-  useCreateLink,
-} from "@/entities/link";
 import { CreateLinkFormFields } from "../links";
 
 const mapLinkToFormPayload = (
@@ -173,7 +173,21 @@ export function TwinClassRelations() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
-    await createLink(formValues);
+    const body: CreateLinkRequestBody = {
+      forwardNameI18n: {
+        translations: {
+          en: formValues.name,
+        },
+      },
+      backwardNameI18n: {
+        translations: {
+          en: formValues.name,
+        },
+      },
+      ...formValues,
+    };
+
+    await createLink(body);
     toast.success("Link created successfully!");
   };
 
@@ -205,7 +219,7 @@ export function TwinClassRelations() {
         dialogForm={forwardLinkForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
-          <CreateLinkFormFields control={forwardLinkForm.control} isForward />
+          <CreateLinkFormFields control={forwardLinkForm.control} />
         )}
       />
 

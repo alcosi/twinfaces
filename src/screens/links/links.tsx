@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CreateLinkRequestBody,
   Link,
   LINK_SCHEMA,
   LinkStrengthEnum,
@@ -12,20 +13,20 @@ import {
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
-} from "@/entities/twinClass";
+} from "@/entities/twin-class";
 import { UserResourceLink } from "@/entities/user";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { Badge, GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { CreateLinkFormFields } from "./form-fields";
-import { useEffect } from "react";
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { useRouter } from "next/navigation";
 
 const colDefs: Record<
   | "id"
@@ -153,7 +154,20 @@ export function LinksScreen() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
-    await createLink(formValues);
+    const body: CreateLinkRequestBody = {
+      forwardNameI18n: {
+        translations: {
+          en: formValues.name,
+        },
+      },
+      backwardNameI18n: {
+        translations: {
+          en: formValues.name,
+        },
+      },
+      ...formValues,
+    };
+    await createLink(body);
     toast.success("Link created successfully!");
   };
 
@@ -188,7 +202,7 @@ export function LinksScreen() {
       dialogForm={linkForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
-        <CreateLinkFormFields control={linkForm.control} enableAllTwinClasses />
+        <CreateLinkFormFields control={linkForm.control} />
       )}
     />
   );

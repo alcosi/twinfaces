@@ -25,15 +25,16 @@ import {
   FactoryPipelineApi,
 } from "@/entities/factory-pipeline";
 import { createFeaturerApi, FeaturerApi } from "@/entities/featurer";
+import { createLinkApi, LinkApi } from "@/entities/link";
 import { createPermissionApi, PermissionApi } from "@/entities/permission";
-import {
-  createPermissionGroupApi,
-  PermissionGroupApi,
-} from "@/entities/permissionGroup";
 import {
   createPermissionSchemaApi,
   PermissionSchemaApi,
 } from "@/entities/permission-schema";
+import {
+  createPermissionGroupApi,
+  PermissionGroupApi,
+} from "@/entities/permissionGroup";
 import {
   createPipelineStepApi,
   PipelineStepApi,
@@ -43,16 +44,12 @@ import {
   PermissionSpaceRoleApi,
 } from "@/entities/spaceRole";
 import { createTwinApi, TwinApi } from "@/entities/twin";
+import { createTwinClassApi, TwinClassApi } from "@/entities/twin-class";
 import {
   createTwinClassFieldApi,
   TwinClassFieldApi,
 } from "@/entities/twin-class-field";
 import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
-import { createTwinClassApi, TwinClassApi } from "@/entities/twin-class";
-import {
-  createTwinClassLinksApi,
-  TwinClassLinkApi,
-} from "@/entities/twin-class-link";
 import { createTwinFlowApi, TwinFlowApi } from "@/entities/twinFlow";
 import {
   createTwinFlowSchemaApi,
@@ -75,7 +72,6 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
-import { createLinkApi, LinkApi } from "@/entities/link/api";
 
 export interface ApiContextProps {
   domain: DomainApi;
