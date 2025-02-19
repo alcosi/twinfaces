@@ -44,7 +44,7 @@ export function TwinFields() {
             valueInfo={{
               type: AutoFormValueType.twinField,
               descriptor: original.descriptor,
-              twinClassId: original.twinClassId!,
+              twinId,
             }}
             schema={resolveTwinFieldSchema(original)}
             renderPreview={(_) => renderTwinFieldPreview(original)}

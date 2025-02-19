@@ -7,7 +7,6 @@ import { TwinFormValues } from "@/entities/twin";
 import { TwinFieldFormField } from "@/widgets/form-fields";
 import { Control } from "react-hook-form";
 import { useTwinClassFields } from "./use-twin-form-fields";
-import { DevTool } from "@hookform/devtools";
 
 export function TwinFormFields({
   control,
@@ -84,8 +83,6 @@ export function TwinFormFields({
           {...optionAdapter}
         />
       )}
-
-      <DevTool control={control} />
     </>
   );
 }
