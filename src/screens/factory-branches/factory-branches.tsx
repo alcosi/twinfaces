@@ -2,6 +2,7 @@
 
 import { Factory, FactoryResourceLink } from "@/entities/factory";
 import {
+  FACTORY_BRANCHE_SCHEMA,
   FactoryBranche,
   useFactoryBrancheFilters,
   useFactoryBranchesSearch,
@@ -15,6 +16,10 @@ import { Check } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FactoryBrancheFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Omit<
@@ -96,6 +101,16 @@ export function FactoryBranchesScreen() {
     setBreadcrumbs([{ label: "Branches", href: "/workspace/branches" }]);
   }, [setBreadcrumbs]);
 
+  const factoryBrancheForm = useForm<z.infer<typeof FACTORY_BRANCHE_SCHEMA>>({
+    resolver: zodResolver(FACTORY_BRANCHE_SCHEMA),
+    defaultValues: {
+      factoryConditionSetId: "",
+      factoryConditionSetInvert: false,
+      description: "",
+      active: false,
+    },
+  });
+
   async function fetchFactoryBranches(
     pagination: PaginationState,
     filters: FiltersState
@@ -109,6 +124,14 @@ export function FactoryBranchesScreen() {
       throw new Error("An error occurred while factory branches: " + error);
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof FACTORY_BRANCHE_SCHEMA>
+  ) => {
+    console.log(formValues);
+    // await createLink(formValues);
+    toast.success("Link created successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -132,6 +155,11 @@ export function FactoryBranchesScreen() {
         colDefs.nextFactory,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={factoryBrancheForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <FactoryBrancheFormFields control={factoryBrancheForm.control} />
+      )}
     />
   );
 }
