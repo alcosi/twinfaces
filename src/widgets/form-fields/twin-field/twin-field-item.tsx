@@ -100,6 +100,7 @@ export function TwinFieldFormItem({
               linkId={descriptor.linkId}
               multi={descriptor.multiple}
               twinId={twinId}
+              {...props}
             />
           );
         } else if (twinClassId) {
@@ -108,6 +109,7 @@ export function TwinFieldFormItem({
               linkId={descriptor.linkId}
               multi={descriptor.multiple}
               twinClassId={twinClassId}
+              {...props}
             />
           );
         }
