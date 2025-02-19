@@ -1,6 +1,6 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryBranchFilters } from "./types";
+import { FactoryBrancheCreateRq, FactoryBranchFilters } from "./types";
 
 export function createFactoryBrancheApi(settings: ApiSettings) {
   function search({
@@ -28,7 +28,20 @@ export function createFactoryBrancheApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function create({ id, body }: { id: string; body: FactoryBrancheCreateRq }) {
+    return settings.client.POST(
+      `/private/factory/{factoryId}/factory_branch/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { factoryId: id },
+        },
+        body: body,
+      }
+    );
+  }
+
+  return { search, create };
 }
 
 export type FactoryBrancheApi = ReturnType<typeof createFactoryBrancheApi>;

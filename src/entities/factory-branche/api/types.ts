@@ -17,6 +17,8 @@ export type FactoryBranche_DETAILED = RequireFields<
 
 export type FactoryBranchSearchRq =
   components["schemas"]["FactoryBranchSearchRqV1"];
+export type FactoryBrancheCreateRq =
+  components["schemas"]["FactoryBranchCreateRqV1"];
 
 export type FactoryBranchFilterKeys =
   | "idList"

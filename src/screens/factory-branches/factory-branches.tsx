@@ -4,6 +4,7 @@ import { Factory, FactoryResourceLink } from "@/entities/factory";
 import {
   FACTORY_BRANCHE_SCHEMA,
   FactoryBranche,
+  useFactoryBrancheCreate,
   useFactoryBrancheFilters,
   useFactoryBranchesSearch,
 } from "@/entities/factory-branche";
@@ -96,6 +97,7 @@ export function FactoryBranchesScreen() {
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryBrancheFilters();
+  const { createFactoryBranche } = useFactoryBrancheCreate();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Branches", href: "/workspace/branches" }]);
@@ -104,10 +106,12 @@ export function FactoryBranchesScreen() {
   const factoryBrancheForm = useForm<z.infer<typeof FACTORY_BRANCHE_SCHEMA>>({
     resolver: zodResolver(FACTORY_BRANCHE_SCHEMA),
     defaultValues: {
+      factoryId: "",
       factoryConditionSetId: "",
       factoryConditionSetInvert: false,
       description: "",
       active: false,
+      nextFactoryId: "",
     },
   });
 
@@ -128,8 +132,9 @@ export function FactoryBranchesScreen() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof FACTORY_BRANCHE_SCHEMA>
   ) => {
-    console.log(formValues);
-    // await createLink(formValues);
+    const { factoryId, ...body } = formValues;
+
+    await createFactoryBranche({ id: factoryId, body });
     toast.success("Link created successfully!");
   };
 
