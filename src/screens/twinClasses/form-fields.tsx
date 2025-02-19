@@ -16,18 +16,18 @@ import {
 import { isFalsy, isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
 import { useState } from "react";
-import { Control, Path, PathValue, useWatch } from "react-hook-form";
+import { Control, useWatch } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 
-export function TwinClassFormFields<T extends TwinClassFieldValues>({
+export function TwinClassFormFields({
   control,
 }: {
-  control: Control<T>;
+  control: Control<TwinClassFieldValues>;
 }) {
-  const headTwinClass = useWatch<T>({
+  const headTwinClass = useWatch({
     control,
-    name: "headTwinClass" as Path<T>,
-    // TODO: Fix type for `defaultValue`, ensuring it matches `PathValue<T, "headTwinClass">`.
-    defaultValue: [] as PathValue<T, any>,
+    name: "headTwinClass",
+    defaultValue: [],
   });
 
   const tcAdapter = useTwinClassSelectAdapter();
@@ -43,22 +43,22 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
     <>
       <TextFormField
         control={control}
-        name={"key" as Path<T>}
+        name="key"
         label="Key"
         autoFocus={true}
       />
 
-      <TextFormField control={control} name={"name" as Path<T>} label="Name" />
+      <TextFormField control={control} name="name" label="Name" />
 
       <TextAreaFormField
         control={control}
-        name={"description" as Path<T>}
+        name="description"
         label="Description"
       />
 
       <ComboboxFormField
         control={control}
-        name={"twinClassOwnerTypes" as Path<T>}
+        name="ownerType"
         label="Owner type"
         selectPlaceholder="Select owner type"
         searchPlaceholder="Search owner type..."
@@ -68,19 +68,15 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
       <CheckboxFormField
         control={control}
-        name={"abstractClass" as Path<T>}
+        name="abstractClass"
         label="Is abstract"
       />
 
-      <TextFormField
-        control={control}
-        name={"logo" as Path<T>}
-        label="Logo URL"
-      />
+      <TextFormField control={control} name="logo" label="Logo URL" />
 
       <ComboboxFormField
         control={control}
-        name={"headTwinClass" as Path<T>}
+        name="headTwinClass"
         label="Head"
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
@@ -92,7 +88,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
         <FeaturerFormField
           typeId={FeaturerTypes.headHunter}
           control={control}
-          name={"headHunterFeaturer" as Path<T>}
+          name="headHunterFeaturerId"
           label="Head Hunter"
           paramsFieldName="headHunterParams"
         />
@@ -100,7 +96,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
       <ComboboxFormField
         control={control}
-        name={"extendsTwinClassId" as Path<T>}
+        name="extendsTwinClassId"
         label="Extends"
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
@@ -110,7 +106,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
       <ComboboxFormField
         control={control}
-        name={"markerDataListId" as Path<T>}
+        name="markerDataListId"
         label="Markers list"
         selectPlaceholder="Select datalist"
         searchPlaceholder="Search datalist..."
@@ -120,7 +116,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
       <ComboboxFormField
         control={control}
-        name={"tagDataListId" as Path<T>}
+        name="tagDataListId"
         label="Tags list"
         selectPlaceholder="Select datalist"
         searchPlaceholder="Search datalist..."
@@ -130,7 +126,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
       <CheckboxFormField
         control={control}
-        name={"autoCreatePermissions" as Path<T>}
+        name="autoCreatePermissions"
         label="Auto create permissions"
         onClick={() => setIsAutoCreatePermission((prev) => !prev)}
       />
@@ -140,7 +136,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           <legend className="text-sm font-medium italic">Permissions</legend>
           <ComboboxFormField
             control={control}
-            name={"createPermissionId" as Path<T>}
+            name="createPermissionId"
             label="Create"
             selectPlaceholder="Select create permission"
             searchPlaceholder="Search create permission..."
@@ -150,7 +146,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
           <ComboboxFormField
             control={control}
-            name={"viewPermissionId" as Path<T>}
+            name="viewPermissionId"
             label="View"
             selectPlaceholder="Select view permission"
             searchPlaceholder="Search view permission..."
@@ -160,7 +156,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
           <ComboboxFormField
             control={control}
-            name={"editPermissionId" as Path<T>}
+            name="editPermissionId"
             label="Edit"
             selectPlaceholder="Select edit permission"
             searchPlaceholder="Search edit permission..."
@@ -170,7 +166,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
 
           <ComboboxFormField
             control={control}
-            name={"deletePermissionId" as Path<T>}
+            name="deletePermissionId"
             label=" Delete"
             selectPlaceholder="Select delete permission"
             searchPlaceholder="Search delete permission..."
@@ -183,7 +179,7 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
       <CheckboxFormItem
         fieldValue={isSpaceChecked}
         label="Space"
-        name={"space" as Path<T>}
+        name="space"
         onClick={() => setIsSpaceChecked((prev) => !prev)}
       />
 
@@ -192,29 +188,31 @@ export function TwinClassFormFields<T extends TwinClassFieldValues>({
           <legend className="text-sm font-medium italic">Spaces</legend>
           <CheckboxFormField
             control={control}
-            name={"permissionSchemaSpace" as Path<T>}
+            name="permissionSchemaSpace"
             label="Permission schema space"
           />
 
           <CheckboxFormField
             control={control}
-            name={"twinflowSchemaSpace" as Path<T>}
+            name="twinflowSchemaSpace"
             label="Twinflow schema space"
           />
 
           <CheckboxFormField
             control={control}
-            name={"twinClassSchemaSpace" as Path<T>}
+            name="twinClassSchemaSpace"
             label="Twin class schema space"
           />
 
           <CheckboxFormField
             control={control}
-            name={"aliasSpace" as Path<T>}
+            name="aliasSpace"
             label="Alias space"
           />
         </fieldset>
       )}
+
+      <DevTool control={control} />
     </>
   );
 }

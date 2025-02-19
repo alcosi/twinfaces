@@ -2,6 +2,7 @@
 
 import { ImageWithFallback } from "@/components/image-with-fallback";
 import { DatalistResourceLink } from "@/entities/datalist";
+import { PermissionResourceLink } from "@/entities/permission";
 import {
   TWIN_CLASSES_SCHEMA,
   TwinClass_DETAILED,
@@ -13,7 +14,6 @@ import {
 } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { ApiContext, PagedResponse } from "@/shared/api";
-import { pluckProperty } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
@@ -29,7 +29,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { TwinClassFormFields } from "./form-fields";
-import { PermissionResourceLink } from "@/entities/permission";
 
 const colDefs: Record<
   keyof Pick<
@@ -274,7 +273,7 @@ export function TwinClasses() {
       description: "",
       abstractClass: false,
       headTwinClass: null,
-      headHunterFeaturerId: 0,
+      headHunterFeaturerId: undefined,
       headHunterParams: {},
       extendsTwinClassId: null,
       logo: "",

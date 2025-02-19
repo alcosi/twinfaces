@@ -2,8 +2,13 @@ import {
   FEATURER_ID_EXTRACTOR,
   FEATURER_PARAMS_VALUE,
 } from "@/entities/featurer";
-import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
+import {
+  FIRST_ID_EXTRACTOR,
+  isPopulatedArray,
+  REGEX_PATTERNS,
+} from "@/shared/libs";
 import { z } from "zod";
+import { TwinClass } from "../api";
 
 export const OWNER_TYPES = [
   "SYSTEM",
@@ -29,9 +34,22 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .string()
     .optional()
     .or(z.literal("").transform(() => undefined)),
+  ownerType: z
+    .array(
+      z.object({
+        id: z.enum(OWNER_TYPES),
+      })
+    )
+    .min(1, "Required")
+    .transform((arr) =>
+      isPopulatedArray<{ id: TwinClass["ownerType"] }>(arr)
+        ? arr[0].id
+        : undefined
+    )
+    .optional(),
   abstractClass: z.boolean(),
   headTwinClass: z.array(z.object({ id: z.string().uuid() })).nullable(),
-  headHunterFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
+  headHunterFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR).optional(),
   headHunterParams: FEATURER_PARAMS_VALUE,
   extendsTwinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),
   logo: z
