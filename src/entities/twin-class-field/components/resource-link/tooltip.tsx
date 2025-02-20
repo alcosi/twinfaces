@@ -1,8 +1,8 @@
 import { isPopulatedString } from "@/shared/libs";
-import { ResourceLinkTooltip, GuidWithCopy } from "@/shared/ui";
-import { Puzzle } from "lucide-react";
+import { GuidWithCopy, ResourceLinkTooltip } from "@/shared/ui";
 import { TwinClassField_DETAILED } from "../../api";
 import { ENTITY_COLOR } from "../../libs";
+import { FieldIcon } from "../field-icon";
 
 type Props = {
   data: TwinClassField_DETAILED;
@@ -15,7 +15,7 @@ export const TwinClassFieldResourceTooltip = ({ data, link }: Props) => {
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}
-        iconSource={Puzzle}
+        iconSource={FieldIcon}
       />
 
       <ResourceLinkTooltip.Main>

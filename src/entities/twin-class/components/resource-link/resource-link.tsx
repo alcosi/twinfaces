@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
-import { LayoutTemplate } from "lucide-react";
 import { TwinClass_DETAILED } from "../../api";
+import { TwinClassIcon } from "../twin-class-icon";
 import { TwinClassResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -20,7 +20,7 @@ export const TwinClassResourceLink = ({
   return (
     <ResourceLink
       IconComponent={
-        data.logo ? () => <Avatar url={data.logo} size="sm" /> : LayoutTemplate
+        data.logo ? () => <Avatar url={data.logo} size="sm" /> : TwinClassIcon
       }
       data={data}
       disabled={disabled}

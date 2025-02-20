@@ -1,13 +1,13 @@
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twin-class";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { Braces } from "lucide-react";
 import { Twin } from "../../api";
 import { formatTwinDisplay } from "../../libs";
+import { TwinIcon } from "../twin-icon";
 
 type Props = {
   data: Twin;
@@ -19,7 +19,7 @@ export function TwinResourceTooltip({ data, link }: Props) {
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
         title={formatTwinDisplay(data)}
-        iconSource={Braces}
+        iconSource={TwinIcon}
       />
 
       <ResourceLinkTooltip.Main>

@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { BookKey } from "lucide-react";
 import { PermissionGroup } from "../../api";
+import { PermissionGroupIcon } from "../permission-group-icon";
 import { PermissionGroupResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -19,7 +19,7 @@ export const PermissionGroupResourceLink = ({
 
   return (
     <ResourceLink
-      IconComponent={() => <BookKey className="h-4 w-4" />}
+      IconComponent={() => <PermissionGroupIcon className="h-4 w-4" />}
       data={data}
       disabled={disabled}
       renderTooltip={

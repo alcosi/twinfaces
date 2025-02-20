@@ -1,8 +1,8 @@
-import { GuidWithCopy } from "@/shared/ui/guid";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { Key } from "lucide-react";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { Permission } from "../../api";
+import { PermissionIcon } from "../permission-icon";
 
 type Props = {
   data: Permission;
@@ -15,7 +15,7 @@ export function PermissionResourceTooltip({ data, link }: Props) {
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}
-        iconSource={Key}
+        iconSource={PermissionIcon}
       />
 
       <ResourceLinkTooltip.Main>

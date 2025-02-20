@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { Puzzle } from "lucide-react";
 import { TwinClassField_DETAILED } from "../../api";
+import { FieldIcon } from "../field-icon";
 import { TwinClassFieldResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -19,7 +19,7 @@ export const TwinClassFieldResourceLink = ({
 
   return (
     <ResourceLink
-      IconComponent={Puzzle}
+      IconComponent={FieldIcon}
       data={data}
       disabled={disabled}
       renderTooltip={
