@@ -1,17 +1,18 @@
+import { PermissionIcon } from "@/entities/permission";
+import { PermissionGroupIcon } from "@/entities/permissionGroup";
+import { TwinIcon } from "@/entities/twin";
+import { TwinClassIcon } from "@/entities/twin-class";
+import { FieldIcon } from "@/entities/twin-class-field";
 import {
   Activity,
   ArrowRightLeft,
   Asterisk,
-  BookKey,
-  Braces,
   BriefcaseBusiness,
   CircleDot,
   Eraser,
   Factory,
   Fence,
   Footprints,
-  Key,
-  LayoutTemplate,
   Leaf,
   Link2,
   ListTree,
@@ -19,7 +20,6 @@ import {
   Option,
   Paperclip,
   Play,
-  Puzzle,
   Scroll,
   Shapes,
   Split,
@@ -37,12 +37,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Classes",
         url: "/workspace/twinclass",
-        icon: LayoutTemplate,
+        icon: TwinClassIcon,
       },
       {
         title: "Fields",
         url: "/workspace/fields",
-        icon: Puzzle,
+        icon: FieldIcon,
       },
       {
         title: "Statuses",
@@ -62,7 +62,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Twins",
         url: "/workspace/twins",
-        icon: Braces,
+        icon: TwinIcon,
       },
       {
         title: "Comments",
@@ -117,12 +117,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Permissions",
         url: "/workspace/permissions",
-        icon: Key,
+        icon: PermissionIcon,
       },
       {
         title: "Permission Groups",
         url: "/workspace/permission-group",
-        icon: BookKey,
+        icon: PermissionGroupIcon,
       },
       {
         title: "Schemas",

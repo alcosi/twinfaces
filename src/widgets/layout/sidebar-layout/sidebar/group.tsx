@@ -71,7 +71,8 @@ export function GroupSection({ group }: { group: Group }) {
           >
             <SidebarMenuButton>
               <item.icon
-                className={cn("w-4 h-4", isActive && "stroke-[3px]")}
+                className={cn("w-4 h-4")}
+                strokeWidth={isActive ? 3 : undefined}
               />
               {!isCompact && <span>{item.title}</span>}
             </SidebarMenuButton>

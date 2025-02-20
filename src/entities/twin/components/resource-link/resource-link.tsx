@@ -1,7 +1,7 @@
 import { ResourceLink } from "@/shared/ui";
-import { Braces } from "lucide-react";
 import { Twin } from "../../api";
 import { formatTwinDisplay } from "../../libs";
+import { TwinIcon } from "../twin-icon";
 import { TwinResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -15,7 +15,7 @@ export function TwinResourceLink({ data, disabled, withTooltip }: Props) {
 
   return (
     <ResourceLink
-      IconComponent={Braces}
+      IconComponent={TwinIcon}
       data={data}
       disabled={disabled}
       renderTooltip={

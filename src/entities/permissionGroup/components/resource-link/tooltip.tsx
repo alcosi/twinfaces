@@ -4,8 +4,8 @@ import {
 } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { BookKey } from "lucide-react";
 import { PermissionGroup } from "../../api";
+import { PermissionGroupIcon } from "../permission-group-icon";
 
 type Props = {
   data: PermissionGroup;
@@ -18,7 +18,7 @@ export function PermissionGroupResourceTooltip({ data, link }: Props) {
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}
-        iconSource={BookKey}
+        iconSource={PermissionGroupIcon}
       />
 
       <ResourceLinkTooltip.Main>
