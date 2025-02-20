@@ -5,16 +5,9 @@ import { useContext, useEffect } from "react";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { FactoryPipelineContext } from "@/features/factory-pipeline";
 import { Tab, TabsLayout } from "@/widgets/layout";
+import { PipelineStepsTable } from "@/widgets/tables";
 
 import { FactoryPipelineGeneral } from "./views";
-
-const tabs: Tab[] = [
-  {
-    key: "general",
-    label: "General",
-    content: <FactoryPipelineGeneral />,
-  },
-];
 
 export function FactoryPipelineScreen() {
   const { pipelineId, pipeline } = useContext(FactoryPipelineContext);
@@ -33,7 +26,20 @@ export function FactoryPipelineScreen() {
         href: `/workspace/pipelines/${pipelineId}`,
       },
     ]);
-  }, [pipelineId, pipeline.factory.name]);
+  }, [pipelineId, pipeline.factory.name, setBreadcrumbs, pipeline.factory.key]);
+
+  const tabs: Tab[] = [
+    {
+      key: "general",
+      label: "General",
+      content: <FactoryPipelineGeneral />,
+    },
+    {
+      key: "steps",
+      label: "Steps",
+      content: <PipelineStepsTable pipelineId={pipelineId} />,
+    },
+  ];
 
   return <TabsLayout tabs={tabs} />;
 }

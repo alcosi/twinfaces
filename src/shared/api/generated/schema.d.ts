@@ -64,6 +64,8 @@ export interface paths {
   "/private/tier/{tierId}/v1": {
     /** tier for update */
     put: operations["tierUpdateV1"];
+    /** Delete tier by id */
+    delete: operations["tierServiceDeleteV1"];
   };
   "/private/permission_grant/user_group/{permissionGrantUserGroupId}/v1": {
     /** Update permission grant user group */
@@ -3170,6 +3172,10 @@ export interface components {
       twin?: components["schemas"]["TwinBaseV1"];
     };
     TierUpdateRqV1: {
+      tier?: components["schemas"]["TierUpdateV1"];
+    };
+    /** @description tier update */
+    TierUpdateV1: {
       /**
        * @description name
        * @example Some name
@@ -7678,6 +7684,10 @@ export interface components {
       transition?: components["schemas"]["TwinflowTransitionBaseV2"][];
     };
     TierCreateRqV1: {
+      tier?: components["schemas"]["TierCreateV1"];
+    };
+    /** @description tier create */
+    TierCreateV1: {
       /**
        * @description name
        * @example Some name
@@ -7729,12 +7739,6 @@ export interface components {
        * @example Some description
        */
       description?: string;
-      /**
-       * Format: uuid
-       * @description id
-       * @example 64807201-e3d6-4016-b699-b36c5f91c58e
-       */
-      id?: string;
     };
     TierRsV1: {
       /**
@@ -7799,6 +7803,16 @@ export interface components {
        * @description user count quota
        */
       userCountQuota?: number;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
+       * Format: date-time
+       * @description updated at
+       */
+      updatedAt?: string;
       permissionSchema?: components["schemas"]["PermissionSchemaV1"];
       twinflowSchema?: components["schemas"]["TwinflowSchemaV1"];
       twinClassSchema?: components["schemas"]["TwinClassSchemaV1"];
@@ -9663,20 +9677,20 @@ export interface components {
        * @example en
        */
       currentLocale?: {
-        language?: string;
         displayName?: string;
-        country?: string;
-        variant?: string;
         script?: string;
+        variant?: string;
         unicodeLocaleAttributes?: string[];
         unicodeLocaleKeys?: string[];
         displayLanguage?: string;
         displayScript?: string;
         displayCountry?: string;
         displayVariant?: string;
+        country?: string;
         extensionKeys?: string[];
         iso3Language?: string;
         iso3Country?: string;
+        language?: string;
       };
       /**
        * Format: date-time
@@ -11953,10 +11967,41 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Updated tier data */
+      /** @description Tier data updated successfully */
       200: {
         content: {
           "application/json": components["schemas"]["DataListOptionRsV3"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Delete tier by id */
+  tierServiceDeleteV1: {
+    parameters: {
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 64807201-e3d6-4016-b699-b36c5f91c58e */
+        tierId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Response"];
         };
       };
       /** @description Access is denied */
@@ -16551,7 +16596,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Tier add */
+      /** @description Tier added successfully */
       200: {
         content: {
           "application/json": components["schemas"]["TierRsV1"];
