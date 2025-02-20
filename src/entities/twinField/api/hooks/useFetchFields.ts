@@ -13,7 +13,9 @@ export const useFetchFields = () => {
       twinId,
     }: {
       twinId: string;
-    }): Promise<PagedResponse<TwinFieldUI>> => {
+    }): Promise<
+      PagedResponse<TwinFieldUI & { twinClassId: string | undefined }>
+    > => {
       const { data, error } = await api.twin.getFieldsById({ twinId });
 
       if (error) {
@@ -32,7 +34,12 @@ export const useFetchFields = () => {
         })
       );
 
-      return { data: twinFields, pagination: {} };
+      const extendedTwinFields = twinFields.map((field) => ({
+        ...field,
+        twinClassId: data.twin?.twinClassId,
+      }));
+
+      return { data: extendedTwinFields, pagination: {} };
     },
     [api]
   );

@@ -87,6 +87,7 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
           showTwinClass2LinkMode: "DETAILED",
           showTwinField2UserMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
         },
       },
     });
