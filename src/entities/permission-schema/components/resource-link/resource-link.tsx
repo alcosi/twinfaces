@@ -1,7 +1,7 @@
-import { isPopulatedString, isUndefined } from "@/shared/libs";
+import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { Scroll } from "lucide-react";
 import { PermissionSchema } from "../../api";
+import { PermissionSchemaIcon } from "../permission-schema-icon";
 import { PermissionSchemaResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -19,7 +19,7 @@ export const PermissionSchemaResourceLink = ({
 
   return (
     <ResourceLink
-      IconComponent={() => <Scroll className="h-4 w-4" />}
+      IconComponent={PermissionSchemaIcon}
       data={data}
       disabled={disabled}
       renderTooltip={
