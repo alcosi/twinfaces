@@ -1,6 +1,9 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { DatalistOptionResourceLink } from "@/entities/datalist-option";
+import {
+  DatalistOptionResourceLink,
+  useDatalistOptionSelectAdapter,
+} from "@/entities/datalist-option";
 import { TwinResourceLink, TwinUpdateRq } from "@/entities/twin";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import {
@@ -14,7 +17,7 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatToTwinfaceDate, isPopulatedArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
@@ -28,6 +31,7 @@ export function TwinGeneral() {
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
   const uAdapter = useUserSelectAdapter();
+  const tAdapter = useDatalistOptionSelectAdapter();
 
   async function updateTwin(newTwin: TwinUpdateRq) {
     if (!twin) {
@@ -82,6 +86,60 @@ export function TwinGeneral() {
       return updateTwin({
         description: value as string,
       });
+    },
+  };
+
+  const initialTagAutoDialogSettings: AutoEditDialogSettings = {
+    value: { tags: twin.tags ?? [] },
+    title: "Update Tags",
+    onSubmit: (values) => {
+      const updTags = {
+        existingTags: [] as string[],
+        newTags: [] as string[],
+        deleteTags: [] as string[],
+      };
+      const newTags = Array.isArray(values.tags) ? values.tags : [];
+
+      newTags.forEach((tag: any) => {
+        if (typeof tag === "string") {
+          updTags.newTags.push(tag);
+        } else if (typeof tag === "object" && tag.id) {
+          const existsInTwin =
+            twin.tags?.some((item) => item.id === tag.id) ?? false;
+          if (!existsInTwin) {
+            updTags.existingTags.push(tag.id);
+          }
+        }
+      });
+      updTags.deleteTags = (twin.tags ?? [])
+        .filter(
+          (item) =>
+            !newTags.some(
+              (tag: string | { id: string }) =>
+                typeof tag === "object" && tag.id === item.id
+            )
+        )
+        .map((item) => item.id)
+        .filter((id): id is string => id !== undefined);
+
+      return updateTwin({ tagsUpdate: updTags });
+    },
+
+    valuesInfo: {
+      tags: {
+        type: AutoFormValueType.combobox,
+        label: "Tags",
+        selectPlaceholder: "Select tag...",
+        creatable: true,
+        multi: true,
+        ...tAdapter,
+        getItems: (search: string) =>
+          twin?.twinClass?.tagsDataListId
+            ? tAdapter.getItems(twin.twinClassId, search, {
+                dataListIdList: [twin.twinClass.tagsDataListId],
+              })
+            : Promise.resolve([]),
+      },
     },
   };
 
@@ -210,18 +268,17 @@ export function TwinGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(initialTagAutoDialogSettings)}
+          >
             <TableCell>Tags</TableCell>
             <TableCell>
-              {twin.twinClass?.tagsDataListId && twin.tags && (
-                <div className="max-w-48 inline-flex">
-                  <DatalistOptionResourceLink
-                    data={{
-                      ...twin.tags,
-                      dataListId: twin.twinClass?.tagsDataListId,
-                    }}
-                    withTooltip
-                  />
+              {isPopulatedArray(twin.tags) && (
+                <div className="max-w-48 inline-flex flex-wrap gap-2">
+                  {twin.tags.map((tag) => (
+                    <DatalistOptionResourceLink key={tag.id} data={tag} />
+                  ))}
                 </div>
               )}
             </TableCell>

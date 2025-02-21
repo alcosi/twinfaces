@@ -8,21 +8,27 @@ import {
   DataListOptionV3,
   useDatalistOptionSearch,
 } from "../../api";
+import { useTagSearch } from "@/entities/twin-class/api/hooks/use-tag-search";
+import { TagListOptionFilter } from "@/entities/twin-class";
 
 export function useDatalistOptionSelectAdapter(): SelectAdapter<DataListOptionV3> {
-  const { searchDatalistOptions } = useDatalistOptionSearch();
+  // const { searchDatalistOptions } = useDatalistOptionSearch();
+  const { searchTagListOptions } = useTagSearch();
 
   async function getById(id: string) {
-    const response = await searchDatalistOptions({
-      filters: {
-        idList: [id],
-      },
+    const response = await searchTagListOptions({
+      twinClassId: id,
     });
     return response.data[0];
   }
 
-  async function getItems(search: string, filters?: DataListOptionFilters) {
-    const response = await searchDatalistOptions({
+  async function getItems(
+    id: string,
+    search: string,
+    filters?: TagListOptionFilter
+  ) {
+    const response = await searchTagListOptions({
+      twinClassId: id,
       filters: {
         optionLikeList: isPopulatedString(search)
           ? [wrapWithPercent(search)]
@@ -44,8 +50,8 @@ export function useDatalistOptionSelectAdapter(): SelectAdapter<DataListOptionV3
 
   return {
     getById,
-    getItems: (search, options) =>
-      getItems(search, options as DataListOptionFilters),
+    getItems: (id, search, options) =>
+      getItems(id, search, options as TagListOptionFilter),
     renderItem,
   };
 }

@@ -3,6 +3,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { components, operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
 import {
+  TagListOptionFilter,
   TwinClassCreateRq,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
@@ -177,7 +178,39 @@ export function createTwinClassApi(settings: ApiSettings) {
     );
   }
 
+  function searchTags({
+    twinClassId,
+    pagination,
+    filters,
+  }: {
+    twinClassId: string;
+    pagination: PaginationState;
+    filters: TagListOptionFilter;
+  }) {
+    return settings.client.POST(
+      "/private/twin_class/{twinClassId}/tag/search/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { twinClassId },
+          query: {
+            lazyRelation: false,
+            //showDataListMode: "DETAILED",
+            showDataListOptionMode: "DETAILED",
+            offset: pagination.pageIndex * pagination.pageSize,
+            limit: pagination.pageSize,
+            sortAsc: false,
+          },
+        },
+        body: {
+          ...filters, // body: filters ?? {},
+        },
+      }
+    );
+  }
+
   return {
+    searchTags,
     search,
     getByKey,
     getById,

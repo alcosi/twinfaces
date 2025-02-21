@@ -36,14 +36,16 @@ export function useTwinClassFields(control: Control<TwinFormValues>) {
     headAdapter: {
       ...headAdapter,
       getItems: (search: string) =>
-        headAdapter.getItems(search, { twinClassId: selectedTwinClass?.id }),
+        headAdapter.getItems(selectedTwinClass?.id || "", search, {
+          twinClassId: selectedTwinClass?.id,
+        }),
     },
     hasTagDataList: Boolean(selectedTwinClass?.tagsDataListId),
     optionAdapter: {
       ...optionAdapter,
       getItems: (search: string) =>
         selectedTwinClass?.tagsDataListId
-          ? optionAdapter.getItems(search, {
+          ? optionAdapter.getItems(selectedTwinClass.id, search, {
               dataListIdList: [selectedTwinClass.tagsDataListId],
             })
           : Promise.resolve([]),
