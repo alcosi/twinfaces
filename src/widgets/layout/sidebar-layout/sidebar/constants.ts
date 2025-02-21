@@ -4,8 +4,8 @@ import { TwinIcon } from "@/entities/twin";
 import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";
 import { TwinFlowIcon } from "@/entities/twin-flow";
+import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
 import {
-  ArrowRightLeft,
   Asterisk,
   BriefcaseBusiness,
   CircleDot,
@@ -177,7 +177,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Transitions",
         url: "/workspace/transitions",
-        icon: ArrowRightLeft,
+        icon: TwinFlowTransitionIcon,
       },
       {
         title: "Twinflows",

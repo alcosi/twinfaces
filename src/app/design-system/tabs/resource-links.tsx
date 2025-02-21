@@ -5,7 +5,7 @@ import { TwinClassResourceLink } from "@/entities/twin-class";
 import { TwinClassFieldResourceLink } from "@/entities/twin-class-field";
 import { TwinFlowResourceLink } from "@/entities/twin-flow";
 import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
-import { TwinFlowTransitionResourceLink } from "@/entities/twinFlowTransition";
+import { TwinFlowTransitionResourceLink } from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
 import { UserGroupResourceLink } from "@/entities/userGroup";

@@ -1,5 +1,5 @@
 import { TextFormField } from "@/components/form-fields";
-import { TwinFlowTransitionFormValues } from "@/entities/twinFlowTransition";
+import { TwinFlowTransitionFormValues } from "@/entities/twin-flow-transition";
 import { TwinStatusSelectField } from "@/features/twinStatus";
 import { Control } from "react-hook-form";
 

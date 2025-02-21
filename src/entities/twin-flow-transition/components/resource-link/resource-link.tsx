@@ -3,6 +3,7 @@ import { ResourceLink } from "@/shared/ui";
 import { ArrowRightLeft } from "lucide-react";
 import { TwinFlowTransition_DETAILED } from "../../api";
 import { TwinFlowTransitionResourceTooltip } from "./tooltip";
+import { TwinFlowTransitionIcon } from "../twin-flow-transition-icon";
 
 type Props = {
   data: TwinFlowTransition_DETAILED;
@@ -23,7 +24,8 @@ export function TwinFlowTransitionResourceLink({
 
   return (
     <ResourceLink
-      IconComponent={() => <ArrowRightLeft className="h-4 w-4" />}
+      // IconComponent={() => <ArrowRightLeft className="h-4 w-4" />}
+      IconComponent={TwinFlowTransitionIcon}
       data={data}
       disabled={disabled}
       renderTooltip={

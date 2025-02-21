@@ -5,7 +5,7 @@ import { PermissionResourceLink } from "@/entities/permission";
 import {
   TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
-} from "@/entities/twinFlowTransition";
+} from "@/entities/twin-flow-transition";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";

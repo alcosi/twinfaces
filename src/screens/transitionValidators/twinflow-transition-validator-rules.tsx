@@ -6,7 +6,7 @@ import {
   useTwinFlowTransitionValidatorRulesSearch,
   VALIDATOR_RULES_SCHEMA,
   ValidatorRulesFormValues,
-} from "@/entities/twinFlowTransition";
+} from "@/entities/twin-flow-transition";
 import { useRef } from "react";
 import { DataTableHandle } from "@/widgets/crud-data-table";
 import { ColumnDef } from "@tanstack/table-core";

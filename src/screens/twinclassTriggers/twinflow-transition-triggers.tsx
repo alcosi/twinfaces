@@ -5,7 +5,7 @@ import {
   TwinFlowTransitionTrigger,
   TwinFlowTransitionTriggerUpdate,
   useTwinFlowTransitionTriggersSearch,
-} from "@/entities/twinFlowTransition";
+} from "@/entities/twin-flow-transition";
 import { ApiContext } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";

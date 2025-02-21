@@ -8,7 +8,7 @@ import {
   TwinFlowTransitionResourceLink,
   useTwinFlowTransitionFilters,
   useTwinFlowTransitionSearchV1,
-} from "@/entities/twinFlowTransition";
+} from "@/entities/twin-flow-transition";
 import {
   TwinClassStatusResourceLink,
   TwinStatus,

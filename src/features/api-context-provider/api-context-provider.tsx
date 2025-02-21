@@ -58,7 +58,7 @@ import {
 import {
   createTwinFlowTransitionApi,
   TwinFlowTransitionApi,
-} from "@/entities/twinFlowTransition";
+} from "@/entities/twin-flow-transition";
 import {
   createPermissionTwinRoleApi,
   PermissionTwinRoleApi,
