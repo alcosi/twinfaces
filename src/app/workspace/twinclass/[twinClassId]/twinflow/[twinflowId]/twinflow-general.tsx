@@ -4,7 +4,7 @@ import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twin-class";
-import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twinFlow";
+import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twin-flow";
 import {
   TwinClassStatusResourceLink,
   TwinStatus,

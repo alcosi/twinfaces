@@ -3,8 +3,8 @@ import { PermissionGroupIcon } from "@/entities/permissionGroup";
 import { TwinIcon } from "@/entities/twin";
 import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";
+import { TwinFlowIcon } from "@/entities/twin-flow";
 import {
-  Activity,
   ArrowRightLeft,
   Asterisk,
   BriefcaseBusiness,
@@ -182,7 +182,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Twinflows",
         url: "/workspace/twinflows",
-        icon: Activity,
+        icon: TwinFlowIcon,
       },
       {
         title: "Schemas",

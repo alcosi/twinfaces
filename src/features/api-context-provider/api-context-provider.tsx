@@ -50,7 +50,7 @@ import {
   TwinClassFieldApi,
 } from "@/entities/twin-class-field";
 import { createTwinStatusApi, TwinStatusApi } from "@/entities/twin-status";
-import { createTwinFlowApi, TwinFlowApi } from "@/entities/twinFlow";
+import { createTwinFlowApi, TwinFlowApi } from "@/entities/twin-flow";
 import {
   createTwinFlowSchemaApi,
   TwinFlowSchemaApi,

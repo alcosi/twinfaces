@@ -1,5 +1,5 @@
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { TwinFlow, useTwinFlowSearchV1 } from "@/entities/twinFlow";
+import { TwinFlow, useTwinFlowSearchV1 } from "@/entities/twin-flow";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 type TwinFlowContextType = {
