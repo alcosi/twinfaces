@@ -6,7 +6,8 @@ import {
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { FACTORY_BRANCH_SCHEMA } from "@/entities/factory-branch";
 import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
-import { isPopulatedArray } from "@/shared/libs";
+import { isTruthy } from "@/shared/libs";
+import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -18,7 +19,7 @@ export function FactoryBranchFormFields({
   const fcsAdapter = useFactoryConditionSetSelectAdapter();
   const fAdapter = useFactorySelectAdapter();
   const fWatch = useWatch({ control, name: "factoryId" });
-  const disabled = isPopulatedArray(fWatch);
+  const disabled = useRef(isTruthy(fWatch)).current;
 
   return (
     <>
