@@ -3,7 +3,7 @@ import {
   PermissionGroup_DETAILED,
   useFetchPermissionGroupById,
   usePermissionGroupSearchV1,
-} from "@/entities/permissionGroup";
+} from "@/entities/permission-group";
 import { useEffect, useState } from "react";
 import { Control, FieldValues, Path, useWatch } from "react-hook-form";
 

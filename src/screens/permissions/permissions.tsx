@@ -12,7 +12,7 @@ import { PermissionResourceLink } from "@/entities/permission/components/resourc
 import {
   PermissionGroup,
   PermissionGroupResourceLink,
-} from "@/entities/permissionGroup";
+} from "@/entities/permission-group";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
