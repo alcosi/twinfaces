@@ -1,3 +1,4 @@
+import { FactoryBranchIcon } from "@/entities/factory-branch";
 import { FactoryPipelineIcon } from "@/entities/factory-pipeline";
 import { FactoryPipelineStepIcon } from "@/entities/factory-pipeline-step";
 import { PermissionIcon } from "@/entities/permission";
@@ -8,14 +9,13 @@ import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";
 import { TwinFlowIcon } from "@/entities/twin-flow";
 import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
-import { FactoryBranchIcon } from "@/shared/ui/icons/factory-branch-icon";
+import { TierIcon } from "@/shared/ui/icons/tier-icon";
 import {
   Asterisk,
   BriefcaseBusiness,
   CircleDot,
   Eraser,
   Factory,
-  Leaf,
   Link2,
   ListTree,
   MessageCircle,
@@ -202,7 +202,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Tiers",
         url: "/workspace/tiers",
-        icon: Leaf,
+        icon: TierIcon,
       },
     ],
   },
