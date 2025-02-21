@@ -1,5 +1,6 @@
 import { PermissionIcon } from "@/entities/permission";
 import { PermissionGroupIcon } from "@/entities/permission-group";
+import { PermissionSchemaIcon } from "@/entities/permission-schema/components/permission-schema-icon";
 import { TwinIcon } from "@/entities/twin";
 import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";
@@ -20,7 +21,6 @@ import {
   Option,
   Paperclip,
   Play,
-  Scroll,
   Shapes,
   Split,
   SquareActivity,
@@ -127,7 +127,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Schemas",
         url: "/workspace/permission-schemas",
-        icon: Scroll,
+        icon: PermissionSchemaIcon,
       },
     ],
   },

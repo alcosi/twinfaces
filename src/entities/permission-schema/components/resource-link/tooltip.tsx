@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { Scroll } from "lucide-react";
 import { PermissionSchema } from "../../api";
+import { PermissionSchemaIcon } from "../permission-schema-icon";
 
 type Props = {
   data: PermissionSchema;
@@ -13,7 +13,7 @@ export function PermissionSchemaResourceTooltip({ data, link }: Props) {
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
-        iconSource={Scroll}
+        iconSource={PermissionSchemaIcon}
       />
 
       <ResourceLinkTooltip.Main>
