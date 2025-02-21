@@ -45,7 +45,7 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
 
     case TwinFieldType.selectUserV1:
     case TwinFieldType.selectUserLongV1:
-      return <UserResourceLink data={twinField.value as User} />;
+      return <UserResourceLink data={{ id: twinField.value as string }} />;
 
     default:
       return twinField.value as string;

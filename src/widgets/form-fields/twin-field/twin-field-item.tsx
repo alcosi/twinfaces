@@ -11,7 +11,7 @@ import {
 import { Twin, useTwinSelectAdapter } from "@/entities/twin";
 import { TwinClassFieldDescriptor } from "@/entities/twin-class-field";
 import { TwinFieldType } from "@/entities/twinField";
-import { useUserSelectAdapter } from "@/entities/user";
+import { DomainUser_DETAILED, useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";
 import React from "react";
 import { TwinFieldSelectLinkLongFormItem } from "./components";
@@ -53,6 +53,12 @@ export function TwinFieldFormItem({
   function handleOnDataListSelect(datalistOptions?: DataListOptionV3[]) {
     if (isPopulatedArray<DataListOptionV3>(datalistOptions)) {
       return onChange?.(datalistOptions[0].id!);
+    }
+  }
+
+  function handleOnUserSelect(users?: DomainUser_DETAILED[]) {
+    if (isPopulatedArray<DomainUser_DETAILED>(users)) {
+      return onChange?.(users[0].userId);
     }
   }
 
@@ -144,8 +150,7 @@ export function TwinFieldFormItem({
               })
             }
             renderItem={userAdapter.renderItem}
-            onSelect={handleOnDataListSelect}
-            multi={descriptor.multiple}
+            onSelect={handleOnUserSelect}
             {...props}
           />
         );
