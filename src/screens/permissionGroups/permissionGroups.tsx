@@ -6,7 +6,7 @@ import {
   PermissionGroup_DETAILED,
   usePermissionGroupFilters,
   usePermissionGroupSearchV1,
-} from "@/entities/permissionGroup";
+} from "@/entities/permission-group";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,

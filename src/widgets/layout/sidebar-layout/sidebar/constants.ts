@@ -1,5 +1,5 @@
 import { PermissionIcon } from "@/entities/permission";
-import { PermissionGroupIcon } from "@/entities/permissionGroup";
+import { PermissionGroupIcon } from "@/entities/permission-group";
 import { TwinIcon } from "@/entities/twin";
 import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";

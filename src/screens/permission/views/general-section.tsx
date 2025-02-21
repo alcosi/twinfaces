@@ -3,7 +3,7 @@ import {
   UpdatePermissionRequestBody,
   usePermissionUpdate,
 } from "@/entities/permission";
-import { usePermissionGroupSelectAdapter } from "@/entities/permissionGroup";
+import { usePermissionGroupSelectAdapter } from "@/entities/permission-group";
 import { UserGroupResourceLink } from "@/entities/userGroup";
 import {
   InPlaceEdit,

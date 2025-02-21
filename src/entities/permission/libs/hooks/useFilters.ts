@@ -1,5 +1,5 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import { usePermissionGroupSelectAdapter } from "@/entities/permissionGroup";
+import { usePermissionGroupSelectAdapter } from "@/entities/permission-group";
 import {
   toArray,
   toArrayOfString,
