@@ -2,10 +2,12 @@
 
 import { Factory, FactoryResourceLink } from "@/entities/factory";
 import {
-  FactoryBranche,
-  useFactoryBrancheFilters,
+  FACTORY_BRANCH_SCHEMA,
+  FactoryBranch,
+  useFactoryBranchCreate,
+  useFactoryBranchFilters,
   useFactoryBranchesSearch,
-} from "@/entities/factory-branche";
+} from "@/entities/factory-branch";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -15,13 +17,17 @@ import { Check } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FactoryBranchFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Omit<
-    FactoryBranche,
+    FactoryBranch,
     "factoryId" | "factoryConditionSetId" | "nextFactoryId"
   >,
-  ColumnDef<FactoryBranche>
+  ColumnDef<FactoryBranch>
 > = {
   id: {
     id: "id",
@@ -90,11 +96,24 @@ const colDefs: Record<
 export function FactoryBranchesScreen() {
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { buildFilterFields, mapFiltersToPayload } = useFactoryBrancheFilters();
+  const { buildFilterFields, mapFiltersToPayload } = useFactoryBranchFilters();
+  const { createFactoryBranch } = useFactoryBranchCreate();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Branches", href: "/workspace/branches" }]);
   }, [setBreadcrumbs]);
+
+  const factoryBranchForm = useForm<z.infer<typeof FACTORY_BRANCH_SCHEMA>>({
+    resolver: zodResolver(FACTORY_BRANCH_SCHEMA),
+    defaultValues: {
+      factoryId: "",
+      factoryConditionSetId: "",
+      factoryConditionSetInvert: false,
+      description: undefined,
+      active: false,
+      nextFactoryId: "",
+    },
+  });
 
   async function fetchFactoryBranches(
     pagination: PaginationState,
@@ -109,6 +128,15 @@ export function FactoryBranchesScreen() {
       throw new Error("An error occurred while factory branches: " + error);
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof FACTORY_BRANCH_SCHEMA>
+  ) => {
+    const { factoryId, ...body } = formValues;
+
+    await createFactoryBranch({ id: factoryId, body });
+    toast.success("Factory branch created successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -132,6 +160,11 @@ export function FactoryBranchesScreen() {
         colDefs.nextFactory,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={factoryBranchForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <FactoryBranchFormFields control={factoryBranchForm.control} />
+      )}
     />
   );
 }
