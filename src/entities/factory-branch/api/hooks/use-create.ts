@@ -11,10 +11,10 @@ export const useFactoryBranchCreate = () => {
         const { error } = await api.factoryBranch.create({ id, body });
 
         if (error) {
-          throw new Error("Failed to create factory branche");
+          throw new Error("Failed to create factory branch");
         }
       } catch (error) {
-        throw new Error("An error occurred while creating factory branche");
+        throw new Error("An error occurred while creating factory branch");
       }
     },
     [api]

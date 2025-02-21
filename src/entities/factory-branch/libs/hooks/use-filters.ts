@@ -8,8 +8,8 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 import { FactoryBranchFilterKeys, FactoryBranchFilters } from "../../api";
-import { useFactorySelectAdapter } from "../../../factory/libs";
-import { useFactoryConditionSetSelectAdapter } from "../../../factory-condition-set";
+import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import { useFactorySelectAdapter } from "@/entities/factory/libs";
 
 export function useFactoryBranchFilters(): FilterFeature<
   FactoryBranchFilterKeys,
