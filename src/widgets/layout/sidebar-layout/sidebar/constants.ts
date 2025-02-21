@@ -29,6 +29,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Group, GroupKeys } from "./group";
+import { FactoryBranchIcon } from "@/shared/ui/icons/factory-branch-icon";
 
 export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
   class: {
@@ -162,7 +163,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Branches",
         url: "/workspace/branches",
-        icon: Split,
+        icon: FactoryBranchIcon,
       },
       {
         title: "Erasers",
