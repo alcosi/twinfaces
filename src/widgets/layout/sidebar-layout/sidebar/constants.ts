@@ -1,3 +1,5 @@
+import { FactoryPipelineIcon } from "@/entities/factory-pipeline";
+import { FactoryPipelineStepIcon } from "@/entities/factory-pipeline-step";
 import { PermissionIcon } from "@/entities/permission";
 import { PermissionGroupIcon } from "@/entities/permission-group";
 import { PermissionSchemaIcon } from "@/entities/permission-schema/components/permission-schema-icon";
@@ -6,14 +8,13 @@ import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";
 import { TwinFlowIcon } from "@/entities/twin-flow";
 import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
+import { FactoryBranchIcon } from "@/shared/ui/icons/factory-branch-icon";
 import {
   Asterisk,
   BriefcaseBusiness,
   CircleDot,
   Eraser,
   Factory,
-  Fence,
-  Footprints,
   Leaf,
   Link2,
   ListTree,
@@ -22,14 +23,12 @@ import {
   Paperclip,
   Play,
   Shapes,
-  Split,
   SquareActivity,
   SquareAsterisk,
   User,
   UsersRound,
 } from "lucide-react";
 import { Group, GroupKeys } from "./group";
-import { FactoryBranchIcon } from "@/shared/ui/icons/factory-branch-icon";
 
 export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
   class: {
@@ -153,12 +152,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Pipelines",
         url: "/workspace/pipelines",
-        icon: Fence,
+        icon: FactoryPipelineIcon,
       },
       {
         title: "Pipeline steps",
         url: "/workspace/pipeline-steps",
-        icon: Footprints,
+        icon: FactoryPipelineStepIcon,
       },
       {
         title: "Branches",
