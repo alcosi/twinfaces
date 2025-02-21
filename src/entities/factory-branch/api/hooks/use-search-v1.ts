@@ -1,8 +1,8 @@
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { hydrateFactoryBrancheFromMap } from "../../libs";
-import { FactoryBranche_DETAILED, FactoryBranchFilters } from "../types";
+import { hydrateFactoryBranchFromMap } from "../../libs";
+import { FactoryBranch_DETAILED, FactoryBranchFilters } from "../types";
 
 export function useFactoryBranchesSearch() {
   const api = useContext(ApiContext);
@@ -13,9 +13,9 @@ export function useFactoryBranchesSearch() {
     }: {
       pagination: PaginationState;
       filters?: FactoryBranchFilters;
-    }): Promise<PagedResponse<FactoryBranche_DETAILED>> => {
+    }): Promise<PagedResponse<FactoryBranch_DETAILED>> => {
       try {
-        const { data, error } = await api.factoryBranche.search({
+        const { data, error } = await api.factoryBranch.search({
           pagination,
           filters,
         });
@@ -24,13 +24,13 @@ export function useFactoryBranchesSearch() {
           throw error;
         }
 
-        const factoryBranche =
+        const factoryBranch =
           data.branches?.map((dto) =>
-            hydrateFactoryBrancheFromMap(dto, data.relatedObjects)
+            hydrateFactoryBranchFromMap(dto, data.relatedObjects)
           ) ?? [];
 
         return {
-          data: factoryBranche,
+          data: factoryBranch,
           pagination: data.pagination ?? {},
         };
       } catch (error) {

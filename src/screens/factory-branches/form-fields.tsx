@@ -4,25 +4,27 @@ import {
   TextAreaFormField,
 } from "@/components/form-fields";
 import { useFactorySelectAdapter } from "@/entities/factory";
+import { FACTORY_BRANCH_SCHEMA } from "@/entities/factory-branch";
 import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import { isPopulatedArray } from "@/shared/libs";
-import { Control, FieldValues, Path, useWatch } from "react-hook-form";
+import { Control, useWatch } from "react-hook-form";
+import { z } from "zod";
 
-export function FactoryBrancheFormFields<T extends FieldValues>({
+export function FactoryBranchFormFields({
   control,
 }: {
-  control: Control<T>;
+  control: Control<z.infer<typeof FACTORY_BRANCH_SCHEMA>>;
 }) {
   const fcsAdapter = useFactoryConditionSetSelectAdapter();
   const fAdapter = useFactorySelectAdapter();
-  const fWatch = useWatch({ control, name: "factoryId" as Path<T> });
+  const fWatch = useWatch({ control, name: "factoryId" });
   const disabled = isPopulatedArray(fWatch);
 
   return (
     <>
       <ComboboxFormField
         control={control}
-        name={"factoryId" as Path<T>}
+        name="factoryId"
         label="Factory"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
@@ -33,7 +35,7 @@ export function FactoryBrancheFormFields<T extends FieldValues>({
 
       <ComboboxFormField
         control={control}
-        name={"factoryConditionSetId" as Path<T>}
+        name="factoryConditionSetId"
         label="Condition set"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
@@ -43,25 +45,21 @@ export function FactoryBrancheFormFields<T extends FieldValues>({
 
       <CheckboxFormField
         control={control}
-        name={"factoryConditionSetInvert" as Path<T>}
+        name="factoryConditionSetInvert"
         label="Condition set invert"
       />
 
       <TextAreaFormField
         control={control}
-        name={"description" as Path<T>}
+        name="description"
         label="Description"
       />
 
-      <CheckboxFormField
-        control={control}
-        name={"active" as Path<T>}
-        label="Active"
-      />
+      <CheckboxFormField control={control} name="active" label="Active" />
 
       <ComboboxFormField
         control={control}
-        name={"nextFactoryId" as Path<T>}
+        name="nextFactoryId"
         label="Next factory"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."

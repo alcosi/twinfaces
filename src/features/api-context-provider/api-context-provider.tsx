@@ -13,9 +13,9 @@ import {
 import { createDomainApi, DomainApi } from "@/entities/domain";
 import { createFactoryApi, FactoryApi } from "@/entities/factory";
 import {
-  createFactoryBrancheApi,
-  FactoryBrancheApi,
-} from "@/entities/factory-branche";
+  createFactoryBranchApi,
+  FactoryBranchApi,
+} from "@/entities/factory-branch";
 import {
   createFactoryConditionSetApi,
   FactoryConditionSetApi,
@@ -98,7 +98,7 @@ export interface ApiContextProps {
   assigneePropagation: PermissionAssigneePropagationApi;
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
-  factoryBranche: FactoryBrancheApi;
+  factoryBranch: FactoryBranchApi;
   factoryConditionSet: FactoryConditionSetApi;
   pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
@@ -145,7 +145,7 @@ export function ApiContextProvider({
         assigneePropagation: createPermissionAssigneePropagationApi(settings),
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
-        factoryBranche: createFactoryBrancheApi(settings),
+        factoryBranch: createFactoryBranchApi(settings),
         factoryConditionSet: createFactoryConditionSetApi(settings),
         pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),

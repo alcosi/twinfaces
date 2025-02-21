@@ -1,14 +1,14 @@
 import { RelatedObjects } from "@/shared/api";
-import { FactoryBranche, FactoryBranche_DETAILED } from "../api";
+import { FactoryBranch, FactoryBranch_DETAILED } from "../api";
 
-export const hydrateFactoryBrancheFromMap = (
-  dto: FactoryBranche,
+export const hydrateFactoryBranchFromMap = (
+  dto: FactoryBranch,
   relatedObjects?: RelatedObjects
-): FactoryBranche_DETAILED => {
-  const hydrated: FactoryBranche_DETAILED = Object.assign(
+): FactoryBranch_DETAILED => {
+  const hydrated: FactoryBranch_DETAILED = Object.assign(
     {},
     dto
-  ) as FactoryBranche_DETAILED;
+  ) as FactoryBranch_DETAILED;
 
   if (dto.factoryId && relatedObjects?.factoryMap) {
     hydrated.factory = relatedObjects.factoryMap[dto.factoryId]!;

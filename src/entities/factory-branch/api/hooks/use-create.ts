@@ -1,14 +1,14 @@
 import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
-import { FactoryBrancheCreateRq } from "../types";
+import { FactoryBranchCreateRq } from "../types";
 
-export const useFactoryBrancheCreate = () => {
+export const useFactoryBranchCreate = () => {
   const api = useContext(ApiContext);
 
-  const createFactoryBranche = useCallback(
-    async ({ id, body }: { id: string; body: FactoryBrancheCreateRq }) => {
+  const createFactoryBranch = useCallback(
+    async ({ id, body }: { id: string; body: FactoryBranchCreateRq }) => {
       try {
-        const { error } = await api.factoryBranche.create({ id, body });
+        const { error } = await api.factoryBranch.create({ id, body });
 
         if (error) {
           throw new Error("Failed to create factory branche");
@@ -20,5 +20,5 @@ export const useFactoryBrancheCreate = () => {
     [api]
   );
 
-  return { createFactoryBranche };
+  return { createFactoryBranch };
 };

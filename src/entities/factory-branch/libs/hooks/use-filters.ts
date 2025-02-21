@@ -11,7 +11,7 @@ import { FactoryBranchFilterKeys, FactoryBranchFilters } from "../../api";
 import { useFactorySelectAdapter } from "../../../factory/libs";
 import { useFactoryConditionSetSelectAdapter } from "../../../factory-condition-set";
 
-export function useFactoryBrancheFilters(): FilterFeature<
+export function useFactoryBranchFilters(): FilterFeature<
   FactoryBranchFilterKeys,
   FactoryBranchFilters
 > {

@@ -1,13 +1,13 @@
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type FactoryBranche = components["schemas"]["FactoryBranchV2"];
-export type FactoryBranche_SHORT = RequireFields<
-  FactoryBranche,
+export type FactoryBranch = components["schemas"]["FactoryBranchV2"];
+export type FactoryBranch_SHORT = RequireFields<
+  FactoryBranch,
   "id" | "factoryId" | "factory" | "factoryConditionSetInvert" | "active"
 >;
-export type FactoryBranche_DETAILED = RequireFields<
-  FactoryBranche_SHORT,
+export type FactoryBranch_DETAILED = RequireFields<
+  FactoryBranch_SHORT,
   | "description"
   | "factoryConditionSetId"
   | "factoryConditionSet"
@@ -17,7 +17,7 @@ export type FactoryBranche_DETAILED = RequireFields<
 
 export type FactoryBranchSearchRq =
   components["schemas"]["FactoryBranchSearchRqV1"];
-export type FactoryBrancheCreateRq =
+export type FactoryBranchCreateRq =
   components["schemas"]["FactoryBranchCreateRqV1"];
 
 export type FactoryBranchFilterKeys =

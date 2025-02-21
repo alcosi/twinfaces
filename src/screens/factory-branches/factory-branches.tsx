@@ -2,12 +2,12 @@
 
 import { Factory, FactoryResourceLink } from "@/entities/factory";
 import {
-  FACTORY_BRANCHE_SCHEMA,
-  FactoryBranche,
-  useFactoryBrancheCreate,
-  useFactoryBrancheFilters,
+  FACTORY_BRANCH_SCHEMA,
+  FactoryBranch,
+  useFactoryBranchCreate,
+  useFactoryBranchFilters,
   useFactoryBranchesSearch,
-} from "@/entities/factory-branche";
+} from "@/entities/factory-branch";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -20,14 +20,14 @@ import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-se
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FactoryBrancheFormFields } from "./form-fields";
+import { FactoryBranchFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Omit<
-    FactoryBranche,
+    FactoryBranch,
     "factoryId" | "factoryConditionSetId" | "nextFactoryId"
   >,
-  ColumnDef<FactoryBranche>
+  ColumnDef<FactoryBranch>
 > = {
   id: {
     id: "id",
@@ -96,20 +96,20 @@ const colDefs: Record<
 export function FactoryBranchesScreen() {
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { buildFilterFields, mapFiltersToPayload } = useFactoryBrancheFilters();
-  const { createFactoryBranche } = useFactoryBrancheCreate();
+  const { buildFilterFields, mapFiltersToPayload } = useFactoryBranchFilters();
+  const { createFactoryBranch } = useFactoryBranchCreate();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Branches", href: "/workspace/branches" }]);
   }, [setBreadcrumbs]);
 
-  const factoryBrancheForm = useForm<z.infer<typeof FACTORY_BRANCHE_SCHEMA>>({
-    resolver: zodResolver(FACTORY_BRANCHE_SCHEMA),
+  const factoryBranchForm = useForm<z.infer<typeof FACTORY_BRANCH_SCHEMA>>({
+    resolver: zodResolver(FACTORY_BRANCH_SCHEMA),
     defaultValues: {
       factoryId: "",
       factoryConditionSetId: "",
       factoryConditionSetInvert: false,
-      description: "",
+      description: undefined,
       active: false,
       nextFactoryId: "",
     },
@@ -130,12 +130,12 @@ export function FactoryBranchesScreen() {
   }
 
   const handleOnCreateSubmit = async (
-    formValues: z.infer<typeof FACTORY_BRANCHE_SCHEMA>
+    formValues: z.infer<typeof FACTORY_BRANCH_SCHEMA>
   ) => {
     const { factoryId, ...body } = formValues;
 
-    await createFactoryBranche({ id: factoryId, body });
-    toast.success("Link created successfully!");
+    await createFactoryBranch({ id: factoryId, body });
+    toast.success("Factory branch created successfully!");
   };
 
   return (
@@ -160,10 +160,10 @@ export function FactoryBranchesScreen() {
         colDefs.nextFactory,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
-      dialogForm={factoryBrancheForm}
+      dialogForm={factoryBranchForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
-        <FactoryBrancheFormFields control={factoryBrancheForm.control} />
+        <FactoryBranchFormFields control={factoryBranchForm.control} />
       )}
     />
   );
