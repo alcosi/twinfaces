@@ -3,9 +3,9 @@ import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { ArrowRightLeft } from "lucide-react";
 import { TwinFlowTransition_DETAILED } from "../../api";
 import { ENTITY_COLOR } from "../../libs";
+import { TwinFlowTransitionIcon } from "../twin-flow-transition-icon";
 
 type Props = {
   data: TwinFlowTransition_DETAILED;
@@ -25,7 +25,7 @@ export function TwinFlowTransitionResourceTooltip({
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.alias}
-        iconSource={ArrowRightLeft}
+        iconSource={TwinFlowTransitionIcon}
       />
 
       <ResourceLinkTooltip.Main>

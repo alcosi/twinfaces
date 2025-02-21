@@ -1,7 +1,7 @@
 import {
   TwinFlowTransitionTrigger,
   useFetchTwinFlowTransitionById,
-} from "@/entities/twinFlowTransition";
+} from "@/entities/twin-flow-transition";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { useCallback, useContext } from "react";
 
