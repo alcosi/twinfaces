@@ -1,7 +1,9 @@
+import { PaginationState } from "@tanstack/table-core";
+
 import { TwinSimpleFilters } from "@/entities/twin/api";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { components, operations } from "@/shared/api/generated/schema";
-import { PaginationState } from "@tanstack/table-core";
+
 import {
   TagSearchFilters,
   TwinClassCreateRq,

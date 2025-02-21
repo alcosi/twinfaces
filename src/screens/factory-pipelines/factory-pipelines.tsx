@@ -20,6 +20,7 @@ import {
   useFactoryPipelineFilters,
   useFactoryPipelineSearch,
 } from "@/entities/factory-pipeline";
+import { useRouter } from "next/navigation";
 
 const colDefs: Record<
   keyof Omit<
@@ -150,6 +151,7 @@ export function FactoryPipelines() {
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryPipelineFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const router = useRouter();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Pipelines", href: "/workspace/pipelines" }]);
@@ -201,6 +203,9 @@ export function FactoryPipelines() {
         colDefs.description,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      onRowClick={(row) => {
+        router.push(`/workspace/pipelines/${row.id}`);
+      }}
     />
   );
 }
