@@ -3,7 +3,7 @@ import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { FeaturerTypes } from "@/entities/featurer";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { TwinFieldType } from "@/entities/twinField";
-import { useTwinFlowSelectAdapter } from "@/entities/twinFlow";
+import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import { useUserSelectAdapter } from "@/entities/user";
 import { useUserGroupSelectAdapter } from "@/entities/userGroup/libs/hooks";

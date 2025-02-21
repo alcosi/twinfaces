@@ -4,9 +4,9 @@ import {
 } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { Activity } from "lucide-react";
 import { TwinFlow_DETAILED } from "../../api";
 import { ENTITY_COLOR } from "../../libs";
+import { TwinFlowIcon } from "../twin-flow-icon";
 
 type Props = {
   data: TwinFlow_DETAILED;
@@ -18,7 +18,7 @@ export const TwinFlowResourceTooltip = ({ data, link }: Props) => {
     <ResourceLinkTooltip uuid={data.id} link={link} accentColor={ENTITY_COLOR}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
-        iconSource={Activity}
+        iconSource={TwinFlowIcon}
       />
 
       <ResourceLinkTooltip.Main>

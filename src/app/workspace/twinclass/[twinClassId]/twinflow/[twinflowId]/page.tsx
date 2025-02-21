@@ -1,7 +1,7 @@
 "use client";
 
 import { TwinClassContext } from "@/entities/twin-class";
-import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twinFlow";
+import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twin-flow";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowTransitions } from "@/screens/twinFlowTransitions";
 import { LoadingOverlay } from "@/shared/ui/loading";

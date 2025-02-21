@@ -1,4 +1,4 @@
-import { TwinFlow_DETAILED, useTwinFlowSearchV1 } from "@/entities/twinFlow";
+import { TwinFlow_DETAILED, useTwinFlowSearchV1 } from "@/entities/twin-flow";
 import { SelectAdapter } from "@/shared/libs";
 
 export function useTwinFlowSelectAdapter(): SelectAdapter<TwinFlow_DETAILED> {

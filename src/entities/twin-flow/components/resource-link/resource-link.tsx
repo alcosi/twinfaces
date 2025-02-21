@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { Activity } from "lucide-react";
 import { TwinFlow_DETAILED } from "../../api";
+import { TwinFlowIcon } from "../twin-flow-icon";
 import { TwinFlowResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -19,7 +19,7 @@ export const TwinFlowResourceLink = ({
 
   return (
     <ResourceLink
-      IconComponent={Activity}
+      IconComponent={TwinFlowIcon}
       data={data}
       disabled={disabled}
       renderTooltip={
