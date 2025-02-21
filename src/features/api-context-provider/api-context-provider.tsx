@@ -38,7 +38,7 @@ import {
 import {
   createPipelineStepApi,
   PipelineStepApi,
-} from "@/entities/pipeline-step";
+} from "@/entities/factory-pipeline-step";
 import {
   createPermissionSpaceRoleApi,
   PermissionSpaceRoleApi,

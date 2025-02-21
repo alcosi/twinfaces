@@ -1,7 +1,7 @@
 import { isPopulatedString, shortenUUID } from "@/shared/libs";
-import { FactoryPipeline } from "../../api";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { FenceIcon } from "lucide-react";
+import { FactoryPipeline } from "../../api";
+import { FactoryPipelineIcon } from "../factory-pipeline-icon";
 
 type Props = {
   data: FactoryPipeline;
@@ -16,7 +16,7 @@ export function FactoryPipelineResourceTooltip({ data, link }: Props) {
       <ResourceLinkTooltip.Header
         title={title}
         subTitle={data.description}
-        iconSource={FenceIcon}
+        iconSource={FactoryPipelineIcon}
       />
 
       <ResourceLinkTooltip.Main>

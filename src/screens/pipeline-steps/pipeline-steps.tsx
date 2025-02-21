@@ -8,7 +8,7 @@ import {
   PipelineStep,
   usePipelineStepFilters,
   usePipelineStepSearch,
-} from "@/entities/pipeline-step";
+} from "@/entities/factory-pipeline-step";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
