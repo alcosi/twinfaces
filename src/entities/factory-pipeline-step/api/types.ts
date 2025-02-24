@@ -1,4 +1,4 @@
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 
 export type PipelineStep = components["schemas"]["FactoryPipelineStepV2"];
 export type PipelineStep_DETAILED = Required<PipelineStep>;
@@ -20,3 +20,6 @@ export type PipelineStepFilterKeys =
 export type PipelineStepFilters = Partial<
   Pick<PipelineStepSearchRq, PipelineStepFilterKeys>
 >;
+
+export type FactoryPipelineStepRqQuery =
+  operations["factoryPipelineStepViewV1"]["parameters"]["query"];
