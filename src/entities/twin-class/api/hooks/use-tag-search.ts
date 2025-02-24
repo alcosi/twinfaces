@@ -1,25 +1,28 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { useCallback, useContext } from "react";
-import { PaginationState } from "@tanstack/table-core";
 import {
   DataListOptionV3,
   hydrateDatalistOptionFromMap,
 } from "@/entities/datalist-option";
-import { TagListOptionFilter, TagSearchResponse } from "../types";
+import { ApiContext, PagedResponse } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+import { PaginationState } from "@tanstack/table-core";
+import { useCallback, useContext } from "react";
+import { TagSearchFilters } from "../types";
 
-export const useTagSearch = () => {
+export const useTagSearch = (twinClassId?: string) => {
   const api = useContext(ApiContext);
 
-  const searchTagListOptions = useCallback(
+  const searchTags = useCallback(
     async ({
-      twinClassId = "",
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
     }: {
-      twinClassId: string;
       pagination?: PaginationState;
-      filters?: TagListOptionFilter;
+      filters?: TagSearchFilters;
     }): Promise<PagedResponse<DataListOptionV3>> => {
+      if (isUndefined(twinClassId)) {
+        return { data: [], pagination: {} };
+      }
+
       try {
         const { data, error } = await api.twinClass.searchTags({
           twinClassId,
@@ -27,7 +30,7 @@ export const useTagSearch = () => {
           filters,
         });
         if (error) {
-          throw new Error("Failed to fetch datalist options due to API error");
+          throw new Error("Failed to fetch tags due to API error");
         }
 
         const options =
@@ -40,10 +43,11 @@ export const useTagSearch = () => {
           pagination: data.pagination ?? {},
         };
       } catch (error) {
-        throw new Error("An error occurred while fetching datalist options");
+        throw new Error("An error occurred while fetching taga");
       }
     },
     [api]
   );
-  return { searchTagListOptions };
+
+  return { searchTags };
 };

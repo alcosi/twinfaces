@@ -1,3 +1,4 @@
+import { DataListOptionV3 } from "@/entities/datalist-option";
 import {
   Twin_DETAILED,
   TwinSimpleFilters,
@@ -10,9 +11,11 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 import {
+  TagSearchFilters,
   TwinClass_DETAILED,
   TwinClassFilters,
   useFetchTwinClassById,
+  useTagSearch,
   useTwinClassSearchV1,
   useValidTwinsForLink,
 } from "../../api";
@@ -90,5 +93,47 @@ export function useValidTwinsForLinkSelectAdapter({
     getItems: (search, options) =>
       getItems(search, options as TwinSimpleFilters),
     renderItem: adapter.renderItem,
+  };
+}
+
+export function useTagsByTwinClassIdSelectAdapter(
+  twinClassId?: string
+): SelectAdapter<DataListOptionV3> {
+  const { searchTags } = useTagSearch(twinClassId);
+
+  async function getById() {
+    return {};
+  }
+
+  async function getItems(search: string, filters: TagSearchFilters) {
+    if (isUndefined(twinClassId)) {
+      return [];
+    }
+
+    const response = await searchTags({
+      filters: {
+        optionLikeList: isPopulatedString(search)
+          ? [wrapWithPercent(search)]
+          : filters?.optionLikeList,
+        ...filters,
+      },
+    });
+    return response.data;
+  }
+
+  function renderItem(item: DataListOptionV3 | string) {
+    // NOTE: The item can be a string when the user creates a new item using Combobox,
+    // which relates to the `as T` type assertion issue in `ComboboxProps<T>`.
+    // Since `SelectAdapter<T>` doesn't support `T & string`, consider extending `T` with `id` and `name`
+    // or updating `SelectAdapter<T>` to handle string values properly.
+    // refer to `src/shared/ui/combobox/combobox.tsx`
+    return isPopulatedString(item) ? item : item.name;
+  }
+
+  return {
+    getById,
+    getItems: (search, options) =>
+      getItems(search, options as TagSearchFilters),
+    renderItem,
   };
 }

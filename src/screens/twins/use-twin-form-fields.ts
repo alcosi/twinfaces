@@ -36,7 +36,7 @@ export function useTwinClassFields(control: Control<TwinFormValues>) {
     headAdapter: {
       ...headAdapter,
       getItems: (search: string) =>
-        headAdapter.getItems(selectedTwinClass?.id || "", search, {
+        headAdapter.getItems(search, {
           twinClassId: selectedTwinClass?.id,
         }),
     },
@@ -45,7 +45,7 @@ export function useTwinClassFields(control: Control<TwinFormValues>) {
       ...optionAdapter,
       getItems: (search: string) =>
         selectedTwinClass?.tagsDataListId
-          ? optionAdapter.getItems(selectedTwinClass.id, search, {
+          ? optionAdapter.getItems(search, {
               dataListIdList: [selectedTwinClass.tagsDataListId],
             })
           : Promise.resolve([]),

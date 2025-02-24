@@ -3,7 +3,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { components, operations } from "@/shared/api/generated/schema";
 import { PaginationState } from "@tanstack/table-core";
 import {
-  TagListOptionFilter,
+  TagSearchFilters,
   TwinClassCreateRq,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
@@ -185,7 +185,7 @@ export function createTwinClassApi(settings: ApiSettings) {
   }: {
     twinClassId: string;
     pagination: PaginationState;
-    filters: TagListOptionFilter;
+    filters: TagSearchFilters;
   }) {
     return settings.client.POST(
       "/private/twin_class/{twinClassId}/tag/search/v1",
