@@ -15,7 +15,7 @@ export type Twin_SHORT = RequireFields<
 >;
 export type Twin_DETAILED = RequireFields<
   Twin_SHORT,
-  "createdAt" | "headTwinId" | "tags"
+  "twinClass" | "createdAt" | "headTwinId" | "tags"
 >;
 
 export type TwinCreateRq = RequireFields<
@@ -24,6 +24,8 @@ export type TwinCreateRq = RequireFields<
 >;
 export type TwinCreateRsV1 = components["schemas"]["TwinCreateRsV1"];
 export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
+export type TwinTagManageV1 = TwinUpdateRq["tagsUpdate"];
+
 export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];
 export type HistoryV1 = components["schemas"]["HistoryV1"];
 

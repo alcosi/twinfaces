@@ -48,6 +48,10 @@ export function isNull(value: unknown): value is null {
   return value === null;
 }
 
+export function isObject<T extends object>(value: unknown): value is T {
+  return typeof value === "object" && value !== null;
+}
+
 // React-specific type-checking utility functions
 
 /**

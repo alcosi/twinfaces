@@ -1,12 +1,17 @@
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import { DatalistOptionResourceLink } from "@/entities/datalist-option";
-import { TwinResourceLink, TwinUpdateRq } from "@/entities/twin";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import {
+  categorizeTwinTags,
+  TwinResourceLink,
+  TwinUpdateRq,
+} from "@/entities/twin";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
+  useTagsByTwinClassIdSelectAdapter,
 } from "@/entities/twin-class";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
 import {
   InPlaceEdit,
@@ -14,7 +19,11 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { ApiContext } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import {
+  formatToTwinfaceDate,
+  isPopulatedArray,
+  isUndefined,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 import { useContext, useState } from "react";
@@ -28,15 +37,16 @@ export function TwinGeneral() {
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
   const uAdapter = useUserSelectAdapter();
+  const tagAdapter = useTagsByTwinClassIdSelectAdapter(twin?.twinClassId);
 
-  async function updateTwin(newTwin: TwinUpdateRq) {
-    if (!twin) {
+  async function updateTwin(body: TwinUpdateRq) {
+    if (isUndefined(twin)) {
       console.error("updateTwin: no twin");
       return;
     }
 
     try {
-      await api.twin.update({ id: twin.id!, body: newTwin });
+      await api.twin.update({ id: twin.id, body });
       fetchTwinData();
     } catch (e) {
       console.error(e);
@@ -82,6 +92,31 @@ export function TwinGeneral() {
       return updateTwin({
         description: value as string,
       });
+    },
+  };
+
+  const tagsSettings: AutoEditDialogSettings = {
+    value: { tags: twin.tags ?? [] },
+    title: "Update Tags",
+    valuesInfo: {
+      tags: {
+        type: AutoFormValueType.combobox,
+        label: "Tags",
+        selectPlaceholder: "Select tag...",
+        creatable: true,
+        multi: true,
+        ...tagAdapter,
+        getItems: (search: string) =>
+          tagAdapter.getItems(search, {
+            dataListIdList: twin.twinClass.tagsDataListId
+              ? [twin.twinClass.tagsDataListId]
+              : [],
+          }),
+      },
+    },
+    onSubmit: (values) => {
+      const tagsUpdate = categorizeTwinTags(values.tags, twin.tags);
+      return updateTwin({ tagsUpdate });
     },
   };
 
@@ -210,18 +245,17 @@ export function TwinGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow
+            className={"cursor-pointer"}
+            onClick={() => openWithSettings(tagsSettings)}
+          >
             <TableCell>Tags</TableCell>
             <TableCell>
-              {twin.twinClass?.tagsDataListId && twin.tags && (
-                <div className="max-w-48 inline-flex">
-                  <DatalistOptionResourceLink
-                    data={{
-                      ...twin.tags,
-                      dataListId: twin.twinClass?.tagsDataListId,
-                    }}
-                    withTooltip
-                  />
+              {isPopulatedArray(twin.tags) && (
+                <div className="max-w-48 inline-flex flex-wrap gap-2">
+                  {twin.tags.map((tag) => (
+                    <DatalistOptionResourceLink key={tag.id} data={tag} />
+                  ))}
                 </div>
               )}
             </TableCell>

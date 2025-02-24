@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 interface TwinContextProps {
   twinId: string;
-  twin: Twin_DETAILED | undefined;
+  twin: Twin_DETAILED;
   fetchTwinData: () => void;
 }
 

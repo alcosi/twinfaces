@@ -70,3 +70,15 @@ export type TwinClassFilterKeys =
 export type TwinClassFilters = Partial<
   Pick<components["schemas"]["TwinClassListRqV1"], TwinClassFilterKeys>
 >;
+
+export type TagSearchFilterKeys =
+  | "idList"
+  | "idExcludeList"
+  | "optionLikeList"
+  | "optionNotLikeList"
+  | "optionI18nLikeList"
+  | "optionI18nNotLikeList";
+
+export type TagSearchFilters = Partial<
+  Pick<components["schemas"]["TagSearchRqV1"], TagSearchFilterKeys>
+>;
