@@ -29,5 +29,23 @@ export const hydrateTwinFlowTransitionFromMap = (
       relatedObjects.userMap[transitionDTO.createdByUserId];
   }
 
+  if (transitionDTO.twinflowId && relatedObjects?.twinflowMap) {
+    transition.twinflow = relatedObjects.twinflowMap[transitionDTO.twinflowId];
+  }
+
+  if (transitionDTO.inbuiltTwinFactoryId && relatedObjects?.factoryMap) {
+    transition.inbuiltTwinFactory =
+      relatedObjects.factoryMap[transitionDTO.inbuiltTwinFactoryId];
+  }
+
+  if (
+    transitionDTO.twinflowId &&
+    relatedObjects?.twinClassMap &&
+    transition.twinflow
+  ) {
+    transition.twinflow.twinClass =
+      relatedObjects.twinClassMap[transition.twinflow.twinClassId!];
+  }
+
   return transition;
 };

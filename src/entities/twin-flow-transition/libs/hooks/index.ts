@@ -1,1 +1,1 @@
-export * from "./useFilters";
+export * from "./use-filters";

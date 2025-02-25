@@ -4,7 +4,10 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { TwinClassContext } from "@/entities/twin-class";
-import { TwinFlowTransition } from "@/entities/twin-flow-transition";
+import {
+  TwinFlowTransition,
+  useFetchTwinFlowTransitionById,
+} from "@/entities/twin-flow-transition";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowContext } from "@/features/twinFlow";
 import { TwinflowTransitionValidatorRules } from "@/screens/transitionValidators";
@@ -30,11 +33,12 @@ export default function TransitionPage({
   const api = useContext(PrivateApiContext);
   const { twinClass } = useContext(TwinClassContext);
   const { twinFlow } = useContext(TwinFlowContext);
-  const [loading, setLoading] = useState<boolean>(false);
   const [transition, setTransition] = useState<TwinFlowTransition | undefined>(
     undefined
   );
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { fetchTwinFlowTransitionById, loading } =
+    useFetchTwinFlowTransitionById();
 
   useEffect(() => {
     fetchTransitionData();
@@ -72,26 +76,13 @@ export default function TransitionPage({
     transition?.name,
   ]);
 
-  function fetchTransitionData() {
-    setLoading(true);
-    api.twinFlowTransition
-      .fetchById(transitionId)
-      .then((response: any) => {
-        const data = response.data;
-        if (!data || data.status != 0) {
-          console.error("failed to fetch twin class", data);
-          let message = "Failed to load twin class";
-          if (data?.msg) message += `: ${data.msg}`;
-          toast.error(message);
-          return;
-        }
-        setTransition(data.transition);
-      })
-      .catch((e: any) => {
-        console.error("exception while fetching twin class", e);
-        toast.error("Failed to fetch twin class");
-      })
-      .finally(() => setLoading(false));
+  async function fetchTransitionData() {
+    try {
+      const response = await fetchTwinFlowTransitionById(transitionId);
+      setTransition(response);
+    } catch {
+      toast.error("Failed to fetch twin class");
+    }
   }
 
   const tabs: Tab[] = transition

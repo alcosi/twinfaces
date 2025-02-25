@@ -29,6 +29,9 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
           showTransition2PermissionMode: "DETAILED",
           showTransition2StatusMode: "DETAILED",
           showTransition2UserMode: "SHORT",
+          showTransition2TwinflowMode: "DETAILED",
+          showTwinflow2TwinClassMode: "DETAILED",
+          showTransition2FactoryMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
@@ -47,12 +50,16 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         path: { transitionId },
         query: {
-          showTransitionMode: "MANAGED",
+          lazyRelation: false,
+          showTransitionMode: "DETAILED",
           showTransition2StatusMode: "DETAILED",
           showTransition2PermissionMode: "DETAILED",
           showTwinflowTransition2TwinflowTransitionValidatorRuleMode:
             "DETAILED",
           showTwinflowTransitionValidatorRule2TwinValidatorSetMode: "DETAILED",
+          showTransition2TwinflowMode: "DETAILED",
+          showTwinflow2TwinClassMode: "DETAILED",
+          showTransition2FactoryMode: "DETAILED",
         },
       },
     });

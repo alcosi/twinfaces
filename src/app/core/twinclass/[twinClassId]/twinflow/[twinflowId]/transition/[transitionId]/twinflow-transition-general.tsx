@@ -3,53 +3,83 @@ import { z } from "zod";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
+import { ClassStatusView } from "@/components/class-status-view";
 
 import { PermissionResourceLink } from "@/entities/permission";
 import {
+  PermissionResourceLink,
+  usePermissionSelectAdapter,
+} from "@/entities/permission";
+import {
   TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
+  useUpdateTransition,
 } from "@/entities/twin-flow-transition";
-import {
-  TwinClassStatusResourceLink,
-  TwinStatusV2,
-  useTwinStatusSelectAdapter,
-} from "@/entities/twin-status";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
 import { PrivateApiContext } from "@/shared/api";
+import { NULLIFY_UUID_VALUE, formatToTwinfaceDate } from "@/shared/libs";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
+import { z } from "zod";
+import { TwinFlow_DETAILED, TwinFlowResourceLink } from "@/entities/twin-flow";
+import {
+  FactoryResourceLink,
+  useFactorySelectAdapter,
+} from "@/entities/factory";
+import { useTransitionAliasSelectAdapter } from "@/entities/transition-alias";
+import { toast } from "sonner";
 
 export function TwinflowTransitionGeneral({
   transition,
   onChange,
 }: {
   transition: TwinFlowTransition;
-  onChange: () => void;
+  onChange: () => any;
 }) {
   const api = useContext(PrivateApiContext);
   const sAdapter = useTwinStatusSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
+  const { updateTransition } = useUpdateTransition();
+  const sAdapter = useTwinStatusSelectAdapter(transition.twinflow?.twinClassId);
+  const pAdapter = usePermissionSelectAdapter();
+  const fAdapter = useFactorySelectAdapter();
+  const tAAdapter = useTransitionAliasSelectAdapter();
 
-  function openWithSettings(settings: AutoEditDialogSettings) {
-    setCurrentAutoEditDialogSettings(settings);
-    setEditFieldDialogOpen(true);
-  }
-
-  async function updateTransition(newTransition: TwinFlowTransitionUpdateRq) {
+  async function update(newTransition: TwinFlowTransitionUpdateRq) {
     try {
-      await api.twinFlowTransition.update({
+      await updateTransition({
         transitionId: transition.id!,
         body: newTransition,
       });
       onChange?.();
-    } catch (e) {
-      console.error(e);
-      throw e;
+    } catch {
+      toast.error("not updated transition");
     }
   }
+
+  //TODO https://alcosi.atlassian.net/browse/TWINFACES-269 add with possibility of new value enter
+  const aliasSettings: InPlaceEditProps<any> = {
+    id: "alias",
+    value: transition.alias,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select alias...",
+      ...tAAdapter,
+    },
+    renderPreview: transition.alias ? (_) => transition.alias : undefined,
+    onSubmit: async (value) => {
+      return update({ alias: value[0].alias });
+    },
+  };
 
   const nameSettings: InPlaceEditProps = {
     id: "name",
@@ -63,7 +93,7 @@ export function TwinflowTransitionGeneral({
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateTransition({
+      return update({
         nameI18n: { translationInCurrentLocale: value as string },
       });
     },
@@ -81,7 +111,7 @@ export function TwinflowTransitionGeneral({
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateTransition({
+      return update({
         descriptionI18n: { translationInCurrentLocale: value as string },
       });
     },
@@ -96,15 +126,10 @@ export function TwinflowTransitionGeneral({
       ...sAdapter,
     },
     renderPreview: transition.srcTwinStatus
-      ? (_) => (
-          <TwinClassStatusResourceLink
-            data={transition.srcTwinStatus as TwinStatusV2}
-            twinClassId={transition.srcTwinStatus?.twinClassId!}
-          />
-        )
+      ? (_) => <ClassStatusView status={transition.srcTwinStatus} />
       : undefined,
     onSubmit: async (value) => {
-      return updateTransition({ srcStatusId: value[0].id });
+      return update({ srcStatusId: value[0].id });
     },
   };
 
@@ -117,42 +142,52 @@ export function TwinflowTransitionGeneral({
       ...sAdapter,
     },
     renderPreview: transition.dstTwinStatus
+      ? (_) => <ClassStatusView status={transition.dstTwinStatus} />
+      : undefined,
+    onSubmit: async (value) => {
+      return update({ dstStatusId: value[0].id });
+    },
+  };
+
+  const permissionSettings: InPlaceEditProps<any> = {
+    id: "permissionId",
+    value: transition.permissionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select permission...",
+      ...pAdapter,
+    },
+    renderPreview: transition.permission
+      ? (_) => <PermissionResourceLink data={transition.permission!} />
+      : undefined,
+    onSubmit: async (value) => {
+      return update({ permissionId: value[0].id });
+    },
+  };
+
+  const factorySettings: InPlaceEditProps<any> = {
+    id: "inbuiltTwinFactoryId",
+    value: transition.inbuiltTwinFactoryId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select factory...",
+      ...fAdapter,
+    },
+    renderPreview: transition.inbuiltTwinFactory
       ? (_) => (
-          <TwinClassStatusResourceLink
-            data={transition.dstTwinStatus as TwinStatusV2}
-            twinClassId={transition.dstTwinStatus?.twinClassId!}
+          <FactoryResourceLink
+            data={transition.inbuiltTwinFactory!}
+            withTooltip
           />
         )
       : undefined,
     onSubmit: async (value) => {
-      return updateTransition({ dstStatusId: value[0].id });
-    },
-  };
-
-  //  TODO: Replace with <PermissionSelectField />
-  // as per https://alcosi.atlassian.net/browse/TWINFACES-116
-  const permissionAutoDialogSettings: AutoEditDialogSettings = {
-    value: { permissionId: transition.permissionId },
-    title: "Update permission",
-    onSubmit: (values) => {
-      return updateTransition({
-        permissionId: values.permissionId,
-      });
-    },
-    valuesInfo: {
-      permission: {
-        type: AutoFormValueType.string,
-        label: "Permission",
-      },
-      permissionId: {
-        type: AutoFormValueType.string,
-        label: "Permission",
-      },
+      return update({ inbuiltTwinFactoryId: value[0].id });
     },
   };
 
   return (
-    <>
+    <InPlaceEditContextProvider>
       <Table className="mt-8">
         <TableBody>
           <TableRow>
@@ -162,19 +197,33 @@ export function TwinflowTransitionGeneral({
             </TableCell>
           </TableRow>
 
-          <TableRow className="cursor-pointer">
-            <TableCell>Alias</TableCell>
-            <TableCell>{transition.alias}</TableCell>
+          <TableRow>
+            <TableCell>Twinflow</TableCell>
+            <TableCell>
+              {transition.twinflow && (
+                <TwinFlowResourceLink
+                  data={transition.twinflow as TwinFlow_DETAILED}
+                  withTooltip
+                />
+              )}
+            </TableCell>
           </TableRow>
 
-          <TableRow className="cursor-pointer">
+          <TableRow>
+            <TableCell>Alias</TableCell>
+            <TableCell>
+              <InPlaceEdit {...aliasSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>
               <InPlaceEdit {...nameSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow className="cursor-pointer">
+          <TableRow>
             <TableCell>Description</TableCell>
             <TableCell>
               <InPlaceEdit {...descriptionSettings} />
@@ -187,35 +236,34 @@ export function TwinflowTransitionGeneral({
               <InPlaceEdit {...srcTwinStatusSettings} />
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Destination status</TableCell>
             <TableCell>
               <InPlaceEdit {...dstTwinStatusSettings} />
             </TableCell>
           </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(permissionAutoDialogSettings)}
-          >
+
+          <TableRow>
             <TableCell>Permission</TableCell>
             <TableCell>
-              {transition.permission && (
-                <PermissionResourceLink data={transition.permission} />
-              )}
+              <InPlaceEdit {...permissionSettings} />
             </TableCell>
           </TableRow>
+
+          <TableRow>
+            <TableCell>Factory</TableCell>
+            <TableCell>
+              <InPlaceEdit {...factorySettings} />
+            </TableCell>
+          </TableRow>
+
           <TableRow>
             <TableCell>Created at</TableCell>
             <TableCell>{formatToTwinfaceDate(transition.createdAt!)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
-
-      <AutoDialog
-        open={editFieldDialogOpen}
-        onOpenChange={setEditFieldDialogOpen}
-        settings={currentAutoEditDialogSettings}
-      />
-    </>
+    </InPlaceEditContextProvider>
   );
 }

@@ -1,13 +1,22 @@
 import { z } from "zod";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const ENTITY_COLOR = "#8B5CF6"; // text-violet-500
 
 export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
-  alias: z.string().min(1, "Alias can not be empty"),
+  twinflow: z
+    .array(z.object({ id: z.string().uuid(), twinClassId: z.string() }))
+    .min(1, "Twinflow can not be empty")
+    .nullable(),
+  alias: z
+    .array(z.object({ alias: z.string() }))
+    .min(1, "Alias can not be empty")
+    .nullable(),
   name: z.string().min(1, "Name can not be empty"),
   description: z.string().optional(),
+  factory: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   srcTwinStatusId: z
     .string()
     .uuid("Source Status ID must be a valid UUID")
@@ -20,7 +29,8 @@ export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
   permissionId: z
     .string()
     .uuid("Permission ID must be a valid UUID")
-    .optional(),
+    .optional()
+    .or(FIRST_ID_EXTRACTOR),
 });
 
 export const TRIGGER_SCHEMA = z.object({

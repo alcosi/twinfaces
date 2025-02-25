@@ -25,11 +25,16 @@ export type TwinTransitionPerformRq =
   components["schemas"]["TwinTransitionPerformRqV1"];
 
 export type TwinFlowTransitionFilterKeys =
+  | "idList"
+  | "nameLikeList"
+  | "descriptionLikeList"
   | "twinflowIdList"
   | "aliasLikeList"
   | "srcStatusIdList"
   | "dstStatusIdList"
-  | "permissionIdList";
+  | "permissionIdList"
+  | "inbuiltTwinFactoryIdList";
+
 export type TwinFlowTransitionFilters = Partial<
   Pick<
     components["schemas"]["TransitionSearchRqV1"],
