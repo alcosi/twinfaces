@@ -9,11 +9,11 @@ import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";
 import { TwinFlowIcon } from "@/entities/twin-flow";
 import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
+import { TwinStatusIcon } from "@/entities/twin-status";
 import { TierIcon } from "@/shared/ui/icons/tier-icon";
 import {
   Asterisk,
   BriefcaseBusiness,
-  CircleDot,
   Eraser,
   Factory,
   Link2,
@@ -47,7 +47,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Statuses",
         url: "/workspace/statuses",
-        icon: CircleDot,
+        icon: TwinStatusIcon,
       },
       {
         title: "Links",
