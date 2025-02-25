@@ -1,9 +1,10 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { CircleDot, Square } from "lucide-react";
+import { Square } from "lucide-react";
 import { useTheme } from "next-themes";
 import { TwinStatus } from "../../api";
 import { TwinClassStatusResourceTooltip } from "./tooltip";
+import { TwinStatusIcon } from "../twin-status-icon";
 
 type Props = {
   data: TwinStatus;
@@ -36,7 +37,7 @@ export function TwinClassStatusResourceLink({
               <TwinClassStatusResourceTooltip
                 data={data}
                 link={link}
-                IconComponent={CircleDot}
+                IconComponent={TwinStatusIcon}
               />
             )
           : undefined

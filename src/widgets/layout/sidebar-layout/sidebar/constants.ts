@@ -13,7 +13,6 @@ import { TierIcon } from "@/shared/ui/icons/tier-icon";
 import {
   Asterisk,
   BriefcaseBusiness,
-  CircleDot,
   Eraser,
   Factory,
   Link2,
@@ -29,6 +28,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Group, GroupKeys } from "./group";
+import { TwinStatusIcon } from "@/entities/twin-status";
 
 export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
   class: {
@@ -47,7 +47,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Statuses",
         url: "/workspace/statuses",
-        icon: CircleDot,
+        icon: TwinStatusIcon,
       },
       {
         title: "Links",
