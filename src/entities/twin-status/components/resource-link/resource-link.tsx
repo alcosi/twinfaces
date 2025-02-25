@@ -1,10 +1,9 @@
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 import { Square } from "lucide-react";
-import { useTheme } from "next-themes";
 import { TwinStatus } from "../../api";
-import { TwinClassStatusResourceTooltip } from "./tooltip";
 import { TwinStatusIcon } from "../twin-status-icon";
+import { TwinClassStatusResourceTooltip } from "./tooltip";
 
 type Props = {
   data: TwinStatus;
@@ -19,16 +18,21 @@ export function TwinClassStatusResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  const { theme } = useTheme();
   const link = `/workspace/twinclass/${twinClassId}/twinStatus/${data.id}`;
-  const squareColor =
-    data.backgroundColor || (theme === "light" ? "#0c66e4" : "#579dff");
+
+  const Icon = data.backgroundColor ? (
+    <Square
+      className="w-4 h-4"
+      fill={data.backgroundColor}
+      stroke={data.backgroundColor}
+    />
+  ) : (
+    <TwinStatusIcon className="w-4 h-4" />
+  );
 
   return (
     <ResourceLink
-      IconComponent={() => (
-        <Square className="w-4 h-4" fill={squareColor} stroke={squareColor} />
-      )}
+      IconComponent={() => Icon}
       data={data}
       disabled={disabled}
       renderTooltip={

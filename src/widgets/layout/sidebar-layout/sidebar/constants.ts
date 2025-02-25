@@ -9,6 +9,7 @@ import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";
 import { TwinFlowIcon } from "@/entities/twin-flow";
 import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
+import { TwinStatusIcon } from "@/entities/twin-status";
 import { TierIcon } from "@/shared/ui/icons/tier-icon";
 import {
   Asterisk,
@@ -28,7 +29,6 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Group, GroupKeys } from "./group";
-import { TwinStatusIcon } from "@/entities/twin-status";
 
 export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
   class: {
