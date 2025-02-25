@@ -65,6 +65,12 @@ export interface paths {
     /** tier for update */
     put: operations["tierUpdateV1"];
   };
+  "/private/permission_grant/user_group/{permissionGrantUserGroupId}/v1": {
+    /** Update permission grant user group */
+    put: operations["permissionGrantUserGroupUpdateV1"];
+    /** Delete permission grant user group by id */
+    delete: operations["permissionGrantUserGroupDeleteV1"];
+  };
   "/private/permission_grant/space_role/{permissionGrantSpaceRoleId}/v1": {
     /** Permission grant space role update */
     put: operations["permissionGrantSpaceRoleUpdateV1"];
@@ -394,6 +400,10 @@ export interface paths {
   "/private/permission_group/search/v1": {
     /** Return a list of all permission groups for the current domain */
     post: operations["permissionGroupSearchListV1"];
+  };
+  "/private/permission_grant/user_group/v1": {
+    /** Create permission grant user group */
+    post: operations["permissionGrantUserGroupCreateV1"];
   };
   "/private/permission_grant/user_group/search/v1": {
     /** Permission grant user-group search */
@@ -3235,6 +3245,147 @@ export interface components {
       dataList?: components["schemas"]["DataListV1"];
       businessAccount?: components["schemas"]["BusinessAccountV1"];
     };
+    PermissionGrantUserGroupUpdateRqV1: {
+      permissionGrantUserGroup?: components["schemas"]["PermissionGrantUserGroupUpdateV1"];
+    };
+    /** @description permission grant user group */
+    PermissionGrantUserGroupUpdateV1: {
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description user group id
+       */
+      userGroupId?: string;
+    };
+    PermissionGrantUserGroupSaveRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      permissionGrantUserGroup?: components["schemas"]["PermissionGrantUserGroupV2"];
+    };
+    /** @description result - permission grant user-group */
+    PermissionGrantUserGroupV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 12fd2df0-cae7-455f-a721-eaec415105a4
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description user group id
+       */
+      userGroupId?: string;
+      /**
+       * Format: uuid
+       * @description granted by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      grantedByUserId?: string;
+      /**
+       * Format: date-time
+       * @description granted at
+       */
+      grantedAt?: string;
+      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
+      permission?: components["schemas"]["PermissionV2"];
+      userGroup?: components["schemas"]["UserGroupV1"];
+      grantedByUser?: components["schemas"]["UserV1"];
+    };
+    /** @description permission schema */
+    PermissionSchemaV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description domainId
+       */
+      domainId?: string;
+      /**
+       * Format: uuid
+       * @description businessAccountId
+       */
+      businessAccountId?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+    };
+    /** @description permission */
+    PermissionV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      id?: string;
+      /** @description key */
+      key?: string;
+      /**
+       * @description name
+       * @example Manager
+       */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description group id
+       * @example 7efd9df0-cae7-455f-a721-eaec455105a4
+       */
+      groupId?: string;
+      group?: components["schemas"]["PermissionGroupV1"];
+    };
     PermissionGrantSpaceRoleUpdateRqV1: {
       permissionGrantSpaceRole?: components["schemas"]["PermissionGrantSpaceRoleUpdateV1"];
     };
@@ -3319,38 +3470,6 @@ export interface components {
       permission?: components["schemas"]["PermissionV1"];
       spaceRole?: components["schemas"]["SpaceRoleV2"];
       grantedByUser?: components["schemas"]["UserV1"];
-    };
-    /** @description permission schema */
-    PermissionSchemaV1: {
-      /**
-       * Format: uuid
-       * @description id
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @description domainId
-       */
-      domainId?: string;
-      /**
-       * Format: uuid
-       * @description businessAccountId
-       */
-      businessAccountId?: string;
-      /** @description name */
-      name?: string;
-      /** @description description */
-      description?: string;
-      /**
-       * Format: uuid
-       * @description createdByUserId
-       */
-      createdByUserId?: string;
-      /**
-       * Format: date-time
-       * @description created at
-       */
-      createdAt?: string;
     };
     /** @description space role */
     SpaceRoleV2: {
@@ -5466,8 +5585,8 @@ export interface components {
       statusDetails?: string;
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
-      /** @description tiers */
-      tiers?: components["schemas"]["TierV2"][];
+      /** @description results - tag option list */
+      options?: components["schemas"]["DataListOptionV3"][];
     };
     TwinClassFieldCreateRqV1: {
       /**
@@ -7176,6 +7295,28 @@ export interface components {
        */
       custom?: "ONLY" | "ONLY_NOT" | "ANY";
     };
+    TierSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description tiers */
+      tiers?: components["schemas"]["TierV2"][];
+    };
     UserRefSpaceRoleSearchV1: {
       /**
        * @description Filter by user name, case ignore
@@ -7383,6 +7524,29 @@ export interface components {
       /** @description permission group list */
       permissionGroups?: components["schemas"]["PermissionGroupV1"][];
     };
+    PermissionGrantUserGroupCreateRqV1: {
+      permissionGrantUserGroup?: components["schemas"]["PermissionGrantUserGroupCreateV1"];
+    };
+    /** @description permission grant user group */
+    PermissionGrantUserGroupCreateV1: {
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description user group id
+       */
+      userGroupId?: string;
+    };
     PermissionGrantUserGroupSearchRqV1: {
       /** @description id list */
       idList?: string[];
@@ -7426,72 +7590,6 @@ export interface components {
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - permission grant user-group list */
       permissionGrantUserGroups?: components["schemas"]["PermissionGrantUserGroupV2"][];
-    };
-    /** @description result - permission grant user-group */
-    PermissionGrantUserGroupV2: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example 12fd2df0-cae7-455f-a721-eaec415105a4
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @description permission schema id
-       * @example af143656-9899-4e1f-8683-48795cdefeac
-       */
-      permissionSchemaId?: string;
-      /**
-       * Format: uuid
-       * @description permission id
-       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-       */
-      permissionId?: string;
-      /**
-       * Format: uuid
-       * @description user group id
-       */
-      userGroupId?: string;
-      /**
-       * Format: uuid
-       * @description granted by user id
-       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-       */
-      grantedByUserId?: string;
-      /**
-       * Format: date-time
-       * @description granted at
-       */
-      grantedAt?: string;
-      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
-      permission?: components["schemas"]["PermissionV2"];
-      userGroup?: components["schemas"]["UserGroupV1"];
-      grantedByUser?: components["schemas"]["UserV1"];
-    };
-    /** @description permission */
-    PermissionV2: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-       */
-      id?: string;
-      /** @description key */
-      key?: string;
-      /**
-       * @description name
-       * @example Manager
-       */
-      name?: string;
-      /** @description description */
-      description?: string;
-      /**
-       * Format: uuid
-       * @description group id
-       * @example 7efd9df0-cae7-455f-a721-eaec455105a4
-       */
-      groupId?: string;
-      group?: components["schemas"]["PermissionGroupV1"];
     };
     /** @description permission grant user list */
     PermissionGrantUserV2: {
@@ -9136,6 +9234,7 @@ export interface components {
        * @example en
        */
       currentLocale?: {
+        displayName?: string;
         script?: string;
         variant?: string;
         unicodeLocaleAttributes?: string[];
@@ -9148,7 +9247,6 @@ export interface components {
         extensionKeys?: string[];
         iso3Language?: string;
         iso3Country?: string;
-        displayName?: string;
         language?: string;
       };
       /**
@@ -11430,6 +11528,103 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["DataListOptionRsV3"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Update permission grant user group */
+  permissionGrantUserGroupUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 12fd2df0-cae7-455f-a721-eaec415105a4 */
+        permissionGrantUserGroupId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantUserGroupUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantUserGroupSaveRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Delete permission grant user group by id */
+  permissionGrantUserGroupDeleteV1: {
+    parameters: {
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 12fd2df0-cae7-455f-a721-eaec415105a4 */
+        permissionGrantUserGroupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Response"];
         };
       };
       /** @description Access is denied */
@@ -15679,7 +15874,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["TagSearchRsV1"];
+          "application/json": components["schemas"]["TierSearchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -15929,6 +16124,68 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["PermissionGroupSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Create permission grant user group */
+  permissionGrantUserGroupCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantUserGroupCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantUserGroupSaveRsV1"];
         };
       };
       /** @description Access is denied */
