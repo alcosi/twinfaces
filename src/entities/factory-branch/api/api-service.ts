@@ -1,6 +1,11 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryBranchCreateRq, FactoryBranchFilters } from "./types";
+import {
+  FactoryBranchCreateRq,
+  FactoryBranchFilters,
+  FactoryBranchUpdateRq,
+  FactoryBranchViewQuery,
+} from "./types";
 
 export function createFactoryBranchApi(settings: ApiSettings) {
   function search({
@@ -28,6 +33,22 @@ export function createFactoryBranchApi(settings: ApiSettings) {
     });
   }
 
+  function getById({
+    id,
+    query = {},
+  }: {
+    id: string;
+    query?: FactoryBranchViewQuery;
+  }) {
+    return settings.client.GET("/private/factory_branch/{factoryBranchId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { factoryBranchId: id },
+        query: query,
+      },
+    });
+  }
+
   function create({ id, body }: { id: string; body: FactoryBranchCreateRq }) {
     return settings.client.POST(
       `/private/factory/{factoryId}/factory_branch/v1`,
@@ -41,7 +62,17 @@ export function createFactoryBranchApi(settings: ApiSettings) {
     );
   }
 
-  return { search, create };
+  function update({ id, body }: { id: string; body: FactoryBranchUpdateRq }) {
+    return settings.client.PUT("/private/factory_branch/{factoryBranchId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { factoryBranchId: id },
+      },
+      body: body,
+    });
+  }
+
+  return { search, getById, create, update };
 }
 
 export type FactoryBranchApi = ReturnType<typeof createFactoryBranchApi>;
