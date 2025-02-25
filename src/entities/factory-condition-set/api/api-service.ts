@@ -14,13 +14,14 @@ export function createFactoryConditionSetApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
-          lazyRelation: true,
+          lazyRelation: false,
           showConditionSetInFactoryBranchUsagesCountMode: "SHOW",
           showConditionSetInFactoryEraserUsagesCountMode: "SHOW",
           showConditionSetInFactoryMultiplierFilterUsagesCountMode: "SHOW",
           showConditionSetInFactoryPipelineStepUsagesCountMode: "SHOW",
           showConditionSetInFactoryPipelineUsagesCountMode: "SHOW",
           showFactoryConditionSetMode: "DETAILED",
+          showFactoryConditionSet2UserMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

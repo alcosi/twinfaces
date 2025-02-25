@@ -44,7 +44,7 @@ export function useTwinClassFilters(): FilterFeature<
         type: AutoFormValueType.string,
         label: "Description",
       },
-      headTwinClassIdList: {
+      headHierarchyParentsForTwinClassSearch: {
         type: AutoFormValueType.combobox,
         label: "Head",
         multi: true,
@@ -53,7 +53,7 @@ export function useTwinClassFilters(): FilterFeature<
           return tcAdapter.getItems(search, { abstractt: "ONLY_NOT" });
         },
       },
-      extendsTwinClassIdList: {
+      extendsHierarchyParentsForTwinClassSearch: {
         type: AutoFormValueType.combobox,
         label: "Extends",
         multi: true,
@@ -156,14 +156,18 @@ export function useTwinClassFilters(): FilterFeature<
         toArray(filters.descriptionI18nLikeList),
         "description"
       ).map(wrapWithPercent),
-      headTwinClassIdList: toArrayOfString(
-        toArray(filters.headTwinClassIdList),
-        "id"
-      ),
-      extendsTwinClassIdList: toArrayOfString(
-        toArray(filters.extendsTwinClassIdList),
-        "id"
-      ),
+      headHierarchyParentsForTwinClassSearch: {
+        idList: toArrayOfString(
+          toArray(filters.headHierarchyParentsForTwinClassSearch),
+          "id"
+        ),
+      },
+      extendsHierarchyParentsForTwinClassSearch: {
+        idList: toArrayOfString(
+          toArray(filters.extendsHierarchyParentsForTwinClassSearch),
+          "id"
+        ),
+      },
       ownerTypeList: toArray(
         filters.ownerTypeList as TwinClassFilters["ownerTypeList"]
       ),

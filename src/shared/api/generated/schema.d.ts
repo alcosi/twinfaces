@@ -61,11 +61,39 @@ export interface paths {
     /** Mark twin as touched for user */
     put: operations["twinTouchAddV1"];
   };
+  "/private/tier/{tierId}/v1": {
+    /** tier for update */
+    put: operations["tierUpdateV1"];
+  };
+  "/private/permission_grant/user_group/{permissionGrantUserGroupId}/v1": {
+    /** Update permission grant user group */
+    put: operations["permissionGrantUserGroupUpdateV1"];
+    /** Delete permission grant user group by id */
+    delete: operations["permissionGrantUserGroupDeleteV1"];
+  };
+  "/private/permission_grant/space_role/{permissionGrantSpaceRoleId}/v1": {
+    /** Permission grant space role update */
+    put: operations["permissionGrantSpaceRoleUpdateV1"];
+    /** Delete permission grant space role by id */
+    delete: operations["permissionGrantSpaceRoleDeleteV1"];
+  };
+  "/private/permission_grant/assingee_propagation/{permissionGrantAssigneePropagationId}/v1": {
+    /** Permission grant assignee propagation update */
+    put: operations["permissionGrantAssigneePropagationUpdateV1"];
+  };
   "/private/link/{linkId}/v1": {
     /** Link view */
     get: operations["linkViewV1"];
     /** Update link by id */
     put: operations["linkUpdateV1"];
+  };
+  "/private/factory_pipeline/{factoryPipelineId}/v1": {
+    /** Factory pipeline update */
+    put: operations["factoryPipelineUpdateV1"];
+  };
+  "/private/factory_multiplier/{factoryMultiplierId}/v1": {
+    /** Factory multiplier update */
+    put: operations["factoryMultiplierUpdateV1"];
   };
   "/private/factory_branch/{factoryBranchId}/v1": {
     /** Factory branch by id */
@@ -345,6 +373,14 @@ export interface paths {
     /** Returns transition search result */
     post: operations["transitionSearchV1"];
   };
+  "/private/tier/v1": {
+    /** Tier add */
+    post: operations["tierCreateV1"];
+  };
+  "/private/tier/search/v1": {
+    /** Return a list of tiers by search criteria */
+    post: operations["tierSearchV1"];
+  };
   "/private/space/{spaceId}/users/search/v1": {
     /** Search users within their roles of specific space */
     post: operations["spaceRoleWithinUsersMapV1"];
@@ -365,6 +401,10 @@ export interface paths {
     /** Return a list of all permission groups for the current domain */
     post: operations["permissionGroupSearchListV1"];
   };
+  "/private/permission_grant/user_group/v1": {
+    /** Create permission grant user group */
+    post: operations["permissionGrantUserGroupCreateV1"];
+  };
   "/private/permission_grant/user_group/search/v1": {
     /** Permission grant user-group search */
     post: operations["permissionGrantUserGroupSearchV1"];
@@ -381,9 +421,17 @@ export interface paths {
     /** Permission grant twin role search */
     post: operations["permissionGrantTwinRoleSearchV1"];
   };
+  "/private/permission_grant/space_role/v1": {
+    /** permission grant space role add */
+    post: operations["permissionGrantSpaceRoleCreateV1"];
+  };
   "/private/permission_grant/space_role/search/v1": {
     /** Permission grant space role search */
     post: operations["permissionGrantSpaceRoleSearchV1"];
+  };
+  "/private/permission_grant/assignee_propagation/v1": {
+    /** permission grantAssignee propagation create add */
+    post: operations["permissionGrantAssigneePropagationCreateV1"];
   };
   "/private/permission_grant/assignee_propagation/search/v1": {
     /** Permission grant assignee propagation search */
@@ -442,6 +490,14 @@ export interface paths {
   "/private/factory_branch/search/v1": {
     /** Factory branch search */
     post: operations["factoryBranchSearchV1"];
+  };
+  "/private/factory/{factoryId}/factory_pipeline/v1": {
+    /** Factory pipeline add */
+    post: operations["factoryPipelineCreateV1"];
+  };
+  "/private/factory/{factoryId}/factory_multiplier/v1": {
+    /** Factory multiplier add */
+    post: operations["factoryMultiplierCreateV1"];
   };
   "/private/factory/{factoryId}/factory_branch/v1": {
     /** Factory branch add */
@@ -729,6 +785,10 @@ export interface paths {
   "/private/twin/{twinId}/delete_drafted/v1": {
     /** Delete twin by id */
     delete: operations["twinDeleteDraftedV1"];
+  };
+  "/private/permission_grant/assignee_propagation/{permissionGrantAssigneePropagationId}/v1": {
+    /** Delete permission grant assignee propagation by id */
+    delete: operations["permissionGrantAssigneePropagationDeleteV1"];
   };
   "/private/domain/{domainId}/user/{userId}/v1": {
     /** Delete user from domain */
@@ -1473,6 +1533,21 @@ export interface components {
       /** @description type */
       type?: string;
       /**
+       * @description optional
+       * @example true
+       */
+      optional?: boolean;
+      /** @description defaultValue */
+      defaultValue?: string;
+      /**
+       * @description exampleValues
+       * @example [
+       *   "GREEN,RED,BLUE",
+       *   6000
+       * ]
+       */
+      exampleValues?: string[];
+      /**
        * Format: int32
        * @description order
        */
@@ -1744,6 +1819,13 @@ export interface components {
        */
       factoryPipelineMap?: {
         [key: string]: components["schemas"]["FactoryPipelineV1"];
+      };
+      /**
+       * @description related twinclass schema map
+       * @example {twin class schema map}
+       */
+      twinClassSchemaMap?: {
+        [key: string]: components["schemas"]["TwinClassSchemaV1"];
       };
       /**
        * @description related featurer map
@@ -2216,6 +2298,31 @@ export interface components {
       viewPermission?: components["schemas"]["PermissionV1"];
       editPermission?: components["schemas"]["PermissionV1"];
       fieldTyperFeaturer?: components["schemas"]["FeaturerV1"];
+    };
+    /**
+     * @description related twinclass schema map
+     * @example {twin class schema map}
+     */
+    TwinClassSchemaV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description domainId
+       */
+      domainId?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
     };
     /** @description Twins of which classes are possible to create as children for given twin */
     TwinClassV1: {
@@ -3022,6 +3129,490 @@ export interface components {
       createdAt?: string;
       twin?: components["schemas"]["TwinBaseV1"];
     };
+    TierUpdateRqV1: {
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description custom
+       * @example true
+       */
+      custom?: boolean;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinflow schema id
+       * @example 2c618b09-e8dc-4712-a433-2e18915ee70d
+       */
+      twinflowSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinclass schema id
+       * @example 8b9ea6ad-2b9b-4a4a-8ea9-1b17da4d603b
+       */
+      twinClassSchemaId?: string;
+      /**
+       * Format: int32
+       * @description attachments storage quota count
+       * @example 3
+       */
+      attachmentsStorageQuotaCount?: number;
+      /**
+       * Format: int64
+       * @description attachments storage quota size
+       * @example 3
+       */
+      attachmentsStorageQuotaSize?: number;
+      /**
+       * Format: int32
+       * @description user count quota
+       * @example 3
+       */
+      userCountQuota?: number;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+    };
+    DataListOptionRsV3: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      option?: components["schemas"]["DataListOptionV3"];
+    };
+    /** @description data lists option */
+    DataListOptionV3: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 7de977d4-df6d-4250-9cb2-088363d139a1
+       */
+      id?: string;
+      /**
+       * @description name
+       * @example Bharat
+       */
+      name?: string;
+      /**
+       * @description icon
+       * @example Icon path
+       */
+      icon?: string;
+      /**
+       * @description status
+       * @example active
+       * @enum {string}
+       */
+      status?: "active" | "disabled" | "hidden";
+      /** @description map attributes (key : value) */
+      attributes?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: uuid
+       * @description id
+       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
+       */
+      dataListId?: string;
+      /**
+       * Format: uuid
+       * @description business account id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      businessAccountId?: string;
+      dataList?: components["schemas"]["DataListV1"];
+      businessAccount?: components["schemas"]["BusinessAccountV1"];
+    };
+    PermissionGrantUserGroupUpdateRqV1: {
+      permissionGrantUserGroup?: components["schemas"]["PermissionGrantUserGroupUpdateV1"];
+    };
+    /** @description permission grant user group */
+    PermissionGrantUserGroupUpdateV1: {
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description user group id
+       */
+      userGroupId?: string;
+    };
+    PermissionGrantUserGroupSaveRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      permissionGrantUserGroup?: components["schemas"]["PermissionGrantUserGroupV2"];
+    };
+    /** @description result - permission grant user-group */
+    PermissionGrantUserGroupV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 12fd2df0-cae7-455f-a721-eaec415105a4
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description user group id
+       */
+      userGroupId?: string;
+      /**
+       * Format: uuid
+       * @description granted by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      grantedByUserId?: string;
+      /**
+       * Format: date-time
+       * @description granted at
+       */
+      grantedAt?: string;
+      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
+      permission?: components["schemas"]["PermissionV2"];
+      userGroup?: components["schemas"]["UserGroupV1"];
+      grantedByUser?: components["schemas"]["UserV1"];
+    };
+    /** @description permission schema */
+    PermissionSchemaV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description domainId
+       */
+      domainId?: string;
+      /**
+       * Format: uuid
+       * @description businessAccountId
+       */
+      businessAccountId?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+    };
+    /** @description permission */
+    PermissionV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      id?: string;
+      /** @description key */
+      key?: string;
+      /**
+       * @description name
+       * @example Manager
+       */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description group id
+       * @example 7efd9df0-cae7-455f-a721-eaec455105a4
+       */
+      groupId?: string;
+      group?: components["schemas"]["PermissionGroupV1"];
+    };
+    PermissionGrantSpaceRoleUpdateRqV1: {
+      permissionGrantSpaceRole?: components["schemas"]["PermissionGrantSpaceRoleUpdateV1"];
+    };
+    /** @description permission grant space role create */
+    PermissionGrantSpaceRoleUpdateV1: {
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description space role id
+       * @example d74c3adc-c83c-4b55-92ca-cf570598296a
+       */
+      spaceRoleId?: string;
+    };
+    PermissionGrantSpaceRoleRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      permissionGrantSpaceRole?: components["schemas"]["PermissionGrantSpaceRoleV2"];
+    };
+    /** @description result - permission grant space role */
+    PermissionGrantSpaceRoleV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 9e8641f2-dda1-4a43-9a23-8786124cdb6b
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description space role id
+       */
+      spaceRoleId?: string;
+      /**
+       * Format: uuid
+       * @description granted by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      grantedByUserId?: string;
+      /**
+       * Format: date-time
+       * @description granted at
+       */
+      grantedAt?: string;
+      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
+      permission?: components["schemas"]["PermissionV1"];
+      spaceRole?: components["schemas"]["SpaceRoleV2"];
+      grantedByUser?: components["schemas"]["UserV1"];
+    };
+    /** @description space role */
+    SpaceRoleV2: {
+      /**
+       * Format: uuid
+       * @description space role user id
+       * @example 275bf3c4-951a-4d26-bb82-5e18361d301c
+       */
+      id?: string;
+      /**
+       * @description key
+       * @example Member
+       */
+      key?: string;
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      twinClassId?: string;
+      /**
+       * Format: uuid
+       * @description business account id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      businessAccountId?: string;
+      twinClass?: components["schemas"]["TwinClassV1"];
+      businessAccount?: components["schemas"]["BusinessAccountV1"];
+    };
+    PermissionGrantAssigneePropagationUpdateRqV1: {
+      permissionGrantAssigneePropagation?: components["schemas"]["PermissionGrantAssigneePropagationUpdateV1"];
+    };
+    /** @description permission grant assignee propagation update */
+    PermissionGrantAssigneePropagationUpdateV1: {
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description propagation by twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      propagationByTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description propagation by twin status id
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      propagationByTwinStatusId?: string;
+      /**
+       * @description is space only
+       * @example true
+       */
+      inSpaceOnly?: boolean;
+    };
+    PermissionGrantAssigneePropagationRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      permissionGrantAssigneePropagation?: components["schemas"]["PermissionGrantAssigneePropagationV2"];
+    };
+    /** @description result - permission assignee propagation */
+    PermissionGrantAssigneePropagationV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 9e8641f2-dda1-4a43-9a23-8786124cdb6b
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description propagation twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      propagationTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description twin status id
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      propagationTwinStatusId?: string;
+      /**
+       * Format: uuid
+       * @description granted by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      grantedByUserId?: string;
+      /**
+       * Format: date-time
+       * @description granted at
+       */
+      grantedAt?: string;
+      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
+      permission?: components["schemas"]["PermissionV1"];
+      propagationTwinClass?: components["schemas"]["TwinClassV1"];
+      propagationTwinStatus?: components["schemas"]["TwinStatusV1"];
+      grantedByUser?: components["schemas"]["UserV1"];
+    };
     LinkUpdateV1: {
       forwardNameI18n?: components["schemas"]["I18nV1"];
       backwardNameI18n?: components["schemas"]["I18nV1"];
@@ -3123,7 +3714,17 @@ export interface components {
       srcTwinClass?: components["schemas"]["TwinClassBaseV1"];
       createdByUser?: components["schemas"]["UserV1"];
     };
-    FactoryBranchUpdateRqv1: {
+    FactoryPipelineUpdateRqV1: {
+      factoryPipeline?: components["schemas"]["FactoryPipelineUpdateV1"];
+    };
+    /** @description factory pipeline update */
+    FactoryPipelineUpdateV1: {
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
       /**
        * Format: uuid
        * @description factory condition set id
@@ -3136,16 +3737,219 @@ export interface components {
        */
       factoryConditionSetInvert?: boolean;
       /**
-       * @description factory condition set invert
+       * @description is active
        * @example true
        */
       active?: boolean;
+      /**
+       * Format: uuid
+       * @description output status id
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      outputStatusId?: string;
       /**
        * Format: uuid
        * @description next factory id
        * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
        */
       nextFactoryId?: string;
+      /**
+       * Format: uuid
+       * @description template twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      templateTwinId?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+    };
+    /** @description factory condition set */
+    FactoryConditionSetV1: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      id?: string;
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description created by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description updated at
+       */
+      updatedAt?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
+       * Format: int32
+       * @description count in factory pipeline usages
+       * @example 3
+       */
+      inFactoryPipelineUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory pipeline step usages
+       * @example 3
+       */
+      inFactoryPipelineStepUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory multiplier filter usages
+       * @example 3
+       */
+      inFactoryMultiplierFilterUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory branch usages
+       * @example 3
+       */
+      inFactoryBranchUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory eraser usages
+       * @example 3
+       */
+      inFactoryEraserUsagesCount?: number;
+    };
+    FactoryPipelineRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      factoryPipeline?: components["schemas"]["FactoryPipelineV2"];
+    };
+    /** @description result - factory pipeline */
+    FactoryPipelineV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryId?: string;
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryConditionSetId?: string;
+      /**
+       * @description factory condition set invert
+       * @example true
+       */
+      factoryConditionSetInvert?: boolean;
+      /**
+       * @description is active
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description output twin status id
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      outputTwinStatusId?: string;
+      /**
+       * Format: uuid
+       * @description next factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      nextFactoryId?: string;
+      /**
+       * @description next factory limit scope
+       * @example true
+       */
+      nextFactoryLimitScope?: boolean;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: int32
+       * @description count pipeline steps
+       * @example 3
+       */
+      pipelineStepsCount?: number;
+      factory?: components["schemas"]["FactoryV1"];
+      inputTwinClass?: components["schemas"]["TwinClassBaseV1"];
+      factoryConditionSet?: components["schemas"]["FactoryConditionSetV1"];
+      outputTwinStatus?: components["schemas"]["TwinStatusV1"];
+      nextFactory?: components["schemas"]["FactoryV1"];
+    };
+    FactoryMultiplierUpdateRqV1: {
+      factoryMultiplier?: components["schemas"]["FactoryMultiplierUpdateV1"];
+    };
+    /** @description factory multiplier update */
+    FactoryMultiplierUpdateV1: {
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
+      /**
+       * Format: int32
+       * @description multiplier featurer id
+       * @example 1000
+       */
+      multiplierFeaturerId?: number;
+      /**
+       * @description multiplier params
+       * @example {"outputTwinClassId"=>"da69c441-9c8f-4e73-a07e-b5648f8f4396",
+       * "copyHead"=>"true"}
+       */
+      multiplierParams?: {
+        [key: string]: string;
+      };
+      /**
+       * @description is active
+       * @example true
+       */
+      active?: boolean;
       /**
        * @description description
        * @example Some description
@@ -3217,54 +4021,34 @@ export interface components {
       factoryConditionSet?: components["schemas"]["FactoryConditionSetV1"];
       nextFactory?: components["schemas"]["FactoryV1"];
     };
-    /** @description factory condition set */
-    FactoryConditionSetV1: {
+    FactoryBranchUpdateRqv1: {
       /**
        * Format: uuid
-       * @description id
+       * @description factory condition set id
        * @example 69856a15-6858-40ba-b0aa-b123c54e250d
        */
-      id?: string;
+      factoryConditionSetId?: string;
       /**
-       * @description name
-       * @example Some name
+       * @description factory condition set invert
+       * @example true
        */
-      name?: string;
+      factoryConditionSetInvert?: boolean;
+      /**
+       * @description factory condition set invert
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description next factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      nextFactoryId?: string;
       /**
        * @description description
        * @example Some description
        */
       description?: string;
-      /**
-       * Format: int32
-       * @description count in factory pipeline usages
-       * @example 3
-       */
-      inFactoryPipelineUsagesCount?: number;
-      /**
-       * Format: int32
-       * @description count in factory pipeline step usages
-       * @example 3
-       */
-      inFactoryPipelineStepUsagesCount?: number;
-      /**
-       * Format: int32
-       * @description count in factory multiplier filter usages
-       * @example 3
-       */
-      inFactoryMultiplierFilterUsagesCount?: number;
-      /**
-       * Format: int32
-       * @description count in factory branch usages
-       * @example 3
-       */
-      inFactoryBranchUsagesCount?: number;
-      /**
-       * Format: int32
-       * @description count in factory eraser usages
-       * @example 3
-       */
-      inFactoryEraserUsagesCount?: number;
     };
     FactoryUpdateRqV1: {
       /**
@@ -3544,69 +4328,6 @@ export interface components {
        * @enum {string}
        */
       status?: "active" | "disabled" | "hidden";
-    };
-    DataListOptionRsV3: {
-      /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description User friendly, localized request processing status description
-       * @example success
-       */
-      msg?: string;
-      /**
-       * @description request processing status description, technical
-       * @example success
-       */
-      statusDetails?: string;
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      option?: components["schemas"]["DataListOptionV3"];
-    };
-    /** @description data lists option */
-    DataListOptionV3: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example 7de977d4-df6d-4250-9cb2-088363d139a1
-       */
-      id?: string;
-      /**
-       * @description name
-       * @example Bharat
-       */
-      name?: string;
-      /**
-       * @description icon
-       * @example Icon path
-       */
-      icon?: string;
-      /**
-       * @description status
-       * @example active
-       * @enum {string}
-       */
-      status?: "active" | "disabled" | "hidden";
-      /** @description map attributes (key : value) */
-      attributes?: {
-        [key: string]: string;
-      };
-      /**
-       * Format: uuid
-       * @description id
-       * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
-       */
-      dataListId?: string;
-      /**
-       * Format: uuid
-       * @description business account id
-       * @example 9a3f6075-f175-41cd-a804-934201ec969c
-       */
-      businessAccountId?: string;
-      dataList?: components["schemas"]["DataListV1"];
-      businessAccount?: components["schemas"]["BusinessAccountV1"];
     };
     /** @description attribute4 */
     DataListAttributeSaveV1: {
@@ -4056,6 +4777,11 @@ export interface components {
        */
       domainId?: string;
       user?: components["schemas"]["UserV1"];
+      /**
+       * @description locale [optional]
+       * @example en
+       */
+      locale?: string;
     };
     TwinflowSchemaSearchRqV1: {
       /** @description id list */
@@ -4101,7 +4827,7 @@ export interface components {
       /** @description results - twinflow schema list */
       twinflowSchemas?: components["schemas"]["TwinflowSchemaV1"][];
     };
-    /** @description results - twinflow schema list */
+    /** @description twinflow schema */
     TwinflowSchemaV1: {
       /**
        * Format: uuid
@@ -4137,8 +4863,6 @@ export interface components {
        * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
       createdByUserId?: string;
-      businessAccount?: components["schemas"]["BusinessAccountV1"];
-      createdByUser?: components["schemas"]["UserV1"];
     };
     TransitionCreateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
@@ -4292,6 +5016,20 @@ export interface components {
        * @description createdByUserId
        */
       createdByUserId?: string;
+      /**
+       * Format: uuid
+       * @description inbuilt factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      inbuiltTwinFactoryId?: string;
+      inbuiltTwinFactory?: components["schemas"]["FactoryV1"];
+      /**
+       * Format: uuid
+       * @description drafting factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      draftingTwinFactoryId?: string;
+      draftingTwinFactory?: components["schemas"]["FactoryV1"];
     };
     TwinflowListRqV1: {
       /** @description id list */
@@ -4551,6 +5289,20 @@ export interface components {
        * @description createdByUserId
        */
       createdByUserId?: string;
+      /**
+       * Format: uuid
+       * @description inbuilt factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      inbuiltTwinFactoryId?: string;
+      inbuiltTwinFactory?: components["schemas"]["FactoryV1"];
+      /**
+       * Format: uuid
+       * @description drafting factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      draftingTwinFactoryId?: string;
+      draftingTwinFactory?: components["schemas"]["FactoryV1"];
       /** @description validators */
       validatorRules?: components["schemas"]["TransitionValidatorRuleBaseV1"][];
       /** @description triggers */
@@ -4995,6 +5747,18 @@ export interface components {
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       twinClass?: components["schemas"]["TwinClassV1"];
     };
+    /** @description Hierarchy search extands parents */
+    HierarchySearchV1: {
+      /** @description twin class id list */
+      idList?: string[];
+      /** @description twin class id exclude list */
+      idExcludeList?: string[];
+      /**
+       * Format: int32
+       * @description Search depth
+       */
+      depth?: number;
+    };
     TwinClassListRqV1: {
       /** @description twin class id list */
       twinClassIdList?: string[];
@@ -5010,14 +5774,10 @@ export interface components {
       descriptionI18nLikeList?: string[];
       /** @description description i18n exclude keyword list(OR) */
       descriptionI18nNotLikeList?: string[];
-      /** @description head twin class id list */
-      headTwinClassIdList?: string[];
-      /** @description head twin class id exclude list */
-      headTwinClassIdExcludeList?: string[];
-      /** @description extends twin class id list */
-      extendsTwinClassIdList?: string[];
-      /** @description extends twin class id exclude list */
-      extendsTwinClassIdExcludeList?: string[];
+      headHierarchyChildsForTwinClassSearch?: components["schemas"]["HierarchySearchV1"];
+      headHierarchyParentsForTwinClassSearch?: components["schemas"]["HierarchySearchV1"];
+      extendsHierarchyChildsForTwinClassSearch?: components["schemas"]["HierarchySearchV1"];
+      extendsHierarchyParentsForTwinClassSearch?: components["schemas"]["HierarchySearchV1"];
       /** @description owner type list */
       ownerTypeList?: ("SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER")[];
       /** @description owner type exclude list */
@@ -6301,6 +7061,14 @@ export interface components {
       idList?: string[];
       /** @description id exclude list */
       idExcludeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name not like list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
       /** @description twin class id list */
       twinClassIdList?: string[];
       /** @description twin class id exclude list */
@@ -6354,6 +7122,201 @@ export interface components {
       /** @description results - transition list */
       transition?: components["schemas"]["TwinflowTransitionBaseV2"][];
     };
+    TierCreateRqV1: {
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description custom
+       * @example true
+       */
+      custom?: boolean;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinflow schema id
+       * @example 2c618b09-e8dc-4712-a433-2e18915ee70d
+       */
+      twinflowSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinclass schema id
+       * @example 8b9ea6ad-2b9b-4a4a-8ea9-1b17da4d603b
+       */
+      twinClassSchemaId?: string;
+      /**
+       * Format: int32
+       * @description attachments storage quota count
+       * @example 3
+       */
+      attachmentsStorageQuotaCount?: number;
+      /**
+       * Format: int64
+       * @description attachments storage quota size
+       * @example 3
+       */
+      attachmentsStorageQuotaSize?: number;
+      /**
+       * Format: int32
+       * @description user count quota
+       * @example 3
+       */
+      userCountQuota?: number;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description id
+       * @example 64807201-e3d6-4016-b699-b36c5f91c58e
+       */
+      id?: string;
+    };
+    TierRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      tier?: components["schemas"]["TierV2"];
+    };
+    /** @description tiers */
+    TierV2: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description permission schema id
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinflow schema id
+       */
+      twinflowSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinclass schema id
+       */
+      twinClassSchemaId?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /** @description custom */
+      custom?: boolean;
+      /**
+       * Format: int32
+       * @description attachments storage quota count
+       */
+      attachmentsStorageQuotaCount?: number;
+      /**
+       * Format: int64
+       * @description attachments storage quota size
+       */
+      attachmentsStorageQuotaSize?: number;
+      /**
+       * Format: int32
+       * @description user count quota
+       */
+      userCountQuota?: number;
+      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
+      twinflowSchema?: components["schemas"]["TwinflowSchemaV1"];
+      twinClassSchema?: components["schemas"]["TwinClassSchemaV1"];
+    };
+    /** @description user count quota range */
+    LongRangeDTOv1: {
+      /**
+       * Format: int64
+       * @description from
+       */
+      from?: number;
+      /**
+       * Format: int64
+       * @description to
+       */
+      to?: number;
+    };
+    TierSearchRqV1: {
+      /** @description id list */
+      idList?: string[];
+      /** @description id exclude list */
+      idExcludeList?: string[];
+      /** @description permission schema id list */
+      permissionSchemaIdList?: string[];
+      /** @description permission schema id exclude list */
+      permissionSchemaIdExcludeList?: string[];
+      /** @description twinflow schema id list */
+      twinflowSchemaIdList?: string[];
+      /** @description twinflow schema id exclude list */
+      twinflowSchemaIdExcludeList?: string[];
+      /** @description twinclass schema id list */
+      twinclassSchemaIdList?: string[];
+      /** @description twinclass schema id exclude list */
+      twinclassSchemaIdExcludeList?: string[];
+      /** @description name like list */
+      nameLikeList?: string[];
+      /** @description name not like list */
+      nameNotLikeList?: string[];
+      /** @description description like list */
+      descriptionLikeList?: string[];
+      /** @description description not like list */
+      descriptionNotLikeList?: string[];
+      attachmentsStorageQuotaCountRange?: components["schemas"]["LongRangeDTOv1"];
+      attachmentsStorageQuotaSizeRange?: components["schemas"]["LongRangeDTOv1"];
+      userCountQuotaRange?: components["schemas"]["LongRangeDTOv1"];
+      /**
+       * @description custom
+       * @enum {string}
+       */
+      custom?: "ONLY" | "ONLY_NOT" | "ANY";
+    };
+    TierSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description tiers */
+      tiers?: components["schemas"]["TierV2"][];
+    };
     UserRefSpaceRoleSearchV1: {
       /**
        * @description Filter by user name, case ignore
@@ -6374,44 +7337,6 @@ export interface components {
        * ]
        */
       userGroupIdList?: string[];
-    };
-    /** @description space role */
-    SpaceRoleV2: {
-      /**
-       * Format: uuid
-       * @description space role user id
-       * @example 275bf3c4-951a-4d26-bb82-5e18361d301c
-       */
-      id?: string;
-      /**
-       * @description key
-       * @example Member
-       */
-      key?: string;
-      /**
-       * @description name
-       * @example Some name
-       */
-      name?: string;
-      /**
-       * @description description
-       * @example Some description
-       */
-      description?: string;
-      /**
-       * Format: uuid
-       * @description twin class id
-       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-       */
-      twinClassId?: string;
-      /**
-       * Format: uuid
-       * @description business account id
-       * @example 9a3f6075-f175-41cd-a804-934201ec969c
-       */
-      businessAccountId?: string;
-      twinClass?: components["schemas"]["TwinClassV1"];
-      businessAccount?: components["schemas"]["BusinessAccountV1"];
     };
     UserWithinSpaceRolesListRsV1: {
       /**
@@ -6599,6 +7524,29 @@ export interface components {
       /** @description permission group list */
       permissionGroups?: components["schemas"]["PermissionGroupV1"][];
     };
+    PermissionGrantUserGroupCreateRqV1: {
+      permissionGrantUserGroup?: components["schemas"]["PermissionGrantUserGroupCreateV1"];
+    };
+    /** @description permission grant user group */
+    PermissionGrantUserGroupCreateV1: {
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description user group id
+       */
+      userGroupId?: string;
+    };
     PermissionGrantUserGroupSearchRqV1: {
       /** @description id list */
       idList?: string[];
@@ -6642,104 +7590,6 @@ export interface components {
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - permission grant user-group list */
       permissionGrantUserGroups?: components["schemas"]["PermissionGrantUserGroupV2"][];
-    };
-    /** @description result - permission grant user-group */
-    PermissionGrantUserGroupV2: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example 12fd2df0-cae7-455f-a721-eaec415105a4
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @description permission schema id
-       * @example af143656-9899-4e1f-8683-48795cdefeac
-       */
-      permissionSchemaId?: string;
-      /**
-       * Format: uuid
-       * @description permission id
-       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-       */
-      permissionId?: string;
-      /**
-       * Format: uuid
-       * @description user group id
-       */
-      userGroupId?: string;
-      /**
-       * Format: uuid
-       * @description granted by user id
-       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-       */
-      grantedByUserId?: string;
-      /**
-       * Format: date-time
-       * @description granted at
-       */
-      grantedAt?: string;
-      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
-      permission?: components["schemas"]["PermissionV2"];
-      userGroup?: components["schemas"]["UserGroupV1"];
-      grantedByUser?: components["schemas"]["UserV1"];
-    };
-    /** @description permission schema */
-    PermissionSchemaV1: {
-      /**
-       * Format: uuid
-       * @description id
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @description domainId
-       */
-      domainId?: string;
-      /**
-       * Format: uuid
-       * @description businessAccountId
-       */
-      businessAccountId?: string;
-      /** @description name */
-      name?: string;
-      /** @description description */
-      description?: string;
-      /**
-       * Format: uuid
-       * @description createdByUserId
-       */
-      createdByUserId?: string;
-      /**
-       * Format: date-time
-       * @description created at
-       */
-      createdAt?: string;
-    };
-    /** @description permission */
-    PermissionV2: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-       */
-      id?: string;
-      /** @description key */
-      key?: string;
-      /**
-       * @description name
-       * @example Manager
-       */
-      name?: string;
-      /** @description description */
-      description?: string;
-      /**
-       * Format: uuid
-       * @description group id
-       * @example 7efd9df0-cae7-455f-a721-eaec455105a4
-       */
-      groupId?: string;
-      group?: components["schemas"]["PermissionGroupV1"];
     };
     /** @description permission grant user list */
     PermissionGrantUserV2: {
@@ -6942,6 +7792,30 @@ export interface components {
       twinClass?: components["schemas"]["TwinClassV1"];
       grantedByUser?: components["schemas"]["UserV1"];
     };
+    PermissionGrantSpaceRoleCreateRqV1: {
+      permissionGrantSpaceRole?: components["schemas"]["PermissionGrantSpaceRoleCreateV1"];
+    };
+    /** @description permission grant space role create */
+    PermissionGrantSpaceRoleCreateV1: {
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
+       */
+      permissionId?: string;
+      /**
+       * Format: uuid
+       * @description space role id
+       * @example d74c3adc-c83c-4b55-92ca-cf570598296a
+       */
+      spaceRoleId?: string;
+    };
     PermissionGrantSpaceRoleSearchRqV1: {
       /** @description id list */
       idList?: string[];
@@ -6986,14 +7860,11 @@ export interface components {
       /** @description results - permission grant space role list */
       permissionGrantSpaceRoles?: components["schemas"]["PermissionGrantSpaceRoleV2"][];
     };
-    /** @description result - permission grant space role */
-    PermissionGrantSpaceRoleV2: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example 9e8641f2-dda1-4a43-9a23-8786124cdb6b
-       */
-      id?: string;
+    PermissionGrantAssigneePropagationCreateRqV1: {
+      permissionGrantAssigneePropagation?: components["schemas"]["PermissionGrantAssigneePropagationCreateV1"];
+    };
+    /** @description permission grant assignee propagation create */
+    PermissionGrantAssigneePropagationCreateV1: {
       /**
        * Format: uuid
        * @description permission schema id
@@ -7008,24 +7879,21 @@ export interface components {
       permissionId?: string;
       /**
        * Format: uuid
-       * @description space role id
+       * @description propagation by twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
-      spaceRoleId?: string;
+      propagationByTwinClassId?: string;
       /**
        * Format: uuid
-       * @description granted by user id
-       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       * @description propagation by twin status id
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
        */
-      grantedByUserId?: string;
+      propagationByTwinStatusId?: string;
       /**
-       * Format: date-time
-       * @description granted at
+       * @description is space only
+       * @example true
        */
-      grantedAt?: string;
-      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
-      permission?: components["schemas"]["PermissionV1"];
-      spaceRole?: components["schemas"]["SpaceRoleV2"];
-      grantedByUser?: components["schemas"]["UserV1"];
+      inSpaceOnly?: boolean;
     };
     PermissionGrantAssigneePropagationSearchRqV1: {
       /** @description id list */
@@ -7074,55 +7942,6 @@ export interface components {
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - permission assignee propagation list */
       permissionGrantAssigneePropagations?: components["schemas"]["PermissionGrantAssigneePropagationV2"][];
-    };
-    /** @description result - permission assignee propagation */
-    PermissionGrantAssigneePropagationV2: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example 9e8641f2-dda1-4a43-9a23-8786124cdb6b
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @description permission schema id
-       * @example af143656-9899-4e1f-8683-48795cdefeac
-       */
-      permissionSchemaId?: string;
-      /**
-       * Format: uuid
-       * @description permission id
-       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-       */
-      permissionId?: string;
-      /**
-       * Format: uuid
-       * @description propagation twin class id
-       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-       */
-      propagationTwinClassId?: string;
-      /**
-       * Format: uuid
-       * @description twin status id
-       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
-       */
-      propagationTwinStatusId?: string;
-      /**
-       * Format: uuid
-       * @description granted by user id
-       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-       */
-      grantedByUserId?: string;
-      /**
-       * Format: date-time
-       * @description granted at
-       */
-      grantedAt?: string;
-      permissionSchema?: components["schemas"]["PermissionSchemaV1"];
-      permission?: components["schemas"]["PermissionV1"];
-      propagationTwinClass?: components["schemas"]["TwinClassV1"];
-      propagationTwinStatus?: components["schemas"]["TwinStatusV1"];
-      grantedByUser?: components["schemas"]["UserV1"];
     };
     PermissionUpdateRqV1: {
       nameI18n?: components["schemas"]["I18nV1"];
@@ -7505,76 +8324,6 @@ export interface components {
       factoryConditionSet?: components["schemas"]["FactoryConditionSetV1"];
       fillerFeaturer?: components["schemas"]["FeaturerV1"];
     };
-    /** @description result - factory pipeline */
-    FactoryPipelineV2: {
-      /**
-       * Format: uuid
-       * @description id
-       * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-       */
-      id?: string;
-      /**
-       * Format: uuid
-       * @description factory id
-       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-       */
-      factoryId?: string;
-      /**
-       * Format: uuid
-       * @description input twin class id
-       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-       */
-      inputTwinClassId?: string;
-      /**
-       * Format: uuid
-       * @description factory id
-       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-       */
-      factoryConditionSetId?: string;
-      /**
-       * @description factory condition set invert
-       * @example true
-       */
-      factoryConditionSetInvert?: boolean;
-      /**
-       * @description is active
-       * @example true
-       */
-      active?: boolean;
-      /**
-       * Format: uuid
-       * @description output twin status id
-       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
-       */
-      outputTwinStatusId?: string;
-      /**
-       * Format: uuid
-       * @description next factory id
-       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-       */
-      nextFactoryId?: string;
-      /**
-       * @description next factory limit scope
-       * @example true
-       */
-      nextFactoryLimitScope?: boolean;
-      /**
-       * @description description
-       * @example Some description
-       */
-      description?: string;
-      /**
-       * Format: int32
-       * @description count pipeline steps
-       * @example 3
-       */
-      pipelineStepsCount?: number;
-      factory?: components["schemas"]["FactoryV1"];
-      inputTwinClass?: components["schemas"]["TwinClassBaseV1"];
-      factoryConditionSet?: components["schemas"]["FactoryConditionSetV1"];
-      outputTwinStatus?: components["schemas"]["TwinStatusV1"];
-      nextFactory?: components["schemas"]["FactoryV1"];
-    };
     FactoryPipelineSearchRqV1: {
       /** @description id list */
       idList?: string[];
@@ -7813,6 +8562,12 @@ export interface components {
       factoryConditionSetIdList?: string[];
       /** @description factory condition set id exclude list */
       factoryConditionSetIdExcludeList?: string[];
+      /**
+       * @description factory condition invert
+       * @example ANY
+       * @enum {string}
+       */
+      conditionInvert?: "ONLY" | "ONLY_NOT" | "ANY";
       /** @description description like list */
       descriptionLikeList?: string[];
       /** @description description not like list */
@@ -7935,7 +8690,73 @@ export interface components {
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - condition list */
-      conditionSets?: components["schemas"]["FactoryConditionSetV1"][];
+      conditionSets?: components["schemas"]["FactoryConditionSetV2"][];
+    };
+    /** @description results - condition list */
+    FactoryConditionSetV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      id?: string;
+      /**
+       * @description name
+       * @example Some name
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /**
+       * Format: uuid
+       * @description created by user id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      createdByUserId?: string;
+      /**
+       * Format: date-time
+       * @description updated at
+       */
+      updatedAt?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       */
+      createdAt?: string;
+      /**
+       * Format: int32
+       * @description count in factory pipeline usages
+       * @example 3
+       */
+      inFactoryPipelineUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory pipeline step usages
+       * @example 3
+       */
+      inFactoryPipelineStepUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory multiplier filter usages
+       * @example 3
+       */
+      inFactoryMultiplierFilterUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory branch usages
+       * @example 3
+       */
+      inFactoryBranchUsagesCount?: number;
+      /**
+       * Format: int32
+       * @description count in factory eraser usages
+       * @example 3
+       */
+      inFactoryEraserUsagesCount?: number;
+      createdByUser?: components["schemas"]["UserV1"];
     };
     FactoryBranchSearchRqV1: {
       /** @description id list */
@@ -7992,6 +8813,113 @@ export interface components {
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - condition list */
       branches?: components["schemas"]["FactoryBranchV2"][];
+    };
+    FactoryPipelineCreateRqV1: {
+      factoryPipeline?: components["schemas"]["FactoryPipelineCreateV1"];
+    };
+    /** @description factory pipeline create */
+    FactoryPipelineCreateV1: {
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description factory condition set id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryConditionSetId?: string;
+      /**
+       * @description factory condition set invert
+       * @example true
+       */
+      factoryConditionSetInvert?: boolean;
+      /**
+       * @description is active
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description output status id
+       * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+       */
+      outputStatusId?: string;
+      /**
+       * Format: uuid
+       * @description next factory id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      nextFactoryId?: string;
+      /**
+       * Format: uuid
+       * @description template twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      templateTwinId?: string;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+    };
+    FactoryMultiplierCreateRqV1: {
+      factoryMultiplier?: components["schemas"]["FactoryMultiplierCreateV1"];
+    };
+    /** @description factory multiplier create */
+    FactoryMultiplierCreateV1: {
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
+      /**
+       * Format: int32
+       * @description multiplier featurer id
+       * @example 1000
+       */
+      multiplierFeaturerId?: number;
+      /**
+       * @description multiplier params
+       * @example {"outputTwinClassId"=>"da69c441-9c8f-4e73-a07e-b5648f8f4396",
+       * "copyHead"=>"true"}
+       */
+      multiplierParams?: {
+        [key: string]: string;
+      };
+      /**
+       * @description is active
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+    };
+    FactoryMultiplierRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      factoryMultiplier?: components["schemas"]["FactoryMultiplierV2"];
     };
     FactoryBranchCreateRqV1: {
       /**
@@ -8078,6 +9006,11 @@ export interface components {
        * @example c2a7f81f-d7da-43e8-a1d3-18d6f632878b
        */
       userId?: string;
+      /**
+       * @description locale [optional]
+       * @example en
+       */
+      locale?: string;
     };
     DomainBusinessAccountUpdateV1: {
       /**
@@ -8301,20 +9234,20 @@ export interface components {
        * @example en
        */
       currentLocale?: {
-        language?: string;
         displayName?: string;
-        country?: string;
-        variant?: string;
         script?: string;
+        variant?: string;
         unicodeLocaleAttributes?: string[];
         unicodeLocaleKeys?: string[];
         displayLanguage?: string;
         displayScript?: string;
         displayCountry?: string;
         displayVariant?: string;
+        country?: string;
         extensionKeys?: string[];
         iso3Language?: string;
         iso3Country?: string;
+        language?: string;
       };
       /**
        * Format: date-time
@@ -9883,7 +10816,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showFeaturerParamMode?: "HIDE" | "SHOW";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -10559,6 +11498,309 @@ export interface operations {
       };
     };
   };
+  /** tier for update */
+  tierUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showTierMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 64807201-e3d6-4016-b699-b36c5f91c58e */
+        tierId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TierUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Updated tier data */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DataListOptionRsV3"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Update permission grant user group */
+  permissionGrantUserGroupUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 12fd2df0-cae7-455f-a721-eaec415105a4 */
+        permissionGrantUserGroupId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantUserGroupUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantUserGroupSaveRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Delete permission grant user group by id */
+  permissionGrantUserGroupDeleteV1: {
+    parameters: {
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 12fd2df0-cae7-455f-a721-eaec415105a4 */
+        permissionGrantUserGroupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Response"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Permission grant space role update */
+  permissionGrantSpaceRoleUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example f64ec2c1-a791-4305-acfc-6925d671c005 */
+        permissionGrantSpaceRoleId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantSpaceRoleUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Permission grant space role update */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantSpaceRoleRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Delete permission grant space role by id */
+  permissionGrantSpaceRoleDeleteV1: {
+    parameters: {
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example f64ec2c1-a791-4305-acfc-6925d671c005 */
+        permissionGrantSpaceRoleId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Response"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Permission grant assignee propagation update */
+  permissionGrantAssigneePropagationUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantAssigneePropagation2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantAssigneePropagation2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantAssigneePropagation2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermissionGrantAssigneePropagation2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantAssigneePropagationMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPropagationTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example a7485d77-16bc-440e-a88e-1a576954a839 */
+        permissionGrantAssigneePropagationId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantAssigneePropagationUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Permission grant assignee propagation update */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantAssigneePropagationRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Link view */
   linkViewV1: {
     parameters: {
@@ -10668,6 +11910,109 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["LinkUpdateRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Factory pipeline update */
+  factoryPipelineUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipeline2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineNextTwinFactory2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineOutputTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 5d956a15-6858-40ba-b0aa-b123c54e250d */
+        factoryPipelineId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryPipelineUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory data pipeline update */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryPipelineRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Factory multiplier update */
+  factoryMultiplierUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultiplier2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplier2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryMultiplierFiltersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultiplierMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example eb773f30-8f24-4ec7-8f06-9dc71d351177 */
+        factoryMultiplierId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryMultiplierUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory data multiplier update */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryBranchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -11501,7 +12846,13 @@ export interface operations {
   transitionCreateV1: {
     parameters: {
       query?: {
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -11549,7 +12900,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showFeaturerParamMode?: "HIDE" | "SHOW";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13880,8 +15237,14 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showFeaturerParamMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -13929,7 +15292,13 @@ export interface operations {
   transitionUpdateV1: {
     parameters: {
       query?: {
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14387,7 +15756,13 @@ export interface operations {
     parameters: {
       query?: {
         lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
         showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTransition2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
         showTransition2TwinflowMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -14419,6 +15794,87 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["TransitionSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Tier add */
+  tierCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showTier2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTier2TwinclassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTier2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTierMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TierCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Tier add */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TierRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Return a list of tiers by search criteria */
+  tierSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showTier2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTier2TwinclassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTier2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTierMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: number;
+        limit?: number;
+        sortAsc?: boolean;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TierSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TierSearchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -14668,6 +16124,68 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["PermissionGroupSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Create permission grant user group */
+  permissionGrantUserGroupCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantUserGroupCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantUserGroupSaveRsV1"];
         };
       };
       /** @description Access is denied */
@@ -14930,6 +16448,70 @@ export interface operations {
       };
     };
   };
+  /** permission grant space role add */
+  permissionGrantSpaceRoleCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRole2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantUserGroup2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantSpaceRoleCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description permission grant space role add */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantSpaceRoleRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Permission grant space role search */
   permissionGrantSpaceRoleSearchV1: {
     parameters: {
@@ -14987,6 +16569,69 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["PermissionGrantSpaceRoleSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** permission grantAssignee propagation create add */
+  permissionGrantAssigneePropagationCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantAssigneePropagation2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantAssigneePropagation2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantAssigneePropagation2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermissionGrantAssigneePropagation2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGrantAssigneePropagationMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPropagationTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PermissionGrantAssigneePropagationCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description permission grant assignee propagation add */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PermissionGrantAssigneePropagationRsV1"];
         };
       };
       /** @description Access is denied */
@@ -15689,6 +17334,7 @@ export interface operations {
         showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
         showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
         offset?: number;
         limit?: number;
@@ -15764,6 +17410,109 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["FactoryBranchSearchRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Factory pipeline add */
+  factoryPipelineCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryEraserUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
+        showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipeline2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipeline2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineNextTwinFactory2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryPipelineOutputTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 5d956a15-6858-40ba-b0aa-b123c54e250d */
+        factoryId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryPipelineCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory pipeline add */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryPipelineRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Factory multiplier add */
+  factoryMultiplierCreateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: boolean;
+        showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+        showFactoryErasersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultiplier2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplier2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFactoryMultiplierFiltersCountMode?: "HIDE" | "SHOW";
+        showFactoryMultiplierMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+        showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+        showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 5d956a15-6858-40ba-b0aa-b123c54e250d */
+        factoryId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FactoryMultiplierCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Factory multiplier add */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FactoryMultiplierRsV1"];
         };
       };
       /** @description Access is denied */
@@ -19046,6 +20795,37 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["DraftRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Delete permission grant assignee propagation by id */
+  permissionGrantAssigneePropagationDeleteV1: {
+    parameters: {
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example a7485d77-16bc-440e-a88e-1a576954a839 */
+        permissionGrantAssigneePropagationId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Response"];
         };
       };
       /** @description Access is denied */
