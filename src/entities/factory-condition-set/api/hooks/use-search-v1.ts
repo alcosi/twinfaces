@@ -1,8 +1,8 @@
-import { useCallback, useContext } from "react";
 import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryConditionSet, FactoryConditionSetFilters } from "../types";
+import { useCallback, useContext } from "react";
 import { hydrateFactoryConditionSetFromMap } from "../../libs";
+import { FactoryConditionSet, FactoryConditionSetFilters } from "../types";
 
 // TODO: Turn off lazy-relation, implement hydration
 export function useFactoryConditionSetSearch() {
@@ -26,12 +26,12 @@ export function useFactoryConditionSetSearch() {
           throw error;
         }
 
-        const factoryConditionSet = data.conditionSets?.map((dto) =>
+        const factoryConditionSets = data.conditionSets?.map((dto) =>
           hydrateFactoryConditionSetFromMap(dto, data.relatedObjects)
         );
 
         return {
-          data: factoryConditionSet ?? [],
+          data: factoryConditionSets ?? [],
           pagination: data.pagination ?? {},
         };
       } catch (error) {
