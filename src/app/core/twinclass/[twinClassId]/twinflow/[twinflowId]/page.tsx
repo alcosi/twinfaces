@@ -6,26 +6,25 @@ import { toast } from "sonner";
 import { TwinClassContext } from "@/entities/twin-class";
 import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twin-flow";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { TwinFlowTransitions } from "@/screens/twinFlowTransitions";
 import { PlatformArea } from "@/shared/config";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
+import { TwinFlowTransitionsTable } from "@/widgets/tables";
 
 import { TwinflowGeneral } from "./twinflow-general";
 
-interface TwinflowPageProps {
+type TwinflowPageProps = {
   params: {
     twinflowId: string;
   };
-}
+};
 
 export default function TwinflowPage({
   params: { twinflowId },
 }: TwinflowPageProps) {
   const { twinClass } = useContext(TwinClassContext);
-  const [loading, setLoading] = useState<boolean>(false);
   const [twinflow, setTwinflow] = useState<TwinFlow | undefined>(undefined);
-  const { fetchTwinFlowById } = useTwinFlowFetchByIdV1();
+  const { fetchTwinFlowById, loading } = useTwinFlowFetchByIdV1();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
@@ -50,16 +49,13 @@ export default function TwinflowPage({
     ]);
   }, [twinClass?.id, twinClass?.name, twinflowId, twinflow?.name]);
 
-  function fetchTwinflowData() {
-    setLoading(true);
-
-    fetchTwinFlowById(twinflowId)
-      .then(setTwinflow)
-      .catch((e: any) => {
-        console.error("exception while fetching twin class", e);
-        toast.error("Failed to fetch twin class");
-      })
-      .finally(() => setLoading(false));
+  async function fetchTwinflowData() {
+    try {
+      const response = await fetchTwinFlowById(twinflowId);
+      setTwinflow(response);
+    } catch {
+      toast.error("Failed to fetch twin flow");
+    }
   }
 
   const tabs: Tab[] = twinflow
@@ -74,12 +70,7 @@ export default function TwinflowPage({
         {
           key: "transitions",
           label: "Transitions",
-          content: (
-            <TwinFlowTransitions
-              twinClassId={twinClass?.id}
-              twinFlowId={twinflowId}
-            />
-          ),
+          content: <TwinFlowTransitionsTable twinflow={twinflow} />,
         },
       ]
     : [];

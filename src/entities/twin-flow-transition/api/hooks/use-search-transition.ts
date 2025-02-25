@@ -30,7 +30,6 @@ export const useTwinFlowTransitionSearchV1 = () => {
       });
 
       if (error) {
-        console.error("Failed to fetch transitions due to API error:", error);
         throw new Error("Failed to fetch transitions due to API error");
       }
 

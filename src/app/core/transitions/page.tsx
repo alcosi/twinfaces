@@ -1,5 +1,5 @@
-import { UnderConstructionScreen as UnderConstruction } from "@/screens/under-construction";
+import { TransitionsScreen } from "@/screens/twin-flow-transitions";
 
-export default function TransitionsPage() {
-  return <UnderConstruction />;
+export default function Page() {
+  return <TransitionsScreen />;
 }

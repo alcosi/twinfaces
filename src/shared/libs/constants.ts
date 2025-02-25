@@ -22,3 +22,8 @@ export const FIRST_USER_ID_EXTRACTOR = z
   .transform((arr) =>
     isPopulatedArray<{ userId: string }>(arr) ? arr[0].userId : ""
   );
+
+export const FIRST_TWIN_FLOW_ID_EXTRACTOR = z
+  .array(z.object({ id: z.string().uuid(), twinClassId: z.string() }))
+  .min(1, "Twinflow can not be empty")
+  .nullable();

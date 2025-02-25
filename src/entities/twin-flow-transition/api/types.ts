@@ -25,11 +25,16 @@ export type TwinTransitionPerformRq =
   components["schemas"]["TwinTransitionPerformRqV1"];
 
 export type TwinFlowTransitionFilterKeys =
+  | "idList"
+  | "nameLikeList"
+  | "descriptionLikeList"
   | "twinflowIdList"
   | "aliasLikeList"
   | "srcStatusIdList"
   | "dstStatusIdList"
-  | "permissionIdList";
+  | "permissionIdList"
+  | "inbuiltTwinFactoryIdList";
+
 export type TwinFlowTransitionFilters = Partial<
   Pick<
     components["schemas"]["TransitionSearchRqV1"],
@@ -50,3 +55,18 @@ export type TwinFlowTransitionValidatorCreate =
   components["schemas"]["ValidatorCreateV1"];
 export type TwinFlowTransitionValidatorUpdate =
   components["schemas"]["ValidatorUpdateV1"];
+
+export type TransitionAliasV1 = components["schemas"]["TransitionAliasV1"];
+
+export type TransitionAliasFiltersKeys =
+  | "idList"
+  | "idExcludeList"
+  | "aliasLikeList"
+  | "aliasNotLikeList";
+
+export type TransitionAliasFilters = Partial<
+  Pick<
+    components["schemas"]["TransitionAliasSearchRqV1"],
+    TransitionAliasFiltersKeys
+  >
+>;
