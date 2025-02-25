@@ -1,7 +1,6 @@
-import { DataList } from "@/entities/datalist";
+import { DataList, DatalistIcon } from "@/entities/datalist";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import { ListTree } from "lucide-react";
 
 type Props = {
   data: DataList;
@@ -14,7 +13,7 @@ export function DatalistResourceTooltip({ data, link }: Props) {
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}
-        iconSource={<ListTree size={35} />}
+        iconSource={DatalistIcon}
       />
 
       <ResourceLinkTooltip.Main>

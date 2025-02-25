@@ -17,7 +17,6 @@ import {
   Eraser,
   Factory,
   Link2,
-  ListTree,
   MessageCircle,
   Option,
   Paperclip,
@@ -29,6 +28,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Group, GroupKeys } from "./group";
+import { DatalistIcon } from "@/entities/datalist";
 
 export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
   class: {
@@ -97,7 +97,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Datalists",
         url: "/workspace/datalists",
-        icon: ListTree,
+        icon: DatalistIcon,
       },
       {
         title: "Options",
