@@ -8,19 +8,19 @@ import {
   useFactoryBranchFilters,
   useFactoryBranchesSearch,
 } from "@/entities/factory-branch";
+import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { toast } from "sonner";
-import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryBranchFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -95,6 +95,7 @@ const colDefs: Record<
 };
 
 export function FactoryBranchesScreen() {
+  const router = useRouter();
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryBranchFilters();
