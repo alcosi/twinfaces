@@ -83,10 +83,11 @@ const colDefs: Record<
 export function FactoryMultipliersScreen() {
   const { searchFactoryMultipliers } = useFactoryMultipliersSearch();
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { buildFilterFields, mapFiltersToPayload } = useFactoryMultiplierFilters();
+  const { buildFilterFields, mapFiltersToPayload } =
+    useFactoryMultiplierFilters();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Multipliers", href: "/workspace/multipliers" }])
+    setBreadcrumbs([{ label: "Multipliers", href: "/workspace/multipliers" }]);
   }, [setBreadcrumbs]);
 
   async function fetchFactoryMultipliers(

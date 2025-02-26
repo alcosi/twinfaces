@@ -1,4 +1,10 @@
-import { FilterFeature, mapToChoice, toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
+import {
+  FilterFeature,
+  mapToChoice,
+  toArray,
+  toArrayOfString,
+  wrapWithPercent,
+} from "@/shared/libs";
 import {
   FactoryMultiplierFilterKeys,
   FactoryMultiplierFilters,
@@ -66,10 +72,14 @@ export function useFactoryMultiplierFilters(): FilterFeature<
       idList: toArrayOfString(filters.idList),
       factoryIdList: toArrayOfString(filters.factoryIdList, "id"),
       inputTwinClassIdList: toArrayOfString(filters.inputTwinClassIdList, "id"),
-      multiplierFeaturerIdList: toArrayOfString(filters.multiplierFeaturerIdList, "id").map(Number),
+      multiplierFeaturerIdList: toArrayOfString(
+        filters.multiplierFeaturerIdList,
+        "id"
+      ).map(Number),
       active: mapToChoice(filters.active),
       descriptionLikeList: toArrayOfString(
-        toArray(filters.descriptionLikeList), "description"
+        toArray(filters.descriptionLikeList),
+        "description"
       ).map(wrapWithPercent),
     };
   }
