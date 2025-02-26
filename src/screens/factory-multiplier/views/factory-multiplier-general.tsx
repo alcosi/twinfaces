@@ -1,10 +1,17 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { z } from "zod";
 
+import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { FactoryResourceLink } from "@/entities/factory";
 import { useUpdateFactoryMultiplier } from "@/entities/factory-multiplier";
+import {
+  FeaturerResourceLink,
+  FeaturerTypes,
+  Featurer_DETAILED,
+  useFeaturerSelectAdapter,
+} from "@/entities/featurer";
 import {
   TwinClassResourceLink,
   TwinClass_DETAILED,
@@ -21,7 +28,11 @@ import { GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
 export function FactoryMultiplierGeneral() {
   const { factoryMultiplier, refresh } = useContext(FactoryMultiplierContext);
   const tcAdapter = useTwinClassSelectAdapter();
+  const featurerAdapter = useFeaturerSelectAdapter(22);
   const { updateFactoryMultiplier } = useUpdateFactoryMultiplier();
+  const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
+  const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
+    useState<AutoEditDialogSettings | undefined>(undefined);
 
   const inputClassSettings: InPlaceEditProps<
     typeof factoryMultiplier.inputTwinClassId
@@ -54,7 +65,32 @@ export function FactoryMultiplierGeneral() {
     },
   };
 
-  //TODO add missing field multiplierFeaturerId in DTO
+  const multiplierFeaturerSettings: AutoEditDialogSettings = {
+    value: {
+      multiplierFeaturerId: factoryMultiplier.multiplierFeaturerId,
+    },
+    title: "Update multiplier",
+    onSubmit: (values) => {
+      return updateFactoryMultiplier({
+        factoryMultiplierId: factoryMultiplier.id,
+        body: {
+          factoryMultiplier: {
+            multiplierFeaturerId: values.multiplierFeaturerId[0].id,
+            multiplierParams: values.multiplierParams,
+          },
+        },
+      }).then(refresh);
+    },
+    valuesInfo: {
+      multiplierFeaturerId: {
+        type: AutoFormValueType.featurer,
+        label: "Multiplier",
+        typeId: FeaturerTypes.multiplier,
+        paramsFieldName: "multiplierParams",
+        ...featurerAdapter,
+      },
+    },
+  };
 
   const activeSettings: InPlaceEditProps<typeof factoryMultiplier.active> = {
     id: "active",
@@ -102,6 +138,11 @@ export function FactoryMultiplierGeneral() {
     },
   };
 
+  function openWithSettings(settings: AutoEditDialogSettings) {
+    setCurrentAutoEditDialogSettings(settings);
+    setEditFieldDialogOpen(true);
+  }
+
   return (
     <InPlaceEditContextProvider>
       <Table className="mt-8">
@@ -126,6 +167,21 @@ export function FactoryMultiplierGeneral() {
           </TableCell>
         </TableRow>
 
+        <TableRow
+          className="cursor-pointer"
+          onClick={() => openWithSettings(multiplierFeaturerSettings)}
+        >
+          <TableCell>Multiplier</TableCell>
+          <TableCell>
+            {factoryMultiplier.multiplierFeaturer && (
+              <FeaturerResourceLink
+                data={factoryMultiplier.multiplierFeaturer as Featurer_DETAILED}
+                withTooltip
+              />
+            )}
+          </TableCell>
+        </TableRow>
+
         <TableRow>
           <TableCell>Active</TableCell>
           <TableCell>
@@ -140,6 +196,12 @@ export function FactoryMultiplierGeneral() {
           </TableCell>
         </TableRow>
       </Table>
+
+      <AutoDialog
+        open={editFieldDialogOpen}
+        onOpenChange={setEditFieldDialogOpen}
+        settings={currentAutoEditDialogSettings}
+      />
     </InPlaceEditContextProvider>
   );
 }

@@ -9,6 +9,8 @@ export type FactoryMultiplierViewQuery =
   operations["factoryMultiplierViewV1"]["parameters"]["query"];
 export type FactoryMultiplierUpdateRq =
   components["schemas"]["FactoryMultiplierUpdateRqV1"];
+export type FactoryMultiplierCreateRq =
+  components["schemas"]["FactoryMultiplierCreateRqV1"];
 
 export type FactoryMultiplierFilterKeys =
   | "idList"
