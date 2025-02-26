@@ -15,8 +15,8 @@ export function useFactoryBranchFilters(): FilterFeature<
   FactoryBranchFilterKeys,
   FactoryBranchFilters
 > {
-  const factorySelectAdapter = useFactorySelectAdapter();
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const fAdapter = useFactorySelectAdapter();
+  const fcsAdapter = useFactoryConditionSetSelectAdapter();
 
   function buildFilterFields(): Record<
     FactoryBranchFilterKeys,
@@ -33,13 +33,13 @@ export function useFactoryBranchFilters(): FilterFeature<
         type: AutoFormValueType.combobox,
         label: "Factory",
         multi: true,
-        ...factorySelectAdapter,
+        ...fAdapter,
       },
       factoryConditionSetIdList: {
         type: AutoFormValueType.combobox,
         label: "Condition set",
         multi: true,
-        ...factoryConditionSetAdapter,
+        ...fcsAdapter,
       },
       conditionInvert: {
         type: AutoFormValueType.boolean,
@@ -57,7 +57,7 @@ export function useFactoryBranchFilters(): FilterFeature<
         type: AutoFormValueType.combobox,
         label: "Next Factory",
         multi: true,
-        ...factorySelectAdapter,
+        ...fAdapter,
       },
       descriptionLikeList: {
         type: AutoFormValueType.tag,

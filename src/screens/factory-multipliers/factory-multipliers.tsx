@@ -3,16 +3,19 @@
 import { FactoryResourceLink } from "@/entities/factory";
 import {
   FactoryMultiplier_DETAILED,
+  useFactoryMultiplierFilters,
   useFactoryMultipliersSearch,
 } from "@/entities/factory-multiplier";
 import {
   TwinClass_DETAILED,
   TwinClassResourceLink,
 } from "@/entities/twin-class";
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 const colDefs: Record<
@@ -58,6 +61,7 @@ const colDefs: Record<
         </div>
       ),
   },
+  //TODO add missing column Multiplier featurer in DTO
   active: {
     id: "active",
     accessorKey: "active",
@@ -78,13 +82,21 @@ const colDefs: Record<
 
 export function FactoryMultipliersScreen() {
   const { searchFactoryMultipliers } = useFactoryMultipliersSearch();
+  const { setBreadcrumbs } = useBreadcrumbs();
+  const { buildFilterFields, mapFiltersToPayload } = useFactoryMultiplierFilters();
+
+  useEffect(() => {
+    setBreadcrumbs([{ label: "Multipliers", href: "/workspace/multipliers" }])
+  }, [setBreadcrumbs]);
 
   async function fetchFactoryMultipliers(
     pagination: PaginationState,
     filters: FiltersState
   ) {
+    const _filters = mapFiltersToPayload(filters.filters);
+
     try {
-      return await searchFactoryMultipliers({ pagination, filters: {} });
+      return await searchFactoryMultipliers({ pagination, filters: _filters });
     } catch (error) {
       toast.error(
         "An error occured while fetching factory multipliers: " + error
@@ -99,6 +111,7 @@ export function FactoryMultipliersScreen() {
         colDefs.id,
         colDefs.factory,
         colDefs.inputTwinClass,
+        //TODO add missing column Multiplier featurer in DTO
         colDefs.active,
         colDefs.factoryMultiplierFiltersCount,
         colDefs.description,
@@ -109,10 +122,12 @@ export function FactoryMultipliersScreen() {
         colDefs.id,
         colDefs.factory,
         colDefs.inputTwinClass,
+        //TODO add missing column Multiplier featurer in DTO
         colDefs.active,
         colDefs.factoryMultiplierFiltersCount,
         colDefs.description,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }
