@@ -1,5 +1,4 @@
 "use client";
-
 import { FactoryResourceLink } from "@/entities/factory";
 import {
   FactoryMultiplier_DETAILED,
@@ -15,6 +14,7 @@ import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -85,6 +85,7 @@ export function FactoryMultipliersScreen() {
   const { setBreadcrumbs } = useBreadcrumbs();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryMultiplierFilters();
+  const router = useRouter();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Multipliers", href: "/workspace/multipliers" }]);
@@ -129,6 +130,9 @@ export function FactoryMultipliersScreen() {
         colDefs.description,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      onRowClick={(row) => {
+        router.push(`/workspace/multipliers/${row.id}`);
+      }}
     />
   );
 }

@@ -1,6 +1,10 @@
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryMultiplierFilters } from "./types";
+import {
+  FactoryMultiplierFilters,
+  FactoryMultiplierUpdateRq,
+  FactoryMultiplierViewQuery,
+} from "./types";
 
 export function createFactoryMultiplierApi(settings: ApiSettings) {
   function search({
@@ -29,7 +33,45 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function getById({
+    id,
+    query = {},
+  }: {
+    id: string;
+    query?: FactoryMultiplierViewQuery;
+  }) {
+    return settings.client.GET(
+      "/private/factory_multiplier/{multiplierId}/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { multiplierId: id },
+          query: query,
+        },
+      }
+    );
+  }
+
+  function update({
+    id,
+    body,
+  }: {
+    id: string;
+    body: FactoryMultiplierUpdateRq;
+  }) {
+    return settings.client.PUT(
+      "/private/factory_multiplier/{factoryMultiplierId}/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { factoryMultiplierId: id },
+        },
+        body: body,
+      }
+    );
+  }
+
+  return { search, getById, update };
 }
 
 export type FactoryMultiplierApi = ReturnType<
