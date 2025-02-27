@@ -1,25 +1,27 @@
 "use client";
 
-import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
-import {
-  TwinClass_DETAILED,
-  TwinClassResourceLink,
-} from "@/entities/twin-class";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { GuidWithCopy } from "@/shared/ui";
-import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
+
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 import {
   FactoryPipeline_DETAILED,
   useFactoryPipelineFilters,
   useFactoryPipelineSearch,
 } from "@/entities/factory-pipeline";
+import { FactoryResourceLink } from "@/entities/factory/components/resource-link/resource-link";
+import {
+  TwinClassResourceLink,
+  TwinClass_DETAILED,
+} from "@/entities/twin-class";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { GuidWithCopy } from "@/shared/ui";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
 const colDefs: Record<
   keyof Omit<
@@ -150,6 +152,7 @@ export function FactoryPipelines() {
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryPipelineFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const router = useRouter();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Pipelines", href: "/workspace/pipelines" }]);
@@ -201,6 +204,9 @@ export function FactoryPipelines() {
         colDefs.description,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      onRowClick={(row) => {
+        router.push(`/workspace/pipelines/${row.id}`);
+      }}
     />
   );
 }

@@ -1,14 +1,15 @@
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   wrapWithPercent,
 } from "@/shared/libs";
+
 import {
-  FactoryPipeline_DETAILED,
   FactoryPipelineFilters,
+  FactoryPipeline_DETAILED,
   useFactoryPipelineSearch,
+  useFetchFactoryPipelineById,
 } from "../../api";
-import { useFetchFactoryPipelineById } from "./use-fetch-factory-pipeline-by-id";
 
 export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline_DETAILED> {
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
