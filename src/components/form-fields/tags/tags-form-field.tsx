@@ -1,6 +1,8 @@
+import { FieldValues } from "react-hook-form";
+
 import { isEmptyString } from "@/shared/libs";
 import { FormField, TagBoxProps } from "@/shared/ui";
-import { FieldValues } from "react-hook-form";
+
 import { FormFieldProps } from "../types";
 import { TagsFormItem } from "./tags-form-item";
 
