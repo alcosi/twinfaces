@@ -1,4 +1,23 @@
+import {
+  Asterisk,
+  BriefcaseBusiness,
+  Eraser,
+  Factory,
+  Link2,
+  MessageCircle,
+  Option,
+  Paperclip,
+  Play,
+  Shapes,
+  SquareActivity,
+  SquareAsterisk,
+  User,
+  UsersRound,
+} from "lucide-react";
+
+import { DatalistIcon } from "@/entities/datalist";
 import { FactoryBranchIcon } from "@/entities/factory-branch";
+import { FactoryConditionSetIcon } from "@/entities/factory-condition-set";
 import { FactoryPipelineIcon } from "@/entities/factory-pipeline";
 import { FactoryPipelineStepIcon } from "@/entities/factory-pipeline-step";
 import { PermissionIcon } from "@/entities/permission";
@@ -11,25 +30,8 @@ import { TwinFlowIcon } from "@/entities/twin-flow";
 import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
 import { TwinStatusIcon } from "@/entities/twin-status";
 import { TierIcon } from "@/shared/ui/icons/tier-icon";
-import {
-  Asterisk,
-  BriefcaseBusiness,
-  Eraser,
-  Factory,
-  Link2,
-  MessageCircle,
-  Option,
-  Paperclip,
-  PencilRulerIcon,
-  Play,
-  Shapes,
-  SquareActivity,
-  SquareAsterisk,
-  User,
-  UsersRound,
-} from "lucide-react";
+
 import { Group, GroupKeys } from "./group";
-import { DatalistIcon } from "@/entities/datalist";
 
 export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
   class: {
@@ -173,7 +175,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Condition sets",
         url: "/workspace/condition-sets",
-        icon: PencilRulerIcon,
+        icon: FactoryConditionSetIcon,
       },
     ],
   },
