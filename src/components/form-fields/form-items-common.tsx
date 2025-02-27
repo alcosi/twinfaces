@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
+
 import { cn } from "@/shared/libs";
 import { FormDescription, FormLabel } from "@/shared/ui/form";
 import { Label } from "@/shared/ui/label";
-import { ReactNode } from "react";
 
 export function FormItemLabel({
   children,

@@ -1,3 +1,5 @@
+import React, { useEffect, useRef } from "react";
+
 import {
   cn,
   isEmptyArray,
@@ -9,7 +11,7 @@ import {
 } from "@/shared/libs";
 import { Combobox, ComboboxHandle, ComboboxProps } from "@/shared/ui/combobox";
 import { FormControl, FormItem, FormMessage } from "@/shared/ui/form";
-import React, { useEffect, useRef } from "react";
+
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
 
 export function ComboboxFormItem<TFieldModel>({

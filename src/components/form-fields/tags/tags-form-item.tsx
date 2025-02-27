@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 import { isArray, isPopulatedString } from "@/shared/libs";
 import {
   FormControl,
@@ -6,9 +8,9 @@ import {
   TagBoxHandle,
   TagBoxProps,
 } from "@/shared/ui";
-import { useEffect, useRef } from "react";
-import { FormItemProps } from "../types";
+
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { FormItemProps } from "../types";
 
 export function TagsFormItem<TField>({
   fieldValue,

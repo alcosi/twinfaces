@@ -1,6 +1,8 @@
+import { FieldValues } from "react-hook-form";
+
 import { FormField } from "@/shared/ui";
 import { TextareaProps } from "@/shared/ui/textarea";
-import { FieldValues } from "react-hook-form";
+
 import { FormFieldProps, TextFormFieldProps } from "../types";
 import { TextAreaFormItem } from "./textarea-form-item";
 

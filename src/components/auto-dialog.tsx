@@ -1,4 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
+
 import { Alert } from "@/shared/ui/alert";
 import { Button } from "@/shared/ui/button";
 import {
@@ -10,10 +16,6 @@ import {
   DialogTrigger,
 } from "@/shared/ui/dialog";
 import { Form } from "@/shared/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 export interface AutoEditDialogSettings {
   title: string;

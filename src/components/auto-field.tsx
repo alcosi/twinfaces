@@ -1,3 +1,5 @@
+import { Control, FieldPath } from "react-hook-form";
+
 import { TagBoxProps } from "@/shared/ui";
 import { ComboboxProps } from "@/shared/ui/combobox";
 import { InputProps } from "@/shared/ui/input";
@@ -8,7 +10,7 @@ import {
   TwinFieldFormItem,
   TwinFieldFormItemProps,
 } from "@/widgets/form-fields";
-import { Control, FieldPath } from "react-hook-form";
+
 import {
   CheckboxFormField,
   CheckboxFormItem,

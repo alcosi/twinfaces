@@ -1,6 +1,8 @@
+import { FieldValues } from "react-hook-form";
+
 import { ComboboxProps } from "@/shared/ui/combobox";
 import { FormField } from "@/shared/ui/form";
-import { FieldValues } from "react-hook-form";
+
 import { FormFieldProps } from "../types";
 import { ComboboxFormItem } from "./combobox-form-item";
 
