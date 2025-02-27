@@ -217,7 +217,6 @@ export function FactoryPipelineGeneral() {
     },
     schema: z.string().min(3),
     onSubmit: async (value) => {
-      console.log(value);
       return updateFactoryPipeline({
         factoryPipelineId: pipeline.id,
         body: {
