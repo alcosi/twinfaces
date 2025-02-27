@@ -4,6 +4,7 @@ export const FeaturerTypes = {
   validator: 16,
   headHunter: 26,
   filler: 23,
+  multiplier: 22,
 } as const;
 
 export type FeaturerTypeId = (typeof FeaturerTypes)[keyof typeof FeaturerTypes];

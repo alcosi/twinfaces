@@ -72,6 +72,10 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 import { useAuthUser } from "../auth";
+import {
+  createFactoryMultiplierApi,
+  FactoryMultiplierApi,
+} from "@/entities/factory-multiplier";
 
 export interface ApiContextProps {
   domain: DomainApi;
@@ -96,6 +100,7 @@ export interface ApiContextProps {
   factoryPipeline: FactoryPipelineApi;
   factoryBranch: FactoryBranchApi;
   factoryConditionSet: FactoryConditionSetApi;
+  factoryMultiplier: FactoryMultiplierApi;
   pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
@@ -143,6 +148,7 @@ export function ApiContextProvider({
         factoryPipeline: createFactoryPipelineApi(settings),
         factoryBranch: createFactoryBranchApi(settings),
         factoryConditionSet: createFactoryConditionSetApi(settings),
+        factoryMultiplier: createFactoryMultiplierApi(settings),
         pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),

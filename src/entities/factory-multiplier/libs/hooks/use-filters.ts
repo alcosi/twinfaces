@@ -1,5 +1,3 @@
-import { z } from "zod";
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import {
   FilterFeature,
   mapToChoice,
@@ -7,19 +5,26 @@ import {
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { FactoryBranchFilterKeys, FactoryBranchFilters } from "../../api";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import {
+  FactoryMultiplierFilterKeys,
+  FactoryMultiplierFilters,
+} from "../../api";
+import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+import { z } from "zod";
 import { useFactorySelectAdapter } from "@/entities/factory/libs";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import { useFeaturerSelectAdapter } from "@/entities/featurer";
 
-export function useFactoryBranchFilters(): FilterFeature<
-  FactoryBranchFilterKeys,
-  FactoryBranchFilters
+export function useFactoryMultiplierFilters(): FilterFeature<
+  FactoryMultiplierFilterKeys,
+  FactoryMultiplierFilters
 > {
   const fAdapter = useFactorySelectAdapter();
-  const fcsAdapter = useFactoryConditionSetSelectAdapter();
+  const tcAdapter = useTwinClassSelectAdapter();
+  const featurerAdapter = useFeaturerSelectAdapter(22);
 
   function buildFilterFields(): Record<
-    FactoryBranchFilterKeys,
+    FactoryMultiplierFilterKeys,
     AutoFormValueInfo
   > {
     return {
@@ -35,29 +40,23 @@ export function useFactoryBranchFilters(): FilterFeature<
         multi: true,
         ...fAdapter,
       },
-      factoryConditionSetIdList: {
+      inputTwinClassIdList: {
         type: AutoFormValueType.combobox,
-        label: "Condition set",
+        label: "Input class",
         multi: true,
-        ...fcsAdapter,
+        ...tcAdapter,
       },
-      conditionInvert: {
-        type: AutoFormValueType.boolean,
-        label: "Condition invert",
-        hasIndeterminate: true,
-        defaultValue: "indeterminate",
+      multiplierFeaturerIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Muliplier featurer",
+        multi: true,
+        ...featurerAdapter,
       },
       active: {
         type: AutoFormValueType.boolean,
         label: "Active",
         hasIndeterminate: true,
         defaultValue: "indeterminate",
-      },
-      nextFactoryIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Next Factory",
-        multi: true,
-        ...fAdapter,
       },
       descriptionLikeList: {
         type: AutoFormValueType.tag,
@@ -67,22 +66,21 @@ export function useFactoryBranchFilters(): FilterFeature<
   }
 
   function mapFiltersToPayload(
-    filters: Record<FactoryBranchFilterKeys, unknown>
-  ): FactoryBranchFilters {
+    filters: Record<FactoryMultiplierFilterKeys, unknown>
+  ): FactoryMultiplierFilters {
     return {
       idList: toArrayOfString(filters.idList),
       factoryIdList: toArrayOfString(filters.factoryIdList, "id"),
-      factoryConditionSetIdList: toArrayOfString(
-        filters.factoryConditionSetIdList,
+      inputTwinClassIdList: toArrayOfString(filters.inputTwinClassIdList, "id"),
+      multiplierFeaturerIdList: toArrayOfString(
+        filters.multiplierFeaturerIdList,
         "id"
-      ),
+      ).map(Number),
       active: mapToChoice(filters.active),
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),
         "description"
       ).map(wrapWithPercent),
-      nextFactoryIdList: toArrayOfString(filters.nextFactoryIdList, "id"),
-      conditionInvert: mapToChoice(filters.conditionInvert),
     };
   }
 
