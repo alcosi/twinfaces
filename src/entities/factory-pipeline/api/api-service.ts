@@ -1,10 +1,11 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
 import {
   FactoryPipelineFilters,
   FactoryPipelineUpdateRq,
   FactoryPipelineViewQuery,
 } from "@/entities/factory-pipeline";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createFactoryPipelineApi(settings: ApiSettings) {
   function search({

@@ -1,10 +1,12 @@
 "use client";
 
-import { Tab, TabsLayout } from "@/widgets/layout";
-import { FactoryPipelineGeneral } from "./views";
 import { useContext, useEffect } from "react";
-import { FactoryPipelineContext } from "@/features/factory-pipeline";
+
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { FactoryPipelineContext } from "@/features/factory-pipeline";
+import { Tab, TabsLayout } from "@/widgets/layout";
+
+import { FactoryPipelineGeneral } from "./views";
 
 const tabs: Tab[] = [
   {

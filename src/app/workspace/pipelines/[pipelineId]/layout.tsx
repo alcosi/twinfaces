@@ -1,7 +1,8 @@
 "use client";
 
-import { FactoryPipelineContextProvider } from "@/features/factory-pipeline";
 import { ReactNode } from "react";
+
+import { FactoryPipelineContextProvider } from "@/features/factory-pipeline";
 
 type FactoryPipelineLayoutProps = {
   params: {

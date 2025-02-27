@@ -1,4 +1,8 @@
+import { useContext } from "react";
+import { z } from "zod";
+
 import { AutoFormValueType } from "@/components/auto-field";
+
 import {
   FactoryResourceLink,
   useFactorySelectAdapter,
@@ -9,8 +13,8 @@ import {
 } from "@/entities/factory-condition-set";
 import { useUpdateFactoryPipeline } from "@/entities/factory-pipeline";
 import {
-  TwinClass_DETAILED,
   TwinClassResourceLink,
+  TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import {
@@ -30,8 +34,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/ui";
-import { useContext } from "react";
-import { z } from "zod";
 
 export function FactoryPipelineGeneral() {
   const { pipeline, refresh } = useContext(FactoryPipelineContext);

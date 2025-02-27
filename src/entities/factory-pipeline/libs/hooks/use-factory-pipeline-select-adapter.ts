@@ -1,11 +1,12 @@
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   wrapWithPercent,
 } from "@/shared/libs";
+
 import {
-  FactoryPipeline_DETAILED,
   FactoryPipelineFilters,
+  FactoryPipeline_DETAILED,
   useFactoryPipelineSearch,
   useFetchFactoryPipelineById,
 } from "../../api";
