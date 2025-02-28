@@ -55,3 +55,18 @@ export type TwinFlowTransitionValidatorCreate =
   components["schemas"]["ValidatorCreateV1"];
 export type TwinFlowTransitionValidatorUpdate =
   components["schemas"]["ValidatorUpdateV1"];
+
+export type TransitionAliasV1 = components["schemas"]["TransitionAliasV1"];
+
+export type TransitionAliasFiltersKeys =
+  | "idList"
+  | "idExcludeList"
+  | "aliasLikeList"
+  | "aliasNotLikeList";
+
+export type TransitionAliasFilters = Partial<
+  Pick<
+    components["schemas"]["TransitionAliasSearchRqV1"],
+    TransitionAliasFiltersKeys
+  >
+>;

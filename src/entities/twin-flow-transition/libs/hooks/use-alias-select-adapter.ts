@@ -1,4 +1,5 @@
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+
 import { TransitionAliasV1, useTransitionAliasSearch } from "../../api";
 
 export function useTransitionAliasSelectAdapter(): SelectAdapter<TransitionAliasV1> {

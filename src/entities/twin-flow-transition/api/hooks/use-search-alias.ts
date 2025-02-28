@@ -1,8 +1,10 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { TransitionAliasFilters, TransitionAliasV1 } from "../types";
+
+import { ApiContext, PagedResponse } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
+
+import { TransitionAliasFilters, TransitionAliasV1 } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTransitionAliasSearch = () => {
@@ -19,7 +21,7 @@ export const useTransitionAliasSearch = () => {
       filters?: TransitionAliasFilters;
     }): Promise<PagedResponse<TransitionAliasV1>> => {
       try {
-        const { data, error } = await api.transitionAlias.search({
+        const { data, error } = await api.twinFlowTransition.searchAlias({
           pagination,
           filters: {
             ...filters,

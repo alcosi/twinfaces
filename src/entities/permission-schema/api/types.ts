@@ -1,10 +1,6 @@
 import { components, operations } from "@/shared/api/generated/schema";
 
-export type PermissionSchema = components["schemas"]["PermissionSchemaV2"] & {
-  // NOTE: This is a workaround! Please remove after comment is resolved
-  // https://alcosi.atlassian.net/browse/TWINFACES-460?focusedCommentId=32135
-  createdAt?: string;
-};
+export type PermissionSchema = components["schemas"]["PermissionSchemaV2"];
 
 export type PermissionSchemaSearchFilterKeys = "nameLikeList";
 export type PermissionSchemaSearchFilters = Partial<

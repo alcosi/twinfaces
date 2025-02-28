@@ -6,6 +6,9 @@ import { wrapWithPercent } from "@/shared/libs";
 import {
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFilters,
+  TransitionAliasFilters,
+  TwinFlowTransitionCreateRq,
+  TwinFlowTransitionFilters,
   TwinFlowTransitionUpdateRq,
   TwinTransitionPerformRq,
 } from "./types";
@@ -119,12 +122,34 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     );
   }
 
+  function searchAlias({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters?: TransitionAliasFilters;
+  }) {
+    return settings.client.POST("/private/transition_alias/search/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          showTransitionAliasMode: "DETAILED",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+        },
+      },
+      body: { ...filters },
+    });
+  }
+
   return {
     search,
     fetchById,
     create,
     update,
     performTransition,
+    searchAlias,
   };
 }
 

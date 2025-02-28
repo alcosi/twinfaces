@@ -1,13 +1,28 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { FactoryResourceLink } from "@/entities/factory";
 import { PermissionResourceLink } from "@/entities/permission";
+import {
+  TwinFlow,
+  TwinFlowResourceLink,
+  TwinFlow_DETAILED,
+} from "@/entities/twin-flow";
 import {
   TWIN_FLOW_TRANSITION_SCHEMA,
   TwinFlowTransition,
-  TwinFlowTransition_DETAILED,
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFormValues,
+  TwinFlowTransition_DETAILED,
   useTwinFlowTransitionFilters,
   useTwinFlowTransitionSearchV1,
 } from "@/entities/twin-flow-transition";
+import { useCreateTransition } from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { PagedResponse } from "@/shared/api";
 import {
@@ -18,22 +33,9 @@ import {
   toArrayOfString,
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
+
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import {
-  TwinFlow,
-  TwinFlow_DETAILED,
-  TwinFlowResourceLink,
-} from "@/entities/twin-flow";
 import { TwinFlowTransitionFormFields } from "./form-fields";
-import { FactoryResourceLink } from "@/entities/factory";
-import { useCreateTransition } from "@/entities/twin-flow-transition";
 
 const colDefs: Record<
   keyof Pick<
@@ -222,6 +224,7 @@ export function TwinFlowTransitionsTable({
   async function handleCreate(
     formValues: z.infer<typeof TWIN_FLOW_TRANSITION_SCHEMA>
   ) {
+    // TODO: Extract new-created-alias from formValues and use it to populate body
     const body: TwinFlowTransitionCreateRq = {
       alias: formValues.alias?.[0]?.alias!,
       nameI18n: {

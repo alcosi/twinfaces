@@ -1,14 +1,17 @@
-import { ComboboxFormField, TextFormField } from "@/components/form-fields";
-import { TwinFlowTransitionFormValues } from "@/entities/twin-flow-transition";
-import { TwinStatusSelectField } from "@/features/twinStatus";
+import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
-import { usePermissionSelectAdapter } from "@/entities/permission";
-import { isPopulatedArray, isTruthy } from "@/shared/libs";
-import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useTransitionAliasSelectAdapter } from "@/entities/transition-alias";
 
-//TODO https://alcosi.atlassian.net/browse/TWINFACES-269 add in alias with possibility of new value enter
+import { ComboboxFormField, TextFormField } from "@/components/form-fields";
+
+import { useFactorySelectAdapter } from "@/entities/factory";
+import { usePermissionSelectAdapter } from "@/entities/permission";
+import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
+import {
+  TwinFlowTransitionFormValues,
+  useTransitionAliasSelectAdapter,
+} from "@/entities/twin-flow-transition";
+import { TwinStatusSelectField } from "@/features/twinStatus";
+import { isPopulatedArray, isTruthy } from "@/shared/libs";
 
 export function TwinFlowTransitionFormFields({
   control,
@@ -20,8 +23,7 @@ export function TwinFlowTransitionFormFields({
   const pAdapter = usePermissionSelectAdapter();
   const fAdapter = useFactorySelectAdapter();
   const tAAdapter = useTransitionAliasSelectAdapter();
-  const disabled = isPopulatedArray(twinflow);
-
+  const disabled = useRef(isPopulatedArray(twinflow)).current;
   return (
     <>
       <ComboboxFormField
@@ -44,6 +46,7 @@ export function TwinFlowTransitionFormFields({
         searchPlaceholder="Search Alias..."
         noItemsText="No Alias found"
         required={true}
+        creatable
         {...tAAdapter}
       />
 

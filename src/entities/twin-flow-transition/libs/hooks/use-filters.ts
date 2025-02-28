@@ -1,21 +1,24 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import { useFactorySelectAdapter } from "@/entities/factory";
 import { usePermissionSelectAdapter } from "@/entities/permission";
+import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
+import { useTransitionAliasSelectAdapter } from "@/entities/twin-flow-transition";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
+  type FilterFeature,
+  isPopulatedArray,
   toArray,
   toArrayOfString,
   wrapWithPercent,
-  type FilterFeature,
-  isPopulatedArray,
 } from "@/shared/libs";
+
 import {
   TwinFlowTransitionFilterKeys,
   TwinFlowTransitionFilters,
 } from "../../api";
-import { z } from "zod";
-import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useTransitionAliasSelectAdapter } from "@/entities/transition-alias";
 
 export function useTwinFlowTransitionFilters({
   twinClassId,
