@@ -1,6 +1,12 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { PermissionGrantUserGroupFilters, UserGroupFilters } from "./types";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
+import {
+  CreatePermissionGrantUserGroupRequestBody,
+  PermissionGrantUserGroupFilters,
+  UserGroupFilters,
+} from "./types";
 
 export function createUserGroupApi(settings: ApiSettings) {
   async function search({
@@ -59,7 +65,20 @@ export function createUserGroupApi(settings: ApiSettings) {
     );
   }
 
-  return { search, searchPermissionGrants };
+  function createPermissionGrant({
+    body,
+  }: {
+    body: CreatePermissionGrantUserGroupRequestBody;
+  }) {
+    return settings.client.POST(`/private/permission_grant/user_group/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, searchPermissionGrants, createPermissionGrant };
 }
 
 export type UserGroupApi = ReturnType<typeof createUserGroupApi>;

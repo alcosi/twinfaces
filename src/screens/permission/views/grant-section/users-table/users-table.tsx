@@ -1,29 +1,26 @@
-import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
-import {
-  PermissionGrantSpaceRole_DETAILED,
-  SpaceRoleResourceLink,
-  usePermissionSpaceRoleSearchV1,
-} from "@/entities/spaceRole";
-import { UserResourceLink } from "@/entities/user";
-import { PermissionContext } from "@/features/permission";
-import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 import { toast } from "sonner";
 
+import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
+import {
+  PermissionGrantUser,
+  PermissionGrantUser_DETAILED,
+  UserResourceLink,
+  usePermissionGrantUserSearchV1,
+} from "@/entities/user";
+import { PermissionContext } from "@/features/permission";
+import { PagedResponse } from "@/shared/api";
+import { formatToTwinfaceDate, isUndefined } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { CrudDataTable } from "@/widgets/crud-data-table";
+
 const colDefs: Record<
   keyof Pick<
-    PermissionGrantSpaceRole_DETAILED,
-    | "id"
-    | "permissionSchemaId"
-    | "spaceRoleId"
-    | "grantedByUserId"
-    | "grantedAt"
+    PermissionGrantUser,
+    "id" | "permissionSchemaId" | "userId" | "grantedByUserId" | "grantedAt"
   >,
-  ColumnDef<PermissionGrantSpaceRole_DETAILED>
+  ColumnDef<PermissionGrantUser>
 > = {
   id: {
     id: "id",
@@ -39,19 +36,22 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.permissionSchema && (
         <div className="max-w-48 inline-flex">
-          <PermissionSchemaResourceLink data={original.permissionSchema} />
+          <PermissionSchemaResourceLink
+            data={original.permissionSchema}
+            withTooltip
+          />
         </div>
       ),
   },
 
-  spaceRoleId: {
-    id: "spaceRoleId",
-    accessorKey: "spaceRoleId",
-    header: "Space role",
+  userId: {
+    id: "userId",
+    accessorKey: "userId",
+    header: "User",
     cell: ({ row: { original } }) =>
-      original.spaceRole && (
+      original.user && (
         <div className="max-w-48 inline-flex">
-          <SpaceRoleResourceLink data={original.spaceRole} withTooltip />
+          <UserResourceLink data={original.user} withTooltip />
         </div>
       ),
   },
@@ -77,15 +77,16 @@ const colDefs: Record<
   },
 };
 
-export function SpaceRoleTable() {
+export function UsersTable() {
   const { permission } = useContext(PermissionContext);
-  const { searchSpaceRoleGrant } = usePermissionSpaceRoleSearchV1();
+  const { searchPermissionGrantUsers } = usePermissionGrantUserSearchV1();
 
   async function fetchData(
     pagination: PaginationState
-  ): Promise<PagedResponse<PermissionGrantSpaceRole_DETAILED>> {
+    // filters: FiltersState
+  ): Promise<PagedResponse<PermissionGrantUser_DETAILED>> {
     try {
-      const response = await searchSpaceRoleGrant({
+      const response = await searchPermissionGrantUsers({
         pagination,
         filters: {
           permissionIdList: permission ? [permission.id] : [],
@@ -94,18 +95,21 @@ export function SpaceRoleTable() {
 
       return response;
     } catch (e) {
-      toast.error("Failed to fetch permissions space role");
+      console.error("Failed to fetch permission groups", e);
+      toast.error("Failed to fetch permissions");
       return { data: [], pagination: {} };
     }
   }
 
+  if (isUndefined(permission)) return null;
+
   return (
     <CrudDataTable
-      title="For space role"
+      title="For user"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,
-        colDefs.spaceRoleId,
+        colDefs.userId,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
@@ -115,7 +119,7 @@ export function SpaceRoleTable() {
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.permissionSchemaId,
-        colDefs.spaceRoleId,
+        colDefs.userId,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}

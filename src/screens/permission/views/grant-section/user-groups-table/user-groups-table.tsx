@@ -1,25 +1,38 @@
-import { GuidWithCopy } from "@/shared/ui/guid";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
+import { UserResourceLink } from "@/entities/user";
 import {
-  PermissionGrantUser,
-  PermissionGrantUser_DETAILED,
-  usePermissionGrantUserSearchV1,
-  UserResourceLink,
-} from "@/entities/user";
+  PERMISSION_GRANT_USER_GROUP_SCHEMA,
+  PermissionGrantUserGroup,
+  PermissionGrantUserGroup_DETAILED,
+  UserGroupResourceLink,
+  useCreatePermissionGrantUserGroup,
+  usePermissionGrantUserGroupSearchV1,
+} from "@/entities/userGroup";
 import { PermissionContext } from "@/features/permission";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate, isUndefined } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useContext } from "react";
-import { toast } from "sonner";
+
+import { UserGroupTableFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
-    PermissionGrantUser,
-    "id" | "permissionSchemaId" | "userId" | "grantedByUserId" | "grantedAt"
+    PermissionGrantUserGroup,
+    | "id"
+    | "permissionSchemaId"
+    | "userGroupId"
+    | "grantedByUserId"
+    | "grantedAt"
   >,
-  ColumnDef<PermissionGrantUser>
+  ColumnDef<PermissionGrantUserGroup>
 > = {
   id: {
     id: "id",
@@ -43,14 +56,14 @@ const colDefs: Record<
       ),
   },
 
-  userId: {
-    id: "userId",
-    accessorKey: "userId",
-    header: "User",
+  userGroupId: {
+    id: "userGroupId",
+    accessorKey: "userGroupId",
+    header: "User Group",
     cell: ({ row: { original } }) =>
-      original.user && (
+      original.userGroup && (
         <div className="max-w-48 inline-flex">
-          <UserResourceLink data={original.user} withTooltip />
+          <UserGroupResourceLink data={original.userGroup} withTooltip />
         </div>
       ),
   },
@@ -76,16 +89,30 @@ const colDefs: Record<
   },
 };
 
-export function UsersTable() {
-  const { permission } = useContext(PermissionContext);
-  const { searchPermissionGrantUsers } = usePermissionGrantUserSearchV1();
+export function UserGroupsTable() {
+  const { permission, permissionId } = useContext(PermissionContext);
+  const { searchPermissionGrantUserGroups } =
+    usePermissionGrantUserGroupSearchV1();
+  const { createPermissionGrantUserGroup } =
+    useCreatePermissionGrantUserGroup();
+
+  const userGroupForm = useForm<
+    z.infer<typeof PERMISSION_GRANT_USER_GROUP_SCHEMA>
+  >({
+    resolver: zodResolver(PERMISSION_GRANT_USER_GROUP_SCHEMA),
+    defaultValues: {
+      permissionSchemaId: "",
+      permissionId: permissionId || "",
+      userGroupId: "",
+    },
+  });
 
   async function fetchData(
     pagination: PaginationState
     // filters: FiltersState
-  ): Promise<PagedResponse<PermissionGrantUser_DETAILED>> {
+  ): Promise<PagedResponse<PermissionGrantUserGroup_DETAILED>> {
     try {
-      const response = await searchPermissionGrantUsers({
+      const response = await searchPermissionGrantUserGroups({
         pagination,
         filters: {
           permissionIdList: permission ? [permission.id] : [],
@@ -102,13 +129,24 @@ export function UsersTable() {
 
   if (isUndefined(permission)) return null;
 
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof PERMISSION_GRANT_USER_GROUP_SCHEMA>
+  ) => {
+    const { ...body } = formValues;
+
+    await createPermissionGrantUserGroup({
+      body: { permissionGrantUserGroup: body },
+    });
+    toast.success("User group created successfully!");
+  };
+
   return (
     <CrudDataTable
-      title="For user"
+      title="For user group"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,
-        colDefs.userId,
+        colDefs.userGroupId,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
@@ -118,10 +156,15 @@ export function UsersTable() {
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.permissionSchemaId,
-        colDefs.userId,
+        colDefs.userGroupId,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
+      dialogForm={userGroupForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <UserGroupTableFormFields control={userGroupForm.control} />
+      )}
     />
   );
 }

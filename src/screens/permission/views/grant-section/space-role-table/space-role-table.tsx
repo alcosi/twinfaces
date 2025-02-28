@@ -1,30 +1,30 @@
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
-import { UserResourceLink } from "@/entities/user";
-import {
-  PermissionGrantUserGroup,
-  PermissionGrantUserGroup_DETAILED,
-  usePermissionGrantUserGroupSearchV1,
-  UserGroupResourceLink,
-} from "@/entities/userGroup";
-import { PermissionContext } from "@/features/permission";
-import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate, isUndefined } from "@/shared/libs";
-import { CrudDataTable } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 import { toast } from "sonner";
 
+import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
+import {
+  PermissionGrantSpaceRole_DETAILED,
+  SpaceRoleResourceLink,
+  usePermissionSpaceRoleSearchV1,
+} from "@/entities/spaceRole";
+import { UserResourceLink } from "@/entities/user";
+import { PermissionContext } from "@/features/permission";
+import { PagedResponse } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { CrudDataTable } from "@/widgets/crud-data-table";
+
 const colDefs: Record<
   keyof Pick<
-    PermissionGrantUserGroup,
+    PermissionGrantSpaceRole_DETAILED,
     | "id"
     | "permissionSchemaId"
-    | "userGroupId"
+    | "spaceRoleId"
     | "grantedByUserId"
     | "grantedAt"
   >,
-  ColumnDef<PermissionGrantUserGroup>
+  ColumnDef<PermissionGrantSpaceRole_DETAILED>
 > = {
   id: {
     id: "id",
@@ -40,22 +40,19 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.permissionSchema && (
         <div className="max-w-48 inline-flex">
-          <PermissionSchemaResourceLink
-            data={original.permissionSchema}
-            withTooltip
-          />
+          <PermissionSchemaResourceLink data={original.permissionSchema} />
         </div>
       ),
   },
 
-  userGroupId: {
-    id: "userGroupId",
-    accessorKey: "userGroupId",
-    header: "User Group",
+  spaceRoleId: {
+    id: "spaceRoleId",
+    accessorKey: "spaceRoleId",
+    header: "Space role",
     cell: ({ row: { original } }) =>
-      original.userGroup && (
+      original.spaceRole && (
         <div className="max-w-48 inline-flex">
-          <UserGroupResourceLink data={original.userGroup} withTooltip />
+          <SpaceRoleResourceLink data={original.spaceRole} withTooltip />
         </div>
       ),
   },
@@ -81,17 +78,15 @@ const colDefs: Record<
   },
 };
 
-export function UserGroupsTable() {
+export function SpaceRoleTable() {
   const { permission } = useContext(PermissionContext);
-  const { searchPermissionGrantUserGroups } =
-    usePermissionGrantUserGroupSearchV1();
+  const { searchSpaceRoleGrant } = usePermissionSpaceRoleSearchV1();
 
   async function fetchData(
     pagination: PaginationState
-    // filters: FiltersState
-  ): Promise<PagedResponse<PermissionGrantUserGroup_DETAILED>> {
+  ): Promise<PagedResponse<PermissionGrantSpaceRole_DETAILED>> {
     try {
-      const response = await searchPermissionGrantUserGroups({
+      const response = await searchSpaceRoleGrant({
         pagination,
         filters: {
           permissionIdList: permission ? [permission.id] : [],
@@ -100,21 +95,18 @@ export function UserGroupsTable() {
 
       return response;
     } catch (e) {
-      console.error("Failed to fetch permission groups", e);
-      toast.error("Failed to fetch permissions");
+      toast.error("Failed to fetch permissions space role");
       return { data: [], pagination: {} };
     }
   }
 
-  if (isUndefined(permission)) return null;
-
   return (
     <CrudDataTable
-      title="For user group"
+      title="For space role"
       columns={[
         colDefs.id,
         colDefs.permissionSchemaId,
-        colDefs.userGroupId,
+        colDefs.spaceRoleId,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
@@ -124,7 +116,7 @@ export function UserGroupsTable() {
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.permissionSchemaId,
-        colDefs.userGroupId,
+        colDefs.spaceRoleId,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
