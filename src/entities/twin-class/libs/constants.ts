@@ -1,13 +1,15 @@
+import { z } from "zod";
+
 import {
   FEATURER_ID_EXTRACTOR,
   FEATURER_PARAMS_VALUE,
 } from "@/entities/featurer";
 import {
   FIRST_ID_EXTRACTOR,
-  isPopulatedArray,
   REGEX_PATTERNS,
+  isPopulatedArray,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import { TwinClass } from "../api";
 
 export const OWNER_TYPES = [
@@ -26,8 +28,8 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .min(1)
     .max(100)
     .regex(
-      REGEX_PATTERNS.ALPHANUMERIC_WITH_DASHES,
-      "Key can only contain latin letters, numbers, underscores and dashes"
+      REGEX_PATTERNS.TWIN_CLASS_KEY,
+      "Allowed characters: Latin and Cyrillic letters, numbers, underscores, and spaces. No special characters or hyphens are allowed."
     ),
   name: z.string().min(1).max(100),
   description: z
