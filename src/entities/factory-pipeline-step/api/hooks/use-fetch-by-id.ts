@@ -1,10 +1,12 @@
 "use client";
 
+import { useCallback, useContext, useState } from "react";
+
+import { hydratePipelineStepFromMap } from "@/entities/factory-pipeline-step";
 import { ApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-import { useCallback, useContext, useState } from "react";
+
 import { FactoryPipelineStepRqQuery, PipelineStep_DETAILED } from "../../api";
-import { hydratePipelineStepFromMap } from "@/entities/factory-pipeline-step";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchFactoryPipelineStepById = () => {

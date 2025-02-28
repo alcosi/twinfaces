@@ -1,16 +1,18 @@
 "use client";
 
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect } from "react";
-import { FactoryPipelineStepGeneral } from "./views";
+
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PipelineStepContext } from "@/features/pipeline-step";
+import { Tab, TabsLayout } from "@/widgets/layout";
+
+import { PipelineStepGeneral } from "./views";
 
 const tabs: Tab[] = [
   {
     key: "general",
     label: "General",
-    content: <FactoryPipelineStepGeneral />,
+    content: <PipelineStepGeneral />,
   },
 ];
 
@@ -26,15 +28,14 @@ export function PipelineStepScreen() {
       },
       {
         label:
-          step?.factoryPipeline?.factory?.name! ||
-          step?.factoryPipeline?.factory?.key!,
+          step.factoryPipeline.factory?.name ||
+          step.factoryPipeline.factory?.key!,
         href: `/workspace/pipeline-steps/${stepId}`,
       },
     ]);
   }, [
     stepId,
-    step?.factoryPipeline?.factory?.name,
-    step.factoryPipeline?.factory?.key,
+    step.factoryPipeline.factory?.name || step.factoryPipeline.factory?.key!,
     setBreadcrumbs,
   ]);
 

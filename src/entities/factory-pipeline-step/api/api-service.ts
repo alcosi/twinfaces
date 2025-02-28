@@ -1,6 +1,12 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryPipelineStepRqQuery, PipelineStepFilters } from "./types";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
+import {
+  FactoryPipelineStepRqQuery,
+  FactoryPipelineStepUpdateRq,
+  PipelineStepFilters,
+} from "./types";
 
 export function createPipelineStepApi(settings: ApiSettings) {
   function search({
@@ -49,7 +55,26 @@ export function createPipelineStepApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById };
+  function update({
+    factoryPipelineStepId,
+    body,
+  }: {
+    factoryPipelineStepId: string;
+    body: FactoryPipelineStepUpdateRq;
+  }) {
+    return settings.client.PUT(
+      "/private/factory/factory_pipeline_step/{factoryPipelineStepId}/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { factoryPipelineStepId },
+        },
+        body,
+      }
+    );
+  }
+
+  return { search, getById, update };
 }
 
 export type PipelineStepApi = ReturnType<typeof createPipelineStepApi>;

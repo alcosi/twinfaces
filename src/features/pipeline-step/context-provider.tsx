@@ -1,10 +1,11 @@
-import { isUndefined } from "@/shared/libs";
-import { LoadingOverlay } from "@/shared/ui";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
+
 import {
   PipelineStep_DETAILED,
   useFetchFactoryPipelineStepById,
 } from "@/entities/factory-pipeline-step";
+import { isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui";
 
 type PipelineStepContextProps = {
   stepId: string;
