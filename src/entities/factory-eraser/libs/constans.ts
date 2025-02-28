@@ -1,0 +1,5 @@
+export const ERASE_ACTION_TYPES = [
+  "RESTRICT",
+  "ERASE_IRREVOCABLE",
+  "ERASE_CANDIDATE",
+] as const;
