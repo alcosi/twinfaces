@@ -1,20 +1,22 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
+
 import {
   TwinFlowTransition,
   TwinFlowTransitionValidator,
   TwinFlowTransitionValidatorCreate,
-  useTwinFlowTransitionValidatorRulesSearch,
   VALIDATOR_RULES_SCHEMA,
   ValidatorRulesFormValues,
+  useTwinFlowTransitionValidatorRulesSearch,
   useUpdateTransition,
 } from "@/entities/twin-flow-transition";
-import { useRef } from "react";
-import { DataTableHandle } from "@/widgets/crud-data-table";
-import { ColumnDef } from "@tanstack/table-core";
 import { GuidWithCopy } from "@/shared/ui/guid";
+import { DataTableHandle } from "@/widgets/crud-data-table";
 import { CrudDataTable } from "@/widgets/crud-data-table";
-import { Check } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import { TransitionValidatorFormFields } from "./form-fields";
 
 const colDefs: Record<

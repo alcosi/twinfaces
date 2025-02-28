@@ -10,9 +10,10 @@ import { TwinFlowTransitions } from "@/screens/twinFlowTransitions";
 import { PlatformArea } from "@/shared/config";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
+import { TwinFlowTransitionsTable } from "@/widgets/tables";
+
 
 import { TwinflowGeneral } from "./twinflow-general";
-import { TwinFlowTransitionsTable } from "@/widgets/tables";
 
 interface TwinflowPageProps {
   params: {
