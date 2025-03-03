@@ -1,10 +1,11 @@
+import { ReactNode, createContext, useEffect, useState } from "react";
+
 import {
   FactoryMultiplier_DETAILED,
   useFetchFactoryMultiplierById,
 } from "@/entities/factory-multiplier";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
-import { createContext, ReactNode, useEffect, useState } from "react";
 
 type FactoryMultiplierContextProps = {
   factoryMultiplierId: string;

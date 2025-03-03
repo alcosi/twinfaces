@@ -1,12 +1,13 @@
+import { useContext } from "react";
+import { z } from "zod";
+
 import { AutoFormValueType } from "@/components/auto-field";
-import {
-  FactoryResourceLink,
-  useFactorySelectAdapter,
-} from "@/entities/factory";
+
+import { FactoryResourceLink } from "@/entities/factory";
 import { useUpdateFactoryMultiplier } from "@/entities/factory-multiplier";
 import {
-  TwinClass_DETAILED,
   TwinClassResourceLink,
+  TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import { FactoryMultiplierContext } from "@/features/factory-multiplier";
@@ -16,8 +17,6 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
-import { useContext } from "react";
-import { z } from "zod";
 
 export function FactoryMultiplierGeneral() {
   const { factoryMultiplier, refresh } = useContext(FactoryMultiplierContext);

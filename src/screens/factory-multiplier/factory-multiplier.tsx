@@ -1,10 +1,12 @@
 "use client";
 
-import { Tab, TabsLayout } from "@/widgets/layout";
-import { FactoryMultiplierGeneral } from "./views";
 import { useContext, useEffect } from "react";
-import { FactoryMultiplierContext } from "@/features/factory-multiplier";
+
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { FactoryMultiplierContext } from "@/features/factory-multiplier";
+import { Tab, TabsLayout } from "@/widgets/layout";
+
+import { FactoryMultiplierGeneral } from "./views";
 
 const tabs: Tab[] = [
   {

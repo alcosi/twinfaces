@@ -1,7 +1,8 @@
 "use client";
 
-import { FactoryMultiplierContextProvider } from "@/features/factory-multiplier";
 import { ReactNode } from "react";
+
+import { FactoryMultiplierContextProvider } from "@/features/factory-multiplier";
 
 type FactoryMultiplierLayoutProps = {
   params: {

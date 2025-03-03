@@ -1,8 +1,10 @@
-import { ApiContext } from "@/shared/api";
 import { useCallback, useContext, useState } from "react";
-import { FactoryMultiplier_DETAILED } from "../types";
+
+import { ApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
+
 import { hydrateFactoryMultiplierFromMap } from "../../libs";
+import { FactoryMultiplier_DETAILED } from "../types";
 
 export const useFetchFactoryMultiplierById = () => {
   const api = useContext(ApiContext);
