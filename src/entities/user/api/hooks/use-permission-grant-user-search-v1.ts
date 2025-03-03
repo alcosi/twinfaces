@@ -1,10 +1,12 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+
+import { ApiContext, PagedResponse } from "@/shared/api";
+
 import { hydratePermissionGrantUserFromMap } from "../../libs";
 import {
-  PermissionGrantUser_DETAILED,
   PermissionGrantUserFilters,
+  PermissionGrantUser_DETAILED,
 } from "../types";
 
 // TODO: Apply caching-strategy

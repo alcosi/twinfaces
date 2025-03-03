@@ -1,8 +1,10 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { DomainUser, DomainUser_DETAILED, DomainUserFilters } from "../types";
+
+import { ApiContext, PagedResponse } from "@/shared/api";
+
 import { hydrateDomainUserFromMap } from "../../libs";
+import { DomainUserFilters, DomainUser_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
 export const useDomainUserSearchV1 = () => {
