@@ -104,7 +104,14 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create, update, getById, createPermissionGrantUser, createPermissionGrantUserGroup };
+  return {
+    search,
+    create,
+    update,
+    getById,
+    createPermissionGrantUser,
+    createPermissionGrantUserGroup,
+  };
 }
 
 export type PermissionApi = ReturnType<typeof createPermissionApi>;
