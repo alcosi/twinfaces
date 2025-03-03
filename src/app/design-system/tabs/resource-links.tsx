@@ -1,17 +1,18 @@
 import { CommentResourceLink } from "@/entities/comment";
 import { FeaturerResourceLink } from "@/entities/featurer";
+import { LinkResourceLink } from "@/entities/link";
 import { TwinResourceLink } from "@/entities/twin";
 import { TwinClassResourceLink } from "@/entities/twin-class";
 import { TwinClassFieldResourceLink } from "@/entities/twin-class-field";
 import { TwinFlowResourceLink } from "@/entities/twin-flow";
-import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
 import { TwinFlowTransitionResourceLink } from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
 import { UserResourceLink } from "@/entities/user";
-import { UserGroupResourceLink } from "@/entities/userGroup";
+import { UserGroupResourceLink } from "@/entities/user-group";
+
 import { UiSection } from "../components/ui-section";
 import { Fake } from "../seeds";
-import { LinkResourceLink } from "@/entities/link";
 
 export function ResourceLinksTab() {
   return (

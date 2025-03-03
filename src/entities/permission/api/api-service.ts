@@ -1,6 +1,9 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import {
+  CreatePermissionGrantUserGroupRequestBody,
   CreatePermissionRequestBody,
   PermissionFilters,
   QueryPermissionViewV1,
@@ -74,7 +77,20 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create, update, getById };
+  function createPermissionGrantUserGroup({
+    body,
+  }: {
+    body: CreatePermissionGrantUserGroupRequestBody;
+  }) {
+    return settings.client.POST(`/private/permission_grant/user_group/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, create, update, getById, createPermissionGrantUserGroup };
 }
 
 export type PermissionApi = ReturnType<typeof createPermissionApi>;
