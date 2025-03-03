@@ -1,5 +1,11 @@
 "use client";
 
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
 import { FactoryResourceLink } from "@/entities/factory";
 import {
   FactoryMultiplier_DETAILED,
@@ -7,16 +13,12 @@ import {
   useFactoryMultipliersSearch,
 } from "@/entities/factory-multiplier";
 import {
-  TwinClass_DETAILED,
   TwinClassResourceLink,
+  TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
-import { useEffect } from "react";
-import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Pick<
@@ -85,6 +87,7 @@ export function FactoryMultipliersScreen() {
   const { setBreadcrumbs } = useBreadcrumbs();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryMultiplierFilters();
+  const router = useRouter();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Multipliers", href: "/workspace/multipliers" }]);
@@ -129,6 +132,9 @@ export function FactoryMultipliersScreen() {
         colDefs.description,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      onRowClick={(row) => {
+        router.push(`/workspace/multipliers/${row.id}`);
+      }}
     />
   );
 }
