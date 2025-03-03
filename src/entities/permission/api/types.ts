@@ -25,3 +25,6 @@ export type CreatePermissionGrantUserRequestBody =
   components["schemas"]["PermissionGrantUserCreateRqV1"];
 export type CreatePermissionGrantUserGroupRequestBody =
   components["schemas"]["PermissionGrantUserGroupCreateRqV1"];
+
+export type CreatePermissionGrantTwinRoleRequestBody =
+  components["schemas"]["PermissionGrantTwinRoleCreateRqV1"];

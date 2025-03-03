@@ -62,15 +62,15 @@ import {
   TwinFlowTransitionApi,
   createTwinFlowTransitionApi,
 } from "@/entities/twin-flow-transition";
+import {
+  PermissionTwinRoleApi,
+  createPermissionTwinRoleApi,
+} from "@/entities/twin-role";
 import { TwinStatusApi, createTwinStatusApi } from "@/entities/twin-status";
 import {
   TwinFlowSchemaApi,
   createTwinFlowSchemaApi,
 } from "@/entities/twinFlowSchema";
-import {
-  PermissionTwinRoleApi,
-  createPermissionTwinRoleApi,
-} from "@/entities/twinRole";
 import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
 import { ApiSettings, PrivateApiContext } from "@/shared/api";

@@ -1,9 +1,10 @@
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
+
 import {
   PermissionGrantTwinRoles,
   PermissionGrantTwinRoles_DETAILED,
-} from "@/entities/twinRole";
-import { TwinClass_DETAILED } from "@/entities/twin-class";
+} from "../api";
 
 export const hydratePermissionGrantTwinRolesFromMap = (
   dto: PermissionGrantTwinRoles,

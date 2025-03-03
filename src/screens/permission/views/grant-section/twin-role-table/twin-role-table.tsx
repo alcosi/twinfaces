@@ -1,19 +1,29 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
+import {
+  PERMISSION_GRANT_TWIN_ROLE_SCHEMA,
+  useCreatePermissionGrantTwinRole,
+} from "@/entities/permission";
 import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import { TwinClassResourceLink } from "@/entities/twin-class";
 import {
   PermissionGrantTwinRoles_DETAILED,
+  TwinRoleEnum,
   usePermissionGrantTwinRolesSearchV1,
-} from "@/entities/twinRole";
+} from "@/entities/twin-role";
 import { UserResourceLink } from "@/entities/user";
 import { PermissionContext } from "@/features/permission";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable } from "@/widgets/crud-data-table";
+
+import { TwinRoleTableFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -89,8 +99,21 @@ const colDefs: Record<
 };
 
 export function TwinRoleTable() {
-  const { permission } = useContext(PermissionContext);
+  const { permission, permissionId } = useContext(PermissionContext);
   const { searchTwinRoleGrant } = usePermissionGrantTwinRolesSearchV1();
+  const { createPermissionGrantTwinRole } = useCreatePermissionGrantTwinRole();
+
+  const twinRoleForm = useForm<
+    z.infer<typeof PERMISSION_GRANT_TWIN_ROLE_SCHEMA>
+  >({
+    resolver: zodResolver(PERMISSION_GRANT_TWIN_ROLE_SCHEMA),
+    defaultValues: {
+      permissionId: permissionId || "",
+      permissionSchemaId: "",
+      twinClassId: "",
+      twinRole: TwinRoleEnum.assignee,
+    },
+  });
 
   async function fetchData(
     pagination: PaginationState
@@ -108,6 +131,17 @@ export function TwinRoleTable() {
       return { data: [], pagination: {} };
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof PERMISSION_GRANT_TWIN_ROLE_SCHEMA>
+  ) => {
+    const { ...body } = formValues;
+
+    await createPermissionGrantTwinRole({
+      body: { permissionGrantTwinRole: body },
+    });
+    toast.success("Twin role created successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -131,6 +165,11 @@ export function TwinRoleTable() {
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
+      dialogForm={twinRoleForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <TwinRoleTableFormFields control={twinRoleForm.control} />
+      )}
     />
   );
 }

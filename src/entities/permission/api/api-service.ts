@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  CreatePermissionGrantTwinRoleRequestBody,
   CreatePermissionGrantUserGroupRequestBody,
   CreatePermissionGrantUserRequestBody,
   CreatePermissionRequestBody,
@@ -78,6 +79,19 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
+  function createPermissionGrantTwinRole({
+    body,
+  }: {
+    body: CreatePermissionGrantTwinRoleRequestBody;
+  }) {
+    return settings.client.POST(`/private/permission_grant/twin_role/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
   function createPermissionGrantUser({
     body,
   }: {
@@ -111,6 +125,7 @@ export function createPermissionApi(settings: ApiSettings) {
     getById,
     createPermissionGrantUser,
     createPermissionGrantUserGroup,
+    createPermissionGrantTwinRole,
   };
 }
 
