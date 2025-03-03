@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  FactoryMultiplierCreateRq,
   FactoryMultiplierFilters,
   FactoryMultiplierUpdateRq,
   FactoryMultiplierViewQuery,
@@ -25,6 +26,7 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
           showFactoryMultiplier2TwinClassMode: "DETAILED",
           showFactoryMultiplierFiltersCountMode: "SHOW",
           showFactoryMultiplierMode: "DETAILED",
+          showFactoryMultiplier2FeaturerMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
@@ -73,7 +75,26 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
     );
   }
 
-  return { search, getById, update };
+  function create({
+    id,
+    body,
+  }: {
+    id: string;
+    body: FactoryMultiplierCreateRq;
+  }) {
+    return settings.client.POST(
+      `/private/factory/{factoryId}/factory_multiplier/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { factoryId: id },
+        },
+        body: body,
+      }
+    );
+  }
+
+  return { search, getById, update, create };
 }
 
 export type FactoryMultiplierApi = ReturnType<

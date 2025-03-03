@@ -1,17 +1,23 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { FactoryResourceLink } from "@/entities/factory";
 import {
+  FACTORY_MULTIPLIER_SCHEMA,
   FactoryMultiplier_DETAILED,
+  useFactoryMultiplierCreate,
   useFactoryMultiplierFilters,
   useFactoryMultipliersSearch,
 } from "@/entities/factory-multiplier";
+import { FeaturerResourceLink, Featurer_DETAILED } from "@/entities/featurer";
 import {
   TwinClassResourceLink,
   TwinClass_DETAILED,
@@ -19,6 +25,8 @@ import {
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+
+import { FactoryMultiplierFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -29,6 +37,7 @@ const colDefs: Record<
     | "active"
     | "factoryMultiplierFiltersCount"
     | "description"
+    | "multiplierFeaturer"
   >,
   ColumnDef<FactoryMultiplier_DETAILED>
 > = {
@@ -63,7 +72,20 @@ const colDefs: Record<
         </div>
       ),
   },
-  //TODO add missing column Multiplier featurer in DTO
+  multiplierFeaturer: {
+    id: "multiplierFeaturer",
+    accessorKey: "multiplierFeaturer",
+    header: "Muliplier featurer",
+    cell: ({ row: { original } }) =>
+      original.multiplierFeaturer && (
+        <div className="max-w-48 inline-flex">
+          <FeaturerResourceLink
+            data={original.multiplierFeaturer as Featurer_DETAILED}
+            withTooltip
+          />
+        </div>
+      ),
+  },
   active: {
     id: "active",
     accessorKey: "active",
@@ -88,10 +110,23 @@ export function FactoryMultipliersScreen() {
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryMultiplierFilters();
   const router = useRouter();
+  const { createFactoryMultiplier } = useFactoryMultiplierCreate();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Multipliers", href: "/workspace/multipliers" }]);
   }, [setBreadcrumbs]);
+
+  const factoryMultiplierForm = useForm<
+    z.infer<typeof FACTORY_MULTIPLIER_SCHEMA>
+  >({
+    resolver: zodResolver(FACTORY_MULTIPLIER_SCHEMA),
+    defaultValues: {
+      factoryId: "",
+      inputTwinClassId: "",
+      active: false,
+      description: undefined,
+    },
+  });
 
   async function fetchFactoryMultipliers(
     pagination: PaginationState,
@@ -109,13 +144,25 @@ export function FactoryMultipliersScreen() {
     }
   }
 
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof FACTORY_MULTIPLIER_SCHEMA>
+  ) => {
+    const { factoryId, ...body } = formValues;
+
+    await createFactoryMultiplier({
+      id: factoryId,
+      body: { factoryMultiplier: body },
+    });
+    toast.success("Factory multiplier created successfully!");
+  };
+
   return (
     <CrudDataTable
       columns={[
         colDefs.id,
         colDefs.factory,
         colDefs.inputTwinClass,
-        //TODO add missing column Multiplier featurer in DTO
+        colDefs.multiplierFeaturer,
         colDefs.active,
         colDefs.factoryMultiplierFiltersCount,
         colDefs.description,
@@ -126,7 +173,7 @@ export function FactoryMultipliersScreen() {
         colDefs.id,
         colDefs.factory,
         colDefs.inputTwinClass,
-        //TODO add missing column Multiplier featurer in DTO
+        colDefs.multiplierFeaturer,
         colDefs.active,
         colDefs.factoryMultiplierFiltersCount,
         colDefs.description,
@@ -135,6 +182,11 @@ export function FactoryMultipliersScreen() {
       onRowClick={(row) => {
         router.push(`/workspace/multipliers/${row.id}`);
       }}
+      dialogForm={factoryMultiplierForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <FactoryMultiplierFormFields control={factoryMultiplierForm.control} />
+      )}
     />
   );
 }

@@ -22,6 +22,7 @@ export const useFetchFactoryMultiplierById = () => {
             showFactoryMultiplier2FactoryMode: "DETAILED",
             showFactoryMultiplier2TwinClassMode: "DETAILED",
             showFactoryMultiplierMode: "DETAILED",
+            showFactoryMultiplier2FeaturerMode: "DETAILED",
           },
         });
 
