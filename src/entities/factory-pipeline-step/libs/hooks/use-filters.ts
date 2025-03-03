@@ -1,17 +1,21 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
   FilterFeature,
+  extractEnabledFilters,
   isPopulatedArray,
   mapToChoice,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import { PipelineStepFilterKeys, PipelineStepFilters } from "../../api";
 
 export function usePipelineStepFilters({
@@ -83,17 +87,9 @@ export function usePipelineStepFilters({
     PipelineStepFilterKeys,
     AutoFormValueInfo
   > {
-    if (isPopulatedArray(enabledFilters)) {
-      return enabledFilters.reduce(
-        (filters, key) => {
-          filters[key] = allFilters[key];
-          return filters;
-        },
-        {} as Record<PipelineStepFilterKeys, AutoFormValueInfo>
-      );
-    }
-
-    return allFilters;
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(

@@ -1,16 +1,20 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import { usePermissionSelectAdapter } from "@/entities/permission";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
   type FilterFeature,
+  extractEnabledFilters,
   isPopulatedArray,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import { TwinClassFieldV2FilterKeys, TwinClassFieldV2Filters } from "../../api";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { usePermissionSelectAdapter } from "@/entities/permission";
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
 
 export function useTwinClassFieldFilters({
   enabledFilters,
@@ -70,17 +74,9 @@ export function useTwinClassFieldFilters({
     TwinClassFieldV2FilterKeys,
     AutoFormValueInfo
   > {
-    if (isPopulatedArray(enabledFilters)) {
-      return enabledFilters.reduce(
-        (filters, key) => {
-          filters[key] = allFilters[key];
-          return filters;
-        },
-        {} as Record<TwinClassFieldV2FilterKeys, AutoFormValueInfo>
-      );
-    }
-
-    return allFilters;
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(

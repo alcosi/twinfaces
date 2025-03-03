@@ -55,7 +55,7 @@ const colDefs: Record<
       original.factoryPipeline?.factory && (
         <div className="max-w-48 inline-flex">
           <FactoryResourceLink
-            data={original.factoryPipeline?.factory}
+            data={original.factoryPipeline.factory}
             withTooltip
           />
         </div>
@@ -148,7 +148,7 @@ export function PipelineStepsTable({ pipelineId }: { pipelineId?: string }) {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      const resp = await searchPipelineStep({
+      return await searchPipelineStep({
         pagination,
         filters: {
           ..._filters,
@@ -157,11 +157,6 @@ export function PipelineStepsTable({ pipelineId }: { pipelineId?: string }) {
             : _filters.factoryPipelineIdList,
         },
       });
-
-      return {
-        data: resp.data ?? [],
-        pagination: resp.pagination ?? {},
-      };
     } catch (error) {
       toast.error("An error occured while fetching pipeline steps: " + error);
       return { data: [], pagination: {} };
