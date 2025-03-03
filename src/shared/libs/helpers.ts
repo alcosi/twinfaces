@@ -1,5 +1,6 @@
 import React from "react";
-import { isBoolean, isPopulatedString, SelectAdapter } from "./types";
+
+import { SelectAdapter, isBoolean, isPopulatedString } from "./types";
 
 export const mapToChoice = (input: unknown): "ONLY" | "ONLY_NOT" | "ANY" => {
   if (input === "indeterminate" || input === undefined) return "ANY";
@@ -133,4 +134,17 @@ export function shortenUUID(uuid: string): string {
     return `${uuid.slice(0, 8)}...${uuid.slice(-2)}`;
   }
   return uuid;
+}
+
+export function extractEnabledFilters<K extends string, V>(
+  enabledFilters: K[],
+  allFilters: Record<K, V>
+): Record<K, V> {
+  return enabledFilters.reduce(
+    (filters, key) => {
+      filters[key] = allFilters[key];
+      return filters;
+    },
+    {} as Record<K, V>
+  );
 }

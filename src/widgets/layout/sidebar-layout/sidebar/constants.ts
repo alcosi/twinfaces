@@ -22,7 +22,7 @@ import { FactoryPipelineIcon } from "@/entities/factory-pipeline";
 import { FactoryPipelineStepIcon } from "@/entities/factory-pipeline-step";
 import { PermissionIcon } from "@/entities/permission";
 import { PermissionGroupIcon } from "@/entities/permission-group";
-import { PermissionSchemaIcon } from "@/entities/permission-schema/components/permission-schema-icon";
+import { PermissionSchemaIcon } from "@/entities/permission-schema";
 import { TwinIcon } from "@/entities/twin";
 import { TwinClassIcon } from "@/entities/twin-class";
 import { FieldIcon } from "@/entities/twin-class-field";

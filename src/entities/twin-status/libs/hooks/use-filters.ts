@@ -1,17 +1,20 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
   TwinStatusFilterKeys,
   TwinStatusFilters,
 } from "@/entities/twin-status";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
   type FilterFeature,
+  extractEnabledFilters,
   isPopulatedArray,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { z } from "zod";
 
 export function useStatusFilters({
   enabledFilters,
@@ -55,17 +58,9 @@ export function useStatusFilters({
     TwinStatusFilterKeys,
     AutoFormValueInfo
   > {
-    if (isPopulatedArray(enabledFilters)) {
-      return enabledFilters.reduce(
-        (filters, key) => {
-          filters[key] = allFilters[key];
-          return filters;
-        },
-        {} as Record<TwinStatusFilterKeys, AutoFormValueInfo>
-      );
-    }
-
-    return allFilters;
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(
