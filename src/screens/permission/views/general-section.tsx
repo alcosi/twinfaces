@@ -1,10 +1,15 @@
+import { useContext } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { AutoFormValueType } from "@/components/auto-field";
+
 import {
   UpdatePermissionRequestBody,
   usePermissionUpdate,
 } from "@/entities/permission";
 import { usePermissionGroupSelectAdapter } from "@/entities/permission-group";
-import { UserGroupResourceLink } from "@/entities/userGroup";
+import { UserGroupResourceLink } from "@/entities/user-group";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
@@ -13,9 +18,6 @@ import {
 import { PermissionContext } from "@/features/permission";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { useContext } from "react";
-import { toast } from "sonner";
-import { z } from "zod";
 
 export function GeneralSection() {
   const { permission, refresh } = useContext(PermissionContext);

@@ -5,16 +5,18 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import {
+  PERMISSION_GRANT_USER_GROUP_SCHEMA,
+  useCreatePermissionGrantUserGroup,
+} from "@/entities/permission";
 import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import { UserResourceLink } from "@/entities/user";
 import {
-  PERMISSION_GRANT_USER_GROUP_SCHEMA,
   PermissionGrantUserGroup,
   PermissionGrantUserGroup_DETAILED,
   UserGroupResourceLink,
-  useCreatePermissionGrantUserGroup,
   usePermissionGrantUserGroupSearchV1,
-} from "@/entities/userGroup";
+} from "@/entities/user-group";
 import { PermissionContext } from "@/features/permission";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate, isUndefined } from "@/shared/libs";

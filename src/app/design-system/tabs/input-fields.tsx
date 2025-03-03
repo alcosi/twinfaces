@@ -1,23 +1,26 @@
-import { AutoField, AutoFormValueType } from "@/components/auto-field";
-import { useDatalistSelectAdapter } from "@/entities/datalist";
-import { FeaturerTypes } from "@/entities/featurer";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { TwinFieldType } from "@/entities/twinField";
-import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
-import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
-import { useUserSelectAdapter } from "@/entities/user";
-import { useUserGroupSelectAdapter } from "@/entities/userGroup/libs/hooks";
-import { Button, Form } from "@/shared/ui";
-import { FeaturerFormField, TwinFieldFormField } from "@/widgets/form-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { UiSection } from "../components/ui-section";
-import { Fake } from "../seeds";
+
+import { AutoField, AutoFormValueType } from "@/components/auto-field";
+
+import { useDatalistSelectAdapter } from "@/entities/datalist";
+import { FeaturerTypes } from "@/entities/featurer";
 import {
   useLinkStrengthSelectAdapter,
   useLinkTypeSelectAdapter,
 } from "@/entities/link";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
+import { TwinFieldType } from "@/entities/twinField";
+import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
+import { useUserSelectAdapter } from "@/entities/user";
+import { useUserGroupSelectAdapter } from "@/entities/user-group";
+import { Button, Form } from "@/shared/ui";
+import { FeaturerFormField, TwinFieldFormField } from "@/widgets/form-fields";
+
+import { UiSection } from "../components/ui-section";
+import { Fake } from "../seeds";
 
 const FORM_SCHEMA = z.any();
 type FormValues = z.infer<typeof FORM_SCHEMA>;

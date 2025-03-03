@@ -13,6 +13,3 @@ export type PermissionGrantUserGroupFilters = Partial<
     PermissionGrantUserGroupFilterKeys
   >
 >;
-
-export type CreatePermissionGrantUserGroupRequestBody =
-  components["schemas"]["PermissionGrantUserGroupCreateRqV1"];

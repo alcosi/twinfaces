@@ -20,3 +20,6 @@ export type PermissionFilters = Partial<
 >;
 export type QueryPermissionViewV1 =
   operations["permissionViewV1"]["parameters"]["query"];
+
+export type CreatePermissionGrantUserGroupRequestBody =
+  components["schemas"]["PermissionGrantUserGroupCreateRqV1"];

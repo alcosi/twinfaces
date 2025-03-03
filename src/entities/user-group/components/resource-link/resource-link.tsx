@@ -1,6 +1,8 @@
+import { UsersRound } from "lucide-react";
+
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { UsersRound } from "lucide-react";
+
 import { UserGroup } from "../../api";
 import { UserGroupResourceTooltip } from "./tooltip";
 

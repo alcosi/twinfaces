@@ -1,12 +1,15 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
 import {
   type FilterFeature,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { z } from "zod";
-import { UserGroupFilterKeys, UserGroupFilters } from "@/entities/userGroup";
+
+import { UserGroupFilterKeys, UserGroupFilters } from "../../api";
 
 export function useUserGroupsFilters(): FilterFeature<
   UserGroupFilterKeys,

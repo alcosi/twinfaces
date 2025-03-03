@@ -4,12 +4,12 @@ import { z } from "zod";
 
 import { ComboboxFormField } from "@/components/form-fields";
 
-import { usePermissionSelectAdapter } from "@/entities/permission";
-import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import {
   PERMISSION_GRANT_USER_GROUP_SCHEMA,
-  useUserGroupSelectAdapter,
-} from "@/entities/userGroup";
+  usePermissionSelectAdapter,
+} from "@/entities/permission";
+import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
+import { useUserGroupSelectAdapter } from "@/entities/user-group";
 import { isTruthy } from "@/shared/libs";
 
 export function UserGroupTableFormFields({

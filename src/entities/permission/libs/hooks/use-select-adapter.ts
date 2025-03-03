@@ -1,4 +1,5 @@
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+
 import { Permission_DETAILED, usePermissionSearchV1 } from "../../api";
 
 export function usePermissionSelectAdapter(): SelectAdapter<Permission_DETAILED> {

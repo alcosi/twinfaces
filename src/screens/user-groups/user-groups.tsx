@@ -1,21 +1,22 @@
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useEffect, useRef } from "react";
+import { toast } from "sonner";
+
+import { BusinessAccountResourceLink } from "@/entities/business-account";
 import {
   UserGroup_DETAILED,
   useUserGroupSearchV1,
   useUserGroupsFilters,
-} from "@/entities/userGroup";
+} from "@/entities/user-group";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
-import { formatToTwinfaceDate } from "@/shared/libs";
-import { BusinessAccountResourceLink } from "@/entities/business-account";
 
 const colDefs: Record<
   "id" | "name" | "type" | "description" | "createdAt" | "businessAccount",
