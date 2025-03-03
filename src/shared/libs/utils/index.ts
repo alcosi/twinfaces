@@ -12,6 +12,7 @@ export * from "./local-storage";
 export * from "./mapping";
 export * from "./safe";
 export * from "./string";
+export * from "./uuid";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -24,8 +24,10 @@ import {
 } from "@/features/inPlaceEdit";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
+import { Switch } from "@/shared/ui/switch";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinClassGeneral() {
@@ -37,6 +39,7 @@ export function TwinClassGeneral() {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
+  const { confirm } = useActionDialogs();
 
   async function update(newClass: TwinClassUpdateRq) {
     try {
@@ -113,22 +116,6 @@ export function TwinClassGeneral() {
     onSubmit: (value) => {
       return update({
         descriptionI18n: { translationInCurrentLocale: value as string },
-      });
-    },
-  };
-
-  const abstractSettings: InPlaceEditProps = {
-    id: "abstract",
-    value: twinClass.abstractClass,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: (value) => {
-      return update({
-        abstractClass: value as boolean,
       });
     },
   };
@@ -250,6 +237,21 @@ export function TwinClassGeneral() {
     setEditFieldDialogOpen(true);
   }
 
+  function switchAbstract() {
+    const action = twinClass.abstractClass ? "disable" : "enable";
+    const status = twinClass.abstractClass ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Abstract Mode`,
+      message: `Are you sure you want to ${action} abstract mode for this class?`,
+      onSuccess: () => {
+        return update({
+          abstractClass: !twinClass.abstractClass,
+        });
+      },
+    });
+  }
+
   return (
     <InPlaceEditContextProvider>
       <Table>
@@ -283,7 +285,10 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell>Abstract</TableCell>
             <TableCell>
-              <InPlaceEdit {...abstractSettings} />
+              <Switch
+                checked={twinClass.abstractClass ?? false}
+                onCheckedChange={switchAbstract}
+              />
             </TableCell>
           </TableRow>
 

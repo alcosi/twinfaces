@@ -4,7 +4,6 @@ import { PublicApiContextProvider } from "@/features/api";
 import { ThemeProvider } from "@/features/ui/theme-provider";
 import { ProductFlavorConfigProvider } from "@/shared/config";
 import { ProductFlavorConfig } from "@/shared/config/types";
-import { TooltipProvider } from "@/shared/ui";
 
 export function PublicLayoutProviders({
   config,
@@ -22,9 +21,7 @@ export function PublicLayoutProviders({
           enableSystem
           disableTransitionOnChange
         >
-          <TooltipProvider delayDuration={700} skipDelayDuration={0}>
-            {children}
-          </TooltipProvider>
+          {children}
         </ThemeProvider>
       </PublicApiContextProvider>
     </ProductFlavorConfigProvider>

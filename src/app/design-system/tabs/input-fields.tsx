@@ -17,6 +17,7 @@ import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import { useUserSelectAdapter } from "@/entities/user";
 import { useUserGroupSelectAdapter } from "@/entities/user-group";
 import { Button, Form } from "@/shared/ui";
+import { Switch } from "@/shared/ui/switch";
 import { FeaturerFormField, TwinFieldFormField } from "@/widgets/form-fields";
 
 import { UiSection } from "../components/ui-section";
@@ -81,7 +82,7 @@ export function InputFieldsTab() {
         <form
           className="h-screen overflow-y-auto max-h-98"
           style={{
-            maxHeight: "calc(100vh - var(--header-height))",
+            maxHeight: "calc(100vh - var(--header-height) * 2)",
           }}
           onSubmit={twinFieldsForm.handleSubmit(internalSubmit)}
         >
@@ -243,6 +244,8 @@ export function InputFieldsTab() {
                       label="dabeScrollV1"
                       twinClassId={mockTwinClassId}
                     />
+
+                    <Switch />
                   </div>
                 }
               />

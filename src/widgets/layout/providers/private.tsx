@@ -4,6 +4,8 @@ import { Toaster } from "sonner";
 import { PrivateApiContextProvider } from "@/features/api";
 import { BreadcrumbProvider } from "@/features/breadcrumb";
 import { QuickViewProvider } from "@/features/quick-view-overlay";
+import { ActionDialogsProvider } from "@/features/ui/action-dialogs";
+import { TooltipProvider } from "@/shared/ui";
 
 import { SidebarLayout } from "../sidebar-layout";
 
@@ -14,12 +16,16 @@ export function PrivateLayoutProviders({
 }) {
   return (
     <PrivateApiContextProvider>
-      <BreadcrumbProvider>
-        <QuickViewProvider>
-          <SidebarLayout>{children}</SidebarLayout>
-          <Toaster />
-        </QuickViewProvider>
-      </BreadcrumbProvider>
+      <ActionDialogsProvider>
+        <BreadcrumbProvider>
+          <QuickViewProvider>
+            <TooltipProvider delayDuration={700} skipDelayDuration={0}>
+              <SidebarLayout>{children}</SidebarLayout>
+              <Toaster />
+            </TooltipProvider>
+          </QuickViewProvider>
+        </BreadcrumbProvider>
+      </ActionDialogsProvider>
     </PrivateApiContextProvider>
   );
 }
