@@ -8,7 +8,7 @@ export const NULLIFY_UUID_VALUE: string =
 export const REGEX_PATTERNS = {
   // UUID: /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/,
   ALPHANUMERIC_WITH_DASHES: /^[a-zA-Z0-9_-]+$/,
-  TWIN_CLASS_KEY: /^[a-zA-Zа-яА-Я0-9_\\\\s]+$/,
+  TWIN_CLASS_KEY: /^[a-zA-Z0-9_\s]+$/,
 };
 
 export const FIRST_ID_EXTRACTOR = z

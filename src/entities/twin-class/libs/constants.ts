@@ -29,7 +29,7 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .max(100)
     .regex(
       REGEX_PATTERNS.TWIN_CLASS_KEY,
-      "Allowed characters: Latin and Cyrillic letters, numbers, underscores, and spaces. No special characters or hyphens are allowed."
+      "Letters, numbers, underscores, and spaces allowed"
     ),
   name: z.string().min(1).max(100),
   description: z
