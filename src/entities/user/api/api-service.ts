@@ -1,5 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import { DomainUserFilters, PermissionGrantUserFilters } from "./types";
 
 export function createUserApi(settings: ApiSettings) {

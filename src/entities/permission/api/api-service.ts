@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   CreatePermissionGrantUserGroupRequestBody,
+  CreatePermissionGrantUserRequestBody,
   CreatePermissionRequestBody,
   PermissionFilters,
   QueryPermissionViewV1,
@@ -77,6 +78,19 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
+  function createPermissionGrantUser({
+    body,
+  }: {
+    body: CreatePermissionGrantUserRequestBody;
+  }) {
+    return settings.client.POST(`/private/permission_grant/user/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
   function createPermissionGrantUserGroup({
     body,
   }: {
@@ -90,7 +104,7 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create, update, getById, createPermissionGrantUserGroup };
+  return { search, create, update, getById, createPermissionGrantUser, createPermissionGrantUserGroup };
 }
 
 export type PermissionApi = ReturnType<typeof createPermissionApi>;

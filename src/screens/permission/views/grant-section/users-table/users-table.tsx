@@ -1,7 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
+import {
+  PERMISSION_GRANT_USER_SCHEMA,
+  useCreatePermissionGrantUser,
+} from "@/entities/permission";
 import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import {
   PermissionGrantUser,
@@ -14,6 +21,8 @@ import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate, isUndefined } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable } from "@/widgets/crud-data-table";
+
+import { UserTableFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -78,8 +87,18 @@ const colDefs: Record<
 };
 
 export function UsersTable() {
-  const { permission } = useContext(PermissionContext);
+  const { permission, permissionId } = useContext(PermissionContext);
   const { searchPermissionGrantUsers } = usePermissionGrantUserSearchV1();
+  const { createPermissionGrantUser } = useCreatePermissionGrantUser();
+
+  const userForm = useForm<z.infer<typeof PERMISSION_GRANT_USER_SCHEMA>>({
+    resolver: zodResolver(PERMISSION_GRANT_USER_SCHEMA),
+    defaultValues: {
+      permissionId: permissionId || "",
+      permissionSchemaId: "",
+      userId: "",
+    },
+  });
 
   async function fetchData(
     pagination: PaginationState
@@ -103,6 +122,17 @@ export function UsersTable() {
 
   if (isUndefined(permission)) return null;
 
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof PERMISSION_GRANT_USER_SCHEMA>
+  ) => {
+    const { ...body } = formValues;
+
+    await createPermissionGrantUser({
+      body: { permissionGrantUser: body },
+    });
+    toast.success("User created successfully!");
+  };
+
   return (
     <CrudDataTable
       title="For user"
@@ -123,6 +153,11 @@ export function UsersTable() {
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
+      dialogForm={userForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <UserTableFormFields control={userForm.control} />
+      )}
     />
   );
 }
