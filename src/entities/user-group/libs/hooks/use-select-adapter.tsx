@@ -1,7 +1,6 @@
 import { SelectAdapter } from "@/shared/libs";
 
-import { UserGroup_DETAILED } from "../../api";
-import { useUserGroupSearchV1 } from "../../api/hooks/use-search-v1";
+import { UserGroup_DETAILED, useUserGroupSearchV1 } from "../../api";
 
 export function useUserGroupSelectAdapter(): SelectAdapter<UserGroup_DETAILED> {
   const { searchUserGroups } = useUserGroupSearchV1();
