@@ -51,6 +51,7 @@ import {
   PermissionSpaceRoleApi,
   createPermissionSpaceRoleApi,
 } from "@/entities/spaceRole";
+import { TierApi, createTierApi } from "@/entities/tier";
 import { TwinApi, createTwinApi } from "@/entities/twin";
 import { TwinClassApi, createTwinClassApi } from "@/entities/twin-class";
 import {
@@ -107,6 +108,7 @@ export interface PrivateApiContextProps {
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
   link: LinkApi;
+  tier: TierApi;
 }
 
 export function PrivateApiContextProvider({
@@ -155,6 +157,7 @@ export function PrivateApiContextProvider({
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
         link: createLinkApi(settings),
+        tier: createTierApi(settings),
       }}
     >
       {children}
