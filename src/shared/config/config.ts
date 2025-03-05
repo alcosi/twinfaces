@@ -39,7 +39,8 @@ const configs: Record<string, ProjectConfig> = {
   },
 };
 
-const activeFlavor = process.env.NEXT_PUBLIC_PRODUCT_FLAVOR || "twinfaces";
+export function getServerProjectConfig(): ProjectConfig {
+  const activeFlavor = process.env.PRODUCT_FLAVOR || "twinfaces";
 
-export const projectConfig: ProjectConfig = (configs[activeFlavor] ??
-  configs["twinfaces"]) as ProjectConfig;
+  return (configs[activeFlavor] ?? configs["twinfaces"]) as ProjectConfig;
+}

@@ -7,7 +7,7 @@ import React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import { ProjectConfigProvider } from "@/features/project-config-context";
-import { projectConfig } from "@/shared/config";
+import { getServerProjectConfig } from "@/shared/config";
 import { cn } from "@/shared/libs";
 
 import "./globals.css";
@@ -17,21 +17,27 @@ const fontSans = Inter({
   variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-  title: projectConfig?.title,
-  description: projectConfig.description,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const config = getServerProjectConfig();
+
+  return {
+    title: config.title,
+    description: config.description,
+  };
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const config = getServerProjectConfig();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <PublicEnvScript />
-        <link rel="icon" type="image/svg+xml" href={projectConfig?.favicon} />
+        <link rel="icon" type="image/svg+xml" href={config.favicon} />
       </head>
       <body
         className={cn(
@@ -39,7 +45,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <ProjectConfigProvider>
+        <ProjectConfigProvider config={config}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
