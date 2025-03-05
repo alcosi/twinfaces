@@ -1,4 +1,4 @@
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type Twin = components["schemas"]["TwinV2"];
@@ -24,6 +24,7 @@ export type TwinCreateRq = RequireFields<
 >;
 export type TwinCreateRsV1 = components["schemas"]["TwinCreateRsV1"];
 export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
+export type TwinViewQuery = operations["twinViewV2"]["parameters"]["query"];
 export type TwinTagManageV1 = TwinUpdateRq["tagsUpdate"];
 
 export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];

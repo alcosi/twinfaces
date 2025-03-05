@@ -1,13 +1,14 @@
+import { PaginationState } from "@tanstack/table-core";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import {
   CommentCard,
   CommentView_DETAILED,
   useFetchComments,
 } from "@/entities/comment";
+import { TwinContext } from "@/features/twin";
 import { PagedResponse } from "@/shared/api";
-import { PaginationState } from "@tanstack/table-core";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "sonner";
-import { TwinContext } from "../twin-context";
 
 export function TwinComments() {
   const { twin } = useContext(TwinContext);

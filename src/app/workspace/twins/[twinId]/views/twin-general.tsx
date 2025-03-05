@@ -1,14 +1,18 @@
+import { useContext, useState } from "react";
+import { z } from "zod";
+
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
+
 import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import {
-  categorizeTwinTags,
   TwinResourceLink,
   TwinUpdateRq,
+  categorizeTwinTags,
 } from "@/entities/twin";
 import {
-  TwinClass_DETAILED,
   TwinClassResourceLink,
+  TwinClass_DETAILED,
   useTagsByTwinClassIdSelectAdapter,
 } from "@/entities/twin-class";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
@@ -18,6 +22,7 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { TwinContext } from "@/features/twin";
 import { ApiContext } from "@/shared/api";
 import {
   formatToTwinfaceDate,
@@ -26,13 +31,10 @@ import {
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { useContext, useState } from "react";
-import { z } from "zod";
-import { TwinContext } from "../twin-context";
 
 export function TwinGeneral() {
   const api = useContext(ApiContext);
-  const { twin, fetchTwinData } = useContext(TwinContext);
+  const { twin, refresh } = useContext(TwinContext);
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -47,7 +49,7 @@ export function TwinGeneral() {
 
     try {
       await api.twin.update({ id: twin.id, body });
-      fetchTwinData();
+      refresh();
     } catch (e) {
       console.error(e);
       throw e;

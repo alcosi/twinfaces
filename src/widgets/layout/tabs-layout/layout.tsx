@@ -1,9 +1,10 @@
 "use client";
 
-import { cn } from "@/shared/libs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
+
+import { cn } from "@/shared/libs";
 
 export type Tab = {
   key: string;
@@ -31,8 +32,8 @@ export function TabsLayout({ tabs }: Props) {
 
   return (
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
-      <nav className="sticky top-0 flex w-full border-b bg-background z-10">
-        <TabsList>
+      <nav className="sticky top-0 flex w-full border-b bg-background z-10 overflow-x-auto">
+        <TabsList className="min-w-max">
           {tabs.map((tab) => (
             <Link href={`#${tab.key}`} key={tab.key}>
               <TabsTrigger

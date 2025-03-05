@@ -1,12 +1,13 @@
-import { HistoryV1, useFetchHistoryV1 } from "@/entities/twin";
-import { User, UserResourceLink } from "@/entities/user";
-import { PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui";
-import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
-import { TwinContext } from "../twin-context";
+
+import { HistoryV1, useFetchHistoryV1 } from "@/entities/twin";
+import { User, UserResourceLink } from "@/entities/user";
+import { TwinContext } from "@/features/twin";
+import { PagedResponse } from "@/shared/api";
+import { GuidWithCopy } from "@/shared/ui";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 
 const colDefs: Record<
   keyof Pick<
