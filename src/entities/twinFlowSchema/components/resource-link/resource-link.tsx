@@ -1,6 +1,8 @@
+import { SquareActivity } from "lucide-react";
+
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { SquareActivity } from "lucide-react";
+
 import { TwinFlowSchema_DETAILED } from "../../api";
 import { TwinFlowSchemaResourceTooltip } from "./tooltip";
 

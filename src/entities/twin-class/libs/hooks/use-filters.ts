@@ -1,4 +1,8 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   OWNER_TYPES,
   TwinClassFilterKeys,
@@ -6,14 +10,13 @@ import {
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import {
+  type FilterFeature,
   mapToChoice,
   toArray,
   toArrayOfString,
   wrapWithPercent,
-  type FilterFeature,
 } from "@/shared/libs";
-import { z } from "zod";
-import { usePermissionSelectAdapter } from "@/entities/permission";
+
 import { useDatalistSelectAdapter } from "../../../datalist";
 
 export function useTwinClassFilters(): FilterFeature<
@@ -24,7 +27,9 @@ export function useTwinClassFilters(): FilterFeature<
   const pAdapter = usePermissionSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
 
-  function buildFilterFields(): Record<TwinClassFilterKeys, AutoFormValueInfo> {
+  function buildFilterFields(): Partial<
+    Record<TwinClassFilterKeys, AutoFormValueInfo>
+  > {
     return {
       twinClassIdList: {
         type: AutoFormValueType.tag,
@@ -59,6 +64,7 @@ export function useTwinClassFilters(): FilterFeature<
         multi: true,
         ...tcAdapter,
       },
+      extendsHierarchyChildsForTwinClassSearch: undefined,
       ownerTypeList: {
         type: AutoFormValueType.combobox,
         label: "Owner types",
@@ -168,6 +174,7 @@ export function useTwinClassFilters(): FilterFeature<
           "id"
         ),
       },
+      extendsHierarchyChildsForTwinClassSearch: undefined,
       ownerTypeList: toArray(
         filters.ownerTypeList as TwinClassFilters["ownerTypeList"]
       ),

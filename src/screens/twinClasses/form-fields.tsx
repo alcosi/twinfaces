@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Control, useWatch } from "react-hook-form";
+
 import {
   CheckboxFormField,
   CheckboxFormItem,
@@ -5,6 +8,7 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 import { ComboboxFormField } from "@/components/form-fields/combobox";
+
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";
 import { FeaturerTypes } from "@/entities/featurer";
@@ -15,9 +19,6 @@ import {
 } from "@/entities/twin-class";
 import { isFalsy, isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
-import { useState } from "react";
-import { Control, useWatch } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
 
 export function TwinClassFormFields({
   control,
@@ -211,8 +212,6 @@ export function TwinClassFormFields({
           />
         </fieldset>
       )}
-
-      <DevTool control={control} />
     </>
   );
 }

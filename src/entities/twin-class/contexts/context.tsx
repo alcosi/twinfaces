@@ -1,28 +1,18 @@
-import { Link } from "@/entities/link";
-import {
-  hydrateTwinClassFromMap,
-  TwinClass,
-  useFetchTwinClassById,
-} from "@/entities/twin-class";
-import { RelatedObjects } from "@/shared/api";
+import { PropsWithChildren, createContext, useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { TwinClass, useFetchTwinClassById } from "@/entities/twin-class";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
-import { toast } from "sonner";
 
 interface TwinClassContextProps {
   twinClassId: string;
   twinClass: TwinClass;
-  relatedObjects?: RelatedObjects;
-  loading: boolean;
-  fetchClassData: () => void;
-  linkId?: string;
-  link?: Link;
-  isForwardLink?: boolean;
+  refresh: () => void;
 }
 
 export type TwinClassLayoutProps = PropsWithChildren<{
-  params: Pick<TwinClassContextProps, "twinClassId" | "linkId">;
+  params: Pick<TwinClassContextProps, "twinClassId">;
 }>;
 
 export const TwinClassContext = createContext<TwinClassContextProps>(
@@ -30,33 +20,25 @@ export const TwinClassContext = createContext<TwinClassContextProps>(
 );
 
 export function TwinClassContextProvider({
-  params: { twinClassId, linkId },
+  params: { twinClassId },
   children,
 }: TwinClassLayoutProps) {
   const { fetchTwinClassById } = useFetchTwinClassById();
   const [loading, setLoading] = useState<boolean>(false);
   const [twinClass, setTwinClass] = useState<TwinClass | undefined>(undefined);
-  const [relatedObjects, setRelatedObjects] = useState<
-    RelatedObjects | undefined
-  >(undefined);
-
-  // `Link` related logic
-  // TODO: Consider extracting `linkId`, `link` and `isForwardLink`
-  // into a separate hook or component for better maintainability.
-  const [link, setLink] = useState<Link | undefined>();
-  const [isForwardLink, setIsForwardLink] = useState<boolean>();
 
   useEffect(() => {
-    fetchClassData();
-  }, [twinClassId, linkId]);
+    refresh();
+  }, [twinClassId]);
 
-  async function fetchClassData() {
+  async function refresh() {
     // Only set loading on first load
     if (!twinClass) {
       setLoading(true);
     }
+
     try {
-      const { data } = await fetchTwinClassById({
+      const twinClass = await fetchTwinClassById({
         id: twinClassId,
         query: {
           showTwinClassMode: "MANAGED",
@@ -73,20 +55,7 @@ export function TwinClassContextProvider({
         },
       });
 
-      if (data?.twinClass && data?.relatedObjects) {
-        setTwinClass(
-          hydrateTwinClassFromMap(data.twinClass, data.relatedObjects)
-        );
-      }
-
-      setRelatedObjects(data?.relatedObjects);
-
-      if (linkId) {
-        const forwardLink = data?.twinClass?.forwardLinkMap?.[linkId];
-        const backwardLink = data?.twinClass?.backwardLinkMap?.[linkId];
-        setLink(forwardLink || backwardLink);
-        setIsForwardLink(!!forwardLink);
-      }
+      setTwinClass(twinClass);
     } catch (e) {
       console.error("exception while fetching twin class", e);
       toast.error("Failed to fetch twin class");
@@ -102,16 +71,10 @@ export function TwinClassContextProvider({
       value={{
         twinClassId,
         twinClass,
-        relatedObjects,
-        loading,
-        fetchClassData,
-        linkId,
-        link,
-        isForwardLink,
+        refresh,
       }}
     >
-      {loading && <LoadingOverlay />}
-      {!loading && children}
+      {loading ? <LoadingOverlay /> : children}
     </TwinClassContext.Provider>
   );
 }

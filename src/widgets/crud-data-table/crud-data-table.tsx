@@ -1,7 +1,5 @@
 "use client";
 
-import { PagedResponse } from "@/shared/api";
-import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { PaginationState } from "@tanstack/table-core";
 import {
   ForwardedRef,
@@ -13,6 +11,10 @@ import {
   useRef,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
+
+import { PagedResponse } from "@/shared/api";
+import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+
 import {
   DataTable,
   DataTableHandle,
@@ -80,6 +82,18 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   useEffect(() => {
     tableRef.current?.refresh();
   }, [viewSettings]);
+
+  // NOTE: Temp solution
+  // Ensure visibleKeys are updated when props.defaultVisibleColumns changes
+  //
+  // DOWNSIDE: loading-indicator flicks 2 times
+  useEffect(() => {
+    if (props.defaultVisibleColumns) {
+      updateViewSettings({
+        visibleKeys: props.defaultVisibleColumns.map(getColumnKey),
+      });
+    }
+  }, [props.defaultVisibleColumns]);
 
   const fetchWrapper = async (pagination: PaginationState) => {
     try {

@@ -1,5 +1,6 @@
-import { Card } from "@/shared/ui";
 import { PropsWithChildren, ReactNode } from "react";
+
+import { Card } from "@/shared/ui";
 
 type Props = {
   title: string;

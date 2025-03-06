@@ -1,20 +1,28 @@
+import { useContext, useState } from "react";
+import { z } from "zod";
+
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
+
 import {
   DataList,
   DatalistResourceLink,
   useDatalistSelectAdapter,
 } from "@/entities/datalist";
 import {
-  Featurer_DETAILED,
   FeaturerResourceLink,
   FeaturerTypes,
+  Featurer_DETAILED,
 } from "@/entities/featurer";
 import {
-  TwinClass_DETAILED,
+  PermissionResourceLink,
+  usePermissionSelectAdapter,
+} from "@/entities/permission";
+import {
   TwinClassContext,
   TwinClassResourceLink,
   TwinClassUpdateRq,
+  TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import {
@@ -26,16 +34,10 @@ import { ApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { useContext, useState } from "react";
-import { z } from "zod";
-import {
-  PermissionResourceLink,
-  usePermissionSelectAdapter,
-} from "@/entities/permission";
 
 export function TwinClassGeneral() {
   const api = useContext(ApiContext);
-  const { twinClass, fetchClassData } = useContext(TwinClassContext);
+  const { twinClass, refresh } = useContext(TwinClassContext);
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
@@ -51,7 +53,7 @@ export function TwinClassGeneral() {
 
     try {
       await api.twinClass.update({ id: twinClass.id!, body: newClass });
-      fetchClassData();
+      refresh();
     } catch (e) {
       console.error(e);
       throw e;

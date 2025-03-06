@@ -35,6 +35,7 @@ export type TwinFilterKeys =
   | "twinClassIdList"
   | "statusIdList"
   | "descriptionLikeList"
+  | "extendsTwinClassIdList"
   | "headTwinIdList"
   | "createdByUserIdList"
   | "assignerUserIdList";
