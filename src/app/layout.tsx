@@ -6,8 +6,7 @@ import React from "react";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
-import { ProjectConfigProvider } from "@/features/project-config-context";
-import { getServerProjectConfig } from "@/shared/config";
+import { PRODUCT_FLAVOR_CONFIG, ProjectConfigProvider } from "@/shared/config";
 import { cn } from "@/shared/libs";
 
 import "./globals.css";
@@ -18,11 +17,11 @@ const fontSans = Inter({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const config = getServerProjectConfig();
+  const config = PRODUCT_FLAVOR_CONFIG;
 
   return {
-    title: config.title,
-    description: config.description,
+    title: config.productTitle,
+    description: config.productDescription,
   };
 }
 
@@ -31,7 +30,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const config = getServerProjectConfig();
+  const config = PRODUCT_FLAVOR_CONFIG;
 
   return (
     <html lang="en" suppressHydrationWarning>
