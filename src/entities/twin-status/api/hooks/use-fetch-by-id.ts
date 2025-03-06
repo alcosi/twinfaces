@@ -1,11 +1,13 @@
 import { useCallback, useContext } from "react";
-import { TwinStatus } from "../../api";
-import { ApiContext } from "@/shared/api";
+
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
+
+import { TwinStatus } from "../../api";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinStatusById = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchTwinStatusById = useCallback(
     async (id: string): Promise<TwinStatus> => {

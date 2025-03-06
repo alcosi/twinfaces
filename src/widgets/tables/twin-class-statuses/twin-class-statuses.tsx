@@ -1,22 +1,3 @@
-import { ImageWithFallback } from "@/components/image-with-fallback";
-import {
-  TWIN_CLASS_STATUS_SCHEMA,
-  TwinClassStatusFormValues,
-  TwinClassStatusResourceLink,
-  TwinStatus_DETAILED,
-  TwinStatusCreateRq,
-  useStatusFilters,
-  useTwinStatusSearchV1,
-} from "@/entities/twin-status";
-import {
-  TwinClass_DETAILED,
-  TwinClassResourceLink,
-} from "@/entities/twin-class";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { ColorTile } from "@/shared/ui";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
@@ -24,6 +5,28 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { ImageWithFallback } from "@/components/image-with-fallback";
+
+import {
+  TwinClassResourceLink,
+  TwinClass_DETAILED,
+} from "@/entities/twin-class";
+import {
+  TWIN_CLASS_STATUS_SCHEMA,
+  TwinClassStatusFormValues,
+  TwinClassStatusResourceLink,
+  TwinStatusCreateRq,
+  TwinStatus_DETAILED,
+  useStatusFilters,
+  useTwinStatusSearchV1,
+} from "@/entities/twin-status";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { ColorTile } from "@/shared/ui";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+
 import {
   CrudDataTable,
   DataTableHandle,
@@ -151,7 +154,7 @@ export function TwinClassStatusesTable({
 }: {
   twinClassId?: string;
 }) {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinStatuses } = useTwinStatusSearchV1();

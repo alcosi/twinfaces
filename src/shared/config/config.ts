@@ -29,7 +29,7 @@ const configs: Record<string, ProductFlavorConfig> = {
       defaultFormValues: {
         userId: "608c6d7d-99c8-4d87-89c6-2f72d0f5d673",
         businessAccountId: "9a3f6075-f175-41cd-a804-934201ec969c",
-        domainId: "d64da887-3e8c-44d5-b067-0b35b16860c2",
+        domainId: "0bc892b6-ef88-47c4-ad92-19cc89576f65",
       },
     },
   },

@@ -1,11 +1,11 @@
 import { useCallback, useContext } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 
 import { CreatePermissionGrantUserRequestBody } from "../types";
 
 export const useCreatePermissionGrantUser = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const createPermissionGrantUser = useCallback(
     async ({ body }: { body: CreatePermissionGrantUserRequestBody }) => {

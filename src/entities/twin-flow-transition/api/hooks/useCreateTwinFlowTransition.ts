@@ -1,9 +1,10 @@
-import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
+
 import { TwinFlowTransitionUpdateRq } from "@/entities/twin-flow-transition";
+import { PrivateApiContext } from "@/shared/api";
 
 export const useCreateTwinFlowTransition = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const createTwinFlowTransition = useCallback(
     async ({

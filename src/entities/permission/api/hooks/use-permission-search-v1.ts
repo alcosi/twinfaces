@@ -1,13 +1,15 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
+
 import { hydratePermissionFromMap } from "../../libs";
-import { Permission_DETAILED, PermissionFilters } from "../types";
+import { PermissionFilters, Permission_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
 export const usePermissionSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchPermissions = useCallback(
     async ({

@@ -1,7 +1,7 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 import { hydratePermissionGrantUserFromMap } from "../../libs";
 import {
@@ -11,7 +11,7 @@ import {
 
 // TODO: Apply caching-strategy
 export const usePermissionGrantUserSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchPermissionGrantUsers = useCallback(
     async ({

@@ -1,12 +1,13 @@
+import { useCallback, useContext } from "react";
+
 import {
   TwinFlowTransitionValidator,
   useFetchTwinFlowTransitionById,
 } from "@/entities/twin-flow-transition";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { useCallback, useContext } from "react";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export const useTwinFlowTransitionValidatorRulesSearch = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { fetchTwinFlowTransitionById } = useFetchTwinFlowTransitionById();
 
   const fetchValidatorRules = useCallback(

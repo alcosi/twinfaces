@@ -1,7 +1,10 @@
-import { useLocalStorage } from "@/shared/libs";
 import { useCallback, useEffect, useState } from "react";
 
+import { DomainUser_DETAILED } from "@/entities/user";
+import { useLocalStorage } from "@/shared/libs";
+
 interface AuthUser {
+  domainUser?: DomainUser_DETAILED;
   authToken: string;
   domainId: string;
 }

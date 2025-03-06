@@ -1,7 +1,7 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
 import { hydrateUserGroupFromMap } from "../../libs";
@@ -9,7 +9,7 @@ import { UserGroupFilters, UserGroup_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
 export const useUserGroupSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchUserGroups = useCallback(
     async ({

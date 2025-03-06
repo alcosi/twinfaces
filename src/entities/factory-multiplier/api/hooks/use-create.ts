@@ -1,11 +1,11 @@
 import { useCallback, useContext } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 
 import { FactoryMultiplierCreateRq } from "../types";
 
 export const useFactoryMultiplierCreate = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const createFactoryMultiplier = useCallback(
     async ({ id, body }: { id: string; body: FactoryMultiplierCreateRq }) => {

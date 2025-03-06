@@ -73,13 +73,13 @@ import {
 } from "@/entities/twinRole";
 import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
-import { ApiContext, ApiSettings } from "@/shared/api";
+import { ApiSettings, PrivateApiContext } from "@/shared/api";
 import { paths } from "@/shared/api/generated/schema";
 import { LoadingOverlay } from "@/shared/ui";
 
-import { useAuthUser } from "../auth";
+import { useAuthUser } from "../../auth";
 
-export interface ApiContextProps {
+export interface PrivateApiContextProps {
   domain: DomainApi;
   twinFlowSchema: TwinFlowSchemaApi;
   twinClassField: TwinClassFieldApi;
@@ -109,7 +109,7 @@ export interface ApiContextProps {
   link: LinkApi;
 }
 
-export function ApiContextProvider({
+export function PrivateApiContextProvider({
   children,
 }: {
   children: React.ReactNode;
@@ -126,7 +126,7 @@ export function ApiContextProvider({
   if (!authUser?.authToken) return <LoadingOverlay />;
 
   return (
-    <ApiContext.Provider
+    <PrivateApiContext.Provider
       value={{
         domain: createDomainApi(settings),
         twinFlowSchema: createTwinFlowSchemaApi(settings),
@@ -158,6 +158,6 @@ export function ApiContextProvider({
       }}
     >
       {children}
-    </ApiContext.Provider>
+    </PrivateApiContext.Provider>
   );
 }

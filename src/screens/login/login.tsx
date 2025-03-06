@@ -3,13 +3,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields";
 
+import { DomainUser_DETAILED, hydrateDomainUserFromMap } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
+import { PublicApiContext } from "@/shared/api";
 import { useProductFlavorConfig } from "@/shared/config";
+import { isPopulatedArray } from "@/shared/libs";
 import { Button, Form } from "@/shared/ui";
 
 const FORM_SCHEMA = z.object({
@@ -20,27 +24,54 @@ const FORM_SCHEMA = z.object({
 type FormValues = z.infer<typeof FORM_SCHEMA>;
 
 export function Login() {
-  const { setAuthUser } = useAuthUser();
-  const router = useRouter();
   const config = useProductFlavorConfig();
+  const router = useRouter();
+  const publicApiClient = useContext(PublicApiContext);
+  const { setAuthUser } = useAuthUser();
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const form = useForm({
     defaultValues: {
-      userId: "608c6d7d-99c8-4d87-89c6-2f72d0f5d673",
-      businessAccountId: undefined,
+      userId: config.loginPage.defaultFormValues.userId,
+      businessAccountId: config.loginPage.defaultFormValues.businessAccountId,
       domainId: config.loginPage.defaultFormValues.domainId,
     },
     resolver: zodResolver(FORM_SCHEMA),
   });
 
-  function onSubmit(values: FormValues) {
-    setAuthUser({
-      authToken: [values.userId, values.businessAccountId]
-        .filter(Boolean)
-        .join(","),
-      domainId: values.domainId,
+  async function onSubmit(values: FormValues) {
+    setIsLoggingIn(true);
+    const { data } = await publicApiClient.user.searchDomainUsers({
+      header: {
+        DomainId: values.domainId,
+        AuthToken: values.userId,
+        Channel: "WEB",
+      },
+      pagination: { pageIndex: 0, pageSize: 10 },
+      filters: {
+        userIdList: [values.userId],
+        businessAccountIdList: [],
+      },
     });
-    router.push("/workspace/twinclass");
+
+    setIsLoggingIn(false);
+    const index =
+      data?.users?.findIndex((user) => user.userId === values.userId) ?? -1;
+    if (isPopulatedArray<DomainUser_DETAILED>(data?.users) && index !== -1) {
+      const hydratedDomainUser = hydrateDomainUserFromMap(
+        data.users[index]!,
+        data.relatedObjects
+      );
+
+      setAuthUser({
+        domainUser: hydratedDomainUser,
+        authToken: [values.userId, values.businessAccountId]
+          .filter(Boolean)
+          .join(","),
+        domainId: values.domainId,
+      });
+      router.push("/workspace/twinclass");
+    }
   }
 
   return (
@@ -77,7 +108,12 @@ export function Login() {
               label="Domain Id"
             />
 
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isLoggingIn}
+              size="lg"
+            >
               Login
             </Button>
           </form>

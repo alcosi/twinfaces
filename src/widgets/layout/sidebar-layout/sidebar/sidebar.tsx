@@ -1,5 +1,8 @@
 "use client";
 
+import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
@@ -17,8 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/shared/ui";
-import { ChevronsUpDown, ChevronUp, Globe, User2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 import { SIDEBAR_GROUPS } from "./constants";
 import { GroupSection } from "./group";
 
@@ -93,7 +95,7 @@ export function AppSidebar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
-                    <User2 /> Username
+                    <User2 /> {authUser?.domainUser?.user.fullName}
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>

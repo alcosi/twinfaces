@@ -1,11 +1,11 @@
 import { useContext } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 
 import { FactoryPipelineUpdateRq } from "../types";
 
 export function useUpdateFactoryPipeline() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   async function updateFactoryPipeline({
     factoryPipelineId,

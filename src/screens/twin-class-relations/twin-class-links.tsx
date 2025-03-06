@@ -1,23 +1,3 @@
-import {
-  CreateLinkRequestBody,
-  Link,
-  LINK_SCHEMA,
-  LinkResourceLink,
-  LinkStrengthEnum,
-  LinkTypesEnum,
-  UpdateLinkRequestBody,
-  useCreateLink,
-} from "@/entities/link";
-import {
-  TwinClass_DETAILED,
-  TwinClassContext,
-  TwinClassResourceLink,
-} from "@/entities/twin-class";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { Badge } from "@/shared/ui";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { LoadingOverlay } from "@/shared/ui/loading";
-import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
@@ -25,6 +5,28 @@ import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import {
+  CreateLinkRequestBody,
+  LINK_SCHEMA,
+  Link,
+  LinkResourceLink,
+  LinkStrengthEnum,
+  LinkTypesEnum,
+  UpdateLinkRequestBody,
+  useCreateLink,
+} from "@/entities/link";
+import {
+  TwinClassContext,
+  TwinClassResourceLink,
+  TwinClass_DETAILED,
+} from "@/entities/twin-class";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { Badge } from "@/shared/ui";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { LoadingOverlay } from "@/shared/ui/loading";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
+
 import { CreateLinkFormFields } from "../links";
 
 const mapLinkToFormPayload = (
@@ -47,7 +49,7 @@ const mapLinkToFormPayload = (
 };
 
 export function TwinClassRelations() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { twinClass } = useContext(TwinClassContext);
   const router = useRouter();
   const tableRefForward = useRef<DataTableHandle>(null);

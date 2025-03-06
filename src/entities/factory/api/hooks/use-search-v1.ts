@@ -1,14 +1,15 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PaginationState } from "@tanstack/table-core";
+import { useCallback, useContext } from "react";
+
 import {
   Factory,
   FactoryFilters,
   hydrateFactoryFromMap,
 } from "@/entities/factory";
-import { PaginationState } from "@tanstack/table-core";
-import { useCallback, useContext } from "react";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export function useFactorySearch() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchFactories = useCallback(
     async ({

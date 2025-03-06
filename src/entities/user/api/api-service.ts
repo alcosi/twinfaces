@@ -8,13 +8,15 @@ export function createUserApi(settings: ApiSettings) {
   async function searchDomainUsers({
     pagination,
     filters,
+    header,
   }: {
     pagination: PaginationState;
     filters: DomainUserFilters;
+    header?: ReturnType<typeof getApiDomainHeaders>;
   }) {
     return settings.client.POST("/private/domain/user/search/v1", {
       params: {
-        header: getApiDomainHeaders(settings),
+        header: header ?? getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
           showDomainUser2UserMode: "DETAILED",

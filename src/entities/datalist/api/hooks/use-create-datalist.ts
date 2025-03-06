@@ -1,10 +1,12 @@
-import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
+
+import { PrivateApiContext } from "@/shared/api";
+
 import { DataListCreateRqV1 } from "../types";
 
 // TODO: Apply caching-strategy
 export const useDatalistCreate = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const createDatalist = useCallback(
     async ({ body }: { body: DataListCreateRqV1 }) => {

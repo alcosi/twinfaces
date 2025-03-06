@@ -1,15 +1,3 @@
-import { FeaturerResourceLink } from "@/entities/featurer/components";
-import { PermissionResourceLink } from "@/entities/permission";
-import {
-  TwinClassFieldCreateRq,
-  TwinClassFieldV2_DETAILED,
-  useTwinClassFieldFilters,
-  useTwinClassFieldSearchV1,
-} from "@/entities/twin-class-field";
-import { TwinClassResourceLink } from "@/entities/twin-class";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui/guid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
@@ -17,6 +5,20 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { FeaturerResourceLink } from "@/entities/featurer/components";
+import { PermissionResourceLink } from "@/entities/permission";
+import { TwinClassResourceLink } from "@/entities/twin-class";
+import {
+  TwinClassFieldCreateRq,
+  TwinClassFieldV2_DETAILED,
+  useTwinClassFieldFilters,
+  useTwinClassFieldSearchV1,
+} from "@/entities/twin-class-field";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
+
 import {
   CrudDataTable,
   DataTableHandle,
@@ -124,7 +126,7 @@ export function TwinClassFieldsTable({
 }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters({
     enabledFilters: isTruthy(twinClassId)
       ? [

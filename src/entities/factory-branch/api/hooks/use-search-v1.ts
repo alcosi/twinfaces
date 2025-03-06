@@ -1,11 +1,13 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 import { hydrateFactoryBranchFromMap } from "../../libs";
-import { FactoryBranch_DETAILED, FactoryBranchFilters } from "../types";
+import { FactoryBranchFilters, FactoryBranch_DETAILED } from "../types";
 
 export function useFactoryBranchesSearch() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const searchFactoryBranches = useCallback(
     async ({
       pagination,

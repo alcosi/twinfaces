@@ -1,6 +1,6 @@
 import { useCallback, useContext, useState } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinFromMap } from "../../libs";
@@ -8,7 +8,7 @@ import { Twin_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTwinFetchByIdV2 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchTwinById = useCallback(

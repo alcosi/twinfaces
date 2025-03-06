@@ -2,13 +2,13 @@ import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
 import { hydrateTwinFromMap } from "@/entities/twin";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 import { TwinFilters, Twin_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTwinSearchV3 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTwins = useCallback(
     async ({

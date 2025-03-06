@@ -1,11 +1,13 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 import { Featurer, FeaturerFilters } from "../types";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFeaturerSearch = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchFeaturers = useCallback(
     async ({

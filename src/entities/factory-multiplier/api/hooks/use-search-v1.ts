@@ -1,11 +1,13 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { useCallback, useContext } from "react";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryMultiplier_DETAILED, FactoryMultiplierFilters } from "../types";
+import { useCallback, useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 import { hydrateFactoryMultiplierFromMap } from "../../libs";
+import { FactoryMultiplierFilters, FactoryMultiplier_DETAILED } from "../types";
 
 export function useFactoryMultipliersSearch() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchFactoryMultipliers = useCallback(
     async ({

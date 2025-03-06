@@ -1,22 +1,3 @@
-import { PermissionResourceLink } from "@/entities/permission";
-import {
-  TWIN_FLOW_TRANSITION_SCHEMA,
-  TwinFlowTransition,
-  TwinFlowTransition_DETAILED,
-  TwinFlowTransitionCreateRq,
-  TwinFlowTransitionFormValues,
-  TwinFlowTransitionResourceLink,
-  useTwinFlowTransitionFilters,
-  useTwinFlowTransitionSearchV1,
-} from "@/entities/twin-flow-transition";
-import {
-  TwinClassStatusResourceLink,
-  TwinStatus,
-} from "@/entities/twin-status";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
@@ -24,6 +5,27 @@ import { useCallback, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import { PermissionResourceLink } from "@/entities/permission";
+import {
+  TWIN_FLOW_TRANSITION_SCHEMA,
+  TwinFlowTransition,
+  TwinFlowTransitionCreateRq,
+  TwinFlowTransitionFormValues,
+  TwinFlowTransitionResourceLink,
+  TwinFlowTransition_DETAILED,
+  useTwinFlowTransitionFilters,
+  useTwinFlowTransitionSearchV1,
+} from "@/entities/twin-flow-transition";
+import {
+  TwinClassStatusResourceLink,
+  TwinStatus,
+} from "@/entities/twin-status";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+
 import { TwinFlowTransitionFormFields } from "./form-fields";
 
 function buildColumnDefs({
@@ -135,7 +137,7 @@ function buildColumnDefs({
 
 export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
   const colDefs = buildColumnDefs({ twinClassId, twinFlowId });
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } =
     useTwinFlowTransitionFilters(twinClassId);

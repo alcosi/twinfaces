@@ -1,15 +1,17 @@
+import { PaginationState } from "@tanstack/table-core";
+import { useCallback, useContext } from "react";
+
 import {
   DataListOptionV3,
   hydrateDatalistOptionFromMap,
 } from "@/entities/datalist-option";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-import { PaginationState } from "@tanstack/table-core";
-import { useCallback, useContext } from "react";
+
 import { TagSearchFilters } from "../types";
 
 export const useTagSearch = (twinClassId?: string) => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTags = useCallback(
     async ({

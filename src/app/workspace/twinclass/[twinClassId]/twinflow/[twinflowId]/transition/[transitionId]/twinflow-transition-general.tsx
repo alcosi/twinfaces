@@ -1,6 +1,10 @@
+import { useContext, useState } from "react";
+import { z } from "zod";
+
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 import { ClassStatusView } from "@/components/class-status-view";
+
 import { PermissionResourceLink } from "@/entities/permission";
 import {
   TwinFlowTransition,
@@ -8,12 +12,10 @@ import {
 } from "@/entities/twin-flow-transition";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
-import { ApiContext } from "@/shared/api";
-import { formatToTwinfaceDate, NULLIFY_UUID_VALUE } from "@/shared/libs";
+import { PrivateApiContext } from "@/shared/api";
+import { NULLIFY_UUID_VALUE, formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { useContext, useState } from "react";
-import { z } from "zod";
 
 export function TwinflowTransitionGeneral({
   transition,
@@ -22,7 +24,7 @@ export function TwinflowTransitionGeneral({
   transition: TwinFlowTransition;
   onChange: () => any;
 }) {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const sAdapter = useTwinStatusSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =

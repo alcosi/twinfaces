@@ -1,14 +1,15 @@
-import {
-  hydrateTwinFromMap,
-  Twin_DETAILED,
-  TwinSimpleFilters,
-} from "@/entities/twin";
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 
+import {
+  TwinSimpleFilters,
+  Twin_DETAILED,
+  hydrateTwinFromMap,
+} from "@/entities/twin";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 export function useValidTwinsForLink() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   async function fetchValidTwinsForLink({
     twinClassId,
