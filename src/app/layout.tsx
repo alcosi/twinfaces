@@ -6,7 +6,7 @@ import React from "react";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
-import { PRODUCT_FLAVOR_CONFIG, ProjectConfigProvider } from "@/shared/config";
+import { PRODUCT_FLAVOR_CONFIG, ProductConfigProvider } from "@/shared/config";
 import { cn } from "@/shared/libs";
 
 import "./globals.css";
@@ -44,7 +44,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <ProjectConfigProvider config={config}>
+        <ProductConfigProvider config={config}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -55,7 +55,7 @@ export default function RootLayout({
               {children}
             </TooltipProvider>
           </ThemeProvider>
-        </ProjectConfigProvider>
+        </ProductConfigProvider>
       </body>
     </html>
   );

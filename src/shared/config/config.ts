@@ -1,6 +1,5 @@
 import { ProductFlavorConfig } from "./types";
 
-
 const configs: Record<string, ProductFlavorConfig> = {
   twinfaces: {
     productName: "Twin Faces",

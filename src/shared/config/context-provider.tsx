@@ -7,7 +7,7 @@ import { LoadingOverlay } from "../ui";
 import { ProductFlavorConfig } from "./types";
 
 const ProductFlavorConfigContext = createContext<ProductFlavorConfig>(
-  {} as any
+  {} as ProductFlavorConfig
 );
 
 export function useProductFlavorConfig() {
@@ -16,7 +16,7 @@ export function useProductFlavorConfig() {
   return config;
 }
 
-export function ProjectConfigProvider({
+export function ProductConfigProvider({
   children,
   config,
 }: {
