@@ -1,4 +1,5 @@
 export type ProductFlavorConfig = {
+  flavor: "twinfaces" | "onshelves";
   productName: string;
   productTitle: string;
   productDescription: string;

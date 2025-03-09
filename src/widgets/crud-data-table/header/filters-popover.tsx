@@ -1,11 +1,13 @@
-import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
-import { Button } from "@/shared/ui/button";
-import { Form } from "@/shared/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { cn } from "@/shared/libs";
 import { FilterIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
+
+import { cn, isTruthy } from "@/shared/libs";
+import { Button } from "@/shared/ui/button";
+import { Form } from "@/shared/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 interface FiltersPopoverProps {
   filtersInfo: { [key: string]: AutoFormValueInfo };
@@ -15,7 +17,12 @@ interface FiltersPopoverProps {
 export function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
   const [open, setOpen] = useState(false);
 
-  const keys = Object.keys(filtersInfo);
+  const keys: string[] = [];
+  for (const key in filtersInfo) {
+    if (isTruthy(filtersInfo[key])) {
+      keys.push(key);
+    }
+  }
 
   const form = useForm({
     defaultValues: Object.fromEntries(

@@ -1,8 +1,10 @@
 "use client";
 
 import { Tab, TabsLayout } from "@/widgets/layout";
+
 import { InputFieldsTab } from "./tabs/input-fields";
 import { ResourceLinksTab } from "./tabs/resource-links";
+import { TablesTab } from "./tabs/tables";
 
 const tabs: Tab[] = [
   {
@@ -14,6 +16,11 @@ const tabs: Tab[] = [
     key: "input-fields",
     label: "Input Fields",
     content: <InputFieldsTab />,
+  },
+  {
+    key: "tables",
+    label: "Tables",
+    content: <TablesTab />,
   },
 ];
 

@@ -1,24 +1,32 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { useUserSelectAdapter } from "@/entities/user";
 import {
+  type FilterFeature,
+  isUndefined,
   toArray,
   toArrayOfString,
   wrapWithPercent,
-  type FilterFeature,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import { TwinFilterKeys, TwinFilters } from "../../api";
 import { useTwinSelectAdapter } from "./use-select-adapter";
 
-export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
+export function useTwinFilters(
+  baseTwinClassId?: string
+): FilterFeature<TwinFilterKeys, TwinFilters> {
   const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
   const uAdapter = useUserSelectAdapter();
   const tAdapter = useTwinSelectAdapter();
 
-  function buildFilterFields(): Record<TwinFilterKeys, AutoFormValueInfo> {
+  function buildFilterFields(): Partial<
+    Record<TwinFilterKeys, AutoFormValueInfo>
+  > {
     return {
       twinIdList: {
         type: AutoFormValueType.tag,
@@ -26,12 +34,14 @@ export function useTwinFilters(): FilterFeature<TwinFilterKeys, TwinFilters> {
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
       },
-      twinClassIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Twin Class",
-        multi: true,
-        ...tcAdapter,
-      },
+      twinClassIdList: isUndefined(baseTwinClassId)
+        ? {
+            type: AutoFormValueType.combobox,
+            label: "Twin Class",
+            multi: true,
+            ...tcAdapter,
+          }
+        : undefined,
       statusIdList: {
         type: AutoFormValueType.combobox,
         label: "Statuses",

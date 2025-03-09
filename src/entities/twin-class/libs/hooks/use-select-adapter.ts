@@ -1,19 +1,20 @@
 import { DataListOptionV3 } from "@/entities/datalist-option";
 import {
-  Twin_DETAILED,
   TwinSimpleFilters,
+  Twin_DETAILED,
   useValidTwinsForLinkSelectAdapter as useValidTwinsAdapter,
 } from "@/entities/twin";
 import {
+  SelectAdapter,
   isPopulatedString,
   isUndefined,
-  SelectAdapter,
   wrapWithPercent,
 } from "@/shared/libs";
+
 import {
   TagSearchFilters,
-  TwinClass_DETAILED,
   TwinClassFilters,
+  TwinClass_DETAILED,
   useFetchTwinClassById,
   useTagSearch,
   useTwinClassSearchV1,
@@ -25,19 +26,13 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
   const { fetchTwinClassById } = useFetchTwinClassById();
 
   async function getById(id: string) {
-    const response = await fetchTwinClassById({
+    return await fetchTwinClassById({
       id,
       query: {
         showTwinClassMode: "DETAILED",
         showTwin2TwinClassMode: "SHORT",
       },
     });
-
-    if (!response.data?.twinClass) {
-      throw new Error(`TwinClass with ID ${id} not found.`);
-    }
-
-    return response.data.twinClass as TwinClass_DETAILED;
   }
 
   async function getItems(search: string, filters?: TwinClassFilters) {

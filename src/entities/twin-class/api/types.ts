@@ -54,6 +54,7 @@ export type TwinClassFilterKeys =
   | "descriptionI18nLikeList"
   | "headHierarchyParentsForTwinClassSearch"
   | "extendsHierarchyParentsForTwinClassSearch"
+  | "extendsHierarchyChildsForTwinClassSearch"
   | "ownerTypeList"
   | "abstractt"
   | "twinflowSchemaSpace"

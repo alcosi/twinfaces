@@ -1,6 +1,8 @@
+import { PaginationState } from "@tanstack/table-core";
+
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { operations } from "@/shared/api/generated/schema";
-import { PaginationState } from "@tanstack/table-core";
+
 import {
   TwinCreateRq,
   TwinFilters,
@@ -30,6 +32,7 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinTag2DataListOptionMode: "DETAILED",
           showTwinByHeadMode: "YELLOW",
           showTwinAliasMode: "C",
+          showTwinFieldCollectionMode: "ALL_FIELDS",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

@@ -1,17 +1,22 @@
+import { Control } from "react-hook-form";
+
 import {
   ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
+
 import { TwinFormValues } from "@/entities/twin";
-import { TwinFieldFormField } from "@/widgets/form-fields";
-import { Control } from "react-hook-form";
+
+import { TwinFieldFormField } from "../../form-fields";
 import { useTwinClassFields } from "./use-twin-form-fields";
 
 export function TwinFormFields({
   control,
+  baseTwinClassId,
 }: {
   control: Control<TwinFormValues>;
+  baseTwinClassId?: string;
 }) {
   const {
     selectedTwinClass,
@@ -22,7 +27,7 @@ export function TwinFormFields({
     headAdapter,
     hasTagDataList,
     optionAdapter,
-  } = useTwinClassFields(control);
+  } = useTwinClassFields(control, baseTwinClassId);
 
   return (
     <>
