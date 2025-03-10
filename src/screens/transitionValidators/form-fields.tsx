@@ -1,5 +1,6 @@
-import { CheckboxFormField, TextFormField } from "@/components/form-fields";
 import { Control, FieldValues, Path } from "react-hook-form";
+
+import { CheckboxFormField, TextFormField } from "@/components/form-fields";
 
 export function TransitionValidatorFormFields<T extends FieldValues>({
   control,
@@ -13,6 +14,7 @@ export function TransitionValidatorFormFields<T extends FieldValues>({
         name={"order" as Path<T>}
         label="Order"
         type="number"
+        autoFocus={true}
       />
 
       <CheckboxFormField

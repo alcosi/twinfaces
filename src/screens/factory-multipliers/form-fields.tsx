@@ -35,6 +35,7 @@ export function FactoryMultiplierFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         disabled={disabled}
+        autoFocus={true}
         {...fAdapter}
       />
 

@@ -1,14 +1,17 @@
+import { Control, useWatch } from "react-hook-form";
+
 import {
   CheckboxFormField,
   ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
+
 import { FeaturerTypes } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
-import { Control, useWatch } from "react-hook-form";
+
 import { FeaturerFormField } from "../../form-fields";
 import { TwinClassFieldFormValues } from "./types";
 
@@ -34,7 +37,12 @@ export function TwinClassFieldFormFields({
         {...tcAdapter}
       />
 
-      <TextFormField control={control} name="key" label="Key" />
+      <TextFormField
+        control={control}
+        name="key"
+        label="Key"
+        autoFocus={true}
+      />
 
       <TextFormField control={control} name="name" label="Name" />
 

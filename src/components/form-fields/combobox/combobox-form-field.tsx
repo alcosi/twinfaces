@@ -15,6 +15,7 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
   description,
   required,
   buttonClassName,
+  autoFocus,
   ...props
 }: Props<TFormModel, TFieldModel>) {
   return (
@@ -32,6 +33,7 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
             buttonClassName={buttonClassName}
             fieldValue={_fieldValue}
             inForm={true}
+            autoFocus={autoFocus}
             {...props}
             onSelect={(event) => {
               props.onSelect?.(event);

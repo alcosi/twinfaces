@@ -1,10 +1,12 @@
+import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
+
 import {
+  SelectAdapter,
   isArray,
   isUndefined,
-  SelectAdapter,
   useDebouncedValue,
 } from "@/shared/libs";
-import { ForwardedRef, useEffect, useImperativeHandle, useState } from "react";
+
 import { ComboboxHandle, ComboboxProps } from "../types";
 import { useMultiComboboxStrategy } from "./use-multi-combobox-strategy";
 import { useSingleComboboxStrategy } from "./use-single-combobox-strategy";
@@ -58,6 +60,9 @@ export function useComboboxController<T>({
       }
 
       return setSelectedItems([newSelection]);
+    },
+    focus: () => {
+      setIsOpen(true);
     },
   }));
 
