@@ -85,15 +85,13 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   // NOTE: Temp solution
   // Ensure visibleKeys are updated when props.defaultVisibleColumns changes
-  //
-  // DOWNSIDE: loading-indicator flicks 2 times
   useEffect(() => {
     if (props.defaultVisibleColumns) {
       updateViewSettings({
         visibleKeys: props.defaultVisibleColumns.map(getColumnKey),
       });
     }
-  }, [props.defaultVisibleColumns]);
+  }, [props.defaultVisibleColumns?.length]);
 
   const fetchWrapper = async (pagination: PaginationState) => {
     try {
