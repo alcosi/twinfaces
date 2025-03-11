@@ -1,13 +1,13 @@
 import { PaginationState } from "@tanstack/table-core";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { operations } from "@/shared/api/generated/schema";
 
 import {
   TwinCreateRq,
   TwinFilters,
   TwinSimpleFilters,
   TwinUpdateRq,
+  TwinViewQuery,
 } from "./types";
 
 export function createTwinApi(settings: ApiSettings) {
@@ -42,13 +42,7 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function getById({
-    id,
-    query = {},
-  }: {
-    id: string;
-    query?: operations["twinViewV2"]["parameters"]["query"];
-  }) {
+  function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
     return settings.client.GET("/private/twin/{twinId}/v2", {
       params: {
         header: getApiDomainHeaders(settings),
@@ -109,7 +103,6 @@ export function createTwinApi(settings: ApiSettings) {
         path: { twinId },
         query: {
           showHistory2TwinMode: "DETAILED",
-          // showTwin2TwinClassMode: "DETAILED",
           showTwin2UserMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,

@@ -1,7 +1,8 @@
 "use client";
 
-import { TwinContextProvider } from "./twin-context";
 import React from "react";
+
+import { TwinContextProvider } from "@/features/twin";
 
 interface TwinLayoutProps {
   params: {

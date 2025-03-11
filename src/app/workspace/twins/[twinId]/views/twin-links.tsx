@@ -1,15 +1,16 @@
+import { ColumnDef } from "@tanstack/table-core";
+import { useContext, useRef } from "react";
+import { toast } from "sonner";
+
 import { TwinLinkView } from "@/entities/link";
+import { LinkResourceLink } from "@/entities/link";
 import { TwinResourceLink, useFetchTwinLinks } from "@/entities/twin";
 import { UserResourceLink } from "@/entities/user";
+import { TwinContext } from "@/features/twin";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
-import { ColumnDef } from "@tanstack/table-core";
-import { useContext, useRef } from "react";
-import { toast } from "sonner";
-import { TwinContext } from "../twin-context";
-import { LinkResourceLink } from "@/entities/link";
 
 const colDefs: Record<
   keyof Pick<

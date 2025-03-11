@@ -1,47 +1,56 @@
 "use client";
 
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect } from "react";
-import { TwinContext } from "./twin-context";
+
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { TwinContext } from "@/features/twin";
+import { Tab, TabsLayout } from "@/widgets/layout";
+import { TwinsTable } from "@/widgets/tables";
+
 import {
+  TwinComments,
   TwinFields,
   TwinGeneral,
-  TwinLinks,
-  TwinComments,
   TwinHistory,
+  TwinLinks,
 } from "./views";
 
-const tabs: Tab[] = [
-  {
-    key: "general",
-    label: "General",
-    content: <TwinGeneral />,
-  },
-  {
-    key: "fields",
-    label: "Fields",
-    content: <TwinFields />,
-  },
-  {
-    key: "relations",
-    label: "Relations",
-    content: <TwinLinks />,
-  },
-  {
-    key: "comments",
-    label: "Comments",
-    content: <TwinComments />,
-  },
-  {
-    key: "history",
-    label: "History",
-    content: <TwinHistory />,
-  },
-];
 export default function TwinPage() {
   const { twinId, twin } = useContext(TwinContext);
   const { setBreadcrumbs } = useBreadcrumbs();
+
+  const tabs: Tab[] = [
+    {
+      key: "general",
+      label: "General",
+      content: <TwinGeneral />,
+    },
+    {
+      key: "fields",
+      label: "Fields",
+      content: <TwinFields />,
+    },
+    {
+      key: "relations",
+      label: "Relations",
+      content: <TwinLinks />,
+    },
+    {
+      key: "comments",
+      label: "Comments",
+      content: <TwinComments />,
+    },
+    {
+      key: "history",
+      label: "History",
+      content: <TwinHistory />,
+    },
+    ...(twin.subordinates?.map((tab) => ({
+      key: tab.id,
+      label: tab.name,
+      content: <TwinsTable baseTwinClassId={tab.id} />,
+    })) ?? []),
+  ];
 
   useEffect(() => {
     setBreadcrumbs([

@@ -1,4 +1,13 @@
+import { ColumnDef } from "@tanstack/table-core";
+import { useContext, useRef } from "react";
+import { toast } from "sonner";
+
 import { AutoFormValueType } from "@/components/auto-field";
+
+import {
+  TwinClassFieldResourceLink,
+  TwinClassField_DETAILED,
+} from "@/entities/twin-class-field";
 import {
   TwinFieldUI,
   useFetchFields,
@@ -8,6 +17,7 @@ import {
   InPlaceEdit,
   InPlaceEditContextProvider,
 } from "@/features/inPlaceEdit";
+import { TwinContext } from "@/features/twin";
 import { PagedResponse } from "@/shared/api";
 import { isPopulatedString } from "@/shared/libs";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
@@ -15,14 +25,6 @@ import {
   renderTwinFieldPreview,
   resolveTwinFieldSchema,
 } from "@/widgets/form-fields";
-import { ColumnDef } from "@tanstack/table-core";
-import { useContext, useRef } from "react";
-import { toast } from "sonner";
-import { TwinContext } from "../twin-context";
-import {
-  TwinClassField_DETAILED,
-  TwinClassFieldResourceLink,
-} from "@/entities/twin-class-field";
 
 export function TwinFields() {
   const { twinId } = useContext(TwinContext);

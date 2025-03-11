@@ -66,7 +66,8 @@ export type TwinClassFilterKeys =
   | "editPermissionIdList"
   | "deletePermissionIdList"
   | "markerDatalistIdList"
-  | "tagDatalistIdList";
+  | "tagDatalistIdList"
+  | "headHierarchyChildsForTwinClassSearch";
 
 export type TwinClassFilters = Partial<
   Pick<components["schemas"]["TwinClassListRqV1"], TwinClassFilterKeys>
