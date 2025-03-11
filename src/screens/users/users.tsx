@@ -1,8 +1,12 @@
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useEffect, useRef } from "react";
+import { toast } from "sonner";
+
 import {
   DomainUser,
   DomainUser_DETAILED,
-  useDomainUserSearchV1,
   UserResourceLink,
+  useDomainUserSearchV1,
   useUserFilters,
 } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
@@ -14,9 +18,6 @@ import {
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Pick<DomainUser, "id" | "userId" | "createdAt">,

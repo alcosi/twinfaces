@@ -7,6 +7,7 @@ import React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import { PublicApiContextProvider } from "@/features/api";
+import ClientMetadataUpdater from "@/features/client-metadata-updater/client-metadata-updater";
 import { PRODUCT_FLAVOR_CONFIG, ProductConfigProvider } from "@/shared/config";
 import { cn } from "@/shared/libs";
 
@@ -45,6 +46,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <ClientMetadataUpdater />
         <ProductConfigProvider config={config}>
           <PublicApiContextProvider>
             <ThemeProvider

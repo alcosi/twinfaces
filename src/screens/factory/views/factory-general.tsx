@@ -1,8 +1,17 @@
+import { useContext } from "react";
+import { z } from "zod";
+
+import { AutoFormValueType } from "@/components/auto-field";
+
+import { useUpdateFactory } from "@/entities/factory";
+import { UserResourceLink } from "@/entities/user";
+import { FactoryContext } from "@/features/factory";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import {
   GuidWithCopy,
   Table,
@@ -10,13 +19,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/ui";
-import { useContext } from "react";
-import { AutoFormValueType } from "@/components/auto-field";
-import { z } from "zod";
-import { UserResourceLink } from "@/entities/user";
-import { formatToTwinfaceDate } from "@/shared/libs";
-import { FactoryContext } from "@/features/factory";
-import { useUpdateFactory } from "@/entities/factory";
 
 export function FactoryGeneral() {
   const { factory, refresh } = useContext(FactoryContext);

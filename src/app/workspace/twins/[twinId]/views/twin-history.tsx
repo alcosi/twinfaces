@@ -6,6 +6,7 @@ import { HistoryV1, useFetchHistoryV1 } from "@/entities/twin";
 import { User, UserResourceLink } from "@/entities/user";
 import { TwinContext } from "@/features/twin";
 import { PagedResponse } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 
@@ -67,9 +68,7 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt
-        ? new Date(original.createdAt).toLocaleDateString()
-        : "",
+      original.createdAt && formatToTwinfaceDate(original.createdAt),
   },
 
   batchId: {

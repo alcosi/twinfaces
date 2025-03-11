@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import { UserResourceLink } from "@/entities/user";
 import { PermissionSchemaContext } from "@/features/permission-schema";
 import { formatToTwinfaceDate } from "@/shared/libs";
@@ -8,7 +10,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/ui";
-import { useContext } from "react";
 
 export function PermissionSchemaGeneral() {
   const { schema } = useContext(PermissionSchemaContext);

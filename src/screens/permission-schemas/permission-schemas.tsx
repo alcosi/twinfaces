@@ -1,3 +1,8 @@
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { toast } from "sonner";
+
 import {
   PermissionSchema,
   usePermissionSchemaFilters,
@@ -13,10 +18,6 @@ import {
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Pick<

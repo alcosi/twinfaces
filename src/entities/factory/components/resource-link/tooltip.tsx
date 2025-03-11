@@ -1,7 +1,8 @@
-import { Factory } from "@/entities/factory";
-import { ResourceLinkTooltip } from "@/shared/ui";
-import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
 import { Factory as FactoryIcon } from "lucide-react";
+
+import { Factory } from "@/entities/factory";
+import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
+import { ResourceLinkTooltip } from "@/shared/ui";
 
 type Props = {
   data: Factory;

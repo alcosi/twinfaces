@@ -1,6 +1,9 @@
-import { UserResourceLink } from "@/entities/user";
-import { ResourceLinkTooltip } from "@/shared/ui";
 import { MessageCircle } from "lucide-react";
+
+import { UserResourceLink } from "@/entities/user";
+import { formatToTwinfaceDate } from "@/shared/libs";
+import { ResourceLinkTooltip } from "@/shared/ui";
+
 import { Comment_DETAILED } from "../../api";
 import { ENTITY_COLOR } from "../../libs";
 
@@ -28,7 +31,7 @@ export const CommentResourceTooltip = ({ data, link }: Props) => {
 
         {data.createdAt && (
           <ResourceLinkTooltip.Item title="Created at">
-            {new Date(data.createdAt).toLocaleDateString()}
+            {formatToTwinfaceDate(data.createdAt)}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

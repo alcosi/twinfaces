@@ -1,7 +1,9 @@
-import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
-import { BusinessAccount } from "../../api";
-import { ResourceLinkTooltip } from "@/shared/ui";
 import { BriefcaseBusinessIcon } from "lucide-react";
+
+import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
+import { ResourceLinkTooltip } from "@/shared/ui";
+
+import { BusinessAccount } from "../../api";
 
 type Props = {
   data: BusinessAccount;

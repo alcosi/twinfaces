@@ -3,12 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields";
 
+import { usePublicDomainData } from "@/entities/domain";
 import { DomainUser_DETAILED, hydrateDomainUserFromMap } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { PublicApiContext } from "@/shared/api";
@@ -29,12 +31,36 @@ export function Login() {
   const publicApiClient = useContext(PublicApiContext);
   const { setAuthUser } = useAuthUser();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const { publicDomainData, fetchPublicDomainData } = usePublicDomainData();
+
+  useLayoutEffect(() => {
+    fetchPublicDomainData("test.dev-cabinet-twinfaces.worknroll.pro").catch(
+      (error) => {
+        if (error.message.includes("Unknown Domain key")) {
+          const baseURL = window.location.host.split(".").slice(-3).join(".");
+          router.push(`${window.location.protocol}//${baseURL}`);
+        } else {
+          toast.error("An error occurred while fetching domain data: " + error);
+        }
+      }
+    );
+  }, [fetchPublicDomainData, router]);
+
+  useEffect(() => {
+    if (publicDomainData?.id) {
+      form.reset({
+        ...form.getValues(),
+        domainId: publicDomainData.id,
+      });
+    }
+  }, [publicDomainData]);
 
   const form = useForm({
     defaultValues: {
       userId: config.loginPage.defaultFormValues.userId,
       businessAccountId: config.loginPage.defaultFormValues.businessAccountId,
-      domainId: config.loginPage.defaultFormValues.domainId,
+      domainId:
+        publicDomainData?.id ?? config.loginPage.defaultFormValues.domainId,
     },
     resolver: zodResolver(FORM_SCHEMA),
   });
@@ -78,7 +104,7 @@ export function Login() {
     <main className="flex flex-col justify-center items-center h-screen w-screen">
       <div className="flex flex-col my-5 items-center -mt-32 min-w-96">
         <Image
-          src={config.favicon}
+          src={publicDomainData?.iconLight ?? config.favicon}
           width={56}
           height={56}
           alt="Picture of the author"
@@ -102,11 +128,13 @@ export function Login() {
               label="Business Account Id"
             />
 
-            <TextFormField
-              control={form.control}
-              name="domainId"
-              label="Domain Id"
-            />
+            {publicDomainData?.id ? null : (
+              <TextFormField
+                control={form.control}
+                name="domainId"
+                label="Domain Id"
+              />
+            )}
 
             <Button
               type="submit"
