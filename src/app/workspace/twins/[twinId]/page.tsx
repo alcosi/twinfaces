@@ -16,7 +16,7 @@ import {
 } from "./views";
 
 export default function TwinPage() {
-  const { twinId, twin, twinClass } = useContext(TwinContext);
+  const { twinId, twin } = useContext(TwinContext);
   const { setBreadcrumbs } = useBreadcrumbs();
 
   const tabs: Tab[] = [
@@ -45,7 +45,7 @@ export default function TwinPage() {
       label: "History",
       content: <TwinHistory />,
     },
-    ...(twinClass?.map((tab) => ({
+    ...(twin.subordinates?.map((tab) => ({
       key: tab.id,
       label: tab.name,
       content: <TwinsTable baseTwinClassId={tab.id} />,

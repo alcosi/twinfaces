@@ -1,5 +1,5 @@
 import { PaginationState } from "@tanstack/react-table";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import { ApiContext, PagedResponse } from "@/shared/api";
 
@@ -9,6 +9,7 @@ import { TwinClassFilters, TwinClass_DETAILED } from "../types";
 // TODO: Apply caching-strategy
 export const useTwinClassSearchV1 = () => {
   const api = useContext(ApiContext);
+  const [loading, setLoading] = useState(false);
 
   const searchTwinClasses = useCallback(
     async ({
@@ -18,8 +19,10 @@ export const useTwinClassSearchV1 = () => {
     }: {
       search?: string;
       pagination?: PaginationState;
-      filters?: {};
+      filters?: TwinClassFilters;
     }): Promise<PagedResponse<TwinClass_DETAILED>> => {
+      setLoading(true);
+
       try {
         const { data, error } = await api.twinClass.search({
           search,
@@ -43,10 +46,12 @@ export const useTwinClassSearchV1 = () => {
       } catch (error) {
         console.error("Failed to fetch twin classes:", error);
         throw new Error("An error occurred while fetching twin classes");
+      } finally {
+        setLoading(false);
       }
     },
     [api]
   );
 
-  return { searchTwinClasses };
+  return { searchTwinClasses, loading };
 };

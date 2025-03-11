@@ -1,3 +1,4 @@
+import { TwinClass, TwinClass_DETAILED } from "@/entities/twin-class";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
@@ -16,7 +17,9 @@ export type Twin_SHORT = RequireFields<
 export type Twin_DETAILED = RequireFields<
   Twin_SHORT,
   "twinClass" | "createdAt" | "headTwinId" | "tags"
->;
+> & {
+  subordinates?: TwinClass_DETAILED[];
+};
 
 export type TwinCreateRq = RequireFields<
   components["schemas"]["TwinCreateRqV2"],
