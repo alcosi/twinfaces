@@ -1,10 +1,12 @@
-import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
+
+import { PrivateApiContext } from "@/shared/api";
+
 import { CreatePermissionRequestBody } from "../types";
 
 // TODO: Apply caching-strategy
 export const usePermissionCreate = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const createPermission = useCallback(
     async ({ body }: { body: CreatePermissionRequestBody }) => {

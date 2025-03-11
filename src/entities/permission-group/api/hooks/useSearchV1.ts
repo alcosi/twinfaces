@@ -1,12 +1,14 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 import { hydratePermissionGroupFromMap } from "../../libs";
-import { PermissionGroup_DETAILED, PermissionGroupFilters } from "../types";
+import { PermissionGroupFilters, PermissionGroup_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
 export const usePermissionGroupSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchPermissionGroups = useCallback(
     async ({

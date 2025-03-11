@@ -1,13 +1,13 @@
 import { useCallback, useContext, useState } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { FactoryPipeline_DETAILED } from "..";
 import { hydrateFactoryPipelineFromMap } from "../../libs";
 
 export function useFetchFactoryPipelineById() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchFactoryPipelineById = useCallback(

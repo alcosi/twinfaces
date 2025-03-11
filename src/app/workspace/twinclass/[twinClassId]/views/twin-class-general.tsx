@@ -30,13 +30,13 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinClassGeneral() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { twinClass, refresh } = useContext(TwinClassContext);
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();

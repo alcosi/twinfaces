@@ -23,7 +23,7 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
@@ -33,7 +33,7 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinGeneral() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { twin, refresh } = useContext(TwinContext);
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =

@@ -1,10 +1,12 @@
 import { useCallback, useContext } from "react";
-import { ApiContext } from "@/shared/api";
-import { FactoryConditionSet } from "../../api";
+
+import { PrivateApiContext } from "@/shared/api";
 import { isEmptyArray, isUndefined } from "@/shared/libs";
 
+import { FactoryConditionSet } from "../../api";
+
 export function useFetchFactoryConditionSetById() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchFactoryConditionSetById = useCallback(
     async (id: string): Promise<FactoryConditionSet> => {

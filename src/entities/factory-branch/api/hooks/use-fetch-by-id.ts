@@ -1,11 +1,13 @@
-import { ApiContext } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext, useState } from "react";
+
+import { PrivateApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+
 import { hydrateFactoryBranchFromMap } from "../../libs";
 import { FactoryBranch_DETAILED } from "../types";
 
 export const useFetchFactoryBranchById = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchFactoryBranchById = useCallback(

@@ -6,6 +6,7 @@ import React from "react";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
+import { PublicApiContextProvider } from "@/features/api";
 import { PRODUCT_FLAVOR_CONFIG, ProductConfigProvider } from "@/shared/config";
 import { cn } from "@/shared/libs";
 
@@ -45,16 +46,18 @@ export default function RootLayout({
         )}
       >
         <ProductConfigProvider config={config}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider delayDuration={700} skipDelayDuration={0}>
-              {children}
-            </TooltipProvider>
-          </ThemeProvider>
+          <PublicApiContextProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TooltipProvider delayDuration={700} skipDelayDuration={0}>
+                {children}
+              </TooltipProvider>
+            </ThemeProvider>
+          </PublicApiContextProvider>
         </ProductConfigProvider>
       </body>
     </html>

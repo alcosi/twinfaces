@@ -1,17 +1,19 @@
 "use client";
 
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { TwinClassContext } from "@/entities/twin-class";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowContext } from "@/features/twinFlow";
-import { ApiContext } from "@/shared/api";
+import { TwinflowTransitionValidatorRules } from "@/screens/transitionValidators";
+import { TwinflowTransitionTriggers } from "@/screens/twinclassTriggers";
+import { PrivateApiContext } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "sonner";
+
 import { TwinflowTransitionGeneral } from "./twinflow-transition-general";
-import { TwinflowTransitionTriggers } from "@/screens/twinclassTriggers";
-import { TwinflowTransitionValidatorRules } from "@/screens/transitionValidators";
 
 interface TransitionPageProps {
   params: {
@@ -24,7 +26,7 @@ interface TransitionPageProps {
 export default function TransitionPage({
   params: { twinClassId, twinflowId, transitionId },
 }: TransitionPageProps) {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { twinClass } = useContext(TwinClassContext);
   const { twinFlow } = useContext(TwinFlowContext);
   const [loading, setLoading] = useState<boolean>(false);

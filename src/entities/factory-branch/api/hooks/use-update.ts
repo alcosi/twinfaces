@@ -1,9 +1,11 @@
-import { ApiContext } from "@/shared/api";
 import { useContext } from "react";
+
+import { PrivateApiContext } from "@/shared/api";
+
 import { FactoryBranchUpdateRq } from "../types";
 
 export function useUpdateFactoryBranch() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   async function updateFactoryBranch({
     factoryBranchId,

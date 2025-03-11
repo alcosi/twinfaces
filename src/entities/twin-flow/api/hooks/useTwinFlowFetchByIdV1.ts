@@ -1,11 +1,13 @@
-import { ApiContext } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext } from "react";
+
+import { PrivateApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+
 import { TwinFlow } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTwinFlowFetchByIdV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchTwinFlowById = useCallback(
     async (id: string): Promise<TwinFlow> => {

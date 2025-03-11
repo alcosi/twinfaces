@@ -1,12 +1,14 @@
-import { TwinFieldUI } from "@/entities/twinField";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext } from "react";
+
+import { TwinFieldUI } from "@/entities/twinField";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+
 import { hydrateTwinFieldFromMap } from "../../libs";
 
 // TODO: Apply caching-strategy
 export const useFetchFields = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchFieldsByTwinId = useCallback(
     async ({

@@ -1,8 +1,16 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { X } from "lucide-react";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { TextAreaFormField, TextFormField } from "@/components/form-fields";
+
 import { DOMAIN_CREATE_SCHEMA } from "@/entities/domain";
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
 import {
   Form,
@@ -19,16 +27,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { X } from "lucide-react";
-import { useContext } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+
 import { useQuickView } from "../../quick-view-overlay";
 
 export function CreateDomainForm() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { closeQuickView } = useQuickView();
 
   const form = useForm<z.infer<typeof DOMAIN_CREATE_SCHEMA>>({

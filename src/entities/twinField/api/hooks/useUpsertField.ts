@@ -1,10 +1,11 @@
-import { ApiContext } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext } from "react";
+
+import { PrivateApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
 
 // TODO: Apply caching-strategy
 export const useUpsertField = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const upsertTwinField = useCallback(
     async (args: {

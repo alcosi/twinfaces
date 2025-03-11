@@ -1,11 +1,13 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext, useEffect, useState } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 import { hydrateDomainView } from "../../libs";
 import { DomainView_SHORT } from "../types";
 
 export const useDomains = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const [response, setResponse] = useState<PagedResponse<DomainView_SHORT>>();
 
   const fetchDomainsList = useCallback(

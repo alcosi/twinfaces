@@ -1,13 +1,14 @@
+import { PaginationState } from "@tanstack/table-core";
+import { useCallback, useContext } from "react";
+
 import {
   CommentView_DETAILED,
   hydrateCommentViewFromMap,
 } from "@/entities/comment";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { PaginationState } from "@tanstack/table-core";
-import { useCallback, useContext } from "react";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export const useFetchComments = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchCommentsByTwinId = useCallback(
     async ({

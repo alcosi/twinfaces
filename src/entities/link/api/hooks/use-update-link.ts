@@ -1,10 +1,11 @@
-import { UpdateLinkRequestBody } from "@/entities/link";
-import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
+
+import { UpdateLinkRequestBody } from "@/entities/link";
+import { PrivateApiContext } from "@/shared/api";
 
 // TODO: Apply caching-strategy
 export const useLinkUpdate = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const updateLink = useCallback(
     async ({

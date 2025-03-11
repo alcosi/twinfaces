@@ -1,15 +1,17 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 import { hydrateTwinFlowTransitionFromMap } from "../../libs";
 import {
-  TwinFlowTransition_DETAILED,
   TwinFlowTransitionFilters,
+  TwinFlowTransition_DETAILED,
 } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTwinFlowTransitionSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   async function searchTwinFlowTransitions({
     search,

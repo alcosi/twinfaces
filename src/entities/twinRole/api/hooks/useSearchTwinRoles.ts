@@ -1,15 +1,16 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+
 import {
-  hydratePermissionGrantTwinRolesFromMap,
-  PermissionGrantTwinRoles_DETAILED,
   PermissionGrantTwinRolesFilter,
+  PermissionGrantTwinRoles_DETAILED,
+  hydratePermissionGrantTwinRolesFromMap,
 } from "@/entities/twinRole";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 // TODO: Apply caching-strategy
 export const usePermissionGrantTwinRolesSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTwinRoleGrant = useCallback(
     async ({

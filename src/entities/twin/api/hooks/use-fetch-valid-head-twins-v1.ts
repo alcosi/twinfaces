@@ -1,12 +1,13 @@
+import { useCallback, useContext } from "react";
+
 import { Twin } from "@/entities/twin";
 import { TwinClassValidHeadQuery } from "@/entities/twin-class";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
-import { useCallback, useContext } from "react";
 
 // TODO: Apply caching-strategy
 export const useFetchValidHeadTwins = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchValidHeadTwins = useCallback(
     async ({

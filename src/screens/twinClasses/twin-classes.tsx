@@ -1,25 +1,5 @@
 "use client";
 
-import { ImageWithFallback } from "@/components/image-with-fallback";
-import { DatalistResourceLink } from "@/entities/datalist";
-import { PermissionResourceLink } from "@/entities/permission";
-import {
-  TWIN_CLASSES_SCHEMA,
-  TwinClass_DETAILED,
-  TwinClassCreateRq,
-  TwinClassFieldValues,
-  TwinClassResourceLink,
-  useTwinClassFilters,
-  useTwinClassSearchV1,
-} from "@/entities/twin-class";
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui";
-import {
-  CrudDataTable,
-  DataTableHandle,
-  FiltersState,
-} from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
@@ -28,6 +8,29 @@ import { useContext, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import { ImageWithFallback } from "@/components/image-with-fallback";
+
+import { DatalistResourceLink } from "@/entities/datalist";
+import { PermissionResourceLink } from "@/entities/permission";
+import {
+  TWIN_CLASSES_SCHEMA,
+  TwinClassCreateRq,
+  TwinClassFieldValues,
+  TwinClassResourceLink,
+  TwinClass_DETAILED,
+  useTwinClassFilters,
+  useTwinClassSearchV1,
+} from "@/entities/twin-class";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { GuidWithCopy } from "@/shared/ui";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
+
 import { TwinClassFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -237,7 +240,7 @@ const colDefs: Record<
 };
 
 export function TwinClasses() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();

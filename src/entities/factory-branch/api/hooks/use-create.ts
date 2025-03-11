@@ -1,9 +1,11 @@
-import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
+
+import { PrivateApiContext } from "@/shared/api";
+
 import { FactoryBranchCreateRq } from "../types";
 
 export const useFactoryBranchCreate = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const createFactoryBranch = useCallback(
     async ({ id, body }: { id: string; body: FactoryBranchCreateRq }) => {

@@ -1,11 +1,13 @@
-import { useCallback, useContext } from "react";
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
+import { useCallback, useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
+import { PipelineStepFilters, PipelineStep_DETAILED } from "../../api";
 import { hydratePipelineStepFromMap } from "../helpers";
-import { PipelineStep_DETAILED, PipelineStepFilters } from "../../api";
 
 export function usePipelineStepSearch() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchPipelineStep = useCallback(
     async ({

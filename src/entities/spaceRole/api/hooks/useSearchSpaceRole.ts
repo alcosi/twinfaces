@@ -1,15 +1,16 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+
 import {
-  hydratePermissionGrantSpaceRoleFromMap,
-  PermissionGrantSpaceRole_DETAILED,
   PermissionGrantSpaceRoleFilter,
+  PermissionGrantSpaceRole_DETAILED,
+  hydratePermissionGrantSpaceRoleFromMap,
 } from "@/entities/spaceRole";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 // TODO: Apply caching-strategy
 export const usePermissionSpaceRoleSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchSpaceRoleGrant = useCallback(
     async ({

@@ -1,13 +1,13 @@
 import { useCallback, useContext, useState } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateFactoryMultiplierFromMap } from "../../libs";
 import { FactoryMultiplier_DETAILED } from "../types";
 
 export const useFetchFactoryMultiplierById = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchFactoryMultiplierById = useCallback(

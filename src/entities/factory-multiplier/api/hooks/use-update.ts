@@ -1,11 +1,11 @@
 import { useContext } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 
 import { FactoryMultiplierUpdateRq } from "../types";
 
 export function useUpdateFactoryMultiplier() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   async function updateFactoryMultiplier({
     factoryMultiplierId,

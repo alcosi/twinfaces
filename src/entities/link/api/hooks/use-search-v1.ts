@@ -1,12 +1,14 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { useCallback, useContext } from "react";
 import { PaginationState } from "@tanstack/react-table";
-import { Link_MANAGED, LinkFilters } from "..";
+import { useCallback, useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
+
+import { LinkFilters, Link_MANAGED } from "..";
 import { hydrateLinkFromMap } from "../../libs";
 
 export function useLinkSearch() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchLinks = useCallback(
     async ({

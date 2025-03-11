@@ -1,7 +1,9 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
+
 import { hydrateTwinClassFieldFromMap } from "../../libs";
 import {
   TwinClassFieldSearchFilters,
@@ -10,7 +12,7 @@ import {
 
 // TODO: Apply caching-strategy
 export const useTwinClassFieldSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTwinClassFields = useCallback(
     async ({

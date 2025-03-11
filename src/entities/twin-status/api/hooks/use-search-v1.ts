@@ -1,12 +1,14 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { TwinStatus_DETAILED, TwinStatusFilters } from "../../api";
+
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
+import { TwinStatusFilters, TwinStatus_DETAILED } from "../../api";
 import { hydrateTwinStatusFromMap } from "../../libs";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useTwinStatusSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTwinStatuses = useCallback(
     async ({

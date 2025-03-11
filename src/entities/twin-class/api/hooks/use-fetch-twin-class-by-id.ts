@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { operations } from "@/shared/api/generated/schema";
 import { isUndefined } from "@/shared/libs";
 
@@ -9,7 +9,7 @@ import { TwinClass_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinClassById = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchTwinClassById = useCallback(
     async ({

@@ -1,22 +1,24 @@
+import { useContext, useState } from "react";
+import { z } from "zod";
+
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
+
 import {
-  TwinClass_DETAILED,
   TwinClassContext,
   TwinClassResourceLink,
+  TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import {
   TwinClassStatusResourceLink,
   TwinStatus,
   TwinStatusUpdateRq,
 } from "@/entities/twin-status";
-import { ApiContext } from "@/shared/api";
+import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
+import { PrivateApiContext } from "@/shared/api";
 import { ColorPicker } from "@/shared/ui/color-picker";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { useContext, useState } from "react";
-import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
-import { z } from "zod";
 
 export function TwinStatusGeneral({
   status,
@@ -25,7 +27,7 @@ export function TwinStatusGeneral({
   status: TwinStatus;
   onChange: () => any;
 }) {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { twinClassId } = useContext(TwinClassContext);
   const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
 

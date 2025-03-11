@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
+import { useContext, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import {
   TRIGGER_SCHEMA,
   TriggersFormValues,
@@ -6,15 +13,10 @@ import {
   TwinFlowTransitionTriggerUpdate,
   useTwinFlowTransitionTriggersSearch,
 } from "@/entities/twin-flow-transition";
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ColumnDef } from "@tanstack/table-core";
-import { Check } from "lucide-react";
-import { useContext, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+
 import { TriggersFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -59,7 +61,7 @@ export function TwinflowTransitionTriggers({
   transition: TwinFlowTransition;
 }) {
   const tableRef = useRef<DataTableHandle>(null);
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { fetchTriggers } = useTwinFlowTransitionTriggersSearch();
 
   async function fetchData() {

@@ -1,19 +1,10 @@
 import { useContext, useState } from "react";
-import { AutoFormValueType } from "@/components/auto-field";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { GuidWithCopy } from "@/shared/ui";
-import {
-  InPlaceEdit,
-  InPlaceEditContextProvider,
-  InPlaceEditProps,
-} from "@/features/inPlaceEdit";
+import { toast } from "sonner";
 import { z } from "zod";
-import {
-  TwinClassFieldUpdateRq,
-  TwinClassFieldV2_DETAILED,
-} from "@/entities/twin-class-field";
-import { ApiContext } from "@/shared/api";
-import { TwinClassResourceLink } from "@/entities/twin-class";
+
+import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
+import { AutoFormValueType } from "@/components/auto-field";
+
 import {
   FeaturerResourceLink,
   FeaturerTypes,
@@ -23,8 +14,19 @@ import {
   PermissionResourceLink,
   usePermissionSelectAdapter,
 } from "@/entities/permission";
-import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
-import { toast } from "sonner";
+import { TwinClassResourceLink } from "@/entities/twin-class";
+import {
+  TwinClassFieldUpdateRq,
+  TwinClassFieldV2_DETAILED,
+} from "@/entities/twin-class-field";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
+import { PrivateApiContext } from "@/shared/api";
+import { GuidWithCopy } from "@/shared/ui";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinFieldGeneral({
   field,
@@ -36,7 +38,7 @@ export function TwinFieldGeneral({
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const pAdapter = usePermissionSelectAdapter();
   const fAdapter = useFeaturerSelectAdapter(13);
 
