@@ -8,8 +8,6 @@ import {
 } from "@/entities/factory-pipeline";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-// TODO: Turn off lazy-relation for twinClasses and factories, implement hydration
-// https://alcosi.atlassian.net/browse/TWINFACES-419
 export function useFactoryPipelineSearch() {
   const api = useContext(PrivateApiContext);
   const searchFactoryPipelines = useCallback(
