@@ -269,9 +269,9 @@ export function TwinsTable({ title, baseTwinClassId, enabledColumns }: Props) {
         pagination: pagination,
         filters: {
           ..._filters,
-          extendsTwinClassIdList: baseTwinClassId
+          twinClassExtendsHierarchyContainsIdList: baseTwinClassId
             ? [baseTwinClassId]
-            : _filters.extendsTwinClassIdList,
+            : _filters.twinClassExtendsHierarchyContainsIdList,
         },
       });
     } catch (e) {

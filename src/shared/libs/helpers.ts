@@ -40,6 +40,24 @@ export const toArrayOfString = <T>(input: unknown, key?: keyof T): string[] => {
     .filter((value) => value !== "");
 };
 
+export function reduceToObject<T, V>({
+  list,
+  key = "id" as keyof T,
+  defaultValue = null as V,
+}: {
+  list: T[];
+  key?: keyof T;
+  defaultValue?: V;
+}) {
+  return list.reduce<Record<string, V>>((acc, item) => {
+    const fieldValue = isPopulatedString(item) ? item : item[key];
+    if (isPopulatedString(fieldValue)) {
+      acc[fieldValue] = defaultValue;
+    }
+    return acc;
+  }, {});
+}
+
 export function wrapWithPercent(input: string): string {
   return `%${input}%`;
 }

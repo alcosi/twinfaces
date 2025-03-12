@@ -1,7 +1,7 @@
+import { Featurer_DETAILED } from "@/entities/featurer";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
-import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { Featurer_DETAILED } from "@/entities/featurer";
 
 export type TwinClassField = components["schemas"]["TwinClassFieldV1"];
 export type TwinClassField_DETAILED = RequireFields<
@@ -9,7 +9,7 @@ export type TwinClassField_DETAILED = RequireFields<
   "id" | "key" | "name" | "twinClassId"
 >;
 
-export type TwinClassFieldSearchFilterKeys = "twinClassIdList" | "keyLikeList";
+export type TwinClassFieldSearchFilterKeys = "twinClassIdMap" | "keyLikeList";
 export type TwinClassFieldSearchFilters = Partial<
   Pick<
     components["schemas"]["TwinClassFieldSearchRqV1"],
@@ -33,7 +33,7 @@ export type TwinClassFieldV2_DETAILED = Required<TwinClassFieldV2> & {
 
 export type TwinClassFieldV2FilterKeys =
   | "idList"
-  | "twinClassIdList"
+  | "twinClassIdMap"
   | "keyLikeList"
   | "nameI18nLikeList"
   | "descriptionI18nLikeList"

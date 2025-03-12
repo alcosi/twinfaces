@@ -639,6 +639,14 @@ export interface paths {
     /** Return list of locales */
     get: operations["localeListPublicViewV1"];
   };
+  "/public/domain_by_key/{domainKey}/v1": {
+    /** Returns public domain data by key */
+    get: operations["domainViewByKeyPublicV1"];
+  };
+  "/public/domain/{domainId}/v1": {
+    /** Returns public domain data by id */
+    get: operations["domainViewPublicV1"];
+  };
   "/public/data_list_option/{dataListOptionId}/v1": {
     /** Returns public list data */
     get: operations["dataListOptionPublicViewV1"];
@@ -6170,10 +6178,14 @@ export interface components {
       idList?: string[];
       /** @description id exclude list */
       idExcludeList?: string[];
-      /** @description twin class id list */
-      twinClassIdList?: string[];
-      /** @description twin class id exclude list */
-      twinClassIdExcludeList?: string[];
+      /** @description twin class id map */
+      twinClassIdMap?: {
+        [key: string]: boolean;
+      };
+      /** @description twin class id exclude map */
+      twinClassIdExcludeMap?: {
+        [key: string]: boolean;
+      };
       /** @description key like list */
       keyLikeList?: string[];
       /** @description key not like list */
@@ -7201,7 +7213,7 @@ export interface components {
       /** @description Twin marker exclude list(data list options ids) */
       markerDataListOptionIdExcludeList?: string[];
       /** @description Twin extends by twin class list ids */
-      extendsTwinClassIdList?: string[];
+      twinClassExtendsHierarchyContainsIdList?: string[];
       /** @description Head twin class list ids */
       headTwinClassIdList?: string[];
       /** @description Twin touch list ids */
@@ -7267,7 +7279,7 @@ export interface components {
       /** @description Twin marker exclude list(data list options ids) */
       markerDataListOptionIdExcludeList?: string[];
       /** @description Twin extends by twin class list ids */
-      extendsTwinClassIdList?: string[];
+      twinClassExtendsHierarchyContainsIdList?: string[];
       /** @description Head twin class list ids */
       headTwinClassIdList?: string[];
       /** @description Twin touch list ids */
@@ -7357,7 +7369,7 @@ export interface components {
       /** @description Twin marker exclude list(data list options ids) */
       markerDataListOptionIdExcludeList?: string[];
       /** @description Twin extends by twin class list ids */
-      extendsTwinClassIdList?: string[];
+      twinClassExtendsHierarchyContainsIdList?: string[];
       /** @description Head twin class list ids */
       headTwinClassIdList?: string[];
       /** @description Twin touch list ids */
@@ -9956,6 +9968,10 @@ export interface components {
        * @example alcosi
        */
       description?: string;
+      /** @description Icon dark uri. Might be relative */
+      iconDark?: string;
+      /** @description Icon light uri. Might be relative */
+      iconLight?: string;
       /**
        * @description type [basic/b2b]
        * @enum {string}
@@ -9989,10 +10005,6 @@ export interface components {
       createdAt?: string;
       /** @description default locale */
       defaultLocale?: string;
-      /** @description Icon dark uri. Might be relative */
-      iconDark?: string;
-      /** @description Icon light uri. Might be relative */
-      iconLight?: string;
     };
     DomainUserSearchRqV1: {
       /** @description user id list */
@@ -10606,6 +10618,47 @@ export interface components {
       /** @description locales in domain */
       localeList?: components["schemas"]["LocaleV1"][];
     };
+    DomainViewPublicRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description domain */
+      domain?: components["schemas"]["DomainViewPublicRsv1"];
+    };
+    DomainViewPublicRsv1: {
+      /**
+       * Format: uuid
+       * @description domain id
+       */
+      id?: string;
+      /**
+       * @description key
+       * @example alcosi
+       */
+      key?: string;
+      /**
+       * @description domain description
+       * @example alcosi
+       */
+      description?: string;
+      /** @description Icon dark uri. Might be relative */
+      iconDark?: string;
+      /** @description Icon light uri. Might be relative */
+      iconLight?: string;
+    };
     DataListOptionRsV1: {
       /**
        * Format: int32
@@ -10769,7 +10822,7 @@ export interface components {
        */
       statusDetails?: string;
       /** @description twin status */
-      twinStatus?: components["schemas"]["TwinStatusV1"];
+      twinStatus?: components["schemas"]["TwinStatusV2"];
     };
     WidgetListRsV1: {
       /**
@@ -20198,6 +20251,70 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["LocaleViewV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns public domain data by key */
+  domainViewByKeyPublicV1: {
+    parameters: {
+      query?: {
+        showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example alcosi */
+        domainKey: string;
+      };
+    };
+    responses: {
+      /** @description Public domain details prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainViewPublicRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns public domain data by id */
+  domainViewPublicV1: {
+    parameters: {
+      query?: {
+        showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        domainId: string;
+      };
+    };
+    responses: {
+      /** @description Public domain details prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainViewPublicRsV1"];
         };
       };
       /** @description Access is denied */
