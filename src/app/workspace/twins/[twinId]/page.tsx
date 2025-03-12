@@ -48,7 +48,9 @@ export default function TwinPage() {
     ...(twin.subordinates?.map((tab) => ({
       key: tab.id,
       label: tab.name,
-      content: <TwinsTable baseTwinClassId={tab.id} />,
+      content: (
+        <TwinsTable baseTwinClassId={tab.id} targetHeadTwinId={twinId} />
+      ),
     })) ?? []),
   ];
 

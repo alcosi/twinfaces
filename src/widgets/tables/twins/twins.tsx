@@ -59,8 +59,10 @@ type TwinTableColumnKey = keyof Pick<
 
 type Props = {
   title?: string;
-  baseTwinClassId?: string;
   enabledColumns?: TwinTableColumnKey[];
+  // NOTE: Filtering criteria for retrieving related twins
+  baseTwinClassId?: string;
+  targetHeadTwinId?: string;
 };
 
 const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
@@ -197,7 +199,12 @@ const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
   },
 };
 
-export function TwinsTable({ title, baseTwinClassId, enabledColumns }: Props) {
+export function TwinsTable({
+  title,
+  enabledColumns,
+  baseTwinClassId,
+  targetHeadTwinId,
+}: Props) {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } =
@@ -269,9 +276,12 @@ export function TwinsTable({ title, baseTwinClassId, enabledColumns }: Props) {
         pagination: pagination,
         filters: {
           ..._filters,
-          extendsTwinClassIdList: baseTwinClassId
+          twinClassExtendsHierarchyContainsIdList: baseTwinClassId
             ? [baseTwinClassId]
-            : _filters.extendsTwinClassIdList,
+            : _filters.twinClassExtendsHierarchyContainsIdList,
+          headTwinIdList: targetHeadTwinId
+            ? [targetHeadTwinId]
+            : _filters.headTwinIdList,
         },
       });
     } catch (e) {

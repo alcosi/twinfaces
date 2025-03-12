@@ -16,7 +16,7 @@ import {
   useTwinClassFieldSearchV1,
 } from "@/entities/twin-class-field";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -152,9 +152,9 @@ export function TwinClassFieldsTable({
         pagination,
         filters: {
           ..._filters,
-          twinClassIdList: twinClassId
-            ? toArrayOfString(toArray(twinClassId), "id")
-            : _filters.twinClassIdList,
+          twinClassIdMap: twinClassId
+            ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
+            : _filters.twinClassIdMap,
         },
       });
 

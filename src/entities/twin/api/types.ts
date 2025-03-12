@@ -39,7 +39,7 @@ export type TwinFilterKeys =
   | "twinClassIdList"
   | "statusIdList"
   | "descriptionLikeList"
-  | "extendsTwinClassIdList"
+  | "twinClassExtendsHierarchyContainsIdList"
   | "headTwinIdList"
   | "createdByUserIdList"
   | "assignerUserIdList";

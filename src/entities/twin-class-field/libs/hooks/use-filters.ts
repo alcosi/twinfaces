@@ -4,11 +4,15 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  TwinClass_DETAILED,
+  useTwinClassSelectAdapter,
+} from "@/entities/twin-class";
 import {
   type FilterFeature,
   extractEnabledFilters,
   isPopulatedArray,
+  reduceToObject,
   toArray,
   toArrayOfString,
   wrapWithPercent,
@@ -32,7 +36,7 @@ export function useTwinClassFieldFilters({
       schema: z.string().uuid("Please enter a valid UUID"),
       placeholder: "Enter UUID",
     },
-    twinClassIdList: {
+    twinClassIdMap: {
       type: AutoFormValueType.combobox,
       label: "Twin Class",
       multi: true,
@@ -84,7 +88,10 @@ export function useTwinClassFieldFilters({
   ): TwinClassFieldV2Filters {
     const result: TwinClassFieldV2Filters = {
       idList: toArrayOfString(filters.idList),
-      twinClassIdList: toArrayOfString(toArray(filters.twinClassIdList), "id"),
+      twinClassIdMap: reduceToObject({
+        list: toArray(filters.twinClassIdMap) as TwinClass_DETAILED[],
+        defaultValue: true,
+      }),
       keyLikeList: toArrayOfString(filters.keyLikeList).map(wrapWithPercent),
       nameI18nLikeList: toArrayOfString(filters.nameI18nLikeList).map(
         wrapWithPercent
