@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
@@ -24,20 +25,20 @@ import {
   TwinClassUpdateRq,
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
+  useUpdateTwinClass,
 } from "@/entities/twin-class";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { PrivateApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinClassGeneral() {
-  const api = useContext(PrivateApiContext);
   const { twinClass, refresh } = useContext(TwinClassContext);
+  const { updateTwinClass } = useUpdateTwinClass();
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
@@ -45,24 +46,16 @@ export function TwinClassGeneral() {
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
 
-  async function updateTwinClass(newClass: TwinClassUpdateRq) {
-    if (!twinClass) {
-      console.error("updateTwinClass: no twin class");
-      return;
-    }
-
+  async function update(newClass: TwinClassUpdateRq) {
     try {
-      await api.twinClass.update({ id: twinClass.id!, body: newClass });
+      await updateTwinClass({
+        twinClassId: twinClass.id!,
+        body: newClass,
+      });
       refresh();
-    } catch (e) {
-      console.error(e);
-      throw e;
+    } catch {
+      toast.error("TwinClass Update Failed");
     }
-  }
-
-  if (!twinClass) {
-    console.error("TwinClassGeneral: no twin class");
-    return;
   }
 
   const classValues: { [key: string]: AutoEditDialogSettings } = {
@@ -74,7 +67,7 @@ export function TwinClassGeneral() {
       },
       title: "Update head",
       onSubmit: (values) => {
-        return updateTwinClass({
+        return update({
           headTwinClassUpdate: { newId: values.headClassId[0].id },
           headHunterFeaturerId: values.headHunterFeaturerId,
           headHunterParams: values.headHunterParams,
@@ -108,7 +101,7 @@ export function TwinClassGeneral() {
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateTwinClass({
+      return update({
         nameI18n: { translationInCurrentLocale: value as string },
       });
     },
@@ -126,7 +119,7 @@ export function TwinClassGeneral() {
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateTwinClass({
+      return update({
         descriptionI18n: { translationInCurrentLocale: value as string },
       });
     },
@@ -142,13 +135,15 @@ export function TwinClassGeneral() {
     schema: z.boolean(),
     renderPreview: (value) => (value ? "Yes" : "No"),
     onSubmit: (value) => {
-      return updateTwinClass({
+      return update({
         abstractClass: value as boolean,
       });
     },
   };
 
-  const createPermissionSettings: InPlaceEditProps<any> = {
+  const createPermissionSettings: InPlaceEditProps<
+    typeof twinClass.createPermissionId
+  > = {
     id: "createPermissionId",
     value: twinClass.createPermissionId,
     valueInfo: {
@@ -160,11 +155,14 @@ export function TwinClassGeneral() {
       ? (_) => <PermissionResourceLink data={twinClass.createPermission!} />
       : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ createPermissionId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ createPermissionId: id });
     },
   };
 
-  const viewPermissionSettings: InPlaceEditProps<any> = {
+  const viewPermissionSettings: InPlaceEditProps<
+    typeof twinClass.viewPermissionId
+  > = {
     id: "viewPermissionId",
     value: twinClass.viewPermissionId,
     valueInfo: {
@@ -176,11 +174,14 @@ export function TwinClassGeneral() {
       ? (_) => <PermissionResourceLink data={twinClass.viewPermission!} />
       : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ viewPermissionId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ viewPermissionId: id });
     },
   };
 
-  const editPermissionSettings: InPlaceEditProps<any> = {
+  const editPermissionSettings: InPlaceEditProps<
+    typeof twinClass.editPermissionId
+  > = {
     id: "editPermissionId",
     value: twinClass.editPermissionId,
     valueInfo: {
@@ -192,11 +193,14 @@ export function TwinClassGeneral() {
       ? (_) => <PermissionResourceLink data={twinClass.editPermission!} />
       : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ editPermissionId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ editPermissionId: id });
     },
   };
 
-  const deletePermissionSettings: InPlaceEditProps<any> = {
+  const deletePermissionSettings: InPlaceEditProps<
+    typeof twinClass.deletePermissionId
+  > = {
     id: "deletePermissionId",
     value: twinClass.deletePermissionId,
     valueInfo: {
@@ -208,7 +212,8 @@ export function TwinClassGeneral() {
       ? (_) => <PermissionResourceLink data={twinClass.deletePermission!} />
       : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ deletePermissionId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ deletePermissionId: id });
     },
   };
 
@@ -226,7 +231,7 @@ export function TwinClassGeneral() {
       ? (_) => <DatalistResourceLink data={twinClass.tagMap as DataList} />
       : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ tagDataListUpdate: { newId: value[0].id } });
+      return update({ tagDataListUpdate: { newId: value[0].id } });
     },
   };
 
@@ -244,7 +249,7 @@ export function TwinClassGeneral() {
       ? (_) => <DatalistResourceLink data={twinClass.markerMap as DataList} />
       : undefined,
     onSubmit: async (value) => {
-      return updateTwinClass({ markerDataListUpdate: { newId: value[0].id } });
+      return update({ markerDataListUpdate: { newId: value[0].id } });
     },
   };
 
@@ -255,7 +260,7 @@ export function TwinClassGeneral() {
 
   return (
     <InPlaceEditContextProvider>
-      <Table className="mt-8">
+      <Table>
         <TableBody>
           <TableRow>
             <TableCell width={300}>ID</TableCell>
@@ -268,6 +273,7 @@ export function TwinClassGeneral() {
             <TableCell>Key</TableCell>
             <TableCell>{twinClass.key}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>
@@ -331,42 +337,42 @@ export function TwinClassGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow>
             <TableCell>Markers list</TableCell>
             <TableCell>
               <InPlaceEdit {...markerListSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow>
             <TableCell>Tags list</TableCell>
             <TableCell>
               <InPlaceEdit {...tagListSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow>
             <TableCell>Create Permission</TableCell>
             <TableCell>
               <InPlaceEdit {...createPermissionSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow>
             <TableCell>View Permission</TableCell>
             <TableCell>
               <InPlaceEdit {...viewPermissionSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow>
             <TableCell>Edit Permission</TableCell>
             <TableCell>
               <InPlaceEdit {...editPermissionSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow>
             <TableCell>Delete Permission</TableCell>
             <TableCell>
               <InPlaceEdit {...deletePermissionSettings} />

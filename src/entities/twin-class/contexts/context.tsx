@@ -23,8 +23,7 @@ export function TwinClassContextProvider({
   params: { twinClassId },
   children,
 }: TwinClassLayoutProps) {
-  const { fetchTwinClassById } = useFetchTwinClassById();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { fetchTwinClassById, loading } = useFetchTwinClassById();
   const [twinClass, setTwinClass] = useState<TwinClass | undefined>(undefined);
 
   useEffect(() => {
@@ -32,13 +31,8 @@ export function TwinClassContextProvider({
   }, [twinClassId]);
 
   async function refresh() {
-    // Only set loading on first load
-    if (!twinClass) {
-      setLoading(true);
-    }
-
     try {
-      const twinClass = await fetchTwinClassById({
+      const response = await fetchTwinClassById({
         id: twinClassId,
         query: {
           showTwinClassMode: "MANAGED",
@@ -55,16 +49,13 @@ export function TwinClassContextProvider({
         },
       });
 
-      setTwinClass(twinClass);
-    } catch (e) {
-      console.error("exception while fetching twin class", e);
+      setTwinClass(response);
+    } catch {
       toast.error("Failed to fetch twin class");
-    } finally {
-      setLoading(false);
     }
   }
 
-  if (isUndefined(twinClass)) return <>{loading && <LoadingOverlay />}</>;
+  if (isUndefined(twinClass) || loading) return <LoadingOverlay />;
 
   return (
     <TwinClassContext.Provider

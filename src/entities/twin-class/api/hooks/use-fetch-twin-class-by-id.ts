@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 import { operations } from "@/shared/api/generated/schema";
@@ -9,6 +9,7 @@ import { TwinClass_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinClassById = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const api = useContext(PrivateApiContext);
 
   const fetchTwinClassById = useCallback(
@@ -24,6 +25,7 @@ export const useFetchTwinClassById = () => {
         showTwin2TwinClassMode: "SHORT",
       };
 
+      setLoading(true);
       try {
         const { data, error } = await api.twinClass.getById({
           id,
@@ -38,13 +40,15 @@ export const useFetchTwinClassById = () => {
           throw new Error("Response does not have twin-class data", error);
         }
 
-        return hydrateTwinClassFromMap(data.twinClass);
+        return hydrateTwinClassFromMap(data.twinClass, data.relatedObjects);
       } catch (error) {
         throw new Error(`Failed to find twin class with ID ${id}`);
+      } finally {
+        setLoading(false);
       }
     },
     [api]
   );
 
-  return { fetchTwinClassById };
+  return { fetchTwinClassById, loading };
 };

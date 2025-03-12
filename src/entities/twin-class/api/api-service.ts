@@ -2,33 +2,16 @@ import { PaginationState } from "@tanstack/table-core";
 
 import { TwinSimpleFilters } from "@/entities/twin/api";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { components, operations } from "@/shared/api/generated/schema";
+import { operations } from "@/shared/api/generated/schema";
 
 import {
   TagSearchFilters,
+  TwinClassApiFilters,
   TwinClassCreateRq,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
   TwinClassValidHeadQuery,
 } from "./types";
-
-type TwinClassApiFilters = Partial<
-  Pick<
-    components["schemas"]["TwinClassListRqV1"],
-    | "twinClassIdList"
-    | "twinClassKeyLikeList"
-    | "nameI18nLikeList"
-    | "descriptionI18nLikeList"
-    | "headHierarchyParentsForTwinClassSearch"
-    | "extendsHierarchyParentsForTwinClassSearch"
-    | "ownerTypeList"
-    | "twinflowSchemaSpace"
-    | "twinClassSchemaSpace"
-    | "permissionSchemaSpace"
-    | "aliasSpace"
-    | "abstractt"
-  >
->;
 
 export function createTwinClassApi(settings: ApiSettings) {
   function search({
@@ -106,11 +89,17 @@ export function createTwinClassApi(settings: ApiSettings) {
     });
   }
 
-  function update({ id, body }: { id: string; body: TwinClassUpdateRq }) {
+  function update({
+    twinClassId,
+    body,
+  }: {
+    twinClassId: string;
+    body: TwinClassUpdateRq;
+  }) {
     return settings.client.PUT("/private/twin_class/{twinClassId}/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { twinClassId: id },
+        path: { twinClassId },
       },
       body: body,
     });
