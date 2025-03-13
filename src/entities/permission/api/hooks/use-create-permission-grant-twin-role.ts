@@ -1,15 +1,15 @@
 import { useCallback, useContext } from "react";
 
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 
-import { CreatePermissionGrantTwinRoleRequestBody } from "../types";
+import { GrantTwinRolePermissionPayload } from "../types";
 
 export const useCreatePermissionGrantTwinRole = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const createPermissionGrantTwinRole = useCallback(
-    async ({ body }: { body: CreatePermissionGrantTwinRoleRequestBody }) => {
-      const { error } = await api.permission.createPermissionGrantTwinRole({
+    async ({ body }: { body: GrantTwinRolePermissionPayload }) => {
+      const { error } = await api.permission.grantTwinRolePermission({
         body,
       });
 
