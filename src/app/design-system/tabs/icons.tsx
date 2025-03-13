@@ -21,9 +21,6 @@ export function IconsTab() {
     <div className="h-screen overflow-y-auto max-h-98">
       <div className="space-y-4 p-4">
         <UiSection title="Icons">
-          {/* <UiSection.Item title="Box" value={<BoxIcon />} />
-          <UiSection.Item title="Shopping Bag" value={<ShoppingBag />} />
-          <UiSection.Item title="Tier" value={<TierIcon />} /> */}
           <UiSection.Item title="Box" value={<BoxIcon />} />
           <UiSection.Item title="Datalist" value={<DatalistIcon />} />
           <UiSection.Item title="FactoryBranch" value={<FactoryBranchIcon />} />
