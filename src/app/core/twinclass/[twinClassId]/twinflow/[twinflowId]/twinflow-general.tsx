@@ -1,20 +1,25 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { z } from "zod";
 
+import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { TwinClass_DETAILED } from "@/entities/twin-class";
+import {
+  TwinClassResourceLink,
+  TwinClass_DETAILED,
+} from "@/entities/twin-class";
 import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twin-flow";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import {
+  TwinClassStatusResourceLink,
+  useTwinStatusSelectAdapter,
+} from "@/entities/twin-status";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PrivateApiContext } from "@/shared/api";
-import { formatIntlDate, reduceToObject, toArray } from "@/shared/libs";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -27,14 +32,15 @@ export function TwinflowGeneral({
 }) {
   const api = useContext(PrivateApiContext);
   const twinStatusAdapter = useTwinStatusSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapter(twinflow.twinClassId);
+  const { updateTwinFlow } = useUpdateTwinFlow();
 
-  async function updateTwinFlow(newFlow: TwinFlowUpdateRq) {
+  async function update(newFlow: TwinFlowUpdateRq) {
     try {
-      await api.twinFlow.update({ id: twinflow.id!, body: newFlow });
+      await updateTwinFlow({ twinflowId: twinflow.id!, body: newFlow });
       onChange?.();
-    } catch (e) {
-      console.error(e);
-      throw e;
+    } catch {
+      toast.error("Twinflow update failed");
     }
   }
 
@@ -109,7 +115,7 @@ export function TwinflowGeneral({
 
   return (
     <InPlaceEditContextProvider>
-      <Table className="mt-8">
+      <Table>
         <TableBody>
           <TableRow>
             <TableCell width={300}>ID</TableCell>
@@ -130,14 +136,14 @@ export function TwinflowGeneral({
             </TableCell>
           </TableRow>
 
-          <TableRow className="cursor-pointer">
+          <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>
               <InPlaceEdit {...nameSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow className="cursor-pointer">
+          <TableRow>
             <TableCell>Description</TableCell>
             <TableCell>
               <InPlaceEdit {...descriptionSettings} />
@@ -148,6 +154,16 @@ export function TwinflowGeneral({
             <TableCell>Initial status</TableCell>
             <TableCell>
               <InPlaceEdit {...initialStatusAutoDialogSettings} />
+              <InPlaceEdit {...initialStatusSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Created by</TableCell>
+            <TableCell>
+              {twinflow.createdByUser && (
+                <UserResourceLink data={twinflow.createdByUser} withTooltip />
+              )}
             </TableCell>
           </TableRow>
 
@@ -155,6 +171,9 @@ export function TwinflowGeneral({
             <TableCell>Created at</TableCell>
             <TableCell>
               {formatIntlDate(twinflow.createdAt!, "datetime-local")}
+            </TableCell>
+            <TableCell>
+              {formatToTwinfaceDate(twinflow.createdAt!, "datetime")}
             </TableCell>
           </TableRow>
         </TableBody>

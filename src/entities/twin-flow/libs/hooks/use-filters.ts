@@ -3,7 +3,7 @@ import { z } from "zod";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
+import { useUserSelectAdapter } from "@/entities/user";
 import {
   type FilterFeature,
   toArray,
@@ -13,14 +13,14 @@ import {
 
 import { TwinFlowFilterKeys, TwinFlowFilters } from "../../api";
 
-type FilterKeys = Exclude<TwinFlowFilterKeys, "twinClassIdMap">;
+type FilterKeys = Exclude<TwinFlowFilterKeys, "twinClassIdList">;
 
 export function useTwinFlowFilters(): FilterFeature<
   FilterKeys,
   TwinFlowFilters
 > {
   const sAdapter = useTwinStatusSelectAdapter();
-  const tfsAdapter = useTwinFlowSchemaSelectAdapter();
+  const userAdapter = useUserSelectAdapter();
 
   function buildFilterFields(): Record<FilterKeys, AutoFormValueInfo> {
     return {
@@ -45,12 +45,12 @@ export function useTwinFlowFilters(): FilterFeature<
         multi: true,
         ...sAdapter,
       },
-      twinflowSchemaIdList: {
+      createdByUserIdList: {
         type: AutoFormValueType.combobox,
-        label: "Twinflow Schemas",
-        selectPlaceholder: "Select schemas...",
+        label: "Created by",
+        selectPlaceholder: "Select user...",
         multi: true,
-        ...tfsAdapter,
+        ...userAdapter,
       },
     };
   }
@@ -67,7 +67,7 @@ export function useTwinFlowFilters(): FilterFeature<
         toArray(filters.descriptionI18nLikeList)
       ).map(wrapWithPercent),
       initialStatusIdList: toArrayOfString(filters.initialStatusIdList, "id"),
-      twinflowSchemaIdList: toArrayOfString(filters.twinflowSchemaIdList, "id"),
+      createdByUserIdList: toArrayOfString(filters.createdByUserIdList, "id"),
     };
 
     return result;

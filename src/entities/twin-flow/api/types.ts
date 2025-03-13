@@ -13,7 +13,7 @@ export type TwinFlowFilterKeys =
   | "nameI18nLikeList"
   | "descriptionI18nLikeList"
   | "initialStatusIdList"
-  | "twinflowSchemaIdList";
+  | "createdByUserIdList";
 export type TwinFlowFilters = Partial<
   Pick<components["schemas"]["TwinflowListRqV1"], TwinFlowFilterKeys>
 >;

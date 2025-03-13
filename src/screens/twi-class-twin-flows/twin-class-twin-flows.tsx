@@ -8,15 +8,19 @@ import { z } from "zod";
 
 import { TwinClassContext } from "@/entities/twin-class";
 import {
+  TWIN_FLOW_SCHEMA,
   TwinFlow,
+  TwinFlowCreateRq,
+  TwinFlowResourceLink,
   TwinFlow_DETAILED,
+  useCreateTwinFlow,
   useTwinFlowFilters,
   useTwinFlowSearchV1,
 } from "@/entities/twin-flow";
-import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
-import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
-import { UserResourceLink } from "@/features/user/ui";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { PlatformArea } from "@/shared/config";
 import { reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -28,16 +32,15 @@ import {
 
 import { TwinClassTwinFlowFormFields } from "./form-fields";
 
-const formSchema = z.object({
-  name: z.string().min(1, "Name can not be empty"),
-  description: z.string(),
-  initialStatus: z.string().uuid("Status ID must be a valid UUID"),
-});
-
 const columnsMap: Record<
   Extract<
     keyof TwinFlow,
-    "id" | "name" | "description" | "initialStatusId" | "createdByUserId"
+    | "id"
+    | "name"
+    | "description"
+    | "initialStatusId"
+    | "createdByUserId"
+    | "createdAt"
   >,
   ColumnDef<TwinFlow_DETAILED>
 > = {
@@ -83,20 +86,31 @@ const columnsMap: Record<
         </div>
       ),
   },
+  createdAt: {
+    id: "createdAt",
+    accessorKey: "createdAt",
+    header: "Created at",
+    cell: ({ row: { original } }) =>
+      original.createdAt &&
+      formatToTwinfaceDate(original.createdAt, "datetime"),
+  },
 };
 
 export function TwinClassTwinFlows() {
   const { twinClassId } = useContext(TwinClassContext);
   const { searchTwinFlows } = useTwinFlowSearchV1();
+  const { createTwinFlow } = useCreateTwinFlow();
   const { buildFilterFields, mapFiltersToPayload } = useTwinFlowFilters();
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
 
-  const dialogForm = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const dialogForm = useForm<z.infer<typeof TWIN_FLOW_SCHEMA>>({
+    resolver: zodResolver(TWIN_FLOW_SCHEMA),
     defaultValues: {
+      twinClassId: twinClassId || "",
       name: "",
       description: "",
+      initialStatus: "",
     },
   });
   async function fetchTwinflows(
@@ -122,7 +136,27 @@ export function TwinClassTwinFlows() {
     }
   }
 
-  // NOTE: https://alcosi.atlassian.net/browse/TWINFACES-190
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof TWIN_FLOW_SCHEMA>
+  ) => {
+    const { name, description, initialStatus } = formValues;
+
+    const requestBody: TwinFlowCreateRq = {
+      nameI18n: { translationInCurrentLocale: name, translations: {} },
+      descriptionI18n: {
+        translationInCurrentLocale: description,
+        translations: {},
+      },
+      initialStatusId: initialStatus,
+    };
+
+    await createTwinFlow({
+      twinClassId: twinClassId,
+      body: requestBody,
+    });
+    toast.success("Twin flow created successfully!");
+  };
+
   return (
     <CrudDataTable
       ref={tableRef}
@@ -132,6 +166,7 @@ export function TwinClassTwinFlows() {
         columnsMap.description,
         columnsMap.initialStatusId,
         columnsMap.createdByUserId,
+        columnsMap.createdAt,
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchTwinflows}
@@ -144,13 +179,18 @@ export function TwinClassTwinFlows() {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      defaultVisibleColumns={[
+        columnsMap.id,
+        columnsMap.name,
+        columnsMap.description,
+        columnsMap.initialStatusId,
+        columnsMap.createdByUserId,
+        columnsMap.createdAt,
+      ]}
       dialogForm={dialogForm}
-      onCreateSubmit={async () => undefined}
+      onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
-        <TwinClassTwinFlowFormFields
-          control={dialogForm.control}
-          twinClassId={twinClassId}
-        />
+        <TwinClassTwinFlowFormFields control={dialogForm.control} />
       )}
     />
   );
