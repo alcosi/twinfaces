@@ -11,7 +11,6 @@ import {
 import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twin-flow";
 import {
   TwinClassStatusResourceLink,
-  TwinStatus,
   useTwinStatusSelectAdapter,
 } from "@/entities/twin-status";
 import {
@@ -149,7 +148,7 @@ export function TwinflowGeneral({
             <TableCell>
               {twinflow.initialStatus && (
                 <TwinClassStatusResourceLink
-                  data={twinflow.initialStatus as TwinStatus}
+                  data={twinflow.initialStatus}
                   twinClassId={twinflow.twinClassId!}
                   withTooltip
                 />

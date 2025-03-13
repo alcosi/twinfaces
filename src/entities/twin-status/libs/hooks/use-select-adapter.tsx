@@ -1,20 +1,22 @@
-import {
-  isPopulatedString,
-  SelectAdapter,
-  wrapWithPercent,
-} from "@/shared/libs";
 import { Square } from "lucide-react";
 import { useTheme } from "next-themes";
+
 import {
-  TwinStatus,
+  SelectAdapter,
+  isPopulatedString,
+  wrapWithPercent,
+} from "@/shared/libs";
+
+import {
   TwinStatusFilters,
+  TwinStatusV2,
   useFetchTwinStatusById,
   useTwinStatusSearchV1,
 } from "../../api";
 
 export function useTwinStatusSelectAdapter(
   twinClassId?: string
-): SelectAdapter<TwinStatus> {
+): SelectAdapter<TwinStatusV2> {
   const { theme } = useTheme();
   const { fetchTwinStatusById } = useFetchTwinStatusById();
   const { searchTwinStatuses } = useTwinStatusSearchV1();
@@ -37,7 +39,7 @@ export function useTwinStatusSelectAdapter(
     }
   }
 
-  function renderItem(status: TwinStatus) {
+  function renderItem(status: TwinStatusV2) {
     const squareColor =
       status.backgroundColor || (theme === "light" ? "#0c66e4" : "#579dff");
 

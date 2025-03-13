@@ -1,12 +1,14 @@
+import { useEffect, useState } from "react";
+import { Control, FieldValues, Path, useWatch } from "react-hook-form";
+
 import { ComboboxFormField } from "@/components/form-fields/combobox";
 import { FormFieldProps } from "@/components/form-fields/types";
+
 import {
-  TwinStatus,
+  TwinStatusV2,
   useFetchTwinStatusById,
   useTwinStatusSelectAdapter,
 } from "@/entities/twin-status";
-import { useEffect, useState } from "react";
-import { Control, FieldValues, Path, useWatch } from "react-hook-form";
 
 type Props<T extends FieldValues> = {
   twinClassId?: string;
@@ -23,7 +25,7 @@ export function TwinStatusSelectField<T extends FieldValues>(props: Props<T>) {
     name: props.name,
   });
   // TODO: Refactor after TWINFACES-207 - Combobox/select should fetch object value from field ID.
-  const [initVals, setInitVals] = useState<TwinStatus[]>([]);
+  const [initVals, setInitVals] = useState<TwinStatusV2[]>([]);
 
   useEffect(() => {
     if (statusId) {

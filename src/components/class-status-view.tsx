@@ -1,9 +1,9 @@
-import { TwinStatus } from "@/entities/twin-status";
+import { TwinStatusV2 } from "@/entities/twin-status";
 import { ColorTile } from "@/shared/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 export interface TwinflowStatusViewProps {
-  status?: TwinStatus;
+  status?: TwinStatusV2;
 }
 
 export function ClassStatusView({ status }: TwinflowStatusViewProps) {

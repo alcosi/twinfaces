@@ -1,21 +1,24 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import {
-  TwinClassContext,
   TwinClassResourceLink,
   TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import {
-  TwinClassStatusResourceLink,
-  TwinStatus,
   TwinStatusUpdateRq,
+  TwinStatusV2,
+  useStatusUpdate,
 } from "@/entities/twin-status";
-import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
-import { PrivateApiContext } from "@/shared/api";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
 import { ColorPicker } from "@/shared/ui/color-picker";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
@@ -24,11 +27,10 @@ export function TwinStatusGeneral({
   status,
   onChange,
 }: {
-  status: TwinStatus;
+  status: TwinStatusV2;
   onChange: () => any;
 }) {
-  const api = useContext(PrivateApiContext);
-  const { twinClassId } = useContext(TwinClassContext);
+  const { updateStatus } = useStatusUpdate();
   const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
 
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
@@ -44,31 +46,14 @@ export function TwinStatusGeneral({
     setEditStatusDialogOpen(true);
   }
 
-  async function updateStatus(newStatus: TwinStatusUpdateRq) {
+  async function update(newStatus: TwinStatusUpdateRq) {
     try {
-      await api.twinStatus.update({ statusId: status.id!, data: newStatus });
+      await updateStatus({ statusId: status.id!, body: newStatus });
       onChange?.();
-    } catch (e) {
-      console.error(e);
-      throw e;
+    } catch {
+      toast.error("Twin status update failed");
     }
   }
-
-  const nameAutoDialogSettings: AutoEditDialogSettings = {
-    value: { name: status.name },
-    title: "Update name",
-    onSubmit: (values) => {
-      return updateStatus({
-        nameI18n: { translationInCurrentLocale: values.name },
-      });
-    },
-    valuesInfo: {
-      name: {
-        type: AutoFormValueType.string,
-        label: "Name",
-      },
-    },
-  };
 
   const keySettings: InPlaceEditProps = {
     id: "key",
@@ -82,8 +67,26 @@ export function TwinStatusGeneral({
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateStatus({
+      return update({
         key: value as string,
+      });
+    },
+  };
+
+  const nameSettings: InPlaceEditProps = {
+    id: "name",
+    value: status.name,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      inputProps: {
+        fieldSize: "sm",
+      },
+      label: "",
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return update({
+        nameI18n: { translationInCurrentLocale: value as string },
       });
     },
   };
@@ -100,7 +103,7 @@ export function TwinStatusGeneral({
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateStatus({
+      return update({
         descriptionI18n: { translationInCurrentLocale: value as string },
       });
     },
@@ -112,7 +115,7 @@ export function TwinStatusGeneral({
     onSubmit: (values) => {
       setBackgroundColor(values.backgroundColor);
 
-      return updateStatus({
+      return update({
         backgroundColor: values.backgroundColor,
       });
     },
@@ -130,7 +133,7 @@ export function TwinStatusGeneral({
     onSubmit: (values) => {
       setFontColor(values.fontColor);
 
-      return updateStatus({
+      return update({
         fontColor: values.fontColor,
       });
     },
@@ -143,8 +146,8 @@ export function TwinStatusGeneral({
   };
 
   return (
-    <>
-      <Table className="mt-8">
+    <InPlaceEditContextProvider>
+      <Table>
         <TableBody>
           <TableRow>
             <TableCell width={300}>ID</TableCell>
@@ -156,10 +159,12 @@ export function TwinStatusGeneral({
           <TableRow>
             <TableCell>Class</TableCell>
             <TableCell>
-              <TwinClassResourceLink
-                data={status as TwinClass_DETAILED}
-                withTooltip
-              />
+              {status.twinClass && (
+                <TwinClassResourceLink
+                  data={status.twinClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              )}
             </TableCell>
           </TableRow>
 
@@ -170,20 +175,14 @@ export function TwinStatusGeneral({
             </TableCell>
           </TableRow>
 
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(nameAutoDialogSettings)}
-          >
+          <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>
-              <TwinClassStatusResourceLink
-                data={status}
-                twinClassId={twinClassId}
-              />
+              <InPlaceEdit {...nameSettings} />
             </TableCell>
           </TableRow>
 
-          <TableRow className="cursor-pointer">
+          <TableRow>
             <TableCell>Description</TableCell>
             <TableCell>
               <InPlaceEdit {...descriptionSettings} />
@@ -217,6 +216,6 @@ export function TwinStatusGeneral({
         onOpenChange={setEditStatusDialogOpen}
         settings={currentAutoEditDialogSettings}
       />
-    </>
+    </InPlaceEditContextProvider>
   );
 }

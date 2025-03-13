@@ -17,10 +17,7 @@ import {
   useTwinFlowTransitionFilters,
   useTwinFlowTransitionSearchV1,
 } from "@/entities/twin-flow-transition";
-import {
-  TwinClassStatusResourceLink,
-  TwinStatus,
-} from "@/entities/twin-status";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -85,7 +82,7 @@ function buildColumnDefs({
         original.srcTwinStatus && (
           <div className="max-w-48 inline-flex">
             <TwinClassStatusResourceLink
-              data={original.srcTwinStatus as TwinStatus}
+              data={original.srcTwinStatus}
               twinClassId={twinClassId}
               withTooltip
             />
@@ -100,7 +97,7 @@ function buildColumnDefs({
         original.dstTwinStatus && (
           <div className="max-w-48 inline-flex">
             <TwinClassStatusResourceLink
-              data={original.dstTwinStatus as TwinStatus}
+              data={original.dstTwinStatus}
               twinClassId={twinClassId}
               withTooltip
             />

@@ -1,12 +1,14 @@
 "use client";
 
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { TwinClassContext } from "@/entities/twin-class";
-import { TwinStatus, useFetchTwinStatusById } from "@/entities/twin-status";
+import { TwinStatusV2, useFetchTwinStatusById } from "@/entities/twin-status";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "sonner";
+
 import { TwinStatusGeneral } from "./twin-status-general";
 
 interface TwinStatusPageProps {
@@ -19,15 +21,14 @@ export default function TwinClassPage({
   params: { twinStatusId },
 }: TwinStatusPageProps) {
   const { twinClass } = useContext(TwinClassContext);
-  const { fetchTwinStatusById } = useFetchTwinStatusById();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [twinStatus, setTwinStatus] = useState<TwinStatus | undefined>(
+  const { fetchTwinStatusById, loading } = useFetchTwinStatusById();
+  const [twinStatus, setTwinStatus] = useState<TwinStatusV2 | undefined>(
     undefined
   );
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    fetchTwinClassData();
+    fetchTwinStatusData();
   }, [twinStatusId]);
 
   useEffect(() => {
@@ -48,17 +49,13 @@ export default function TwinClassPage({
     ]);
   }, [twinClass.id, twinClass.name, twinStatus?.name, twinStatusId]);
 
-  function fetchTwinClassData() {
+  async function fetchTwinStatusData() {
     if (twinStatusId) {
-      setLoading(true);
-
-      fetchTwinStatusById(twinStatusId)
+      await fetchTwinStatusById(twinStatusId)
         .then(setTwinStatus)
-        .catch((e) => {
-          console.error("exception while fetching twin class", e);
-          toast.error("Failed to fetch twin class");
-        })
-        .finally(() => setLoading(false));
+        .catch(() => {
+          toast.error("Failed to fetch twin status");
+        });
     }
   }
 
@@ -69,7 +66,7 @@ export default function TwinClassPage({
           label: "General",
           content: (
             <TwinStatusGeneral
-              onChange={fetchTwinClassData}
+              onChange={fetchTwinStatusData}
               status={twinStatus}
             />
           ),

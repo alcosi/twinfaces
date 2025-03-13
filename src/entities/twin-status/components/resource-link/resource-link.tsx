@@ -1,12 +1,14 @@
+import { Square } from "lucide-react";
+
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { Square } from "lucide-react";
-import { TwinStatus } from "../../api";
+
+import { TwinStatusV2 } from "../../api";
 import { TwinStatusIcon } from "../twin-status-icon";
 import { TwinClassStatusResourceTooltip } from "./tooltip";
 
 type Props = {
-  data: TwinStatus;
+  data: TwinStatusV2;
   twinClassId: string;
   disabled?: boolean;
   withTooltip?: boolean;

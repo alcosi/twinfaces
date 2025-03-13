@@ -22,10 +22,7 @@ import {
   TwinClass_DETAILED,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
-import {
-  TwinClassStatusResourceLink,
-  TwinStatus,
-} from "@/entities/twin-status";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { User, UserResourceLink } from "@/entities/user";
 import {
   formatToTwinfaceDate,
@@ -108,7 +105,7 @@ const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
       original.status && (
         <div className="max-w-48 inline-flex">
           <TwinClassStatusResourceLink
-            data={original.status as TwinStatus}
+            data={original.status}
             twinClassId={original.twinClassId!}
             withTooltip
           />
