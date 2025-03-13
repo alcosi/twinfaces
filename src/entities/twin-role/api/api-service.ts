@@ -1,6 +1,8 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { PermissionGrantTwinRolesFilter } from "@/entities/twinRole";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
+import { PermissionGrantTwinRolesFilter } from "./types";
 
 export function createPermissionTwinRoleApi(settings: ApiSettings) {
   async function search({

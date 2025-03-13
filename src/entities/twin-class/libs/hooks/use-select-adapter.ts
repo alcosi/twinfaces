@@ -37,6 +37,7 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
 
   async function getItems(search: string, filters?: TwinClassFilters) {
     const response = await searchTwinClasses({ search, filters });
+
     return response.data;
   }
 

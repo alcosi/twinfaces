@@ -2,14 +2,14 @@ import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { CreatePermissionGrantUserGroupRequestBody } from "../types";
+import { GrantUserGroupPermissionPayload } from "../types";
 
 export const useCreatePermissionGrantUserGroup = () => {
   const api = useContext(PrivateApiContext);
 
   const createPermissionGrantUserGroup = useCallback(
-    async ({ body }: { body: CreatePermissionGrantUserGroupRequestBody }) => {
-      const { error } = await api.permission.createPermissionGrantUserGroup({
+    async ({ body }: { body: GrantUserGroupPermissionPayload }) => {
+      const { error } = await api.permission.grantUserGroupPermission({
         body,
       });
 

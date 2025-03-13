@@ -1,5 +1,5 @@
-import type { components } from "@/shared/api/generated/schema";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import type { components } from "@/shared/api/generated/schema";
 
 export type PermissionGrantTwinRoles =
   components["schemas"]["PermissionGrantTwinRoleV1"];

@@ -3,9 +3,10 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
-  CreatePermissionGrantUserGroupRequestBody,
-  CreatePermissionGrantUserRequestBody,
   CreatePermissionRequestBody,
+  GrantTwinRolePermissionPayload,
+  GrantUserGroupPermissionPayload,
+  GrantUserPermissionPayload,
   PermissionFilters,
   QueryPermissionViewV1,
   UpdatePermissionRequestBody,
@@ -78,11 +79,7 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  function createPermissionGrantUser({
-    body,
-  }: {
-    body: CreatePermissionGrantUserRequestBody;
-  }) {
+  function grantUserPermission({ body }: { body: GrantUserPermissionPayload }) {
     return settings.client.POST(`/private/permission_grant/user/v1`, {
       params: {
         header: getApiDomainHeaders(settings),
@@ -91,12 +88,25 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  function createPermissionGrantUserGroup({
+  function grantUserGroupPermission({
     body,
   }: {
-    body: CreatePermissionGrantUserGroupRequestBody;
+    body: GrantUserGroupPermissionPayload;
   }) {
     return settings.client.POST(`/private/permission_grant/user_group/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function grantTwinRolePermission({
+    body,
+  }: {
+    body: GrantTwinRolePermissionPayload;
+  }) {
+    return settings.client.POST(`/private/permission_grant/twin_role/v1`, {
       params: {
         header: getApiDomainHeaders(settings),
       },
@@ -109,8 +119,9 @@ export function createPermissionApi(settings: ApiSettings) {
     create,
     update,
     getById,
-    createPermissionGrantUser,
-    createPermissionGrantUserGroup,
+    grantUserPermission,
+    grantUserGroupPermission,
+    grantTwinRolePermission,
   };
 }
 

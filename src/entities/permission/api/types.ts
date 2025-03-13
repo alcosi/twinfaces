@@ -21,7 +21,10 @@ export type PermissionFilters = Partial<
 export type QueryPermissionViewV1 =
   operations["permissionViewV1"]["parameters"]["query"];
 
-export type CreatePermissionGrantUserRequestBody =
+export type GrantUserPermissionPayload =
   components["schemas"]["PermissionGrantUserCreateRqV1"];
-export type CreatePermissionGrantUserGroupRequestBody =
+export type GrantUserGroupPermissionPayload =
   components["schemas"]["PermissionGrantUserGroupCreateRqV1"];
+
+export type GrantTwinRolePermissionPayload =
+  components["schemas"]["PermissionGrantTwinRoleCreateRqV1"];
