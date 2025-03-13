@@ -29,7 +29,7 @@ import { FieldIcon } from "@/entities/twin-class-field";
 import { TwinFlowIcon } from "@/entities/twin-flow";
 import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
 import { TwinStatusIcon } from "@/entities/twin-status";
-import { TierIcon } from "@/shared/ui/icons/tier-icon";
+import { TierIcon } from "@/shared/ui/icons";
 
 import { Group, GroupKeys } from "./group";
 

@@ -2,6 +2,7 @@
 
 import { Tab, TabsLayout } from "@/widgets/layout";
 
+import { IconsTab } from "./tabs/icons";
 import { InputFieldsTab } from "./tabs/input-fields";
 import { ResourceLinksTab } from "./tabs/resource-links";
 import { TablesTab } from "./tabs/tables";
@@ -21,6 +22,11 @@ const tabs: Tab[] = [
     key: "tables",
     label: "Tables",
     content: <TablesTab />,
+  },
+  {
+    key: "icons-fields",
+    label: "Icons",
+    content: <IconsTab />,
   },
 ];
 

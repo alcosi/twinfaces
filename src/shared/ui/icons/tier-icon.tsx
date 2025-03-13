@@ -1,5 +1,6 @@
-import { BaseSvgIcon, IconProps } from "@/shared/ui";
 import React from "react";
+
+import { BaseSvgIcon, IconProps } from "@/shared/ui";
 
 export function TierIcon({
   className,
