@@ -21,13 +21,7 @@ import {
   useValidTwinsForLink,
 } from "../../api";
 
-type Props = {
-  excludeAbstract?: boolean;
-};
-
-export function useTwinClassSelectAdapter({
-  excludeAbstract = false,
-}: Props = {}): SelectAdapter<TwinClass_DETAILED> {
+export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
   const { searchTwinClasses } = useTwinClassSearchV1();
   const { fetchTwinClassById } = useFetchTwinClassById();
 
@@ -43,12 +37,6 @@ export function useTwinClassSelectAdapter({
 
   async function getItems(search: string, filters?: TwinClassFilters) {
     const response = await searchTwinClasses({ search, filters });
-
-    if (excludeAbstract) {
-      return response.data.filter(
-        (twinClass) => twinClass.abstractClass === false
-      );
-    }
 
     return response.data;
   }

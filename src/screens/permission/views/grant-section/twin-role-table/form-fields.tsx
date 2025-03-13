@@ -10,8 +10,8 @@ import {
 } from "@/entities/permission";
 import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { useTwinRoleSelectAdapter } from "@/entities/twin-role";
-import { isTruthy } from "@/shared/libs";
+import { TWIN_ROLE } from "@/entities/twin-role";
+import { createFixedSelectAdapter, isTruthy } from "@/shared/libs";
 
 export function TwinRoleTableFormFields({
   control,
@@ -20,8 +20,7 @@ export function TwinRoleTableFormFields({
 }) {
   const permissionSchemaAdapter = usePermissionSchemaSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter({ excludeAbstract: true });
-  const twinRoleAdapter = useTwinRoleSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapter();
   const permissionWatch = useWatch({ control, name: "permissionId" });
   const disabled = useRef(isTruthy(permissionWatch)).current;
 
@@ -33,7 +32,7 @@ export function TwinRoleTableFormFields({
         label="Permission"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
-        noItemsText="No data fount"
+        noItemsText="No data found"
         disabled={disabled}
         {...permissionAdapter}
       />
@@ -44,7 +43,7 @@ export function TwinRoleTableFormFields({
         label="Permission schema"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
-        noItemsText="No data fount"
+        noItemsText="No data found"
         {...permissionSchemaAdapter}
       />
 
@@ -54,8 +53,11 @@ export function TwinRoleTableFormFields({
         label="Twin class"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
-        noItemsText="No data fount"
+        noItemsText="No data found"
         {...twinClassAdapter}
+        getItems={async (search: string) => {
+          return twinClassAdapter.getItems(search, { abstractt: "ONLY_NOT" });
+        }}
       />
 
       <ComboboxFormField
@@ -65,7 +67,7 @@ export function TwinRoleTableFormFields({
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
-        {...twinRoleAdapter}
+        {...createFixedSelectAdapter(TWIN_ROLE)}
       />
     </>
   );

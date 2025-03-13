@@ -1,11 +1,7 @@
 import { z } from "zod";
 
-import { TWIN_ROLE_SCHEMA, TwinRole, TwinRoleEnum } from "@/entities/twin-role";
-import {
-  FIRST_ID_EXTRACTOR,
-  FIRST_USER_ID_EXTRACTOR,
-  isPopulatedArray,
-} from "@/shared/libs";
+import { TWIN_ROLE_SCHEMA } from "@/entities/twin-role";
+import { FIRST_ID_EXTRACTOR, FIRST_USER_ID_EXTRACTOR } from "@/shared/libs";
 
 export const PERMISSION_SCHEMA = z.object({
   groupId: z
@@ -31,15 +27,13 @@ export const PERMISSION_GRANT_TWIN_ROLE_SCHEMA = z.object({
     .string()
     .uuid("Twin class ID must be a valid UUID")
     .or(FIRST_ID_EXTRACTOR),
-  twinRole: z
-    .array(z.object({ id: TWIN_ROLE_SCHEMA }))
-    .min(1, "Required")
-    .transform<TwinRole>((arr) =>
-      isPopulatedArray<{ id: string }>(arr)
-        ? (arr[0].id as TwinRole)
-        : TwinRoleEnum.assignee
-    )
-    .or(TWIN_ROLE_SCHEMA),
+  twinRole: z.union([
+    TWIN_ROLE_SCHEMA,
+    z
+      .array(TWIN_ROLE_SCHEMA)
+      .min(1, "Required")
+      .transform((arr) => arr[0]),
+  ]),
 });
 
 export const PERMISSION_GRANT_USER_SCHEMA = z.object({

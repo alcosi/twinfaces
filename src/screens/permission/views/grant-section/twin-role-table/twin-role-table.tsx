@@ -140,7 +140,7 @@ export function TwinRoleTable() {
     await createPermissionGrantTwinRole({
       body: { permissionGrantTwinRole: body },
     });
-    toast.success("Twin role created successfully!");
+    toast.success("Twin role permission is granted successfully!");
   };
 
   return (
