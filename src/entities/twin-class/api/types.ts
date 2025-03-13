@@ -84,21 +84,3 @@ export type TagSearchFilterKeys =
 export type TagSearchFilters = Partial<
   Pick<components["schemas"]["TagSearchRqV1"], TagSearchFilterKeys>
 >;
-
-export type TwinClassApiFilters = Partial<
-  Pick<
-    components["schemas"]["TwinClassListRqV1"],
-    | "twinClassIdList"
-    | "twinClassKeyLikeList"
-    | "nameI18nLikeList"
-    | "descriptionI18nLikeList"
-    | "headHierarchyParentsForTwinClassSearch"
-    | "extendsHierarchyParentsForTwinClassSearch"
-    | "ownerTypeList"
-    | "twinflowSchemaSpace"
-    | "twinClassSchemaSpace"
-    | "permissionSchemaSpace"
-    | "aliasSpace"
-    | "abstractt"
-  >
->;

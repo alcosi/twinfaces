@@ -6,8 +6,8 @@ import { operations } from "@/shared/api/generated/schema";
 
 import {
   TagSearchFilters,
-  TwinClassApiFilters,
   TwinClassCreateRq,
+  TwinClassFilters,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
   TwinClassValidHeadQuery,
@@ -21,7 +21,7 @@ export function createTwinClassApi(settings: ApiSettings) {
   }: {
     pagination: PaginationState;
     search?: string;
-    filters: TwinClassApiFilters;
+    filters: TwinClassFilters;
   }) {
     return settings.client.POST("/private/twin_class/search/v1", {
       params: {
