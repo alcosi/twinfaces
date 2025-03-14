@@ -13,7 +13,7 @@ export const useFactoryMultiplierCreate = () => {
         const { error } = await api.factoryMultiplier.create({ id, body });
 
         if (error) {
-          throw new Error("Failed to create fctory multiplier");
+          throw new Error("Failed to create factory multiplier");
         }
       } catch (error) {
         throw new Error("An error occured while creating factory multiplier");

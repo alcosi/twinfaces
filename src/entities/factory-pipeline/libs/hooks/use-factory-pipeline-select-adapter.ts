@@ -11,7 +11,9 @@ import {
   useFetchFactoryPipelineById,
 } from "../../api";
 
-export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline_DETAILED> {
+export function useFactoryPipelineSelectAdapter(
+  factoryId?: string
+): SelectAdapter<FactoryPipeline_DETAILED> {
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
   const { fetchFactoryPipelineById } = useFetchFactoryPipelineById();
 
@@ -27,6 +29,7 @@ export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline
       },
       filters: {
         keyLikeList: [wrapWithPercent(search)],
+        factoryIdList: factoryId ? [factoryId] : [],
         ...filters,
       },
     });

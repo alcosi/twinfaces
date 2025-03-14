@@ -13,17 +13,18 @@ import { FACTORY_MULTIPLIER_SCHEMA } from "@/entities/factory-multiplier";
 import { FeaturerTypes } from "@/entities/featurer";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { isTruthy } from "@/shared/libs";
-import { FeaturerFormField } from "@/widgets/form-fields";
+
+import { FeaturerFormField } from "../../form-fields";
 
 export function FactoryMultiplierFormFields({
   control,
 }: {
   control: Control<z.infer<typeof FACTORY_MULTIPLIER_SCHEMA>>;
 }) {
-  const fAdapter = useFactorySelectAdapter();
-  const tcAdapter = useTwinClassSelectAdapter();
-  const fWatch = useWatch({ control, name: "factoryId" });
-  const disabled = useRef(isTruthy(fWatch)).current;
+  const factoryAdapter = useFactorySelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapter();
+  const factoryWatch = useWatch({ control, name: "factoryId" });
+  const disabled = useRef(isTruthy(factoryWatch)).current;
 
   return (
     <>
@@ -35,7 +36,7 @@ export function FactoryMultiplierFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         disabled={disabled}
-        {...fAdapter}
+        {...factoryAdapter}
       />
 
       <ComboboxFormField
@@ -45,7 +46,7 @@ export function FactoryMultiplierFormFields({
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
-        {...tcAdapter}
+        {...twinClassAdapter}
       />
 
       <FeaturerFormField

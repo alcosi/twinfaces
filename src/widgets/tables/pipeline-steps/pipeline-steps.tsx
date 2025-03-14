@@ -1,16 +1,22 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { FactoryResourceLink } from "@/entities/factory";
 import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 import { FactoryPipelineResourceLink } from "@/entities/factory-pipeline";
 import {
+  PIPELINE_STEP_SCHEMA,
+  PipelineStepFilterKeys,
   PipelineStep_DETAILED,
+  usePipelineStepCreate,
   usePipelineStepFilters,
   usePipelineStepSearch,
 } from "@/entities/factory-pipeline-step";
@@ -21,6 +27,7 @@ import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { PipelineStepFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -124,22 +131,46 @@ const colDefs: Record<
   },
 };
 
-export function PipelineStepsTable({ pipelineId }: { pipelineId?: string }) {
+export function PipelineStepsTable({
+  pipelineId,
+  factoryId,
+  title,
+}: {
+  pipelineId?: string;
+  factoryId?: string;
+  title?: string;
+}) {
   const { searchPipelineStep } = usePipelineStepSearch();
+  const { createPipelineStep } = usePipelineStepCreate();
   const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } = usePipelineStepFilters({
-    enabledFilters: isTruthy(pipelineId)
-      ? [
-          "idList",
-          "factoryIdList",
-          "descriptionLikeList",
-          "optional",
-          "conditionInvert",
-          "active",
-          "fillerFeaturerIdList",
-          "factoryConditionSetIdList",
-        ]
-      : undefined,
+    enabledFilters:
+      isTruthy(pipelineId) || isTruthy(factoryId)
+        ? ([
+            "idList",
+            !factoryId && "factoryIdList",
+            !pipelineId && "factoryPipelineIdList",
+            "descriptionLikeList",
+            "optional",
+            "conditionInvert",
+            "active",
+            "fillerFeaturerIdList",
+            "factoryConditionSetIdList",
+          ].filter(Boolean) as PipelineStepFilterKeys[])
+        : undefined,
+  });
+
+  const pipelineStepForm = useForm<z.infer<typeof PIPELINE_STEP_SCHEMA>>({
+    resolver: zodResolver(PIPELINE_STEP_SCHEMA),
+    defaultValues: {
+      factoryPipelineId: pipelineId || "",
+      factoryConditionSetId: "",
+      factoryConditionSetInvert: false,
+      active: false,
+      optional: false,
+      order: 0,
+      description: undefined,
+    },
   });
 
   async function fetchPipelineStep(
@@ -156,6 +187,9 @@ export function PipelineStepsTable({ pipelineId }: { pipelineId?: string }) {
           factoryPipelineIdList: pipelineId
             ? toArrayOfString(toArray(pipelineId), "id")
             : _filters.factoryPipelineIdList,
+          factoryIdList: factoryId
+            ? toArrayOfString(toArray(factoryId), "id")
+            : _filters.factoryIdList,
         },
       });
     } catch (error) {
@@ -164,11 +198,23 @@ export function PipelineStepsTable({ pipelineId }: { pipelineId?: string }) {
     }
   }
 
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof PIPELINE_STEP_SCHEMA>
+  ) => {
+    const { factoryPipelineId, ...body } = formValues;
+
+    await createPipelineStep({
+      id: factoryPipelineId,
+      body: { factoryPipelineStep: body },
+    });
+    toast.success("Pipeline step created successfully!");
+  };
+
   return (
     <CrudDataTable
       columns={[
         colDefs.id,
-        colDefs.factoryPipelineId,
+        ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),
         ...(isFalsy(pipelineId) ? [colDefs.factoryPipeline] : []),
         colDefs.factoryConditionSet,
         colDefs.factoryConditionInvert,
@@ -181,7 +227,7 @@ export function PipelineStepsTable({ pipelineId }: { pipelineId?: string }) {
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
         colDefs.id,
-        colDefs.factoryPipelineId,
+        ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),
         ...(isFalsy(pipelineId) ? [colDefs.factoryPipeline] : []),
         colDefs.factoryConditionSet,
         colDefs.factoryConditionInvert,
@@ -192,6 +238,15 @@ export function PipelineStepsTable({ pipelineId }: { pipelineId?: string }) {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/pipeline-steps/${row.id}`)
       }
+      dialogForm={pipelineStepForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <PipelineStepFormFields
+          factoryId={factoryId}
+          control={pipelineStepForm.control}
+        />
+      )}
+      title={title}
     />
   );
 }

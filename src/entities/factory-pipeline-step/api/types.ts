@@ -5,6 +5,8 @@ export type PipelineStep_DETAILED = Required<PipelineStep>;
 
 export type PipelineStepSearchRq =
   components["schemas"]["FactoryPipelineStepSearchRqV1"];
+export type PipelineStepCreateRq =
+  components["schemas"]["FactoryPipelineStepCreateRqV1"];
 
 export type FactoryPipelineStepUpdateRq =
   components["schemas"]["FactoryPipelineStepUpdateRqV1"];
