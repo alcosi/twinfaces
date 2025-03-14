@@ -4,7 +4,6 @@ import { env } from "next-runtime-env";
 import createClient from "openapi-fetch";
 import React from "react";
 
-import { PublicDomainApi, createPublicDomainApi } from "@/entities/domain";
 import { UserApi, createUserApi } from "@/entities/user";
 import { ApiSettings, PublicApiContext } from "@/shared/api";
 import { paths } from "@/shared/api/generated/schema";
@@ -13,7 +12,6 @@ import { useAuthUser } from "../../auth";
 
 export interface PublicApiContextProps {
   user: UserApi;
-  publicDomain: PublicDomainApi;
 }
 
 export function PublicApiContextProvider({
@@ -34,7 +32,6 @@ export function PublicApiContextProvider({
     <PublicApiContext.Provider
       value={{
         user: createUserApi(settings),
-        publicDomain: createPublicDomainApi(settings),
       }}
     >
       {children}

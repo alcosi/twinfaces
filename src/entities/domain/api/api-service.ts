@@ -1,6 +1,6 @@
 import { PaginationState } from "@tanstack/react-table";
 
-import { DomainAddRqV1, DomainViewQuery } from "@/entities/domain";
+import { DomainAddRqV1 } from "@/entities/domain";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createDomainApi(settings: ApiSettings) {
@@ -57,25 +57,3 @@ export function createDomainApi(settings: ApiSettings) {
 }
 
 export type DomainApi = ReturnType<typeof createDomainApi>;
-
-export function createPublicDomainApi(settings: ApiSettings) {
-  function fetchPublicDomainData({
-    key,
-    query = {},
-  }: {
-    key: string;
-    query?: DomainViewQuery;
-  }) {
-    return settings.client.GET("/public/domain_by_key/{domainKey}/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { domainKey: key },
-        query: query,
-      },
-    });
-  }
-
-  return { fetchPublicDomainData };
-}
-
-export type PublicDomainApi = ReturnType<typeof createPublicDomainApi>;
