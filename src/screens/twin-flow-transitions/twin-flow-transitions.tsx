@@ -1,7 +1,8 @@
 "use client";
 
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { useEffect } from "react";
+
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowTransitionsTable } from "@/widgets/tables";
 
 export function TransitionsScreen() {

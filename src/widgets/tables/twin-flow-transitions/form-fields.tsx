@@ -19,11 +19,12 @@ export function TwinFlowTransitionFormFields({
   control: Control<TwinFlowTransitionFormValues>;
 }) {
   const twinflow = useWatch({ control, name: "twinflow" });
-  const tFAdapter = useTwinFlowSelectAdapter();
-  const pAdapter = usePermissionSelectAdapter();
-  const fAdapter = useFactorySelectAdapter();
-  const tAAdapter = useTransitionAliasSelectAdapter();
   const disabled = useRef(isPopulatedArray(twinflow)).current;
+  const twinFlowAdapter = useTwinFlowSelectAdapter();
+  const permissionAdapter = usePermissionSelectAdapter();
+  const factoryAdapter = useFactorySelectAdapter();
+  const transitionAliasAdapter = useTransitionAliasSelectAdapter();
+
   return (
     <>
       <ComboboxFormField
@@ -35,7 +36,7 @@ export function TwinFlowTransitionFormFields({
         noItemsText="No Twinflow found"
         disabled={disabled}
         required={true}
-        {...tFAdapter}
+        {...twinFlowAdapter}
       />
 
       <ComboboxFormField
@@ -47,7 +48,7 @@ export function TwinFlowTransitionFormFields({
         noItemsText="No Alias found"
         required={true}
         creatable
-        {...tAAdapter}
+        {...transitionAliasAdapter}
       />
 
       <TextFormField
@@ -66,7 +67,7 @@ export function TwinFlowTransitionFormFields({
         selectPlaceholder="Select Factory"
         searchPlaceholder="Search Factory..."
         noItemsText="No Factory found"
-        {...fAdapter}
+        {...factoryAdapter}
       />
 
       {isTruthy(twinflow) && twinflow.length > 0 && (
@@ -95,7 +96,7 @@ export function TwinFlowTransitionFormFields({
         selectPlaceholder="Select permission"
         searchPlaceholder="Search permission..."
         noItemsText="No permission found"
-        {...pAdapter}
+        {...permissionAdapter}
       />
     </>
   );

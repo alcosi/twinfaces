@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState } from "react";
 
 import { hydrateTwinFlowTransitionFromMap } from "@/entities/twin-flow-transition";
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { TwinFlowTransition } from "../types";
@@ -9,7 +9,7 @@ import { TwinFlowTransition } from "../types";
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinFlowTransitionById = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchTwinFlowTransitionById = useCallback(
     async (id: string): Promise<TwinFlowTransition> => {

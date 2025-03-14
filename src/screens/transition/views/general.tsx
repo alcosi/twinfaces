@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
-import { ClassStatusView } from "@/components/class-status-view";
 
 import {
   FactoryResourceLink,
@@ -16,10 +15,14 @@ import { TwinFlowResourceLink, TwinFlow_DETAILED } from "@/entities/twin-flow";
 import {
   TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
+  useTransitionAliasSelectAdapter,
   useUpdateTransition,
 } from "@/entities/twin-flow-transition";
-import { useTransitionAliasSelectAdapter } from "@/entities/twin-flow-transition";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import {
+  TwinClassStatusResourceLink,
+  TwinStatus,
+  useTwinStatusSelectAdapter,
+} from "@/entities/twin-status";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
@@ -34,13 +37,15 @@ export function TwinflowTransitionGeneral({
   onChange,
 }: {
   transition: TwinFlowTransition;
-  onChange: () => any;
+  onChange: () => void;
 }) {
   const { updateTransition } = useUpdateTransition();
-  const sAdapter = useTwinStatusSelectAdapter(transition.twinflow?.twinClassId);
-  const pAdapter = usePermissionSelectAdapter();
-  const fAdapter = useFactorySelectAdapter();
-  const tAAdapter = useTransitionAliasSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapter(
+    transition.twinflow?.twinClassId
+  );
+  const permissionAdapter = usePermissionSelectAdapter();
+  const factoryAdapter = useFactorySelectAdapter();
+  const transitionAliasAdapter = useTransitionAliasSelectAdapter();
 
   async function update(newTransition: TwinFlowTransitionUpdateRq) {
     try {
@@ -61,7 +66,7 @@ export function TwinflowTransitionGeneral({
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select alias...",
-      ...tAAdapter,
+      ...transitionAliasAdapter,
     },
     renderPreview: transition.alias ? (_) => transition.alias : undefined,
     onSubmit: async (value) => {
@@ -105,61 +110,80 @@ export function TwinflowTransitionGeneral({
     },
   };
 
-  const srcTwinStatusSettings: InPlaceEditProps<any> = {
+  const srcTwinStatusSettings: InPlaceEditProps<
+    typeof transition.srcTwinStatusId
+  > = {
     id: "srcTwinStatusId",
     value: transition.srcTwinStatusId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select status...",
-      ...sAdapter,
+      ...twinStatusAdapter,
     },
     renderPreview: transition.srcTwinStatus
-      ? (_) => <ClassStatusView status={transition.srcTwinStatus} />
+      ? (_) => (
+          <TwinClassStatusResourceLink
+            data={transition.srcTwinStatus as TwinStatus}
+            twinClassId={transition.srcTwinStatus?.twinClassId!}
+          />
+        )
       : undefined,
     onSubmit: async (value) => {
-      return update({ srcStatusId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ srcStatusId: id });
     },
   };
 
-  const dstTwinStatusSettings: InPlaceEditProps<any> = {
+  const dstTwinStatusSettings: InPlaceEditProps<
+    typeof transition.dstTwinStatusId
+  > = {
     id: "dstTwinStatusId",
     value: transition.dstTwinStatusId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select status...",
-      ...sAdapter,
+      ...twinStatusAdapter,
     },
     renderPreview: transition.dstTwinStatus
-      ? (_) => <ClassStatusView status={transition.dstTwinStatus} />
+      ? (_) => (
+          <TwinClassStatusResourceLink
+            data={transition.dstTwinStatus as TwinStatus}
+            twinClassId={transition.dstTwinStatus?.twinClassId!}
+          />
+        )
       : undefined,
     onSubmit: async (value) => {
-      return update({ dstStatusId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ dstStatusId: id });
     },
   };
 
-  const permissionSettings: InPlaceEditProps<any> = {
+  const permissionSettings: InPlaceEditProps<typeof transition.permissionId> = {
     id: "permissionId",
     value: transition.permissionId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select permission...",
-      ...pAdapter,
+      ...permissionAdapter,
     },
     renderPreview: transition.permission
       ? (_) => <PermissionResourceLink data={transition.permission!} />
       : undefined,
     onSubmit: async (value) => {
-      return update({ permissionId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ permissionId: id });
     },
   };
 
-  const factorySettings: InPlaceEditProps<any> = {
+  const factorySettings: InPlaceEditProps<
+    typeof transition.inbuiltTwinFactoryId
+  > = {
     id: "inbuiltTwinFactoryId",
     value: transition.inbuiltTwinFactoryId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select factory...",
-      ...fAdapter,
+      ...factoryAdapter,
     },
     renderPreview: transition.inbuiltTwinFactory
       ? (_) => (
@@ -170,13 +194,14 @@ export function TwinflowTransitionGeneral({
         )
       : undefined,
     onSubmit: async (value) => {
-      return update({ inbuiltTwinFactoryId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ inbuiltTwinFactoryId: id });
     },
   };
 
   return (
     <InPlaceEditContextProvider>
-      <Table className="mt-8">
+      <Table>
         <TableBody>
           <TableRow>
             <TableCell width={300}>ID</TableCell>

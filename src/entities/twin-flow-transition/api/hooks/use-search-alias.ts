@@ -1,14 +1,14 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
 import { TransitionAliasFilters, TransitionAliasV1 } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTransitionAliasSearch = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTransitionAlias = useCallback(
     async ({

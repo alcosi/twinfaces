@@ -27,11 +27,11 @@ export function useTwinFlowTransitionFilters({
   twinClassId?: string;
   enabledFilters?: TwinFlowTransitionFilterKeys[];
 }): FilterFeature<TwinFlowTransitionFilterKeys, TwinFlowTransitionFilters> {
-  const sAdapter = useTwinStatusSelectAdapter(twinClassId);
-  const pAdapter = usePermissionSelectAdapter();
-  const tfAdapter = useTwinFlowSelectAdapter();
-  const fAdapter = useFactorySelectAdapter();
-  const tAAdapter = useTransitionAliasSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapter(twinClassId);
+  const permissionAdapter = usePermissionSelectAdapter();
+  const twinFlowAdapter = useTwinFlowSelectAdapter();
+  const factoryAdapter = useFactorySelectAdapter();
+  const transitionAliasAdapter = useTransitionAliasSelectAdapter();
 
   const allFilters: Record<TwinFlowTransitionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -45,14 +45,14 @@ export function useTwinFlowTransitionFilters({
       type: AutoFormValueType.combobox,
       label: "Twinflow",
       multi: true,
-      ...tfAdapter,
+      ...twinFlowAdapter,
     },
 
     aliasLikeList: {
       type: AutoFormValueType.combobox,
       label: "Alias",
       multi: true,
-      ...tAAdapter,
+      ...transitionAliasAdapter,
     },
 
     nameLikeList: {
@@ -69,28 +69,28 @@ export function useTwinFlowTransitionFilters({
       type: AutoFormValueType.combobox,
       label: "Source status",
       multi: true,
-      ...sAdapter,
+      ...twinStatusAdapter,
     },
 
     dstStatusIdList: {
       type: AutoFormValueType.combobox,
       label: "Destination status",
       multi: true,
-      ...sAdapter,
+      ...twinStatusAdapter,
     },
 
     permissionIdList: {
       type: AutoFormValueType.combobox,
       label: "Permission",
       multi: true,
-      ...pAdapter,
+      ...permissionAdapter,
     },
 
     inbuiltTwinFactoryIdList: {
       type: AutoFormValueType.combobox,
       label: "Factory",
       multi: true,
-      ...fAdapter,
+      ...factoryAdapter,
     },
   };
 
