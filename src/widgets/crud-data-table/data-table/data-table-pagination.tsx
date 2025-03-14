@@ -1,12 +1,3 @@
-import { PaginationV1 } from "@/shared/api";
-import { Button } from "@/shared/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/ui/select";
 import { Table } from "@tanstack/react-table";
 import {
   AlignJustify,
@@ -18,6 +9,16 @@ import {
   Layers3,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { PaginationV1 } from "@/shared/api";
+import { Button } from "@/shared/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/ui/select";
 
 type DataTablePaginationState = {
   pageIndex: number;
@@ -61,25 +62,29 @@ export function DataTablePagination<TData>({
 
       <div className="flex justify-end items-center w-full space-x-6 lg:space-x-8">
         <div className="flex items-center justify-center space-x-2 text-sm font-medium">
-          <AlignJustify className="w-4 h-4" />
-          <span>
+          <AlignJustify className="w-4 h-4 stroke-muted-foreground" />
+          <span className="text-muted-foreground">
             {state.rangeStart} - {state.rangeEnd} of {total}
           </span>
         </div>
         <div className="flex items-center space-x-2">
-          <Layers3 className="w-4 h-4" />
+          <Layers3 className="w-4 h-4 stroke-muted-foreground" />
           <Select
             value={`${limit}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-[70px]">
+            <SelectTrigger className="h-8 w-[70px] text-muted-foreground">
               <SelectValue placeholder={limit} />
             </SelectTrigger>
             <SelectContent side="top">
               {pageSizes.map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
+                <SelectItem
+                  className="text-muted-foreground"
+                  key={pageSize}
+                  value={`${pageSize}`}
+                >
                   {pageSize}
                 </SelectItem>
               ))}
@@ -88,8 +93,8 @@ export function DataTablePagination<TData>({
         </div>
 
         <div className="flex items-center space-x-2">
-          <Files className="w-4 h-4" />
-          <span>
+          <Files className="w-4 h-4 stroke-muted-foreground" />
+          <span className="text-muted-foreground">
             {state.pageIndex} of {table.getPageCount()}
           </span>
 
@@ -100,7 +105,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to first page</span>
-            <ChevronsLeft className="h-4 w-4" />
+            <ChevronsLeft className="h-4 w-4 stroke-muted-foreground" />
           </Button>
           <Button
             variant="outline"
@@ -109,7 +114,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to previous page</span>
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 stroke-muted-foreground" />
           </Button>
           <Button
             variant="outline"
@@ -118,7 +123,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to next page</span>
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4 stroke-muted-foreground" />
           </Button>
           <Button
             variant="outline"
@@ -127,7 +132,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
-            <ChevronsRight className="h-4 w-4" />
+            <ChevronsRight className="h-4 w-4 stroke-muted-foreground" />
           </Button>
         </div>
       </div>
