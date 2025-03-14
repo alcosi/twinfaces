@@ -28,7 +28,7 @@ export function TwinStatusGeneral({
   onChange,
 }: {
   status: TwinStatusV2;
-  onChange: () => any;
+  onChange: () => void;
 }) {
   const { updateStatus } = useStatusUpdate();
   const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
