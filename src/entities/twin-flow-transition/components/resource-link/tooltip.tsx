@@ -1,8 +1,13 @@
 import { PermissionResourceLink } from "@/entities/permission";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
-import { isPopulatedString, isUndefined } from "@/shared/libs";
+import {
+  formatToTwinfaceDate,
+  isPopulatedString,
+  isUndefined,
+} from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
+
 import { TwinFlowTransition_DETAILED } from "../../api";
 import { ENTITY_COLOR } from "../../libs";
 import { TwinFlowTransitionIcon } from "../twin-flow-transition-icon";
@@ -63,7 +68,7 @@ export function TwinFlowTransitionResourceTooltip({
 
         {data.createdAt && (
           <ResourceLinkTooltip.Item title="Created at">
-            {new Date(data.createdAt).toLocaleDateString()}
+            {formatToTwinfaceDate(data.createdAt)}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

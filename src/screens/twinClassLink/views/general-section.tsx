@@ -1,27 +1,29 @@
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { AutoFormValueType } from "@/components/auto-field";
+
 import {
-  TwinClass_DETAILED,
+  LINK_STRENGTHS,
+  LINK_TYPES,
+  Link,
+  UpdateLinkRequestBody,
+  useLinkUpdate,
+} from "@/entities/link";
+import {
   TwinClassResourceLink,
+  TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
 import { UserResourceLink } from "@/entities/user";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { AutoFormValueType } from "@/components/auto-field";
-import { z } from "zod";
+import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
-import { toast } from "sonner";
-import {
-  Link,
-  LINK_STRENGTHS,
-  LINK_TYPES,
-  UpdateLinkRequestBody,
-  useLinkUpdate,
-} from "@/entities/link";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function GeneralSection({
   link,

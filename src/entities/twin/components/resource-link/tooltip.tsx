@@ -1,10 +1,12 @@
 import {
-  TwinClass_DETAILED,
   TwinClassResourceLink,
+  TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
+
 import { Twin } from "../../api";
 import { formatTwinDisplay } from "../../libs";
 import { TwinIcon } from "../twin-icon";
@@ -51,7 +53,7 @@ export function TwinResourceTooltip({ data, link }: Props) {
         )}
         {data.createdAt && (
           <ResourceLinkTooltip.Item title="Created at">
-            {new Date(data.createdAt).toLocaleDateString()}
+            {formatToTwinfaceDate(data.createdAt)}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

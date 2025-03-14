@@ -1,6 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
 import { DomainAddRqV1 } from "@/entities/domain";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createDomainApi(settings: ApiSettings) {
   function search() {

@@ -1,4 +1,4 @@
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type TwinClassOwnerType = components["schemas"]["TwinClassOwnerTypeV1"];
@@ -17,3 +17,5 @@ export type DomainView_DETAILED = RequireFields<
 >;
 
 export type DomainAddRqV1 = components["schemas"]["DomainCreateRqDTOv1"];
+export type DomainViewQuery =
+  operations["domainViewPublicV1"]["parameters"]["query"];

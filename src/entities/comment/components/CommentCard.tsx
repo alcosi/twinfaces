@@ -1,3 +1,5 @@
+import { CircleUserRound, EllipsisVertical } from "lucide-react";
+
 import { CommentView_DETAILED } from "@/entities/comment";
 import { formatToTwinfaceDate, isPopulatedArray } from "@/shared/libs";
 import {
@@ -10,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/ui";
-import { CircleUserRound, EllipsisVertical } from "lucide-react";
+
 import { UserResourceLink } from "../../user";
 
 interface CommentCardProps {
@@ -33,7 +35,7 @@ export function CommentCard({ item }: CommentCardProps) {
               <UserResourceLink data={item.authorUser} withTooltip hideAvatar />
             </h2>
             <span className="text-xs text-gray-500">
-              {formatToTwinfaceDate(item.createdAt, "datetime")}
+              {formatToTwinfaceDate(item.createdAt)}
             </span>
           </div>
 

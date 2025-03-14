@@ -117,7 +117,7 @@ export function debounce<T extends (...args: any[]) => void>(
 
 export function formatToTwinfaceDate(
   dateInput: Date | string | number,
-  format: "date" | "datetime" | "time" = "date"
+  format: "date" | "datetime" | "time" = "datetime"
 ): string {
   const date = new Date(dateInput);
   if (isNaN(date.getTime())) {
