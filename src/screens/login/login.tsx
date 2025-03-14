@@ -3,19 +3,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields";
 
-import { usePublicDomainData } from "@/entities/domain";
 import { DomainUser_DETAILED, hydrateDomainUserFromMap } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { PublicApiContext } from "@/shared/api";
-import { useProductFlavorConfig } from "@/shared/config";
-import { isPopulatedArray } from "@/shared/libs";
+import { ProductFlavorConfigContext } from "@/shared/config";
+import { isPopulatedArray, isUndefined } from "@/shared/libs";
 import { Button, Form } from "@/shared/ui";
 
 const FORM_SCHEMA = z.object({
@@ -26,41 +24,17 @@ const FORM_SCHEMA = z.object({
 type FormValues = z.infer<typeof FORM_SCHEMA>;
 
 export function Login() {
-  const config = useProductFlavorConfig();
   const router = useRouter();
   const publicApiClient = useContext(PublicApiContext);
   const { setAuthUser } = useAuthUser();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const { publicDomainData, fetchPublicDomainData } = usePublicDomainData();
-
-  useLayoutEffect(() => {
-    fetchPublicDomainData("test.dev-cabinet-twinfaces.worknroll.pro").catch(
-      (error) => {
-        if (error.message.includes("Unknown Domain key")) {
-          const baseURL = window.location.host.split(".").slice(-3).join(".");
-          router.push(`${window.location.protocol}//${baseURL}`);
-        } else {
-          toast.error("An error occurred while fetching domain data: " + error);
-        }
-      }
-    );
-  }, [fetchPublicDomainData, router]);
-
-  useEffect(() => {
-    if (publicDomainData?.id) {
-      form.reset({
-        ...form.getValues(),
-        domainId: publicDomainData.id,
-      });
-    }
-  }, [publicDomainData]);
+  const config = useContext(ProductFlavorConfigContext);
 
   const form = useForm({
     defaultValues: {
-      userId: config.loginPage.defaultFormValues.userId,
-      businessAccountId: config.loginPage.defaultFormValues.businessAccountId,
-      domainId:
-        publicDomainData?.id ?? config.loginPage.defaultFormValues.domainId,
+      userId: config?.loginPage.defaultFormValues.userId,
+      businessAccountId: config?.loginPage.defaultFormValues.businessAccountId,
+      domainId: config.id ?? "",
     },
     resolver: zodResolver(FORM_SCHEMA),
   });
@@ -104,12 +78,15 @@ export function Login() {
     <main className="flex flex-col justify-center items-center h-screen w-screen">
       <div className="flex flex-col my-5 items-center -mt-32 min-w-96">
         <Image
-          src={publicDomainData?.iconLight ?? config.favicon}
+          className="rounded-full"
+          src={config.iconLight ?? config.favicon}
           width={56}
           height={56}
           alt="Picture of the author"
         />
-        <h1 className="text-lg font-bold my-3">{config.productTitle}</h1>
+        <h1 className="text-lg font-bold my-3">
+          {config.key ?? config.productName}
+        </h1>
 
         <Form {...form}>
           <form
@@ -128,7 +105,7 @@ export function Login() {
               label="Business Account Id"
             />
 
-            {publicDomainData?.id ? null : (
+            {isUndefined(config.id) && (
               <TextFormField
                 control={form.control}
                 name="domainId"
