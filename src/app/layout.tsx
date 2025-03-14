@@ -1,5 +1,5 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { PublicEnvScript } from "next-runtime-env";
+import { PublicEnvScript, env } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
 
@@ -27,7 +27,7 @@ export default async function RootLayout({
 }>) {
   async function fetchDomainByKey(key: string) {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_TWINS_API_URL}/public/domain_by_key/${key}/v1?showDomainMode=DETAILED`
+      `${env("NEXT_PUBLIC_TWINS_API_URL")}/public/domain_by_key/${key}/v1?showDomainMode=DETAILED`
       //  { cache: 'no-cache' }
     );
 
