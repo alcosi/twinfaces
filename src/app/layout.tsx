@@ -1,6 +1,7 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { PublicEnvScript, env } from "next-runtime-env";
+import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
+import { headers } from "next/headers";
 import React from "react";
 
 import { ThemeProvider } from "@/components/theme-provider";
@@ -8,7 +9,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { PublicApiContextProvider } from "@/features/api";
 import {
   ProductFlavorConfigProvider,
-  RemoteConfig,
   getProductFlavorConfig,
 } from "@/shared/config";
 import { cn } from "@/shared/libs";
@@ -25,18 +25,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  async function fetchDomainByKey(key: string) {
-    const response = await fetch(
-      `${env("NEXT_PUBLIC_TWINS_API_URL")}/public/domain_by_key/${key}/v1?showDomainMode=DETAILED`
-      //  { cache: 'no-cache' }
-    );
-
-    const body = await response.json();
-    return body.domain;
-  }
-
-  const domain: RemoteConfig = await fetchDomainByKey("wnr");
-  const config = getProductFlavorConfig(domain);
+  const domainConfigHeader = headers().get("X-Domain-Config");
+  const config = getProductFlavorConfig(
+    domainConfigHeader ? JSON.parse(domainConfigHeader) : {}
+  );
 
   return (
     <html lang="en" suppressHydrationWarning>
