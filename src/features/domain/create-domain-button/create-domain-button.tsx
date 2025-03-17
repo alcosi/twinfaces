@@ -1,5 +1,7 @@
-import { SidebarMenuButton } from "@/shared/ui";
 import { Plus } from "lucide-react";
+
+import { SidebarMenuButton } from "@/shared/ui";
+
 import { useQuickView } from "../../quick-view-overlay";
 import { CreateDomainForm } from "./create-domain-form";
 
