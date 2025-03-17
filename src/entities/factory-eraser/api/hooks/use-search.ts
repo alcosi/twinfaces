@@ -6,10 +6,10 @@ import {
   FactoryEraser_DETAILED,
   hydrateFactoryEraserFromMap,
 } from "@/entities/factory-eraser";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export function useFactoryEraserSearch() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const searchFactoryErasers = useCallback(
     async ({
       pagination,

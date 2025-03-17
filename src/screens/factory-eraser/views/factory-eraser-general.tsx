@@ -39,8 +39,8 @@ import {
 export function FactoryEraserGeneral() {
   const { eraser, refresh } = useContext(FactoryEraserContext);
   const { updateFactoryEraser } = useFactoryEraserUpdate();
-  const tCAdapter = useTwinClassSelectAdapter();
-  const fCAdapter = useFactoryConditionSetSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapter();
+  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
 
   async function update(body: FactoryEraserUpdate) {
     try {
@@ -52,13 +52,15 @@ export function FactoryEraserGeneral() {
     }
   }
 
-  const inputTwinClassSettings: InPlaceEditProps<any> = {
+  const inputTwinClassSettings: InPlaceEditProps<
+    typeof eraser.inputTwinClassId
+  > = {
     id: "inputTwinClassId",
     value: eraser.inputTwinClassId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select Twin class...",
-      ...tCAdapter,
+      ...twinClassAdapter,
     },
     renderPreview: eraser.inputTwinClassId
       ? (_) => (
@@ -69,21 +71,25 @@ export function FactoryEraserGeneral() {
         )
       : undefined,
     onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+
       return update({
         eraser: {
-          inputTwinClassId: value[0].id,
+          inputTwinClassId: id,
         },
       });
     },
   };
 
-  const factoryConditionSetSettings: InPlaceEditProps<any> = {
+  const factoryConditionSetSettings: InPlaceEditProps<
+    typeof eraser.factoryConditionSetId
+  > = {
     id: "factoryConditionSetId",
     value: eraser.factoryConditionSetId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select Factory...",
-      ...fCAdapter,
+      ...factoryConditionSetAdapter,
     },
     renderPreview: eraser.factoryConditionSetId
       ? (_) => (
@@ -94,15 +100,19 @@ export function FactoryEraserGeneral() {
         )
       : undefined,
     onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+
       return update({
         eraser: {
-          twinFactoryConditionSetId: value[0].id,
+          twinFactoryConditionSetId: id,
         },
       });
     },
   };
 
-  const factoryConditionSetInvertSettings: InPlaceEditProps = {
+  const factoryConditionSetInvertSettings: InPlaceEditProps<
+    typeof eraser.factoryConditionSetInvert
+  > = {
     id: "factoryConditionSetInvert",
     value: eraser.factoryConditionSetInvert,
     valueInfo: {
@@ -114,13 +124,13 @@ export function FactoryEraserGeneral() {
     onSubmit: (value) => {
       return update({
         eraser: {
-          twinFactoryConditionInvert: value as boolean,
+          twinFactoryConditionInvert: value,
         },
       });
     },
   };
 
-  const activeSettings: InPlaceEditProps = {
+  const activeSettings: InPlaceEditProps<typeof eraser.active> = {
     id: "active",
     value: eraser.active,
     valueInfo: {
@@ -132,13 +142,13 @@ export function FactoryEraserGeneral() {
     onSubmit: (value) => {
       return update({
         eraser: {
-          active: value as boolean,
+          active: value,
         },
       });
     },
   };
 
-  const eraseActionSettings: InPlaceEditProps<any> = {
+  const eraseActionSettings: InPlaceEditProps<typeof eraser.action> = {
     id: "action",
     value: eraser.action,
     valueInfo: {
@@ -154,7 +164,7 @@ export function FactoryEraserGeneral() {
     },
   };
 
-  const descriptionSettings: InPlaceEditProps = {
+  const descriptionSettings: InPlaceEditProps<typeof eraser.description> = {
     id: "description",
     value: eraser.description,
     valueInfo: {
@@ -168,7 +178,7 @@ export function FactoryEraserGeneral() {
     onSubmit: (value) => {
       return update({
         eraser: {
-          description: value as string,
+          description: value,
         },
       });
     },

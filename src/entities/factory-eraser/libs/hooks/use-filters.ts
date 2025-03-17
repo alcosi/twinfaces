@@ -23,9 +23,9 @@ export function useFactoryEraserFilters(): FilterFeature<
   FactoryEraserFilterKeys,
   FactoryEraserFilters
 > {
-  const fAdapter = useFactorySelectAdapter();
-  const tcAdapter = useTwinClassSelectAdapter();
-  const fcsAdapter = useFactoryConditionSetSelectAdapter();
+  const factoryAdapter = useFactorySelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapter();
+  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
 
   function buildFilterFields(): Record<
     FactoryEraserFilterKeys,
@@ -43,21 +43,21 @@ export function useFactoryEraserFilters(): FilterFeature<
         type: AutoFormValueType.combobox,
         label: "Factory",
         multi: true,
-        ...fAdapter,
+        ...factoryAdapter,
       },
 
       inputTwinClassIdList: {
         type: AutoFormValueType.combobox,
         label: "Input class",
         multi: true,
-        ...tcAdapter,
+        ...twinClassAdapter,
       },
 
       factoryConditionSetIdList: {
         type: AutoFormValueType.combobox,
         label: "Condition set",
         multi: true,
-        ...fcsAdapter,
+        ...factoryConditionSetAdapter,
       },
 
       conditionInvert: {

@@ -47,29 +47,27 @@ const colDefs: Record<
     id: "factoryId",
     accessorKey: "factoryId",
     header: "Factory",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        {original.factory && (
+    cell: ({ row: { original } }) =>
+      original.factory && (
+        <div className="max-w-48 inline-flex">
           <FactoryResourceLink data={original.factory} withTooltip />
-        )}
-      </div>
-    ),
+        </div>
+      ),
   },
 
   inputTwinClassId: {
     id: "inputTwinClassId",
     accessorKey: "inputTwinClassId",
     header: "Input class",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        {original.inputTwinClass && (
+    cell: ({ row: { original } }) =>
+      original.inputTwinClass && (
+        <div className="max-w-48 inline-flex">
           <TwinClassResourceLink
             data={original.inputTwinClass as TwinClass_DETAILED}
             withTooltip
           />
-        )}
-      </div>
-    ),
+        </div>
+      ),
   },
 
   factoryConditionSetId: {

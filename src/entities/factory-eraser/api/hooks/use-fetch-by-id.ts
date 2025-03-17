@@ -7,12 +7,12 @@ import {
   FactoryEraser_DETAILED,
   hydrateFactoryEraserFromMap,
 } from "@/entities/factory-eraser";
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 // TODO: Apply caching-strategy
 export const useFactoryEraserById = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchFactoryEraserById = useCallback(
