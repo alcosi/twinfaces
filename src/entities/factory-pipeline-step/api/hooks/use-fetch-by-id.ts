@@ -3,14 +3,14 @@
 import { useCallback, useContext, useState } from "react";
 
 import { hydratePipelineStepFromMap } from "@/entities/factory-pipeline-step";
-import { ApiContext } from "@/shared/api";
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { FactoryPipelineStepRqQuery, PipelineStep_DETAILED } from "../../api";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchFactoryPipelineStepById = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchFactoryPipelineStepById = useCallback(
