@@ -20,7 +20,7 @@ import {
 } from "@/entities/twin-flow-transition";
 import {
   TwinClassStatusResourceLink,
-  TwinStatus,
+  TwinStatusV2,
   useTwinStatusSelectAdapter,
 } from "@/entities/twin-status";
 import {
@@ -74,7 +74,7 @@ export function TwinflowTransitionGeneral({
     },
   };
 
-  const nameSettings: InPlaceEditProps = {
+  const nameSettings: InPlaceEditProps<typeof transition.name> = {
     id: "name",
     value: transition.name,
     valueInfo: {
@@ -87,12 +87,12 @@ export function TwinflowTransitionGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return update({
-        nameI18n: { translationInCurrentLocale: value as string },
+        nameI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const descriptionSettings: InPlaceEditProps = {
+  const descriptionSettings: InPlaceEditProps<typeof transition.description> = {
     id: "description",
     value: transition.description,
     valueInfo: {
@@ -105,7 +105,7 @@ export function TwinflowTransitionGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return update({
-        descriptionI18n: { translationInCurrentLocale: value as string },
+        descriptionI18n: { translationInCurrentLocale: value },
       });
     },
   };
@@ -123,7 +123,7 @@ export function TwinflowTransitionGeneral({
     renderPreview: transition.srcTwinStatus
       ? (_) => (
           <TwinClassStatusResourceLink
-            data={transition.srcTwinStatus as TwinStatus}
+            data={transition.srcTwinStatus as TwinStatusV2}
             twinClassId={transition.srcTwinStatus?.twinClassId!}
           />
         )
@@ -147,7 +147,7 @@ export function TwinflowTransitionGeneral({
     renderPreview: transition.dstTwinStatus
       ? (_) => (
           <TwinClassStatusResourceLink
-            data={transition.dstTwinStatus as TwinStatus}
+            data={transition.dstTwinStatus as TwinStatusV2}
             twinClassId={transition.dstTwinStatus?.twinClassId!}
           />
         )
