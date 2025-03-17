@@ -1,5 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import {
   TwinStatusCreateRq,
   TwinStatusFilters,
@@ -9,10 +11,10 @@ import {
 export function createTwinStatusApi(settings: ApiSettings) {
   function create({
     twinClassId,
-    data,
+    body,
   }: {
     twinClassId: string;
-    data: TwinStatusCreateRq;
+    body: TwinStatusCreateRq;
   }) {
     return settings.client.POST(
       "/private/twin_class/{twinClassId}/twin_status/v1",
@@ -21,24 +23,24 @@ export function createTwinStatusApi(settings: ApiSettings) {
           header: getApiDomainHeaders(settings),
           path: { twinClassId: twinClassId },
         },
-        body: data,
+        body,
       }
     );
   }
 
   function update({
     statusId,
-    data,
+    body,
   }: {
     statusId: string;
-    data: TwinStatusUpdateRq;
+    body: TwinStatusUpdateRq;
   }) {
     return settings.client.PUT("/private/twin_status/{twinStatusId}/v1", {
       params: {
         header: getApiDomainHeaders(settings),
         path: { twinStatusId: statusId },
       },
-      body: data,
+      body,
     });
   }
 
@@ -49,6 +51,7 @@ export function createTwinStatusApi(settings: ApiSettings) {
         path: { twinStatusId },
         query: {
           showStatusMode: "DETAILED",
+          showTwinStatus2TwinClassMode: "DETAILED",
         },
       },
     });

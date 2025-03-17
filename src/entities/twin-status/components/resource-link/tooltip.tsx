@@ -1,11 +1,13 @@
+import { ElementType } from "react";
+
 import { isPopulatedString } from "@/shared/libs";
 import { ColorTile, ResourceLinkTooltip } from "@/shared/ui";
-import { ElementType } from "react";
-import { TwinStatus } from "../../api";
+
+import { TwinStatusV2 } from "../../api";
 import { ENTITY_COLOR } from "../../libs";
 
 type Props = {
-  data: TwinStatus;
+  data: TwinStatusV2;
   link: string;
   IconComponent: ElementType;
 };

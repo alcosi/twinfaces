@@ -1,6 +1,5 @@
 import { DataListOptionV1, DataListOptionV3 } from "@/entities/datalist-option";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { TwinStatus } from "@/entities/twin-status";
 import { RelatedObjects } from "@/shared/api";
 import {
   isFalsy,
@@ -8,8 +7,9 @@ import {
   isPopulatedArray,
   isPopulatedString,
 } from "@/shared/libs";
+
 import { User } from "../../user";
-import { Twin, Twin_DETAILED, TwinTagManageV1 } from "../api";
+import { Twin, TwinTagManageV1, Twin_DETAILED } from "../api";
 
 export const hydrateTwinFromMap = (
   dto: Twin,
@@ -20,7 +20,7 @@ export const hydrateTwinFromMap = (
   if (!relatedObjects?.twinClassMap) return hydrated;
 
   if (dto.statusId && relatedObjects.statusMap) {
-    hydrated.status = relatedObjects.statusMap[dto.statusId] as TwinStatus;
+    hydrated.status = relatedObjects.statusMap[dto.statusId];
   }
 
   if (dto.twinClassId) {

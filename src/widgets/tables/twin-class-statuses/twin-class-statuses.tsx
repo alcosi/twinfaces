@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -15,13 +15,13 @@ import {
 import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
-  TwinClassStatusResourceLink,
   TwinStatusCreateRq,
   TwinStatus_DETAILED,
+  useStatusCreate,
   useStatusFilters,
   useTwinStatusSearchV1,
 } from "@/entities/twin-status";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse } from "@/shared/api";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -99,15 +99,6 @@ const colDefs: Record<
     id: "name",
     accessorKey: "name",
     header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinClassStatusResourceLink
-          data={original}
-          twinClassId={original.twinClassId!}
-          withTooltip
-        />
-      </div>
-    ),
   },
 
   description: {
@@ -154,10 +145,10 @@ export function TwinClassStatusesTable({
 }: {
   twinClassId?: string;
 }) {
-  const api = useContext(PrivateApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinStatuses } = useTwinStatusSearchV1();
+  const { createStatus } = useStatusCreate();
   const { buildFilterFields, mapFiltersToPayload } = useStatusFilters({
     enabledFilters: isTruthy(twinClassId)
       ? ["idList", "keyLikeList", "nameI18nLikeList", "descriptionI18nLikeList"]
@@ -220,14 +211,10 @@ export function TwinClassStatusesTable({
       return;
     }
 
-    const { error } = await api.twinStatus.create({
+    await createStatus({
       twinClassId: twinClassId || formValues.twinClassId!,
-      data,
+      body: data,
     });
-
-    if (error) {
-      throw new Error("Failed to create status");
-    }
 
     toast.success("Link created successfully!");
     fetchStatuses({ pageIndex: 0, pageSize: 10 }, { filters: {} });

@@ -3,17 +3,20 @@ import { z } from "zod";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
-import { ClassStatusView } from "@/components/class-status-view";
 
 import { PermissionResourceLink } from "@/entities/permission";
 import {
   TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
 } from "@/entities/twin-flow-transition";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import {
+  TwinClassStatusResourceLink,
+  TwinStatusV2,
+  useTwinStatusSelectAdapter,
+} from "@/entities/twin-status";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
 import { PrivateApiContext } from "@/shared/api";
-import { NULLIFY_UUID_VALUE, formatToTwinfaceDate } from "@/shared/libs";
+import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -22,7 +25,7 @@ export function TwinflowTransitionGeneral({
   onChange,
 }: {
   transition: TwinFlowTransition;
-  onChange: () => any;
+  onChange: () => void;
 }) {
   const api = useContext(PrivateApiContext);
   const sAdapter = useTwinStatusSelectAdapter();
@@ -84,31 +87,45 @@ export function TwinflowTransitionGeneral({
     },
   };
 
-  const statusIdAutoDialogSettings: AutoEditDialogSettings = {
-    value: {
-      srcTwinStatusId: transition.srcTwinStatusId,
-      dstTwinStatusId: transition.dstTwinStatusId,
+  const srcTwinStatusSettings: InPlaceEditProps<any> = {
+    id: "srcTwinStatusId",
+    value: transition.srcTwinStatusId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select status...",
+      ...sAdapter,
     },
-    title: "Update statuses",
-    onSubmit: (values) => {
-      return updateTransition({
-        srcStatusId: values.srcTwinStatusId ?? NULLIFY_UUID_VALUE,
-        dstStatusId: values.dstTwinStatusId ?? NULLIFY_UUID_VALUE,
-      });
+    renderPreview: transition.srcTwinStatus
+      ? (_) => (
+          <TwinClassStatusResourceLink
+            data={transition.srcTwinStatus as TwinStatusV2}
+            twinClassId={transition.srcTwinStatus?.twinClassId!}
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      return updateTransition({ srcStatusId: value[0].id });
     },
-    valuesInfo: {
-      srcTwinStatusId: {
-        type: AutoFormValueType.combobox,
-        label: "Source status",
-        selectPlaceholder: "Select status...",
-        ...sAdapter,
-      },
-      dstTwinStatusId: {
-        type: AutoFormValueType.combobox,
-        label: "Destination status",
-        selectPlaceholder: "Select status...",
-        ...sAdapter,
-      },
+  };
+
+  const dstTwinStatusSettings: InPlaceEditProps<any> = {
+    id: "dstTwinStatusId",
+    value: transition.dstTwinStatusId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select status...",
+      ...sAdapter,
+    },
+    renderPreview: transition.dstTwinStatus
+      ? (_) => (
+          <TwinClassStatusResourceLink
+            data={transition.dstTwinStatus as TwinStatusV2}
+            twinClassId={transition.dstTwinStatus?.twinClassId!}
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      return updateTransition({ dstStatusId: value[0].id });
     },
   };
 
@@ -164,22 +181,16 @@ export function TwinflowTransitionGeneral({
             </TableCell>
           </TableRow>
 
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(statusIdAutoDialogSettings)}
-          >
+          <TableRow>
             <TableCell>Source status</TableCell>
             <TableCell>
-              <ClassStatusView status={transition.srcTwinStatus} />
+              <InPlaceEdit {...srcTwinStatusSettings} />
             </TableCell>
           </TableRow>
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(statusIdAutoDialogSettings)}
-          >
+          <TableRow>
             <TableCell>Destination status</TableCell>
             <TableCell>
-              <ClassStatusView status={transition.dstTwinStatus} />
+              <InPlaceEdit {...dstTwinStatusSettings} />
             </TableCell>
           </TableRow>
           <TableRow
