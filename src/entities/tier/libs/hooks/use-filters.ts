@@ -16,8 +16,8 @@ import { TierFilterKeys, TierFilters } from "../../api";
 
 //TODO added filter Class schema https://alcosi.atlassian.net/browse/TWINFACES-406 now this task is block
 export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
-  const pSAdapter = usePermissionSchemaSelectAdapter();
-  const tFAdapter = useTwinFlowSchemaSelectAdapter();
+  const permissionSchemaAdapter = usePermissionSchemaSelectAdapter();
+  const twinFlowSchemaAdapter = useTwinFlowSchemaSelectAdapter();
 
   function buildFilterFields(): Record<TierFilterKeys, AutoFormValueInfo> {
     return {
@@ -41,28 +41,25 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
         type: AutoFormValueType.combobox,
         label: "Permission schema",
         multi: true,
-        ...pSAdapter,
+        ...permissionSchemaAdapter,
       },
       twinflowSchemaIdList: {
         type: AutoFormValueType.combobox,
         label: "Twinflow schema",
         multi: true,
-        ...tFAdapter,
+        ...twinFlowSchemaAdapter,
       },
-      //TODO need to complete the filtering logic https://alcosi.atlassian.net/browse/TWINFACES-408
       attachmentsStorageQuotaCountRange: {
-        type: AutoFormValueType.number,
-        label: "Attachments count quota, from",
+        type: AutoFormValueType.numberRange,
+        label: "Attachments count quota",
       },
-      //TODO need to complete the filtering logic https://alcosi.atlassian.net/browse/TWINFACES-408
       attachmentsStorageQuotaSizeRange: {
-        type: AutoFormValueType.number,
-        label: "Attachments size quota, from",
+        type: AutoFormValueType.numberRange,
+        label: "Attachments size quota",
       },
-      //TODO need to complete the filtering logic https://alcosi.atlassian.net/browse/TWINFACES-408
       userCountQuotaRange: {
-        type: AutoFormValueType.number,
-        label: "User count quota, from",
+        type: AutoFormValueType.numberRange,
+        label: "User count quota",
       },
       descriptionLikeList: {
         type: AutoFormValueType.tag,
@@ -87,13 +84,52 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
         "id"
       ),
       attachmentsStorageQuotaCountRange: {
-        from: Number(filters.attachmentsStorageQuotaCountRange),
+        from: Number(
+          (
+            filters.attachmentsStorageQuotaCountRange as {
+              from?: number;
+            }
+          )?.from
+        ),
+        to: Number(
+          (
+            filters.attachmentsStorageQuotaCountRange as {
+              to?: number;
+            }
+          )?.to
+        ),
       },
       attachmentsStorageQuotaSizeRange: {
-        from: Number(filters.attachmentsStorageQuotaSizeRange),
+        from: Number(
+          (
+            filters.attachmentsStorageQuotaSizeRange as {
+              from?: number;
+            }
+          )?.from
+        ),
+        to: Number(
+          (
+            filters.attachmentsStorageQuotaSizeRange as {
+              to?: number;
+            }
+          )?.to
+        ),
       },
       userCountQuotaRange: {
-        from: Number(filters.userCountQuotaRange),
+        from: Number(
+          (
+            filters.userCountQuotaRange as {
+              from?: number;
+            }
+          )?.from
+        ),
+        to: Number(
+          (
+            filters.userCountQuotaRange as {
+              to?: number;
+            }
+          )?.to
+        ),
       },
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),

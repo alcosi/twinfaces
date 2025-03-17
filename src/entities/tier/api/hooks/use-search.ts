@@ -2,13 +2,13 @@ import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
 import { hydrateTierFromMap } from "@/entities/tier";
-import { ApiContext, PagedResponse } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 import { TierFilters, Tier_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy
 export const useTierSearch = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTiers = useCallback(
     async ({

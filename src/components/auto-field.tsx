@@ -18,6 +18,7 @@ import {
   ColorPickerFormItem,
   ComboboxFormField,
   ComboboxFormItem,
+  NumberRangeFormField,
   TagsFormField,
   TagsFormItem,
   TextFormField,
@@ -34,6 +35,7 @@ export enum AutoFormValueType {
   color = "color",
   tag = "tag",
   twinField = "twinField",
+  numberRange = "numberRange",
 }
 
 /* eslint-enable no-unused-vars */
@@ -48,6 +50,7 @@ export type AutoFormValueInfo = AutoFormCommonInfo &
     | AutoFormTwinFieldValueInfo
     | AutoFormFeaturerValueInfo
     | AutoFormColorValueInfo
+    | AutoFormNumberRangeValueInfo
   );
 
 export interface AutoFormCommonInfo {
@@ -100,6 +103,12 @@ export interface AutoFormFieldProps {
 
 export interface AutoFormColorValueInfo {
   type: AutoFormValueType.color;
+}
+
+export interface AutoFormNumberRangeValueInfo {
+  type: AutoFormValueType.numberRange;
+  placeholderFrom?: string;
+  placeholderTo?: string;
 }
 
 export function AutoField({
@@ -184,6 +193,14 @@ export function AutoField({
           );
         }
         break;
+
+      case AutoFormValueType.numberRange:
+        return (
+          name &&
+          control && (
+            <NumberRangeFormField name={name} control={control} {...info} />
+          )
+        );
 
       default:
         return name && control ? (

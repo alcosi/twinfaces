@@ -5,3 +5,4 @@ export { FormItemLabel, FormItemDescription } from "./form-items-common";
 export * from "./tags";
 export * from "./text";
 export * from "./types";
+export * from "./range";

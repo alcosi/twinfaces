@@ -150,7 +150,7 @@ export function Tiers() {
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Tiers", href: "/workspace/tiers" }]);
-  }, []);
+  }, [setBreadcrumbs]);
 
   async function fetchTiers(
     pagination: PaginationState,
@@ -163,6 +163,7 @@ export function Tiers() {
         pagination,
         filters: _filters,
       });
+
       return response;
     } catch {
       toast.error("Failed to fetch tiers");
