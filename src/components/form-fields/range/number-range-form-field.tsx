@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
 
 import { AutoFormNumberRangeValueInfo } from "@/components/auto-field";
@@ -6,15 +6,13 @@ import { FormFieldProps, TextFormItem } from "@/components/form-fields";
 
 import { FormField } from "@/shared/ui";
 
-interface NumberRangeFormFieldProps<T extends FieldValues>
-  extends FormFieldProps<T>,
-    Omit<NumberRangeFormItemProps, "fieldValue" | "onChange"> {
-  idPrefix?: string;
-  label?: React.ReactNode;
-}
+type NumberRangeFormFieldProps<T extends FieldValues> = FormFieldProps<T> &
+  Omit<NumberRangeFormItemProps, "fieldValue" | "onChange"> & {
+    idPrefix?: string;
+    label?: ReactNode;
+  };
 
-interface NumberRangeFormItemProps
-  extends Omit<AutoFormNumberRangeValueInfo, "label"> {
+type NumberRangeFormItemProps = Omit<AutoFormNumberRangeValueInfo, "label"> & {
   fieldValue?: { from: number | undefined; to: number | undefined };
   onChange?: (value: {
     from: number | undefined;
@@ -23,8 +21,8 @@ interface NumberRangeFormItemProps
   autoFocus?: boolean;
   inputId?: string;
   inForm?: boolean;
-  label?: React.ReactNode;
-}
+  label?: ReactNode;
+};
 
 export function NumberRangeFormField<T extends FieldValues>({
   name,
@@ -57,9 +55,7 @@ export function NumberRangeFormField<T extends FieldValues>({
                   inputId={inputId ? `${inputId}-from` : undefined}
                   inForm={true}
                   type="number"
-                  placeholder={
-                    props.placeholderFrom ? props.placeholderFrom : "from"
-                  }
+                  placeholder={props.placeholderFrom ?? "from"}
                   {...props}
                 />
               );
@@ -79,9 +75,7 @@ export function NumberRangeFormField<T extends FieldValues>({
                   inputId={inputId ? `${inputId}-to` : undefined}
                   inForm={true}
                   type="number"
-                  placeholder={
-                    props.placeholderFrom ? props.placeholderFrom : "to"
-                  }
+                  placeholder={props.placeholderTo ?? "to"}
                   {...props}
                 />
               );

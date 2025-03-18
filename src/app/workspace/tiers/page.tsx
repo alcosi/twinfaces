@@ -1,5 +1,7 @@
-import { Tiers } from "@/screens/tiers";
+"use client";
 
-export default function TiersPage() {
-  return <Tiers />;
+import { TiersScreen } from "@/screens/tiers";
+
+export default function Page() {
+  return <TiersScreen />;
 }

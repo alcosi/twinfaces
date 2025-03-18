@@ -84,53 +84,44 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
         "id"
       ),
       attachmentsStorageQuotaCountRange: {
-        from: Number(
-          (
-            filters.attachmentsStorageQuotaCountRange as {
-              from?: number;
-            }
-          )?.from
-        ),
-        to: Number(
-          (
-            filters.attachmentsStorageQuotaCountRange as {
-              to?: number;
-            }
-          )?.to
-        ),
+        from: (
+          filters.attachmentsStorageQuotaCountRange as {
+            from?: number;
+          }
+        )?.from,
+        to: (
+          filters.attachmentsStorageQuotaCountRange as {
+            to?: number;
+          }
+        )?.to,
       },
+
       attachmentsStorageQuotaSizeRange: {
-        from: Number(
-          (
-            filters.attachmentsStorageQuotaSizeRange as {
-              from?: number;
-            }
-          )?.from
-        ),
-        to: Number(
-          (
-            filters.attachmentsStorageQuotaSizeRange as {
-              to?: number;
-            }
-          )?.to
-        ),
+        from: (
+          filters.attachmentsStorageQuotaSizeRange as {
+            from?: number;
+          }
+        )?.from,
+        to: (
+          filters.attachmentsStorageQuotaSizeRange as {
+            to?: number;
+          }
+        )?.to,
       },
+
       userCountQuotaRange: {
-        from: Number(
-          (
-            filters.userCountQuotaRange as {
-              from?: number;
-            }
-          )?.from
-        ),
-        to: Number(
-          (
-            filters.userCountQuotaRange as {
-              to?: number;
-            }
-          )?.to
-        ),
+        from: (
+          filters.userCountQuotaRange as {
+            from?: number;
+          }
+        )?.from,
+        to: (
+          filters.userCountQuotaRange as {
+            to?: number;
+          }
+        )?.to,
       },
+
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),
         "description"
