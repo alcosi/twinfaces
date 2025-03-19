@@ -101,6 +101,12 @@ export interface paths {
     /** Update link by id */
     put: operations["linkUpdateV1"];
   };
+  "/private/i18n/{i18nId}/v1": {
+    /** View a list of all i18n translations for the i18n */
+    get: operations["i18nTranslationGetV1"];
+    /** I18n translation for update */
+    put: operations["i18nTranslationUpdateV1"];
+  };
   "/private/factory_pipeline/{factoryPipelineId}/v1": {
     /** Factory pipeline update */
     put: operations["factoryPipelineUpdateV1"];
@@ -497,6 +503,10 @@ export interface paths {
     /** Link search */
     post: operations["linkSearchV1"];
   };
+  "/private/i18n/search/v1": {
+    /** Return a list of i18n translations by search criteria */
+    post: operations["i18nTranslationSearchV1"];
+  };
   "/private/featurer/search/v1": {
     /** Featurer search */
     post: operations["featurerSearchV1"];
@@ -805,6 +815,26 @@ export interface paths {
   "/private/factory_condition_set/{factoryConditionSetId}/v1": {
     /** Condition set view by id */
     get: operations["factoryConditionSetViewV1"];
+  };
+  "/private/face/{faceId}/v1": {
+    /** Returns face details */
+    get: operations["faceViewV1"];
+  };
+  "/private/face/wt001/{faceId}/v1": {
+    /** Returns wt001 navigation bar details */
+    get: operations["faceWT001ViewV1"];
+  };
+  "/private/face/pg001/{faceId}/v1": {
+    /** Returns pg001 navigation bar details */
+    get: operations["facePG001ViewV1"];
+  };
+  "/private/face/nb001/{faceId}/v1": {
+    /** Returns nb001 navigation bar details */
+    get: operations["faceNB001ViewV1"];
+  };
+  "/private/domain/{domainId}/v1": {
+    /** Returns domain data by id */
+    get: operations["domainViewV1"];
   };
   "/private/domain/user/{userId}/v1": {
     /** Return the user by id */
@@ -1217,6 +1247,15 @@ export interface components {
        */
       storageLink?: string;
       /**
+       * @description External storage links map by key
+       * @example {
+       *   "origin": "https://test.filestorage.by/JFUjEFWksfqwf"
+       * }
+       */
+      storageLinksMap?: {
+        [key: string]: string;
+      };
+      /**
        * @description External id
        * @example JD999weqw9f
        */
@@ -1446,6 +1485,34 @@ export interface components {
       attribute4?: components["schemas"]["DataListAttributeV1"];
       /** @description attribute5 */
       attribute5?: components["schemas"]["DataListAttributeV1"];
+    };
+    FaceV1: {
+      /**
+       * Format: uuid
+       * @description config id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * @description component
+       * @example some domain
+       */
+      component?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       * @example 2023-09-13T09:32:08
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
     };
     FactoryPipelineV1: {
       /**
@@ -1888,6 +1955,13 @@ export interface components {
        */
       featurerMap?: {
         [key: string]: components["schemas"]["FeaturerV1"];
+      };
+      /**
+       * @description related face map
+       * @example {face map}
+       */
+      faceMap?: {
+        [key: string]: components["schemas"]["FaceV1"];
       };
     };
     SpaceRoleV1: {
@@ -2920,6 +2994,15 @@ export interface components {
        */
       storageLink?: string;
       /**
+       * @description External storage links map by key
+       * @example {
+       *   "origin": "https://test.filestorage.by/JFUjEFWksfqwf"
+       * }
+       */
+      storageLinksMap?: {
+        [key: string]: string;
+      };
+      /**
        * @description External id
        * @example JD999weqw9f
        */
@@ -2970,6 +3053,15 @@ export interface components {
        * @example https://test.filestorage.by/JFUjEFWksfqwf
        */
       storageLink?: string;
+      /**
+       * @description External storage links map by key
+       * @example {
+       *   "origin": "https://test.filestorage.by/JFUjEFWksfqwf"
+       * }
+       */
+      storageLinksMap?: {
+        [key: string]: string;
+      };
       /**
        * @description External id
        * @example JD999weqw9f
@@ -4030,6 +4122,80 @@ export interface components {
       srcTwinClass?: components["schemas"]["TwinClassBaseV1"];
       /** @description Created by user */
       createdByUser?: components["schemas"]["UserV1"];
+    };
+    I18nTranslationUpdateRqV1: {
+      /** @description i18n translation update */
+      i18nTranslations?: components["schemas"]["I18nTranslationUpdateV1"];
+    };
+    I18nTranslationUpdateV1: {
+      /**
+       * @description map (locale : translate)
+       * @example {
+       *   "en": "translation",
+       *   "pl": "tłumaczenie",
+       *   "ru": "перевод"
+       * }
+       */
+      translations?: {
+        [key: string]: string;
+      };
+    };
+    I18nTranslationSaveRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description pagination */
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description result - i18n translations */
+      i18nTranslations?: components["schemas"]["I18nTranslationV1"][];
+    };
+    I18nTranslationV1: {
+      /**
+       * Format: uuid
+       * @description i18n id
+       * @example 633c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      i18nId?: string;
+      /**
+       * @description locale
+       * @example en
+       */
+      locale?: {
+        displayName?: string;
+        language?: string;
+        script?: string;
+        variant?: string;
+        unicodeLocaleAttributes?: string[];
+        unicodeLocaleKeys?: string[];
+        displayLanguage?: string;
+        displayScript?: string;
+        displayCountry?: string;
+        displayVariant?: string;
+        country?: string;
+        extensionKeys?: string[];
+        iso3Language?: string;
+        iso3Country?: string;
+      };
+      /**
+       * @description translation
+       * @example translation
+       */
+      translation?: string;
     };
     FactoryPipelineUpdateRqV1: {
       /** @description factory pipeline update */
@@ -6095,10 +6261,14 @@ export interface components {
       idList?: string[];
       /** @description id exclude list */
       idExcludeList?: string[];
-      /** @description twin class id list */
-      twinClassIdList?: string[];
-      /** @description twin class id exclude list */
-      twinClassIdExcludeList?: string[];
+      /** @description twin class id map */
+      twinClassIdMap?: {
+        [key: string]: boolean;
+      };
+      /** @description twin class id exclude map */
+      twinClassIdExcludeMap?: {
+        [key: string]: boolean;
+      };
       /** @description key like list */
       keyLikeList?: string[];
       /** @description key not like list */
@@ -9096,6 +9266,58 @@ export interface components {
       /** @description results - link list */
       links?: components["schemas"]["LinkV3"][];
     };
+    I18nTranslationSearchRqV1: {
+      /** @description i18n id list */
+      i18nIdList?: string[];
+      /** @description i18n id exclude list */
+      i18nIdExcludeList?: string[];
+      /** @description translation like list */
+      translationLikeList?: string[];
+      /** @description translation not like list */
+      translationNotLikeList?: string[];
+      /** @description locale like list */
+      localeLikeList?: {
+          displayName?: string;
+          language?: string;
+          script?: string;
+          variant?: string;
+          unicodeLocaleAttributes?: string[];
+          unicodeLocaleKeys?: string[];
+          displayLanguage?: string;
+          displayScript?: string;
+          displayCountry?: string;
+          displayVariant?: string;
+          country?: string;
+          extensionKeys?: string[];
+          iso3Language?: string;
+          iso3Country?: string;
+        }[];
+      /** @description locale not like list */
+      localeNotLikeList?: {
+          displayName?: string;
+          language?: string;
+          script?: string;
+          variant?: string;
+          unicodeLocaleAttributes?: string[];
+          unicodeLocaleKeys?: string[];
+          displayLanguage?: string;
+          displayScript?: string;
+          displayCountry?: string;
+          displayVariant?: string;
+          country?: string;
+          extensionKeys?: string[];
+          iso3Language?: string;
+          iso3Country?: string;
+        }[];
+      /** @description usage counter */
+      usageCounter?: components["schemas"]["LongRange"];
+    };
+    LongRange: {
+      /** Format: int64 */
+      from?: number;
+      /** Format: int64 */
+      to?: number;
+    };
     FeaturerSearchRqV1: {
       /** @description ids list */
       idList?: number[];
@@ -9954,6 +10176,28 @@ export interface components {
     };
     DomainViewRsv1: {
       /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description domain */
+      domain?: components["schemas"]["DomainViewV1"];
+    };
+    DomainViewV1: {
+      /**
        * Format: uuid
        * @description domain id
        */
@@ -10005,6 +10249,11 @@ export interface components {
       createdAt?: string;
       /** @description default locale */
       defaultLocale?: string;
+      /**
+       * Format: uuid
+       * @description domain navigation bar pointer
+       */
+      navbarFaceId?: string;
     };
     DomainUserSearchRqV1: {
       /** @description user id list */
@@ -10100,6 +10349,7 @@ export interface components {
        */
       currentLocale?: {
         displayName?: string;
+        language?: string;
         script?: string;
         variant?: string;
         unicodeLocaleAttributes?: string[];
@@ -10112,7 +10362,6 @@ export interface components {
         extensionKeys?: string[];
         iso3Language?: string;
         iso3Country?: string;
-        language?: string;
       };
       /**
        * Format: date-time
@@ -10421,6 +10670,15 @@ export interface components {
        */
       storageLink?: string;
       /**
+       * @description External storage links map by key
+       * @example {
+       *   "origin": "https://test.filestorage.by/JFUjEFWksfqwf"
+       * }
+       */
+      storageLinksMap?: {
+        [key: string]: string;
+      };
+      /**
        * @description External id
        * @example JD999weqw9f
        */
@@ -10636,9 +10894,9 @@ export interface components {
        */
       statusDetails?: string;
       /** @description domain */
-      domain?: components["schemas"]["DomainViewPublicRsv1"];
+      domain?: components["schemas"]["DomainViewPublicV1"];
     };
-    DomainViewPublicRsv1: {
+    DomainViewPublicV1: {
       /**
        * Format: uuid
        * @description domain id
@@ -11503,6 +11761,249 @@ export interface components {
       /** @description result - factory */
       factory?: components["schemas"]["FactoryV2"];
     };
+    FaceViewRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description results - face details */
+      face?: components["schemas"]["FaceV1"];
+    };
+    FaceWT001ViewRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description results - widget details */
+      widget?: components["schemas"]["FaceWT001v1"];
+    };
+    FaceWT001v1: {
+      /**
+       * Format: uuid
+       * @description config id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * @description component
+       * @example some domain
+       */
+      component?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       * @example 2023-09-13T09:32:08
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /** @description uniq key */
+      key?: string;
+      /** @description UI label for item */
+      label?: string;
+      /**
+       * Format: uuid
+       * @description twins of given twin class id
+       */
+      twinClassId?: string;
+      /**
+       * Format: uuid
+       * @description searchId
+       */
+      searchId?: string;
+      /** @description hide given basic columns from table and filter */
+      hideColumns?: string[];
+    };
+    FacePG001ViewRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description results - page details */
+      page?: components["schemas"]["FacePG001v1"];
+    };
+    FacePG001WidgetV1: {
+      /**
+       * Format: uuid
+       * @description uniq id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * Format: int32
+       * @description uniq menu item key
+       */
+      order?: number;
+      /**
+       * Format: uuid
+       * @description widget face pointer
+       */
+      widgetFaceId?: string;
+    };
+    FacePG001v1: {
+      /**
+       * Format: uuid
+       * @description config id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * @description component
+       * @example some domain
+       */
+      component?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       * @example 2023-09-13T09:32:08
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /** @description page title */
+      title?: string;
+      /** @description page widgets list */
+      widgets?: components["schemas"]["FacePG001WidgetV1"][];
+    };
+    FaceNB001MenuItemV1: {
+      /**
+       * Format: uuid
+       * @description item id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /** @description uniq menu item key */
+      key?: string;
+      /** @description UI label for item */
+      label?: string;
+      /** @description description */
+      description?: string;
+      /** @description item is not selectable */
+      disabled?: boolean;
+      /** @description Icon light uri. Might be relative */
+      icon?: string;
+      /**
+       * Format: uuid
+       * @description domain navigation bar pointer
+       */
+      targetPageFaceId?: string;
+    };
+    FaceNB001ViewRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description results - navbar details */
+      navbar?: components["schemas"]["FaceNB001v1"];
+    };
+    FaceNB001v1: {
+      /**
+       * Format: uuid
+       * @description config id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * @description component
+       * @example some domain
+       */
+      component?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       * @example 2023-09-13T09:32:08
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /** @description label for admin area menu */
+      adminAreaLabel?: string;
+      /** @description Icon for admin area menu */
+      adminAreaIcon?: string;
+      /** @description label for user area menu */
+      userAreaLabel?: string;
+      /** @description Icon for user area menu */
+      userAreaIcon?: string;
+      /** @description menu items list */
+      userAreaMenuItems?: components["schemas"]["FaceNB001MenuItemV1"][];
+    };
     DomainUserViewRsV1: {
       /**
        * Format: int32
@@ -11542,10 +12043,12 @@ export interface components {
        * @example success
        */
       statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       /** @description pagination data */
       pagination?: components["schemas"]["PaginationV1"];
       /** @description domain list */
-      domainList?: components["schemas"]["DomainViewRsv1"][];
+      domainList?: components["schemas"]["DomainViewV1"][];
     };
     DomainClassOwnerTypeListRsV1: {
       /**
@@ -13122,6 +13625,81 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["LinkUpdateRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** View a list of all i18n translations for the i18n */
+  i18nTranslationGetV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showI18nTranslationMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 633c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        i18nId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["I18nTranslationSaveRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** I18n translation for update */
+  i18nTranslationUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showI18nTranslationMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 633c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
+        i18nId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["I18nTranslationUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description I18n translation data updated successfully */
+      200: {
+        content: {
+          "application/json": components["schemas"]["I18nTranslationSaveRsV1"];
         };
       };
       /** @description Access is denied */
@@ -18610,6 +19188,45 @@ export interface operations {
       };
     };
   };
+  /** Return a list of i18n translations by search criteria */
+  i18nTranslationSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showI18nTranslationMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: unknown;
+        limit?: unknown;
+        sortAsc?: unknown;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["I18nTranslationSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["I18nTranslationSaveRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Featurer search */
   featurerSearchV1: {
     parameters: {
@@ -20267,12 +20884,6 @@ export interface operations {
       query?: {
         showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
       };
-      header: {
-        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-        AuthToken: string;
-        /** @example WEB */
-        Channel: string;
-      };
       path: {
         /** @example alcosi */
         domainKey: string;
@@ -20298,12 +20909,6 @@ export interface operations {
     parameters: {
       query?: {
         showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
-      };
-      header: {
-        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-        AuthToken: string;
-        /** @example WEB */
-        Channel: string;
       };
       path: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -22305,6 +22910,184 @@ export interface operations {
       };
     };
   };
+  /** Returns face details */
+  faceViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 9a3f6075-f175-41cd-a804-934201ec969c */
+        faceId: string;
+      };
+    };
+    responses: {
+      /** @description Twin card list prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FaceViewRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns wt001 navigation bar details */
+  faceWT001ViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 9a3f6075-f175-41cd-a804-934201ec969c */
+        faceId: string;
+      };
+    };
+    responses: {
+      /** @description WT001 face config */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FaceWT001ViewRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns pg001 navigation bar details */
+  facePG001ViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFacePG001Widget2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFacePG001WidgetCollectionMode?: "HIDE" | "SHOW";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 9a3f6075-f175-41cd-a804-934201ec969c */
+        faceId: string;
+      };
+    };
+    responses: {
+      /** @description PG001 face config */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FacePG001ViewRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns nb001 navigation bar details */
+  faceNB001ViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFaceNB001MenuItem2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFaceNB001MenuItemCollectionMode?: "HIDE" | "SHOW";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 9a3f6075-f175-41cd-a804-934201ec969c */
+        faceId: string;
+      };
+    };
+    responses: {
+      /** @description NB001 face config */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FaceNB001ViewRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns domain data by id */
+  domainViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
+        showDomainNavbar2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        domainId: string;
+      };
+    };
+    responses: {
+      /** @description  domain details prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainViewRsv1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   /** Return the user by id */
   domainUserViewV1: {
     parameters: {
@@ -22350,7 +23133,9 @@ export interface operations {
   domainListV1: {
     parameters: {
       query?: {
+        lazyRelation?: unknown;
         showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
+        showDomainNavbar2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
         offset?: unknown;
         limit?: unknown;
         sortAsc?: unknown;

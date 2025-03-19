@@ -4,6 +4,8 @@ import { useTheme } from "next-themes";
 import {
   SelectAdapter,
   isPopulatedString,
+  reduceToObject,
+  toArray,
   wrapWithPercent,
 } from "@/shared/libs";
 
@@ -28,7 +30,9 @@ export function useTwinStatusSelectAdapter(
   async function getItems(search: string) {
     try {
       const filters: TwinStatusFilters = {
-        twinClassIdList: twinClassId ? [twinClassId] : [],
+        twinClassIdMap: twinClassId
+          ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
+          : {},
         keyLikeList: search ? [wrapWithPercent(search)] : [],
       };
       const { data } = await searchTwinStatuses({ filters });
