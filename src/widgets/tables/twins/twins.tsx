@@ -1,11 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-
-import { TransitionSelector } from "@/components/transition-selector";
 
 import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import {
@@ -24,8 +22,13 @@ import {
   TwinClass_DETAILED,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
+import {
+  TwinFlowTransition,
+  useSelectTransition,
+} from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { User, UserResourceLink } from "@/entities/user";
+import { TransitionSelector } from "@/features/twin-flow-transition";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
@@ -77,6 +80,7 @@ export function TwinsTable({
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
+  const { selectTransition } = useSelectTransition();
 
   const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
     id: {
@@ -127,7 +131,7 @@ export function TwinsTable({
             />
           )}
           {original.transitions && original.transitions.length > 0 && (
-            <TransitionSelector twin={original} tableRef={tableRef} />
+            <TransitionSelector twin={original} onSelect={handleOnSelect} />
           )}
         </div>
       ),
@@ -310,6 +314,26 @@ export function TwinsTable({
     await createTwin({ body });
     toast.success(`Twin ${body.name} is created successfully!`);
   }
+
+  const handleOnSelect = async (
+    transition: TwinFlowTransition,
+    twin: Twin_DETAILED,
+    event: MouseEvent
+  ) => {
+    event.stopPropagation();
+
+    try {
+      await selectTransition({
+        transitionId: transition.id!,
+        body: { twinId: twin.id },
+      });
+
+      tableRef.current?.resetPage();
+      toast.success("Transition select successfully!");
+    } catch (error) {
+      toast.error("Error selecting transition!");
+    }
+  };
 
   return (
     <CrudDataTable
