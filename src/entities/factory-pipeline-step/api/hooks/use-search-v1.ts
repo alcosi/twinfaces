@@ -4,7 +4,7 @@ import { useCallback, useContext } from "react";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 import { PipelineStepFilters, PipelineStep_DETAILED } from "../../api";
-import { hydratePipelineStepFromMap } from "../helpers";
+import { hydratePipelineStepFromMap } from "../../libs";
 
 export function usePipelineStepSearch() {
   const api = useContext(PrivateApiContext);
