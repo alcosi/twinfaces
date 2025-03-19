@@ -1,9 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { EllipsisVertical, Settings2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { TransitionSelector } from "@/components/transition-selector";
 
 import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import {
@@ -29,7 +32,14 @@ import {
   isPopulatedArray,
   isUndefined,
 } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 
 import {
   CrudDataTable,
@@ -52,6 +62,7 @@ type TwinTableColumnKey = keyof Pick<
   | "markers"
   | "createdAt"
   | "aliases"
+  | "transitions"
 >;
 
 type Props = {
@@ -111,6 +122,19 @@ const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
           />
         </div>
       ),
+  },
+
+  transitions: {
+    id: "changeStatus",
+    header: () => <Settings2Icon />,
+    accessorKey: "changeStatus",
+    cell: ({ row: { original } }) =>
+      original.transitions && original.transitions.length > 0 ? (
+        <TransitionSelector
+          transitions={original.transitions}
+          onSelect={(transition) => console.log(transition)}
+        />
+      ) : null,
   },
 
   description: {

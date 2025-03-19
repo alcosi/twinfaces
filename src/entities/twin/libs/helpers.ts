@@ -1,5 +1,6 @@
 import { DataListOptionV1, DataListOptionV3 } from "@/entities/datalist-option";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinFlowTransition } from "@/entities/twin-flow-transition";
 import { RelatedObjects } from "@/shared/api";
 import {
   isFalsy,
@@ -44,6 +45,12 @@ export const hydrateTwinFromMap = (
   if (dto.tagIdList && relatedObjects.dataListsOptionMap) {
     hydrated.tags = dto.tagIdList.map<DataListOptionV1>(
       (id) => relatedObjects.dataListsOptionMap![id]!
+    );
+  }
+
+  if (dto.transitionsIdList && relatedObjects.transitionsMap) {
+    hydrated.transitions = dto.transitionsIdList.map<TwinFlowTransition>(
+      (id) => relatedObjects.transitionsMap![id]!
     );
   }
 
