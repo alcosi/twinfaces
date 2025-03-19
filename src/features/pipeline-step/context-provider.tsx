@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactNode, createContext, useEffect, useState } from "react";
 
 import {
@@ -56,7 +58,7 @@ export function PipelineStepContextProvider({
 
   return (
     <PipelineStepContext.Provider value={{ stepId, step, refresh }}>
-      {loading ? <LoadingOverlay /> : children}
+      {children}
     </PipelineStepContext.Provider>
   );
 }

@@ -1,5 +1,3 @@
-"use client";
-
 import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -58,7 +56,9 @@ export function PipelineStepGeneral() {
     }
   }
 
-  const factoryConditionSetSettings: InPlaceEditProps<any> = {
+  const factoryConditionSetSettings: InPlaceEditProps<
+    typeof step.factoryConditionSetId
+  > = {
     id: "factoryConditionSetId",
     value: step.factoryConditionSetId,
     valueInfo: {
@@ -75,15 +75,18 @@ export function PipelineStepGeneral() {
         )
       : undefined,
     onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({
         factoryPipelineStep: {
-          factoryConditionSetId: value[0].id,
+          factoryConditionSetId: id,
         },
       });
     },
   };
 
-  const factoryConditionSetInvertSettings: InPlaceEditProps = {
+  const factoryConditionSetInvertSettings: InPlaceEditProps<
+    typeof step.factoryConditionInvert
+  > = {
     id: "factoryConditionInvert",
     value: step.factoryConditionInvert,
     valueInfo: {
@@ -95,13 +98,13 @@ export function PipelineStepGeneral() {
     onSubmit: (value) => {
       return update({
         factoryPipelineStep: {
-          factoryConditionSetInvert: value as boolean,
+          factoryConditionSetInvert: value,
         },
       });
     },
   };
 
-  const activeSettings: InPlaceEditProps = {
+  const activeSettings: InPlaceEditProps<typeof step.active> = {
     id: "active",
     value: step.active,
     valueInfo: {
@@ -113,7 +116,7 @@ export function PipelineStepGeneral() {
     onSubmit: (value) => {
       return update({
         factoryPipelineStep: {
-          active: value as boolean,
+          active: value,
         },
       });
     },
@@ -144,7 +147,7 @@ export function PipelineStepGeneral() {
     },
   };
 
-  const descriptionSettings: InPlaceEditProps = {
+  const descriptionSettings: InPlaceEditProps<typeof step.description> = {
     id: "description",
     value: step.description,
     valueInfo: {
@@ -158,7 +161,7 @@ export function PipelineStepGeneral() {
     onSubmit: (value) => {
       return update({
         factoryPipelineStep: {
-          description: value as string,
+          description: value,
         },
       });
     },

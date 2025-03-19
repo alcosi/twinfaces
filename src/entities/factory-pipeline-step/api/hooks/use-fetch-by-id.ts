@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useContext, useState } from "react";
 
 import { hydratePipelineStepFromMap } from "@/entities/factory-pipeline-step";
