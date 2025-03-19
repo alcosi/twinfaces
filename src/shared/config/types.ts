@@ -1,6 +1,6 @@
 import { components } from "@/shared/api/generated/schema";
 
-export type RemoteConfig = components["schemas"]["DomainViewPublicRsv1"];
+export type RemoteConfig = components["schemas"]["DomainViewPublicV1"];
 
 export type LocalConfig = {
   // flavor: "twinfaces",

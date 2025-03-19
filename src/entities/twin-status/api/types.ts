@@ -8,7 +8,7 @@ export type TwinStatusUpdateRq = components["schemas"]["TwinStatusUpdateRqV1"];
 
 export type TwinStatusFilterKeys =
   | "idList"
-  | "twinClassIdList"
+  | "twinClassIdMap"
   | "keyLikeList"
   | "nameI18nLikeList"
   | "descriptionI18nLikeList";

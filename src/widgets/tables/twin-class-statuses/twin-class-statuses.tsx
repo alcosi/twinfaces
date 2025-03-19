@@ -22,7 +22,7 @@ import {
   useTwinStatusSearchV1,
 } from "@/entities/twin-status";
 import { PagedResponse } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
@@ -179,9 +179,9 @@ export function TwinClassStatusesTable({
         pagination,
         filters: {
           ..._filters,
-          twinClassIdList: twinClassId
-            ? toArrayOfString(toArray(twinClassId), "id")
-            : _filters.twinClassIdList,
+          twinClassIdMap: twinClassId
+            ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
+            : _filters.twinClassIdMap,
         },
       });
     } catch (e) {
