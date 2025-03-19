@@ -1,10 +1,13 @@
+import { PaginationState } from "@tanstack/react-table";
+
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { wrapWithPercent } from "@/shared/libs";
-import { PaginationState } from "@tanstack/react-table";
+
 import {
-  TwinFlowTransitionFilters,
   TwinFlowTransitionCreateRq,
+  TwinFlowTransitionFilters,
   TwinFlowTransitionUpdateRq,
+  TwinTransitionPerformRq,
 } from "./types";
 
 export function createTwinFlowTransitionApi(settings: ApiSettings) {
@@ -90,11 +93,31 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     });
   }
 
+  function selectTransition({
+    id,
+    body,
+  }: {
+    id: string;
+    body: TwinTransitionPerformRq;
+  }) {
+    return settings.client.POST(
+      `/private/transition/{transitionId}/perform/v2`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { transitionId: id },
+        },
+        body,
+      }
+    );
+  }
+
   return {
     search,
     fetchById,
     create,
     update,
+    selectTransition,
   };
 }
 
