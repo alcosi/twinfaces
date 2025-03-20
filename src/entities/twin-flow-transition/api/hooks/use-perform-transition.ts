@@ -4,17 +4,17 @@ import { PrivateApiContext } from "@/shared/api";
 
 import { TwinTransitionPerformRq } from "../types";
 
-export function useSelectTransition() {
+export function usePerformTransition() {
   const api = useContext(PrivateApiContext);
 
-  async function selectTransition({
+  async function performTransition({
     transitionId,
     body,
   }: {
     transitionId: string;
     body: TwinTransitionPerformRq;
   }) {
-    const { error } = await api.twinFlowTransition.selectTransition({
+    const { error } = await api.twinFlowTransition.performTransition({
       id: transitionId,
       body,
     });
@@ -24,5 +24,5 @@ export function useSelectTransition() {
     }
   }
 
-  return { selectTransition };
+  return { performTransition };
 }

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -24,11 +24,11 @@ import {
 } from "@/entities/twin-class";
 import {
   TwinFlowTransition,
-  useSelectTransition,
+  usePerformTransition,
 } from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { User, UserResourceLink } from "@/entities/user";
-import { TransitionSelector } from "@/features/twin-flow-transition";
+import { TransitionPerformer } from "@/features/transition-performer";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
@@ -80,7 +80,7 @@ export function TwinsTable({
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
-  const { selectTransition } = useSelectTransition();
+  const { performTransition } = usePerformTransition();
 
   const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
     id: {
@@ -130,8 +130,8 @@ export function TwinsTable({
               withTooltip
             />
           )}
-          {original.transitions && original.transitions.length > 0 && (
-            <TransitionSelector twin={original} onSelect={handleOnSelect} />
+          {isPopulatedArray(original.transitions) && (
+            <TransitionPerformer twin={original} onSelect={handleOnSelect} />
           )}
         </div>
       ),
@@ -315,15 +315,15 @@ export function TwinsTable({
     toast.success(`Twin ${body.name} is created successfully!`);
   }
 
-  const handleOnSelect = async (
-    transition: TwinFlowTransition,
-    twin: Twin_DETAILED,
-    event: MouseEvent
-  ) => {
-    event.stopPropagation();
-
+  const handleOnSelect = async ({
+    transition,
+    twin,
+  }: {
+    transition: TwinFlowTransition;
+    twin: Twin_DETAILED;
+  }) => {
     try {
-      await selectTransition({
+      await performTransition({
         transitionId: transition.id!,
         body: { twinId: twin.id },
       });

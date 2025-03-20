@@ -43,14 +43,23 @@ export const hydrateTwinFromMap = (
   }
 
   if (dto.tagIdList && relatedObjects.dataListsOptionMap) {
-    hydrated.tags = dto.tagIdList.map<DataListOptionV1>(
-      (id) => relatedObjects.dataListsOptionMap![id]!
-    );
+    hydrated.tags = dto.tagIdList.reduce<DataListOptionV1[]>((acc, id) => {
+      const tag = relatedObjects.dataListsOptionMap?.[id];
+      if (tag) acc.push(tag);
+
+      return acc;
+    }, []);
   }
 
   if (dto.transitionsIdList && relatedObjects.transitionsMap) {
-    hydrated.transitions = dto.transitionsIdList.map<TwinFlowTransition>(
-      (id) => relatedObjects.transitionsMap![id]!
+    hydrated.transitions = dto.transitionsIdList.reduce<TwinFlowTransition[]>(
+      (acc, id) => {
+        const transition = relatedObjects.transitionsMap?.[id];
+        if (transition) acc.push(transition);
+
+        return acc;
+      },
+      []
     );
   }
 

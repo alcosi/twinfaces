@@ -93,7 +93,7 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     });
   }
 
-  function selectTransition({
+  function performTransition({
     id,
     body,
   }: {
@@ -117,7 +117,7 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     fetchById,
     create,
     update,
-    selectTransition,
+    performTransition,
   };
 }
 

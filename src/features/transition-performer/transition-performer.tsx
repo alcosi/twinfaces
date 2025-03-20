@@ -1,5 +1,4 @@
 import { Ellipsis } from "lucide-react";
-import { MouseEvent } from "react";
 
 import { Twin_DETAILED } from "@/entities/twin";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
@@ -11,16 +10,18 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui";
 
-export const TransitionSelector = ({
+export const TransitionPerformer = ({
   twin,
   onSelect,
 }: {
   twin: Twin_DETAILED;
-  onSelect: (
-    transition: TwinFlowTransition,
-    twin: Twin_DETAILED,
-    event: MouseEvent
-  ) => void;
+  onSelect: ({
+    transition,
+    twin,
+  }: {
+    transition: TwinFlowTransition;
+    twin: Twin_DETAILED;
+  }) => void;
 }) => {
   return (
     <DropdownMenu>
@@ -33,11 +34,10 @@ export const TransitionSelector = ({
         {twin.transitions?.map((transition) => (
           <DropdownMenuItem
             key={transition.id}
-            onClick={(event) => onSelect(transition, twin, event)}
-            // onClick={(event) => {
-            //   event.stopPropagation();
-            //   return console.log(transition);
-            // }}
+            onClick={(event) => {
+              event.stopPropagation();
+              onSelect({ transition, twin });
+            }}
           >
             {transition.name || "N/A"}
           </DropdownMenuItem>
