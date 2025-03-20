@@ -1,24 +1,26 @@
 "use client";
 
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
 import {
-  PermissionGroupResourceLink,
   PermissionGroup,
+  PermissionGroupResourceLink,
   PermissionGroup_DETAILED,
   usePermissionGroupFilters,
   usePermissionGroupSearchV1,
 } from "@/entities/permission-group";
 import {
-  TwinClass_DETAILED,
   TwinClassResourceLink,
+  TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
-import { FiltersState } from "@/widgets/crud-data-table";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui/guid";
+import { FiltersState } from "@/widgets/crud-data-table";
 import { CrudDataTable } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useEffect } from "react";
-import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Omit<PermissionGroup, "twinClass">,
@@ -74,7 +76,10 @@ export function PermissionGroups() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Permission Groups", href: "/workspace/permission-groups" },
+      {
+        label: "Permission Groups",
+        href: `/${PlatformArea.core}/permission-groups`,
+      },
     ]);
   }, []);
 
@@ -100,7 +105,6 @@ export function PermissionGroups() {
 
   return (
     <CrudDataTable
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       columns={[
         colDefs.id!,
         colDefs.key!,

@@ -1,15 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { isDev, isPopulatedArray, isTruthy } from "./shared/libs";
-
-async function fetchDomainByKey(key: string) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_TWINS_API_URL}/public/domain_by_key/${key}/v1?showDomainMode=DETAILED`
-  );
-
-  const body = await response.json();
-  return body.domain;
-}
+import { fetchDomainByKey } from "@/entities/domain/api";
+import { isDev, isPopulatedArray, isTruthy } from "@/shared/libs";
 
 const SUBDOMAIN_DEPTH = isDev ? 2 : 3;
 

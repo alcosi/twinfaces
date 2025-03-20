@@ -1,17 +1,11 @@
-import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 import React from "react";
 
-import { ThemeProvider } from "@/components/theme-provider";
-
-import { PublicApiContextProvider } from "@/features/api";
-import {
-  ProductFlavorConfigProvider,
-  getProductFlavorConfig,
-} from "@/shared/config";
+import { getProductFlavorConfig } from "@/shared/config";
 import { cn } from "@/shared/libs";
+import { PublicLayoutProviders } from "@/widgets/layout";
 
 import "./globals.css";
 
@@ -25,10 +19,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const domainConfigHeader = headers().get("X-Domain-Config");
-  const config = getProductFlavorConfig(
-    domainConfigHeader ? JSON.parse(domainConfigHeader) : {}
-  );
+  const dInfo = headers().get("X-Domain-Config");
+  const config = getProductFlavorConfig(dInfo ? JSON.parse(dInfo) : {});
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -51,20 +43,9 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
-        <ProductFlavorConfigProvider config={config}>
-          <PublicApiContextProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <TooltipProvider delayDuration={700} skipDelayDuration={0}>
-                {children}
-              </TooltipProvider>
-            </ThemeProvider>
-          </PublicApiContextProvider>
-        </ProductFlavorConfigProvider>
+        <PublicLayoutProviders config={config}>
+          {children}
+        </PublicLayoutProviders>
       </body>
     </html>
   );

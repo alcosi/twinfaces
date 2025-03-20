@@ -12,7 +12,7 @@ import { TextFormField } from "@/components/form-fields";
 import { DomainUser_DETAILED, hydrateDomainUserFromMap } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { PublicApiContext } from "@/shared/api";
-import { ProductFlavorConfigContext } from "@/shared/config";
+import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
 import { isPopulatedArray, isUndefined } from "@/shared/libs";
 import { Button, Form } from "@/shared/ui";
 
@@ -70,7 +70,7 @@ export function Login() {
           .join(","),
         domainId: values.domainId,
       });
-      router.push("/workspace/twinclass");
+      router.push(`/${PlatformArea.core}/twinclas`);
     }
   }
 

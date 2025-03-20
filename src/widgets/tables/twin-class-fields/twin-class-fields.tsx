@@ -16,6 +16,7 @@ import {
   useTwinClassFieldSearchV1,
 } from "@/entities/twin-class-field";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
@@ -228,7 +229,7 @@ export function TwinClassFieldsTable({
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
         router.push(
-          `/workspace/twinclass/${row.twinClassId}/twinField/${row.id}`
+          `/${PlatformArea.core}/twinclass/${row.twinClassId}/twinField/${row.id}`
         )
       }
       filters={{

@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { FactoryMultiplierContext } from "@/features/factory-multiplier";
+import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { FactoryMultiplierGeneral } from "./views";
@@ -26,13 +27,13 @@ export function FactoryMultiplierScreen() {
     setBreadcrumbs([
       {
         label: "Multipliers",
-        href: "/workspace/multipliers",
+        href: `/${PlatformArea.core}/multiplier`,
       },
       {
         label: factoryMultiplier.factory.name
           ? factoryMultiplier.factory.name
           : factoryMultiplier.factory.key!,
-        href: `/workspace/multipliers/${factoryMultiplierId}`,
+        href: `/${PlatformArea.core}/multipliers/${factoryMultiplierId}`,
       },
     ]);
   }, [

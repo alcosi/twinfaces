@@ -1,7 +1,10 @@
+import { BriefcaseBusinessIcon } from "lucide-react";
+
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
+
 import { BusinessAccount } from "../../api";
-import { BriefcaseBusinessIcon } from "lucide-react";
 import { BusinessAccountResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -16,7 +19,7 @@ export function BusinessAccountResourceLink({
   withTooltip,
 }: Props) {
   const title = isPopulatedString(data.name) ? data.name : "N/A";
-  const link = `/workspace/business-account/${data.id}`;
+  const link = `/${PlatformArea.core}/business-account/${data.id}`;
 
   return (
     <ResourceLink

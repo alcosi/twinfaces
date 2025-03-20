@@ -1,5 +1,7 @@
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
+
 import { TwinClassField_DETAILED } from "../../api";
 import { FieldIcon } from "../field-icon";
 import { TwinClassFieldResourceTooltip } from "./tooltip";
@@ -15,7 +17,7 @@ export const TwinClassFieldResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/workspace/twinclass/${data.twinClassId}/twinField/${data.id}`;
+  const link = `/${PlatformArea.core}/twinclass/${data.twinClassId}/twinField/${data.id}`;
 
   return (
     <ResourceLink

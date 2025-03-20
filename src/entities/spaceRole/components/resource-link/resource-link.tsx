@@ -1,6 +1,9 @@
+import { VenetianMask } from "lucide-react";
+
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { VenetianMask } from "lucide-react";
+
 import { SpaceRole } from "../../api";
 import { SpaceRoleResourceTooltip } from "./tooltip";
 
@@ -15,7 +18,7 @@ export const SpaceRoleResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/workspace/space-roles/${data.id}`;
+  const link = `/${PlatformArea.core}/space-roles/${data.id}`;
 
   return (
     <ResourceLink

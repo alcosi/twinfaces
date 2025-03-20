@@ -1,6 +1,6 @@
 import { FieldValues } from "react-hook-form";
 
-import { FormField } from "@/shared/ui/form";
+import { FormField } from "@/shared/ui";
 
 import { FormFieldProps } from "../types";
 import { ColorPickerFormItem } from "./color-picker-form-item";

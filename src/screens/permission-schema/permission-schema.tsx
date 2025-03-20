@@ -1,9 +1,12 @@
 "use client";
 
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect } from "react";
+
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PermissionSchemaContext } from "@/features/permission-schema";
+import { PlatformArea } from "@/shared/config";
+import { Tab, TabsLayout } from "@/widgets/layout";
+
 import { PermissionSchemaGeneral } from "./views";
 
 const tabs: Tab[] = [
@@ -20,10 +23,10 @@ export function PermissionSchemaScreen() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Schemas", href: "/workspace/permission-schemas" },
+      { label: "Schemas", href: `/${PlatformArea.core}/permission-schemas` },
       {
         label: schema?.name!,
-        href: `/workspace/permission-schemas/${schemaId}`,
+        href: `/${PlatformArea.core}/permission-schemas/${schemaId}`,
       },
     ]);
   }, [schemaId, schema?.name, setBreadcrumbs]);

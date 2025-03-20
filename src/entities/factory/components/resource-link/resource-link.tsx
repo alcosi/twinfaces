@@ -1,7 +1,10 @@
+import { Factory as FactoryIcon } from "lucide-react";
+
 import { Factory } from "@/entities/factory";
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { Factory as FactoryIcon } from "lucide-react";
+
 import { FactoryResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -15,7 +18,7 @@ export function FactoryResourceLink({ data, disabled, withTooltip }: Props) {
   if (isPopulatedString(data.name)) title = data.name;
   else if (isPopulatedString(data.key)) title = data.key;
 
-  const link = `/workspace/factories/${data.id}`;
+  const link = `/${PlatformArea.core}/factories/${data.id}`;
 
   return (
     <ResourceLink

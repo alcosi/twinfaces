@@ -23,6 +23,7 @@ import {
   TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -113,7 +114,9 @@ export function FactoryMultipliersScreen() {
   const { createFactoryMultiplier } = useFactoryMultiplierCreate();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Multipliers", href: "/workspace/multipliers" }]);
+    setBreadcrumbs([
+      { label: "Multipliers", href: `/${PlatformArea.core}/multipliers` },
+    ]);
   }, [setBreadcrumbs]);
 
   const factoryMultiplierForm = useForm<
@@ -180,7 +183,7 @@ export function FactoryMultipliersScreen() {
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
       onRowClick={(row) => {
-        router.push(`/workspace/multipliers/${row.id}`);
+        router.push(`/${PlatformArea.core}/multipliers/${row.id}`);
       }}
       dialogForm={factoryMultiplierForm}
       onCreateSubmit={handleOnCreateSubmit}

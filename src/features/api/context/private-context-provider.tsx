@@ -1,7 +1,6 @@
 "use client";
 
-import { env } from "next-runtime-env";
-import createClient from "openapi-fetch";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 import {
@@ -74,8 +73,7 @@ import {
 } from "@/entities/twinFlowSchema";
 import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
-import { ApiSettings, PrivateApiContext } from "@/shared/api";
-import { paths } from "@/shared/api/generated/schema";
+import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui";
 
 import { useAuthUser } from "../../auth";
@@ -117,15 +115,19 @@ export function PrivateApiContextProvider({
   children: React.ReactNode;
 }) {
   const { authUser } = useAuthUser();
+  const router = useRouter();
 
   const settings: ApiSettings = {
     authToken: authUser?.authToken ?? "",
     domain: authUser?.domainId ?? "",
     channel: "WEB",
-    client: createClient<paths>({ baseUrl: env("NEXT_PUBLIC_TWINS_API_URL") }),
+    client: TwinsAPI,
   };
 
-  if (!authUser?.authToken) return <LoadingOverlay />;
+  if (!authUser?.authToken) {
+    // router.push("/");
+    return <LoadingOverlay />;
+  }
 
   return (
     <PrivateApiContext.Provider

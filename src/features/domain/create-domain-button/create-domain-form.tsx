@@ -11,22 +11,20 @@ import { TextAreaFormField, TextFormField } from "@/components/form-fields";
 
 import { DOMAIN_CREATE_SCHEMA } from "@/entities/domain";
 import { PrivateApiContext } from "@/shared/api";
-import { Button } from "@/shared/ui/button";
 import {
+  Button,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/shared/ui/form";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select";
+} from "@/shared/ui";
 
 import { useQuickView } from "../../quick-view-overlay";
 

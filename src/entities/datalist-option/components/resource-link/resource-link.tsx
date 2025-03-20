@@ -1,6 +1,9 @@
+import { Option } from "lucide-react";
+
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { Option } from "lucide-react";
+
 import { type DataListOptionV3 } from "../../api";
 import { DatalistOptionResourceTooltip } from "./tooltip";
 
@@ -15,7 +18,7 @@ export function DatalistOptionResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  const link = `/workspace/datalist-options/${data.id}`;
+  const link = `/${PlatformArea.core}/datalist-options/${data.id}`;
 
   return (
     <ResourceLink

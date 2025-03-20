@@ -1,3 +1,13 @@
+"use client";
+
+import { House } from "lucide-react";
+import Link from "next/link";
+import React from "react";
+
+import { ThemeToggle } from "@/components/theme-toggle";
+
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { cn } from "@/shared/libs";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -5,12 +15,6 @@ import {
   BreadcrumbSeparator,
 } from "@/shared/ui/breadcrumb";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { cn } from "@/shared/libs";
-import { House } from "lucide-react";
-import Link from "next/link";
-import React from "react";
 
 export function SidebarLayoutHeader() {
   const { breadcrumbs } = useBreadcrumbs();

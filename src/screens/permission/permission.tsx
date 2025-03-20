@@ -1,10 +1,13 @@
 "use client";
 
+import { useContext, useEffect } from "react";
+
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PermissionContext } from "@/features/permission";
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { useContext, useEffect } from "react";
+
 import { GeneralSection, GrantSection } from "./views";
 
 export type PageProps = {
@@ -32,12 +35,12 @@ export function PermissionPage({ params: { permissionId } }: PageProps) {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Permissions", href: "/workspace/permissions" },
+      { label: "Permissions", href: `/${PlatformArea.core}/permissions` },
       {
         label: isPopulatedString(permission?.name)
           ? permission?.name
           : permission?.key!,
-        href: `/workspace/permissions/${permissionId}`,
+        href: `/${PlatformArea.core}/permissions/${permissionId}`,
       },
     ]);
   }, [permissionId, permission?.name, permission?.key]);

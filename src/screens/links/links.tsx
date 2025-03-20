@@ -24,6 +24,7 @@ import {
 } from "@/entities/twin-class";
 import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { Badge, GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -128,7 +129,7 @@ export function LinksScreen() {
   const { createLink } = useCreateLink();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Links", href: "/workspace/links" }]);
+    setBreadcrumbs([{ label: "Links", href: `/${PlatformArea.core}/links` }]);
   }, [setBreadcrumbs]);
 
   const linkForm = useForm<z.infer<typeof LINK_SCHEMA>>({
@@ -188,7 +189,7 @@ export function LinksScreen() {
       ]}
       fetcher={fetchLink}
       getRowId={(row) => row.id!}
-      onRowClick={(row) => router.push(`/workspace/links/${row.id}`)}
+      onRowClick={(row) => router.push(`/${PlatformArea.core}/links/${row.id}`)}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,

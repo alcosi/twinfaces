@@ -1,5 +1,7 @@
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
+
 import { Permission } from "../../api";
 import { PermissionIcon } from "../permission-icon";
 import { PermissionResourceTooltip } from "./tooltip";
@@ -15,7 +17,7 @@ export const PermissionResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/workspace/permissions/${data.id}`;
+  const link = `/${PlatformArea.core}/permissions/${data.id}`;
 
   return (
     <ResourceLink

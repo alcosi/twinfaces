@@ -1,7 +1,6 @@
 import { Component } from "react";
 
-import { ColorPicker } from "@/shared/ui/color-picker";
-import { FormControl, FormItem, FormMessage } from "@/shared/ui/form";
+import { ColorPicker, FormControl, FormItem, FormMessage } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
 import { FormItemProps } from "../types";

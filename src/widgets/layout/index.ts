@@ -1,2 +1,2 @@
-export * from "./sidebar-layout";
+export * from "./providers";
 export * from "./tabs-layout";

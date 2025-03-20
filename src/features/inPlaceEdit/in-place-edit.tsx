@@ -1,17 +1,20 @@
 "use client";
 
-import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
-import { isFalsy } from "@/shared/libs";
-import { Button } from "@/shared/ui/button";
-import { Form } from "@/shared/ui/form";
-import { LoadingSpinner } from "@/shared/ui/loading";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { InPlaceEditContext } from "./in-place-edit-context";
 import { toast } from "sonner";
+import { z } from "zod";
+
+import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
+
+import { isFalsy } from "@/shared/libs";
+import { Form } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
+import { LoadingSpinner } from "@/shared/ui/loading";
+
+import { InPlaceEditContext } from "./in-place-edit-context";
 
 export interface InPlaceEditProps<T = unknown> {
   id: string;

@@ -15,6 +15,7 @@ import {
   TwinFlowSchema_DETAILED,
 } from "@/entities/twinFlowSchema";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
@@ -168,7 +169,6 @@ export function TiersTable() {
   return (
     <CrudDataTable
       title="Tiers"
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
         colDefs.id,
@@ -185,7 +185,7 @@ export function TiersTable() {
       ]}
       fetcher={fetchTiers}
       getRowId={(row) => row.id!}
-      onRowClick={(row) => router.push(`/workspace/tiers/${row.id}`)}
+      onRowClick={(row) => router.push(`/${PlatformArea.core}/tiers/${row.id}`)}
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

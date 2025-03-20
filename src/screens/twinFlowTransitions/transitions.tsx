@@ -19,6 +19,7 @@ import {
 } from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -208,13 +209,12 @@ export function TwinFlowTransitions({ twinClassId, twinFlowId }: any) {
 
   return (
     <CrudDataTable
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       columns={Object.values(colDefs)}
       fetcher={fetchTransitions}
       getRowId={(row) => row.id!}
       onRowClick={(row) =>
         router.push(
-          `/workspace/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${row.id}`
+          `/${PlatformArea.core}/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${row.id}`
         )
       }
       pageSizes={[10, 20, 50]}

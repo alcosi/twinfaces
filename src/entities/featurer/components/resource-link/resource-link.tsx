@@ -1,6 +1,9 @@
+import { Play } from "lucide-react";
+
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { Play } from "lucide-react";
+
 import { Featurer_DETAILED } from "../../api";
 import { FeaturerResourceTooltip } from "./tooltip";
 
@@ -15,7 +18,7 @@ export const FeaturerResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/workspace/featurer/${data.id}`;
+  const link = `/${PlatformArea.core}/featurer/${data.id}`;
 
   return (
     <ResourceLink

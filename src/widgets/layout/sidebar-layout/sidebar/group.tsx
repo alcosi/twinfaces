@@ -1,3 +1,8 @@
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ElementType } from "react";
+
 import { cn } from "@/shared/libs";
 import {
   Collapsible,
@@ -13,10 +18,6 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from "@/shared/ui";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ElementType } from "react";
 
 type SidebarGroupItem = {
   title: string;

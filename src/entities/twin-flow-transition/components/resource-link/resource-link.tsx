@@ -1,9 +1,12 @@
+import { ArrowRightLeft } from "lucide-react";
+
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
-import { ArrowRightLeft } from "lucide-react";
+
 import { TwinFlowTransition_DETAILED } from "../../api";
-import { TwinFlowTransitionResourceTooltip } from "./tooltip";
 import { TwinFlowTransitionIcon } from "../twin-flow-transition-icon";
+import { TwinFlowTransitionResourceTooltip } from "./tooltip";
 
 type Props = {
   data: TwinFlowTransition_DETAILED;
@@ -20,7 +23,7 @@ export function TwinFlowTransitionResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  const link = `/workspace/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${data.id}`;
+  const link = `/${PlatformArea.core}/twinclass/${twinClassId}/twinflow/${twinFlowId}/transition/${data.id}`;
 
   return (
     <ResourceLink

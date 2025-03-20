@@ -1,25 +1,13 @@
 "use client";
 
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
-import { Separator } from "@/shared/ui/separator";
-import { Sheet, SheetContent } from "@/shared/ui/sheet";
-import { Skeleton } from "@/shared/ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/shared/ui/tooltip";
-import { cn, useIsMobile, useLocalStorage } from "@/shared/libs";
 import { Slot } from "@radix-ui/react-slot";
-import { cva, VariantProps } from "class-variance-authority";
+import { VariantProps, cva } from "class-variance-authority";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
-  ComponentProps,
-  createContext,
   CSSProperties,
+  ComponentProps,
   ElementRef,
+  createContext,
   forwardRef,
   useCallback,
   useContext,
@@ -27,6 +15,14 @@ import {
   useMemo,
   useState,
 } from "react";
+
+import { cn, useIsMobile, useLocalStorage } from "@/shared/libs";
+import { Input } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
+import { Separator } from "@/shared/ui/separator";
+import { Sheet, SheetContent } from "@/shared/ui/sheet";
+import { Skeleton } from "@/shared/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 export const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";

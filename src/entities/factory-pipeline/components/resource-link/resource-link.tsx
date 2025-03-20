@@ -1,5 +1,7 @@
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString, shortenUUID } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
+
 import { FactoryPipeline } from "../../api";
 import { FactoryPipelineIcon } from "../factory-pipeline-icon";
 import { FactoryPipelineResourceTooltip } from "./tooltip";
@@ -16,7 +18,7 @@ export function FactoryPipelineResourceLink({
   withTooltip,
 }: Props) {
   const title = isPopulatedString(data.id) ? shortenUUID(data.id) : "N/A";
-  const link = `/workspace/factory-pipeline/${data.id}`;
+  const link = `/${PlatformArea.core}/factory-pipeline/${data.id}`;
 
   return (
     <ResourceLink

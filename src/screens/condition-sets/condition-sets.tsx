@@ -11,6 +11,7 @@ import {
 } from "@/entities/factory-condition-set";
 import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -97,7 +98,7 @@ export function ConditionSetsScreen() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Condition Sets", href: "/workspace/condition-sets" },
+      { label: "Condition Sets", href: `/${PlatformArea.core}/condition-sets` },
     ]);
   }, [setBreadcrumbs]);
 

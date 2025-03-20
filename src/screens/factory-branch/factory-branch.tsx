@@ -1,9 +1,12 @@
 "use client";
 
+import { useContext, useEffect } from "react";
+
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { FactoryBranchContext } from "@/features/factory-branch";
+import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { useContext, useEffect } from "react";
+
 import { FactoryBranchGeneral } from "./views";
 
 const tabs: Tab[] = [
@@ -22,13 +25,13 @@ export function FactoryBranchScreen() {
     setBreadcrumbs([
       {
         label: "Branches",
-        href: "/workspace/branches",
+        href: `/${PlatformArea.core}/branche`,
       },
       {
         label: factoryBranch.factory.name
           ? factoryBranch.factory.name
           : factoryBranch.factory.key!,
-        href: `/workspace/branches/${factoryBranchId}`,
+        href: `/${PlatformArea.core}/branches/${factoryBranchId}`,
       },
     ]);
   }, [factoryBranchId, factoryBranch.factory.name, factoryBranch.factory.key]);

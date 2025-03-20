@@ -22,6 +22,7 @@ import {
   useTwinStatusSearchV1,
 } from "@/entities/twin-status";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -238,7 +239,7 @@ export function TwinClassStatusesTable({
       fetcher={fetchStatuses}
       onRowClick={(row) =>
         router.push(
-          `/workspace/twinclass/${row.twinClassId}/twinStatus/${row.id}`
+          `/${PlatformArea.core}/twinclass/${row.twinClassId}/twinStatus/${row.id}`
         )
       }
       filters={{

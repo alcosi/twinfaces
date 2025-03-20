@@ -29,6 +29,7 @@ import { FieldIcon } from "@/entities/twin-class-field";
 import { TwinFlowIcon } from "@/entities/twin-flow";
 import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
 import { TwinStatusIcon } from "@/entities/twin-status";
+import { PlatformArea } from "@/shared/config";
 import { TierIcon } from "@/shared/ui/icons";
 
 import { Group, GroupKeys } from "./group";
@@ -39,22 +40,22 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Classes",
-        url: "/workspace/twinclass",
+        url: `/${PlatformArea.core}/twinclass`,
         icon: TwinClassIcon,
       },
       {
         title: "Fields",
-        url: "/workspace/fields",
+        url: `/${PlatformArea.core}/fields`,
         icon: FieldIcon,
       },
       {
         title: "Statuses",
-        url: "/workspace/statuses",
+        url: `/${PlatformArea.core}/statuses`,
         icon: TwinStatusIcon,
       },
       {
         title: "Links",
-        url: "/workspace/links",
+        url: `/${PlatformArea.core}/links`,
         icon: Link2,
       },
     ],
@@ -64,17 +65,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Twins",
-        url: "/workspace/twins",
+        url: `/${PlatformArea.core}/twins`,
         icon: TwinIcon,
       },
       {
         title: "Comments",
-        url: "/workspace/comments",
+        url: `/${PlatformArea.core}/comments`,
         icon: MessageCircle,
       },
       {
         title: "Attachments",
-        url: "/workspace/attachments",
+        url: `/${PlatformArea.core}/attachments`,
         icon: Paperclip,
       },
     ],
@@ -84,12 +85,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Users",
-        url: "/workspace/users",
+        url: `/${PlatformArea.core}/users`,
         icon: User,
       },
       {
         title: "Groups",
-        url: "/workspace/user-groups",
+        url: `/${PlatformArea.core}/user-groups`,
         icon: UsersRound,
       },
     ],
@@ -99,17 +100,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Datalists",
-        url: "/workspace/datalists",
+        url: `/${PlatformArea.core}/datalists`,
         icon: DatalistIcon,
       },
       {
         title: "Options",
-        url: "/workspace/datalist-options",
+        url: `/${PlatformArea.core}/datalist-options`,
         icon: Option,
       },
       {
         title: "Subsets",
-        url: "/workspace/subsets",
+        url: `/${PlatformArea.core}/subsets`,
         icon: Shapes,
       },
     ],
@@ -119,17 +120,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Permissions",
-        url: "/workspace/permissions",
+        url: `/${PlatformArea.core}/permissions`,
         icon: PermissionIcon,
       },
       {
         title: "Permission Groups",
-        url: "/workspace/permission-group",
+        url: `/${PlatformArea.core}/permission-groups`,
         icon: PermissionGroupIcon,
       },
       {
         title: "Schemas",
-        url: "/workspace/permission-schemas",
+        url: `/${PlatformArea.core}/permission-schemas`,
         icon: PermissionSchemaIcon,
       },
     ],
@@ -139,42 +140,42 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Factories",
-        url: "/workspace/factories",
+        url: `/${PlatformArea.core}/factories`,
         icon: Factory,
       },
       {
         title: "Multipliers",
-        url: "/workspace/multipliers",
+        url: `/${PlatformArea.core}/multipliers`,
         icon: Asterisk,
       },
       {
         title: "Multiplier filters",
-        url: "/workspace/multiplier-filters",
+        url: `/${PlatformArea.core}/multiplier-filters`,
         icon: SquareAsterisk,
       },
       {
         title: "Pipelines",
-        url: "/workspace/pipelines",
+        url: `/${PlatformArea.core}/pipelines`,
         icon: FactoryPipelineIcon,
       },
       {
         title: "Pipeline steps",
-        url: "/workspace/pipeline-steps",
+        url: `/${PlatformArea.core}/pipeline-steps`,
         icon: FactoryPipelineStepIcon,
       },
       {
         title: "Branches",
-        url: "/workspace/branches",
+        url: `/${PlatformArea.core}/branches`,
         icon: FactoryBranchIcon,
       },
       {
         title: "Erasers",
-        url: "/workspace/erasers",
+        url: `/${PlatformArea.core}/erasers`,
         icon: Eraser,
       },
       {
         title: "Condition sets",
-        url: "/workspace/condition-sets",
+        url: `/${PlatformArea.core}/condition-sets`,
         icon: FactoryConditionSetIcon,
       },
     ],
@@ -184,17 +185,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Transitions",
-        url: "/workspace/transitions",
+        url: `/${PlatformArea.core}/transitions`,
         icon: TwinFlowTransitionIcon,
       },
       {
         title: "Twinflows",
-        url: "/workspace/twinflows",
+        url: `/${PlatformArea.core}/twinflows`,
         icon: TwinFlowIcon,
       },
       {
         title: "Schemas",
-        url: "/workspace/twinflow-schemas",
+        url: `/${PlatformArea.core}/twinflow-schemas`,
         icon: SquareActivity,
       },
     ],
@@ -204,12 +205,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Business accounts",
-        url: "/workspace/business-accounts",
+        url: `/${PlatformArea.core}/business-accounts`,
         icon: BriefcaseBusiness,
       },
       {
         title: "Tiers",
-        url: "/workspace/tiers",
+        url: `/${PlatformArea.core}/tiers`,
         icon: TierIcon,
       },
     ],
@@ -219,7 +220,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Featurers",
-        url: "/workspace/featurers",
+        url: `/${PlatformArea.core}/featurers`,
         icon: Play,
       },
     ],

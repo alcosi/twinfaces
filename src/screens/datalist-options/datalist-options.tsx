@@ -1,14 +1,18 @@
 "use client";
 
-import { DatalistOptionsTable } from "@/widgets/tables";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { useEffect } from "react";
+
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PlatformArea } from "@/shared/config";
+import { DatalistOptionsTable } from "@/widgets/tables";
 
 export function DatalistOptionsScreen() {
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Options", href: "/workspace/datalist-options" }]);
+    setBreadcrumbs([
+      { label: "Options", href: `/${PlatformArea.core}/datalist-options` },
+    ]);
   }, [setBreadcrumbs]);
 
   return <DatalistOptionsTable />;

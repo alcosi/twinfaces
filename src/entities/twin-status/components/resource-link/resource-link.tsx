@@ -1,5 +1,6 @@
 import { Square } from "lucide-react";
 
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 
@@ -20,7 +21,7 @@ export function TwinClassStatusResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  const link = `/workspace/twinclass/${twinClassId}/twinStatus/${data.id}`;
+  const link = `/${PlatformArea.core}/twinclass/${twinClassId}/twinStatus/${data.id}`;
 
   const Icon = data.backgroundColor ? (
     <Square

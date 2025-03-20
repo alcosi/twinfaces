@@ -1,10 +1,13 @@
 "use client";
 
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { Tab, TabsLayout } from "@/widgets/layout";
 import { useContext, useEffect } from "react";
-import { FactoryGeneral } from "./views";
+
+import { useBreadcrumbs } from "@/features/breadcrumb";
 import { FactoryContext } from "@/features/factory";
+import { PlatformArea } from "@/shared/config";
+import { Tab, TabsLayout } from "@/widgets/layout";
+
+import { FactoryGeneral } from "./views";
 
 const tabs: Tab[] = [
   {
@@ -22,11 +25,11 @@ export function FactoryScreen() {
     setBreadcrumbs([
       {
         label: "Factory",
-        href: "/workspace/factories",
+        href: `/${PlatformArea.core}/factorie`,
       },
       {
         label: factory.name,
-        href: `/workspace/factories/${factoryId}`,
+        href: `/${PlatformArea.core}/factories/${factoryId}`,
       },
     ]);
   }, [factoryId, factory.name]);

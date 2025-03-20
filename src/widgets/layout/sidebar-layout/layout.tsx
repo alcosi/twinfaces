@@ -1,15 +1,20 @@
-"use client";
+import { PropsWithChildren } from "react";
 
-import { SidebarProvider } from "@/shared/ui/sidebar";
-import React from "react";
+import { fetchSidebarFace } from "@/entities/face";
+import { SidebarProvider } from "@/shared/ui";
+
 import { SidebarLayoutContent } from "./content";
 import { SidebarLayoutHeader } from "./header";
 import { AppSidebar } from "./sidebar";
 
-export function SidebarLayout({ children }: { children: React.ReactNode }) {
+type Props = PropsWithChildren<{}>;
+
+export async function SidebarLayout({ children }: Props) {
+  const face = await fetchSidebarFace();
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar face={face} />
       <div className="w-full">
         <SidebarLayoutHeader />
         <SidebarLayoutContent>{children}</SidebarLayoutContent>

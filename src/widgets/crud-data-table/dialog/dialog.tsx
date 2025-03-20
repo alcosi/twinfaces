@@ -1,22 +1,23 @@
-import { Button } from "@/shared/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/dialog";
-import { Form } from "@/shared/ui/form";
 import {
   ForwardedRef,
-  forwardRef,
   ReactNode,
+  forwardRef,
   useImperativeHandle,
   useReducer,
   useRef,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
+
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Form,
+} from "@/shared/ui";
 
 export type CrudDataTableDialogRef = {
   // TODO: fix `any`
