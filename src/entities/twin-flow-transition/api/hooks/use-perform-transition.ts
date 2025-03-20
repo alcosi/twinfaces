@@ -20,7 +20,10 @@ export function usePerformTransition() {
     });
 
     if (error) {
-      throw new Error("Failed to select transition due to API error", error);
+      throw new Error(
+        "Failed to select perform transition due to API error",
+        error
+      );
     }
   }
 
