@@ -329,9 +329,9 @@ export function TwinsTable({
       });
 
       tableRef.current?.resetPage();
-      toast.success("Perform transition select successfully!");
+      toast.success("Transition is performed successfully");
     } catch (error) {
-      toast.error("Error selecting perform transition!");
+      toast.error("Error performing transition");
     }
   };
 
