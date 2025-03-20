@@ -22,8 +22,13 @@ import {
   TwinClass_DETAILED,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
+import {
+  TwinFlowTransition,
+  usePerformTransition,
+} from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { User, UserResourceLink } from "@/entities/user";
+import { TransitionPerformer } from "@/features/transition-performer";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
@@ -62,140 +67,6 @@ type Props = {
   targetHeadTwinId?: string;
 };
 
-const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
-  id: {
-    id: "id",
-    accessorKey: "id",
-    header: "ID",
-    cell: (data) => <GuidWithCopy value={data.row.original.id} />,
-  },
-
-  twinClassId: {
-    id: "twinClassId",
-    accessorKey: "twinClassId",
-    header: "Twin class",
-    cell: ({ row: { original } }) =>
-      original.twinClass && (
-        <div className="max-w-48 inline-flex">
-          <TwinClassResourceLink
-            data={original.twinClass as TwinClass_DETAILED}
-            withTooltip
-          />
-        </div>
-      ),
-  },
-
-  aliases: {
-    id: "aliases",
-    accessorKey: "aliases",
-    header: "Alias",
-  },
-
-  name: {
-    id: "name",
-    accessorKey: "name",
-    header: "Name",
-  },
-
-  statusId: {
-    id: "statusId",
-    accessorKey: "statusId",
-    header: "Status",
-    cell: ({ row: { original } }) =>
-      original.status && (
-        <div className="max-w-48 inline-flex">
-          <TwinClassStatusResourceLink
-            data={original.status}
-            twinClassId={original.twinClassId!}
-            withTooltip
-          />
-        </div>
-      ),
-  },
-
-  description: {
-    id: "description",
-    accessorKey: "description",
-    header: "Description",
-  },
-
-  authorUserId: {
-    id: "authorUserId",
-    accessorKey: "authorUserId",
-    header: "Author",
-    cell: ({ row: { original } }) =>
-      original.authorUser && (
-        <div className="max-w-48 inline-flex">
-          <UserResourceLink data={original.authorUser as User} withTooltip />
-        </div>
-      ),
-  },
-
-  assignerUserId: {
-    id: "assignerUserId",
-    accessorKey: "assignerUserId",
-    header: "Assignee",
-    cell: ({ row: { original } }) =>
-      original.assignerUser && (
-        <div className="max-w-48 inline-flex">
-          <UserResourceLink data={original.assignerUser as User} withTooltip />
-        </div>
-      ),
-  },
-
-  headTwinId: {
-    id: "headTwinId",
-    accessorKey: "headTwinId",
-    header: "Head",
-    cell: ({ row: { original } }) =>
-      original.headTwinId && original.headTwin ? (
-        <div className="max-w-48 inline-flex">
-          <TwinResourceLink data={original.headTwin} withTooltip />
-        </div>
-      ) : null,
-  },
-
-  tags: {
-    id: "tags",
-    accessorKey: "tags",
-    header: "Tags",
-    cell: ({ row: { original } }) =>
-      isPopulatedArray(original.tags) && (
-        <div className="max-w-48 inline-flex flex-wrap gap-2">
-          {original.tags.map((tag) => (
-            <DatalistOptionResourceLink key={tag.id} data={tag} />
-          ))}
-        </div>
-      ),
-  },
-
-  markers: {
-    id: "markers",
-    accessorKey: "markers",
-    header: "Markers",
-    cell: ({ row: { original } }) =>
-      original.markerIdList && original.markers ? (
-        <div className="max-w-48 inline-flex">
-          <DatalistOptionResourceLink
-            data={{
-              ...original.markers,
-              dataListId: original.twinClass?.markersDataListId,
-            }}
-            withTooltip
-          />
-        </div>
-      ) : null,
-  },
-
-  createdAt: {
-    id: "createdAt",
-    accessorKey: "createdAt",
-    header: "Created at",
-    cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
-  },
-};
-
 export function TwinsTable({
   title,
   enabledColumns,
@@ -209,6 +80,148 @@ export function TwinsTable({
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
+  const { performTransition } = usePerformTransition();
+
+  const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
+    id: {
+      id: "id",
+      accessorKey: "id",
+      header: "ID",
+      cell: (data) => <GuidWithCopy value={data.row.original.id} />,
+    },
+
+    twinClassId: {
+      id: "twinClassId",
+      accessorKey: "twinClassId",
+      header: "Twin class",
+      cell: ({ row: { original } }) =>
+        original.twinClass && (
+          <div className="max-w-48 inline-flex">
+            <TwinClassResourceLink
+              data={original.twinClass as TwinClass_DETAILED}
+              withTooltip
+            />
+          </div>
+        ),
+    },
+
+    aliases: {
+      id: "aliases",
+      accessorKey: "aliases",
+      header: "Alias",
+    },
+
+    name: {
+      id: "name",
+      accessorKey: "name",
+      header: "Name",
+    },
+
+    statusId: {
+      id: "statusId",
+      accessorKey: "statusId",
+      header: "Status",
+      cell: ({ row: { original } }) => (
+        <div className="max-w-48 inline-flex items-center gap-2">
+          {original.status && (
+            <TwinClassStatusResourceLink
+              data={original.status}
+              twinClassId={original.twinClassId!}
+              withTooltip
+            />
+          )}
+          {isPopulatedArray(original.transitions) && (
+            <TransitionPerformer twin={original} onSelect={handleOnSelect} />
+          )}
+        </div>
+      ),
+    },
+
+    description: {
+      id: "description",
+      accessorKey: "description",
+      header: "Description",
+    },
+
+    authorUserId: {
+      id: "authorUserId",
+      accessorKey: "authorUserId",
+      header: "Author",
+      cell: ({ row: { original } }) =>
+        original.authorUser && (
+          <div className="max-w-48 inline-flex">
+            <UserResourceLink data={original.authorUser as User} withTooltip />
+          </div>
+        ),
+    },
+
+    assignerUserId: {
+      id: "assignerUserId",
+      accessorKey: "assignerUserId",
+      header: "Assignee",
+      cell: ({ row: { original } }) =>
+        original.assignerUser && (
+          <div className="max-w-48 inline-flex">
+            <UserResourceLink
+              data={original.assignerUser as User}
+              withTooltip
+            />
+          </div>
+        ),
+    },
+
+    headTwinId: {
+      id: "headTwinId",
+      accessorKey: "headTwinId",
+      header: "Head",
+      cell: ({ row: { original } }) =>
+        original.headTwinId && original.headTwin ? (
+          <div className="max-w-48 inline-flex">
+            <TwinResourceLink data={original.headTwin} withTooltip />
+          </div>
+        ) : null,
+    },
+
+    tags: {
+      id: "tags",
+      accessorKey: "tags",
+      header: "Tags",
+      cell: ({ row: { original } }) =>
+        isPopulatedArray(original.tags) && (
+          <div className="max-w-48 inline-flex flex-wrap gap-2">
+            {original.tags.map((tag) => (
+              <DatalistOptionResourceLink key={tag.id} data={tag} />
+            ))}
+          </div>
+        ),
+    },
+
+    markers: {
+      id: "markers",
+      accessorKey: "markers",
+      header: "Markers",
+      cell: ({ row: { original } }) =>
+        original.markerIdList && original.markers ? (
+          <div className="max-w-48 inline-flex">
+            <DatalistOptionResourceLink
+              data={{
+                ...original.markers,
+                dataListId: original.twinClass?.markersDataListId,
+              }}
+              withTooltip
+            />
+          </div>
+        ) : null,
+    },
+
+    createdAt: {
+      id: "createdAt",
+      accessorKey: "createdAt",
+      header: "Created at",
+      cell: ({ row: { original } }) =>
+        original.createdAt && formatToTwinfaceDate(original.createdAt),
+    },
+  };
 
   const [columnMap, setColumnMap] = useState(
     enabledColumns
@@ -301,6 +314,26 @@ export function TwinsTable({
     await createTwin({ body });
     toast.success(`Twin ${body.name} is created successfully!`);
   }
+
+  const handleOnSelect = async ({
+    transition,
+    twin,
+  }: {
+    transition: TwinFlowTransition;
+    twin: Twin_DETAILED;
+  }) => {
+    try {
+      await performTransition({
+        transitionId: transition.id!,
+        body: { twinId: twin.id },
+      });
+
+      tableRef.current?.resetPage();
+      toast.success("Transition is performed successfully");
+    } catch (error) {
+      toast.error("Error performing transition");
+    }
+  };
 
   return (
     <CrudDataTable

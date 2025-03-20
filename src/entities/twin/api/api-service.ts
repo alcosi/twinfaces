@@ -33,6 +33,7 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinByHeadMode: "YELLOW",
           showTwinAliasMode: "C",
           showTwinFieldCollectionMode: "ALL_FIELDS",
+          showTwin2TransitionMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

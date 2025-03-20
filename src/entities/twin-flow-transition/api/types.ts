@@ -21,6 +21,8 @@ export type TwinFlowTransitionCreateRq =
   components["schemas"]["TransitionCreateRqV1"];
 export type TwinFlowTransitionUpdateRq =
   components["schemas"]["TransitionUpdateRqV1"];
+export type TwinTransitionPerformRq =
+  components["schemas"]["TwinTransitionPerformRqV1"];
 
 export type TwinFlowTransitionFilterKeys =
   | "twinflowIdList"
