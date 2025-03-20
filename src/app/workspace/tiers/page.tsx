@@ -1,5 +1,5 @@
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
+import { TiersScreen } from "@/screens/tiers";
 
-export default function TiersPage() {
-  return <UnderConstruction />;
+export default function Page() {
+  return <TiersScreen />;
 }
