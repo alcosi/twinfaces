@@ -13,5 +13,15 @@ export const hydrateTierFromMap = (
       relatedObjects.permissionSchemaMap[dto.permissionSchemaId]!;
   }
 
+  if (dto.twinflowSchemaId && relatedObjects?.twinflowMap) {
+    hydrated.twinClassSchema =
+      relatedObjects.twinflowMap[dto.twinflowSchemaId]!;
+  }
+
+  if (dto.twinClassSchemaId && relatedObjects?.twinClassSchemaMap) {
+    hydrated.twinClassSchema =
+      relatedObjects.twinClassSchemaMap[dto.twinClassSchemaId]!;
+  }
+
   return hydrated;
 };

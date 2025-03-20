@@ -1,5 +1,3 @@
-"use client";
-
 import { TiersScreen } from "@/screens/tiers";
 
 export default function Page() {

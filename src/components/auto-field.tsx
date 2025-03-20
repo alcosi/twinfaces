@@ -195,12 +195,9 @@ export function AutoField({
         break;
 
       case AutoFormValueType.numberRange:
-        return (
-          name &&
-          control && (
-            <NumberRangeFormField name={name} control={control} {...info} />
-          )
-        );
+        return name && control ? (
+          <NumberRangeFormField name={name} control={control} {...info} />
+        ) : null;
 
       default:
         return name && control ? (

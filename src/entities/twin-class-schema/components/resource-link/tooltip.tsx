@@ -9,7 +9,7 @@ type Props = {
   link: string;
 };
 
-export const TwinClassSchemaResourceTooltip = ({ data, link }: Props) => {
+export function TwinClassSchemaResourceTooltip({ data, link }: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id} link={link}>
       <ResourceLinkTooltip.Header
@@ -22,4 +22,4 @@ export const TwinClassSchemaResourceTooltip = ({ data, link }: Props) => {
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
-};
+}

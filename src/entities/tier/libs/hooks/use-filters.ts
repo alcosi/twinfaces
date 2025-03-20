@@ -14,7 +14,6 @@ import {
 
 import { TierFilterKeys, TierFilters } from "../../api";
 
-//TODO added filter Class schema https://alcosi.atlassian.net/browse/TWINFACES-406 now this task is block
 export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
   const permissionSchemaAdapter = usePermissionSchemaSelectAdapter();
   const twinFlowSchemaAdapter = useTwinFlowSchemaSelectAdapter();
@@ -49,6 +48,8 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
         multi: true,
         ...twinFlowSchemaAdapter,
       },
+      // TODO: Add filter `class-schema`
+      // see BLOCKED -> https://alcosi.atlassian.net/browse/TWINFACES-406
       attachmentsStorageQuotaCountRange: {
         type: AutoFormValueType.numberRange,
         label: "Attachments count quota",
@@ -95,7 +96,6 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
           }
         )?.to,
       },
-
       attachmentsStorageQuotaSizeRange: {
         from: (
           filters.attachmentsStorageQuotaSizeRange as {
@@ -108,7 +108,6 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
           }
         )?.to,
       },
-
       userCountQuotaRange: {
         from: (
           filters.userCountQuotaRange as {
@@ -121,7 +120,6 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
           }
         )?.to,
       },
-
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),
         "description"

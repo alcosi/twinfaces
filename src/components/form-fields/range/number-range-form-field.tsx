@@ -1,88 +1,43 @@
-import { ReactNode } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
 
 import { AutoFormNumberRangeValueInfo } from "@/components/auto-field";
-import { FormFieldProps, TextFormItem } from "@/components/form-fields";
+import {
+  FormFieldProps,
+  FormItemLabel,
+  TextFormField,
+} from "@/components/form-fields";
 
-import { FormField } from "@/shared/ui";
-
-type NumberRangeFormFieldProps<T extends FieldValues> = FormFieldProps<T> &
-  Omit<NumberRangeFormItemProps, "fieldValue" | "onChange"> & {
-    idPrefix?: string;
-    label?: ReactNode;
-  };
-
-type NumberRangeFormItemProps = Omit<AutoFormNumberRangeValueInfo, "label"> & {
-  fieldValue?: { from: number | undefined; to: number | undefined };
-  onChange?: (value: {
-    from: number | undefined;
-    to: number | undefined;
-  }) => void;
-  autoFocus?: boolean;
-  inputId?: string;
-  inForm?: boolean;
-  label?: ReactNode;
-};
+type Props<T extends FieldValues> = FormFieldProps<T> &
+  AutoFormNumberRangeValueInfo;
 
 export function NumberRangeFormField<T extends FieldValues>({
   name,
   control,
-  idPrefix,
-  type,
   label,
   ...props
-}: NumberRangeFormFieldProps<T>) {
-  const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
-
+}: Props<T>) {
   return (
-    <div>
+    <div className="grid grid-rows-[auto_1fr] grid-cols-2 gap-2">
       {label && (
-        <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-          {label}
-        </label>
+        <div className="col-span-2">
+          <FormItemLabel>{label}</FormItemLabel>
+        </div>
       )}
-      <div className="flex gap-2">
-        <div className="flex-1">
-          <FormField
-            control={control}
-            name={`${name}.from` as FieldPath<T>}
-            render={({ field }) => {
-              return (
-                <TextFormItem
-                  autoFocus={props.autoFocus}
-                  fieldValue={field.value}
-                  onChange={(x) => field.onChange(x)}
-                  inputId={inputId ? `${inputId}-from` : undefined}
-                  inForm={true}
-                  type="number"
-                  placeholder={props.placeholderFrom ?? "from"}
-                  {...props}
-                />
-              );
-            }}
-          />
-        </div>
+      <TextFormField
+        {...props}
+        name={`${name}.from` as FieldPath<T>}
+        control={control}
+        type="number"
+        placeholder={props.placeholderFrom ?? "from"}
+      />
 
-        <div className="flex-1">
-          <FormField
-            control={control}
-            name={`${name}.to` as FieldPath<T>}
-            render={({ field }) => {
-              return (
-                <TextFormItem
-                  fieldValue={field.value}
-                  onChange={(x) => field.onChange(x)}
-                  inputId={inputId ? `${inputId}-to` : undefined}
-                  inForm={true}
-                  type="number"
-                  placeholder={props.placeholderTo ?? "to"}
-                  {...props}
-                />
-              );
-            }}
-          />
-        </div>
-      </div>
+      <TextFormField
+        {...props}
+        name={`${name}.to` as FieldPath<T>}
+        control={control}
+        type="number"
+        placeholder={props.placeholderFrom ?? "to"}
+      />
     </div>
   );
 }

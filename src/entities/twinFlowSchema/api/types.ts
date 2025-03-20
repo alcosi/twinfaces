@@ -1,4 +1,4 @@
-import { components, paths } from "@/shared/api/generated/schema";
+import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type TwinFlowSchema = components["schemas"]["TwinflowSchemaV1"];

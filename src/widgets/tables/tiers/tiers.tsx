@@ -101,6 +101,7 @@ const colDefs: Record<
           <TwinClassSchemaResourceLink
             data={original.twinClassSchema as TwinClassSchema_DETAILED}
             withTooltip
+            disabled
           />
         </div>
       ),
