@@ -1,7 +1,9 @@
+import { Control } from "react-hook-form";
+
 import { TextFormField } from "@/components/form-fields";
+
 import { TwinFlowTransitionFormValues } from "@/entities/twin-flow-transition";
 import { TwinStatusSelectField } from "@/features/twinStatus";
-import { Control } from "react-hook-form";
 
 export function TwinFlowTransitionFormFields({
   twinClassId,
@@ -13,7 +15,12 @@ export function TwinFlowTransitionFormFields({
   return (
     <>
       <TextFormField control={control} name="alias" label="Alias" />
-      <TextFormField control={control} name="name" label="Name" />
+      <TextFormField
+        control={control}
+        name="name"
+        label="Name"
+        autoFocus={true}
+      />
       <TextFormField control={control} name="description" label="Description" />
       <TwinStatusSelectField
         twinClassId={twinClassId}

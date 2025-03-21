@@ -61,6 +61,9 @@ export function useComboboxController<T>({
 
       return setSelectedItems([newSelection]);
     },
+    focus: () => {
+      setIsOpen(true);
+    },
   }));
 
   const selectItem = (itemKey: string, getItemKey: (item: T) => string) => {

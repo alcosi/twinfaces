@@ -1,15 +1,17 @@
+import { useRef } from "react";
+import { Control, useWatch } from "react-hook-form";
+import { z } from "zod";
+
 import {
   CheckboxFormField,
   ComboboxFormField,
   TextAreaFormField,
 } from "@/components/form-fields";
+
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { FACTORY_BRANCH_SCHEMA } from "@/entities/factory-branch";
 import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import { isTruthy } from "@/shared/libs";
-import { useRef } from "react";
-import { Control, useWatch } from "react-hook-form";
-import { z } from "zod";
 
 export function FactoryBranchFormFields({
   control,
@@ -31,6 +33,7 @@ export function FactoryBranchFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         disabled={disabled}
+        autoFocus={true}
         {...fAdapter}
       />
 

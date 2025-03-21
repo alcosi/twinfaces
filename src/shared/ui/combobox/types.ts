@@ -4,6 +4,7 @@ import { SelectAdapter } from "@/shared/libs";
 export type ComboboxHandle<T> = {
   getSelected: () => T[];
   setSelected: (newSelected: T | T[] | undefined) => void;
+  focus: () => void;
 };
 
 export type ComboboxStrategy<T> = {
@@ -23,4 +24,5 @@ export interface ComboboxProps<T> extends SelectAdapter<T> {
   initialValues?: T[];
   disabled?: boolean;
   creatable?: boolean;
+  autoFocus?: boolean;
 }

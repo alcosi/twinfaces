@@ -43,6 +43,7 @@ export function UserGroupTableFormFields({
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
+        autoFocus={true}
         {...psAdapter}
       />
 

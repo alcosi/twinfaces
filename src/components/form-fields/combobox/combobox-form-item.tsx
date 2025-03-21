@@ -22,6 +22,7 @@ export function ComboboxFormItem<TFieldModel>({
   required,
   buttonClassName,
   inForm,
+  autoFocus,
   ...props
 }: ComboboxProps<TFieldModel> & {
   fieldValue?: TFieldModel[] | string;
@@ -35,6 +36,12 @@ export function ComboboxFormItem<TFieldModel>({
   useEffect(() => {
     applySelectedValues(fieldValue);
   }, [fieldValue]);
+
+  useEffect(() => {
+    if (autoFocus) {
+      comboboxRef.current?.focus();
+    }
+  }, [autoFocus]);
 
   async function applySelectedValues(values: TFieldModel[] | string) {
     if (isEmptyString(values)) {
