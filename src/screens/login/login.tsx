@@ -70,7 +70,7 @@ export function Login() {
           .join(","),
         domainId: values.domainId,
       });
-      router.push(`/${PlatformArea.core}/twinclas`);
+      router.push(`/${PlatformArea.core}/twinclass`);
     }
   }
 
