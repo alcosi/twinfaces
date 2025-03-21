@@ -5,4 +5,5 @@ export * from "./use-fetch-by-id";
 export * from "./use-permission-search-v1";
 export * from "./use-update";
 export * from "./use-create-permission-grant-twin-role";
+export * from "./use-create-permission-grant-space-role";
 export * from "./use-create-permission-grant-assignee-propagation";

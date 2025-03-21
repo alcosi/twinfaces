@@ -57,7 +57,7 @@ import {
 import {
   PermissionSpaceRoleApi,
   createPermissionSpaceRoleApi,
-} from "@/entities/spaceRole";
+} from "@/entities/space-role";
 import { TierApi, createTierApi } from "@/entities/tier";
 import { TwinApi, createTwinApi } from "@/entities/twin";
 import { TwinClassApi, createTwinClassApi } from "@/entities/twin-class";

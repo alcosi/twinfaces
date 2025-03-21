@@ -56,6 +56,21 @@ export const PERMISSION_GRANT_TWIN_ROLE_SCHEMA = z.object({
   ]),
 });
 
+export const PERMISSION_GRANT_SPACE_ROLE_SCHEMA = z.object({
+  permissionId: z
+    .string()
+    .uuid("Permission ID must be a valid UUID")
+    .or(FIRST_ID_EXTRACTOR),
+  permissionSchemaId: z
+    .string()
+    .uuid("Permission schema ID must be a valid UUID")
+    .or(FIRST_ID_EXTRACTOR),
+  spaceRoleId: z
+    .string()
+    .uuid("Space role ID must be a valid UUID")
+    .or(FIRST_ID_EXTRACTOR),
+});
+
 export const PERMISSION_GRANT_USER_SCHEMA = z.object({
   permissionId: z
     .string()

@@ -1,11 +1,11 @@
 import { VenetianMask } from "lucide-react";
 
-import { SpaceRole } from "@/entities/spaceRole";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 
 import { SpaceRoleResourceTooltip } from "./tooltip";
+import { SpaceRole } from "@/entities/space-role";
 
 type Props = {
   data: SpaceRole;
