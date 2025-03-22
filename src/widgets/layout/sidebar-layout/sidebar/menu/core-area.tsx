@@ -30,8 +30,20 @@ export function CoreAreaSidebarMenu() {
 }
 
 function AccordionMenu() {
+  const pathname = usePathname() || "";
+
+  const activeGroup =
+    Object.values(SIDEBAR_GROUPS).find((group) =>
+      group.items.some((item) => isItemActive(item.url, pathname))
+    ) ?? SIDEBAR_GROUPS.class;
+
   return (
-    <Accordion type="single" collapsible className="w-full p-2">
+    <Accordion
+      type="single"
+      collapsible
+      className="w-full p-2"
+      defaultValue={activeGroup?.title.toLowerCase()}
+    >
       {Object.values(SIDEBAR_GROUPS).map((group) => (
         <AccordionGroup key={group.title} {...group} />
       ))}
