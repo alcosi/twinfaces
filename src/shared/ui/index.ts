@@ -20,6 +20,7 @@ export * from "./separator";
 export * from "./sheet";
 export * from "./sidebar";
 export * from "./skeleton";
+export * from "./slide-view";
 export * from "./sonner";
 export * from "./table";
 export * from "./tabs";

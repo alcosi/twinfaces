@@ -1,9 +1,7 @@
 "use client";
 
 import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
@@ -11,14 +9,13 @@ import { FaceNB001 } from "@/entities/face";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";
+import { isPopulatedArray } from "@/shared/libs";
 import {
-  Accordion,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  QuestionMarkIcon,
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -26,13 +23,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SlideView,
   Tabs,
-  TabsContent,
 } from "@/shared/ui";
 
-import { AccordionGroupSection } from "./accordion-group";
 import { PlatformAreaSwitcher } from "./area-switcher";
-import { SIDEBAR_GROUPS } from "./constants";
+import { CoreAreaSidebarMenu, WorkspaceAreaSidebarMenu } from "./menu";
 
 type Props = {
   face: FaceNB001;
@@ -43,9 +39,15 @@ export function AppSidebar({ face }: Props) {
   const { authUser, updateUser, logout } = useAuthUser();
   const currentDomain = data?.find((i) => i.id === authUser?.domainId);
   const router = useRouter();
-  const [area, setArea] = useState<keyof typeof PlatformArea>(
-    PlatformArea.workspace
-  );
+  const pathname = usePathname();
+
+  // NOTE: Quick fix: infer sidebar area from URL prefix
+  // * Doesn't support routes like `/design-system`
+  // TODO: Persist area via localStorage or context
+  const initialArea: keyof typeof PlatformArea = pathname?.startsWith("/core")
+    ? PlatformArea.core
+    : PlatformArea.workspace;
+  const [area, setArea] = useState<keyof typeof PlatformArea>(initialArea);
 
   function onDomainSwitch(domain: DomainView_SHORT) {
     updateUser({ domainId: domain.id });
@@ -97,92 +99,16 @@ export function AppSidebar({ face }: Props) {
         <SidebarContent>
           <Tabs value={area} className="flex flex-col gap-2 h-full">
             <section className="grow overflow-y-auto pb-2">
-              <TabsContent value={PlatformArea.workspace}>
-                <nav className="p-2">
-                  {face.userAreaMenuItems?.map((item) => (
-                    <Link
-                      key={item.key}
-                      href={`/${PlatformArea.workspace}/${item.key!}`}
-                    >
-                      <SidebarMenu>
-                        <SidebarMenuItem>
-                          <SidebarMenuButton>
-                            {item.icon ? (
-                              <Image
-                                src={item.icon}
-                                alt={item.label || "icon"}
-                                width={16}
-                                height={16}
-                                className="dark:invert"
-                              />
-                            ) : (
-                              <QuestionMarkIcon />
-                            )}
-                            <span>{item.label}</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      </SidebarMenu>
-                    </Link>
-                  ))}
+              <SlideView activeIndex={area === PlatformArea.workspace ? 0 : 1}>
+                <nav key={PlatformArea.workspace}>
+                  {isPopulatedArray(face.userAreaMenuItems) && (
+                    <WorkspaceAreaSidebarMenu items={face.userAreaMenuItems} />
+                  )}
                 </nav>
-              </TabsContent>
-              <TabsContent value={PlatformArea.core} className="">
-                <nav>
-                  <Accordion
-                    type="single"
-                    // value="class"
-                    collapsible
-                    className="w-full p-2"
-                  >
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.class.title}
-                      items={SIDEBAR_GROUPS.class.items}
-                    />
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.twin.title}
-                      items={SIDEBAR_GROUPS.twin.items}
-                    />
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.user.title}
-                      items={SIDEBAR_GROUPS.user.items}
-                    />
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.datalist.title}
-                      items={SIDEBAR_GROUPS.datalist.items}
-                    />
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.permission.title}
-                      items={SIDEBAR_GROUPS.permission.items}
-                    />
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.factory.title}
-                      items={SIDEBAR_GROUPS.factory.items}
-                    />
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.transition.title}
-                      items={SIDEBAR_GROUPS.transition.items}
-                    />
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.businessAccount.title}
-                      items={SIDEBAR_GROUPS.businessAccount.items}
-                    />
-                    <AccordionGroupSection
-                      title={SIDEBAR_GROUPS.misc.title}
-                      items={SIDEBAR_GROUPS.misc.items}
-                    />
-                  </Accordion>
-
-                  {/* <GroupSection group={SIDEBAR_GROUPS.class} />
-                  <GroupSection group={SIDEBAR_GROUPS.twin} />
-                  <GroupSection group={SIDEBAR_GROUPS.user} />
-                  <GroupSection group={SIDEBAR_GROUPS.datalist} />
-                  <GroupSection group={SIDEBAR_GROUPS.permission} />
-                  <GroupSection group={SIDEBAR_GROUPS.factory} />
-                  <GroupSection group={SIDEBAR_GROUPS.transition} />
-                  <GroupSection group={SIDEBAR_GROUPS.businessAccount} />
-                  <GroupSection group={SIDEBAR_GROUPS.misc} /> */}
+                <nav key={PlatformArea.core}>
+                  <CoreAreaSidebarMenu />
                 </nav>
-              </TabsContent>
+              </SlideView>
             </section>
 
             <PlatformAreaSwitcher

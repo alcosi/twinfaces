@@ -32,7 +32,7 @@ import { TwinStatusIcon } from "@/entities/twin-status";
 import { PlatformArea } from "@/shared/config";
 import { TierIcon } from "@/shared/ui/icons";
 
-import { Group, GroupKeys } from "./group";
+import { Group, GroupKeys } from "./menu";
 
 export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
   class: {
