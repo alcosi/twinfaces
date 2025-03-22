@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import React from "react";
 
 import { fetchSidebarFace } from "@/entities/face";
 import { isUndefined } from "@/shared/libs";
@@ -9,7 +8,7 @@ type Props = {
   params: {
     pageFaceKey: string;
   };
-} & Readonly<{ children: React.ReactNode }>;
+};
 
 export default async function Page({ params: { pageFaceKey } }: Props) {
   const sidebarFace = await fetchSidebarFace();

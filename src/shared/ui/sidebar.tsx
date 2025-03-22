@@ -17,12 +17,13 @@ import {
 } from "react";
 
 import { cn, useIsMobile, useLocalStorage } from "@/shared/libs";
-import { Input } from "@/shared/ui";
-import { Button } from "@/shared/ui/button";
-import { Separator } from "@/shared/ui/separator";
-import { Sheet, SheetContent } from "@/shared/ui/sheet";
-import { Skeleton } from "@/shared/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+
+import { Button } from "./button";
+import { Input } from "./forms";
+import { Separator } from "./separator";
+import { Sheet, SheetContent } from "./sheet";
+import { Skeleton } from "./skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 export const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
