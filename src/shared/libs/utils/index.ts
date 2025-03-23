@@ -3,6 +3,7 @@ import { ReactNode, Ref, RefAttributes, forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 export * from "./adapter";
+export * from "./client-cookies";
 export * from "./collection";
 export * from "./date";
 export * from "./env";
