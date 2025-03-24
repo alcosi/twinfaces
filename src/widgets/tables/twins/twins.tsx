@@ -344,7 +344,6 @@ export function TwinsTable({
       getRowId={(row) => row.id}
       fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
       pageSizes={[10, 20, 50]}
-      onRowClick={(row) => router.push(`/${PlatformArea.core}/twins/${row.id}`)}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

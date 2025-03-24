@@ -1,6 +1,7 @@
 "use client";
 
 import { PaginationState } from "@tanstack/table-core";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ForwardedRef,
   ReactNode,
@@ -61,6 +62,9 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [viewSettings, updateViewSettings] = useReducer(
     (state: FilterState, updates: Partial<FilterState>) => ({
       ...state,
@@ -136,6 +140,17 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     ? () => dialogRef.current?.open()
     : undefined;
 
+  function handleOnRowClick(row: TData) {
+    if (onRowClick) {
+      return onRowClick(row);
+    }
+
+    if (row?.id) {
+      const basePath = pathname.replace(/\/$/, "");
+      router.push(`${basePath}/${row.id}`);
+    }
+  }
+
   return (
     <div className={cn("flex-1 py-4", className)}>
       <CrudDataTableHeader
@@ -157,7 +172,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         {...props}
         columns={visibleColumns}
         fetcher={fetchWrapper}
-        onRowClick={onRowClick}
+        onRowClick={handleOnRowClick}
       />
 
       <CrudDataTableDialog

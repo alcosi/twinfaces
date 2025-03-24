@@ -6,14 +6,14 @@ import { PG001Face } from "@/widgets/faces/pg001";
 
 type Props = {
   params: {
-    pageFaceKey: string;
+    pageKey: string;
   };
 };
 
-export default async function Page({ params: { pageFaceKey } }: Props) {
+export default async function Page({ params: { pageKey } }: Props) {
   const sidebarFace = await fetchSidebarFace();
   const pageFace = sidebarFace.userAreaMenuItems?.find(
-    (item) => item.key === pageFaceKey
+    (item) => item.key === pageKey
   );
 
   if (isUndefined(pageFace?.targetPageFaceId)) {
