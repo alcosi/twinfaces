@@ -1,6 +1,8 @@
-import { LoadingOverlay } from "@/shared/ui/loading";
+import { PropsWithChildren, createContext, useEffect, useState } from "react";
+
 import { TwinFlow, useTwinFlowSearchV1 } from "@/entities/twin-flow";
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { reduceToObject, toArray } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui/loading";
 
 type TwinFlowContextType = {
   twinClassId: string;
@@ -35,7 +37,12 @@ export function TwinFlowContextProvider({
           pageIndex: 0,
           pageSize: 1,
         },
-        filters: { twinClassIdList: [twinClassId] },
+        filters: {
+          twinClassIdMap: reduceToObject({
+            list: toArray(twinClassId),
+            defaultValue: true,
+          }),
+        },
       });
       const twinFlows = response.data ?? [];
       setTwinFlow(twinFlows[0]);

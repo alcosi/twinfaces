@@ -9,7 +9,7 @@ export type TwinFlow_DETAILED = RequireFields<
 
 export type TwinFlowFilterKeys =
   | "idList"
-  | "twinClassIdList"
+  | "twinClassIdMap"
   | "nameI18nLikeList"
   | "descriptionI18nLikeList"
   | "initialStatusIdList"
