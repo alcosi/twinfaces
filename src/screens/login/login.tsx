@@ -82,7 +82,7 @@ export function Login() {
           src={config.iconLight ?? config.favicon}
           width={56}
           height={56}
-          alt="Picture of the author"
+          alt="Domain icon"
         />
         <h1 className="text-lg font-bold my-3">
           {config.key ?? config.productName}
