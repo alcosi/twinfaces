@@ -1,5 +1,6 @@
 "use server";
 
+import { getAuthTokenFromCookies } from "@/entities/face";
 import { TwinsAPI } from "@/shared/api";
 import { RemoteConfig } from "@/shared/config";
 import { isUndefined } from "@/shared/libs";
@@ -19,11 +20,13 @@ export async function fetchDomainByKey(
 }
 
 export async function fetchDomainById(domainId: string): Promise<DomainViewRs> {
+  const AuthToken = await getAuthTokenFromCookies();
+
   const { data } = await TwinsAPI.GET("/private/domain/{domainId}/v1", {
     params: {
       path: { domainId },
       header: {
-        AuthToken: "608c6d7d-99c8-4d87-89c6-2f72d0f5d673",
+        AuthToken,
         Channel: "WEB",
       },
       query: {
