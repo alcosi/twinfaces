@@ -1,6 +1,6 @@
 import { CheckboxProps } from "@radix-ui/react-checkbox";
 
-import { Checkbox } from "@/shared/ui/checkbox";
+import { Checkbox } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
 import { FormItemProps } from "../types";

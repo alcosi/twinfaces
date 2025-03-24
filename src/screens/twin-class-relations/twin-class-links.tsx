@@ -22,6 +22,7 @@ import {
   TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { Badge } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -207,7 +208,9 @@ export function TwinClassRelations() {
           columnsMap.linkStrengthId,
         ]}
         fetcher={(paginationState) => fetchLinks("forward", paginationState)}
-        onRowClick={(row) => router.push(`/workspace/links/${row.id}`)}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/links/${row.id}`)
+        }
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}
@@ -236,7 +239,9 @@ export function TwinClassRelations() {
           columnsMap.linkStrengthId,
         ]}
         fetcher={(paginationState) => fetchLinks("backward", paginationState)}
-        onRowClick={(row) => router.push(`/workspace/links/${row.id}`)}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/links/${row.id}`)
+        }
         getRowId={(row) => row.id!}
         disablePagination={true}
         pageSizes={[10, 20, 50]}

@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { FactoryPipelineContext } from "@/features/factory-pipeline";
+import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { PipelineStepsTable } from "@/widgets/tables";
 
@@ -17,13 +18,13 @@ export function FactoryPipelineScreen() {
     setBreadcrumbs([
       {
         label: "Pipelines",
-        href: "/workspace/pipelines",
+        href: `/${PlatformArea.core}/pipeline`,
       },
       {
         label: pipeline.factory.name
           ? pipeline.factory.name
           : pipeline.factory.key!,
-        href: `/workspace/pipelines/${pipelineId}`,
+        href: `/${PlatformArea.core}/pipelines/${pipelineId}`,
       },
     ]);
   }, [pipelineId, pipeline.factory.name, setBreadcrumbs, pipeline.factory.key]);

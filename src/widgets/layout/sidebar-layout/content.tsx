@@ -1,9 +1,12 @@
+"use client";
+
+import { PropsWithChildren } from "react";
+
 import {
   SIDEBAR_WIDTH,
   SIDEBAR_WIDTH_ICON,
   useSidebar,
 } from "@/shared/ui/sidebar";
-import { PropsWithChildren } from "react";
 
 export function SidebarLayoutContent({ children }: PropsWithChildren<{}>) {
   const { state } = useSidebar();

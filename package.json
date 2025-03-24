@@ -5,6 +5,7 @@
   "scripts": {
     "prepare": "husky",
     "dev": "next dev",
+    "inspect": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --quiet",
@@ -27,6 +28,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@emotion/css": "^11.13.4",
     "@hookform/resolvers": "^3.6.0",
+    "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",

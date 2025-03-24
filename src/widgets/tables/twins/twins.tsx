@@ -29,6 +29,7 @@ import {
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { User, UserResourceLink } from "@/entities/user";
 import { TransitionPerformer } from "@/features/transition-performer";
+import { PlatformArea } from "@/shared/config";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
@@ -343,7 +344,7 @@ export function TwinsTable({
       getRowId={(row) => row.id}
       fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
       pageSizes={[10, 20, 50]}
-      onRowClick={(row) => router.push(`/workspace/twins/${row.id}`)}
+      onRowClick={(row) => router.push(`/${PlatformArea.core}/twins/${row.id}`)}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

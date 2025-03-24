@@ -9,8 +9,14 @@ import {
   isPopulatedString,
   isTruthy,
 } from "@/shared/libs";
-import { Combobox, ComboboxHandle, ComboboxProps } from "@/shared/ui/combobox";
-import { FormControl, FormItem, FormMessage } from "@/shared/ui/form";
+import {
+  Combobox,
+  ComboboxHandle,
+  ComboboxProps,
+  FormControl,
+  FormItem,
+  FormMessage,
+} from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
 

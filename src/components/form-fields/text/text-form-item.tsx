@@ -1,5 +1,4 @@
-import { FormMessage } from "@/shared/ui";
-import { Input, InputProps } from "@/shared/ui/input";
+import { FormMessage, Input, InputProps } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
 import { FormItemProps, TextFormFieldProps } from "../types";

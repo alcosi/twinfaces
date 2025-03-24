@@ -1,6 +1,9 @@
-import { TwinClass } from "@/entities/twin-class";
-import { ResourceLink } from "@/shared/ui";
 import { Link2 } from "lucide-react";
+
+import { TwinClass } from "@/entities/twin-class";
+import { PlatformArea } from "@/shared/config";
+import { ResourceLink } from "@/shared/ui";
+
 import { LinkResourceTooltip } from "./tooltip";
 
 type Props = {
@@ -10,7 +13,7 @@ type Props = {
 };
 
 export function LinkResourceLink({ data, disabled, withTooltip }: Props) {
-  const link = `/workspace/links/${data.id}`;
+  const link = `/${PlatformArea.core}/links/${data.id}`;
 
   return (
     <ResourceLink

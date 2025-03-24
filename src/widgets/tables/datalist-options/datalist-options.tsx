@@ -1,16 +1,25 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { DataList, DatalistResourceLink } from "@/entities/datalist";
 import {
   DATALIST_OPTION_SCHEMA,
   DataListOptionCreateRqDV1,
-  DatalistOptionResourceLink,
   DataListOptionV3,
+  DatalistOptionResourceLink,
   useCreateDatalistOption,
   useDatalistOptionFilters,
   useDatalistOptionSearch,
 } from "@/entities/datalist-option";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import {
   isPopulatedArray,
   isPopulatedString,
@@ -19,13 +28,7 @@ import {
   toArrayOfString,
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+
 import {
   CrudDataTable,
   DataTableHandle,
@@ -197,12 +200,13 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   return (
     <CrudDataTable
       title="Options"
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={columns}
       fetcher={fetchDatalistOptions}
       getRowId={(row) => row.id!}
-      onRowClick={(row) => router.push(`/workspace/datalist-options/${row.id}`)}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/datalist-options/${row.id}`)
+      }
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

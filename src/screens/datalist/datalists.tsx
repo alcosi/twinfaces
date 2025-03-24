@@ -1,8 +1,16 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import {
-  DataList,
   DATALIST_SCHEMA,
+  DataList,
   DataListCreateRqV1,
   DatalistResourceLink,
   useDatalistCreate,
@@ -11,20 +19,15 @@ import {
 } from "@/entities/datalist";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import {
   CrudDataTable,
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
 import { DatalistFormFields } from "./form-fields";
-import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Pick<
@@ -88,7 +91,9 @@ export const DatalistsScreen = () => {
   const { createDatalist } = useDatalistCreate();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Datalists", href: "/workspace/datalists" }]);
+    setBreadcrumbs([
+      { label: "Datalists", href: `/${PlatformArea.core}/datalists` },
+    ]);
   }, []);
 
   async function fetchDataLists(
@@ -150,7 +155,9 @@ export const DatalistsScreen = () => {
       getRowId={(row) => row.id!}
       fetcher={fetchDataLists}
       pageSizes={[10, 20, 50]}
-      onRowClick={(row) => router.push(`/workspace/datalists/${row.id}`)}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/datalists/${row.id}`)
+      }
       filters={{
         filtersInfo: buildFilterFields(),
       }}

@@ -16,6 +16,7 @@ import {
 } from "@/entities/factory-pipeline-step";
 import { FeaturerResourceLink, Featurer_DETAILED } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
@@ -188,7 +189,9 @@ export function PipelineStepsTable({ pipelineId }: { pipelineId?: string }) {
         colDefs.active,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
-      onRowClick={(row) => router.push(`/workspace/pipeline-steps/${row.id}`)}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/pipeline-steps/${row.id}`)
+      }
     />
   );
 }

@@ -13,6 +13,7 @@ import {
 import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -92,7 +93,9 @@ export function Factories() {
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Factories", href: "/workspace/factories" }]);
+    setBreadcrumbs([
+      { label: "Factories", href: `/${PlatformArea.core}/factories` },
+    ]);
   }, []);
 
   async function fetchFactories(
@@ -114,7 +117,6 @@ export function Factories() {
 
   return (
     <CrudDataTable
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       columns={Object.values(colDefs) as ColumnDef<Factory>[]}
       fetcher={fetchFactories}
       getRowId={(row) => row.id!}
@@ -129,7 +131,7 @@ export function Factories() {
         filtersInfo: buildFilterFields(),
       }}
       onRowClick={(row) => {
-        router.push(`/workspace/factories/${row.id}`);
+        router.push(`/${PlatformArea.core}/factories/${row.id}`);
       }}
     />
   );

@@ -10,6 +10,7 @@ import {
 } from "@/entities/user-group";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
@@ -79,7 +80,9 @@ export function UserGroups() {
   const { buildFilterFields, mapFiltersToPayload } = useUserGroupsFilters();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Groups", href: "/workspace/user-groups" }]);
+    setBreadcrumbs([
+      { label: "Groups", href: `/${PlatformArea.core}/user-groups` },
+    ]);
   }, []);
 
   async function fetchUserGroups(
@@ -103,7 +106,6 @@ export function UserGroups() {
 
   return (
     <CrudDataTable
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
         colDefs.id,

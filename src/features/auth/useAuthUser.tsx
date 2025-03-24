@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { DomainUser_DETAILED } from "@/entities/user";
-import { useLocalStorage } from "@/shared/libs";
+import { clientCookies, useLocalStorage } from "@/shared/libs";
 
 interface AuthUser {
   domainUser?: DomainUser_DETAILED;
@@ -30,6 +30,7 @@ export function useAuthUser(): UseAuthUser {
   const setAuthUser = useCallback(
     (user: AuthUser | null) => {
       setStoredValue(user);
+      clientCookies.set("authToken", `${user?.authToken}`);
     },
     [setStoredValue]
   );
@@ -46,6 +47,7 @@ export function useAuthUser(): UseAuthUser {
 
   const logout = useCallback(() => {
     setStoredValue(null);
+    clientCookies.remove("authToken");
   }, [setStoredValue]);
 
   return {

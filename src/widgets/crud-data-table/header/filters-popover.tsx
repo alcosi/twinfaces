@@ -5,9 +5,13 @@ import { useForm } from "react-hook-form";
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
 
 import { cn, isTruthy } from "@/shared/libs";
-import { Button } from "@/shared/ui/button";
-import { Form } from "@/shared/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import {
+  Button,
+  Form,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/ui";
 
 interface FiltersPopoverProps {
   filtersInfo: { [key: string]: AutoFormValueInfo };

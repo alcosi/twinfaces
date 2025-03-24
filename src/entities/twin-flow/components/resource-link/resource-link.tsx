@@ -1,5 +1,7 @@
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
+
 import { TwinFlow_DETAILED } from "../../api";
 import { TwinFlowIcon } from "../twin-flow-icon";
 import { TwinFlowResourceTooltip } from "./tooltip";
@@ -15,7 +17,7 @@ export const TwinFlowResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/workspace/twinFlow/${data.id}`;
+  const link = `/${PlatformArea.core}/twinFlow/${data.id}`;
 
   return (
     <ResourceLink

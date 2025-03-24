@@ -1,3 +1,4 @@
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 
@@ -17,7 +18,7 @@ export function FactoryConditionSetResourceLink({
   withTooltip,
 }: Props) {
   const title = isPopulatedString(data.name) ? data.name : "N/A";
-  const link = `/workspace/condition-sets/${data.id}`;
+  const link = `/${PlatformArea.core}/condition-sets/${data.id}`;
 
   return (
     <ResourceLink

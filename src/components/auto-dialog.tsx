@@ -5,17 +5,17 @@ import { z } from "zod";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
 
-import { Alert } from "@/shared/ui/alert";
-import { Button } from "@/shared/ui/button";
 import {
+  Alert,
+  Button,
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/shared/ui/dialog";
-import { Form } from "@/shared/ui/form";
+  Form,
+} from "@/shared/ui";
 
 export interface AutoEditDialogSettings {
   title: string;

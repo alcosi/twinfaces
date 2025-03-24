@@ -4,8 +4,8 @@ import React, { ForwardedRef, useCallback, useEffect, useReducer } from "react";
 import { AutoFormValueInfo } from "@/components/auto-field";
 
 import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import { Input } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
 import { Separator } from "@/shared/ui/separator";
 
 import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";

@@ -20,6 +20,7 @@ import {
 } from "@/entities/twin-class";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -155,7 +156,9 @@ export function FactoryPipelines() {
   const router = useRouter();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Pipelines", href: "/workspace/pipelines" }]);
+    setBreadcrumbs([
+      { label: "Pipelines", href: `/${PlatformArea.core}/pipelines` },
+    ]);
   }, []);
 
   async function fetchFactoryPipelines(
@@ -205,7 +208,7 @@ export function FactoryPipelines() {
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
       onRowClick={(row) => {
-        router.push(`/workspace/pipelines/${row.id}`);
+        router.push(`/${PlatformArea.core}/pipelines/${row.id}`);
       }}
     />
   );

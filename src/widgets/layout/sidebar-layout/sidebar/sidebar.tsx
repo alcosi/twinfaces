@@ -1,11 +1,15 @@
 "use client";
 
 import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
+import { FaceNB001 } from "@/entities/face";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
+import { PlatformArea } from "@/shared/config";
+import { isPopulatedArray } from "@/shared/libs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,16 +23,31 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SlideView,
+  Tabs,
 } from "@/shared/ui";
 
-import { SIDEBAR_GROUPS } from "./constants";
-import { GroupSection } from "./group";
+import { PlatformAreaSwitcher } from "./area-switcher";
+import { CoreAreaSidebarMenu, WorkspaceAreaSidebarMenu } from "./menu";
 
-export function AppSidebar() {
+type Props = {
+  face: FaceNB001;
+};
+
+export function AppSidebar({ face }: Props) {
   const { data } = useDomains();
   const { authUser, updateUser, logout } = useAuthUser();
   const currentDomain = data?.find((i) => i.id === authUser?.domainId);
   const router = useRouter();
+  const pathname = usePathname();
+
+  // NOTE: Quick fix: infer sidebar area from URL prefix
+  // * Doesn't support routes like `/design-system`
+  // TODO: Persist area via localStorage or context
+  const initialArea: keyof typeof PlatformArea = pathname?.startsWith("/core")
+    ? PlatformArea.core
+    : PlatformArea.workspace;
+  const [area, setArea] = useState<keyof typeof PlatformArea>(initialArea);
 
   function onDomainSwitch(domain: DomainView_SHORT) {
     updateUser({ domainId: domain.id });
@@ -77,16 +96,28 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent className="gap-1 my-4">
-          <GroupSection group={SIDEBAR_GROUPS.class} />
-          <GroupSection group={SIDEBAR_GROUPS.twin} />
-          <GroupSection group={SIDEBAR_GROUPS.user} />
-          <GroupSection group={SIDEBAR_GROUPS.datalist} />
-          <GroupSection group={SIDEBAR_GROUPS.permission} />
-          <GroupSection group={SIDEBAR_GROUPS.factory} />
-          <GroupSection group={SIDEBAR_GROUPS.transition} />
-          <GroupSection group={SIDEBAR_GROUPS.businessAccount} />
-          <GroupSection group={SIDEBAR_GROUPS.misc} />
+        <SidebarContent>
+          <Tabs value={area} className="flex flex-col gap-2 h-full">
+            <section className="grow overflow-y-auto pb-2">
+              <SlideView activeIndex={area === PlatformArea.workspace ? 0 : 1}>
+                <nav key={PlatformArea.workspace}>
+                  {isPopulatedArray(face.userAreaMenuItems) && (
+                    <WorkspaceAreaSidebarMenu items={face.userAreaMenuItems} />
+                  )}
+                </nav>
+                <nav key={PlatformArea.core}>
+                  <CoreAreaSidebarMenu />
+                </nav>
+              </SlideView>
+            </section>
+
+            <PlatformAreaSwitcher
+              userLabel={face.userAreaLabel ?? ""}
+              adminLabel={face.adminAreaLabel ?? ""}
+              area={area}
+              setArea={setArea}
+            />
+          </Tabs>
         </SidebarContent>
 
         <SidebarFooter className="border-t">

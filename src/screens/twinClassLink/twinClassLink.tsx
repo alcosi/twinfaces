@@ -1,14 +1,17 @@
 "use client";
 
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { Link, useLinkFetchById } from "@/entities/link";
 import { TwinClassContext } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { Tab, TabsLayout } from "@/widgets/layout";
-import { useContext, useEffect, useState } from "react";
-import { GeneralSection } from "./views/general-section";
-import { toast } from "sonner";
-import { LoadingOverlay } from "@/shared/ui";
+import { PlatformArea } from "@/shared/config";
 import { isUndefined } from "@/shared/libs";
-import { Link, useLinkFetchById } from "@/entities/link";
+import { LoadingOverlay } from "@/shared/ui";
+import { Tab, TabsLayout } from "@/widgets/layout";
+
+import { GeneralSection } from "./views/general-section";
 
 export type PageProps = {
   params: {
@@ -26,12 +29,18 @@ export function TwinClassLinkPage({ params: { linkId } }: PageProps) {
     //TODO add missed class name at breadCrumbs
     //https://alcosi.atlassian.net/browse/TWINFACES-469
     setBreadcrumbs([
-      { label: "Classes", href: "/workspace/twinclass" },
-      { label: twinClass?.name!, href: `/workspace/twinclass/${twinClassId}` },
-      { label: "Relations", href: `/workspace/twinclass/${twinClassId}#links` },
+      { label: "Classes", href: `/${PlatformArea.core}/twinclass` },
+      {
+        label: twinClass?.name!,
+        href: `/${PlatformArea.core}/twinclass/${twinClassId}`,
+      },
+      {
+        label: "Relations",
+        href: `/${PlatformArea.core}/twinclass/${twinClassId}#links`,
+      },
       {
         label: link?.name ?? "N/A",
-        href: `/workspace/links/${linkId}`,
+        href: `/${PlatformArea.core}/links/${linkId}`,
       },
     ]);
   }, [linkId, twinClassId, twinClass?.name, link?.name]);

@@ -1,5 +1,6 @@
 import { DataList, DatalistIcon } from "@/entities/datalist";
 import { DatalistResourceTooltip } from "@/entities/datalist/components/resource-link/tooltip";
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 
@@ -10,7 +11,7 @@ type Props = {
 };
 
 export function DatalistResourceLink({ data, disabled, withTooltip }: Props) {
-  const link = `/workspace/datalists/${data.id}`;
+  const link = `/${PlatformArea.core}/datalists/${data.id}`;
 
   return (
     <ResourceLink

@@ -1,4 +1,6 @@
+import { PlatformArea } from "@/shared/config";
 import { ResourceLink } from "@/shared/ui";
+
 import { Twin } from "../../api";
 import { formatTwinDisplay } from "../../libs";
 import { TwinIcon } from "../twin-icon";
@@ -11,7 +13,7 @@ type Props = {
 };
 
 export function TwinResourceLink({ data, disabled, withTooltip }: Props) {
-  const link = `/workspace/twins/${data.id}`;
+  const link = `/${PlatformArea.core}/twins/${data.id}`;
 
   return (
     <ResourceLink

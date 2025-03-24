@@ -24,6 +24,7 @@ import {
 } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
@@ -248,7 +249,9 @@ export function TwinClasses() {
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Classes", href: "/workspace/twinclass" }]);
+    setBreadcrumbs([
+      { label: "Classes", href: `/${PlatformArea.core}/twinclass` },
+    ]);
   }, []);
 
   async function fetchTwinClasses(
@@ -346,53 +349,53 @@ export function TwinClasses() {
   };
 
   return (
-    <main className={"p-8 lg:flex lg:justify-center flex-col mx-auto"}>
-      <CrudDataTable
-        ref={tableRef}
-        fetcher={fetchTwinClasses}
-        onRowClick={(row) => router.push(`/workspace/twinclass/${row.id}`)}
-        columns={[
-          colDefs.logo,
-          colDefs.id,
-          colDefs.key,
-          colDefs.name,
-          colDefs.description,
-          colDefs.headClassId,
-          colDefs.extendsClassId,
-          colDefs.abstractClass,
-          colDefs.ownerType,
-          colDefs.permissionSchemaSpace,
-          colDefs.twinflowSchemaSpace,
-          colDefs.twinClassSchemaSpace,
-          colDefs.aliasSpace,
-          colDefs.markersDataListId,
-          colDefs.tagsDataListId,
-          colDefs.viewPermissionId,
-          colDefs.createPermissionId,
-          colDefs.editPermissionId,
-          colDefs.deletePermissionId,
-        ]}
-        getRowId={(row) => row.id!}
-        pageSizes={[10, 20, 50]}
-        filters={{
-          filtersInfo: buildFilterFields(),
-        }}
-        defaultVisibleColumns={[
-          colDefs.id,
-          colDefs.key,
-          colDefs.name,
-          colDefs.headClassId,
-          colDefs.extendsClassId,
-          colDefs.abstractClass,
-          colDefs.markersDataListId,
-          colDefs.tagsDataListId,
-        ]}
-        dialogForm={twinClassesForm}
-        onCreateSubmit={handleOnCreateSubmit}
-        renderFormFields={() => (
-          <TwinClassFormFields control={twinClassesForm.control} />
-        )}
-      />
-    </main>
+    <CrudDataTable
+      ref={tableRef}
+      fetcher={fetchTwinClasses}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
+      }
+      columns={[
+        colDefs.logo,
+        colDefs.id,
+        colDefs.key,
+        colDefs.name,
+        colDefs.description,
+        colDefs.headClassId,
+        colDefs.extendsClassId,
+        colDefs.abstractClass,
+        colDefs.ownerType,
+        colDefs.permissionSchemaSpace,
+        colDefs.twinflowSchemaSpace,
+        colDefs.twinClassSchemaSpace,
+        colDefs.aliasSpace,
+        colDefs.markersDataListId,
+        colDefs.tagsDataListId,
+        colDefs.viewPermissionId,
+        colDefs.createPermissionId,
+        colDefs.editPermissionId,
+        colDefs.deletePermissionId,
+      ]}
+      getRowId={(row) => row.id!}
+      pageSizes={[10, 20, 50]}
+      filters={{
+        filtersInfo: buildFilterFields(),
+      }}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.key,
+        colDefs.name,
+        colDefs.headClassId,
+        colDefs.extendsClassId,
+        colDefs.abstractClass,
+        colDefs.markersDataListId,
+        colDefs.tagsDataListId,
+      ]}
+      dialogForm={twinClassesForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <TwinClassFormFields control={twinClassesForm.control} />
+      )}
+    />
   );
 }

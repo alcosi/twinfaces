@@ -1,14 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import {
   DataListOptionV3,
   useDatalistOption,
 } from "@/entities/datalist-option";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { useEffect, useState } from "react";
+
 import { DatalistOptionGeneral } from "./views";
 
 export function DatalistOptionScreen({ optionId }: { optionId: string }) {
@@ -33,13 +36,13 @@ export function DatalistOptionScreen({ optionId }: { optionId: string }) {
     setBreadcrumbs([
       {
         label: "Options",
-        href: `/workspace/datalist-options`,
+        href: `/${PlatformArea.core}/datalist-options`,
       },
       {
         label: isPopulatedString(datalistOption?.name)
           ? datalistOption.name
           : "N/A",
-        href: `/workspace/datalist-options/${optionId}`,
+        href: `/${PlatformArea.core}/datalist-options/${optionId}`,
       },
     ]);
   }, [datalistOption, setBreadcrumbs]);

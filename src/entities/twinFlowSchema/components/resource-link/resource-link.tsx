@@ -1,5 +1,6 @@
 import { SquareActivity } from "lucide-react";
 
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 
@@ -17,7 +18,7 @@ export const TwinFlowSchemaResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/workspace/twinFlowSchema/${data.id}`;
+  const link = `/${PlatformArea.core}/twinFlowSchema/${data.id}`;
 
   return (
     <ResourceLink

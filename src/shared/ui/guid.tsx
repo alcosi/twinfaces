@@ -1,5 +1,6 @@
 import { CopyButton } from "@/shared/ui/copy-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+
 import { cn, shortenUUID } from "../libs";
 
 export interface GuidProps {

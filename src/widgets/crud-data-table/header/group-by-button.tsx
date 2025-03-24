@@ -1,10 +1,11 @@
-import { isNotFunction } from "@/shared/libs";
-import { Button } from "@/shared/ui/button";
-import { Label } from "@/shared/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { ColumnDef } from "@tanstack/react-table";
 import { AlignJustify } from "lucide-react";
+
+import { isNotFunction } from "@/shared/libs";
+import { Label, RadioGroup, RadioGroupItem } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+
 import { getColumnKey } from "../helpers";
 
 interface GroupByButtonProps<TData, TValue> {

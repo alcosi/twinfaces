@@ -11,6 +11,7 @@ import {
 import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
@@ -88,7 +89,7 @@ export function PermissionSchemasScreen() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Schemas", href: "/workspace/permission-schemas" },
+      { label: "Schemas", href: `/${PlatformArea.core}/permission-schemas` },
     ]);
   }, [setBreadcrumbs]);
 
@@ -113,7 +114,6 @@ export function PermissionSchemasScreen() {
   return (
     <CrudDataTable
       title="Permission Schemas"
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
         colDefs.id,
@@ -126,7 +126,7 @@ export function PermissionSchemasScreen() {
       fetcher={fetchPermissionSchemas}
       getRowId={(row) => row.id!}
       onRowClick={(row) =>
-        router.push(`/workspace/permission-schemas/${row.id}`)
+        router.push(`/${PlatformArea.core}/permission-schemas/${row.id}`)
       }
       pageSizes={[10, 20, 50]}
       filters={{

@@ -11,14 +11,14 @@ import {
 import { useEffect, useState } from "react";
 
 import { PaginationV1 } from "@/shared/api";
-import { Button } from "@/shared/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select";
+} from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
 
 type DataTablePaginationState = {
   pageIndex: number;

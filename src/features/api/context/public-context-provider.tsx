@@ -1,12 +1,9 @@
 "use client";
 
-import { env } from "next-runtime-env";
-import createClient from "openapi-fetch";
 import React from "react";
 
 import { UserApi, createUserApi } from "@/entities/user";
-import { ApiSettings, PublicApiContext } from "@/shared/api";
-import { paths } from "@/shared/api/generated/schema";
+import { ApiSettings, PublicApiContext, TwinsAPI } from "@/shared/api";
 
 import { useAuthUser } from "../../auth";
 
@@ -25,7 +22,7 @@ export function PublicApiContextProvider({
     authToken: authUser?.authToken ?? "",
     domain: authUser?.domainId ?? "",
     channel: "WEB",
-    client: createClient<paths>({ baseUrl: env("NEXT_PUBLIC_TWINS_API_URL") }),
+    client: TwinsAPI,
   };
 
   return (

@@ -1,26 +1,3 @@
-import {
-  CreatePermissionRequestBody,
-  type Permission,
-  Permission_DETAILED,
-  PERMISSION_SCHEMA,
-  PermissionFormValues,
-  usePermissionCreate,
-  usePermissionFilters,
-  usePermissionSearchV1,
-} from "@/entities/permission";
-import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
-import {
-  PermissionGroup,
-  PermissionGroupResourceLink,
-} from "@/entities/permission-group";
-import { useBreadcrumbs } from "@/features/breadcrumb";
-import { PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import {
-  CrudDataTable,
-  DataTableHandle,
-  FiltersState,
-} from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
@@ -28,6 +5,32 @@ import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import {
+  CreatePermissionRequestBody,
+  PERMISSION_SCHEMA,
+  type Permission,
+  PermissionFormValues,
+  Permission_DETAILED,
+  usePermissionCreate,
+  usePermissionFilters,
+  usePermissionSearchV1,
+} from "@/entities/permission";
+import {
+  PermissionGroup,
+  PermissionGroupResourceLink,
+} from "@/entities/permission-group";
+import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
+
 import { PermissionsFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -89,7 +92,9 @@ export function Permissions() {
   const { createPermission } = usePermissionCreate();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Permissions", href: "/workspace/permissions" }]);
+    setBreadcrumbs([
+      { label: "Permissions", href: `/${PlatformArea.core}/permissions` },
+    ]);
   }, []);
 
   const form = useForm<PermissionFormValues>({
@@ -146,7 +151,6 @@ export function Permissions() {
 
   return (
     <CrudDataTable
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
         colDefs.id!,
@@ -157,7 +161,9 @@ export function Permissions() {
       ]}
       fetcher={fetchPermissions}
       getRowId={(row) => row.id!}
-      onRowClick={(row) => router.push(`/workspace/permissions/${row.id}`)}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/permissions/${row.id}`)
+      }
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

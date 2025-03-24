@@ -1,20 +1,3 @@
-import { TwinClassContext } from "@/entities/twin-class";
-import {
-  TwinFlow,
-  TwinFlow_DETAILED,
-  TwinFlowResourceLink,
-  useTwinFlowFilters,
-  useTwinFlowSearchV1,
-} from "@/entities/twin-flow";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { UserResourceLink } from "@/entities/user";
-import { PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import {
-  CrudDataTable,
-  DataTableHandle,
-  FiltersState,
-} from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
@@ -22,6 +5,26 @@ import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import { TwinClassContext } from "@/entities/twin-class";
+import {
+  TwinFlow,
+  TwinFlowResourceLink,
+  TwinFlow_DETAILED,
+  useTwinFlowFilters,
+  useTwinFlowSearchV1,
+} from "@/entities/twin-flow";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { UserResourceLink } from "@/entities/user";
+import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
+
 import { TwinClassTwinFlowFormFields } from "./form-fields";
 
 const formSchema = z.object({
@@ -131,7 +134,7 @@ export function TwinClassTwinFlows() {
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
         router.push(
-          `/workspace/twinclass/${row.twinClassId}/twinflow/${row.id}`
+          `/${PlatformArea.core}/twinclass/${row.twinClassId}/twinflow/${row.id}`
         )
       }
       filters={{
