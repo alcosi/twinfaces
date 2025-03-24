@@ -3,11 +3,11 @@
 import { fetchDomainById } from "@/entities/domain/api/actions";
 import { TwinsAPI } from "@/shared/api";
 
-import { getAuthTokenFromCookies, getDomainIdFromHeaders } from "../../libs";
+import { getAuthTokenFromCookies, getDomainIdFromCookies } from "../../libs";
 import { Face, FaceNB001 } from "../types";
 
 export async function fetchSidebarFace(): Promise<FaceNB001> {
-  const domainId = await getDomainIdFromHeaders();
+  const domainId = await getDomainIdFromCookies();
   if (!domainId) throw new Error("Domain ID not found in headers");
 
   const { domain } = await fetchDomainById(domainId);

@@ -5,11 +5,11 @@ import { notFound } from "next/navigation";
 import { TwinsAPI } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-import { getAuthTokenFromCookies, getDomainIdFromHeaders } from "../../libs";
+import { getAuthTokenFromCookies, getDomainIdFromCookies } from "../../libs";
 import { FaceWT001 } from "../types";
 
 export async function fetchWidgetFace(faceId: string): Promise<FaceWT001> {
-  const domainId = await getDomainIdFromHeaders();
+  const domainId = await getDomainIdFromCookies();
   if (!domainId) {
     throw new Error("Domain ID not found in headers");
   }
