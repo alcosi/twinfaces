@@ -19,8 +19,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const dInfo = headers().get("X-Domain-Config");
-  const config = getProductFlavorConfig(dInfo ? JSON.parse(dInfo) : {});
+  const domainInfo = headers().get("X-Domain-Config");
+  const config = getProductFlavorConfig(
+    domainInfo ? JSON.parse(domainInfo) : {}
+  );
 
   return (
     <html lang="en" suppressHydrationWarning>

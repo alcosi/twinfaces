@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import React from "react";
 
 import {
@@ -115,7 +114,6 @@ export function PrivateApiContextProvider({
   children: React.ReactNode;
 }) {
   const { authUser } = useAuthUser();
-  const router = useRouter();
 
   const settings: ApiSettings = {
     authToken: authUser?.authToken ?? "",
@@ -125,7 +123,6 @@ export function PrivateApiContextProvider({
   };
 
   if (!authUser?.authToken) {
-    // router.push("/");
     return <LoadingOverlay />;
   }
 
