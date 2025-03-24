@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -26,9 +26,14 @@ type FormValues = z.infer<typeof FORM_SCHEMA>;
 export function Login() {
   const router = useRouter();
   const publicApiClient = useContext(PublicApiContext);
-  const { setAuthUser } = useAuthUser();
+  const { setAuthUser, logout } = useAuthUser();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const config = useContext(ProductFlavorConfigContext);
+
+  useEffect(() => {
+    // Clear any existing user session
+    logout();
+  }, []);
 
   const form = useForm({
     defaultValues: {

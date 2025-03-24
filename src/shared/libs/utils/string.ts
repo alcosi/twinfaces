@@ -19,3 +19,8 @@ export function shortenUUID(uuid: string): string {
   }
   return uuid;
 }
+
+export function capitalize(value: string): string {
+  if (!isPopulatedString(value)) return "";
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+}

@@ -49,6 +49,7 @@ export function useAuthUser(): UseAuthUser {
   const logout = useCallback(() => {
     setStoredValue(null);
     clientCookies.remove("authToken");
+    clientCookies.remove("domainId");
   }, [setStoredValue]);
 
   return {
