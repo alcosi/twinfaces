@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -173,7 +172,6 @@ export function FactoryPipelinesTable({
         ]
       : undefined,
   });
-  const router = useRouter();
 
   const factoryPipelinesForm = useForm<z.infer<typeof FACTORY_PIPELINE_SCHEMA>>(
     {
@@ -258,9 +256,6 @@ export function FactoryPipelinesTable({
         colDefs.description,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
-      onRowClick={(row) => {
-        router.push(`/workspace/pipelines/${row.id}`);
-      }}
       dialogForm={factoryPipelinesForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

@@ -23,7 +23,5 @@ export type FactoryPipelineFilterKeys =
   | "descriptionLikeList";
 
 export type FactoryPipelineFilters = Partial<
-  Pick<FactoryPipelineSearchRq, FactoryPipelineFilterKeys> & {
-    keyLikeList?: string[];
-  }
+  Pick<FactoryPipelineSearchRq, FactoryPipelineFilterKeys>
 >;

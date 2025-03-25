@@ -1,8 +1,4 @@
-import {
-  SelectAdapter,
-  isPopulatedString,
-  wrapWithPercent,
-} from "@/shared/libs";
+import { SelectAdapter, wrapWithPercent } from "@/shared/libs";
 
 import {
   FactoryPipelineFilters,
@@ -28,7 +24,7 @@ export function useFactoryPipelineSelectAdapter(
         pageSize: 10,
       },
       filters: {
-        keyLikeList: [wrapWithPercent(search)],
+        descriptionLikeList: [wrapWithPercent(search)],
         factoryIdList: factoryId ? [factoryId] : [],
         ...filters,
       },
@@ -37,8 +33,11 @@ export function useFactoryPipelineSelectAdapter(
     return response.data;
   }
 
-  function renderItem({ factory, inputTwinClass }: FactoryPipeline_DETAILED) {
-    return `${isPopulatedString(factory.name) ? factory.name : "N/A"} | ${inputTwinClass.name}`;
+  function renderItem({ description }: FactoryPipeline_DETAILED) {
+    // Originally, TWINFACES-326 requested displaying: `${factory.name} | ${inputTwinClass.name}`
+    // However, the backend does not support filtering by factory.name or inputTwinClass.name.
+    // TODO: Revisit the ticket with the BE team to explore a solution.
+    return description;
   }
 
   return {

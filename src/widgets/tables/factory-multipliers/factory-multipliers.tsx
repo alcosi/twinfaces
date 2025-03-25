@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -123,7 +122,6 @@ export function FactoryMultipliersTable({
           ]
         : undefined,
     });
-  const router = useRouter();
   const { createFactoryMultiplier } = useFactoryMultiplierCreate();
 
   const factoryMultiplierForm = useForm<
@@ -197,9 +195,6 @@ export function FactoryMultipliersTable({
         colDefs.description,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
-      onRowClick={(row) => {
-        router.push(`/workspace/multipliers/${row.id}`);
-      }}
       dialogForm={factoryMultiplierForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

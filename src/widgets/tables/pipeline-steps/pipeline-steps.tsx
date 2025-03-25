@@ -23,7 +23,14 @@ import {
 import { FeaturerResourceLink, Featurer_DETAILED } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import {
+  OneOf,
+  isFalsy,
+  isTruthy,
+  isUndefined,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -131,15 +138,21 @@ const colDefs: Record<
   },
 };
 
-export function PipelineStepsTable({
-  pipelineId,
-  factoryId,
-  title,
-}: {
+type PipelineOnlyProps = {
   pipelineId?: string;
+  factoryId?: never;
+};
+
+type FactoryOnlyProps = {
   factoryId?: string;
+  pipelineId?: never;
+};
+
+type Props = {
   title?: string;
-}) {
+} & OneOf<[PipelineOnlyProps, FactoryOnlyProps]>;
+
+export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
   const { searchPipelineStep } = usePipelineStepSearch();
   const { createPipelineStep } = usePipelineStepCreate();
   const router = useRouter();
@@ -148,8 +161,8 @@ export function PipelineStepsTable({
       isTruthy(pipelineId) || isTruthy(factoryId)
         ? ([
             "idList",
-            !factoryId && "factoryIdList",
-            !pipelineId && "factoryPipelineIdList",
+            isUndefined(factoryId) && "factoryIdList",
+            isUndefined(pipelineId) && "factoryPipelineIdList",
             "descriptionLikeList",
             "optional",
             "conditionInvert",

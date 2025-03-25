@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -102,7 +101,6 @@ export function FactoryBranchesTable({
   factoryId?: string;
   title?: string;
 }) {
-  const router = useRouter();
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryBranchFilters({
     enabledFilters: isTruthy(factoryId)
@@ -183,9 +181,6 @@ export function FactoryBranchesTable({
         colDefs.nextFactory,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
-      onRowClick={(row) => {
-        router.push(`/workspace/branches/${row.id}`);
-      }}
       dialogForm={factoryBranchForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
