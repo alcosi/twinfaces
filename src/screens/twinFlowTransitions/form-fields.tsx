@@ -1,7 +1,9 @@
-import { TextFormField } from "@/components/form-fields";
-import { TwinFlowTransitionFormValues } from "@/entities/twin-flow-transition";
-import { TwinStatusSelectField } from "@/features/twinStatus";
 import { Control } from "react-hook-form";
+
+import { ComboboxFormField, TextFormField } from "@/components/form-fields";
+
+import { TwinFlowTransitionFormValues } from "@/entities/twin-flow-transition";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 
 export function TwinFlowTransitionFormFields({
   twinClassId,
@@ -10,25 +12,36 @@ export function TwinFlowTransitionFormFields({
   twinClassId: string;
   control: Control<TwinFlowTransitionFormValues>;
 }) {
+  const twinStatusAdapter = useTwinStatusSelectAdapter(twinClassId);
+
   return (
     <>
       <TextFormField control={control} name="alias" label="Alias" />
+
       <TextFormField control={control} name="name" label="Name" />
+
       <TextFormField control={control} name="description" label="Description" />
-      <TwinStatusSelectField
-        twinClassId={twinClassId}
+
+      <ComboboxFormField
         control={control}
         name="srcTwinStatusId"
         label="Source status"
-        required={true}
+        selectPlaceholder="Select source status"
+        searchPlaceholder="Search source status..."
+        noItemsText="No source status found"
+        {...twinStatusAdapter}
       />
-      <TwinStatusSelectField
-        twinClassId={twinClassId}
+
+      <ComboboxFormField
         control={control}
         name="dstTwinStatusId"
         label="Destination status"
-        required={true}
+        selectPlaceholder="Select destination status"
+        searchPlaceholder="Search destination status..."
+        noItemsText="No destination status found"
+        {...twinStatusAdapter}
       />
+
       {/* TODO: Replace with <PermissionSelectField /> as per https://alcosi.atlassian.net/browse/TWINFACES-116 */}
       <TextFormField
         control={control}
