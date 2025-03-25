@@ -1,16 +1,19 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
+
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import {
+  type FilterFeature,
   toArray,
   toArrayOfString,
   wrapWithPercent,
-  type FilterFeature,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import { TwinFlowFilterKeys, TwinFlowFilters } from "../../api";
 
-type FilterKeys = Exclude<TwinFlowFilterKeys, "twinClassIdList">;
+type FilterKeys = Exclude<TwinFlowFilterKeys, "twinClassIdMap">;
 
 export function useTwinFlowFilters(): FilterFeature<
   FilterKeys,

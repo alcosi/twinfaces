@@ -18,6 +18,7 @@ import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { UserResourceLink } from "@/entities/user";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
+import { reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import {
   CrudDataTable,
@@ -106,7 +107,10 @@ export function TwinClassTwinFlows() {
       const response = await searchTwinFlows({
         pagination,
         filters: {
-          twinClassIdList: [twinClassId],
+          twinClassIdMap: reduceToObject({
+            list: toArray(twinClassId),
+            defaultValue: true,
+          }),
           ...mapFiltersToPayload(filters.filters),
         },
       });
