@@ -5,8 +5,6 @@ import {
   FIRST_TWIN_FLOW_ID_EXTRACTOR,
 } from "@/shared/libs";
 
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
-
 export const ENTITY_COLOR = "#8B5CF6"; // text-violet-500
 
 export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
