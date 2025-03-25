@@ -5,6 +5,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import {
   FactoryPipelineStepRqQuery,
   FactoryPipelineStepUpdateRq,
+  PipelineStepCreateRq,
   PipelineStepFilters,
 } from "./types";
 
@@ -37,6 +38,19 @@ export function createPipelineStepApi(settings: ApiSettings) {
         ...filters,
       },
     });
+  }
+
+  function create({ id, body }: { id: string; body: PipelineStepCreateRq }) {
+    return settings.client.POST(
+      `/private/factory/factory_pipeline/{factoryPipelineId}/factory_pipeline_step/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { factoryPipelineId: id },
+        },
+        body: body,
+      }
+    );
   }
 
   function getById({
@@ -74,7 +88,7 @@ export function createPipelineStepApi(settings: ApiSettings) {
     );
   }
 
-  return { search, getById, update };
+  return { search, create, getById, update };
 }
 
 export type PipelineStepApi = ReturnType<typeof createPipelineStepApi>;

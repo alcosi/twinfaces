@@ -1,6 +1,7 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import {
+  FactoryPipelineCreateRq,
   FactoryPipelineFilters,
   FactoryPipelineUpdateRq,
   FactoryPipelineViewQuery,
@@ -66,7 +67,20 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
     );
   }
 
-  return { search, getById, update };
+  function create({ id, body }: { id: string; body: FactoryPipelineCreateRq }) {
+    return settings.client.POST(
+      `/private/factory/{factoryId}/factory_pipeline/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { factoryId: id },
+        },
+        body: body,
+      }
+    );
+  }
+
+  return { search, getById, update, create };
 }
 
 export type FactoryPipelineApi = ReturnType<typeof createFactoryPipelineApi>;

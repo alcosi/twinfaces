@@ -1,5 +1,5 @@
-import { FactoryPipelines } from "@/screens/factory-pipelines";
+import { FactoryPipelinesScreen } from "@/screens/factory-pipelines";
 
-export default function PipelinesPage() {
-  return <FactoryPipelines />;
+export default function Page() {
+  return <FactoryPipelinesScreen />;
 }

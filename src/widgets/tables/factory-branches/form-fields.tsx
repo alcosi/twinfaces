@@ -1,25 +1,27 @@
+import { useRef } from "react";
+import { Control, useWatch } from "react-hook-form";
+import { z } from "zod";
+
 import {
   CheckboxFormField,
   ComboboxFormField,
   TextAreaFormField,
 } from "@/components/form-fields";
+
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { FACTORY_BRANCH_SCHEMA } from "@/entities/factory-branch";
 import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import { isTruthy } from "@/shared/libs";
-import { useRef } from "react";
-import { Control, useWatch } from "react-hook-form";
-import { z } from "zod";
 
 export function FactoryBranchFormFields({
   control,
 }: {
   control: Control<z.infer<typeof FACTORY_BRANCH_SCHEMA>>;
 }) {
-  const fcsAdapter = useFactoryConditionSetSelectAdapter();
-  const fAdapter = useFactorySelectAdapter();
-  const fWatch = useWatch({ control, name: "factoryId" });
-  const disabled = useRef(isTruthy(fWatch)).current;
+  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const factoryAdapter = useFactorySelectAdapter();
+  const factoryWatch = useWatch({ control, name: "factoryId" });
+  const disabled = useRef(isTruthy(factoryWatch)).current;
 
   return (
     <>
@@ -31,7 +33,7 @@ export function FactoryBranchFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         disabled={disabled}
-        {...fAdapter}
+        {...factoryAdapter}
       />
 
       <ComboboxFormField
@@ -41,7 +43,7 @@ export function FactoryBranchFormFields({
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
-        {...fcsAdapter}
+        {...factoryConditionSetAdapter}
       />
 
       <CheckboxFormField
@@ -65,7 +67,7 @@ export function FactoryBranchFormFields({
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
-        {...fAdapter}
+        {...factoryAdapter}
       />
     </>
   );

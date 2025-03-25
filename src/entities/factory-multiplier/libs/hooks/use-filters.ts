@@ -1,68 +1,78 @@
+import { z } from "zod";
+
+import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import { useFactorySelectAdapter } from "@/entities/factory";
+import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
   FilterFeature,
+  extractEnabledFilters,
+  isPopulatedArray,
   mapToChoice,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
+
 import {
   FactoryMultiplierFilterKeys,
   FactoryMultiplierFilters,
 } from "../../api";
-import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
-import { z } from "zod";
-import { useFactorySelectAdapter } from "@/entities/factory/libs";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
 
-export function useFactoryMultiplierFilters(): FilterFeature<
-  FactoryMultiplierFilterKeys,
-  FactoryMultiplierFilters
-> {
-  const fAdapter = useFactorySelectAdapter();
-  const tcAdapter = useTwinClassSelectAdapter();
+export function useFactoryMultiplierFilters({
+  enabledFilters,
+}: {
+  enabledFilters?: FactoryMultiplierFilterKeys[];
+}): FilterFeature<FactoryMultiplierFilterKeys, FactoryMultiplierFilters> {
+  const factoryAdapter = useFactorySelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(22);
+
+  const allFilters: Record<FactoryMultiplierFilterKeys, AutoFormValueInfo> = {
+    idList: {
+      type: AutoFormValueType.tag,
+      label: "Id",
+      schema: z.string().uuid("Please enter a valid UUID"),
+      placeholder: "Enter UUID",
+    },
+    factoryIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Factory",
+      multi: true,
+      ...factoryAdapter,
+    },
+    inputTwinClassIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Input class",
+      multi: true,
+      ...twinClassAdapter,
+    },
+    multiplierFeaturerIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Muliplier featurer",
+      multi: true,
+      ...featurerAdapter,
+    },
+    active: {
+      type: AutoFormValueType.boolean,
+      label: "Active",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+    descriptionLikeList: {
+      type: AutoFormValueType.tag,
+      label: "Description",
+    },
+  };
 
   function buildFilterFields(): Record<
     FactoryMultiplierFilterKeys,
     AutoFormValueInfo
   > {
-    return {
-      idList: {
-        type: AutoFormValueType.tag,
-        label: "Id",
-        schema: z.string().uuid("Please enter a valid UUID"),
-        placeholder: "Enter UUID",
-      },
-      factoryIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Factory",
-        multi: true,
-        ...fAdapter,
-      },
-      inputTwinClassIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Input class",
-        multi: true,
-        ...tcAdapter,
-      },
-      multiplierFeaturerIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Muliplier featurer",
-        multi: true,
-        ...featurerAdapter,
-      },
-      active: {
-        type: AutoFormValueType.boolean,
-        label: "Active",
-        hasIndeterminate: true,
-        defaultValue: "indeterminate",
-      },
-      descriptionLikeList: {
-        type: AutoFormValueType.tag,
-        label: "Description",
-      },
-    };
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(

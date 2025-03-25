@@ -9,6 +9,8 @@ export type FactoryPipelineViewQuery =
   operations["factoryPipelineViewV1"]["parameters"]["query"];
 export type FactoryPipelineUpdateRq =
   components["schemas"]["FactoryPipelineUpdateRqV1"];
+export type FactoryPipelineCreateRq =
+  components["schemas"]["FactoryPipelineCreateRqV1"];
 
 export type FactoryPipelineFilterKeys =
   | "idList"

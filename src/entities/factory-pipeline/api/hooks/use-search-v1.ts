@@ -1,8 +1,8 @@
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
-import { FactoryFilters } from "@/entities/factory";
 import {
+  FactoryPipelineFilters,
   FactoryPipeline_DETAILED,
   hydrateFactoryPipelineFromMap,
 } from "@/entities/factory-pipeline";
@@ -16,7 +16,7 @@ export function useFactoryPipelineSearch() {
       filters = {},
     }: {
       pagination: PaginationState;
-      filters?: FactoryFilters;
+      filters?: FactoryPipelineFilters;
     }): Promise<PagedResponse<FactoryPipeline_DETAILED>> => {
       try {
         const { data, error } = await api.factoryPipeline.search({
