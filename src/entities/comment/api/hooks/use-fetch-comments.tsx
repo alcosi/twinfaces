@@ -1,10 +1,7 @@
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
-import {
-  CommentView_DETAILED,
-  hydrateCommentViewFromMap,
-} from "@/entities/comment";
+import { Comment_DETAILED, hydrateCommentFromMap } from "@/entities/comment";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export const useFetchComments = () => {
@@ -17,7 +14,7 @@ export const useFetchComments = () => {
     }: {
       twinId: string;
       pagination?: PaginationState;
-    }): Promise<PagedResponse<CommentView_DETAILED>> => {
+    }): Promise<PagedResponse<Comment_DETAILED>> => {
       try {
         const { data, error } = await api.comment.getById({
           twinId,
@@ -30,7 +27,7 @@ export const useFetchComments = () => {
 
         const comments =
           data.comments?.map((comment) =>
-            hydrateCommentViewFromMap(comment, data.relatedObjects)
+            hydrateCommentFromMap(comment, data.relatedObjects)
           ) ?? [];
 
         return {

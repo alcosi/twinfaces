@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 import {
   CommentCard,
-  CommentView_DETAILED,
+  Comment_DETAILED,
   useFetchComments,
 } from "@/entities/comment";
 import { TwinContext } from "@/features/twin";
@@ -13,7 +13,7 @@ import { PagedResponse } from "@/shared/api";
 export function TwinComments() {
   const { twin } = useContext(TwinContext);
   const { fetchCommentsByTwinId } = useFetchComments();
-  const [commentsData, setCommentsData] = useState<CommentView_DETAILED[]>();
+  const [commentsData, setCommentsData] = useState<Comment_DETAILED[]>();
 
   useEffect(() => {
     fetchComments({ pageIndex: 0, pageSize: 10 });
@@ -21,7 +21,7 @@ export function TwinComments() {
 
   async function fetchComments(
     pagination: PaginationState
-  ): Promise<PagedResponse<CommentView_DETAILED>> {
+  ): Promise<PagedResponse<Comment_DETAILED>> {
     if (!twin?.id) {
       toast.error("Twin ID is missing");
       return { data: [], pagination: {} };

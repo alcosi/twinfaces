@@ -92,11 +92,6 @@ const colDefs: Record<
     id: "name",
     accessorKey: "name",
     header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinClassResourceLink data={original} withTooltip />
-      </div>
-    ),
   },
   description: {
     id: "description",
