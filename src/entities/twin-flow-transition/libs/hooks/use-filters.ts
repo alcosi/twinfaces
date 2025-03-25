@@ -9,7 +9,9 @@ import { useTransitionAliasSelectAdapter } from "@/entities/twin-flow-transition
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
   type FilterFeature,
+  extractEnabledFilters,
   isPopulatedArray,
+  reduceToObject,
   toArray,
   toArrayOfString,
   wrapWithPercent,
@@ -27,7 +29,7 @@ export function useTwinFlowTransitionFilters({
   twinClassId?: string;
   enabledFilters?: TwinFlowTransitionFilterKeys[];
 }): FilterFeature<TwinFlowTransitionFilterKeys, TwinFlowTransitionFilters> {
-  const twinStatusAdapter = useTwinStatusSelectAdapter(twinClassId);
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
   const twinFlowAdapter = useTwinFlowSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
@@ -70,6 +72,13 @@ export function useTwinFlowTransitionFilters({
       label: "Source status",
       multi: true,
       ...twinStatusAdapter,
+      getItems: async (search: string) =>
+        twinStatusAdapter.getItems(search, {
+          twinClassIdMap: reduceToObject({
+            list: toArray(twinClassId),
+            defaultValue: true,
+          }),
+        }),
     },
 
     dstStatusIdList: {
@@ -98,17 +107,9 @@ export function useTwinFlowTransitionFilters({
     TwinFlowTransitionFilterKeys,
     AutoFormValueInfo
   > {
-    if (isPopulatedArray(enabledFilters)) {
-      return enabledFilters.reduce(
-        (filters, key) => {
-          filters[key] = allFilters[key];
-          return filters;
-        },
-        {} as Record<TwinFlowTransitionFilterKeys, AutoFormValueInfo>
-      );
-    }
-
-    return allFilters;
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(

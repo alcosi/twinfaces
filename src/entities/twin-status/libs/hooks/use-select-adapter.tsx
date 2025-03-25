@@ -4,8 +4,6 @@ import { useTheme } from "next-themes";
 import {
   SelectAdapter,
   isPopulatedString,
-  reduceToObject,
-  toArray,
   wrapWithPercent,
 } from "@/shared/libs";
 
@@ -16,9 +14,7 @@ import {
   useTwinStatusSearchV1,
 } from "../../api";
 
-export function useTwinStatusSelectAdapter(
-  twinClassId?: string
-): SelectAdapter<TwinStatusV2> {
+export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatusV2> {
   const { theme } = useTheme();
   const { fetchTwinStatusById } = useFetchTwinStatusById();
   const { searchTwinStatuses } = useTwinStatusSearchV1();
@@ -27,16 +23,15 @@ export function useTwinStatusSelectAdapter(
     return fetchTwinStatusById(id);
   }
 
-  async function getItems(search: string) {
+  async function getItems(search: string, filters?: TwinStatusFilters) {
     try {
-      const filters: TwinStatusFilters = {
-        twinClassIdMap: twinClassId
-          ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
-          : {},
-        keyLikeList: search ? [wrapWithPercent(search)] : [],
-      };
-      const { data } = await searchTwinStatuses({ filters });
-      return data;
+      const response = await searchTwinStatuses({
+        filters: {
+          keyLikeList: search ? [wrapWithPercent(search)] : [],
+          ...filters,
+        },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching search items:", error);
       return [];
@@ -61,7 +56,8 @@ export function useTwinStatusSelectAdapter(
 
   return {
     getById,
-    getItems,
+    getItems: (search, options) =>
+      getItems(search, options as TwinStatusFilters),
     renderItem,
   };
 }

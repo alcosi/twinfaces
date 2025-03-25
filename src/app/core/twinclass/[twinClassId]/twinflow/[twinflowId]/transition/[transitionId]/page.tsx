@@ -1,15 +1,9 @@
-"use client";
+import { TransitionScreen, TransitionScreenParams } from "@/screens/transition";
 
-import { TransitionScreen } from "@/screens/transition";
-
-type TransitionPageProps = {
-  params: {
-    twinClassId: string;
-    twinflowId: string;
-    transitionId: string;
-  };
+type Props = {
+  params: TransitionScreenParams;
 };
 
-export default function TransitionPage({ params }: TransitionPageProps) {
-  return <TransitionScreen params={params} />;
+export default function TransitionPage({ params }: Props) {
+  return <TransitionScreen {...params} />;
 }

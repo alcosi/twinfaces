@@ -5,11 +5,13 @@ import { toast } from "sonner";
 
 import { TwinClassContext } from "@/entities/twin-class";
 import {
-  TwinFlowTransition,
+  TwinFlowTransition_DETAILED,
   useFetchTwinFlowTransitionById,
 } from "@/entities/twin-flow-transition";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinFlowContext } from "@/features/twinFlow";
+import { PlatformArea } from "@/shared/config";
+import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
@@ -17,22 +19,22 @@ import { TwinflowTransitionValidatorRules } from "../transitionValidators";
 import { TwinflowTransitionTriggers } from "../twinclassTriggers";
 import { TwinflowTransitionGeneral } from "./views";
 
-type TransitionPageProps = {
-  params: {
-    twinClassId: string;
-    twinflowId: string;
-    transitionId: string;
-  };
+export type TransitionScreenParams = {
+  twinClassId: string;
+  twinflowId: string;
+  transitionId: string;
 };
 
 export function TransitionScreen({
-  params: { twinClassId, twinflowId, transitionId },
-}: TransitionPageProps) {
+  twinClassId,
+  twinflowId,
+  transitionId,
+}: TransitionScreenParams) {
   const { twinClass } = useContext(TwinClassContext);
   const { twinFlow } = useContext(TwinFlowContext);
-  const [transition, setTransition] = useState<TwinFlowTransition | undefined>(
-    undefined
-  );
+  const [transition, setTransition] = useState<
+    TwinFlowTransition_DETAILED | undefined
+  >(undefined);
   const { setBreadcrumbs } = useBreadcrumbs();
   const { fetchTwinFlowTransitionById, loading } =
     useFetchTwinFlowTransitionById();
@@ -43,26 +45,26 @@ export function TransitionScreen({
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Classes", href: "/workspace/twinclass" },
+      { label: "Classes", href: `/${PlatformArea.core}/twinclass` },
       {
         label: twinClass?.name!,
-        href: `/workspace/twinclass/${twinClass?.id}`,
+        href: `/${PlatformArea.core}/twinclass/${twinClass?.id}`,
       },
       {
         label: "Twinflows",
-        href: `/workspace/twinclass/${twinClass?.id}#twinflows`,
+        href: `/${PlatformArea.core}/twinclass/${twinClass?.id}#twinflows`,
       },
       {
         label: twinFlow?.name ?? "N/A",
-        href: `/workspace/twinclass/${twinClass?.id}/twinflow/${twinflowId}`,
+        href: `/${PlatformArea.core}/twinclass/${twinClass?.id}/twinflow/${twinflowId}`,
       },
       {
         label: "Transitions",
-        href: `/workspace/twinclass/${twinClassId}/twinflow/${twinflowId}#transitions`,
+        href: `/${PlatformArea.core}/twinclass/${twinClassId}/twinflow/${twinflowId}#transitions`,
       },
       {
         label: transition?.name ?? "N/A",
-        href: `/workspace/twinclass/${twinClassId}/twinflow/${twinflowId}/transition/${transitionId}`,
+        href: `/${PlatformArea.core}/twinclass/${twinClassId}/twinflow/${twinflowId}/transition/${transitionId}`,
       },
     ]);
   }, [
@@ -78,7 +80,7 @@ export function TransitionScreen({
       const response = await fetchTwinFlowTransitionById(transitionId);
       setTransition(response);
     } catch {
-      toast.error("Failed to fetch twin class");
+      toast.error("Failed to fetch transition data");
     }
   }
 
@@ -87,12 +89,7 @@ export function TransitionScreen({
         {
           key: "general",
           label: "General",
-          content: (
-            <TwinflowTransitionGeneral
-              transition={transition}
-              onChange={fetchTransitionData}
-            />
-          ),
+          content: <TwinflowTransitionGeneral transition={transition} />,
         },
         {
           key: "triggers",
@@ -107,10 +104,7 @@ export function TransitionScreen({
       ]
     : [];
 
-  return (
-    <div>
-      {loading && <LoadingOverlay />}
-      {transition && <TabsLayout tabs={tabs} />}
-    </div>
-  );
+  if (loading || isUndefined(transition)) return <LoadingOverlay />;
+
+  return <TabsLayout tabs={tabs} />;
 }
