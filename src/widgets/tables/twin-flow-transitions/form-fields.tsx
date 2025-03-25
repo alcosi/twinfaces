@@ -10,20 +10,24 @@ import {
   TwinFlowTransitionFormValues,
   useTransitionAliasSelectAdapter,
 } from "@/entities/twin-flow-transition";
-import { TwinStatusSelectField } from "@/features/twinStatus";
-import { isPopulatedArray, isTruthy } from "@/shared/libs";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import { isPopulatedArray } from "@/shared/libs";
 
 export function TwinFlowTransitionFormFields({
   control,
 }: {
   control: Control<TwinFlowTransitionFormValues>;
 }) {
-  const twinflow = useWatch({ control, name: "twinflow" });
-  const disabled = useRef(isPopulatedArray(twinflow)).current;
+  const twinFlowWatch = useWatch({ control, name: "twinflow" });
+  const disabled = useRef(isPopulatedArray(twinFlowWatch)).current;
+
   const twinFlowAdapter = useTwinFlowSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
   const transitionAliasAdapter = useTransitionAliasSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapter(
+    twinFlowWatch?.[0]?.twinClassId
+  );
 
   return (
     <>
@@ -70,24 +74,28 @@ export function TwinFlowTransitionFormFields({
         {...factoryAdapter}
       />
 
-      {isTruthy(twinflow) && twinflow.length > 0 && (
-        <TwinStatusSelectField
-          twinClassId={twinflow?.[0]?.twinClassId}
-          control={control}
-          name="srcTwinStatusId"
-          label="From status"
-        />
-      )}
+      <ComboboxFormField
+        control={control}
+        name={"srcTwinStatusId"}
+        label="From status"
+        selectPlaceholder="Select status"
+        searchPlaceholder="Search status..."
+        noItemsText="No status found"
+        disabled={!twinFlowWatch?.length}
+        {...twinStatusAdapter}
+      />
 
-      {isTruthy(twinflow) && twinflow.length > 0 && (
-        <TwinStatusSelectField
-          twinClassId={twinflow?.[0]?.twinClassId}
-          control={control}
-          name="dstTwinStatusId"
-          label="To status"
-          required={true}
-        />
-      )}
+      <ComboboxFormField
+        control={control}
+        name={"dstTwinStatusId"}
+        label="To status"
+        selectPlaceholder="Select status"
+        searchPlaceholder="Search status..."
+        noItemsText="No status found"
+        required={true}
+        disabled={!twinFlowWatch?.length}
+        {...twinStatusAdapter}
+      />
 
       <ComboboxFormField
         control={control}

@@ -16,7 +16,7 @@ import {
   TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
   useTransitionAliasSelectAdapter,
-  useUpdateTransition,
+  useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
 import {
   TwinClassStatusResourceLink,
@@ -39,7 +39,7 @@ export function TwinflowTransitionGeneral({
   transition: TwinFlowTransition;
   onChange: () => void;
 }) {
-  const { updateTransition } = useUpdateTransition();
+  const { updateTransitionTransition } = useUpdateTwinFlowTransition();
   const twinStatusAdapter = useTwinStatusSelectAdapter(
     transition.twinflow?.twinClassId
   );
@@ -49,7 +49,7 @@ export function TwinflowTransitionGeneral({
 
   async function update(newTransition: TwinFlowTransitionUpdateRq) {
     try {
-      await updateTransition({
+      await updateTransitionTransition({
         transitionId: transition.id!,
         body: newTransition,
       });
@@ -60,7 +60,7 @@ export function TwinflowTransitionGeneral({
   }
 
   //TODO https://alcosi.atlassian.net/browse/TWINFACES-269 add with possibility of new value enter
-  const aliasSettings: InPlaceEditProps<any> = {
+  const aliasSettings: InPlaceEditProps<typeof transition.alias> = {
     id: "alias",
     value: transition.alias,
     valueInfo: {
@@ -70,7 +70,8 @@ export function TwinflowTransitionGeneral({
     },
     renderPreview: transition.alias ? (_) => transition.alias : undefined,
     onSubmit: async (value) => {
-      return update({ alias: value[0].alias });
+      const id = (value as unknown as Array<{ alias: string }>)[0]?.alias;
+      return update({ alias: id });
     },
   };
 

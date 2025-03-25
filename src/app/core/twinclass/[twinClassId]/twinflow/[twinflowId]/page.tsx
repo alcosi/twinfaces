@@ -6,20 +6,18 @@ import { toast } from "sonner";
 import { TwinClassContext } from "@/entities/twin-class";
 import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twin-flow";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { TwinFlowTransitions } from "@/screens/twinFlowTransitions";
 import { PlatformArea } from "@/shared/config";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinFlowTransitionsTable } from "@/widgets/tables";
 
-
 import { TwinflowGeneral } from "./twinflow-general";
 
-interface TwinflowPageProps {
+type TwinflowPageProps = {
   params: {
     twinflowId: string;
   };
-}
+};
 
 export default function TwinflowPage({
   params: { twinflowId },

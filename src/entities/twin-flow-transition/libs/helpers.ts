@@ -3,50 +3,42 @@ import { RelatedObjects } from "@/shared/api";
 import { TwinFlowTransition, TwinFlowTransition_DETAILED } from "../api";
 
 export const hydrateTwinFlowTransitionFromMap = (
-  transitionDTO: TwinFlowTransition,
+  dto: TwinFlowTransition,
   relatedObjects?: RelatedObjects
 ): TwinFlowTransition_DETAILED => {
-  const transition: TwinFlowTransition_DETAILED = Object.assign(
+  const hydrated: TwinFlowTransition_DETAILED = Object.assign(
     {},
-    transitionDTO
+    dto
   ) as TwinFlowTransition_DETAILED;
-  if (transitionDTO.srcTwinStatusId && relatedObjects?.statusMap) {
-    transition.srcTwinStatus =
-      relatedObjects.statusMap[transitionDTO.srcTwinStatusId];
+  if (dto.srcTwinStatusId && relatedObjects?.statusMap) {
+    hydrated.srcTwinStatus = relatedObjects.statusMap[dto.srcTwinStatusId];
   }
 
-  if (transitionDTO.dstTwinStatusId && relatedObjects?.statusMap) {
-    transition.dstTwinStatus =
-      relatedObjects.statusMap[transitionDTO.dstTwinStatusId];
+  if (dto.dstTwinStatusId && relatedObjects?.statusMap) {
+    hydrated.dstTwinStatus = relatedObjects.statusMap[dto.dstTwinStatusId];
   }
 
-  if (transitionDTO.permissionId && relatedObjects?.permissionMap) {
-    transition.permission =
-      relatedObjects.permissionMap[transitionDTO.permissionId];
+  if (dto.permissionId && relatedObjects?.permissionMap) {
+    hydrated.permission = relatedObjects.permissionMap[dto.permissionId];
   }
 
-  if (transitionDTO.createdByUserId && relatedObjects?.userMap) {
-    transition.createdByUser =
-      relatedObjects.userMap[transitionDTO.createdByUserId];
+  if (dto.createdByUserId && relatedObjects?.userMap) {
+    hydrated.createdByUser = relatedObjects.userMap[dto.createdByUserId];
   }
 
-  if (transitionDTO.twinflowId && relatedObjects?.twinflowMap) {
-    transition.twinflow = relatedObjects.twinflowMap[transitionDTO.twinflowId];
+  if (dto.twinflowId && relatedObjects?.twinflowMap) {
+    hydrated.twinflow = relatedObjects.twinflowMap[dto.twinflowId];
   }
 
-  if (transitionDTO.inbuiltTwinFactoryId && relatedObjects?.factoryMap) {
-    transition.inbuiltTwinFactory =
-      relatedObjects.factoryMap[transitionDTO.inbuiltTwinFactoryId];
+  if (dto.inbuiltTwinFactoryId && relatedObjects?.factoryMap) {
+    hydrated.inbuiltTwinFactory =
+      relatedObjects.factoryMap[dto.inbuiltTwinFactoryId];
   }
 
-  if (
-    transitionDTO.twinflowId &&
-    relatedObjects?.twinClassMap &&
-    transition.twinflow
-  ) {
-    transition.twinflow.twinClass =
-      relatedObjects.twinClassMap[transition.twinflow.twinClassId!];
+  if (dto.twinflowId && relatedObjects?.twinClassMap && hydrated.twinflow) {
+    hydrated.twinflow.twinClass =
+      relatedObjects.twinClassMap[hydrated.twinflow.twinClassId!];
   }
 
-  return transition;
+  return hydrated;
 };

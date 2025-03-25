@@ -5,10 +5,10 @@ import { PrivateApiContext } from "@/shared/api";
 import { TwinFlowTransitionUpdateRq } from "../types";
 
 // TODO: Apply caching-strategy
-export const useUpdateTransition = () => {
+export const useUpdateTwinFlowTransition = () => {
   const api = useContext(PrivateApiContext);
 
-  const updateTransition = useCallback(
+  const updateTransitionTransition = useCallback(
     async ({
       transitionId,
       body,
@@ -21,5 +21,5 @@ export const useUpdateTransition = () => {
     [api]
   );
 
-  return { updateTransition };
+  return { updateTransitionTransition };
 };

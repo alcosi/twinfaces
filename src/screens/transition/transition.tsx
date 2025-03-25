@@ -17,13 +17,13 @@ import { TwinflowTransitionValidatorRules } from "../transitionValidators";
 import { TwinflowTransitionTriggers } from "../twinclassTriggers";
 import { TwinflowTransitionGeneral } from "./views";
 
-interface TransitionPageProps {
+type TransitionPageProps = {
   params: {
     twinClassId: string;
     twinflowId: string;
     transitionId: string;
   };
-}
+};
 
 export function TransitionScreen({
   params: { twinClassId, twinflowId, transitionId },

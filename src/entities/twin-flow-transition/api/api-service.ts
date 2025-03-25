@@ -4,8 +4,6 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { wrapWithPercent } from "@/shared/libs";
 
 import {
-  TwinFlowTransitionCreateRq,
-  TwinFlowTransitionFilters,
   TransitionAliasFilters,
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFilters,

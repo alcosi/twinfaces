@@ -11,7 +11,7 @@ import {
   VALIDATOR_RULES_SCHEMA,
   ValidatorRulesFormValues,
   useTwinFlowTransitionValidatorRulesSearch,
-  useUpdateTransition,
+  useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { DataTableHandle } from "@/widgets/crud-data-table";
@@ -61,7 +61,7 @@ export function TwinflowTransitionValidatorRules({
 }) {
   const tableRef = useRef<DataTableHandle>(null);
   const { fetchValidatorRules } = useTwinFlowTransitionValidatorRulesSearch();
-  const { updateTransition } = useUpdateTransition();
+  const { updateTransitionTransition } = useUpdateTwinFlowTransition();
 
   async function fetchData() {
     const response = await fetchValidatorRules({
@@ -89,7 +89,7 @@ export function TwinflowTransitionValidatorRules({
       active: formValues.active,
     };
 
-    await updateTransition({
+    await updateTransitionTransition({
       transitionId: transition.id,
       body: {
         validatorRules: { create: [body] },

@@ -22,9 +22,10 @@ import {
   useTwinFlowTransitionFilters,
   useTwinFlowTransitionSearchV1,
 } from "@/entities/twin-flow-transition";
-import { useCreateTransition } from "@/entities/twin-flow-transition";
+import { useCreateTwinFlowTransition } from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import {
   formatToTwinfaceDate,
   isFalsy,
@@ -180,7 +181,7 @@ export function TwinFlowTransitionsTable({
         : undefined,
     });
   const { searchTwinFlowTransitions } = useTwinFlowTransitionSearchV1();
-  const { createTransition } = useCreateTransition();
+  const { createTwinFlowTransition } = useCreateTwinFlowTransition();
 
   const form = useForm<TwinFlowTransitionFormValues>({
     resolver: zodResolver(TWIN_FLOW_TRANSITION_SCHEMA),
@@ -245,7 +246,7 @@ export function TwinFlowTransitionsTable({
       permissionId: formValues.permissionId,
     };
 
-    await createTransition({
+    await createTwinFlowTransition({
       twinFlowId: twinflow?.id || formValues?.twinflow?.[0]?.id!,
       body,
     });
@@ -272,7 +273,7 @@ export function TwinFlowTransitionsTable({
       getRowId={(row) => row.id!}
       onRowClick={(row) =>
         router.push(
-          `/workspace/twinclass/${row.twinflow?.twinClassId}/twinflow/${row.twinflowId}/transition/${row.id}`
+          `/${PlatformArea.core}/twinclass/${row.twinflow?.twinClassId}/twinflow/${row.twinflowId}/transition/${row.id}`
         )
       }
       pageSizes={[10, 20, 50]}
