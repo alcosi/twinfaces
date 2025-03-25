@@ -1,6 +1,7 @@
 "use client";
 
 import { Tab, TabsLayout } from "@/widgets/layout";
+import { ProductView } from "@/widgets/product-view";
 
 import { IconsTab } from "./tabs/icons";
 import { InputFieldsTab } from "./tabs/input-fields";
@@ -27,6 +28,11 @@ const tabs: Tab[] = [
     key: "icons-fields",
     label: "Icons",
     content: <IconsTab />,
+  },
+  {
+    key: "product-view",
+    label: "ProductView",
+    content: <ProductView />,
   },
 ];
 
