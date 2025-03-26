@@ -11883,8 +11883,8 @@ export interface components {
        * @description searchId
        */
       searchId?: string;
-      /** @description hide given basic columns from table and filter */
-      hideColumns?: string[];
+      /** @description show given basic columns from table and filter */
+      showColumns?: string[]
     };
     FacePG001ViewRsV1: {
       /**

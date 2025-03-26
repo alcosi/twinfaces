@@ -6,6 +6,10 @@ export async function WT001Face({ widgetFaceId }: { widgetFaceId: string }) {
   const widget: FaceWT001 = await fetchWidgetFace(widgetFaceId);
 
   return (
-    <WT001Client title={widget.label} baseTwinClassId={widget.twinClassId} />
+    <WT001Client
+      title={widget.label}
+      baseTwinClassId={widget.twinClassId}
+      enabledColumns={widget.showColumns}
+    />
   );
 }

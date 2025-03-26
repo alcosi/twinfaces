@@ -46,7 +46,6 @@ export function DataListOptionContextProvider({
     }
   }
 
-  console.log("foobar CT", { datalistOption, loading });
   if (isUndefined(datalistOption) || loading) return <LoadingOverlay />;
 
   return (
