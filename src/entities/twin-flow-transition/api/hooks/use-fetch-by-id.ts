@@ -4,7 +4,7 @@ import { hydrateTwinFlowTransitionFromMap } from "@/entities/twin-flow-transitio
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-import { TwinFlowTransition } from "../types";
+import { TwinFlowTransition_DETAILED } from "../types";
 
 // TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinFlowTransitionById = () => {
@@ -12,7 +12,7 @@ export const useFetchTwinFlowTransitionById = () => {
   const api = useContext(PrivateApiContext);
 
   const fetchTwinFlowTransitionById = useCallback(
-    async (id: string): Promise<TwinFlowTransition> => {
+    async (id: string): Promise<TwinFlowTransition_DETAILED> => {
       setLoading(true);
       try {
         const { data, error } = await api.twinFlowTransition.fetchById(id);

@@ -13,8 +13,9 @@ import {
 } from "@/entities/permission";
 import { TwinFlowResourceLink, TwinFlow_DETAILED } from "@/entities/twin-flow";
 import {
-  TwinFlowTransition,
   TwinFlowTransitionUpdateRq,
+  TwinFlowTransition_DETAILED,
+  useFetchTwinFlowTransitionById,
   useTransitionAliasSelectAdapter,
   useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
@@ -28,21 +29,18 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatToTwinfaceDate, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinflowTransitionGeneral({
   transition,
-  onChange,
 }: {
-  transition: TwinFlowTransition;
-  onChange: () => void;
+  transition: TwinFlowTransition_DETAILED;
 }) {
+  const { fetchTwinFlowTransitionById } = useFetchTwinFlowTransitionById();
   const { updateTransitionTransition } = useUpdateTwinFlowTransition();
-  const twinStatusAdapter = useTwinStatusSelectAdapter(
-    transition.twinflow?.twinClassId
-  );
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
   const transitionAliasAdapter = useTransitionAliasSelectAdapter();
@@ -50,12 +48,12 @@ export function TwinflowTransitionGeneral({
   async function update(newTransition: TwinFlowTransitionUpdateRq) {
     try {
       await updateTransitionTransition({
-        transitionId: transition.id!,
+        transitionId: transition.id,
         body: newTransition,
       });
-      onChange?.();
+      fetchTwinFlowTransitionById(transition.id);
     } catch {
-      toast.error("not updated transition");
+      toast.error("Failed to update transition");
     }
   }
 
@@ -120,6 +118,13 @@ export function TwinflowTransitionGeneral({
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select status...",
       ...twinStatusAdapter,
+      getItems: async (search) =>
+        twinStatusAdapter.getItems(search, {
+          twinClassIdMap: reduceToObject({
+            list: toArray(transition.twinflow?.twinClassId),
+            defaultValue: true,
+          }),
+        }),
     },
     renderPreview: transition.srcTwinStatus
       ? (_) => (

@@ -11,7 +11,7 @@ import {
   useTransitionAliasSelectAdapter,
 } from "@/entities/twin-flow-transition";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { isPopulatedArray } from "@/shared/libs";
+import { isPopulatedString, reduceToObject, toArray } from "@/shared/libs";
 
 export function TwinFlowTransitionFormFields({
   control,
@@ -19,15 +19,14 @@ export function TwinFlowTransitionFormFields({
   control: Control<TwinFlowTransitionFormValues>;
 }) {
   const twinFlowWatch = useWatch({ control, name: "twinflow" });
-  const disabled = useRef(isPopulatedArray(twinFlowWatch)).current;
+  const isTwinFlowSelected = isPopulatedString(twinFlowWatch);
+  const isPreselected = useRef(isTwinFlowSelected).current;
 
   const twinFlowAdapter = useTwinFlowSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
   const transitionAliasAdapter = useTransitionAliasSelectAdapter();
-  const twinStatusAdapter = useTwinStatusSelectAdapter(
-    twinFlowWatch?.[0]?.twinClassId
-  );
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
 
   return (
     <>
@@ -38,7 +37,7 @@ export function TwinFlowTransitionFormFields({
         selectPlaceholder="Select Twinflow"
         searchPlaceholder="Search Twinflow..."
         noItemsText="No Twinflow found"
-        disabled={disabled}
+        disabled={isPreselected}
         required={true}
         {...twinFlowAdapter}
       />
@@ -81,8 +80,16 @@ export function TwinFlowTransitionFormFields({
         selectPlaceholder="Select status"
         searchPlaceholder="Search status..."
         noItemsText="No status found"
-        disabled={!twinFlowWatch?.length}
+        disabled={!isTwinFlowSelected}
         {...twinStatusAdapter}
+        getItems={async (search: string) => {
+          return twinStatusAdapter.getItems(search, {
+            twinClassIdMap: reduceToObject({
+              list: toArray(twinFlowWatch),
+              defaultValue: true,
+            }),
+          });
+        }}
       />
 
       <ComboboxFormField
@@ -93,8 +100,16 @@ export function TwinFlowTransitionFormFields({
         searchPlaceholder="Search status..."
         noItemsText="No status found"
         required={true}
-        disabled={!twinFlowWatch?.length}
+        disabled={!isTwinFlowSelected}
         {...twinStatusAdapter}
+        getItems={async (search: string) => {
+          return twinStatusAdapter.getItems(search, {
+            twinClassIdMap: reduceToObject({
+              list: toArray(twinFlowWatch),
+              defaultValue: true,
+            }),
+          });
+        }}
       />
 
       <ComboboxFormField

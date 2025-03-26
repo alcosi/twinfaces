@@ -19,10 +19,10 @@ import {
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFormValues,
   TwinFlowTransition_DETAILED,
+  useCreateTwinFlowTransition,
   useTwinFlowTransitionFilters,
   useTwinFlowTransitionSearchV1,
 } from "@/entities/twin-flow-transition";
-import { useCreateTwinFlowTransition } from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
@@ -186,7 +186,7 @@ export function TwinFlowTransitionsTable({
   const form = useForm<TwinFlowTransitionFormValues>({
     resolver: zodResolver(TWIN_FLOW_TRANSITION_SCHEMA),
     defaultValues: {
-      twinflow: twinflow ? [twinflow] : [],
+      twinflow: twinflow?.id ?? "",
       name: "",
       description: "",
       srcTwinStatusId: undefined,
@@ -225,9 +225,8 @@ export function TwinFlowTransitionsTable({
   async function handleCreate(
     formValues: z.infer<typeof TWIN_FLOW_TRANSITION_SCHEMA>
   ) {
-    // TODO: Extract new-created-alias from formValues and use it to populate body
     const body: TwinFlowTransitionCreateRq = {
-      alias: formValues.alias?.[0]?.alias!,
+      alias: formValues.alias,
       nameI18n: {
         translations: {
           en: formValues.name,
@@ -247,7 +246,7 @@ export function TwinFlowTransitionsTable({
     };
 
     await createTwinFlowTransition({
-      twinFlowId: twinflow?.id || formValues?.twinflow?.[0]?.id!,
+      twinFlowId: formValues.twinflow,
       body,
     });
     toast.success("Transition created successfully!");
