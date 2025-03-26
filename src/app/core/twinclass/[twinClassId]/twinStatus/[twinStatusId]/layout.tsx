@@ -4,17 +4,14 @@ import { ReactNode } from "react";
 
 import { TwinStatusContextProvider } from "@/features/twin-status";
 
-type TwinStatusLayoutProps = {
+type Props = {
   params: {
     twinStatusId: string;
   };
   children: ReactNode;
 };
 
-export default function FactoryMultiplierLayout({
-  params: { twinStatusId },
-  children,
-}: TwinStatusLayoutProps) {
+export default function Layout({ params: { twinStatusId }, children }: Props) {
   return (
     <TwinStatusContextProvider twinStatusId={twinStatusId}>
       {children}

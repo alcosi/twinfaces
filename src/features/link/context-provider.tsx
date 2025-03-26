@@ -54,7 +54,7 @@ export function LinkContextProvider({
 
   return (
     <LinkContext.Provider value={{ linkId, link, refresh }}>
-      {loading ? <LoadingOverlay /> : children}
+      {children}
     </LinkContext.Provider>
   );
 }

@@ -46,13 +46,14 @@ export function DataListOptionContextProvider({
     }
   }
 
+  console.log("foobar CT", { datalistOption, loading });
   if (isUndefined(datalistOption) || loading) return <LoadingOverlay />;
 
   return (
     <DataListOptionContext.Provider
       value={{ optionId, datalistOption, refresh }}
     >
-      {loading ? <LoadingOverlay /> : children}
+      {children}
     </DataListOptionContext.Provider>
   );
 }

@@ -50,7 +50,7 @@ export function TwinFieldContextProvider({
 
   return (
     <TwinFieldContext.Provider value={{ twinFieldId, twinField, refresh }}>
-      {loading ? <LoadingOverlay /> : children}
+      {children}
     </TwinFieldContext.Provider>
   );
 }

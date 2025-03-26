@@ -47,7 +47,7 @@ export function TwinStatusContextProvider({
 
   return (
     <TwinStatusContext.Provider value={{ twinStatusId, twinStatus, refresh }}>
-      {loading ? <LoadingOverlay /> : children}
+      {children}
     </TwinStatusContext.Provider>
   );
 }

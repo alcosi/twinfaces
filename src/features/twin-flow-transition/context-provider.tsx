@@ -54,7 +54,7 @@ export function TwinFlowTransitionContextProvider({
     <TwinFlowTransitionContext.Provider
       value={{ transitionId, transition, refresh }}
     >
-      {loading ? <LoadingOverlay /> : children}
+      {children}
     </TwinFlowTransitionContext.Provider>
   );
 }
