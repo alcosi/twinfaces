@@ -1,4 +1,4 @@
-import { TwinClass, TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 

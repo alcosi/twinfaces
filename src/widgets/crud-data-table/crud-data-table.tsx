@@ -29,6 +29,7 @@ import {
   FilterState,
 } from "./header";
 import { getColumnKey, groupDataByKey } from "./helpers";
+import { useViewSettings } from "./hooks";
 
 type CrudDataTableProps<
   TData extends DataTableRow<TData>,
@@ -65,18 +66,9 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   const router = useRouter();
   const pathname = usePathname();
 
-  const [viewSettings, updateViewSettings] = useReducer(
-    (state: FilterState, updates: Partial<FilterState>) => ({
-      ...state,
-      ...updates,
-    }),
-    {
-      query: "",
-      filters: {},
-      visibleKeys: props.defaultVisibleColumns?.map(getColumnKey) ?? [],
-      orderKeys: props.orderedColumns?.map(getColumnKey) ?? [],
-      groupByKey: undefined,
-    }
+  const { viewSettings, updateViewSettings } = useViewSettings(
+    props.defaultVisibleColumns,
+    props.orderedColumns
   );
   const tableRef = useRef<DataTableHandle>(null);
   const dialogRef = useRef<CrudDataTableDialogRef>(null);
@@ -86,16 +78,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   useEffect(() => {
     tableRef.current?.refresh();
   }, [viewSettings]);
-
-  // NOTE: Temp solution
-  // Ensure visibleKeys are updated when props.defaultVisibleColumns changes
-  useEffect(() => {
-    if (props.defaultVisibleColumns) {
-      updateViewSettings({
-        visibleKeys: props.defaultVisibleColumns.map(getColumnKey),
-      });
-    }
-  }, [props.defaultVisibleColumns?.length]);
 
   const fetchWrapper = async (pagination: PaginationState) => {
     try {

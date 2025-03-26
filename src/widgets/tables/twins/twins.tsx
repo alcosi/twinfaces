@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -29,7 +28,6 @@ import {
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { User, UserResourceLink } from "@/entities/user";
 import { TransitionPerformer } from "@/features/transition-performer";
-import { PlatformArea } from "@/shared/config";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
@@ -44,7 +42,7 @@ import {
 } from "../../crud-data-table";
 import { TwinFormFields } from "./form-fields";
 
-type TwinTableColumnKey = keyof Pick<
+type TwinStaticFieldKey = keyof Pick<
   Twin,
   | "id"
   | "twinClassId"
@@ -60,9 +58,29 @@ type TwinTableColumnKey = keyof Pick<
   | "aliases"
 >;
 
+function filterValidKeys(keys: string[]): TwinStaticFieldKey[] {
+  const validKeys: TwinStaticFieldKey[] = [
+    "id",
+    "twinClassId",
+    "name",
+    "statusId",
+    "description",
+    "authorUserId",
+    "assignerUserId",
+    "headTwinId",
+    "tags",
+    "markers",
+    "createdAt",
+    "aliases",
+  ];
+  return keys.filter((key): key is TwinStaticFieldKey =>
+    validKeys.includes(key as TwinStaticFieldKey)
+  );
+}
+
 type Props = {
   title?: string;
-  enabledColumns?: TwinTableColumnKey[];
+  enabledColumns?: string[];
   // NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
@@ -74,7 +92,6 @@ export function TwinsTable({
   baseTwinClassId,
   targetHeadTwinId,
 }: Props) {
-  const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } =
     useTwinFilters(baseTwinClassId);
@@ -83,7 +100,7 @@ export function TwinsTable({
   const { createTwin } = useCreateTwin();
   const { performTransition } = usePerformTransition();
 
-  const colDefs: Record<TwinTableColumnKey, ColumnDef<Twin_DETAILED>> = {
+  const colDefs: Record<TwinStaticFieldKey, ColumnDef<Twin_DETAILED>> = {
     id: {
       id: "id",
       accessorKey: "id",
@@ -224,9 +241,10 @@ export function TwinsTable({
     },
   };
 
+  const staticKeys = filterValidKeys(enabledColumns ?? []);
   const [columnMap, setColumnMap] = useState(
     enabledColumns
-      ? Object.fromEntries(enabledColumns.map((key) => [key, colDefs[key]]))
+      ? Object.fromEntries(staticKeys.map((key) => [key, colDefs[key]]))
       : colDefs
   );
 
@@ -256,22 +274,6 @@ export function TwinsTable({
       }));
     });
   }, []);
-
-  const defaultVisibleColumns = useMemo(
-    () =>
-      Object.values(columnMap).filter(
-        (col) =>
-          ![
-            "twinClassId",
-            "description",
-            "authorUserId",
-            "assignerUserId",
-            "headTwinId",
-            "createdAt",
-          ].includes(col.id!)
-      ),
-    [columnMap]
-  );
 
   async function fetchTwin({
     pagination,
@@ -347,7 +349,7 @@ export function TwinsTable({
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      defaultVisibleColumns={defaultVisibleColumns}
+      defaultVisibleColumns={Object.values(columnMap)}
       dialogForm={form}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

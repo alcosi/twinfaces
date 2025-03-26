@@ -10,6 +10,7 @@ import { Separator } from "@/shared/ui/separator";
 
 import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";
 import { getColumnKey, safeRefresh } from "../helpers";
+import { useViewSettings } from "../hooks";
 import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersPopover } from "./filters-popover";
 import { GroupByButton } from "./group-by-button";
@@ -46,17 +47,6 @@ type Props<
   groupableColumns?: DataTableProps<TData, TValue>["columns"];
 };
 
-const initialSettings = <TData extends DataTableRow<TData>, TValue>(
-  orderedColumns: Props<TData, TValue>["orderedColumns"],
-  visibleColumns?: Props<TData, TValue>["defaultVisibleColumns"]
-): FilterState => ({
-  query: "",
-  filters: {},
-  visibleKeys: visibleColumns?.map((col) => getColumnKey(col)) ?? [],
-  orderKeys: orderedColumns?.map((col) => getColumnKey(col)) ?? [],
-  groupByKey: undefined,
-});
-
 function CrudDataTableHeaderComponent<
   TData extends DataTableRow<TData>,
   TValue,
@@ -75,12 +65,9 @@ function CrudDataTableHeaderComponent<
   }: Props<TData, TValue>,
   tableRef: ForwardedRef<DataTableHandle>
 ) {
-  const [viewSettings, updateViewSettings] = useReducer(
-    (state: FilterState, updates: Partial<FilterState>) => ({
-      ...state,
-      ...updates,
-    }),
-    initialSettings(orderedColumns, defaultVisibleColumns)
+  const { viewSettings, updateViewSettings } = useViewSettings(
+    defaultVisibleColumns,
+    orderedColumns
   );
 
   const debouncedUpdate = useCallback(
