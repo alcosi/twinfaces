@@ -1,9 +1,5 @@
-import { TransitionScreen, TransitionScreenParams } from "@/screens/transition";
+import { TransitionScreen } from "@/screens/transition";
 
-type Props = {
-  params: TransitionScreenParams;
-};
-
-export default function TransitionPage({ params }: Props) {
-  return <TransitionScreen {...params} />;
+export default function TransitionPage() {
+  return <TransitionScreen />;
 }

@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -14,8 +15,6 @@ import {
 import { TwinFlowResourceLink, TwinFlow_DETAILED } from "@/entities/twin-flow";
 import {
   TwinFlowTransitionUpdateRq,
-  TwinFlowTransition_DETAILED,
-  useFetchTwinFlowTransitionById,
   useTransitionAliasSelectAdapter,
   useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
@@ -29,17 +28,16 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
 import { formatToTwinfaceDate, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
-export function TwinflowTransitionGeneral({
-  transition,
-}: {
-  transition: TwinFlowTransition_DETAILED;
-}) {
-  const { fetchTwinFlowTransitionById } = useFetchTwinFlowTransitionById();
-  const { updateTransitionTransition } = useUpdateTwinFlowTransition();
+export function TwinflowTransitionGeneral() {
+  const { transitionId, transition, refresh } = useContext(
+    TwinFlowTransitionContext
+  );
+  const { updateTwinFlowTransition } = useUpdateTwinFlowTransition();
   const twinStatusAdapter = useTwinStatusSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
@@ -47,11 +45,11 @@ export function TwinflowTransitionGeneral({
 
   async function update(newTransition: TwinFlowTransitionUpdateRq) {
     try {
-      await updateTransitionTransition({
-        transitionId: transition.id,
+      await updateTwinFlowTransition({
+        transitionId: transitionId,
         body: newTransition,
       });
-      fetchTwinFlowTransitionById(transition.id);
+      refresh();
     } catch {
       toast.error("Failed to update transition");
     }
@@ -279,7 +277,7 @@ export function TwinflowTransitionGeneral({
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(transition.createdAt!)}</TableCell>
+            <TableCell>{formatToTwinfaceDate(transition.createdAt)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

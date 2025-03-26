@@ -1,36 +1,16 @@
-"use client";
+import { useContext, useEffect } from "react";
 
-import { useEffect, useState } from "react";
-
-import {
-  DataListOptionV3,
-  useDatalistOption,
-} from "@/entities/datalist-option";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { DataListOptionContext } from "@/features/datalist-option";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
-import { LoadingOverlay } from "@/shared/ui";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { DatalistOptionGeneral } from "./views";
 
-export function DatalistOptionScreen({ optionId }: { optionId: string }) {
-  const [datalistOption, setDatalistOption] = useState<
-    DataListOptionV3 | undefined
-  >(undefined);
-  const { fetchDatalistOptionById, loading } = useDatalistOption();
+export function DatalistOptionScreen() {
   const { setBreadcrumbs } = useBreadcrumbs();
-
-  useEffect(() => {
-    fetchDatalistOptions();
-  }, [optionId]);
-
-  async function fetchDatalistOptions() {
-    if (optionId) {
-      const response = await fetchDatalistOptionById(optionId);
-      setDatalistOption(response);
-    }
-  }
+  const { datalistOption, optionId } = useContext(DataListOptionContext);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -52,20 +32,10 @@ export function DatalistOptionScreen({ optionId }: { optionId: string }) {
         {
           key: "general",
           label: "General",
-          content: (
-            <DatalistOptionGeneral
-              datalistOption={datalistOption}
-              onChange={fetchDatalistOptions}
-            />
-          ),
+          content: <DatalistOptionGeneral />,
         },
       ]
     : [];
 
-  return (
-    <div>
-      {loading && <LoadingOverlay />}
-      {datalistOption && <TabsLayout tabs={tabs} />}
-    </div>
-  );
+  return <TabsLayout tabs={tabs} />;
 }

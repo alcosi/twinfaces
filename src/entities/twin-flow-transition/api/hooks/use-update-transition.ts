@@ -8,7 +8,7 @@ import { TwinFlowTransitionUpdateRq } from "../types";
 export const useUpdateTwinFlowTransition = () => {
   const api = useContext(PrivateApiContext);
 
-  const updateTransitionTransition = useCallback(
+  const updateTwinFlowTransition = useCallback(
     async ({
       transitionId,
       body,
@@ -21,5 +21,5 @@ export const useUpdateTwinFlowTransition = () => {
     [api]
   );
 
-  return { updateTransitionTransition };
+  return { updateTwinFlowTransition };
 };

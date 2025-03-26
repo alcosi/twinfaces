@@ -1,11 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 import {
-  TwinFlowTransition,
   TwinFlowTransitionValidator,
   TwinFlowTransitionValidatorCreate,
   VALIDATOR_RULES_SCHEMA,
@@ -13,9 +12,9 @@ import {
   useTwinFlowTransitionValidatorRulesSearch,
   useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
+import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
 import { GuidWithCopy } from "@/shared/ui/guid";
-import { DataTableHandle } from "@/widgets/crud-data-table";
-import { CrudDataTable } from "@/widgets/crud-data-table";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 
 import { TransitionValidatorFormFields } from "./form-fields";
 
@@ -54,18 +53,15 @@ const colDefs: Record<
   },
 };
 
-export function TwinflowTransitionValidatorRules({
-  transition,
-}: {
-  transition: TwinFlowTransition;
-}) {
+export function TwinflowTransitionValidatorRules() {
   const tableRef = useRef<DataTableHandle>(null);
+  const { transitionId } = useContext(TwinFlowTransitionContext);
   const { fetchValidatorRules } = useTwinFlowTransitionValidatorRulesSearch();
-  const { updateTransitionTransition } = useUpdateTwinFlowTransition();
+  const { updateTwinFlowTransition } = useUpdateTwinFlowTransition();
 
   async function fetchData() {
     const response = await fetchValidatorRules({
-      transitionId: transition.id!,
+      transitionId: transitionId,
     });
     return response;
   }
@@ -79,18 +75,13 @@ export function TwinflowTransitionValidatorRules({
   });
 
   async function createValidator(formValues: ValidatorRulesFormValues) {
-    if (!transition.id) {
-      console.error("Create Validator: no transition");
-      return;
-    }
-
     const body: TwinFlowTransitionValidatorCreate = {
       order: formValues.order,
       active: formValues.active,
     };
 
-    await updateTransitionTransition({
-      transitionId: transition.id,
+    await updateTwinFlowTransition({
+      transitionId: transitionId,
       body: {
         validatorRules: { create: [body] },
       },

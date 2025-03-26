@@ -1,46 +1,40 @@
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { GuidWithCopy } from "@/shared/ui";
+import React, { useContext } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { AutoFormValueType } from "@/components/auto-field";
+
+import { DataList, DatalistResourceLink } from "@/entities/datalist";
 import {
   DATALIST_OPTION_STATUS_TYPES,
   DataListOptionUpdateRqV1,
-  DataListOptionV3,
   useUpdateDatalistOption,
 } from "@/entities/datalist-option";
-import { DataList, DatalistResourceLink } from "@/entities/datalist";
-import React from "react";
+import { DataListOptionContext } from "@/features/datalist-option";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { toast } from "sonner";
-import { AutoFormValueType } from "@/components/auto-field";
-import { z } from "zod";
 import { createFixedSelectAdapter } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
-export function DatalistOptionGeneral({
-  datalistOption,
-  onChange,
-}: {
-  datalistOption: DataListOptionV3;
-  onChange?: () => void;
-}) {
+export function DatalistOptionGeneral() {
+  const { datalistOption, optionId, refresh } = useContext(
+    DataListOptionContext
+  );
   const { updateDatalistOption } = useUpdateDatalistOption();
   const attributeKeys = Object.keys(datalistOption.attributes ?? {});
 
   async function update(newDatalistOption: DataListOptionUpdateRqV1) {
-    if (!datalistOption.id) {
-      toast.error("update Datalist Option: no datalist option");
-      return;
-    }
-
     try {
       await updateDatalistOption({
-        dataListOptionId: datalistOption.id,
+        dataListOptionId: optionId,
         body: newDatalistOption,
       });
       toast.success("Datalist option created successfully!");
-      onChange?.();
+      refresh?.();
     } catch (e) {
       toast.error("Failed to update datalist option");
     }
@@ -101,7 +95,7 @@ export function DatalistOptionGeneral({
 
   return (
     <InPlaceEditContextProvider>
-      <Table className="mt-8">
+      <Table>
         <TableBody>
           <TableRow>
             <TableCell width={300}>ID</TableCell>

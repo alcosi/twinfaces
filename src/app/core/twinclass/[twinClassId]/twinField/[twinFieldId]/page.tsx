@@ -1,34 +1,19 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
 import { TwinClassContext } from "@/entities/twin-class";
-import {
-  TwinClassFieldV2_DETAILED,
-  useFetchTwinClassFieldById,
-} from "@/entities/twin-class-field";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { TwinFieldContext } from "@/features/twin-field";
 import { PlatformArea } from "@/shared/config";
-import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { TwinFieldGeneral } from "./twin-field-general";
 
-interface TwinFieldPageProps {
-  params: {
-    twinFieldId: string;
-  };
-}
-
-export default function TwinClassPage({
-  params: { twinFieldId },
-}: TwinFieldPageProps) {
+export default function TwinClassPage() {
   const { twinClass } = useContext(TwinClassContext);
-  const [twinField, setTwinField] = useState<
-    TwinClassFieldV2_DETAILED | undefined
-  >(undefined);
+  const { twinFieldId, twinField } = useContext(TwinFieldContext);
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { fetchTwinClassFieldById, loading } = useFetchTwinClassFieldById();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -48,33 +33,15 @@ export default function TwinClassPage({
     ]);
   }, [twinClass?.id, twinClass?.name, twinFieldId, twinField?.name]);
 
-  useEffect(() => {
-    fetchTwinClassData();
-  }, [twinFieldId]);
-
-  async function fetchTwinClassData() {
-    if (twinFieldId) {
-      const response = await fetchTwinClassFieldById(twinFieldId);
-      setTwinField(response);
-    }
-  }
-
   const tabs: Tab[] = twinField
     ? [
         {
           key: "general",
           label: "General",
-          content: (
-            <TwinFieldGeneral onChange={fetchTwinClassData} field={twinField} />
-          ),
+          content: <TwinFieldGeneral />,
         },
       ]
     : [];
 
-  return (
-    <div>
-      {loading && <LoadingOverlay />}
-      {twinField && <TabsLayout tabs={tabs} />}
-    </div>
-  );
+  return <TabsLayout tabs={tabs} />;
 }

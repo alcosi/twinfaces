@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -9,16 +9,13 @@ import {
   TwinClassResourceLink,
   TwinClass_DETAILED,
 } from "@/entities/twin-class";
-import {
-  TwinStatusUpdateRq,
-  TwinStatusV2,
-  useStatusUpdate,
-} from "@/entities/twin-status";
+import { TwinStatusUpdateRq, useStatusUpdate } from "@/entities/twin-status";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { TwinStatusContext } from "@/features/twin-status";
 import {
   ColorPicker,
   GuidWithCopy,
@@ -28,13 +25,8 @@ import {
   TableRow,
 } from "@/shared/ui";
 
-export function TwinStatusGeneral({
-  status,
-  onChange,
-}: {
-  status: TwinStatusV2;
-  onChange: () => void;
-}) {
+export function TwinStatusGeneral() {
+  const { twinStatusId, twinStatus, refresh } = useContext(TwinStatusContext);
   const { updateStatus } = useStatusUpdate();
   const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
 
@@ -42,9 +34,9 @@ export function TwinStatusGeneral({
     useState<AutoEditDialogSettings | undefined>(undefined);
 
   const [backgroundColor, setBackgroundColor] = useState(
-    status.backgroundColor
+    twinStatus.backgroundColor
   );
-  const [fontColor, setFontColor] = useState(status.fontColor);
+  const [fontColor, setFontColor] = useState(twinStatus.fontColor);
 
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
@@ -53,16 +45,16 @@ export function TwinStatusGeneral({
 
   async function update(newStatus: TwinStatusUpdateRq) {
     try {
-      await updateStatus({ statusId: status.id!, body: newStatus });
-      onChange?.();
+      await updateStatus({ statusId: twinStatusId, body: newStatus });
+      refresh?.();
     } catch {
       toast.error("Twin status update failed");
     }
   }
 
-  const keySettings: InPlaceEditProps = {
+  const keySettings: InPlaceEditProps<typeof twinStatus.key> = {
     id: "key",
-    value: status.key,
+    value: twinStatus.key,
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
@@ -73,14 +65,14 @@ export function TwinStatusGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return update({
-        key: value as string,
+        key: value,
       });
     },
   };
 
-  const nameSettings: InPlaceEditProps = {
+  const nameSettings: InPlaceEditProps<typeof twinStatus.name> = {
     id: "name",
-    value: status.name,
+    value: twinStatus.name,
     valueInfo: {
       type: AutoFormValueType.string,
       inputProps: {
@@ -91,14 +83,14 @@ export function TwinStatusGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return update({
-        nameI18n: { translationInCurrentLocale: value as string },
+        nameI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const descriptionSettings: InPlaceEditProps = {
+  const descriptionSettings: InPlaceEditProps<typeof twinStatus.description> = {
     id: "description",
-    value: status.description,
+    value: twinStatus.description,
     valueInfo: {
       type: AutoFormValueType.string,
       inputProps: {
@@ -109,13 +101,13 @@ export function TwinStatusGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return update({
-        descriptionI18n: { translationInCurrentLocale: value as string },
+        descriptionI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
   const backgroundColorAutoDialogSettings: AutoEditDialogSettings = {
-    value: { backgroundColor: status.backgroundColor },
+    value: { backgroundColor: twinStatus.backgroundColor },
     title: "Update background color",
     onSubmit: (values) => {
       setBackgroundColor(values.backgroundColor);
@@ -133,7 +125,7 @@ export function TwinStatusGeneral({
   };
 
   const fontColorAutoDialogSettings: AutoEditDialogSettings = {
-    value: { fontColor: status.fontColor },
+    value: { fontColor: twinStatus.fontColor },
     title: "Update font Color",
     onSubmit: (values) => {
       setFontColor(values.fontColor);
@@ -157,16 +149,16 @@ export function TwinStatusGeneral({
           <TableRow>
             <TableCell width={300}>ID</TableCell>
             <TableCell>
-              <GuidWithCopy value={status.id} variant="long" />
+              <GuidWithCopy value={twinStatus.id} variant="long" />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Class</TableCell>
             <TableCell>
-              {status.twinClass && (
+              {twinStatus.twinClass && (
                 <TwinClassResourceLink
-                  data={status.twinClass as TwinClass_DETAILED}
+                  data={twinStatus.twinClass as TwinClass_DETAILED}
                   withTooltip
                 />
               )}
