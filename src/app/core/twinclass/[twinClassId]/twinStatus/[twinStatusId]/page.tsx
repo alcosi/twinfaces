@@ -1,36 +1,19 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useContext, useEffect } from "react";
 
 import { TwinClassContext } from "@/entities/twin-class";
-import { TwinStatusV2, useFetchTwinStatusById } from "@/entities/twin-status";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { TwinStatusContext } from "@/features/twin-status";
 import { PlatformArea } from "@/shared/config";
-import { LoadingOverlay } from "@/shared/ui/loading";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { TwinStatusGeneral } from "./twin-status-general";
 
-interface TwinStatusPageProps {
-  params: {
-    twinStatusId: string;
-  };
-}
-
-export default function TwinClassPage({
-  params: { twinStatusId },
-}: TwinStatusPageProps) {
+export default function TwinClassPage() {
   const { twinClass } = useContext(TwinClassContext);
-  const { fetchTwinStatusById, loading } = useFetchTwinStatusById();
-  const [twinStatus, setTwinStatus] = useState<TwinStatusV2 | undefined>(
-    undefined
-  );
+  const { twinStatus, twinStatusId } = useContext(TwinStatusContext);
   const { setBreadcrumbs } = useBreadcrumbs();
-
-  useEffect(() => {
-    fetchTwinStatusData();
-  }, [twinStatusId]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -50,35 +33,15 @@ export default function TwinClassPage({
     ]);
   }, [twinClass.id, twinClass.name, twinStatus?.name, twinStatusId]);
 
-  async function fetchTwinStatusData() {
-    if (twinStatusId) {
-      await fetchTwinStatusById(twinStatusId)
-        .then(setTwinStatus)
-        .catch(() => {
-          toast.error("Failed to fetch twin status");
-        });
-    }
-  }
-
   const tabs: Tab[] = twinStatus
     ? [
         {
           key: "general",
           label: "General",
-          content: (
-            <TwinStatusGeneral
-              onChange={fetchTwinStatusData}
-              status={twinStatus}
-            />
-          ),
+          content: <TwinStatusGeneral />,
         },
       ]
     : [];
 
-  return (
-    <div>
-      {loading && <LoadingOverlay />}
-      {twinStatus && <TabsLayout tabs={tabs} />}
-    </div>
-  );
+  return <TabsLayout tabs={tabs} />;
 }

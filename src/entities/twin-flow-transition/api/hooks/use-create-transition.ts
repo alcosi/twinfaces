@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 
-import { TwinFlowTransitionUpdateRq } from "@/entities/twin-flow-transition";
+import { TwinFlowTransitionCreateRq } from "@/entities/twin-flow-transition";
 import { PrivateApiContext } from "@/shared/api";
 
 export const useCreateTwinFlowTransition = () => {
@@ -8,16 +8,16 @@ export const useCreateTwinFlowTransition = () => {
 
   const createTwinFlowTransition = useCallback(
     async ({
-      transitionId,
+      twinFlowId,
       body,
     }: {
-      transitionId: string;
-      body: TwinFlowTransitionUpdateRq;
+      twinFlowId: string;
+      body: TwinFlowTransitionCreateRq;
     }) => {
       try {
-        const result = await api.twinFlowTransition.update({
-          transitionId: transitionId,
-          body: body,
+        const result = await api.twinFlowTransition.create({
+          twinFlowId,
+          body,
         });
         if (result.error) {
           throw new Error("Failed to create transition");

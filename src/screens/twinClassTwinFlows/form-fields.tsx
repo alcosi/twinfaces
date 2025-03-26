@@ -1,6 +1,13 @@
-import { TextAreaFormField, TextFormField } from "@/components/form-fields";
-import { TwinStatusSelectField } from "@/features/twinStatus";
 import { Control, FieldValues, Path } from "react-hook-form";
+
+import {
+  ComboboxFormField,
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields";
+
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import { reduceToObject, toArray } from "@/shared/libs";
 
 export function TwinClassTwinFlowFormFields<T extends FieldValues>({
   control,
@@ -9,6 +16,8 @@ export function TwinClassTwinFlowFormFields<T extends FieldValues>({
   control: Control<T>;
   twinClassId: string;
 }) {
+  const sAdapter = useTwinStatusSelectAdapter();
+
   return (
     <>
       <TextFormField
@@ -24,12 +33,23 @@ export function TwinClassTwinFlowFormFields<T extends FieldValues>({
         label="Description"
       />
 
-      <TwinStatusSelectField
-        twinClassId={twinClassId}
+      <ComboboxFormField
         control={control}
         name={"initialStatusId" as Path<T>}
         label="Initial status"
         required={true}
+        selectPlaceholder="Select status"
+        searchPlaceholder="Search status..."
+        noItemsText={"No statuses found"}
+        {...sAdapter}
+        getItems={async (search: string) =>
+          sAdapter.getItems(search, {
+            twinClassIdMap: reduceToObject({
+              list: toArray(twinClassId),
+              defaultValue: true,
+            }),
+          })
+        }
       />
     </>
   );

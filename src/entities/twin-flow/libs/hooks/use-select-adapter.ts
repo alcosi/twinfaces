@@ -1,12 +1,17 @@
-import { TwinFlow_DETAILED, useTwinFlowSearchV1 } from "@/entities/twin-flow";
+import {
+  TwinFlow_DETAILED,
+  useTwinFlowFetchByIdV1,
+  useTwinFlowSearchV1,
+} from "@/entities/twin-flow";
 import { SelectAdapter } from "@/shared/libs";
 
 export function useTwinFlowSelectAdapter(): SelectAdapter<TwinFlow_DETAILED> {
   const { searchTwinFlows } = useTwinFlowSearchV1();
+  const { fetchTwinFlowById } = useTwinFlowFetchByIdV1();
 
   async function getById(id: string) {
-    // TODO: Apply valid logic here
-    return { id } as TwinFlow_DETAILED;
+    const response = await fetchTwinFlowById(id);
+    return response as TwinFlow_DETAILED;
   }
 
   async function getItems(search: string) {

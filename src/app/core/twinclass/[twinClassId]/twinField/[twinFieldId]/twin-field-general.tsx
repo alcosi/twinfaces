@@ -17,52 +17,43 @@ import {
 import { TwinClassResourceLink } from "@/entities/twin-class";
 import {
   TwinClassFieldUpdateRq,
-  TwinClassFieldV2_DETAILED,
+  useFieldUpdate,
 } from "@/entities/twin-class-field";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { PrivateApiContext } from "@/shared/api";
+import { TwinFieldContext } from "@/features/twin-field";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
-export function TwinFieldGeneral({
-  field,
-  onChange,
-}: {
-  field: TwinClassFieldV2_DETAILED;
-  onChange: () => any;
-}) {
+export function TwinFieldGeneral() {
+  const { twinField, twinFieldId, refresh } = useContext(TwinFieldContext);
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
-  const api = useContext(PrivateApiContext);
-  const pAdapter = usePermissionSelectAdapter();
-  const fAdapter = useFeaturerSelectAdapter(13);
+  const { updateField } = useFieldUpdate();
 
-  async function updateField(newField: TwinClassFieldUpdateRq) {
+  const permissionAdapter = usePermissionSelectAdapter();
+  const featurerAdapter = useFeaturerSelectAdapter(13);
+
+  async function update(newField: TwinClassFieldUpdateRq) {
     try {
-      const response = await api.twinClassField.update({
-        fieldId: field.id!,
+      await updateField({
+        fieldId: twinFieldId,
         body: newField,
       });
 
-      if (response.error) {
-        toast.error(response.error.statusDetails);
-      }
-
-      onChange?.();
+      refresh();
     } catch (e) {
-      console.error(e);
-      throw e;
+      toast.error("not updated twin field");
     }
   }
 
-  const nameSettings: InPlaceEditProps = {
+  const nameSettings: InPlaceEditProps<typeof twinField.name> = {
     id: "name",
-    value: field.name,
+    value: twinField.name,
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
@@ -72,15 +63,15 @@ export function TwinFieldGeneral({
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateField({
-        nameI18n: { translationInCurrentLocale: value as string },
+      return update({
+        nameI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const descriptionSettings: InPlaceEditProps = {
+  const descriptionSettings: InPlaceEditProps<typeof twinField.description> = {
     id: "description",
-    value: field.description,
+    value: twinField.description,
     valueInfo: {
       type: AutoFormValueType.string,
       inputProps: {
@@ -90,15 +81,15 @@ export function TwinFieldGeneral({
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateField({
-        descriptionI18n: { translationInCurrentLocale: value as string },
+      return update({
+        descriptionI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const requiredSettings: InPlaceEditProps = {
+  const requiredSettings: InPlaceEditProps<typeof twinField.required> = {
     id: "abstract",
-    value: field.required,
+    value: twinField.required,
     valueInfo: {
       type: AutoFormValueType.boolean,
       label: "",
@@ -106,51 +97,57 @@ export function TwinFieldGeneral({
     schema: z.boolean(),
     renderPreview: (value) => (value ? "Yes" : "No"),
     onSubmit: (value) => {
-      return updateField({
-        required: value as boolean,
+      return update({
+        required: value,
       });
     },
   };
 
-  const viewPermissionSettings: InPlaceEditProps<any> = {
+  const viewPermissionSettings: InPlaceEditProps<
+    typeof twinField.viewPermissionId
+  > = {
     id: "viewPermissionId",
-    value: field.viewPermissionId,
+    value: twinField.viewPermissionId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select permission...",
-      ...pAdapter,
+      ...permissionAdapter,
     },
-    renderPreview: field.viewPermission
-      ? (_) => <PermissionResourceLink data={field.viewPermission} />
+    renderPreview: twinField.viewPermission
+      ? (_) => <PermissionResourceLink data={twinField.viewPermission} />
       : undefined,
     onSubmit: async (value) => {
-      return updateField({ viewPermissionId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ viewPermissionId: id });
     },
   };
 
-  const editPermissionSettings: InPlaceEditProps<any> = {
+  const editPermissionSettings: InPlaceEditProps<
+    typeof twinField.editPermissionId
+  > = {
     id: "editPermissionId",
-    value: field.editPermissionId,
+    value: twinField.editPermissionId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select permission...",
-      ...pAdapter,
+      ...permissionAdapter,
     },
-    renderPreview: field.editPermission
-      ? (_) => <PermissionResourceLink data={field.editPermission} />
+    renderPreview: twinField.editPermission
+      ? (_) => <PermissionResourceLink data={twinField.editPermission} />
       : undefined,
     onSubmit: async (value) => {
-      return updateField({ editPermissionId: value[0].id });
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ editPermissionId: id });
     },
   };
 
   const fieldTyperAutoDialogSettings: AutoEditDialogSettings = {
     value: {
-      fieldTyperFeaturerId: field.fieldTyperFeaturerId,
+      fieldTyperFeaturerId: twinField.fieldTyperFeaturerId,
     },
     title: "Update field typer",
     onSubmit: (values) => {
-      return updateField({
+      return update({
         fieldTyperFeaturerId: values.fieldTyperFeaturerId.id,
         fieldTyperParams: values.fieldTyperParams,
       });
@@ -161,7 +158,7 @@ export function TwinFieldGeneral({
         label: "Field typer",
         typeId: FeaturerTypes.fieldTyper,
         paramsFieldName: "fieldTyperFeaturerParams",
-        ...fAdapter,
+        ...featurerAdapter,
       },
     },
   };
@@ -173,27 +170,27 @@ export function TwinFieldGeneral({
 
   return (
     <InPlaceEditContextProvider>
-      <Table className="mt-8">
+      <Table>
         <TableBody>
           <TableRow>
             <TableCell width={300}>ID</TableCell>
             <TableCell>
-              <GuidWithCopy value={field.id} variant="long" />
+              <GuidWithCopy value={twinField.id} variant="long" />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Class</TableCell>
             <TableCell>
-              {field.twinClass && (
-                <TwinClassResourceLink data={field.twinClass} withTooltip />
+              {twinField.twinClass && (
+                <TwinClassResourceLink data={twinField.twinClass} withTooltip />
               )}
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Key</TableCell>
-            <TableCell>{field.key}</TableCell>
+            <TableCell>{twinField.key}</TableCell>
           </TableRow>
 
           <TableRow className="cursor-pointer">
@@ -216,9 +213,9 @@ export function TwinFieldGeneral({
           >
             <TableCell>Field typer</TableCell>
             <TableCell>
-              {field.fieldTyperFeaturer && (
+              {twinField.fieldTyperFeaturer && (
                 <FeaturerResourceLink
-                  data={field.fieldTyperFeaturer}
+                  data={twinField.fieldTyperFeaturer}
                   withTooltip
                 />
               )}

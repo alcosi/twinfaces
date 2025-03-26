@@ -13,7 +13,7 @@ import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-conditio
 import { FACTORY_PIPELINE_SCHEMA } from "@/entities/factory-pipeline";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { isFalsy, isTruthy } from "@/shared/libs";
+import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
 
 export function FactoryPipelineFormFields({
   control,
@@ -29,7 +29,7 @@ export function FactoryPipelineFormFields({
     name: "inputTwinClassId",
   }) as unknown as { id: string }[];
 
-  const twinStatusAdapter = useTwinStatusSelectAdapter(twinClassWatch[0]?.id);
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
 
   const disabledFactory = useRef(isTruthy(factoryWatch)).current;
   const disabledOutputStatus = isFalsy(twinClassWatch[0]?.id);
@@ -84,6 +84,14 @@ export function FactoryPipelineFormFields({
         noItemsText="No data found"
         disabled={disabledOutputStatus}
         {...twinStatusAdapter}
+        getItems={async (search: string) => {
+          return twinStatusAdapter.getItems(search, {
+            twinClassIdMap: reduceToObject({
+              list: toArray(twinClassWatch[0]?.id),
+              defaultValue: true,
+            }),
+          });
+        }}
       />
 
       <ComboboxFormField

@@ -1,1 +1,1 @@
-export { TwinClassLinkPage, type PageProps } from "./twinClassLink";
+export { TwinClassLinkPage } from "./twinClassLink";
