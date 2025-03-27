@@ -1,14 +1,14 @@
 import {
-  isPopulatedString,
-  SelectAdapter,
-  wrapWithPercent,
-} from "@/shared/libs";
-import {
   Factory,
   FactoryFilters,
   useFactorySearch,
   useFetchFactoryById,
 } from "@/entities/factory";
+import {
+  SelectAdapter,
+  isPopulatedString,
+  wrapWithPercent,
+} from "@/shared/libs";
 
 export function useFactorySelectAdapter(): SelectAdapter<Factory> {
   const { searchFactories } = useFactorySearch();

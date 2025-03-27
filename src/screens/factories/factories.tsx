@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -89,7 +88,6 @@ const colDefs: Record<
 export function Factories() {
   const { searchFactories } = useFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
-  const router = useRouter();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
@@ -125,13 +123,12 @@ export function Factories() {
         colDefs.id,
         colDefs.key,
         colDefs.name,
+        colDefs.description,
+        colDefs.createdByUser,
         colDefs.factoryUsagesCount,
       ]}
       filters={{
         filtersInfo: buildFilterFields(),
-      }}
-      onRowClick={(row) => {
-        router.push(`/${PlatformArea.core}/factories/${row.id}`);
       }}
     />
   );
