@@ -11,7 +11,7 @@ import {
 import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { isFalsy, isTruthy } from "@/shared/libs";
+import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
 
 export function AssigneePropagationFormFields({
   control,
@@ -29,7 +29,7 @@ export function AssigneePropagationFormFields({
     control,
     name: "propagationByTwinClassId",
   }) as unknown as { id: string }[];
-  const twinStatusAdapter = useTwinStatusSelectAdapter(twinClassWatch[0]?.id);
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
   const disabledPermission = useRef(isTruthy(permissionWatch)).current;
   const disabledTwinStatus = isFalsy(twinClassWatch[0]?.id);
 
@@ -78,6 +78,14 @@ export function AssigneePropagationFormFields({
         noItemsText="No data found"
         disabled={disabledTwinStatus}
         {...twinStatusAdapter}
+        getItems={async (search: string) => {
+          return twinStatusAdapter.getItems(search, {
+            twinClassIdMap: reduceToObject({
+              list: toArray(twinClassWatch[0]?.id),
+              defaultValue: true,
+            }),
+          });
+        }}
       />
 
       <CheckboxFormField
