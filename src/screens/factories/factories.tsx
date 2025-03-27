@@ -125,14 +125,16 @@ export function Factories() {
         colDefs.id,
         colDefs.key,
         colDefs.name,
+        colDefs.description,
+        colDefs.createdByUser,
         colDefs.factoryUsagesCount,
       ]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      onRowClick={(row) => {
-        router.push(`/${PlatformArea.core}/factories/${row.id}`);
-      }}
+      // onRowClick={(row) => {
+      //   router.push(`/${PlatformArea.core}/factories/${row.id}`);
+      // }}
     />
   );
 }
