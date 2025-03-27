@@ -1,11 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
   PermissionGrantAssigneePropagation_DETAILED,
   usePermissionGrantAssigneePropagationSearchV1,
 } from "@/entities/assigneePropagation";
+import {
+  PERMISSION_GRANT_ASSIGNEE_PROPAGATION_SCHEMA,
+  useCreatePermissionGrantAssigneePropagation,
+} from "@/entities/permission";
 import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import { TwinClassResourceLink } from "@/entities/twin-class";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
@@ -15,6 +22,8 @@ import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable } from "@/widgets/crud-data-table";
+
+import { AssigneePropagationFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -103,9 +112,24 @@ const colDefs: Record<
 };
 
 export function AssigneePropagationTable() {
-  const { permission } = useContext(PermissionContext);
+  const { permission, permissionId } = useContext(PermissionContext);
   const { searchAssigneePropagationGrant } =
     usePermissionGrantAssigneePropagationSearchV1();
+  const { createPermissionGrantAssigneePropagation } =
+    useCreatePermissionGrantAssigneePropagation();
+
+  const assigneePropagationForm = useForm<
+    z.infer<typeof PERMISSION_GRANT_ASSIGNEE_PROPAGATION_SCHEMA>
+  >({
+    resolver: zodResolver(PERMISSION_GRANT_ASSIGNEE_PROPAGATION_SCHEMA),
+    defaultValues: {
+      permissionId: permissionId || "",
+      permissionSchemaId: "",
+      propagationByTwinClassId: "",
+      propagationByTwinStatusId: "",
+      inSpaceOnly: false,
+    },
+  });
 
   async function fetchData(
     pagination: PaginationState
@@ -123,6 +147,17 @@ export function AssigneePropagationTable() {
       return { data: [], pagination: {} };
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof PERMISSION_GRANT_ASSIGNEE_PROPAGATION_SCHEMA>
+  ) => {
+    const { ...body } = formValues;
+
+    await createPermissionGrantAssigneePropagation({
+      body: { permissionGrantAssigneePropagation: body },
+    });
+    toast.success("Assignee propagation permission is granted successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -146,6 +181,13 @@ export function AssigneePropagationTable() {
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
+      dialogForm={assigneePropagationForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <AssigneePropagationFormFields
+          control={assigneePropagationForm.control}
+        />
+      )}
     />
   );
 }
