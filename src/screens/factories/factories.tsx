@@ -1,11 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  FACTORY_SCHEMA,
   Factory,
+  FactoryCreateRq,
+  useCreateFactory,
   useFactoryFilters,
   useFactorySearch,
 } from "@/entities/factory";
@@ -16,6 +22,8 @@ import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+
+import { FactoryFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Omit<Factory, "createdByUserId">,
@@ -89,12 +97,22 @@ export function Factories() {
   const { searchFactories } = useFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { createFactory } = useCreateFactory();
 
   useEffect(() => {
     setBreadcrumbs([
       { label: "Factories", href: `/${PlatformArea.core}/factories` },
     ]);
   }, []);
+
+  const factoryForm = useForm<z.infer<typeof FACTORY_SCHEMA>>({
+    resolver: zodResolver(FACTORY_SCHEMA),
+    defaultValues: {
+      key: "",
+      name: "",
+      description: "",
+    },
+  });
 
   async function fetchFactories(
     pagination: PaginationState,
@@ -113,6 +131,27 @@ export function Factories() {
     }
   }
 
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof FACTORY_SCHEMA>
+  ) => {
+    const body: FactoryCreateRq = {
+      nameI18n: {
+        translations: {
+          en: formValues.name,
+        },
+      },
+      descriptionI18n: {
+        translations: {
+          en: formValues.description,
+        },
+      },
+      key: formValues.key,
+    };
+
+    await createFactory(body);
+    toast.success("Factory created successfully!");
+  };
+
   return (
     <CrudDataTable
       columns={Object.values(colDefs) as ColumnDef<Factory>[]}
@@ -130,6 +169,11 @@ export function Factories() {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      dialogForm={factoryForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <FactoryFormFields control={factoryForm.control} />
+      )}
     />
   );
 }
