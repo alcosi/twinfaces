@@ -48,7 +48,7 @@ export function useLinkSearch() {
           pagination: data.pagination ?? {},
         };
       } catch (error) {
-        throw new Error("An error occurred while fetching datalist");
+        throw new Error("An error occurred while fetching links");
       }
     },
     [api]
