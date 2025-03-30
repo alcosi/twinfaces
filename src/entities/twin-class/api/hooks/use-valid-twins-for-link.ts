@@ -5,7 +5,7 @@ import {
   TwinSimpleFilters,
   Twin_DETAILED,
   hydrateTwinFromMap,
-} from "@/entities/twin";
+} from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export function useValidTwinsForLink() {
@@ -36,7 +36,7 @@ export function useValidTwinsForLink() {
 
       const twinList =
         data?.twinList?.map((dto) =>
-          hydrateTwinFromMap(dto, data.relatedObjects)
+          hydrateTwinFromMap<Twin_DETAILED>(dto, data.relatedObjects)
         ) ?? [];
 
       return { data: twinList, pagination: data?.pagination ?? {} };

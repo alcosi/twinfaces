@@ -1,6 +1,6 @@
 import { Skeleton } from "@/shared/ui";
 
-export function LoadingScreen() {
+export function TableSkeleton() {
   return (
     <div className="grid grid-cols-[1.75fr_0.5fr_0.75fr] grid-rows-[2.5rem_24rem_2rem] gap-4 my-4">
       <Skeleton className="w-36 h-7 self-center rounded-md" />

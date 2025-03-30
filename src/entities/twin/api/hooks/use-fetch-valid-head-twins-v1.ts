@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 
-import { Twin } from "@/entities/twin";
 import { TwinClassValidHeadQuery } from "@/entities/twin-class";
+import { Twin } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 

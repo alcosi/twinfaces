@@ -122,13 +122,8 @@ export function PrivateApiContextProvider({
     client: TwinsAPI,
   };
 
-  if (!authUser?.authToken) {
-    return <LoadingOverlay />;
-  }
-
-  return (
-    <PrivateApiContext.Provider
-      value={{
+  const value = settings
+    ? {
         domain: createDomainApi(settings),
         twinFlowSchema: createTwinFlowSchemaApi(settings),
         twinClassField: createTwinClassFieldApi(settings),
@@ -157,9 +152,12 @@ export function PrivateApiContextProvider({
         datalistOption: createDatalistOptionApi(settings),
         link: createLinkApi(settings),
         tier: createTierApi(settings),
-      }}
-    >
-      {children}
+      }
+    : ({} as PrivateApiContextProps);
+
+  return (
+    <PrivateApiContext.Provider value={value}>
+      {settings ? children : <LoadingOverlay />}
     </PrivateApiContext.Provider>
   );
 }

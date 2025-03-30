@@ -15,9 +15,22 @@ export async function getDomainFromHeaders(): Promise<
   return JSON.parse(header) as RemoteConfig;
 }
 
-export async function getDomainIdFromCookies(): Promise<
-  Required<RemoteConfig["id"]>
-> {
+export async function getAuthHeaders(): Promise<{
+  DomainId: string;
+  AuthToken: string;
+  Channel: "WEB";
+}> {
+  const DomainId = await getDomainIdFromCookies();
+  const AuthToken = await getAuthTokenFromCookies();
+
+  return {
+    DomainId: DomainId,
+    AuthToken,
+    Channel: "WEB",
+  };
+}
+
+async function getDomainIdFromCookies(): Promise<string> {
   const cookieStore = await cookies();
 
   const domainId = cookieStore.get("domainId")?.value;

@@ -1,9 +1,6 @@
 import { DataListOptionV3 } from "@/entities/datalist-option";
-import {
-  TwinSimpleFilters,
-  Twin_DETAILED,
-  useValidTwinsForLinkSelectAdapter as useValidTwinsAdapter,
-} from "@/entities/twin";
+import { useValidTwinsForLinkSelectAdapter as useValidTwinsAdapter } from "@/entities/twin";
+import { TwinSimpleFilters, Twin_DETAILED } from "@/entities/twin/server";
 import {
   SelectAdapter,
   isPopulatedString,

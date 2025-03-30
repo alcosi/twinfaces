@@ -1,70 +1,11 @@
-import { DataListOptionV1, DataListOptionV3 } from "@/entities/datalist-option";
-import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { TwinFlowTransition } from "@/entities/twin-flow-transition";
-import { RelatedObjects } from "@/shared/api";
+import { DataListOptionV3 } from "@/entities/datalist-option";
+import { Twin, TwinTagManageV1 } from "@/entities/twin/server";
 import {
   isFalsy,
   isObject,
   isPopulatedArray,
   isPopulatedString,
 } from "@/shared/libs";
-
-import { User } from "../../user";
-import { Twin, TwinTagManageV1, Twin_DETAILED } from "../api";
-
-export const hydrateTwinFromMap = (
-  dto: Twin,
-  relatedObjects?: RelatedObjects
-): Twin_DETAILED => {
-  const hydrated: Twin_DETAILED = Object.assign({}, dto) as Twin_DETAILED;
-
-  if (!relatedObjects?.twinClassMap) return hydrated;
-
-  if (dto.statusId && relatedObjects.statusMap) {
-    hydrated.status = relatedObjects.statusMap[dto.statusId];
-  }
-
-  if (dto.twinClassId) {
-    hydrated.twinClass = relatedObjects.twinClassMap[
-      dto.twinClassId
-    ] as TwinClass_DETAILED;
-  }
-
-  if (dto.authorUserId && relatedObjects.userMap) {
-    hydrated.authorUser = relatedObjects.userMap[dto.authorUserId] as User;
-  }
-
-  if (dto.assignerUserId && relatedObjects.userMap) {
-    hydrated.assignerUser = relatedObjects.userMap[dto.assignerUserId] as User;
-  }
-
-  if (dto.headTwinId && relatedObjects.twinMap) {
-    hydrated.headTwin = relatedObjects.twinMap[dto.headTwinId];
-  }
-
-  if (dto.tagIdList && relatedObjects.dataListsOptionMap) {
-    hydrated.tags = dto.tagIdList.reduce<DataListOptionV1[]>((acc, id) => {
-      const tag = relatedObjects.dataListsOptionMap?.[id];
-      if (tag) acc.push(tag);
-
-      return acc;
-    }, []);
-  }
-
-  if (dto.transitionsIdList && relatedObjects.transitionsMap) {
-    hydrated.transitions = dto.transitionsIdList.reduce<TwinFlowTransition[]>(
-      (acc, id) => {
-        const transition = relatedObjects.transitionsMap?.[id];
-        if (transition) acc.push(transition);
-
-        return acc;
-      },
-      []
-    );
-  }
-
-  return hydrated;
-};
 
 export function formatTwinDisplay({ aliases, name }: Twin): string {
   const aliasText = isPopulatedArray(aliases) ? `${aliases[0]} | ` : "";

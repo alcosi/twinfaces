@@ -3,11 +3,11 @@ import {
   TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { Twin } from "@/entities/twin/server";
 import { UserResourceLink } from "@/entities/user";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 
-import { Twin } from "../../api";
 import { formatTwinDisplay } from "../../libs";
 import { TwinIcon } from "../twin-icon";
 

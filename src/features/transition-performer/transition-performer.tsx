@@ -1,7 +1,7 @@
 import { Ellipsis } from "lucide-react";
 
-import { Twin_DETAILED } from "@/entities/twin";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
+import { Twin_DETAILED } from "@/entities/twin/server";
 import {
   Button,
   DropdownMenu,

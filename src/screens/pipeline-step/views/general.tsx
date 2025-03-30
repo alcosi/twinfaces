@@ -128,7 +128,6 @@ export function PipelineStepGeneral() {
     },
     title: "Update filler featurer",
     onSubmit: (values) => {
-      console.log(values);
       return update({
         factoryPipelineStep: {
           fillerFeaturerId: values.fillerFeaturerId[0].id,

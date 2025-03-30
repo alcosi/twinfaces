@@ -1,34 +1,24 @@
 "use server";
 
-import { fetchDomainById } from "@/entities/domain/api/actions";
+import { fetchCurrentDomain } from "@/entities/domain/api/actions";
 import { TwinsAPI } from "@/shared/api";
 
-import { getAuthTokenFromCookies, getDomainIdFromCookies } from "../../libs";
+import { getAuthHeaders } from "../../libs";
 import { Face, FaceNB001 } from "../types";
 
 export async function fetchSidebarFace(): Promise<FaceNB001> {
-  const domainId = await getDomainIdFromCookies();
-  if (!domainId) throw new Error("Domain ID not found in headers");
-
-  const { domain } = await fetchDomainById(domainId);
+  const { domain } = await fetchCurrentDomain();
   if (!domain?.navbarFaceId) throw new Error("Navbar id is not found");
 
-  return fetchSidebarFaceById(domain.navbarFaceId, domainId);
+  return fetchSidebarFaceById(domain.navbarFaceId);
 }
 
-async function fetchSidebarFaceById(
-  faceId: string,
-  domainId: string
-): Promise<Face> {
-  const AuthToken = await getAuthTokenFromCookies();
+async function fetchSidebarFaceById(faceId: string): Promise<Face> {
+  const headers = await getAuthHeaders();
 
   const { data } = await TwinsAPI.GET("/private/face/nb001/{faceId}/v1", {
     params: {
-      header: {
-        DomainId: domainId,
-        AuthToken,
-        Channel: "WEB",
-      },
+      header: headers,
       path: { faceId },
       query: {
         lazyRelation: false,

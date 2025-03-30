@@ -217,7 +217,7 @@ export function TwinClassStatusesTable({
       body: data,
     });
 
-    toast.success("Link created successfully!");
+    toast.success("Status created successfully!");
     fetchStatuses({ pageIndex: 0, pageSize: 10 }, { filters: {} });
   }
 

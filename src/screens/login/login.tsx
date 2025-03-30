@@ -59,7 +59,6 @@ export function Login() {
       },
     });
 
-    setIsLoggingIn(false);
     const index =
       data?.users?.findIndex((user) => user.userId === values.userId) ?? -1;
     if (isPopulatedArray<DomainUser_DETAILED>(data?.users) && index !== -1) {
@@ -75,6 +74,7 @@ export function Login() {
           .join(","),
         domainId: values.domainId,
       });
+      setIsLoggingIn(false);
       router.push(`/${PlatformArea.core}/twinclass`);
     }
   }

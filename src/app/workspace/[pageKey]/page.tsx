@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { fetchSidebarFace } from "@/entities/face";
 import { isUndefined } from "@/shared/libs";
-import { PG001Face } from "@/widgets/faces/pg001";
+import { LayoutRenderer } from "@/widgets/faces/layouts";
 
 type Props = {
   params: {
@@ -20,5 +20,5 @@ export default async function Page({ params: { pageKey } }: Props) {
     return notFound();
   }
 
-  return <PG001Face pageFaceId={pageFace.targetPageFaceId} />;
+  return <LayoutRenderer pageFaceId={pageFace.targetPageFaceId} />;
 }

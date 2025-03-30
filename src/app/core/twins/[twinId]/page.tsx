@@ -1,7 +1,9 @@
-import { TwinScreen, TwinScreenParams } from "@/screens/twin";
+import { TwinScreen } from "@/screens/twin";
 
 type Props = {
-  params: TwinScreenParams;
+  params: {
+    twinId: string;
+  };
 };
 
 export default function TwinLayout({ params }: Props) {

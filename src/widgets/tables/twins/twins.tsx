@@ -7,11 +7,8 @@ import { toast } from "sonner";
 import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import {
   TWIN_SCHEMA,
-  Twin,
-  TwinCreateRq,
   TwinFormValues,
   TwinResourceLink,
-  Twin_DETAILED,
   useCreateTwin,
   useTwinFilters,
   useTwinSearchV3,
@@ -26,6 +23,7 @@ import {
   usePerformTransition,
 } from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { Twin, TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
 import { User, UserResourceLink } from "@/entities/user";
 import { TransitionPerformer } from "@/features/transition-performer";
 import {

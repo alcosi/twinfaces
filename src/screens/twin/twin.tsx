@@ -5,7 +5,6 @@ import { useContext, useEffect } from "react";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinContext, TwinContextProvider } from "@/features/twin";
 import { PlatformArea } from "@/shared/config";
-import { capitalize } from "@/shared/libs";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinsTable } from "@/widgets/tables";
 
@@ -17,8 +16,7 @@ import {
   TwinLinks,
 } from "./views";
 
-export type TwinScreenParams = {
-  pageKey: string;
+type Props = {
   twinId: string;
 };
 
@@ -50,7 +48,7 @@ const DEFAULT_TABS = [
   },
 ];
 
-export function TwinScreen(props: TwinScreenParams) {
+export function TwinScreen(props: Props) {
   return (
     <TwinContextProvider twinId={props.twinId}>
       <TwinScreenContent {...props} />
@@ -58,7 +56,7 @@ export function TwinScreen(props: TwinScreenParams) {
   );
 }
 
-function TwinScreenContent({ pageKey, twinId }: TwinScreenParams) {
+function TwinScreenContent({ twinId }: Props) {
   const { twin } = useContext(TwinContext);
   const { setBreadcrumbs } = useBreadcrumbs();
 
@@ -74,14 +72,12 @@ function TwinScreenContent({ pageKey, twinId }: TwinScreenParams) {
   ];
 
   useEffect(() => {
-    const area =
-      pageKey === "twins" ? PlatformArea.core : PlatformArea.workspace;
-    const listUrl = `/${area}/${pageKey}`;
-    const detailUrl = `${listUrl}/${twinId}`;
-
     setBreadcrumbs([
-      { label: capitalize(pageKey), href: listUrl },
-      { label: twin?.name!, href: detailUrl },
+      { label: "Twins", href: `/${PlatformArea.core}/twins` },
+      {
+        label: twin?.name!,
+        href: `/${PlatformArea.core}/twins/${twinId}`,
+      },
     ]);
   }, [twinId, twin?.name]);
 
