@@ -6,7 +6,7 @@ import { isUndefined } from "@/shared/libs";
 import { getAuthHeaders } from "../../libs";
 import { FaceTW001, FaceTW002 } from "../types";
 
-export async function fetchTwidgetFace(
+export async function fetchTW001Face(
   faceId: string,
   twinId: string
 ): Promise<FaceTW001> {
@@ -20,20 +20,25 @@ export async function fetchTwidgetFace(
         twinId: twinId,
         lazyRelation: false,
         showFaceMode: "DETAILED",
+        showFaceTW0012TwinClassFieldMode: "MANAGED",
+        showFaceTwidget2TwinMode: "DETAILED",
+        showAttachment2TwinMode: "DETAILED",
+        showTwin2AttachmentCollectionMode: "ALL",
+        showTwin2AttachmentMode: "DETAILED",
       },
     },
   });
 
   if (isUndefined(data?.widget)) {
-    const message = `[fetchTwidgetFace] Widget not found for faceId=${faceId}, twinId=${twinId}`;
+    const message = `[fetchTW001Face] Widget not found for faceId=${faceId}, twinId=${twinId}`;
     console.warn(message);
     throw new Error(message);
   }
 
-  return data.widget as FaceTW001;
+  return data.widget;
 }
 
-export async function fetchTwidget2Face(
+export async function fetchTW002Face(
   faceId: string,
   twinId: string
 ): Promise<FaceTW002> {
@@ -52,10 +57,10 @@ export async function fetchTwidget2Face(
   });
 
   if (isUndefined(data?.widget)) {
-    const message = `[fetchTwidget2Face] Widget not found for faceId=${faceId}, twinId=${twinId}`;
+    const message = `[fetchTW002Face] Widget not found for faceId=${faceId}, twinId=${twinId}`;
     console.warn(message);
     throw new Error(message);
   }
 
-  return data.widget as FaceTW002;
+  return data.widget;
 }
