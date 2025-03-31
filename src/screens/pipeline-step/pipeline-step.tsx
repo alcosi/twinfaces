@@ -25,7 +25,7 @@ export function PipelineStepScreen() {
     setBreadcrumbs([
       {
         label: "Pipeline Steps",
-        href: `/${PlatformArea.core}/pipeline-step`,
+        href: `/${PlatformArea.core}/pipeline-steps`,
       },
       {
         label:

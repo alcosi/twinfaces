@@ -29,8 +29,8 @@ export function FactoryScreen() {
   useEffect(() => {
     setBreadcrumbs([
       {
-        label: "Factory",
-        href: `/${PlatformArea.core}/factorie`,
+        label: "Factories",
+        href: `/${PlatformArea.core}/factories`,
       },
       {
         label: factory.name,

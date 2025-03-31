@@ -1,23 +1,25 @@
+import React from "react";
+
 import {
   ColorPickerFormItem,
   FormItemProps,
   TextFormItem,
 } from "@/components/form-fields";
 import { ComboboxFormItem } from "@/components/form-fields/combobox";
+
 import {
   DataListOptionV3,
   useDatalistOptionSelectAdapter,
 } from "@/entities/datalist-option";
 import { Twin, useTwinSelectAdapter } from "@/entities/twin";
-import { TwinClassFieldDescriptor } from "@/entities/twin-class-field";
-import { TwinFieldType } from "@/entities/twinField";
+import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
 import { DomainUser_DETAILED, useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";
-import React from "react";
+
 import { TwinFieldSelectLinkLongFormItem } from "./components";
 
 export type TwinFieldFormItemProps = {
-  descriptor: TwinClassFieldDescriptor;
+  descriptor?: TwinFieldUI["descriptor"];
 } & (
   | { twinClassId: string; twinId?: never }
   | { twinId: string; twinClassId?: never }
@@ -63,14 +65,13 @@ export function TwinFieldFormItem({
   }
 
   function renderByType() {
-    switch (descriptor.fieldType) {
+    switch (descriptor?.fieldType) {
       case TwinFieldType.textV1:
         return <TextFormItem onChange={handleTextChange} {...props} />;
       case TwinFieldType.urlV1:
         return (
           <TextFormItem type="url" onChange={handleTextChange} {...props} />
         );
-      case TwinFieldType.numericV1:
       case TwinFieldType.numericFieldV1:
         return (
           <TextFormItem type="number" onChange={handleTextChange} {...props} />
@@ -84,11 +85,11 @@ export function TwinFieldFormItem({
       case TwinFieldType.immutableV1:
         return <TextFormItem disabled {...props} />;
       case TwinFieldType.attachmentFieldV1:
-      case TwinFieldType.attachmentV1:
         return (
           <TextFormItem type="file" onChange={handleTextChange} {...props} />
         );
       case TwinFieldType.selectLinkV1:
+      case TwinFieldType.selectSharedInHeadV1:
         return (
           <ComboboxFormItem
             getById={twinAdapter.getById}
@@ -103,8 +104,8 @@ export function TwinFieldFormItem({
         if (twinId) {
           return (
             <TwinFieldSelectLinkLongFormItem
-              linkId={descriptor.linkId}
-              multi={descriptor.multiple}
+              linkId={descriptor.linkId!}
+              multi={Boolean(descriptor.multiple)}
               twinId={twinId}
               {...props}
             />
@@ -112,8 +113,8 @@ export function TwinFieldFormItem({
         } else if (twinClassId) {
           return (
             <TwinFieldSelectLinkLongFormItem
-              linkId={descriptor.linkId}
-              multi={descriptor.multiple}
+              linkId={descriptor.linkId!}
+              multi={Boolean(descriptor.multiple)}
               twinClassId={twinClassId}
               {...props}
             />
@@ -121,9 +122,6 @@ export function TwinFieldFormItem({
         }
         break;
       case TwinFieldType.selectListV1:
-      case TwinFieldType.selectListLongV1:
-      case TwinFieldType.selectLongV1:
-      case TwinFieldType.selectSharedInHeadV1:
         return (
           <ComboboxFormItem
             getById={optionAdapter.getById}
@@ -138,8 +136,22 @@ export function TwinFieldFormItem({
             {...props}
           />
         );
+      case TwinFieldType.selectLongV1:
+        return (
+          <ComboboxFormItem
+            getById={optionAdapter.getById}
+            getItems={(search) =>
+              optionAdapter.getItems(search, {
+                idList: descriptor.dataListId ?? [],
+              })
+            }
+            renderItem={optionAdapter.renderItem}
+            onSelect={handleOnDataListSelect}
+            multi={descriptor.multiple}
+            {...props}
+          />
+        );
       case TwinFieldType.selectUserV1:
-      case TwinFieldType.selectUserLongV1:
         return (
           <ComboboxFormItem
             {...userAdapter}
@@ -147,6 +159,21 @@ export function TwinFieldFormItem({
             getItems={(search) =>
               userAdapter.getItems(search, {
                 userIdList: descriptor.userIdList ?? [],
+              })
+            }
+            renderItem={userAdapter.renderItem}
+            onSelect={handleOnUserSelect}
+            {...props}
+          />
+        );
+      case TwinFieldType.selectUserLongV1:
+        return (
+          <ComboboxFormItem
+            {...userAdapter}
+            getById={userAdapter.getById}
+            getItems={(search) =>
+              userAdapter.getItems(search, {
+                userIdList: descriptor.userFilterId ?? [],
               })
             }
             renderItem={userAdapter.renderItem}

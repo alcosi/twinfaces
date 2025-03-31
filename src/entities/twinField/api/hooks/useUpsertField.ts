@@ -3,6 +3,8 @@ import { useCallback, useContext } from "react";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
+import { TwinField } from "../types";
+
 // TODO: Apply caching-strategy
 export const useUpsertField = () => {
   const api = useContext(PrivateApiContext);
@@ -12,7 +14,7 @@ export const useUpsertField = () => {
       twinId: string;
       fieldKey: string;
       fieldValue: string;
-    }): Promise<string> => {
+    }): Promise<TwinField["value"]> => {
       const { data, error } = await api.twin.upsertField(args);
 
       if (error) {
