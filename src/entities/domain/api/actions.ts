@@ -1,11 +1,11 @@
 "use server";
 
-import { getAuthTokenFromCookies } from "@/entities/face";
+import { getAuthHeaders } from "@/entities/face";
 import { TwinsAPI } from "@/shared/api";
 import { RemoteConfig } from "@/shared/config";
 import { isUndefined } from "@/shared/libs";
 
-import { DomainViewRs } from "..";
+import { DomainViewRs } from "./types";
 
 export async function fetchDomainByKey(
   domainKey: string
@@ -19,16 +19,13 @@ export async function fetchDomainByKey(
   return data?.domain;
 }
 
-export async function fetchDomainById(domainId: string): Promise<DomainViewRs> {
-  const AuthToken = await getAuthTokenFromCookies();
+export async function fetchCurrentDomain(): Promise<DomainViewRs> {
+  const { DomainId, AuthToken, Channel } = await getAuthHeaders();
 
   const { data } = await TwinsAPI.GET("/private/domain/{domainId}/v1", {
     params: {
-      path: { domainId },
-      header: {
-        AuthToken,
-        Channel: "WEB",
-      },
+      path: { domainId: DomainId },
+      header: { AuthToken, Channel },
       query: {
         lazyRelation: false,
         showDomainMode: "DETAILED",

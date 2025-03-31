@@ -1,7 +1,7 @@
+import { Twin } from "@/entities/twin/server";
 import { PlatformArea } from "@/shared/config";
 import { ResourceLink } from "@/shared/ui";
 
-import { Twin } from "../../api";
 import { formatTwinDisplay } from "../../libs";
 import { TwinIcon } from "../twin-icon";
 import { TwinResourceTooltip } from "./tooltip";

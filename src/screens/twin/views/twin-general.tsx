@@ -5,17 +5,14 @@ import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { DatalistOptionResourceLink } from "@/entities/datalist-option";
-import {
-  TwinResourceLink,
-  TwinUpdateRq,
-  categorizeTwinTags,
-} from "@/entities/twin";
+import { TwinResourceLink, categorizeTwinTags } from "@/entities/twin";
 import {
   TwinClassResourceLink,
   TwinClass_DETAILED,
   useTagsByTwinClassIdSelectAdapter,
 } from "@/entities/twin-class";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { TwinUpdateRq } from "@/entities/twin/server";
 import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
 import {
   InPlaceEdit,

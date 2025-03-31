@@ -1,5 +1,5 @@
-import { LoadingScreen } from "@/screens/loading";
+import { TableSkeleton } from "@/widgets/skeletons";
 
 export default function Loading() {
-  return <LoadingScreen />;
+  return <TableSkeleton />;
 }

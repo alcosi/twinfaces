@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 
 import { fetchSidebarFace } from "@/entities/face";
-import { SidebarProvider } from "@/shared/ui";
+import { RenderOnClient, SidebarProvider } from "@/shared/ui";
 
 import { SidebarLayoutContent } from "./content";
 import { SidebarLayoutHeader } from "./header";
@@ -14,11 +14,13 @@ export async function SidebarLayout({ children }: Props) {
 
   return (
     <SidebarProvider>
-      <AppSidebar face={face} />
-      <div className="w-full">
-        <SidebarLayoutHeader />
-        <SidebarLayoutContent>{children}</SidebarLayoutContent>
-      </div>
+      <RenderOnClient>
+        <AppSidebar face={face} />
+        <div className="w-full">
+          <SidebarLayoutHeader />
+          <SidebarLayoutContent>{children}</SidebarLayoutContent>
+        </div>
+      </RenderOnClient>
     </SidebarProvider>
   );
 }

@@ -1,9 +1,8 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
+import { Twin } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
-
-import { Twin } from "../types";
 
 // TODO: Apply caching-strategy
 export const useFetchHistoryV1 = () => {

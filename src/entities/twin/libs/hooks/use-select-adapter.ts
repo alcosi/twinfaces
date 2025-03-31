@@ -1,13 +1,19 @@
 import {
+  Twin,
+  TwinFilters,
+  TwinSimpleFilters,
+  Twin_DETAILED,
+} from "@/entities/twin/server";
+import {
+  SelectAdapter,
   createFixedSelectAdapter,
   isPopulatedArray,
   isPopulatedString,
   isUndefined,
-  SelectAdapter,
   shortenUUID,
   wrapWithPercent,
 } from "@/shared/libs";
-import { Twin, Twin_DETAILED, TwinFilters, TwinSimpleFilters } from "../../api";
+
 import {
   useFetchValidHeadTwins,
   useTwinFetchByIdV2,

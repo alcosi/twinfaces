@@ -1,7 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
 
-import { Twin_DETAILED, useTwinFetchByIdV2 } from "@/entities/twin";
+import { useTwinFetchByIdV2 } from "@/entities/twin";
 import { useTwinClassSearchV1 } from "@/entities/twin-class";
+import { Twin_DETAILED } from "@/entities/twin/server";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 

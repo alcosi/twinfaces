@@ -4,6 +4,7 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import { TwinFilterKeys, TwinFilters } from "@/entities/twin/server";
 import { useUserSelectAdapter } from "@/entities/user";
 import {
   type FilterFeature,
@@ -13,7 +14,6 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 
-import { TwinFilterKeys, TwinFilters } from "../../api";
 import { useTwinSelectAdapter } from "./use-select-adapter";
 
 export function useTwinFilters(

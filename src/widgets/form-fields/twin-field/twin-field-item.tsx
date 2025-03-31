@@ -11,7 +11,8 @@ import {
   DataListOptionV3,
   useDatalistOptionSelectAdapter,
 } from "@/entities/datalist-option";
-import { Twin, useTwinSelectAdapter } from "@/entities/twin";
+import { useTwinSelectAdapter } from "@/entities/twin";
+import { Twin } from "@/entities/twin/server";
 import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
 import { DomainUser_DETAILED, useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";

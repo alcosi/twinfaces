@@ -1,8 +1,7 @@
 import { useCallback, useContext } from "react";
 
+import { TwinCreateRq, TwinCreateRsV1 } from "@/entities/twin/server";
 import { PrivateApiContext } from "@/shared/api";
-
-import { TwinCreateRq, TwinCreateRsV1 } from "../types";
 
 export const useCreateTwin = () => {
   const api = useContext(PrivateApiContext);

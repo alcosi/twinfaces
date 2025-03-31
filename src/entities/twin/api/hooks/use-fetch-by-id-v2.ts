@@ -1,25 +1,26 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 
-import { PrivateApiContext } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
-
-import { hydrateTwinFromMap } from "../../libs";
-import { Twin_DETAILED } from "../types";
+import { Twin_DETAILED, fetchTwinById as fetch } from "@/entities/twin/server";
+import { clientCookies } from "@/shared/libs";
 
 // TODO: Apply caching-strategy
 export const useTwinFetchByIdV2 = () => {
-  const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
+  const domainId = clientCookies.get("domainId");
+  const authToken = clientCookies.get("authToken");
 
   const fetchTwinById = useCallback(
     async (id: string): Promise<Twin_DETAILED | undefined> => {
       setLoading(true);
 
       try {
-        const { data, error } = await api.twin.getById({
-          id,
+        return await fetch<Twin_DETAILED>(id, {
+          header: {
+            DomainId: domainId ?? "",
+            AuthToken: authToken ?? "",
+            Channel: "WEB",
+          },
           query: {
-            lazyRelation: false,
             showTwinMode: "DETAILED",
             showTwinClassMode: "DETAILED",
             showTwin2TwinClassMode: "DETAILED",
@@ -31,23 +32,11 @@ export const useTwinFetchByIdV2 = () => {
             showTwinTag2DataListOptionMode: "DETAILED",
           },
         });
-
-        if (error) {
-          throw new Error("Failed to fetch twin due to API error", error);
-        }
-
-        if (isUndefined(data.twin)) {
-          throw new Error("Invalid response data while fetching twin", error);
-        }
-
-        if (data.relatedObjects) {
-          return hydrateTwinFromMap(data.twin, data.relatedObjects);
-        }
       } finally {
         setLoading(false);
       }
     },
-    [api]
+    [authToken, domainId]
   );
 
   return { fetchTwinById, loading };

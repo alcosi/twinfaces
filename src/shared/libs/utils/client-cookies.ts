@@ -1,4 +1,4 @@
-import { isPopulatedString, isTruthy } from "@/shared/libs";
+import { isPopulatedString } from "@/shared/libs";
 
 type CookieOptions = {
   path?: string;

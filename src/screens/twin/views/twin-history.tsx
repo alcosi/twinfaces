@@ -2,7 +2,8 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 
-import { HistoryV1, useFetchHistoryV1 } from "@/entities/twin";
+import { useFetchHistoryV1 } from "@/entities/twin";
+import { HistoryV1 } from "@/entities/twin/server";
 import { User, UserResourceLink } from "@/entities/user";
 import { TwinContext } from "@/features/twin";
 import { PagedResponse } from "@/shared/api";

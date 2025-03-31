@@ -1,6 +1,6 @@
 "use client";
 
-import { TwinsTable } from "../../tables";
+import { TwinsTable } from "../../../../tables";
 
 export function WT001Client({
   title,
