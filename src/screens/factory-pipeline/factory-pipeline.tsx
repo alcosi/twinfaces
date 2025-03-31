@@ -18,7 +18,7 @@ export function FactoryPipelineScreen() {
     setBreadcrumbs([
       {
         label: "Pipelines",
-        href: `/${PlatformArea.core}/pipeline`,
+        href: `/${PlatformArea.core}/pipelines`,
       },
       {
         label: pipeline.factory.name

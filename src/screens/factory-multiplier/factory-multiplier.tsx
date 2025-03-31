@@ -27,7 +27,7 @@ export function FactoryMultiplierScreen() {
     setBreadcrumbs([
       {
         label: "Multipliers",
-        href: `/${PlatformArea.core}/multiplier`,
+        href: `/${PlatformArea.core}/multipliers`,
       },
       {
         label: factoryMultiplier.factory.name

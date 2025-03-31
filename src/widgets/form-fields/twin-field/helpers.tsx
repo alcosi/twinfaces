@@ -1,11 +1,12 @@
-import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
-import { TwinResourceLink } from "@/entities/twin";
-import { z, ZodType } from "zod";
+import { ZodType, z } from "zod";
+
 import {
-  DatalistOptionResourceLink,
   DataListOptionV3,
+  DatalistOptionResourceLink,
 } from "@/entities/datalist-option";
-import { User, UserResourceLink } from "@/entities/user";
+import { TwinResourceLink } from "@/entities/twin";
+import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
+import { UserResourceLink } from "@/entities/user";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI
@@ -34,7 +35,6 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
       );
 
     case TwinFieldType.selectListV1:
-    case TwinFieldType.selectListLongV1:
     case TwinFieldType.selectSharedInHeadV1:
       return (
         <DatalistOptionResourceLink

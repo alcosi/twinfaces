@@ -25,7 +25,7 @@ export function FactoryBranchScreen() {
     setBreadcrumbs([
       {
         label: "Branches",
-        href: `/${PlatformArea.core}/branche`,
+        href: `/${PlatformArea.core}/branches`,
       },
       {
         label: factoryBranch.factory.name

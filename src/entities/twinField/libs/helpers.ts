@@ -1,4 +1,5 @@
 import { RelatedObjects } from "@/shared/api";
+
 import { TwinFieldType, TwinFieldUI } from "./types";
 
 export const hydrateTwinFieldFromMap = ({
@@ -23,7 +24,6 @@ export const hydrateTwinFieldFromMap = ({
   // NOTE: To support preview state for diff `fieldType`(s)
   switch (twinClassField?.descriptor?.fieldType) {
     case TwinFieldType.selectListV1:
-    case TwinFieldType.selectListLongV1:
     case TwinFieldType.selectLongV1:
     case TwinFieldType.selectSharedInHeadV1:
     case TwinFieldType.selectUserV1:

@@ -1,6 +1,9 @@
-import { FormFieldProps } from "@/components/form-fields/types";
-import { FormField } from "@/shared/ui";
 import { FieldValues } from "react-hook-form";
+
+import { FormFieldProps } from "@/components/form-fields/types";
+
+import { FormField } from "@/shared/ui";
+
 import { TwinFieldFormItem, TwinFieldFormItemProps } from "./twin-field-item";
 
 type Props<T extends FieldValues> = FormFieldProps<T> & TwinFieldFormItemProps;

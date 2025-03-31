@@ -1,4 +1,5 @@
 import { PaginationState } from "@tanstack/react-table";
+
 import { components } from "./generated/schema";
 
 // Misc

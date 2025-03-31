@@ -36,7 +36,6 @@ const TWIN_FIELDS_FORM_SCHEMA = z.object({
   selectLinkLongV1: z.any(),
   //
   selectListV1: z.any(),
-  selectListLongV1: z.any(),
   selectLongV1: z.any(),
 });
 type TwinFieldsFormValues = z.infer<typeof TWIN_FIELDS_FORM_SCHEMA>;
@@ -170,13 +169,6 @@ export function InputFieldsTab() {
                     />
                     <TwinFieldFormField
                       control={form.control}
-                      descriptor={Fake.FieldInputs.selectListLongV1.descriptor}
-                      name={TwinFieldType.selectListLongV1}
-                      label={TwinFieldType.selectListLongV1}
-                      twinClassId={mockTwinClassId}
-                    />
-                    <TwinFieldFormField
-                      control={form.control}
                       descriptor={Fake.FieldInputs.selectLongV1.descriptor}
                       name={TwinFieldType.selectLongV1}
                       label={TwinFieldType.selectLongV1}
@@ -249,14 +241,6 @@ export function InputFieldsTab() {
                       descriptor={Fake.FieldInputs.dateScrollV1.descriptor}
                       name={TwinFieldType.dateScrollV1}
                       label="dabeScrollV1"
-                      twinClassId={mockTwinClassId}
-                    />
-
-                    <TwinFieldFormField
-                      control={form.control}
-                      descriptor={{ fieldType: "random" }}
-                      name=""
-                      label="not supported type"
                       twinClassId={mockTwinClassId}
                     />
                   </div>
