@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@radix-ui/react-accordion";
 
-import { fetchTwidget2Face } from "@/entities/face";
+import { fetchTW002Face } from "@/entities/face";
 import { cn, safe } from "@/shared/libs";
 
 import { AlertError } from "../../alert-error";
@@ -15,9 +15,7 @@ import { TWidgetFaceProps } from "../types";
 export async function TW002(props: TWidgetFaceProps) {
   const { twinId, face, widget } = props;
 
-  const result = await safe(() =>
-    fetchTwidget2Face(widget.widgetFaceId, twinId)
-  );
+  const result = await safe(() => fetchTW002Face(widget.widgetFaceId, twinId));
 
   if (!result.ok) {
     return <AlertError message="Widget TW002 failed to load." />;
