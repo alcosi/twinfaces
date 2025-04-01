@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { cn, isPopulatedString, safe } from "@/shared/libs";
+import { cn, safe } from "@/shared/libs";
 import {
   Card,
   CardContent,
@@ -18,7 +18,7 @@ import { widgetGridClasses } from "../../layouts/utils";
 import { TWidgetFaceProps } from "../types";
 
 export async function TW001(props: TWidgetFaceProps) {
-  const { twinId, face, widget } = props;
+  const { twinId, widget } = props;
 
   const header = await getAuthHeaders();
   const query = {
@@ -27,35 +27,39 @@ export async function TW001(props: TWidgetFaceProps) {
     showTwin2AttachmentCollectionMode: "ALL",
     showTwin2AttachmentMode: "DETAILED",
   } as const;
-  const twidget = await safe(() => fetchTW001Face(widget.widgetFaceId, twinId));
+  const twidgetResult = await safe(() =>
+    fetchTW001Face(widget.widgetFaceId, twinId)
+  );
 
-  if (!twidget.ok) {
+  if (!twidgetResult.ok) {
     return <AlertError message="Widget TW001 failed to load." />;
   }
 
-  const pointedTwin = await safe(() =>
-    fetchTwinById(twidget.data.pointedTwinId!, { header, query })
+  const twidget = twidgetResult.data;
+
+  const twinResult = await safe(() =>
+    fetchTwinById(twidget.pointedTwinId!, { header, query })
   );
 
-  if (!pointedTwin.ok) {
+  if (!twinResult.ok) {
     return <AlertError message="Failed to load twin." />;
   }
 
-  let filteredAttachments = pointedTwin.data.attachments || [];
-
-  if (isPopulatedString(twidget.data.imagesTwinClassFieldId)) {
-    filteredAttachments = filteredAttachments.filter(
-      (attachment) => attachment.twinClassFieldId
-    );
-  }
+  const twin = twinResult.data;
+  const allAttachments = twin.attachments ?? [];
+  const images = twidget.imagesTwinClassFieldId
+    ? allAttachments.filter(
+        (attachment) =>
+          attachment.twinClassFieldId === twidget.imagesTwinClassFieldId
+      )
+    : allAttachments;
 
   return (
     <div className={cn("max-w-[624px] h-full", widgetGridClasses(widget))}>
-      <p>{face.name}</p>
-      {twidget.data.label && <p>{twidget.data.label}</p>}
+      {twidget.label && <p>{twidget.label}</p>}
       <Carousel className="w-full max-w-full">
         <CarouselContent>
-          {filteredAttachments.map((image) => (
+          {images.map((image) => (
             <CarouselItem key={image.id}>
               <Card>
                 <CardContent className="flex aspect-square items-center justify-center p-0">
@@ -73,8 +77,8 @@ export async function TW001(props: TWidgetFaceProps) {
           ))}
         </CarouselContent>
         <div className="flex justify-center gap-4 mt-4 relative z-10">
-          <CarouselPrevious className={`static mt-2`} />
-          <CarouselNext className={`static mt-2`} />
+          <CarouselPrevious className="static mt-2" />
+          <CarouselNext className="static mt-2" />
         </div>
       </Carousel>
     </div>
