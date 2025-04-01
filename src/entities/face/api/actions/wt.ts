@@ -8,7 +8,7 @@ import { isUndefined } from "@/shared/libs";
 import { getAuthHeaders } from "../../libs";
 import { FaceWT001 } from "../types";
 
-export async function fetchWidgetFace(faceId: string): Promise<FaceWT001> {
+export async function fetchWT001Face(faceId: string): Promise<FaceWT001> {
   const headers = await getAuthHeaders();
 
   const { data } = await TwinsAPI.GET("/private/face/wt001/{faceId}/v1", {

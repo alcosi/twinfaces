@@ -1,6 +1,23 @@
-export type WidgetProps = {
+import { Face_DETAILED } from "@/entities/face";
+
+export type Widget = {
+  id: string;
+  column?: number;
+  columnEnd?: number;
+  columnSpan?: number;
+  row?: number;
+  rowEnd?: number;
+  rowSpan?: number;
+  active?: boolean;
   widgetFaceId: string;
-  twinId?: string;
 };
 
-export type TWidgetProps = Required<WidgetProps>;
+export type WidgetFaceProps = {
+  face: Face_DETAILED;
+  widget: Widget;
+  className?: string;
+};
+
+export type TWidgetFaceProps = WidgetFaceProps & {
+  twinId: string;
+};
