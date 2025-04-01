@@ -187,6 +187,10 @@ export interface paths {
     /** Smart endpoint for adding new user. It will also add user to domain and businessAccount if specified. If given businessAccount is not registered in domain, it will register it */
     post: operations["userAddV1"];
   };
+  "/private/user/search/v1": {
+    /** Return a list of users by search criteria */
+    post: operations["userSearchV1"];
+  };
   "/private/twinflow_schema/search/v1": {
     /** Returns twinflow schema search result */
     post: operations["twinflowSchemaSearchV1"];
@@ -833,6 +837,10 @@ export interface paths {
   "/private/face/tw001/{faceId}/v1": {
     /** Returns TW001 widget config: image gallery */
     get: operations["faceTW001ViewV1"];
+  };
+  "/private/face/pg002/{faceId}/v1": {
+    /** Returns PG002 page config: tabs */
+    get: operations["facePG002ViewV1"];
   };
   "/private/face/pg001/{faceId}/v1": {
     /** Returns PG001 page config: single column layout */
@@ -2935,7 +2943,7 @@ export interface components {
        * @example domainScopeDomainManage
        * @enum {string}
        */
-      type?: "domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage";
+      type?: "domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage" | "systemScopeDomainManage";
     };
     UserV1: {
       /**
@@ -5640,9 +5648,9 @@ export interface components {
       /** @description description i18n not like list */
       descriptionI18NNotLikeList?: string[];
       /** @description type list */
-      typeList?: ("domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage")[];
+      typeList?: ("domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage" | "systemScopeDomainManage")[];
       /** @description type exclude list */
-      typeExcludeList?: ("domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage")[];
+      typeExcludeList?: ("domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage" | "systemScopeDomainManage")[];
     };
     UserGroupSearchRsV1: {
       /**
@@ -5695,7 +5703,7 @@ export interface components {
        * @example domainScopeDomainManage
        * @enum {string}
        */
-      type?: "domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage";
+      type?: "domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage" | "systemScopeDomainManage";
       /** @description business account */
       businessAccount?: components["schemas"]["BusinessAccountV1"];
     };
@@ -5786,6 +5794,240 @@ export interface components {
        * @example en
        */
       locale?: string;
+    };
+    SpaceSearchV1: {
+      /**
+       * Format: uuid
+       * @description space id
+       */
+      spaceId?: string;
+      /**
+       * Format: uuid
+       * @description role id
+       */
+      roleId?: string;
+    };
+    /**
+     * @description One of values
+     * @example {
+     *   "550e8400-e29b-41d4-a716-446655440000": {
+     *     "type": "TwinFieldSearchNumericV1",
+     *     "lessThen": "10",
+     *     "moreThen": "5",
+     *     "equals": "7"
+     *   },
+     *   "550e8400-e29b-41d4-a716-446655440001": {
+     *     "type": "TwinFieldSearchTextV1",
+     *     "valueLikeAllOfList": [
+     *       "test%"
+     *     ]
+     *   }
+     * }
+     */
+    TwinFieldSearchDTOv1: {
+      /** @description discriminator */
+      type: string;
+      [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
+    };
+    /** @description (less & more connected with AND) and after connected to equals with OR and to emty with OR */
+    TwinFieldSearchDateV1: {
+      type: "TwinFieldSearchDateV1";
+    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+      /**
+       * Format: date-time
+       * @description Twin field date less then given date
+       */
+      lessThen?: string;
+      /**
+       * Format: date-time
+       * @description Twin field date greater then given date
+       */
+      moreThen?: string;
+      /**
+       * Format: date-time
+       * @description Twin field date equals to given date
+       */
+      equals?: string;
+      /** @description include entities with empty or null values to result */
+      empty?: boolean;
+      type?: string;
+    };
+    TwinFieldSearchListV1: {
+      type: "TwinFieldSearchListV1";
+    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+      /** @description Include options with given ids. AND join */
+      optionsAllOfList?: string[];
+      /** @description Include options with given ids. OR join */
+      optionsAnyOfList?: string[];
+      /** @description Exclude options with given ids. AND join */
+      optionsNoAllOfList?: string[];
+      /** @description Exclude options with given ids. OR join */
+      optionsNoAnyOfList?: string[];
+      type?: string;
+    };
+    /** @description (less & more connected with AND) and after connected to equals with OR */
+    TwinFieldSearchNumericV1: {
+      type: "TwinFieldSearchNumericV1";
+    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+      /** @description Twin field numeric value less then given */
+      lessThen?: string;
+      /** @description Twin field numeric value greater then given */
+      moreThen?: string;
+      /** @description Twin field numeric value equals to given */
+      equals?: string;
+      type?: string;
+    };
+    TwinFieldSearchTextV1: {
+      type: "TwinFieldSearchTextV1";
+    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+      /** @description Include like given strings. AND join. Add % symbols manual to use LIKE features. */
+      valueLikeAllOfList?: string[];
+      /** @description Include like given strings. OR join. Add % symbols manual to use LIKE features. */
+      valueLikeAnyOfList?: string[];
+      /** @description Exclude like given strings. AND join. Add % symbols manual to use LIKE features. */
+      valueLikeNoAllOfList?: string[];
+      /** @description Exclude like given strings. OR join. Add % symbols manual to use LIKE features. */
+      valueLikeNoAnyOfList?: string[];
+      type?: string;
+    };
+    TwinSearchByLinkV1: {
+      /**
+       * Format: uuid
+       * @description Twin-link class id
+       */
+      linkId?: string;
+      /** @description Twin dest ids for in(ex)clude from search */
+      dstTwinIdList?: string[];
+    };
+    TwinSearchV1: {
+      /** @description Twin class id list */
+      twinClassIdList?: string[];
+      /** @description Twin class id exclude list */
+      twinClassIdExcludeList?: string[];
+      /** @description Twin name like list */
+      twinNameLikeList?: string[];
+      /** @description Twin name not like list */
+      twinNameNotLikeList?: string[];
+      /** @description Twin description like list */
+      descriptionLikeList?: string[];
+      /** @description Twin description not like list */
+      descriptionNotLikeList?: string[];
+      /** @description Head twin id list */
+      headTwinIdList?: string[];
+      /** @description Twin id list */
+      twinIdList?: string[];
+      /** @description Twin id exclude list */
+      twinIdExcludeList?: string[];
+      /** @description Status id list */
+      statusIdList?: string[];
+      /** @description Assigner id list */
+      assignerUserIdList?: string[];
+      /** @description Assigner id exclude list */
+      assignerUserIdExcludeList?: string[];
+      /** @description Reporter id list */
+      createdByUserIdList?: string[];
+      /** @description Reporter id exclude list */
+      createdByUserIdExcludeList?: string[];
+      /** @description External id list */
+      externalIdList?: string[];
+      /** @description External id exclude list */
+      externalIdExcludeList?: string[];
+      /** @description Include dst twins with given links. OR join */
+      linksAnyOfList?: components["schemas"]["TwinSearchByLinkV1"][];
+      /** @description Exclude dst twins with given links. OR join */
+      linksNoAnyOfList?: components["schemas"]["TwinSearchByLinkV1"][];
+      /** @description Include dst twins with given links. AND join */
+      linksAllOfList?: components["schemas"]["TwinSearchByLinkV1"][];
+      /** @description Exclude dst twins with given links. AND join */
+      linksNoAllOfList?: components["schemas"]["TwinSearchByLinkV1"][];
+      /** @description Hierarchy ids filter */
+      hierarchyTreeContainsIdList?: string[];
+      /** @description Twin status exclude list */
+      statusIdExcludeList?: string[];
+      /** @description Twin tag list(data list options ids) */
+      tagDataListOptionIdList?: string[];
+      /** @description Twin tag exclude list(data list options ids) */
+      tagDataListOptionIdExcludeList?: string[];
+      /** @description Twin marker list(data list options ids) */
+      markerDataListOptionIdList?: string[];
+      /** @description Twin marker exclude list(data list options ids) */
+      markerDataListOptionIdExcludeList?: string[];
+      /** @description Twin extends by twin class list ids */
+      twinClassExtendsHierarchyContainsIdList?: string[];
+      /** @description Head twin class list ids */
+      headTwinClassIdList?: string[];
+      /** @description Twin touch list ids */
+      touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+      /** @description Twin touch exclude list ids */
+      touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+      /**
+       * @description Twin Field Search. Key TwinClassField id.
+       * @example {
+       *   "550e8400-e29b-41d4-a716-446655440000": {
+       *     "type": "TwinFieldSearchNumericV1",
+       *     "lessThen": "10",
+       *     "moreThen": "5",
+       *     "equals": "7"
+       *   },
+       *   "550e8400-e29b-41d4-a716-446655440001": {
+       *     "type": "TwinFieldSearchTextV1",
+       *     "valueLikeAllOfList": [
+       *       "test%"
+       *     ]
+       *   }
+       * }
+       */
+      fields?: {
+        [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
+      };
+    };
+    UserSearchRqV1: {
+      /** @description user update */
+      search?: components["schemas"]["UserSearchV1"];
+    };
+    UserSearchV1: {
+      /** @description id list */
+      userIdList?: string[];
+      /** @description id exclude list */
+      userIdExcludeList?: string[];
+      /** @description name list */
+      userNameLikeList?: string[];
+      /** @description name exclude list */
+      userNameLikeExcludeList?: string[];
+      /** @description status id list */
+      statusIdList?: ("ACTIVE" | "DELETED" | "BLOCKED")[];
+      /** @description status id exclude list */
+      statusIdExcludeList?: ("ACTIVE" | "DELETED" | "BLOCKED")[];
+      /** @description space list */
+      spaceList?: components["schemas"]["SpaceSearchV1"][];
+      /** @description space exclude list */
+      spaceExcludeList?: components["schemas"]["SpaceSearchV1"][];
+      /** @description child twins */
+      childTwins?: components["schemas"]["TwinSearchV1"];
+    };
+    UserSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description pagination data */
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description result - user list */
+      users?: components["schemas"]["UserV1"][];
     };
     TwinflowSchemaSearchRqV1: {
       /** @description id list */
@@ -7351,89 +7593,6 @@ export interface components {
       /** @description touche twins data */
       touchTwins?: components["schemas"]["TwinTouchV1"][];
     };
-    /**
-     * @description One of values
-     * @example {
-     *   "550e8400-e29b-41d4-a716-446655440000": {
-     *     "type": "TwinFieldSearchNumericV1",
-     *     "lessThen": "10",
-     *     "moreThen": "5",
-     *     "equals": "7"
-     *   },
-     *   "550e8400-e29b-41d4-a716-446655440001": {
-     *     "type": "TwinFieldSearchTextV1",
-     *     "valueLikeAllOfList": [
-     *       "test%"
-     *     ]
-     *   }
-     * }
-     */
-    TwinFieldSearchDTOv1: {
-      /** @description discriminator */
-      type: string;
-      [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
-    };
-    /** @description (less & more connected with AND) and after connected to equals with OR and to emty with OR */
-    TwinFieldSearchDateV1: {
-      type: "TwinFieldSearchDateV1";
-    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-      /**
-       * Format: date-time
-       * @description Twin field date less then given date
-       */
-      lessThen?: string;
-      /**
-       * Format: date-time
-       * @description Twin field date greater then given date
-       */
-      moreThen?: string;
-      /**
-       * Format: date-time
-       * @description Twin field date equals to given date
-       */
-      equals?: string;
-      /** @description include entities with empty or null values to result */
-      empty?: boolean;
-      type?: string;
-    };
-    TwinFieldSearchListV1: {
-      type: "TwinFieldSearchListV1";
-    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-      /** @description Include options with given ids. AND join */
-      optionsAllOfList?: string[];
-      /** @description Include options with given ids. OR join */
-      optionsAnyOfList?: string[];
-      /** @description Exclude options with given ids. AND join */
-      optionsNoAllOfList?: string[];
-      /** @description Exclude options with given ids. OR join */
-      optionsNoAnyOfList?: string[];
-      type?: string;
-    };
-    /** @description (less & more connected with AND) and after connected to equals with OR */
-    TwinFieldSearchNumericV1: {
-      type: "TwinFieldSearchNumericV1";
-    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-      /** @description Twin field numeric value less then given */
-      lessThen?: string;
-      /** @description Twin field numeric value greater then given */
-      moreThen?: string;
-      /** @description Twin field numeric value equals to given */
-      equals?: string;
-      type?: string;
-    };
-    TwinFieldSearchTextV1: {
-      type: "TwinFieldSearchTextV1";
-    } & Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-      /** @description Include like given strings. AND join. Add % symbols manual to use LIKE features. */
-      valueLikeAllOfList?: string[];
-      /** @description Include like given strings. OR join. Add % symbols manual to use LIKE features. */
-      valueLikeAnyOfList?: string[];
-      /** @description Exclude like given strings. AND join. Add % symbols manual to use LIKE features. */
-      valueLikeNoAllOfList?: string[];
-      /** @description Exclude like given strings. OR join. Add % symbols manual to use LIKE features. */
-      valueLikeNoAnyOfList?: string[];
-      type?: string;
-    };
     TwinSearchByAliasRqV1: {
       /** @description Search named params values */
       params?: {
@@ -7441,15 +7600,6 @@ export interface components {
       };
       /** @description search narrowing */
       narrow?: components["schemas"]["TwinSearchExtendedV1"];
-    };
-    TwinSearchByLinkV1: {
-      /**
-       * Format: uuid
-       * @description Twin-link class id
-       */
-      linkId?: string;
-      /** @description Twin dest ids for in(ex)clude from search */
-      dstTwinIdList?: string[];
     };
     TwinSearchExtendedV1: {
       /** @description Twin class id list */
@@ -7536,88 +7686,6 @@ export interface components {
       headSearch?: components["schemas"]["TwinSearchV1"];
       /** @description Children twin sub-search */
       childrenSearch?: components["schemas"]["TwinSearchV1"];
-    };
-    TwinSearchV1: {
-      /** @description Twin class id list */
-      twinClassIdList?: string[];
-      /** @description Twin class id exclude list */
-      twinClassIdExcludeList?: string[];
-      /** @description Twin name like list */
-      twinNameLikeList?: string[];
-      /** @description Twin name not like list */
-      twinNameNotLikeList?: string[];
-      /** @description Twin description like list */
-      descriptionLikeList?: string[];
-      /** @description Twin description not like list */
-      descriptionNotLikeList?: string[];
-      /** @description Head twin id list */
-      headTwinIdList?: string[];
-      /** @description Twin id list */
-      twinIdList?: string[];
-      /** @description Twin id exclude list */
-      twinIdExcludeList?: string[];
-      /** @description Status id list */
-      statusIdList?: string[];
-      /** @description Assigner id list */
-      assignerUserIdList?: string[];
-      /** @description Assigner id exclude list */
-      assignerUserIdExcludeList?: string[];
-      /** @description Reporter id list */
-      createdByUserIdList?: string[];
-      /** @description Reporter id exclude list */
-      createdByUserIdExcludeList?: string[];
-      /** @description External id list */
-      externalIdList?: string[];
-      /** @description External id exclude list */
-      externalIdExcludeList?: string[];
-      /** @description Include dst twins with given links. OR join */
-      linksAnyOfList?: components["schemas"]["TwinSearchByLinkV1"][];
-      /** @description Exclude dst twins with given links. OR join */
-      linksNoAnyOfList?: components["schemas"]["TwinSearchByLinkV1"][];
-      /** @description Include dst twins with given links. AND join */
-      linksAllOfList?: components["schemas"]["TwinSearchByLinkV1"][];
-      /** @description Exclude dst twins with given links. AND join */
-      linksNoAllOfList?: components["schemas"]["TwinSearchByLinkV1"][];
-      /** @description Hierarchy ids filter */
-      hierarchyTreeContainsIdList?: string[];
-      /** @description Twin status exclude list */
-      statusIdExcludeList?: string[];
-      /** @description Twin tag list(data list options ids) */
-      tagDataListOptionIdList?: string[];
-      /** @description Twin tag exclude list(data list options ids) */
-      tagDataListOptionIdExcludeList?: string[];
-      /** @description Twin marker list(data list options ids) */
-      markerDataListOptionIdList?: string[];
-      /** @description Twin marker exclude list(data list options ids) */
-      markerDataListOptionIdExcludeList?: string[];
-      /** @description Twin extends by twin class list ids */
-      twinClassExtendsHierarchyContainsIdList?: string[];
-      /** @description Head twin class list ids */
-      headTwinClassIdList?: string[];
-      /** @description Twin touch list ids */
-      touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
-      /** @description Twin touch exclude list ids */
-      touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
-      /**
-       * @description Twin Field Search. Key TwinClassField id.
-       * @example {
-       *   "550e8400-e29b-41d4-a716-446655440000": {
-       *     "type": "TwinFieldSearchNumericV1",
-       *     "lessThen": "10",
-       *     "moreThen": "5",
-       *     "equals": "7"
-       *   },
-       *   "550e8400-e29b-41d4-a716-446655440001": {
-       *     "type": "TwinFieldSearchTextV1",
-       *     "valueLikeAllOfList": [
-       *       "test%"
-       *     ]
-       *   }
-       * }
-       */
-      fields?: {
-        [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
-      };
     };
     TwinSearchByAliasBatchRqV1: {
       /** @description Search alias ref alias request body(TwinSearchByAliasRqV1) */
@@ -12066,6 +12134,129 @@ export interface components {
        */
       imagesTwinClassFieldId?: string;
     };
+    FacePG002TabV1: {
+      /**
+       * Format: uuid
+       * @description config id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * @description component
+       * @example some domain
+       */
+      component?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       * @example 2023-09-13T09:32:08
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /** @description page title */
+      title?: string;
+      /** @description Icon url. Might be relative */
+      icon?: string;
+      /**
+       * @description tab layout
+       * @enum {string}
+       */
+      layout?: "ONE_COLUMN" | "TWO_COLUMNS" | "THREE_COLUMNS";
+      /** @description tab widgets list */
+      widgets?: components["schemas"]["FacePG002WidgetV1"][];
+    };
+    FacePG002ViewRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description results - page details */
+      page?: components["schemas"]["FacePG002v1"];
+    };
+    FacePG002WidgetV1: {
+      /**
+       * Format: uuid
+       * @description uniq id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * Format: int32
+       * @description column id
+       */
+      column?: number;
+      /**
+       * Format: int32
+       * @description row id
+       */
+      row?: number;
+      /** @description is widget active */
+      active?: boolean;
+      /**
+       * Format: uuid
+       * @description widget face pointer
+       */
+      widgetFaceId?: string;
+    };
+    FacePG002v1: {
+      /**
+       * Format: uuid
+       * @description config id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * @description component
+       * @example some domain
+       */
+      component?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       * @example 2023-09-13T09:32:08
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /** @description page title */
+      title?: string;
+      /**
+       * @description page layout
+       * @enum {string}
+       */
+      layout?: "TOP" | "BOTTOM" | "LEFT" | "RIGHT";
+      /** @description page widgets list */
+      tabs?: components["schemas"]["FacePG002TabV1"][];
+    };
     FacePG001ViewRsV1: {
       /**
        * Format: int32
@@ -12165,7 +12356,7 @@ export interface components {
       description?: string;
       /** @description item is not selectable */
       disabled?: boolean;
-      /** @description Icon light uri. Might be relative */
+      /** @description Icon url. Might be relative */
       icon?: string;
       /**
        * Format: uuid
@@ -14997,6 +15188,46 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Response"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Return a list of users by search criteria */
+  userSearchV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showUserMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: unknown;
+        limit?: unknown;
+        sortAsc?: unknown;
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UserSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserSearchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -23771,6 +24002,44 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["FaceTW001ViewRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns PG002 page config: tabs */
+  facePG002ViewV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFacePG002TabCollectionMode?: "HIDE" | "SHOW";
+        showFacePG002TabWidgetCollectionMode?: "HIDE" | "SHOW";
+        showFacePG002Widget2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 9a3f6075-f175-41cd-a804-934201ec969c */
+        faceId: string;
+      };
+    };
+    responses: {
+      /** @description PG002 face config */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FacePG002ViewRsV1"];
         };
       };
       /** @description Access is denied */

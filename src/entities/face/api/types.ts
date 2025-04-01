@@ -17,6 +17,8 @@ export type FaceNB001MenuItem = components["schemas"]["FaceNB001MenuItemV1"];
 
 export type FacePG001 = components["schemas"]["FacePG001v1"];
 export type FacePG001Widget = components["schemas"]["FacePG001WidgetV1"];
+export type FacePG002 = components["schemas"]["FacePG002v1"];
+export type FacePG002Widget = components["schemas"]["FacePG002WidgetV1"];
 
 export type FaceWT001 = components["schemas"]["FaceWT001v1"];
 
