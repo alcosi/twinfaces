@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getAuthHeaders } from "@/entities/face";
 import { Twin_DETAILED, fetchTwinById } from "@/entities/twin/server";
 import { safe } from "@/shared/libs";
-import { AlertError } from "@/widgets/faces/alert-error";
+import { AlertError } from "@/widgets/faces/components";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
 type Props = {

@@ -8,8 +8,8 @@ import {
 import { fetchTW002Face } from "@/entities/face";
 import { cn, safe } from "@/shared/libs";
 
-import { AlertError } from "../../alert-error";
-import { widgetGridClasses } from "../../layouts/utils";
+import { AlertError } from "../../components";
+import { widgetGridClasses } from "../../utils";
 import { TWidgetFaceProps } from "../types";
 
 export async function TW002(props: TWidgetFaceProps) {

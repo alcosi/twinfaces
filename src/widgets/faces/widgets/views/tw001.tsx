@@ -13,8 +13,8 @@ import {
   CarouselPrevious,
 } from "@/shared/ui";
 
-import { AlertError } from "../../alert-error";
-import { widgetGridClasses } from "../../layouts/utils";
+import { AlertError } from "../../components";
+import { widgetGridClasses } from "../../utils";
 import { TWidgetFaceProps } from "../types";
 
 export async function TW001(props: TWidgetFaceProps) {

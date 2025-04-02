@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
 import { isPopulatedString, safe } from "@/shared/libs";
 
-import { AlertError } from "../alert-error";
+import { AlertError } from "../components";
 import { TWidgetFaceProps, Widget, WidgetFaceProps } from "./types";
 import { TW001, TW002, WT001 } from "./views";
 
