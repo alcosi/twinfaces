@@ -1,25 +1,26 @@
-import { Button } from "@/shared/ui/button";
-import { isElementType, stopPropagation } from "@/shared/libs";
 import { Copy, Link } from "lucide-react";
 import React, {
-  createElement,
   ElementType,
-  isValidElement,
   PropsWithChildren,
   ReactNode,
+  createElement,
+  isValidElement,
 } from "react";
 import { toast } from "sonner";
+
+import { isElementType, stopPropagation } from "@/shared/libs";
+import { Button } from "@/shared/ui/button";
+
+import { TOOLTIP_COLORS_BY_THEME } from "./constans";
 
 export type ResourceLinkTooltipProps = PropsWithChildren<{
   uuid: string;
   link?: string;
-  accentColor?: string;
 }>;
 
 export function ResourceLinkTooltip({
   uuid,
   link,
-  accentColor = "#3b82f6", // text-blue-500
   children,
 }: ResourceLinkTooltipProps) {
   function handleCopyUUID(e: React.MouseEvent) {
@@ -41,11 +42,14 @@ export function ResourceLinkTooltip({
 
   return (
     <div
-      className="text-xs w-72 py-2 px-4 space-y-1.5"
-      onClick={stopPropagation}
-      style={{
-        background: `linear-gradient(to bottom, ${accentColor} 56px, transparent 56px)`,
-      }}
+      className="text-xs w-72 py-2 px-4 space-y-1.5 dark:bg-[linear-gradient(to_bottom,var(--tooltip-dark)_56px,transparent_56px)] bg-[linear-gradient(to_bottom,var(--tooltip-light)_56px,transparent_56px)]"
+      onClick={(e) => e.stopPropagation()}
+      style={
+        {
+          "--tooltip-light": TOOLTIP_COLORS_BY_THEME.LIGHT,
+          "--tooltip-dark": TOOLTIP_COLORS_BY_THEME.DARK,
+        } as React.CSSProperties
+      }
     >
       {children}
 
