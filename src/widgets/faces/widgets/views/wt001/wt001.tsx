@@ -1,7 +1,7 @@
 import { FaceWT001, fetchWT001Face } from "@/entities/face";
 import { safe } from "@/shared/libs";
 
-import { AlertError } from "../../../alert-error";
+import { AlertError } from "../../../components";
 import { WidgetFaceProps } from "../../types";
 import { WT001Client } from "./wt001-client";
 
