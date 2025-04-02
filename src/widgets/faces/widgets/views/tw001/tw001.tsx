@@ -1,21 +1,11 @@
-import Image from "next/image";
-
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { cn, safe } from "@/shared/libs";
-import {
-  Card,
-  CardContent,
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/shared/ui";
 
-import { AlertError } from "../../components";
-import { widgetGridClasses } from "../../utils";
-import { TWidgetFaceProps } from "../types";
+import { AlertError } from "../../../components/alert-error";
+import { widgetGridClasses } from "../../../utils";
+import { TWidgetFaceProps } from "../../types";
+import { ProductSlider } from "./product-slider";
 
 export async function TW001(props: TWidgetFaceProps) {
   const { twinId, widget } = props;
@@ -57,30 +47,7 @@ export async function TW001(props: TWidgetFaceProps) {
   return (
     <div className={cn("max-w-[624px] h-full", widgetGridClasses(widget))}>
       {twidget.label && <p>{twidget.label}</p>}
-      <Carousel className="w-full max-w-full">
-        <CarouselContent>
-          {images.map((image) => (
-            <CarouselItem key={image.id}>
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-0">
-                  <div className="relative w-full h-full">
-                    <Image
-                      fill
-                      src={image.storageLink!}
-                      alt={image.title!}
-                      className="rounded-lg object-cover"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <div className="flex justify-center gap-4 mt-4 relative z-10">
-          <CarouselPrevious className="static mt-2" />
-          <CarouselNext className="static mt-2" />
-        </div>
-      </Carousel>
+      <ProductSlider images={images} />
     </div>
   );
 }
