@@ -1,61 +1,53 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useContext, useEffect } from "react";
 
-import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twin-flow";
-import { LoadingOverlay } from "@/shared/ui/loading";
+import { TwinClassContext } from "@/entities/twin-class";
+import { useBreadcrumbs } from "@/features/breadcrumb";
+import { TwinFlowContext } from "@/features/twin-flow";
+import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinFlowTransitionsTable } from "@/widgets/tables";
 
 import { TwinflowGeneral } from "./twinflow-general";
 
-type TwinflowPageProps = {
-  params: {
-    twinflowId: string;
-  };
-};
-
-export default function TwinflowPage({
-  params: { twinflowId },
-}: TwinflowPageProps) {
-  const [twinflow, setTwinflow] = useState<TwinFlow | undefined>(undefined);
-  const { fetchTwinFlowById, loading } = useTwinFlowFetchByIdV1();
+export default function TwinflowPage() {
+  const { twinClass } = useContext(TwinClassContext);
+  const { twinFlow } = useContext(TwinFlowContext);
+  const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    fetchTwinflowData();
-  }, []);
+    setBreadcrumbs([
+      { label: "Classes", href: `/${PlatformArea.core}/twinclass` },
+      {
+        label: twinClass?.name!,
+        href: `/${PlatformArea.core}/twinclass/${twinClass?.id}`,
+      },
+      {
+        label: "Twinflows",
+        href: `/${PlatformArea.core}/twinclass/${twinClass?.id}#twinflows`,
+      },
+      {
+        label: twinFlow?.name ?? "N/A",
+        href: `/${PlatformArea.core}/twinclass/${twinClass?.id}/twinflow/${twinFlow.id}`,
+      },
+    ]);
+  }, [twinClass?.id, twinClass?.name, twinFlow?.id, twinFlow?.name]);
 
-  async function fetchTwinflowData() {
-    try {
-      const response = await fetchTwinFlowById(twinflowId);
-      setTwinflow(response);
-    } catch {
-      toast.error("Failed to fetch twin flow");
-    }
-  }
-
-  const tabs: Tab[] = twinflow
+  const tabs: Tab[] = twinFlow
     ? [
         {
           key: "general",
           label: "General",
-          content: (
-            <TwinflowGeneral twinflow={twinflow} onChange={fetchTwinflowData} />
-          ),
+          content: <TwinflowGeneral />,
         },
         {
           key: "transitions",
           label: "Transitions",
-          content: <TwinFlowTransitionsTable twinflow={twinflow} />,
+          content: <TwinFlowTransitionsTable twinflow={twinFlow} />,
         },
       ]
     : [];
 
-  return (
-    <div>
-      {loading && <LoadingOverlay />}
-      {twinflow && <TabsLayout tabs={tabs} />}
-    </div>
-  );
+  return <TabsLayout tabs={tabs} />;
 }

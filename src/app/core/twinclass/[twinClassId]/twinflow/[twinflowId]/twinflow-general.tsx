@@ -1,115 +1,108 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
-import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import {
   TwinClassResourceLink,
   TwinClass_DETAILED,
 } from "@/entities/twin-class";
-import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twin-flow";
+import { TwinFlowUpdateRq, useUpdateTwinFlow } from "@/entities/twin-flow";
 import {
   TwinClassStatusResourceLink,
+  TwinStatusV2,
   useTwinStatusSelectAdapter,
 } from "@/entities/twin-status";
+import { UserResourceLink } from "@/entities/user";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { PrivateApiContext } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { TwinFlowContext } from "@/features/twin-flow";
+import { formatToTwinfaceDate, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
-export function TwinflowGeneral({
-  twinflow,
-  onChange,
-}: {
-  twinflow: TwinFlow;
-  onChange: () => void;
-}) {
-  const api = useContext(PrivateApiContext);
-  const twinStatusAdapter = useTwinStatusSelectAdapter();
-  const twinStatusAdapter = useTwinStatusSelectAdapter(twinflow.twinClassId);
+export function TwinflowGeneral() {
+  const { twinFlow, refresh } = useContext(TwinFlowContext);
   const { updateTwinFlow } = useUpdateTwinFlow();
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
 
-  async function update(newFlow: TwinFlowUpdateRq) {
+  async function update(newTwinFlow: TwinFlowUpdateRq) {
     try {
-      await updateTwinFlow({ twinflowId: twinflow.id!, body: newFlow });
-      onChange?.();
+      await updateTwinFlow({ twinflowId: twinFlow.id!, body: newTwinFlow });
+      refresh?.();
     } catch {
-      toast.error("Twinflow update failed");
+      toast.error("Twin flow update failed");
     }
   }
 
-  const nameSettings: InPlaceEditProps<typeof twinflow.name> = {
+  const nameSettings: InPlaceEditProps<typeof twinFlow.name> = {
     id: "name",
-    value: twinflow.name,
+    value: twinFlow.name,
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      input_props: {
+      inputProps: {
         fieldSize: "sm",
       },
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateTwinFlow({
+      return update({
         nameI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const descriptionSettings: InPlaceEditProps<typeof twinflow.description> = {
+  const descriptionSettings: InPlaceEditProps<typeof twinFlow.description> = {
     id: "description",
-    value: twinflow.description,
+    value: twinFlow.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      input_props: {
+      inputProps: {
         fieldSize: "sm",
       },
       label: "",
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
-      return updateTwinFlow({
+      return update({
         descriptionI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const initialStatusAutoDialogSettings: InPlaceEditProps<
-    typeof twinflow.initialStatusId
+  const initialStatusIdSettings: InPlaceEditProps<
+    typeof twinFlow.initialStatusId
   > = {
     id: "initialStatusId",
-    value: twinflow.initialStatusId,
+    value: twinFlow.initialStatusId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select status...",
       ...twinStatusAdapter,
-      getItems: async (search: string) => {
-        return twinStatusAdapter.getItems(search, {
+      getItems: async (search: string) =>
+        twinStatusAdapter.getItems(search, {
           twinClassIdMap: reduceToObject({
-            list: toArray(twinflow.twinClassId),
+            list: toArray(twinFlow.twinClassId),
             defaultValue: true,
           }),
-        });
-      },
+        }),
     },
-    renderPreview: twinflow.initialStatus
+    renderPreview: twinFlow.initialStatus
       ? (_) => (
           <TwinClassStatusResourceLink
-            data={twinflow.initialStatus!}
-            twinClassId={twinflow.twinClassId!}
-            withTooltip
+            data={twinFlow.initialStatus as TwinStatusV2}
+            twinClassId={twinFlow.twinClassId!}
           />
         )
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return updateTwinFlow({ initialStatusId: id });
+      return update({ initialStatusId: id });
     },
   };
 
@@ -120,16 +113,16 @@ export function TwinflowGeneral({
           <TableRow>
             <TableCell width={300}>ID</TableCell>
             <TableCell>
-              <GuidWithCopy value={twinflow.id} variant={"long"} />
+              <GuidWithCopy value={twinFlow.id} variant={"long"} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Class</TableCell>
             <TableCell>
-              {twinflow.twinClass && (
+              {twinFlow.twinClass && (
                 <TwinClassResourceLink
-                  data={twinflow.twinClass as TwinClass_DETAILED}
+                  data={twinFlow.twinClass as TwinClass_DETAILED}
                   withTooltip
                 />
               )}
@@ -153,28 +146,22 @@ export function TwinflowGeneral({
           <TableRow>
             <TableCell>Initial status</TableCell>
             <TableCell>
-              <InPlaceEdit {...initialStatusAutoDialogSettings} />
-              <InPlaceEdit {...initialStatusSettings} />
+              <InPlaceEdit {...initialStatusIdSettings} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Created by</TableCell>
             <TableCell>
-              {twinflow.createdByUser && (
-                <UserResourceLink data={twinflow.createdByUser} withTooltip />
+              {twinFlow.createdByUser && (
+                <UserResourceLink data={twinFlow.createdByUser} withTooltip />
               )}
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>
-              {formatIntlDate(twinflow.createdAt!, "datetime-local")}
-            </TableCell>
-            <TableCell>
-              {formatToTwinfaceDate(twinflow.createdAt!, "datetime")}
-            </TableCell>
+            <TableCell>{formatToTwinfaceDate(twinFlow.createdAt!)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

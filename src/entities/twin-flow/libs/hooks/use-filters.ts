@@ -13,13 +13,13 @@ import {
 
 import { TwinFlowFilterKeys, TwinFlowFilters } from "../../api";
 
-type FilterKeys = Exclude<TwinFlowFilterKeys, "twinClassIdList">;
+type FilterKeys = Exclude<TwinFlowFilterKeys, "twinClassIdMap">;
 
 export function useTwinFlowFilters(): FilterFeature<
   FilterKeys,
   TwinFlowFilters
 > {
-  const sAdapter = useTwinStatusSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
   const userAdapter = useUserSelectAdapter();
 
   function buildFilterFields(): Record<FilterKeys, AutoFormValueInfo> {
@@ -43,7 +43,7 @@ export function useTwinFlowFilters(): FilterFeature<
         label: "Initial status",
         selectPlaceholder: "Select statuses...",
         multi: true,
-        ...sAdapter,
+        ...twinStatusAdapter,
       },
       createdByUserIdList: {
         type: AutoFormValueType.combobox,

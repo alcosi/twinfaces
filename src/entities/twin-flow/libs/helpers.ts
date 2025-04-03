@@ -1,4 +1,5 @@
 import { RelatedObjects } from "@/shared/api";
+
 import { TwinFlow, TwinFlow_DETAILED } from "../api";
 
 export const hydrateTwinFlowFromMap = (
@@ -16,6 +17,10 @@ export const hydrateTwinFlowFromMap = (
 
   if (dto.createdByUserId && relatedObjects?.userMap) {
     hydrated.createdByUser = relatedObjects.userMap[dto.createdByUserId];
+  }
+
+  if (dto.twinClassId && relatedObjects?.twinClassMap) {
+    hydrated.twinClass = relatedObjects.twinClassMap[dto.twinClassId];
   }
 
   return hydrated;

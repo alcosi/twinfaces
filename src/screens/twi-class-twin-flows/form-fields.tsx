@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -10,15 +11,16 @@ import {
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { TWIN_FLOW_SCHEMA } from "@/entities/twin-flow";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { isPopulatedString } from "@/shared/libs";
+import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 
 export function TwinClassTwinFlowFormFields({
   control,
 }: {
   control: Control<z.infer<typeof TWIN_FLOW_SCHEMA>>;
 }) {
-  const twinClassId = useWatch({ control, name: "twinClassId" });
-  const twinStatusAdapter = useTwinStatusSelectAdapter(twinClassId!);
+  const twinClassIdWatch = useWatch({ control, name: "twinClassId" });
+  const disabled = useRef(isTruthy(twinClassIdWatch)).current;
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
   const twinClassAdapter = useTwinClassSelectAdapter();
 
   return (
@@ -27,7 +29,7 @@ export function TwinClassTwinFlowFormFields({
         control={control}
         name="twinClassId"
         label="Class"
-        disabled={isPopulatedString(twinClassId)}
+        disabled={disabled}
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
         noItemsText={"No classes found"}
@@ -57,6 +59,14 @@ export function TwinClassTwinFlowFormFields({
         noItemsText="No status found"
         required={true}
         {...twinStatusAdapter}
+        getItems={async (search: string) => {
+          return twinStatusAdapter.getItems(search, {
+            twinClassIdMap: reduceToObject({
+              list: toArray(twinClassIdWatch),
+              defaultValue: true,
+            }),
+          });
+        }}
       />
     </>
   );
