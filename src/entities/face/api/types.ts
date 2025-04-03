@@ -24,3 +24,4 @@ export type FaceWT001 = components["schemas"]["FaceWT001v1"];
 
 export type FaceTW001 = components["schemas"]["FaceTW001v1"];
 export type FaceTW002 = components["schemas"]["FaceTW002v1"];
+export type FaceTW004 = components["schemas"]["FaceTW004v1"];

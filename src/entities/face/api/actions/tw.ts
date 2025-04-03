@@ -4,7 +4,7 @@ import { TwinsAPI } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { getAuthHeaders } from "../../libs";
-import { FaceTW001, FaceTW002 } from "../types";
+import { FaceTW001, FaceTW002, FaceTW004 } from "../types";
 
 export async function fetchTW001Face(
   faceId: string,
@@ -58,6 +58,33 @@ export async function fetchTW002Face(
 
   if (isUndefined(data?.widget)) {
     const message = `[fetchTW002Face] Widget not found for faceId=${faceId}, twinId=${twinId}`;
+    console.warn(message);
+    throw new Error(message);
+  }
+
+  return data.widget;
+}
+
+export async function fetchTW004Face(
+  faceId: string,
+  twinId: string
+): Promise<FaceTW004> {
+  const headers = await getAuthHeaders();
+
+  const { data } = await TwinsAPI.GET("/private/face/tw004/{faceId}/v1", {
+    params: {
+      path: { faceId },
+      header: headers,
+      query: {
+        twinId: twinId,
+        lazyRelation: false,
+        showFaceMode: "DETAILED",
+      },
+    },
+  });
+
+  if (isUndefined(data?.widget)) {
+    const message = `[fetchTW004Face] Widget not found for faceId=${faceId}, twinId=${twinId}`;
     console.warn(message);
     throw new Error(message);
   }

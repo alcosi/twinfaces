@@ -830,6 +830,10 @@ export interface paths {
     /** Returns WT001 widget config: table of twins of given class */
     get: operations["faceWT001ViewV1"];
   };
+  "/private/face/tw004/{faceId}/v1": {
+    /** Returns TW004 widget config: twins single field view/edit widget */
+    get: operations["faceTW004ViewV1"];
+  };
   "/private/face/tw002/{faceId}/v1": {
     /** Returns TW002 widget config: i18n field accordion */
     get: operations["faceTW002ViewV1"];
@@ -12083,6 +12087,71 @@ export interface components {
       searchId?: string;
       /** @description show given basic columns from table and filter */
       showColumns?: string[];
+    };
+    FaceTW004ViewRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description results - widget details */
+      widget?: components["schemas"]["FaceTW004v1"];
+    };
+    /** @description Twin single field view/edit twidget */
+    FaceTW004v1: {
+      /**
+       * Format: uuid
+       * @description config id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      id?: string;
+      /**
+       * @description component
+       * @example some domain
+       */
+      component?: string;
+      /** @description name */
+      name?: string;
+      /** @description description */
+      description?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       * @example 2023-09-13T09:32:08
+       */
+      createdAt?: string;
+      /**
+       * Format: uuid
+       * @description createdByUserId
+       */
+      createdByUserId?: string;
+      /**
+       * Format: uuid
+       * @description an id of twin, for which current config is pointed. It can bu useful when we want to display widget witch some head twin data on current twin page.
+       */
+      pointedTwinId?: string;
+      /** @description uniq key */
+      key?: string;
+      /** @description some label for twidget */
+      label?: string;
+      /**
+       * Format: uuid
+       * @description twin field (also basic field constants supported)
+       */
+      twinClassFieldId?: string;
     };
     FaceTW002AccordionItemV1: {
       /**
@@ -23907,6 +23976,90 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["FaceWT001ViewRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Returns TW004 widget config: twins single field view/edit widget */
+  faceTW004ViewV1: {
+    parameters: {
+      query: {
+        twinId: string;
+        lazyRelation?: unknown;
+        showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showAttachmentModificationMode?: "HIDE" | "SHOW";
+        showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showCommentActionMode?: "HIDE" | "SHOW";
+        showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFaceTW0042TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showFaceTwidget2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+        showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinActionMode?: "HIDE" | "SHOW";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+        showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+        showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+      path: {
+        /** @example 9a3f6075-f175-41cd-a804-934201ec969c */
+        faceId: string;
+      };
+    };
+    responses: {
+      /** @description TW004 face config */
+      200: {
+        content: {
+          "application/json": components["schemas"]["FaceTW004ViewRsV1"];
         };
       };
       /** @description Access is denied */
