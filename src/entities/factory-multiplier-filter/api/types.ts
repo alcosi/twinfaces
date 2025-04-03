@@ -1,13 +1,9 @@
-import { Factory } from "@/entities/factory/api";
 import { components } from "@/shared/api/generated/schema";
 
 export type FactoryMultiplierFilter =
   components["schemas"]["FactoryMultiplierFilterV2"];
 export type FactoryMultiplierFilter_DETAILED =
-  Required<FactoryMultiplierFilter> & {
-    factoryId?: string;
-    factory?: Factory;
-  };
+  Required<FactoryMultiplierFilter>;
 
 export type FactoryMultiplierFilterSearchRq =
   components["schemas"]["FactoryMultiplierFilterSearchRqV1"];

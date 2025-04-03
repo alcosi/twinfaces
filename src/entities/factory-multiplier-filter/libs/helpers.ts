@@ -15,7 +15,8 @@ export const hydrateFactoryMultiplierFilterFromMap = (
   ) as FactoryMultiplierFilter_DETAILED;
 
   if (dto.multiplier?.factoryId && relatedObjects?.factoryMap) {
-    hydrated.factory = relatedObjects.factoryMap[dto.multiplier.factoryId];
+    hydrated.multiplier.factory =
+      relatedObjects.factoryMap[dto.multiplier.factoryId];
   }
 
   if (dto.inputTwinClassId && relatedObjects?.twinClassMap) {
