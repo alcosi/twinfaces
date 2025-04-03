@@ -1,6 +1,6 @@
 import { fetchTW002Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { cn, isTruthy, safe } from "@/shared/libs";
+import { capitalize, cn, isTruthy, safe } from "@/shared/libs";
 import {
   Accordion,
   AccordionContent,
@@ -13,54 +13,54 @@ import { widgetGridClasses } from "../../utils";
 import { TWidgetFaceProps, TranslationEntry } from "../types";
 
 export async function TW002(props: TWidgetFaceProps) {
-  const { twinId, face, widget } = props;
+  const { twinId, widget } = props;
   const header = await getAuthHeaders();
   const query = {
     showTwinFieldCollectionMode: "ALL_FIELDS",
   } as const;
 
-  const result = await safe(() => fetchTW002Face(widget.widgetFaceId, twinId));
+  const twidgetResult = await safe(() =>
+    fetchTW002Face(widget.widgetFaceId, twinId)
+  );
 
-  if (!result.ok) {
+  if (!twidgetResult.ok) {
     return <AlertError message="Widget TW002 failed to load." />;
   }
 
-  const pointedTwin = await safe(() =>
-    fetchTwinById(result.data?.pointedTwinId!, { header, query })
+  const twinResult = await safe(() =>
+    fetchTwinById(twidgetResult.data?.pointedTwinId!, { header, query })
   );
 
-  if (!pointedTwin.ok) {
+  if (!twinResult.ok) {
     return <AlertError message="Failed to load twin." />;
   }
 
-  if (!pointedTwin.data?.fields?.translation) {
+  if (!twinResult.data?.fields?.translation) {
     return null;
   }
 
-  const parseTranslation = JSON.parse(pointedTwin.data?.fields?.translation);
+  const parseTranslation = JSON.parse(twinResult.data?.fields?.translation);
 
-  const parsedData: TranslationEntry[] = Object.entries(parseTranslation).map(
-    ([language, description]) => ({
-      language,
-      description: String(description),
-    })
-  );
+  const translationData: TranslationEntry[] = Object.entries(
+    parseTranslation
+  ).map(([language, description]) => ({
+    language,
+    description: String(description),
+  }));
 
   return (
     <>
-      {isTruthy(parsedData) && (
+      {isTruthy(translationData) && (
         <Accordion
           type="single"
           collapsible
           className={cn("w-full", widgetGridClasses(widget))}
-          defaultValue={parsedData?.[0]?.language ?? ""}
+          defaultValue={translationData?.[0]?.language ?? ""}
         >
-          {parsedData.map((el, key) => {
+          {translationData.map((el, key) => {
             return (
               <AccordionItem key={key} value={el.language ?? ""}>
-                <AccordionTrigger>
-                  {el.language?.toUpperCase()}
-                </AccordionTrigger>
+                <AccordionTrigger>{capitalize(el.language)}</AccordionTrigger>
                 <AccordionContent>
                   <p>{el.description}</p>
                 </AccordionContent>
