@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { isPopulatedArray } from "@/shared/libs";
+import { isFalsy, isPopulatedArray } from "@/shared/libs";
 import {
   Carousel,
   CarouselApi,
@@ -31,11 +31,9 @@ type SlotSliderProps<T> = {
 };
 
 export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
-  const [activeSlide, setActiveSlide] = useState<number>(0);
+  const [current, setCurrent] = useState<number>(0);
   const [mainSlider, setMainSlider] = useState<CarouselApi | null>(null);
-  const [thumbnailSlider, setThumbnailSlider] = useState<CarouselApi | null>(
-    null
-  );
+  const [thumbSlider, setThumbSlider] = useState<CarouselApi | null>(null);
   const [typedItems, setTypedItems] = useState<(T & { type: string })[]>([]);
 
   useEffect(() => {
@@ -47,86 +45,58 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
     ).then(setTypedItems);
   }, [items]);
 
-  const handleActiveSlide = useCallback(
+  const handleThumbClick = useCallback(
     (index: number) => {
-      setActiveSlide(index);
+      setCurrent(index);
       mainSlider?.scrollTo(index);
-      thumbnailSlider?.scrollTo(index);
+      thumbSlider?.scrollTo(index);
     },
     [mainSlider]
   );
 
   useEffect(() => {
-    const handleKeyboardDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") {
-        handleActiveSlide(Math.max(activeSlide - 1, 0));
-      } else if (e.key === "ArrowRight") {
-        handleActiveSlide(Math.min(activeSlide + 1, typedItems.length - 1));
-      }
-    };
+    if (isFalsy(mainSlider)) return;
 
-    window.addEventListener("keydown", handleKeyboardDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyboardDown);
-    };
-  }, [activeSlide, handleActiveSlide, typedItems.length]);
+    mainSlider.on("select", () => {
+      const index = mainSlider.selectedScrollSnap();
+      setCurrent(index);
+      thumbSlider?.scrollTo(index);
+    });
+  }, [mainSlider]);
 
-  mainSlider?.on("select", () => {
-    const selectedIndex = mainSlider.selectedScrollSnap();
-    setActiveSlide(selectedIndex);
-    thumbnailSlider?.scrollTo(selectedIndex);
-  });
-
-  return (
+  return isPopulatedArray(typedItems) ? (
     <>
-      <div>
-        <Carousel setApi={setMainSlider} className="w-full max-w-full">
-          <CarouselContent>
-            {isPopulatedArray(typedItems) ? (
-              typedItems.map((item, index) => (
-                <CarouselItem key={index} className="pb-4">
-                  <SlotSliderItem item={item} />
-                </CarouselItem>
-              ))
-            ) : (
-              <CarouselItem className="flex h-full items-center justify-center">
-                <div className="text-center text-gray-500">
-                  No items available
-                </div>
-              </CarouselItem>
-            )}
-          </CarouselContent>
-        </Carousel>
-      </div>
-
-      {isPopulatedArray(typedItems) && (
-        // TODO: update styling in this block
-        <Carousel
-          setApi={setThumbnailSlider}
-          className="flex w-full max-w-full items-center"
-        >
-          <CarouselPrevious className="static" />
-
-          <CarouselContent className="">
-            {typedItems.map((item, index) => (
-              <CarouselItem
-                key={index}
-                className="cursor-pointer p-2 md:basis-1/4"
-                onClick={() => handleActiveSlide(index)}
-              >
-                <SlotSliderThumbnail
-                  item={item}
-                  isActive={activeSlide === index}
-                />
+      <Carousel setApi={setMainSlider} className="mb-2">
+        <CarouselContent>
+          {isPopulatedArray(typedItems) &&
+            typedItems.map((item, index) => (
+              <CarouselItem key={index}>
+                <SlotSliderItem item={item} />
               </CarouselItem>
             ))}
-          </CarouselContent>
+        </CarouselContent>
+      </Carousel>
 
-          <CarouselNext className="static" />
-        </Carousel>
-      )}
+      <Carousel
+        setApi={setThumbSlider}
+        className="flex w-full max-w-full items-center"
+      >
+        <CarouselPrevious className="static" />
+        <CarouselContent>
+          {typedItems.map((item, index) => (
+            <CarouselItem
+              key={index}
+              className="cursor-pointer py-0.5 md:basis-1/4"
+              onClick={() => handleThumbClick(index)}
+            >
+              <SlotSliderThumbnail item={item} isActive={current === index} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselNext className="static" />
+      </Carousel>
     </>
-  );
+  ) : null;
 }
 
 // === SlotSlider Views ===
