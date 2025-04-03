@@ -1,29 +1,38 @@
 "use client";
 
-import Image from "next/image";
+import { PdfIcon } from "@/shared/ui/icons";
 
 export function PdfSlide({
-  src,
-  alt,
-  caption,
+  url,
+  title = "PDF",
 }: {
-  src: string;
-  alt?: string;
-  caption?: string;
+  url: string;
+  title?: string;
 }) {
-  // TODO: implement
-  return null;
+  return (
+    <iframe
+      src={`https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(url)}`}
+      title={title}
+      className="aspect-square h-full w-full rounded-lg border"
+    />
+  );
 }
 
 export function PdfThumbnail({
-  src,
-  alt,
+  title = "PDF File",
   isActive,
 }: {
-  src: string;
-  alt?: string;
+  title?: string;
   isActive?: boolean;
 }) {
-  // TODO: implement
-  return null;
+  return (
+    <div
+      className={`flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-secondary px-2 text-xs text-primary ${
+        isActive && "ring-brand ring-2"
+      }`}
+    >
+      <PdfIcon className="h-6 w-6" />
+      <span className="w-full truncate text-center">{title}</span>
+    </div>
+  );
 }

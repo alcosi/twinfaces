@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 
+import { cn } from "@/shared/libs";
+import { Caption } from "@/shared/ui";
+
 export function ImageSlide({
   src,
   alt,
@@ -12,25 +15,21 @@ export function ImageSlide({
   caption?: string;
 }) {
   return (
-    <div className="relative w-full aspect-square">
+    <div className="relative flex aspect-square w-full rounded-lg bg-secondary">
       <Image
         fill
         src={src}
         alt={alt || "Image"}
         className="rounded-lg object-cover"
       />
-      {caption && (
-        <div className="absolute bottom-0 left-0 m-1 p-1 rounded-md bg-black/60 text-white text-xs text-center">
-          {caption}
-        </div>
-      )}
+      {caption && <Caption text={caption} />}
     </div>
   );
 }
 
 export function ImageThumbnail({
   src,
-  alt,
+  alt = "Thumbnail",
   isActive,
 }: {
   src: string;
@@ -38,16 +37,15 @@ export function ImageThumbnail({
   isActive?: boolean;
 }) {
   return (
-    <div
-      className={`relative w-full aspect-square border ${
-        isActive ? "ring-2 ring-sidebar-ring dark:ring-yellow-500" : ""
-      }`}
-    >
+    <div className={`relative aspect-square rounded-lg bg-secondary`}>
       <Image
         fill
         src={src}
-        alt={alt || "Thumbnail"}
-        className="rounded-lg object-cover"
+        alt={alt}
+        className={cn(
+          "rounded-lg object-cover",
+          isActive && "ring-2 ring-brand"
+        )}
       />
     </div>
   );
