@@ -14,12 +14,9 @@ import {
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { TwinUpdateRq } from "@/entities/twin/server";
 import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
-import {
-  InPlaceEdit,
-  InPlaceEditContextProvider,
-  InPlaceEditProps,
-} from "@/features/inPlaceEdit";
+import { InPlaceEditContextProvider } from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
+import { TwinFieldEditor } from "@/features/twin/ui";
 import { PrivateApiContext } from "@/shared/api";
 import {
   formatToTwinfaceDate,
@@ -57,42 +54,6 @@ export function TwinGeneral() {
     console.error("TwinGeneral: no twin");
     return;
   }
-
-  const nameSettings: InPlaceEditProps = {
-    id: "name",
-    value: twin.name,
-    valueInfo: {
-      type: AutoFormValueType.string,
-      label: "",
-      inputProps: {
-        fieldSize: "sm",
-      },
-    },
-    schema: z.string().min(3),
-    onSubmit: (value) => {
-      return updateTwin({
-        name: value as string,
-      });
-    },
-  };
-
-  const descriptionSettings: InPlaceEditProps = {
-    id: "description",
-    value: twin.description,
-    valueInfo: {
-      type: AutoFormValueType.string,
-      inputProps: {
-        fieldSize: "sm",
-      },
-      label: "",
-    },
-    schema: z.string().min(3),
-    onSubmit: (value) => {
-      return updateTwin({
-        description: value as string,
-      });
-    },
-  };
 
   const tagsSettings: AutoEditDialogSettings = {
     value: { tags: twin.tags ?? [] },
@@ -181,19 +142,25 @@ export function TwinGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
-            <TableCell>Name</TableCell>
-            <TableCell>
-              <InPlaceEdit {...nameSettings} />
-            </TableCell>
-          </TableRow>
+          <TwinFieldEditor
+            id="twin.name"
+            twinId={twin.id}
+            fieldKey="name"
+            fieldValue={twin.name}
+            label="Name"
+            schema={z.string().min(3)}
+            onSuccess={refresh}
+          />
 
-          <TableRow className={"cursor-pointer"}>
-            <TableCell>Description</TableCell>
-            <TableCell>
-              <InPlaceEdit {...descriptionSettings} />
-            </TableCell>
-          </TableRow>
+          <TwinFieldEditor
+            id="twin.description"
+            twinId={twin.id}
+            fieldKey="description"
+            fieldValue={twin.description ?? ""}
+            label="Description"
+            schema={z.string().min(3)}
+            onSuccess={refresh}
+          />
 
           <TableRow>
             <TableCell>Author</TableCell>
@@ -220,7 +187,7 @@ export function TwinGeneral() {
             <TableCell>Head</TableCell>
             <TableCell>
               {twin.headTwin && (
-                <div className="max-w-48 inline-flex">
+                <div className="inline-flex max-w-48">
                   <TwinResourceLink data={twin.headTwin} withTooltip />
                 </div>
               )}
@@ -231,7 +198,7 @@ export function TwinGeneral() {
             <TableCell>Markers</TableCell>
             <TableCell>
               {twin.twinClass?.markersDataListId && twin.markers && (
-                <div className="max-w-48 inline-flex">
+                <div className="inline-flex max-w-48">
                   <DatalistOptionResourceLink
                     data={{
                       ...twin.markers,
@@ -251,7 +218,7 @@ export function TwinGeneral() {
             <TableCell>Tags</TableCell>
             <TableCell>
               {isPopulatedArray(twin.tags) && (
-                <div className="max-w-48 inline-flex flex-wrap gap-2">
+                <div className="inline-flex max-w-48 flex-wrap gap-2">
                   {twin.tags.map((tag) => (
                     <DatalistOptionResourceLink key={tag.id} data={tag} />
                   ))}

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/shared/libs";
 import { Caption, FileQuestionIcon } from "@/shared/ui";
 
 export function UnknownSlide({
@@ -24,9 +25,10 @@ export function UnknownThumbnail({
 }) {
   return (
     <div
-      className={`flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-secondary px-2 text-xs text-primary ${
-        isActive && "ring-brand-500 ring-2"
-      }`}
+      className={cn(
+        "flex h-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-transparent bg-secondary px-2 text-xs text-primary",
+        isActive && "border-brand-500"
+      )}
     >
       <FileQuestionIcon className="h-6 w-6" />
       <span className="w-full truncate text-center">{title}</span>

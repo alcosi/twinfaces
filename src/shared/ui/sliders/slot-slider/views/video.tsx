@@ -32,8 +32,8 @@ export function VideoThumbnail({
       src={src}
       muted
       className={cn(
-        "h-full w-full rounded-lg object-cover",
-        isActive && "ring-brand-500 ring-2"
+        "h-full w-full rounded-lg border-2 border-transparent object-cover",
+        isActive && "border-brand-500"
       )}
       title="Video thumbnail"
     />

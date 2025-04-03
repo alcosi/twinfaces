@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { isFalsy, isPopulatedArray } from "@/shared/libs";
+import {
+  isFalsy,
+  isPopulatedArray,
+  useKeyboardNavigation,
+} from "@/shared/libs";
 import {
   Carousel,
   CarouselApi,
@@ -17,10 +21,11 @@ import { PdfSlide, PdfThumbnail } from "./views/pdf";
 import { UnknownSlide, UnknownThumbnail } from "./views/unknown";
 import { VideoSlide, VideoThumbnail } from "./views/video";
 
-type MediaType = "image" | "video" | "text" | "pdf" | "unknown";
+export type MediaType = "image" | "video" | "text" | "pdf" | "unknown";
 
 type MediaItem = {
   id: string;
+  type: MediaType;
   url: string;
   title?: string;
   content?: string;
@@ -31,20 +36,16 @@ type SlotSliderProps<T> = {
 };
 
 // TODO: Support loading state for this component
+// TODO: Support loading state for this component
 export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
   const [current, setCurrent] = useState<number>(0);
   const [mainSlider, setMainSlider] = useState<CarouselApi | null>(null);
   const [thumbSlider, setThumbSlider] = useState<CarouselApi | null>(null);
-  const [typedItems, setTypedItems] = useState<(T & { type: string })[]>([]);
 
-  useEffect(() => {
-    Promise.all(
-      items.map(async (item) => ({
-        ...item,
-        type: await detectFileType(item.url),
-      }))
-    ).then(setTypedItems);
-  }, [items]);
+  useKeyboardNavigation({
+    onLeft: () => mainSlider?.scrollPrev(),
+    onRight: () => mainSlider?.scrollNext(),
+  });
 
   const handleThumbClick = useCallback(
     (index: number) => {
@@ -65,28 +66,12 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
     });
   }, [mainSlider]);
 
-  // TODO: Add keyboard / swipe navigation,
-  // useEffect(() => {
-  //   const handleKeyboardDown = (e: KeyboardEvent) => {
-  //     if (e.key === "ArrowLeft") {
-  //       handleActiveSlide(Math.max(activeSlide - 1, 0));
-  //     } else if (e.key === "ArrowRight") {
-  //       handleActiveSlide(Math.min(activeSlide + 1, typedItems.length - 1));
-  //     }
-  //   };
-
-  //   window.addEventListener("keydown", handleKeyboardDown);
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeyboardDown);
-  //   };
-  // }, [activeSlide, handleActiveSlide, typedItems.length]);
-
-  return isPopulatedArray(typedItems) ? (
+  return isPopulatedArray(items) ? (
     <>
       <Carousel setApi={setMainSlider} className="mb-2">
         <CarouselContent>
-          {isPopulatedArray(typedItems) &&
-            typedItems.map((item, index) => (
+          {isPopulatedArray(items) &&
+            items.map((item, index) => (
               <CarouselItem key={index}>
                 <SlotSliderItem item={item} />
               </CarouselItem>
@@ -96,21 +81,21 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
 
       <Carousel
         setApi={setThumbSlider}
-        className="flex w-full max-w-full items-center"
+        className="static flex h-20 w-full max-w-full items-center justify-between gap-2"
       >
-        <CarouselPrevious className="static" />
-        <CarouselContent>
-          {typedItems.map((item, index) => (
+        <CarouselPrevious className="static shrink translate-y-0" />
+        <CarouselContent className="h-full w-full gap-1">
+          {items.map((item, index) => (
             <CarouselItem
               key={index}
-              className="h-full min-w-24 cursor-pointer py-0.5 md:basis-1/4"
+              className="w-20 basis-1/4 h-full min-w-24 cursor-pointer items-stretch"
               onClick={() => handleThumbClick(index)}
             >
               <SlotSliderThumbnail item={item} isActive={current === index} />
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselNext className="static" />
+        <CarouselNext className="static shrink translate-y-0" />
       </Carousel>
     </>
   ) : null;
@@ -155,27 +140,5 @@ function SlotSliderThumbnail({
       return <PdfThumbnail title={item.title} isActive={isActive} />;
     default:
       return <UnknownThumbnail title={item.title} isActive={isActive} />;
-  }
-}
-
-// === Utils ===
-
-function inferTypeFromMime(mime: string): MediaType {
-  if (mime.startsWith("image/")) return "image";
-  if (mime.startsWith("video/")) return "video";
-  if (mime === "application/pdf") return "pdf";
-  if (mime.startsWith("text/")) return "text";
-  return "unknown";
-}
-
-// TODO: this function can't be located in `@/shared` due to `/api/mime-type?url=`
-async function detectFileType(url: string): Promise<MediaType> {
-  try {
-    const res = await fetch(`/api/mime-type?url=${encodeURIComponent(url)}`);
-    const data = await res.json();
-    return inferTypeFromMime(data.mime || "");
-  } catch (e) {
-    console.error("Failed to detect file type:", e);
-    return "unknown";
   }
 }
