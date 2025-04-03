@@ -1,11 +1,12 @@
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { cn, safe } from "@/shared/libs";
+import { ImageSlide, ImageThumbnail, SlotSlider } from "@/shared/ui";
+import { ImageSlider } from "@/shared/ui/image-slider";
 
-import { AlertError } from "../../../components/alert-error";
-import { widgetGridClasses } from "../../../utils";
-import { TWidgetFaceProps } from "../../types";
-import { ProductSlider } from "./product-slider";
+import { AlertError } from "../../components";
+import { widgetGridClasses } from "../../utils";
+import { TWidgetFaceProps } from "../types";
 
 export async function TW001(props: TWidgetFaceProps) {
   const { twinId, widget } = props;
@@ -44,10 +45,28 @@ export async function TW001(props: TWidgetFaceProps) {
       )
     : allAttachments;
 
+  // TODO:
+  // Extract thumbnails into a separate component,
+  // Add keyboard / swipe navigation,
+  // Auto-play support,
+  // Or convert to a generic slider with slot-based customization.
+  // Make aspectRatio customizable,
+  // Handle zoom or full-screen image viewer.
+  // Add support for audio or PDFs
+  // Extract it as a reusable package
+  // ✅ Add support for captions,
   return (
     <div className={cn("max-w-[624px] h-full", widgetGridClasses(widget))}>
       {twidget.label && <p>{twidget.label}</p>}
-      <ProductSlider images={images} />
+      <SlotSlider
+        items={images.map((item) => ({
+          id: item.id!,
+          type: "image",
+          url: item.storageLink!,
+          title: item.title,
+          content: item.title,
+        }))}
+      />
     </div>
   );
 }

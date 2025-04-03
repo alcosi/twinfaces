@@ -3,7 +3,6 @@ import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type Twin = components["schemas"]["TwinV2"];
-export type TwinAttachments = components["schemas"]["AttachmentV1"];
 export type Twin_SHORT = RequireFields<
   Twin,
   | "id"
@@ -21,6 +20,8 @@ export type Twin_DETAILED = RequireFields<
 > & {
   subordinates?: TwinClass_DETAILED[];
 };
+
+export type TwinAttachments = components["schemas"]["AttachmentV1"];
 
 export type TwinCreateRq = RequireFields<
   components["schemas"]["TwinCreateRqV2"],
