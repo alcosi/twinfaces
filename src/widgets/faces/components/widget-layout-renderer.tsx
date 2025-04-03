@@ -28,7 +28,7 @@ export function WidgetLayoutRenderer({
   return (
     <main className="flex gap-4 py-4">
       {Array.from({ length: columns }, (_, i) => (
-        <div key={i} className="flex flex-col flex-1 gap-2 overflow-x-auto">
+        <div key={i} className="flex flex-col flex-1 gap-2 w-full">
           {mapWidgetsToNodes(
             widgets.filter((widget) => widget.column === i + 1),
             twinId
