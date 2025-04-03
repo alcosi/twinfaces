@@ -28,7 +28,7 @@ export function PdfThumbnail({
   return (
     <div
       className={`flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-secondary px-2 text-xs text-primary ${
-        isActive && "ring-brand ring-2"
+        isActive && "ring-brand-500 ring-2"
       }`}
     >
       <PdfIcon className="h-6 w-6" />

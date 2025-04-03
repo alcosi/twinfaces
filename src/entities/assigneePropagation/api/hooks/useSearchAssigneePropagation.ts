@@ -8,7 +8,6 @@ import {
 } from "@/entities/assigneePropagation";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-// TODO: Apply caching-strategy
 export const usePermissionGrantAssigneePropagationSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

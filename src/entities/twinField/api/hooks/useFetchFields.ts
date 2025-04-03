@@ -6,7 +6,6 @@ import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinFieldFromMap } from "../../libs";
 
-// TODO: Apply caching-strategy
 export const useFetchFields = () => {
   const api = useContext(PrivateApiContext);
 

@@ -4,7 +4,6 @@ import { PrivateApiContext } from "@/shared/api";
 
 import { CreatePermissionRequestBody } from "../types";
 
-// TODO: Apply caching-strategy
 export const usePermissionCreate = () => {
   const api = useContext(PrivateApiContext);
 

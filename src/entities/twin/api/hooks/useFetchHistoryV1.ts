@@ -4,7 +4,6 @@ import { useCallback, useContext } from "react";
 import { Twin } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-// TODO: Apply caching-strategy
 export const useFetchHistoryV1 = () => {
   const api = useContext(PrivateApiContext);
 

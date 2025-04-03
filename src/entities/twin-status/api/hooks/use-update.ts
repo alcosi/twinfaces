@@ -3,7 +3,6 @@ import { useCallback, useContext } from "react";
 import { TwinStatusUpdateRq } from "@/entities/twin-status";
 import { PrivateApiContext } from "@/shared/api";
 
-// TODO: Apply caching-strategy
 export const useStatusUpdate = () => {
   const api = useContext(PrivateApiContext);
 

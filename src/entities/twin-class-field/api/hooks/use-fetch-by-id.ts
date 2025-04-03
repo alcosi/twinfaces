@@ -7,7 +7,6 @@ import {
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinClassFieldById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);

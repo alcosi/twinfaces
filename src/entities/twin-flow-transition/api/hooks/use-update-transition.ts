@@ -4,7 +4,6 @@ import { PrivateApiContext } from "@/shared/api";
 
 import { TwinFlowTransitionUpdateRq } from "../types";
 
-// TODO: Apply caching-strategy
 export const useUpdateTwinFlowTransition = () => {
   const api = useContext(PrivateApiContext);
 

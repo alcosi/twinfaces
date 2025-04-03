@@ -8,7 +8,6 @@ import {
 } from "@/entities/spaceRole";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-// TODO: Apply caching-strategy
 export const usePermissionSpaceRoleSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

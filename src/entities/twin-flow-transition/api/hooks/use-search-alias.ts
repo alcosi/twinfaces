@@ -6,7 +6,6 @@ import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
 import { TransitionAliasFilters, TransitionAliasV1 } from "../types";
 
-// TODO: Apply caching-strategy
 export const useTransitionAliasSearch = () => {
   const api = useContext(PrivateApiContext);
 

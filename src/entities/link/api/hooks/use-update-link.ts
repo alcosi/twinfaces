@@ -3,7 +3,6 @@ import { useCallback, useContext } from "react";
 import { UpdateLinkRequestBody } from "@/entities/link";
 import { PrivateApiContext } from "@/shared/api";
 
-// TODO: Apply caching-strategy
 export const useLinkUpdate = () => {
   const api = useContext(PrivateApiContext);
 

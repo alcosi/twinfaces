@@ -6,7 +6,6 @@ import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
 import { DataList, DatalistFilters } from "../types";
 
-// TODO: Apply caching-strategy
 export const useDatalistSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

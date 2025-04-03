@@ -7,7 +7,6 @@ import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { hydrateUserGroupFromMap } from "../../libs";
 import { UserGroupFilters, UserGroup_DETAILED } from "../types";
 
-// TODO: Apply caching-strategy
 export const useUserGroupSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

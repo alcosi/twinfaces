@@ -5,7 +5,6 @@ import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 import { Featurer, FeaturerFilters } from "../types";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFeaturerSearch = () => {
   const api = useContext(PrivateApiContext);
 

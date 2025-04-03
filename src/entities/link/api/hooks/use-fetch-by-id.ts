@@ -4,7 +4,6 @@ import { Link, QueryLinkViewV1, hydrateLinkFromMap } from "@/entities/link";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-// TODO: Apply caching-strategy
 export const useLinkFetchById = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const api = useContext(PrivateApiContext);

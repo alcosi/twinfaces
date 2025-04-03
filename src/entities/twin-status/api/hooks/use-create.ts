@@ -4,7 +4,6 @@ import { PrivateApiContext } from "@/shared/api";
 
 import { TwinStatusCreateRq } from "../types";
 
-// TODO: Apply caching-strategy
 export const useStatusCreate = () => {
   const api = useContext(PrivateApiContext);
 

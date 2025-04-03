@@ -6,7 +6,6 @@ import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { hydratePermissionGroupFromMap } from "../../libs";
 import { PermissionGroupFilters, PermissionGroup_DETAILED } from "../types";
 
-// TODO: Apply caching-strategy
 export const usePermissionGroupSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

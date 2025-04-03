@@ -40,18 +40,8 @@ export async function TW001(props: TWidgetFaceProps) {
       )
     : allAttachments;
 
-  // TODO:
-  // Extract thumbnails into a separate component,
-  // Add keyboard / swipe navigation,
-  // Auto-play support,
-  // Or convert to a generic slider with slot-based customization.
-  // Make aspectRatio customizable,
-  // Handle zoom or full-screen image viewer.
-  // Add support for audio or PDFs
-  // Extract it as a reusable package
-  // ✅ Add support for captions,
   return (
-    <div className={cn("max-w-[624px] h-full", widgetGridClasses(widget))}>
+    <div className={cn("h-full max-w-[624px]", widgetGridClasses(widget))}>
       {twidget.label && <p>{twidget.label}</p>}
       <SlotSlider
         items={images.map((item) => ({

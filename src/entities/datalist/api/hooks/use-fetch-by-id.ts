@@ -4,7 +4,6 @@ import { DataList, DataListRqQuery } from "@/entities/datalist";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchDatalistById = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const api = useContext(PrivateApiContext);

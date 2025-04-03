@@ -4,7 +4,6 @@ import { PrivateApiContext } from "@/shared/api";
 
 import { DataListOptionCreateRqDV1 } from "../types";
 
-// TODO: Apply caching-strategy
 export const useCreateDatalistOption = () => {
   const api = useContext(PrivateApiContext);
 

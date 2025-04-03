@@ -8,7 +8,6 @@ import {
 } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-// TODO: Apply caching-strategy
 export const useTwinSearchV3 = () => {
   const api = useContext(PrivateApiContext);
 

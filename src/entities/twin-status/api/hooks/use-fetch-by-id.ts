@@ -5,7 +5,6 @@ import { isUndefined } from "@/shared/libs";
 
 import { TwinStatusV2 } from "../../api";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinStatusById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);

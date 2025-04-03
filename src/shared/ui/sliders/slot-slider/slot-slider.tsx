@@ -64,6 +64,22 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
     });
   }, [mainSlider]);
 
+  // TODO: Add keyboard / swipe navigation,
+  // useEffect(() => {
+  //   const handleKeyboardDown = (e: KeyboardEvent) => {
+  //     if (e.key === "ArrowLeft") {
+  //       handleActiveSlide(Math.max(activeSlide - 1, 0));
+  //     } else if (e.key === "ArrowRight") {
+  //       handleActiveSlide(Math.min(activeSlide + 1, typedItems.length - 1));
+  //     }
+  //   };
+
+  //   window.addEventListener("keydown", handleKeyboardDown);
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyboardDown);
+  //   };
+  // }, [activeSlide, handleActiveSlide, typedItems.length]);
+
   return isPopulatedArray(typedItems) ? (
     <>
       <Carousel setApi={setMainSlider} className="mb-2">

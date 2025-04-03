@@ -6,7 +6,6 @@ import { isUndefined } from "@/shared/libs";
 
 import { Permission_DETAILED, QueryPermissionViewV1 } from "../../api";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchPermissionById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);

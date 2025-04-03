@@ -6,7 +6,6 @@ import { isUndefined } from "@/shared/libs";
 
 import { TwinFlowTransition_DETAILED } from "../types";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinFlowTransitionById = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const api = useContext(PrivateApiContext);

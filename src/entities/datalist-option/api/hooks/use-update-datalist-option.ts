@@ -3,7 +3,6 @@ import { useCallback, useContext } from "react";
 import { DataListOptionUpdateRqV1 } from "@/entities/datalist-option";
 import { PrivateApiContext } from "@/shared/api";
 
-// TODO: Apply caching-strategy
 export const useUpdateDatalistOption = () => {
   const api = useContext(PrivateApiContext);
 
