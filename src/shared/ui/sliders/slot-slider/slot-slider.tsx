@@ -10,6 +10,8 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  FileQuestionIcon,
+  PdfIcon,
 } from "@/shared/ui";
 
 import { ImageSlide, ImageThumbnail } from "./views/image";
@@ -53,6 +55,21 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
     [mainSlider]
   );
 
+  useEffect(() => {
+    const handleKeyboardDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        handleActiveSlide(Math.max(activeSlide - 1, 0));
+      } else if (e.key === "ArrowRight") {
+        handleActiveSlide(Math.min(activeSlide + 1, typedItems.length - 1));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyboardDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyboardDown);
+    };
+  }, [activeSlide, handleActiveSlide, typedItems.length]);
+
   mainSlider?.on("select", () => {
     const selectedIndex = mainSlider.selectedScrollSnap();
     setActiveSlide(selectedIndex);
@@ -67,10 +84,7 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
             {isPopulatedArray(typedItems) ? (
               typedItems.map((item, index) => (
                 <CarouselItem key={index} className="pb-4">
-                  <SlotSliderItem
-                    item={item}
-                    isActive={activeSlide === index}
-                  />
+                  <SlotSliderItem item={item} />
                 </CarouselItem>
               ))
             ) : (
@@ -116,13 +130,7 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
 
 // HELPERS
 
-function SlotSliderItem({
-  item,
-  isActive,
-}: {
-  item: MediaItem & { type: string };
-  isActive?: boolean;
-}) {
+function SlotSliderItem({ item }: { item: MediaItem & { type: string } }) {
   switch (item.type) {
     case "image":
       return (
@@ -172,12 +180,11 @@ function SlotSliderThumbnail({
   if (item.type === "pdf") {
     return (
       <div
-        className={`relative w-full aspect-square border flex items-center justify-center text-xs text-gray-500 bg-white dark:bg-gray-900 ${
+        className={`relative w-full aspect-square border flex-column content-center justify-items-center text-xs text-gray-500 bg-white dark:bg-gray-900 ${
           isActive ? "ring-2 ring-sidebar-ring dark:ring-yellow-500" : ""
         }`}
       >
-        📄
-        {/* TODO: replace with icon https://www.svgrepo.com/svg/478188/pdf */}
+        <PdfIcon className="w-6 h-6" />
         {item.title}
       </div>
     );
@@ -189,8 +196,8 @@ function SlotSliderThumbnail({
         isActive && "ring-2 ring-sidebar-ring dark:ring-yellow-500"
       )}
     >
-      {/* TODO: replace with icon https://www.svgrepo.com/svg/532788/file-question */}
-      📄 {item.type}
+      <FileQuestionIcon className="w-6 h-6" />
+      {item.type}
     </div>
   );
 }

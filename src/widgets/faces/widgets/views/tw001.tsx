@@ -1,8 +1,7 @@
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { cn, safe } from "@/shared/libs";
-import { ImageSlide, ImageThumbnail, SlotSlider } from "@/shared/ui";
-import { ImageSlider } from "@/shared/ui/image-slider";
+import { SlotSlider } from "@/shared/ui";
 
 import { AlertError } from "../../components";
 import { widgetGridClasses } from "../../utils";
