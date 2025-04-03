@@ -27,6 +27,10 @@ import {
   createFactoryMultiplierApi,
 } from "@/entities/factory-multiplier";
 import {
+  FactoryMultiplierFilterApi,
+  createFactoryMultiplierFilterApi,
+} from "@/entities/factory-multiplier-filter";
+import {
   FactoryPipelineApi,
   createFactoryPipelineApi,
 } from "@/entities/factory-pipeline";
@@ -101,6 +105,7 @@ export interface PrivateApiContextProps {
   factoryBranch: FactoryBranchApi;
   factoryConditionSet: FactoryConditionSetApi;
   factoryMultiplier: FactoryMultiplierApi;
+  factoryMultiplierFilter: FactoryMultiplierFilterApi;
   pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
@@ -147,6 +152,7 @@ export function PrivateApiContextProvider({
         factoryBranch: createFactoryBranchApi(settings),
         factoryConditionSet: createFactoryConditionSetApi(settings),
         factoryMultiplier: createFactoryMultiplierApi(settings),
+        factoryMultiplierFilter: createFactoryMultiplierFilterApi(settings),
         pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),

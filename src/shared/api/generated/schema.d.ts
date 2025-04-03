@@ -2779,6 +2779,12 @@ export interface components {
        * @example start
        */
       alias?: string;
+      /**
+       * @description transition type
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       * @enum {string}
+       */
+      type?: "STATUS_CHANGE" | "OPERATION";
       allowComment?: boolean;
       allowAttachments?: boolean;
       allowLinks?: boolean;
@@ -2912,6 +2918,12 @@ export interface components {
        * @example start
        */
       alias?: string;
+      /**
+       * @description transition type
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       * @enum {string}
+       */
+      type?: "STATUS_CHANGE" | "OPERATION";
       allowComment?: boolean;
       allowAttachments?: boolean;
       allowLinks?: boolean;
@@ -6149,6 +6161,12 @@ export interface components {
        * @description Drafting TwinFactory Id
        */
       draftingTwinFactoryId?: string;
+      /**
+       * @description twinflow transition type id
+       * @example STATUS_CHANGE
+       * @enum {string}
+       */
+      twinflowTransitionTypeId?: "STATUS_CHANGE" | "OPERATION";
     };
     TransitionCreateRsV1: {
       /**
@@ -6236,6 +6254,12 @@ export interface components {
        * @example start
        */
       alias?: string;
+      /**
+       * @description transition type
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       * @enum {string}
+       */
+      type?: "STATUS_CHANGE" | "OPERATION";
       allowComment?: boolean;
       allowAttachments?: boolean;
       allowLinks?: boolean;
@@ -6525,6 +6549,12 @@ export interface components {
        * @example start
        */
       alias?: string;
+      /**
+       * @description transition type
+       * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+       * @enum {string}
+       */
+      type?: "STATUS_CHANGE" | "OPERATION";
       allowComment?: boolean;
       allowAttachments?: boolean;
       allowLinks?: boolean;
@@ -8184,6 +8214,12 @@ export interface components {
        * @description Drafting TwinFactory Id
        */
       draftingTwinFactoryId?: string;
+      /**
+       * @description twinflow transition type id
+       * @example STATUS_CHANGE
+       * @enum {string}
+       */
+      twinflowTransitionTypeId?: "STATUS_CHANGE" | "OPERATION";
       /** @description validator rules cud operations */
       validatorRules?: components["schemas"]["ValidatorCudV1"];
       /** @description triggers cud operations */
@@ -8372,6 +8408,10 @@ export interface components {
       draftingTwinFactoryIdList?: string[];
       /** @description drafting twin factory id exclude list */
       draftingTwinFactoryIdExcludeList?: string[];
+      /** @description twinflow transition type id list */
+      twinflowTransitionTypeList?: ("STATUS_CHANGE" | "OPERATION")[];
+      /** @description twinflow transition type id exclude list */
+      twinflowTransitionTypeExcludeList?: ("STATUS_CHANGE" | "OPERATION")[];
     };
     TransitionSearchRsV1: {
       /**
@@ -9734,6 +9774,12 @@ export interface components {
        * @enum {string}
        */
       active?: "ONLY" | "ONLY_NOT" | "ANY";
+      /**
+       * @description factory condition invert
+       * @example ANY
+       * @enum {string}
+       */
+      factoryConditionInvert?: "ONLY" | "ONLY_NOT" | "ANY";
     };
     FactoryMultiplierFilterSearchRsDTOv1: {
       /**
@@ -9757,7 +9803,54 @@ export interface components {
       /** @description pagination data */
       pagination?: components["schemas"]["PaginationV1"];
       /** @description results - condition list */
-      multiplierFilters?: components["schemas"]["FactoryV2"][];
+      multiplierFilters?: components["schemas"]["FactoryMultiplierFilterV2"][];
+    };
+    FactoryMultiplierFilterV2: {
+      /**
+       * Format: uuid
+       * @description id
+       * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      id?: string;
+      /**
+       * Format: uuid
+       * @description input twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      inputTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description multiplier id
+       * @example 66956a15-6858-40ba-b0aa-b123c54e250d
+       */
+      multiplierId?: string;
+      /**
+       * Format: uuid
+       * @description factory condition set id
+       * @example 69856a15-6858-40ba-b0aa-b123c54e250d
+       */
+      factoryConditionSetId?: string;
+      /**
+       * @description factory condition set invert
+       * @example true
+       */
+      factoryConditionSetInvert?: boolean;
+      /**
+       * @description active
+       * @example true
+       */
+      active?: boolean;
+      /**
+       * @description description
+       * @example Some description
+       */
+      description?: string;
+      /** @description multiplier */
+      multiplier?: components["schemas"]["FactoryMultiplierV2"];
+      /** @description factory condition set */
+      factoryConditionSet?: components["schemas"]["FactoryConditionSetV1"];
+      /** @description input twin class */
+      inputTwinClass?: components["schemas"]["TwinClassBaseV1"];
     };
     FactoryMultiplierSearchRqV1: {
       /** @description id list */
@@ -11791,7 +11884,7 @@ export interface components {
       /** @description results - related objects, if lazeRelation is false */
       relatedObjects?: components["schemas"]["RelatedObjectsV1"];
       /** @description result - multiplierFilter */
-      multiplierFilter?: components["schemas"]["FactoryV2"];
+      multiplierFilter?: components["schemas"]["FactoryMultiplierFilterV2"];
     };
     FactoryMultiplierViewRsV1: {
       /**
@@ -12137,30 +12230,9 @@ export interface components {
     FacePG002TabV1: {
       /**
        * Format: uuid
-       * @description config id
-       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       * @description id
        */
       id?: string;
-      /**
-       * @description component
-       * @example some domain
-       */
-      component?: string;
-      /** @description name */
-      name?: string;
-      /** @description description */
-      description?: string;
-      /**
-       * Format: date-time
-       * @description created at
-       * @example 2023-09-13T09:32:08
-       */
-      createdAt?: string;
-      /**
-       * Format: uuid
-       * @description createdByUserId
-       */
-      createdByUserId?: string;
       /** @description page title */
       title?: string;
       /** @description Icon url. Might be relative */
@@ -20094,6 +20166,7 @@ export interface operations {
         showFactoryMultiplier2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showFactoryMultiplierFilter2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryMultiplierFilter2FactoryMultiplierMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplierFilter2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showFactoryMultiplierFilterMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryMultiplierFiltersCountMode?: "HIDE" | "SHOW";
         showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -23602,6 +23675,7 @@ export interface operations {
         showFactoryMultiplier2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showFactoryMultiplierFilter2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryMultiplierFilter2FactoryMultiplierMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFactoryMultiplierFilter2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
         showFactoryMultiplierFilterMode?: "HIDE" | "SHORT" | "DETAILED";
         showFactoryMultiplierFiltersCountMode?: "HIDE" | "SHOW";
         showFactoryMultipliersCountMode?: "HIDE" | "SHOW";

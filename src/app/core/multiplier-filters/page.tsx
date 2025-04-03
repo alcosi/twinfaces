@@ -1,5 +1,5 @@
-import { UnderConstructionScreen as UnderConstruction } from "@/screens/under-construction";
+import { FactoryMultiplierFiltersScreen } from "@/screens/factory-multiplier-filters";
 
-export default function MultiplierFiltersPage() {
-  return <UnderConstruction />;
+export default function Page() {
+  return <FactoryMultiplierFiltersScreen />;
 }
