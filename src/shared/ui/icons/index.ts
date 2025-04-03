@@ -7,3 +7,5 @@ export * from "./settings";
 export * from "./shopping-bag-icon";
 export * from "./switch-horizontal";
 export * from "./tier-icon";
+export * from "./pdf-icon";
+export * from "./file-question-icon";

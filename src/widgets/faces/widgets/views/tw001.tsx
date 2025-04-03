@@ -1,17 +1,7 @@
-import Image from "next/image";
-
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { cn, safe } from "@/shared/libs";
-import {
-  Card,
-  CardContent,
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/shared/ui";
+import { SlotSlider } from "@/shared/ui";
 
 import { AlertError } from "../../components";
 import { widgetGridClasses } from "../../utils";
@@ -54,33 +44,28 @@ export async function TW001(props: TWidgetFaceProps) {
       )
     : allAttachments;
 
+  // TODO:
+  // Extract thumbnails into a separate component,
+  // Add keyboard / swipe navigation,
+  // Auto-play support,
+  // Or convert to a generic slider with slot-based customization.
+  // Make aspectRatio customizable,
+  // Handle zoom or full-screen image viewer.
+  // Add support for audio or PDFs
+  // Extract it as a reusable package
+  // ✅ Add support for captions,
   return (
     <div className={cn("max-w-[624px] h-full", widgetGridClasses(widget))}>
       {twidget.label && <p>{twidget.label}</p>}
-      <Carousel className="w-full max-w-full">
-        <CarouselContent>
-          {images.map((image) => (
-            <CarouselItem key={image.id}>
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-0">
-                  <div className="relative w-full h-full">
-                    <Image
-                      fill
-                      src={image.storageLink!}
-                      alt={image.title!}
-                      className="rounded-lg object-cover"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <div className="flex justify-center gap-4 mt-4 relative z-10">
-          <CarouselPrevious className="static mt-2" />
-          <CarouselNext className="static mt-2" />
-        </div>
-      </Carousel>
+      <SlotSlider
+        items={images.map((item) => ({
+          id: item.id!,
+          type: "image",
+          url: item.storageLink!,
+          title: item.title,
+          content: item.title,
+        }))}
+      />
     </div>
   );
 }
