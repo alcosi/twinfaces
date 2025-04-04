@@ -11,6 +11,7 @@ import { UserResourceLink } from "@/entities/user";
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI
 ): ZodType<string> | undefined {
+  console.log("foobar twinfield", twinField);
   switch (twinField.descriptor.fieldType) {
     case TwinFieldType.urlV1:
       return z.string().url();

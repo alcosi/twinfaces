@@ -30,6 +30,7 @@ type SlotSliderProps<T> = {
   items: T[];
 };
 
+// Support loading state for this component
 export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
   const [current, setCurrent] = useState<number>(0);
   const [mainSlider, setMainSlider] = useState<CarouselApi | null>(null);
