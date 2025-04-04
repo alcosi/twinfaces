@@ -2,7 +2,12 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { DomainUserFilters, PermissionGrantUserFilters } from "./types";
+import {
+  DomainUserFilters,
+  DomainUserViewQuery,
+  PermissionGrantUserFilters,
+  User,
+} from "./types";
 
 export function createUserApi(settings: ApiSettings) {
   async function searchDomainUsers({
@@ -60,7 +65,33 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
-  return { searchDomainUsers, searchPermissionGrants };
+  function getById({
+    id,
+    query = {},
+  }: {
+    id: string;
+    query?: DomainUserViewQuery;
+  }) {
+    return settings.client.GET(`/private/domain/user/{userId}/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId: id },
+        query: query,
+      },
+    });
+  }
+
+  function update({ id, body }: { id: string; body: User }) {
+    return settings.client.PUT(`/private/user/{userId}/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId: id },
+      },
+      body: body,
+    });
+  }
+
+  return { searchDomainUsers, searchPermissionGrants, getById, update };
 }
 
 export type UserApi = ReturnType<typeof createUserApi>;

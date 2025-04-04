@@ -1,7 +1,7 @@
 "use client";
 
-import { Users } from "@/screens/users";
+import { UsersScreen } from "@/screens/users";
 
-export default function UsersPage() {
-  return <Users />;
+export default function Page() {
+  return <UsersScreen />;
 }

@@ -1,8 +1,11 @@
+import { User as UserIcon } from "lucide-react";
+
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { Avatar, ResourceLink } from "@/shared/ui";
-import { User as UserIcon } from "lucide-react";
-import { UserResourceTooltip } from "./tooltip";
+
 import { User } from "../../api";
+import { UserResourceTooltip } from "./tooltip";
 
 type Props = {
   data: User;
@@ -19,7 +22,7 @@ export const UserResourceLink = ({
 }: Props) => {
   if (isUndefined(data)) return null;
 
-  const link = `/under-construction`;
+  const link = `/${PlatformArea.core}/users/${data.id}`;
 
   return (
     <ResourceLink

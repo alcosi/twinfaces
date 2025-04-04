@@ -122,10 +122,10 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
       return onRowClick(row);
     }
 
-    if (row?.id) {
-      const basePath = pathname.replace(/\/$/, "");
-      router.push(`${basePath}/${row.id}`);
-    }
+    const rowId = props.getRowId(row, 0);
+    const basePath = pathname.replace(/\/$/, "");
+
+    router.push(`${basePath}/${rowId}`);
   }
 
   return (
