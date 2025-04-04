@@ -30,6 +30,7 @@ type SlotSliderProps<T> = {
   items: T[];
 };
 
+// TODO: Support loading state for this component
 export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
   const [current, setCurrent] = useState<number>(0);
   const [mainSlider, setMainSlider] = useState<CarouselApi | null>(null);
@@ -63,6 +64,22 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
       thumbSlider?.scrollTo(index);
     });
   }, [mainSlider]);
+
+  // TODO: Add keyboard / swipe navigation,
+  // useEffect(() => {
+  //   const handleKeyboardDown = (e: KeyboardEvent) => {
+  //     if (e.key === "ArrowLeft") {
+  //       handleActiveSlide(Math.max(activeSlide - 1, 0));
+  //     } else if (e.key === "ArrowRight") {
+  //       handleActiveSlide(Math.min(activeSlide + 1, typedItems.length - 1));
+  //     }
+  //   };
+
+  //   window.addEventListener("keydown", handleKeyboardDown);
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyboardDown);
+  //   };
+  // }, [activeSlide, handleActiveSlide, typedItems.length]);
 
   return isPopulatedArray(typedItems) ? (
     <>

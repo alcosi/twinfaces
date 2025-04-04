@@ -6,7 +6,6 @@ import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { TwinStatusFilters, TwinStatus_DETAILED } from "../../api";
 import { hydrateTwinStatusFromMap } from "../../libs";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useTwinStatusSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

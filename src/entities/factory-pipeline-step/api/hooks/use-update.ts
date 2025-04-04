@@ -4,7 +4,6 @@ import { PrivateApiContext } from "@/shared/api";
 
 import { FactoryPipelineStepUpdateRq } from "../types";
 
-// TODO: Apply caching-strategy
 export const useFactoryPipelineStepUpdate = () => {
   const api = useContext(PrivateApiContext);
 

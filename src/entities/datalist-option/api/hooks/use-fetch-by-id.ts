@@ -4,7 +4,6 @@ import { DataListOptionV3 } from "@/entities/datalist-option";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-// TODO: Apply caching-strategy
 export const useDatalistOption = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);

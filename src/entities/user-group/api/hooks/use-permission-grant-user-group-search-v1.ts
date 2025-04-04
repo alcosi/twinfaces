@@ -9,7 +9,6 @@ import {
   PermissionGrantUserGroup_DETAILED,
 } from "../types";
 
-// TODO: Apply caching-strategy
 export const usePermissionGrantUserGroupSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

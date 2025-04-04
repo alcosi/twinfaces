@@ -5,7 +5,7 @@ import { isPopulatedString, safe } from "@/shared/libs";
 
 import { AlertError } from "../components";
 import { TWidgetFaceProps, Widget, WidgetFaceProps } from "./types";
-import { TW001, TW002, WT001 } from "./views";
+import { TW001, TW002, TW004, WT001 } from "./views";
 
 const WIDGETS: Record<string, FC<WidgetFaceProps>> = {
   WT001,
@@ -14,6 +14,7 @@ const WIDGETS: Record<string, FC<WidgetFaceProps>> = {
 const TWIDGETS: Record<string, FC<TWidgetFaceProps>> = {
   TW001,
   TW002,
+  TW004,
 };
 
 type Props = {

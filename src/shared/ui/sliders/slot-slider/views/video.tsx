@@ -33,7 +33,7 @@ export function VideoThumbnail({
       muted
       className={cn(
         "h-full w-full rounded-lg object-cover",
-        isActive && "ring-brand ring-2"
+        isActive && "ring-brand-500 ring-2"
       )}
       title="Video thumbnail"
     />

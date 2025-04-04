@@ -5,7 +5,6 @@ import { Twin } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
-// TODO: Apply caching-strategy
 export const useFetchValidHeadTwins = () => {
   const api = useContext(PrivateApiContext);
 

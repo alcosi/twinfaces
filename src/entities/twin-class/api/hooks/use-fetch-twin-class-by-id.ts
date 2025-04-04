@@ -7,7 +7,6 @@ import { isUndefined } from "@/shared/libs";
 import { hydrateTwinClassFromMap } from "../../libs";
 import { TwinClass_DETAILED } from "../types";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchTwinClassById = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const api = useContext(PrivateApiContext);

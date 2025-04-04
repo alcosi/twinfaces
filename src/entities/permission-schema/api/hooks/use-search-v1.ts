@@ -7,7 +7,6 @@ import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
 import { PermissionSchema, PermissionSchemaSearchFilters } from "../types";
 
-// TODO: Apply caching-strategy
 export const usePermissionSchemaSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

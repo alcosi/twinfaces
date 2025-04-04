@@ -7,7 +7,6 @@ import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { hydrateTwinFlowSchemaFromMap } from "../../libs";
 import { TwinFlowSchemaFilters, TwinFlowSchema_DETAILED } from "../types";
 
-// TODO: Apply caching-strategy
 export const useTwinFlowSchemaSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

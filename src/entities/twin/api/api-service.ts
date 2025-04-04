@@ -78,6 +78,7 @@ export function createTwinApi(settings: ApiSettings) {
         path: { twinId: twinId },
         query: {
           lazyRelation: false,
+          showTwinMode: "DETAILED",
           showTwin2TwinClassMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
           showTwinFieldCollectionMode: "ALL_FIELDS",

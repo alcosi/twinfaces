@@ -4,7 +4,6 @@ import { PrivateApiContext } from "@/shared/api";
 
 import { TwinClassFieldUpdateRq } from "../types";
 
-// TODO: Apply caching-strategy
 export const useFieldUpdate = () => {
   const api = useContext(PrivateApiContext);
 

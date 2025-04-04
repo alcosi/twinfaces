@@ -3,7 +3,6 @@ import { useCallback, useContext } from "react";
 import { TwinLinkView } from "@/entities/link";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-// TODO: Apply caching-strategy
 export const useFetchTwinLinks = () => {
   const api = useContext(PrivateApiContext);
 

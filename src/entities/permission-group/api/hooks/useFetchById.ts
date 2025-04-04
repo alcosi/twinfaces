@@ -1,9 +1,10 @@
-import { isUndefined } from "@/shared/libs";
 import { useCallback } from "react";
+
+import { isUndefined } from "@/shared/libs";
+
 import { PermissionGroup_DETAILED } from "../types";
 import { usePermissionGroupSearchV1 } from "./useSearchV1";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchPermissionGroupById = () => {
   const { searchPermissionGroups } = usePermissionGroupSearchV1();
 

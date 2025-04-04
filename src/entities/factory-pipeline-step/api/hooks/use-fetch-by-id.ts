@@ -6,7 +6,6 @@ import { isUndefined } from "@/shared/libs";
 
 import { FactoryPipelineStepRqQuery, PipelineStep_DETAILED } from "../../api";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchFactoryPipelineStepById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 
+// TODO: replace with RSC
 export async function GET(req: NextRequest) {
   const url = req.nextUrl.searchParams.get("url");
 

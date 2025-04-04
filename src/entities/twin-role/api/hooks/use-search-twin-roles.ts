@@ -9,7 +9,6 @@ import {
   PermissionGrantTwinRoles_DETAILED,
 } from "../types";
 
-// TODO: Apply caching-strategy
 export const usePermissionGrantTwinRolesSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

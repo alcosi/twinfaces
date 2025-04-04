@@ -6,7 +6,6 @@ import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 import { TierFilters, Tier_DETAILED } from "../types";
 
-// TODO: Apply caching-strategy
 export const useTierSearch = () => {
   const api = useContext(PrivateApiContext);
 

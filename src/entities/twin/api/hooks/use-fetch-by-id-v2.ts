@@ -3,7 +3,6 @@ import { useCallback, useState } from "react";
 import { Twin_DETAILED, fetchTwinById as fetch } from "@/entities/twin/server";
 import { clientCookies } from "@/shared/libs";
 
-// TODO: Apply caching-strategy
 export const useTwinFetchByIdV2 = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const domainId = clientCookies.get("domainId");

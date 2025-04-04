@@ -10,7 +10,6 @@ import {
   TwinClassFieldV2_DETAILED,
 } from "../types";
 
-// TODO: Apply caching-strategy
 export const useTwinClassFieldSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 

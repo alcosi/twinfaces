@@ -8,7 +8,6 @@ import {
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-// TODO: Apply caching-strategy after discussing with team
 export const useFetchPermissionSchemaById = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const api = useContext(PrivateApiContext);
