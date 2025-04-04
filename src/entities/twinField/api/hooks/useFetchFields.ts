@@ -32,7 +32,6 @@ export const useFetchFields = () => {
         hydrateTwinFieldFromMap({
           dto,
           relatedObjects: data.relatedObjects,
-          twinClassId: data?.twin?.twinClassId,
         })
       );
 
