@@ -103,7 +103,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
 
   return {
     search,
-    getFields,
+    // getFields,
     getById,
     create,
     update,

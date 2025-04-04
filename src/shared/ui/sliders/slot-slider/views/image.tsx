@@ -44,7 +44,7 @@ export function ImageThumbnail({
         alt={alt}
         className={cn(
           "rounded-lg object-cover",
-          isActive && "ring-brand-500-500 ring-2"
+          isActive && "ring-brand-500 ring-2"
         )}
       />
     </div>
