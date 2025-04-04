@@ -103,7 +103,7 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
           {typedItems.map((item, index) => (
             <CarouselItem
               key={index}
-              className="cursor-pointer py-0.5 md:basis-1/4"
+              className="h-full min-w-24 cursor-pointer py-0.5 md:basis-1/4"
               onClick={() => handleThumbClick(index)}
             >
               <SlotSliderThumbnail item={item} isActive={current === index} />
