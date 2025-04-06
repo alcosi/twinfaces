@@ -37,15 +37,17 @@ export function ImageThumbnail({
   isActive?: boolean;
 }) {
   return (
-    <div className={`relative aspect-square rounded-lg bg-secondary`}>
+    <div
+      className={cn(
+        "relative aspect-square h-full w-full rounded-lg border-2 border-transparent",
+        isActive && "border-brand-500"
+      )}
+    >
       <Image
         fill
         src={src}
         alt={alt}
-        className={cn(
-          "rounded-lg object-cover",
-          isActive && "ring-brand-500 ring-2"
-        )}
+        className={cn("rounded-lg object-cover")}
       />
     </div>
   );

@@ -1,12 +1,11 @@
 import { fetchTW004Face, getAuthHeaders } from "@/entities/face";
 import { Twin } from "@/entities/twin/server";
+import { TwinFieldEditor } from "@/features/twin/ui";
 import { TwinsAPI } from "@/shared/api";
-import { cn, isTruthy, isUndefined, safe } from "@/shared/libs";
+import { isTruthy, isUndefined, safe } from "@/shared/libs";
 
-import { AlertError } from "../../../components";
-import { widgetGridClasses } from "../../../utils";
-import { TWidgetFaceProps } from "../../types";
-import { TW004Client } from "./tw004-client";
+import { AlertError } from "../../components";
+import { TWidgetFaceProps } from "../types";
 
 const STATIC_FIELD_MAP: Record<string, string> = {
   "00000000-0000-0000-0011-000000000003": "name",
@@ -66,7 +65,6 @@ async function loadFieldInfo(
   return { key: dynamicKey, value: dynamicValue };
 }
 
-// TODO: Refactor — component is currently unstructured and needs cleanup.
 export async function TW004(props: TWidgetFaceProps) {
   const { twinId, widget } = props;
 
@@ -84,7 +82,7 @@ export async function TW004(props: TWidgetFaceProps) {
   );
 
   return (
-    <TW004Client
+    <TwinFieldEditor
       id={twidget.id!}
       twinId={twidget.pointedTwinId!}
       label={twidget.label}

@@ -2,5 +2,6 @@
 
 export * from "./use-debounce";
 export * from "./use-is-client";
+export * from "./use-keyboard-navigation";
 export * from "./use-local-storage";
 export * from "./use-mobile";
