@@ -65,7 +65,6 @@ async function loadFieldInfo(
   return { key: dynamicKey, value: dynamicValue };
 }
 
-// TODO: Refactor — component is currently unstructured and needs cleanup.
 export async function TW004(props: TWidgetFaceProps) {
   const { twinId, widget } = props;
 
