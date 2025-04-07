@@ -1,5 +1,26 @@
 "use client";
 
+import {
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  PaginationState,
+  Row,
+  getExpandedRowModel,
+  isFunction,
+} from "@tanstack/table-core";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import React, {
+  ForwardedRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
+
 import { PaginationV1 } from "@/shared/api";
 import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -11,26 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/table";
-import {
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  getExpandedRowModel,
-  isFunction,
-  PaginationState,
-  Row,
-} from "@tanstack/table-core";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import React, {
-  ForwardedRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from "react";
+
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableHandle, DataTableProps, DataTableRow } from "./types";
 
@@ -45,6 +47,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     pageSizes = [10, 25, 50],
     onFetchError,
     onRowClick,
+    isRedirectDisabled,
   }: DataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
@@ -141,7 +144,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
         key={row.id}
         data-state={row.getIsSelected() && "selected"}
         onClick={() => onRowClick?.(row.original)}
-        className={cn(onRowClick && "cursor-pointer")}
+        className={cn(isRedirectDisabled || (onRowClick && "cursor-pointer"))}
       >
         {row.getVisibleCells().map((cell) => (
           <TableCell key={cell.id}>

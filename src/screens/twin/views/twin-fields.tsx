@@ -96,6 +96,7 @@ export function TwinFields() {
         getRowId={(row) => row.id}
         fetcher={fetchFields}
         disablePagination={true}
+        isRedirectDisabled={true}
       />
     </InPlaceEditContextProvider>
   );

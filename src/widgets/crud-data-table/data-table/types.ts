@@ -1,6 +1,7 @@
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+
 import { PagedResponse } from "@/shared/api";
 import { Identifiable } from "@/shared/libs";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
 
 export type DataTableHandle = {
   refresh: () => void;
@@ -22,4 +23,5 @@ export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
   pageSizes?: number[];
   onFetchError?: (e: Error) => void;
   onRowClick?: (row: TData) => void;
+  isRedirectDisabled?: boolean;
 }
