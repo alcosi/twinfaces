@@ -1,5 +1,26 @@
 "use client";
 
+import {
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  PaginationState,
+  Row,
+  getExpandedRowModel,
+  isFunction,
+} from "@tanstack/table-core";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import React, {
+  ForwardedRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
+
 import { PaginationV1 } from "@/shared/api";
 import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -11,26 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/table";
-import {
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  getExpandedRowModel,
-  isFunction,
-  PaginationState,
-  Row,
-} from "@tanstack/table-core";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import React, {
-  ForwardedRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from "react";
+
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableHandle, DataTableProps, DataTableRow } from "./types";
 

@@ -53,26 +53,31 @@ export function TwinFields() {
       header: "Value",
       cell: ({ row: { original } }) => {
         return (
-          <InPlaceEdit
-            id={original.key}
-            value={original.value}
-            valueInfo={{
-              type: AutoFormValueType.twinField,
-              descriptor: original.descriptor,
-              twinId,
-            }}
-            schema={resolveTwinFieldSchema(original)}
-            renderPreview={(_) => renderTwinFieldPreview(original)}
-            onSubmit={(fieldValue) =>
-              upsertTwinField({
+          <div
+            className="inline-block min-w-[300px] w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <InPlaceEdit
+              id={original.key}
+              value={original.value}
+              valueInfo={{
+                type: AutoFormValueType.twinField,
+                descriptor: original.descriptor,
                 twinId,
-                fieldKey: original.key,
-                fieldValue: isPopulatedString(fieldValue)
-                  ? fieldValue
-                  : fieldValue.id!,
-              }).then(tableRef.current?.refresh)
-            }
-          />
+              }}
+              schema={resolveTwinFieldSchema(original)}
+              renderPreview={(_) => renderTwinFieldPreview(original)}
+              onSubmit={(fieldValue) =>
+                upsertTwinField({
+                  twinId,
+                  fieldKey: original.key,
+                  fieldValue: isPopulatedString(fieldValue)
+                    ? fieldValue
+                    : fieldValue.id!,
+                }).then(tableRef.current?.refresh)
+              }
+            />
+          </div>
         );
       },
     },

@@ -1,6 +1,7 @@
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+
 import { PagedResponse } from "@/shared/api";
 import { Identifiable } from "@/shared/libs";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
 
 export type DataTableHandle = {
   refresh: () => void;

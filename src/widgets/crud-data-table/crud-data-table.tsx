@@ -8,7 +8,6 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
-  useReducer,
   useRef,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -23,11 +22,7 @@ import {
   DataTableRow,
 } from "./data-table";
 import { CrudDataTableDialog, CrudDataTableDialogRef } from "./dialog";
-import {
-  CrudDataTableHeader,
-  CrudDataTableHeaderProps,
-  FilterState,
-} from "./header";
+import { CrudDataTableHeader, CrudDataTableHeaderProps } from "./header";
 import { getColumnKey, groupDataByKey } from "./helpers";
 import { useViewSettings } from "./hooks";
 
