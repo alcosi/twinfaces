@@ -23,5 +23,4 @@ export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
   pageSizes?: number[];
   onFetchError?: (e: Error) => void;
   onRowClick?: (row: TData) => void;
-  isRedirectDisabled?: boolean;
 }

@@ -42,7 +42,6 @@ type CrudDataTableProps<
     dialogForm?: UseFormReturn<any>;
     onCreateSubmit?: (values: any) => Promise<void>;
     renderFormFields?: () => ReactNode;
-    isRedirectDisabled?: boolean;
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -55,7 +54,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onCreateSubmit,
     renderFormFields,
     onRowClick,
-    isRedirectDisabled,
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -120,10 +118,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     : undefined;
 
   function handleOnRowClick(row: TData) {
-    if (isRedirectDisabled) {
-      return;
-    }
-
     if (onRowClick) {
       return onRowClick(row);
     }
@@ -156,7 +150,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         columns={visibleColumns}
         fetcher={fetchWrapper}
         onRowClick={handleOnRowClick}
-        isRedirectDisabled={isRedirectDisabled}
       />
 
       <CrudDataTableDialog

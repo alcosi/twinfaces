@@ -47,7 +47,6 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     pageSizes = [10, 25, 50],
     onFetchError,
     onRowClick,
-    isRedirectDisabled,
   }: DataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
@@ -144,7 +143,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
         key={row.id}
         data-state={row.getIsSelected() && "selected"}
         onClick={() => onRowClick?.(row.original)}
-        className={cn(isRedirectDisabled || (onRowClick && "cursor-pointer"))}
+        className={cn(onRowClick && "cursor-pointer")}
       >
         {row.getVisibleCells().map((cell) => (
           <TableCell key={cell.id}>
