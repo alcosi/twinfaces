@@ -2,7 +2,8 @@ import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
 
-import { getDomainFromHeaders } from "@/entities/face";
+import { fetchDomains } from "@/entities/domain";
+import { getDomainFromHeaders, getDomainIdFromCookies } from "@/entities/face";
 import { getProductFlavorConfig } from "@/shared/config";
 import { cn } from "@/shared/libs";
 import { PublicLayoutProviders } from "@/widgets/layout";
@@ -20,21 +21,31 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const domainInfo = await getDomainFromHeaders();
+  const domainIdFromCookie = await getDomainIdFromCookies();
   const config = getProductFlavorConfig(domainInfo);
+  const domains = await fetchDomains();
+
+  const selectedDomain = domains.domains?.find(
+    (item) => item.id === domainIdFromCookie
+  );
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <PublicEnvScript />
-        <title>{config.key ?? config.productName}</title>
+        <title>{selectedDomain?.key ?? config.key ?? config.productName}</title>
         <meta
           name="description"
-          content={config.description ?? config.productName}
+          content={
+            selectedDomain?.description ??
+            config.description ??
+            config.productName
+          }
         />
         <link
           rel="icon"
           type="image/svg+xml"
-          href={config.iconLight ?? config.favicon}
+          href={selectedDomain?.iconLight ?? config.iconLight ?? config.favicon}
         />
       </head>
       <body
@@ -43,7 +54,7 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
-        <PublicLayoutProviders config={config}>
+        <PublicLayoutProviders config={config} domains={domains.domains ?? []}>
           {children}
         </PublicLayoutProviders>
       </body>

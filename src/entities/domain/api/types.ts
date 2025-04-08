@@ -18,8 +18,11 @@ export type DomainView_DETAILED = RequireFields<
   | "type"
 >;
 
+export type DomainPublicView = components["schemas"]["DomainViewPublicV1"];
+
 export type DomainAddRqV1 = components["schemas"]["DomainCreateRqDTOv1"];
 export type DomainViewQuery =
   operations["domainViewPublicV1"]["parameters"]["query"];
 
 export type DomainViewRs = components["schemas"]["DomainViewRsv1"];
+export type DomainSearchRs = components["schemas"]["DomainSearchRsV1"];

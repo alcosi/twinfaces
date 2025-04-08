@@ -1,25 +1,33 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Globe } from "lucide-react";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { TextFormField } from "@/components/form-fields";
+import { ComboboxFormField, TextFormField } from "@/components/form-fields";
 
+import { DomainPublicView, useDomainSelectAdapter } from "@/entities/domain";
 import { DomainUser_DETAILED, hydrateDomainUserFromMap } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
+import { useDomainPublic } from "@/features/domain";
+import { ThemeToggle } from "@/features/ui/theme-toggle";
 import { PublicApiContext } from "@/shared/api";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
-import { isPopulatedArray, isUndefined } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
 import { Button, Form } from "@/shared/ui";
 
 const FORM_SCHEMA = z.object({
   userId: z.string().uuid("Please enter a valid UUID"),
   businessAccountId: z.string().uuid("Please enter a valid UUID").optional(),
-  domainId: z.string().uuid("Please enter a valid UUID"),
+  domainId: z
+    .string()
+    .uuid("Domain ID must be a valid UUID")
+    .or(FIRST_ID_EXTRACTOR),
 });
 type FormValues = z.infer<typeof FORM_SCHEMA>;
 
@@ -29,6 +37,13 @@ export function Login() {
   const { setAuthUser, logout } = useAuthUser();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const config = useContext(ProductFlavorConfigContext);
+  const domainAdapter = useDomainSelectAdapter();
+  const [selectedDomain, setSelectedDomain] = useState<DomainPublicView | null>(
+    null
+  );
+  const { domains } = useDomainPublic();
+  const domainRef = useRef<string | null>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     // Clear any existing user session
@@ -43,6 +58,28 @@ export function Login() {
     },
     resolver: zodResolver(FORM_SCHEMA),
   });
+
+  const domainWatch = useWatch({ control: form.control, name: "domainId" });
+
+  useEffect(() => {
+    if (domainWatch && domains.length > 0) {
+      const domainId = (domainWatch as unknown as Array<{ id: string }>)[0]?.id;
+      const domain = domains.find((item) => item.id === domainId);
+
+      if (domain && domain.id !== domainRef.current) {
+        setSelectedDomain(domain);
+        domainRef.current = domain.id!;
+
+        saveDomainIdToCookies(domain.id!);
+
+        router.refresh();
+      }
+    }
+  }, [domainWatch, domains, router]);
+
+  const saveDomainIdToCookies = (domainId: string) => {
+    document.cookie = `domainId=${domainId}; path=/; max-age=600`;
+  };
 
   async function onSubmit(values: FormValues) {
     setIsLoggingIn(true);
@@ -80,11 +117,19 @@ export function Login() {
   }
 
   return (
-    <main className="flex flex-col justify-center items-center h-screen w-screen">
+    <main className="flex flex-col justify-center items-center h-screen w-screen relative">
+      <div className="absolute flex top-3 right-6">
+        <ThemeToggle />
+      </div>
+
       <div className="flex flex-col my-5 items-center -mt-32 min-w-96">
         <Image
           className="rounded-full"
-          src={config.iconLight ?? config.favicon}
+          src={
+            (theme === "light"
+              ? selectedDomain?.iconLight
+              : selectedDomain?.iconDark) ?? config.favicon
+          }
           width={56}
           height={56}
           alt="Domain icon"
@@ -110,13 +155,17 @@ export function Login() {
               label="Business Account Id"
             />
 
-            {isUndefined(config.id) && (
-              <TextFormField
+            <div className="absolute flex items-center top-0 left-3 w-full max-w-xs z-10 space-x-3">
+              <Globe />
+              <ComboboxFormField
                 control={form.control}
                 name="domainId"
-                label="Domain Id"
+                selectPlaceholder="Select domain..."
+                searchPlaceholder="Search..."
+                noItemsText="No data found"
+                {...domainAdapter}
               />
-            )}
+            </div>
 
             <Button
               type="submit"
