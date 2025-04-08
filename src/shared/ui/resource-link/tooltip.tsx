@@ -11,8 +11,6 @@ import { toast } from "sonner";
 import { isElementType, stopPropagation } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
 
-import { TOOLTIP_COLORS_BY_THEME } from "./constans";
-
 export type ResourceLinkTooltipProps = PropsWithChildren<{
   uuid: string;
   link?: string;
@@ -42,14 +40,8 @@ export function ResourceLinkTooltip({
 
   return (
     <div
-      className="text-xs w-72 py-2 px-4 space-y-1.5 dark:bg-[linear-gradient(to_bottom,var(--tooltip-dark)_56px,transparent_56px)] bg-[linear-gradient(to_bottom,var(--tooltip-light)_56px,transparent_56px)]"
+      className="text-xs w-72 py-2 px-4 space-y-1.5 bg-[linear-gradient(to_bottom,hsl(var(--brand-500))_0px,hsl(var(--brand-500))_56px,transparent_56px)]"
       onClick={(e) => e.stopPropagation()}
-      style={
-        {
-          "--tooltip-light": TOOLTIP_COLORS_BY_THEME.LIGHT,
-          "--tooltip-dark": TOOLTIP_COLORS_BY_THEME.DARK,
-        } as React.CSSProperties
-      }
     >
       {children}
 
