@@ -1,8 +1,7 @@
 import React from "react";
 
-import { ThemeProvider } from "@/components/theme-provider";
-
 import { PublicApiContextProvider } from "@/features/api";
+import { ThemeProvider } from "@/features/ui/theme-provider";
 import { ProductFlavorConfigProvider } from "@/shared/config";
 import { ProductFlavorConfig } from "@/shared/config/types";
 import { TooltipProvider } from "@/shared/ui";

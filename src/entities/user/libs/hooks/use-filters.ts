@@ -1,10 +1,13 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
 import {
+  type FilterFeature,
   toArrayOfString,
   wrapWithPercent,
-  type FilterFeature,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import { DomainUserFilterKeys, DomainUserFilters } from "../../api";
 
 type Keys = Extract<DomainUserFilterKeys, "userIdList" | "nameLikeList">;

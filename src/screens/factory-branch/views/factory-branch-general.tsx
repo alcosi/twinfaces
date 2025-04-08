@@ -1,4 +1,8 @@
+import { useContext } from "react";
+import { z } from "zod";
+
 import { AutoFormValueType } from "@/components/auto-field";
+
 import {
   FactoryResourceLink,
   useFactorySelectAdapter,
@@ -15,8 +19,6 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
-import { useContext } from "react";
-import { z } from "zod";
 
 export function FactoryBranchGeneral() {
   const { factoryBranch, refresh } = useContext(FactoryBranchContext);

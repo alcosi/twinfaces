@@ -2,10 +2,10 @@ import React from "react";
 
 import {
   ColorPickerFormItem,
+  ComboboxFormItem,
   FormItemProps,
   TextFormItem,
 } from "@/components/form-fields";
-import { ComboboxFormItem } from "@/components/form-fields/combobox";
 
 import {
   DataListOptionV3,

@@ -86,7 +86,7 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
           {items.map((item, index) => (
             <CarouselItem
               key={index}
-              className="w-20 basis-1/4 h-full min-w-24 cursor-pointer items-stretch"
+              className="min-w-24 basis-1/4 h-20 cursor-pointer items-stretch"
               onClick={() => handleThumbClick(index)}
             >
               <SlotSliderThumbnail item={item} isActive={current === index} />

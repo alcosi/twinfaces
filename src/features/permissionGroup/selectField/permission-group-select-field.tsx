@@ -1,11 +1,13 @@
+import { useEffect, useState } from "react";
+import { Control, FieldValues, Path, useWatch } from "react-hook-form";
+
 import { ComboboxFormField, TextFormItem } from "@/components/form-fields";
+
 import {
   PermissionGroup_DETAILED,
   useFetchPermissionGroupById,
   usePermissionGroupSearchV1,
 } from "@/entities/permission-group";
-import { useEffect, useState } from "react";
-import { Control, FieldValues, Path, useWatch } from "react-hook-form";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;

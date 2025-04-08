@@ -1,4 +1,8 @@
+import { Control, useWatch } from "react-hook-form";
+import { z } from "zod";
+
 import { ComboboxFormField, TextFormField } from "@/components/form-fields";
+
 import {
   LINK_SCHEMA,
   useLinkStrengthSelectAdapter,
@@ -6,8 +10,6 @@ import {
 } from "@/entities/link";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
-import { Control, useWatch } from "react-hook-form";
-import { z } from "zod";
 
 export function CreateLinkFormFields({
   control,

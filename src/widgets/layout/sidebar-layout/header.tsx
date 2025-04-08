@@ -4,9 +4,8 @@ import { House } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-import { ThemeToggle } from "@/components/theme-toggle";
-
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { ThemeToggle } from "@/features/ui/theme-toggle";
 import { cn } from "@/shared/libs";
 import {
   Breadcrumb,

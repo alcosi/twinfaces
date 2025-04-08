@@ -1,11 +1,14 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
 import {
+  type FilterFeature,
   toArray,
   toArrayOfString,
   wrapWithPercent,
-  type FilterFeature,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import { PermissionGroupFilterKeys, PermissionGroupFilters } from "../../api";
 
 export function usePermissionGroupFilters(): FilterFeature<

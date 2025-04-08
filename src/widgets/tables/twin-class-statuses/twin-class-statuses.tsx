@@ -6,8 +6,6 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { ImageWithFallback } from "@/components/image-with-fallback";
-
 import {
   TwinClassResourceLink,
   TwinClass_DETAILED,
@@ -21,6 +19,7 @@ import {
   useStatusFilters,
   useTwinStatusSearchV1,
 } from "@/entities/twin-status";
+import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
