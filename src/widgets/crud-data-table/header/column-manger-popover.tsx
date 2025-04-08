@@ -1,7 +1,3 @@
-import { CheckboxFormItem } from "@/components/form-fields";
-import { cn } from "@/shared/libs";
-import { Button } from "@/shared/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -11,6 +7,12 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { EyeIcon, GripVertical } from "lucide-react";
 import { useState } from "react";
+
+import { CheckboxFormItem } from "@/components/form-fields";
+
+import { cn } from "@/shared/libs";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 interface Column {
   id: string;

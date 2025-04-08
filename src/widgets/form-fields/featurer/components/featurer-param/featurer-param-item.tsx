@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   CheckboxFormItem,
   ComboboxFormItem,
@@ -5,9 +7,10 @@ import {
   TagsFormItem,
   TextFormItem,
 } from "@/components/form-fields";
+
 import { FeaturerParam, FeaturerParamType } from "@/entities/featurer";
 import { Button } from "@/shared/ui";
-import React from "react";
+
 import { useFeaturerParamTypesSelectAdapter } from "../../hooks";
 
 export type FeaturerParamFormItemProps = {

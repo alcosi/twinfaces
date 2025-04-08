@@ -1,16 +1,18 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import {
+  PermissionSchemaFilterKeys,
+  PermissionSchemaFilters,
+} from "@/entities/permission-schema";
+import { useUserSelectAdapter } from "@/entities/user";
 import {
   type FilterFeature,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import {
-  PermissionSchemaFilterKeys,
-  PermissionSchemaFilters,
-} from "@/entities/permission-schema";
-import { z } from "zod";
-import { useUserSelectAdapter } from "@/entities/user";
 
 export function usePermissionSchemaFilters(): FilterFeature<
   PermissionSchemaFilterKeys,

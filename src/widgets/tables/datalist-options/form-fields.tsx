@@ -1,10 +1,11 @@
-import { TextFormField } from "@/components/form-fields";
-import { ComboboxFormField } from "@/components/form-fields/combobox";
+import { Control, useWatch } from "react-hook-form";
+import { z } from "zod";
+
+import { ComboboxFormField, TextFormField } from "@/components/form-fields";
+
 import { DataList, useDatalistSelectAdapter } from "@/entities/datalist";
 import { DATALIST_OPTION_SCHEMA } from "@/entities/datalist-option";
 import { isPopulatedArray } from "@/shared/libs";
-import { Control, useWatch } from "react-hook-form";
-import { z } from "zod";
 
 export function DatalistOptionFormFields({
   control,

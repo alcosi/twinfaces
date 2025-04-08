@@ -1,4 +1,7 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
   FilterFeature,
@@ -6,7 +9,7 @@ import {
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import { LinkFilterKeys, LinkFilters } from "../../api";
 import {
   useLinkStrengthSelectAdapter,

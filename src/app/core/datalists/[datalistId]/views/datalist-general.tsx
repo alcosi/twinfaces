@@ -1,14 +1,14 @@
 "use client";
 
-import { DatalistContext } from "@/features/datalist";
-import {
-  GuidWithCopy,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/shared/ui";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { AutoFormValueType } from "@/components/auto-field";
+
 import {
   DATALIST_ATTRIBUTE_SCHEMA,
   DataListAttribute,
@@ -16,20 +16,22 @@ import {
   DataListUpdateRqV1,
   useDatalistUpdate,
 } from "@/entities/datalist";
+import { DatalistContext } from "@/features/datalist";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { AutoFormValueType } from "@/components/auto-field";
-import { z } from "zod";
-import { toast } from "sonner";
-import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
-import { ColumnDef } from "@tanstack/table-core";
-import { PagedResponse } from "@/shared/api";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { DatalistAttributeFormFields } from "@/screens/datalist";
+import { PagedResponse } from "@/shared/api";
+import {
+  GuidWithCopy,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/shared/ui";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 
 export function DatalistGeneral() {
   const tableRef = useRef<DataTableHandle>(null);

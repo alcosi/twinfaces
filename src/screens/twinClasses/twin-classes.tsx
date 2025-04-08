@@ -9,8 +9,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { ImageWithFallback } from "@/components/image-with-fallback";
-
 import { DatalistResourceLink } from "@/entities/datalist";
 import { PermissionResourceLink } from "@/entities/permission";
 import {
@@ -23,6 +21,7 @@ import {
   useTwinClassSearchV1,
 } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";

@@ -1,6 +1,9 @@
-import { toArrayOfString, type FilterFeature } from "@/shared/libs";
 import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import { type FilterFeature, toArrayOfString } from "@/shared/libs";
+
 import { FeaturerFilterKeys, FeaturerFilters } from "../../api";
 
 export function useFeaturerFilters(): FilterFeature<

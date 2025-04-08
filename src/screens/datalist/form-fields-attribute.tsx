@@ -1,7 +1,9 @@
-import { TextFormField } from "@/components/form-fields";
 import { Control, Path } from "react-hook-form";
-import { DATALIST_ATTRIBUTE_SCHEMA } from "@/entities/datalist";
 import { z } from "zod";
+
+import { TextFormField } from "@/components/form-fields";
+
+import { DATALIST_ATTRIBUTE_SCHEMA } from "@/entities/datalist";
 
 export function DatalistAttributeFormFields<
   T extends z.infer<typeof DATALIST_ATTRIBUTE_SCHEMA>,

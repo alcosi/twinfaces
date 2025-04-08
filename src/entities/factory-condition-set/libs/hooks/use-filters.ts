@@ -1,11 +1,14 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
 import {
   FilterFeature,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { z } from "zod";
+
 import {
   FactoryConditionSetFilterKeys,
   FactoryConditionSetFilters,

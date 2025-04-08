@@ -2,7 +2,7 @@ import { fetchTW004Face, getAuthHeaders } from "@/entities/face";
 import { Twin } from "@/entities/twin/server";
 import { TwinFieldEditor } from "@/features/twin/ui";
 import { TwinsAPI } from "@/shared/api";
-import { isTruthy, isUndefined, safe } from "@/shared/libs";
+import { isTruthy, safe } from "@/shared/libs";
 
 import { AlertError } from "../../components";
 import { TWidgetFaceProps } from "../types";
@@ -46,11 +46,7 @@ async function loadFieldInfo(
 
   if (isTruthy(STATIC_FIELD_MAP[fieldId])) {
     const staticKey = STATIC_FIELD_MAP[fieldId] as keyof Twin;
-    const staticValue = data.twin[staticKey] as string;
-
-    if (isUndefined(staticValue)) {
-      throw new Error(`Static value for fieldId ${fieldId} is undefined.`);
-    }
+    const staticValue = (data.twin[staticKey] as string) ?? "";
 
     return { key: staticKey, value: staticValue };
   }

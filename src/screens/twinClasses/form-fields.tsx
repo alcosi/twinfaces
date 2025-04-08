@@ -4,10 +4,10 @@ import { Control, useWatch } from "react-hook-form";
 import {
   CheckboxFormField,
   CheckboxFormItem,
+  ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
-import { ComboboxFormField } from "@/components/form-fields/combobox";
 
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";

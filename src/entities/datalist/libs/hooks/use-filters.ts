@@ -1,12 +1,14 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import { DatalistFilterKeys, DatalistFilters } from "@/entities/datalist";
 import {
   type FilterFeature,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { DatalistFilters, DatalistFilterKeys } from "@/entities/datalist";
-import { z } from "zod";
 
 export function useDatalistFilters(): FilterFeature<
   DatalistFilterKeys,
