@@ -30,11 +30,7 @@ type CrudDataTableProps<
   TData extends DataTableRow<TData>,
   TValue,
 > = CrudDataTableHeaderProps &
-  Omit<DataTableProps<TData, TValue>, "fetcher"> & {
-    fetcher: (
-      pagination: PaginationState,
-      filters: { search?: string; filters: { [key: string]: any } }
-    ) => Promise<PagedResponse<TData>>;
+  Omit<DataTableProps<TData, TValue>, "fetcher" | "getRowId"> & {
     className?: string;
     defaultVisibleColumns?: DataTableProps<TData, TValue>["columns"];
     orderedColumns?: DataTableProps<TData, TValue>["columns"];
@@ -42,6 +38,12 @@ type CrudDataTableProps<
     dialogForm?: UseFormReturn<any>;
     onCreateSubmit?: (values: any) => Promise<void>;
     renderFormFields?: () => ReactNode;
+    // === Overridden ===
+    fetcher: (
+      pagination: PaginationState,
+      filters: { search?: string; filters: { [key: string]: any } }
+    ) => Promise<PagedResponse<TData>>;
+    getRowId: (row: TData) => string;
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -122,10 +124,10 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
       return onRowClick(row);
     }
 
-    if (row?.id) {
-      const basePath = pathname.replace(/\/$/, "");
-      router.push(`${basePath}/${row.id}`);
-    }
+    const rowId = props.getRowId(row);
+    const basePath = pathname.replace(/\/$/, "");
+
+    router.push(`${basePath}/${rowId}`);
   }
 
   return (

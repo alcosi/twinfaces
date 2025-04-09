@@ -1,96 +1,17 @@
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
+"use client";
 
-import {
-  DomainUser,
-  DomainUser_DETAILED,
-  UserResourceLink,
-  useDomainUserSearchV1,
-  useUserFilters,
-} from "@/entities/user";
+import { useEffect } from "react";
+
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { formatToTwinfaceDate } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import {
-  CrudDataTable,
-  DataTableHandle,
-  FiltersState,
-} from "@/widgets/crud-data-table";
+import { UsersTable } from "@/widgets/tables/users";
 
-const colDefs: Record<
-  keyof Pick<DomainUser, "id" | "userId" | "createdAt">,
-  ColumnDef<DomainUser_DETAILED>
-> = {
-  id: {
-    id: "id",
-    accessorKey: "userId",
-    header: "ID",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-  },
-  userId: {
-    id: "userId",
-    accessorKey: "userId",
-    header: "User",
-    cell: ({ row: { original } }) =>
-      original.user && (
-        <div className="max-w-48 inline-flex">
-          <UserResourceLink data={original.user} withTooltip />
-        </div>
-      ),
-  },
-  createdAt: {
-    id: "createdAt",
-    accessorKey: "createdAt",
-    header: "Created at",
-    cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
-  },
-};
-
-export function Users() {
-  const tableRef = useRef<DataTableHandle>(null);
+export function UsersScreen() {
   const { setBreadcrumbs } = useBreadcrumbs();
-  const { searchUsers } = useDomainUserSearchV1();
-  const { buildFilterFields, mapFiltersToPayload } = useUserFilters();
 
   useEffect(() => {
     setBreadcrumbs([{ label: "Users", href: `/${PlatformArea.core}/users` }]);
-  }, []);
+  }, [setBreadcrumbs]);
 
-  async function fetchUsers(
-    pagination: PaginationState,
-    filters: FiltersState
-  ): Promise<PagedResponse<DomainUser_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
-    try {
-      const response = await searchUsers({
-        pagination,
-        filters: _filters,
-      });
-
-      return response;
-    } catch (e) {
-      toast.error("Failed to fetch users");
-      return { data: [], pagination: {} };
-    }
-  }
-
-  return (
-    <CrudDataTable
-      ref={tableRef}
-      columns={[colDefs.id, colDefs.userId, colDefs.createdAt]}
-      fetcher={fetchUsers}
-      getRowId={(row) => row.id}
-      pageSizes={[10, 20, 50]}
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
-      defaultVisibleColumns={[colDefs.id, colDefs.userId, colDefs.createdAt]}
-      orderedColumns={[colDefs.id, colDefs.userId, colDefs.createdAt]}
-    />
-  );
+  return <UsersTable />;
 }

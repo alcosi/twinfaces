@@ -10,33 +10,42 @@ import {
 
 import { DomainUserFilterKeys, DomainUserFilters } from "../../api";
 
-type Keys = Extract<DomainUserFilterKeys, "userIdList" | "nameLikeList">;
-type Filters = Pick<DomainUserFilters, "userIdList" | "nameLikeList">;
-
-export function useUserFilters(): FilterFeature<Keys, Filters> {
-  function buildFilterFields(): Record<Keys, AutoFormValueInfo> {
+export function useUserFilters(): FilterFeature<
+  DomainUserFilterKeys,
+  DomainUserFilters
+> {
+  function buildFilterFields(): Record<
+    Exclude<DomainUserFilterKeys, "businessAccountIdList">,
+    AutoFormValueInfo
+  > {
     return {
       userIdList: {
         type: AutoFormValueType.tag,
-        label: "Id",
+        label: "User Id",
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
       },
-
       nameLikeList: {
         type: AutoFormValueType.tag,
         label: "Name",
       },
-    } as const;
+      emailLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Email",
+      },
+    };
   }
 
-  function mapFiltersToPayload(filters: Record<Keys, unknown>): Filters {
-    const result: DomainUserFilters = {
+  function mapFiltersToPayload(
+    filters: Record<DomainUserFilterKeys, unknown>
+  ): DomainUserFilters {
+    return {
       userIdList: toArrayOfString(filters.userIdList),
       nameLikeList: toArrayOfString(filters.nameLikeList).map(wrapWithPercent),
+      emailLikeList: toArrayOfString(filters.emailLikeList).map(
+        wrapWithPercent
+      ),
     };
-
-    return result;
   }
 
   return {
