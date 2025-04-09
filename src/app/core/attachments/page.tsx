@@ -1,5 +1,5 @@
-import { UnderConstructionScreen as UnderConstruction } from "@/screens/under-construction";
+import { AttachmentsScreen } from "@/screens/attachments";
 
-export default function AttachmentsPage() {
-  return <UnderConstruction />;
+export default function Page() {
+  return <AttachmentsScreen />;
 }

@@ -22,8 +22,6 @@ export type Twin_DETAILED = RequireFields<
   subordinates?: TwinClass_DETAILED[];
 };
 
-export type TwinAttachments = components["schemas"]["AttachmentV1"];
-
 export type TwinCreateRq = RequireFields<
   components["schemas"]["TwinCreateRqV2"],
   "classId" | "name" | "assignerUserId"

@@ -6,6 +6,7 @@ import {
   PermissionAssigneePropagationApi,
   createPermissionAssigneePropagationApi,
 } from "@/entities/assigneePropagation";
+import { AttachmentApi, createAttachmentApi } from "@/entities/attachment";
 import { CommentApi, createCommentApi } from "@/entities/comment";
 import { DatalistApi, createDatalistApi } from "@/entities/datalist";
 import {
@@ -116,6 +117,7 @@ export interface PrivateApiContextProps {
   datalistOption: DatalistOptionApi;
   link: LinkApi;
   tier: TierApi;
+  attachment: AttachmentApi;
 }
 
 export function PrivateApiContextProvider({
@@ -164,6 +166,7 @@ export function PrivateApiContextProvider({
         datalistOption: createDatalistOptionApi(settings),
         link: createLinkApi(settings),
         tier: createTierApi(settings),
+        attachment: createAttachmentApi(settings),
       }
     : ({} as PrivateApiContextProps);
 

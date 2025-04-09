@@ -2,6 +2,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
 import { hydrateTwinFlowTransitionFromMap } from "../../libs";
 import {
@@ -25,7 +26,12 @@ export const useTwinFlowTransitionSearchV1 = () => {
       const { data, error } = await api.twinFlowTransition.search({
         search,
         pagination,
-        filters,
+        filters: {
+          ...filters,
+          nameLikeList: isPopulatedString(search)
+            ? [wrapWithPercent(search)]
+            : filters?.nameLikeList,
+        },
       });
 
       if (error) {

@@ -3,10 +3,10 @@
 import { useContext, useEffect } from "react";
 
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { TwinContext, TwinContextProvider } from "@/features/twin";
+import { TwinContext } from "@/features/twin";
 import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { TwinsTable } from "@/widgets/tables";
+import { TwinAttachmentsTable, TwinsTable } from "@/widgets/tables";
 
 import {
   TwinComments,
@@ -16,49 +16,42 @@ import {
   TwinLinks,
 } from "./views";
 
-type Props = {
-  twinId: string;
-};
-
-const DEFAULT_TABS = [
-  {
-    key: "general",
-    label: "General",
-    content: <TwinGeneral />,
-  },
-  {
-    key: "fields",
-    label: "Fields",
-    content: <TwinFields />,
-  },
-  {
-    key: "relations",
-    label: "Relations",
-    content: <TwinLinks />,
-  },
-  {
-    key: "comments",
-    label: "Comments",
-    content: <TwinComments />,
-  },
-  {
-    key: "history",
-    label: "History",
-    content: <TwinHistory />,
-  },
-];
-
-export function TwinScreen(props: Props) {
-  return (
-    <TwinContextProvider twinId={props.twinId}>
-      <TwinScreenContent {...props} />
-    </TwinContextProvider>
-  );
-}
-
-function TwinScreenContent({ twinId }: Props) {
-  const { twin } = useContext(TwinContext);
+export function TwinScreen() {
+  const { twin, twinId } = useContext(TwinContext);
   const { setBreadcrumbs } = useBreadcrumbs();
+
+  const DEFAULT_TABS = [
+    {
+      key: "general",
+      label: "General",
+      content: <TwinGeneral />,
+    },
+    {
+      key: "fields",
+      label: "Fields",
+      content: <TwinFields />,
+    },
+    {
+      key: "relations",
+      label: "Relations",
+      content: <TwinLinks />,
+    },
+    {
+      key: "comments",
+      label: "Comments",
+      content: <TwinComments />,
+    },
+    {
+      key: "attachments",
+      label: "Attachments",
+      content: <TwinAttachmentsTable twinId={twinId} />,
+    },
+    {
+      key: "history",
+      label: "History",
+      content: <TwinHistory />,
+    },
+  ];
 
   const tabs: Tab[] = [
     ...DEFAULT_TABS,
