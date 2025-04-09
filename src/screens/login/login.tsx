@@ -143,6 +143,16 @@ export function Login() {
             className="space-y-4 w-full"
             onSubmit={form.handleSubmit(onSubmit)}
           >
+            <ComboboxFormField
+              control={form.control}
+              name="domainId"
+              label="Domain"
+              selectPlaceholder="Select domain..."
+              searchPlaceholder="Search..."
+              noItemsText="No data found"
+              {...domainAdapter}
+            />
+
             <TextFormField
               control={form.control}
               name="userId"
@@ -154,18 +164,6 @@ export function Login() {
               name="businessAccountId"
               label="Business Account Id"
             />
-
-            <div className="absolute flex items-center top-0 left-3 w-full max-w-xs z-10 space-x-3">
-              <Globe />
-              <ComboboxFormField
-                control={form.control}
-                name="domainId"
-                selectPlaceholder="Select domain..."
-                searchPlaceholder="Search..."
-                noItemsText="No data found"
-                {...domainAdapter}
-              />
-            </div>
 
             <Button
               type="submit"
