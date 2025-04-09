@@ -1,12 +1,13 @@
 "use client";
 
+import { PaginationState } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
+
 import { Featurer } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
-import { PaginationState } from "@tanstack/react-table";
-import { ColumnDef } from "@tanstack/table-core";
-import { Check } from "lucide-react";
 
 type Props = {
   title: string;

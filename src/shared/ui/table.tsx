@@ -1,6 +1,12 @@
 import * as React from "react";
 
-import { cn, isEmptyString, isUndefined } from "@/shared/libs";
+import {
+  cn,
+  isEmptyArray,
+  isEmptyString,
+  isNull,
+  isUndefined,
+} from "@/shared/libs";
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -86,7 +92,12 @@ const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => {
-  if (isUndefined(props.children) || isEmptyString(props.children)) {
+  if (
+    isNull(props.children) ||
+    isUndefined(props.children) ||
+    isEmptyArray(props.children) ||
+    isEmptyString(props.children)
+  ) {
     return <div className="text-gray-700 font-light p-4">None</div>;
   }
 

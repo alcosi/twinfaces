@@ -11,7 +11,7 @@ export const useFetchUserById = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchUserById = useCallback(
-    async (id: string): Promise<DomainUser | undefined> => {
+    async (id: string): Promise<DomainUser> => {
       setLoading(true);
 
       try {
@@ -35,6 +35,8 @@ export const useFetchUserById = () => {
         if (data.relatedObjects) {
           return hydrateDomainUserFromMap(data.user, data.relatedObjects);
         }
+
+        return data.user;
       } finally {
         setLoading(false);
       }

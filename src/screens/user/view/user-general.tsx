@@ -3,16 +3,15 @@ import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { UserResourceLink, useUpdateUser } from "@/entities/user";
+import { useUpdateUser } from "@/entities/user";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { UserContext } from "@/features/user";
-import { REGEX_PATTERNS, formatToTwinfaceDate } from "@/shared/libs";
-import { Avatar } from "@/shared/ui";
-import { GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
+import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
+import { Avatar, GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
 
 export function UserGeneral() {
   const { user, refresh } = useContext(UserContext);
@@ -49,7 +48,7 @@ export function UserGeneral() {
       },
       label: "",
     },
-    schema: z.string().regex(REGEX_PATTERNS.EMAIL, "Incorrect email format"),
+    schema: z.string().email(),
     onSubmit: async (value) => {
       return updateUser({
         userId: user.userId!,
@@ -78,13 +77,6 @@ export function UserGeneral() {
         </TableRow>
 
         <TableRow>
-          <TableCell>User</TableCell>
-          <TableCell>
-            {user.user && <UserResourceLink data={user.user} />}
-          </TableCell>
-        </TableRow>
-
-        <TableRow>
           <TableCell>Locale</TableCell>
           <TableCell>{user.currentLocale}</TableCell>
         </TableRow>
@@ -101,14 +93,11 @@ export function UserGeneral() {
           <TableCell>{formatToTwinfaceDate(user.createdAt!)}</TableCell>
         </TableRow>
 
-        {/* //TODO add functional to update user avatar */}
         <TableRow>
           <TableCell>Avatar</TableCell>
           <TableCell>
-            {user.user?.avatar ? (
+            {user.user?.avatar && (
               <Avatar url={user.user.avatar} alt={"avatar"} size="xlg" />
-            ) : (
-              ""
             )}
           </TableCell>
         </TableRow>

@@ -46,7 +46,7 @@ export function UserContextProvider({
 
   return (
     <UserContext.Provider value={{ userId, user, refresh }}>
-      {loading ? <LoadingOverlay /> : children}
+      {children}
     </UserContext.Provider>
   );
 }
