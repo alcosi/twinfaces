@@ -78,6 +78,16 @@ const colDefs: Record<
     id: "storageLink",
     accessorKey: "storageLink",
     header: "Link",
+    cell: (data) => (
+      <div onClick={(e) => e.stopPropagation()}>
+        <a
+          href={data.getValue<string>()}
+          className="underline text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200"
+        >
+          <GuidWithCopy value={data.getValue<string>()} />
+        </a>
+      </div>
+    ),
   },
 
   title: {
