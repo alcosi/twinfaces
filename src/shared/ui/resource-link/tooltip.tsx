@@ -1,25 +1,34 @@
-import { Button } from "@/shared/ui/button";
-import { isElementType, stopPropagation } from "@/shared/libs";
+import { css } from "@emotion/css";
 import { Copy, Link } from "lucide-react";
 import React, {
-  createElement,
   ElementType,
-  isValidElement,
   PropsWithChildren,
   ReactNode,
+  createElement,
+  isValidElement,
 } from "react";
 import { toast } from "sonner";
+
+import { cn, isElementType, stopPropagation } from "@/shared/libs";
+import { Button } from "@/shared/ui/button";
 
 export type ResourceLinkTooltipProps = PropsWithChildren<{
   uuid: string;
   link?: string;
-  accentColor?: string;
 }>;
+
+const brandGradient = css`
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--brand-500)) 0px,
+    hsl(var(--brand-500)) 56px,
+    transparent 56px
+  );
+`;
 
 export function ResourceLinkTooltip({
   uuid,
   link,
-  accentColor = "#3b82f6", // text-blue-500
   children,
 }: ResourceLinkTooltipProps) {
   function handleCopyUUID(e: React.MouseEvent) {
@@ -41,11 +50,8 @@ export function ResourceLinkTooltip({
 
   return (
     <div
-      className="text-xs w-72 py-2 px-4 space-y-1.5"
-      onClick={stopPropagation}
-      style={{
-        background: `linear-gradient(to bottom, ${accentColor} 56px, transparent 56px)`,
-      }}
+      className={cn("text-xs w-72 py-2 px-4 space-y-1.5", brandGradient)}
+      onClick={(e) => e.stopPropagation()}
     >
       {children}
 

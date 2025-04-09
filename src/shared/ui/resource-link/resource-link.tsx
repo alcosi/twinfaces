@@ -1,8 +1,9 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { cn, isFalsy } from "@/shared/libs";
 import { css } from "@emotion/css";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
+
+import { cn, isFalsy } from "@/shared/libs";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 type ResourceLinkContentProps = {
   IconComponent: ElementType;

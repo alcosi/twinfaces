@@ -1,7 +1,7 @@
 import { isPopulatedString } from "@/shared/libs";
 import { GuidWithCopy, ResourceLinkTooltip } from "@/shared/ui";
+
 import { TwinClassField_DETAILED } from "../../api";
-import { ENTITY_COLOR } from "../../libs";
 import { FieldIcon } from "../field-icon";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 export const TwinClassFieldResourceTooltip = ({ data, link }: Props) => {
   return (
-    <ResourceLinkTooltip uuid={data.id} link={link} accentColor={ENTITY_COLOR}>
+    <ResourceLinkTooltip uuid={data.id} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}

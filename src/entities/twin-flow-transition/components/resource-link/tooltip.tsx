@@ -9,7 +9,6 @@ import {
 import { ResourceLinkTooltip } from "@/shared/ui";
 
 import { TwinFlowTransition_DETAILED } from "../../api";
-import { ENTITY_COLOR } from "../../libs";
 import { TwinFlowTransitionIcon } from "../twin-flow-transition-icon";
 
 type Props = {
@@ -26,7 +25,7 @@ export function TwinFlowTransitionResourceTooltip({
   if (isUndefined(data.id)) return null;
 
   return (
-    <ResourceLinkTooltip uuid={data.id} link={link} accentColor={ENTITY_COLOR}>
+    <ResourceLinkTooltip uuid={data.id} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.alias}

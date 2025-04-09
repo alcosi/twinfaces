@@ -5,7 +5,6 @@ import { formatToTwinfaceDate } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 
 import { Comment_DETAILED } from "../../api";
-import { ENTITY_COLOR } from "../../libs";
 
 type Props = {
   data: Comment_DETAILED;
@@ -14,7 +13,7 @@ type Props = {
 
 export const CommentResourceTooltip = ({ data, link }: Props) => {
   return (
-    <ResourceLinkTooltip uuid={data.id} link={link} accentColor={ENTITY_COLOR}>
+    <ResourceLinkTooltip uuid={data.id} link={link}>
       <ResourceLinkTooltip.Header
         title={data.text}
         iconSource={MessageCircle}
