@@ -1,8 +1,8 @@
 "use client";
 
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { ProductView } from "@/widgets/product-view";
 
+import { ProductsScreen } from "./components/product-screen";
 import { IconsTab } from "./tabs/icons";
 import { InputFieldsTab } from "./tabs/input-fields";
 import { ResourceLinksTab } from "./tabs/resource-links";
@@ -31,8 +31,8 @@ const tabs: Tab[] = [
   },
   {
     key: "product-view",
-    label: "ProductView",
-    content: <ProductView />,
+    label: "Product View",
+    content: <ProductsScreen />,
   },
 ];
 

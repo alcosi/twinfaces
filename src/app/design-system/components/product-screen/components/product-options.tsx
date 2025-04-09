@@ -1,7 +1,7 @@
 import { Button } from "@/shared/ui";
 
-import { ColorPicker } from "../color-picker";
-import { SizePicker } from "../size-picker";
+import { ColorPicker } from "./color-picker";
+import { SizePicker } from "./size-picker";
 
 type Size = {
   name: string;

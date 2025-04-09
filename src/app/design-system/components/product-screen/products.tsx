@@ -5,12 +5,11 @@ import {
   ProductName,
   ProductOptions,
   ProductPrice,
-  ProductSlider,
   ReviewPicker,
 } from "./components";
 import { products } from "./data";
 
-export function ProductView() {
+export function ProductsScreen() {
   const [selectedColor, setSelectedColor] = useState(products[0]?.colors[0]);
   const [selectedSize, setSelectedSize] = useState(products[0]?.sizes[1]);
 
@@ -43,9 +42,6 @@ export function ProductView() {
               <div className="py-10 lg:pt-6 lg:pr-8 lg:pb-16">
                 <ProductDescription product={product} />
               </div>
-            </div>
-            <div className="lg:w-1/2 flex justify-center self-start pt-12">
-              <ProductSlider images={product.images} />
             </div>
           </div>
         ))}
