@@ -18,7 +18,11 @@ import { useDomainPublic } from "@/features/domain";
 import { ThemeToggle } from "@/features/ui/theme-toggle";
 import { PublicApiContext } from "@/shared/api";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
-import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
+import {
+  FIRST_ID_EXTRACTOR,
+  isPopulatedArray,
+  isUndefined,
+} from "@/shared/libs";
 import { Button, Form } from "@/shared/ui";
 
 const FORM_SCHEMA = z.object({
@@ -143,15 +147,17 @@ export function Login() {
             className="space-y-4 w-full"
             onSubmit={form.handleSubmit(onSubmit)}
           >
-            <ComboboxFormField
-              control={form.control}
-              name="domainId"
-              label="Domain"
-              selectPlaceholder="Select domain..."
-              searchPlaceholder="Search..."
-              noItemsText="No data found"
-              {...domainAdapter}
-            />
+            {isUndefined(config.id) && (
+              <ComboboxFormField
+                control={form.control}
+                name="domainId"
+                label="Domain"
+                selectPlaceholder="Select domain..."
+                searchPlaceholder="Search..."
+                noItemsText="No data found"
+                {...domainAdapter}
+              />
+            )}
 
             <TextFormField
               control={form.control}
