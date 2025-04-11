@@ -31,17 +31,19 @@ export const TransitionPerformer = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {twin.transitions?.map((transition) => (
-          <DropdownMenuItem
-            key={transition.id}
-            onClick={(event) => {
-              event.stopPropagation();
-              onSelect({ transition, twin });
-            }}
-          >
-            {transition.name || "N/A"}
-          </DropdownMenuItem>
-        ))}
+        {twin.transitions
+          ?.filter((transition) => transition.type === "STATUS_CHANGE")
+          .map((transition) => (
+            <DropdownMenuItem
+              key={transition.id}
+              onClick={(event) => {
+                event.stopPropagation();
+                onSelect({ transition, twin });
+              }}
+            >
+              {transition.name || "N/A"}
+            </DropdownMenuItem>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
@@ -11,10 +12,15 @@ import {
   TwinClass_DETAILED,
   useTagsByTwinClassIdSelectAdapter,
 } from "@/entities/twin-class";
+import {
+  TwinFlowTransition,
+  usePerformTransition,
+} from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { TwinUpdateRq } from "@/entities/twin/server";
+import { TwinUpdateRq, Twin_DETAILED } from "@/entities/twin/server";
 import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
 import { InPlaceEditContextProvider } from "@/features/inPlaceEdit";
+import { TransitionPerformer } from "@/features/transition-performer";
 import { TwinContext } from "@/features/twin";
 import { FieldDescriptorText, TwinFieldEditor } from "@/features/twin/ui";
 import { PrivateApiContext } from "@/shared/api";
@@ -34,6 +40,7 @@ export function TwinGeneral() {
     useState<AutoEditDialogSettings | undefined>(undefined);
   const uAdapter = useUserSelectAdapter();
   const tagAdapter = useTagsByTwinClassIdSelectAdapter(twin?.twinClassId);
+  const { performTransition } = usePerformTransition();
 
   async function updateTwin(body: TwinUpdateRq) {
     if (isUndefined(twin)) {
@@ -101,6 +108,26 @@ export function TwinGeneral() {
     setEditFieldDialogOpen(true);
   }
 
+  const handleOnSelect = async ({
+    transition,
+    twin,
+  }: {
+    transition: TwinFlowTransition;
+    twin: Twin_DETAILED;
+  }) => {
+    try {
+      await performTransition({
+        transitionId: transition.id!,
+        body: { twinId: twin.id },
+      });
+
+      updateTwin({});
+      toast.success("Transition is performed successfully");
+    } catch (error) {
+      toast.error("Error performing transition");
+    }
+  };
+
   return (
     <InPlaceEditContextProvider>
       <Table className="mt-8">
@@ -131,13 +158,16 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Status</TableCell>
-            <TableCell>
+            <TableCell className="flex gap-2">
               {twin.twinClassId && twin.status && (
                 <TwinClassStatusResourceLink
                   data={twin.status}
                   twinClassId={twin.twinClassId!}
                   withTooltip
                 />
+              )}
+              {isPopulatedArray(twin.transitions) && (
+                <TransitionPerformer twin={twin} onSelect={handleOnSelect} />
               )}
             </TableCell>
           </TableRow>
