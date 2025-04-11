@@ -1,4 +1,5 @@
 import { fetchTW004Face, getAuthHeaders } from "@/entities/face";
+import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin } from "@/entities/twin/server";
 import { TwinFieldEditor } from "@/features/twin/ui";
 import { TwinsAPI } from "@/shared/api";
@@ -19,10 +20,14 @@ const STATIC_FIELD_MAP: Record<string, string> = {
   "00000000-0000-0000-0011-000000000011": "createdAt",
 };
 
-async function loadFieldInfo(
+async function loadTwinFieldInfo(
   twinId: string,
   fieldId: string
-): Promise<{ key: string; value: string }> {
+): Promise<{
+  key: string;
+  value: string;
+  descriptor: TwinClassField["descriptor"];
+}> {
   const header = await getAuthHeaders();
   const { data, error } = await TwinsAPI.GET("/private/twin/{twinId}/v2", {
     params: {
@@ -35,7 +40,7 @@ async function loadFieldInfo(
         // NOTE: for dynamic-key variant
         showTwinFieldCollectionMode: "ALL_FIELDS",
         showTwin2TwinClassMode: "SHORT",
-        showTwinClass2TwinClassFieldMode: "SHORT",
+        showTwinClass2TwinClassFieldMode: "DETAILED",
       },
     },
   });
@@ -45,20 +50,21 @@ async function loadFieldInfo(
   }
 
   if (isTruthy(STATIC_FIELD_MAP[fieldId])) {
-    const staticKey = STATIC_FIELD_MAP[fieldId] as keyof Twin;
-    const staticValue = (data.twin[staticKey] as string) ?? "";
+    const ownKey = STATIC_FIELD_MAP[fieldId] as keyof Twin;
+    const value = (data.twin[ownKey] as string) ?? "";
 
-    return { key: staticKey, value: staticValue };
+    return { key: ownKey, value, descriptor: undefined };
   }
 
-  const dynamicKey = data.relatedObjects?.twinClassFieldMap?.[fieldId]?.key;
-  const dynamicValue = data.twin.fields?.[dynamicKey!];
+  const twinClassField = data.relatedObjects?.twinClassFieldMap?.[fieldId];
+  const inheritedKey = data.relatedObjects?.twinClassFieldMap?.[fieldId]?.key;
+  const value = data.twin.fields?.[inheritedKey!] ?? "";
 
-  if (!dynamicKey || dynamicValue === undefined) {
+  if (!inheritedKey) {
     throw new Error("Failed to retrieve dynamic field key or value.");
   }
 
-  return { key: dynamicKey, value: dynamicValue };
+  return { key: inheritedKey, value, descriptor: twinClassField?.descriptor };
 }
 
 export async function TW004(props: TWidgetFaceProps) {
@@ -68,11 +74,11 @@ export async function TW004(props: TWidgetFaceProps) {
     fetchTW004Face(widget.widgetFaceId, twinId)
   );
   if (!twidgetResult.ok) {
-    return <AlertError message="Widget TW001 failed to load." />;
+    return <AlertError message="Widget TW004 failed to load." />;
   }
   const twidget = twidgetResult.data;
 
-  const { key, value } = await loadFieldInfo(
+  const { key, value, descriptor } = await loadTwinFieldInfo(
     twidget.pointedTwinId!,
     twidget.twinClassFieldId!
   );
@@ -81,9 +87,14 @@ export async function TW004(props: TWidgetFaceProps) {
     <TwinFieldEditor
       id={twidget.id!}
       twinId={twidget.pointedTwinId!}
-      label={twidget.label}
-      fieldKey={key}
-      fieldValue={value}
+      label={
+        twidget.label || (
+          <label className="px-3 text-sm font-bold italic text-muted">
+            Unknown
+          </label>
+        )
+      }
+      field={{ key, value, descriptor }}
     />
   );
 }

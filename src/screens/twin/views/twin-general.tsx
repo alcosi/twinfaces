@@ -16,7 +16,7 @@ import { TwinUpdateRq } from "@/entities/twin/server";
 import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
 import { InPlaceEditContextProvider } from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
-import { TwinFieldEditor } from "@/features/twin/ui";
+import { FieldDescriptorText, TwinFieldEditor } from "@/features/twin/ui";
 import { PrivateApiContext } from "@/shared/api";
 import {
   formatToTwinfaceDate,
@@ -142,25 +142,39 @@ export function TwinGeneral() {
             </TableCell>
           </TableRow>
 
-          <TwinFieldEditor
-            id="twin.name"
-            twinId={twin.id}
-            fieldKey="name"
-            fieldValue={twin.name}
-            label="Name"
-            schema={z.string().min(3)}
-            onSuccess={refresh}
-          />
+          <TableRow className={"cursor-pointer"}>
+            <TableCell>Name</TableCell>
+            <TableCell>
+              <TwinFieldEditor
+                id="twin.name"
+                twinId={twin.id}
+                field={{
+                  key: "name",
+                  value: twin.name,
+                  descriptor: FieldDescriptorText,
+                }}
+                schema={z.string().min(3)}
+                onSuccess={refresh}
+              />
+            </TableCell>
+          </TableRow>
 
-          <TwinFieldEditor
-            id="twin.description"
-            twinId={twin.id}
-            fieldKey="description"
-            fieldValue={twin.description ?? ""}
-            label="Description"
-            schema={z.string().min(3)}
-            onSuccess={refresh}
-          />
+          <TableRow className={"cursor-pointer"}>
+            <TableCell>Description</TableCell>
+            <TableCell>
+              <TwinFieldEditor
+                id="twin.description"
+                twinId={twin.id}
+                field={{
+                  key: "description",
+                  value: twin.description ?? "",
+                  descriptor: FieldDescriptorText,
+                }}
+                schema={z.string().min(3)}
+                onSuccess={refresh}
+              />
+            </TableCell>
+          </TableRow>
 
           <TableRow>
             <TableCell>Author</TableCell>

@@ -70,10 +70,10 @@ export function ComboboxFormItem<TFieldModel>({
   }
 
   return (
-    <FormItem>
+    <FormItem className="w-full">
       {label && (
         <FormItemLabel>
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-destructive">*</span>}
         </FormItemLabel>
       )}
       <FormControl>

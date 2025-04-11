@@ -98,7 +98,7 @@ const TableCell = React.forwardRef<
     isEmptyArray(props.children) ||
     isEmptyString(props.children)
   ) {
-    return <div className="text-gray-700 font-light p-4">None</div>;
+    return <div className="p-4 font-light text-gray-700">None</div>;
   }
 
   return (

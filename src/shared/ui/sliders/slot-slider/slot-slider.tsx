@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import {
+  isEmptyArray,
   isFalsy,
   isPopulatedArray,
   useKeyboardNavigation,
@@ -16,20 +17,10 @@ import {
   CarouselPrevious,
 } from "@/shared/ui";
 
-import { ImageSlide, ImageThumbnail } from "./views/image";
-import { PdfSlide, PdfThumbnail } from "./views/pdf";
-import { UnknownSlide, UnknownThumbnail } from "./views/unknown";
-import { VideoSlide, VideoThumbnail } from "./views/video";
-
-export type MediaType = "image" | "video" | "text" | "pdf" | "unknown";
-
-type MediaItem = {
-  id: string;
-  type: MediaType;
-  url: string;
-  title?: string;
-  content?: string;
-};
+import { SlotSliderItem } from "./components/slot-slider-item";
+import { SlotSliderPlaceholder } from "./components/slot-slider-placeholder";
+import { SlotSliderThumbnail } from "./components/slot-slider-thumbnail";
+import { MediaItem } from "./types";
 
 type SlotSliderProps<T> = {
   items: T[];
@@ -64,7 +55,11 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
     });
   }, [mainSlider]);
 
-  return isPopulatedArray(items) ? (
+  if (isEmptyArray(items)) {
+    return <SlotSliderPlaceholder />;
+  }
+
+  return (
     <>
       <Carousel setApi={setMainSlider} className="mb-2">
         <CarouselContent>
@@ -86,7 +81,7 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
           {items.map((item, index) => (
             <CarouselItem
               key={index}
-              className="min-w-24 basis-1/4 h-20 cursor-pointer items-stretch"
+              className="h-20 min-w-24 basis-1/4 cursor-pointer items-stretch"
               onClick={() => handleThumbClick(index)}
             >
               <SlotSliderThumbnail item={item} isActive={current === index} />
@@ -96,47 +91,5 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
         <CarouselNext className="static shrink translate-y-0" />
       </Carousel>
     </>
-  ) : null;
-}
-
-// === SlotSlider Views ===
-
-function SlotSliderItem({ item }: { item: MediaItem & { type: string } }) {
-  switch (item.type) {
-    case "image":
-      return (
-        <ImageSlide src={item.url} alt={item.title} caption={item.title} />
-      );
-    case "text":
-      return <span>TODO</span>;
-    case "video":
-      return <VideoSlide src={item.url} title={item.title} />;
-    case "pdf":
-      return <PdfSlide url={item.url} title={item.title} />;
-    default:
-      return <UnknownSlide title={item.title} />;
-  }
-}
-
-function SlotSliderThumbnail({
-  item,
-  isActive,
-}: {
-  item: MediaItem & { type: string };
-  isActive?: boolean;
-}) {
-  switch (item.type) {
-    case "image":
-      return (
-        <ImageThumbnail src={item.url} alt={item.title} isActive={isActive} />
-      );
-    case "text":
-      return <span>TODO</span>;
-    case "video":
-      return <VideoThumbnail src={item.url} isActive={isActive} />;
-    case "pdf":
-      return <PdfThumbnail title={item.title} isActive={isActive} />;
-    default:
-      return <UnknownThumbnail title={item.title} isActive={isActive} />;
-  }
+  );
 }

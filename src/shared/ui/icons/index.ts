@@ -2,6 +2,7 @@ export * from "./base-svg-icon";
 export * from "./box-icon";
 export * from "./dashboard";
 export * from "./main";
+export * from "./no-image";
 export * from "./question-mark";
 export * from "./settings";
 export * from "./shopping-bag-icon";

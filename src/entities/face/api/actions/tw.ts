@@ -79,6 +79,8 @@ export async function fetchTW004Face(
         twinId: twinId,
         lazyRelation: false,
         showFaceMode: "DETAILED",
+        showFaceTW0042TwinClassFieldMode: "SHORT",
+        showFaceTwidget2TwinMode: "DETAILED",
       },
     },
   });
