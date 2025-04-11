@@ -26,11 +26,8 @@ const configs: Record<string, LocalConfig> = {
 export function getProductFlavorConfig(
   remoteConfig?: RemoteConfig
 ): ProductFlavorConfig {
-  // NOTE: does not scale!!!
-  const localConfig = remoteConfig
-    ? ((configs[remoteConfig.key ?? "twinfaces"] ??
-        configs["twinfaces"]) as LocalConfig)
-    : (configs["twinfaces"] as LocalConfig);
+  const key = remoteConfig?.key ?? "twinfaces";
+  const localConfig = configs[key] ?? configs["twinfaces"]!;
 
   return {
     ...localConfig,

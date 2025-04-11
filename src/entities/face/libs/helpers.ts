@@ -30,19 +30,19 @@ export async function getAuthHeaders(): Promise<{
   };
 }
 
-export async function getDomainIdFromCookies(): Promise<string> {
+async function getDomainIdFromCookies(): Promise<string> {
   const cookieStore = await cookies();
 
   const domainId = cookieStore.get("domainId")?.value;
 
   if (isUndefined(domainId)) {
-    return "";
+    throw new Error("Missing domainId in cookies");
   }
 
   return domainId;
 }
 
-export async function getAuthTokenFromCookies(): Promise<string> {
+async function getAuthTokenFromCookies(): Promise<string> {
   const cookieStore = await cookies();
 
   const token = cookieStore.get("authToken")?.value;
