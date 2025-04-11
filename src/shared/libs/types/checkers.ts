@@ -1,4 +1,5 @@
 import { ElementType } from "react";
+
 import { Falsy } from "./misc";
 
 export function isFunction<T>(value: T): value is Extract<T, Function> {
@@ -20,7 +21,8 @@ export function isPopulatedString(str: unknown): str is string {
 export function isArray<T>(arr: unknown): arr is T[] {
   return Array.isArray(arr);
 }
-export function isEmptyArray<T>(arr: unknown): arr is T[] {
+
+export function isEmptyArray(arr: unknown): arr is [] {
   return Array.isArray(arr) && arr.length === 0;
 }
 

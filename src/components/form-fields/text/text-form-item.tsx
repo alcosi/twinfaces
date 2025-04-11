@@ -29,7 +29,7 @@ export function TextFormItem({
   const suggestionsId = inputId ? `${inputId}-suggestions` : undefined;
 
   return (
-    <div>
+    <div className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
           {label} {required && <span className="text-red-500">*</span>}

@@ -92,14 +92,14 @@ export function InPlaceEdit<T>({
     return (
       <div
         onClick={handleEdit}
-        className="flex min-h-8 cursor-pointer flex-row items-center rounded-sm px-1.5 hover:bg-muted/50"
+        className="flex min-h-10 cursor-pointer flex-row items-center rounded-sm px-3 hover:bg-muted/50"
       >
         {renderPreview ? (
           renderPreview(value)
         ) : (
           <>
             {(value as ReactNode) || (
-              <div className="font-light italic text-gray-700">None</div>
+              <div className="font-light italic text-muted">None</div>
             )}
           </>
         )}
@@ -113,7 +113,7 @@ export function InPlaceEdit<T>({
       <form
         onSubmit={form.handleSubmit(handleConfirm)}
         onAbort={handleCancel}
-        className="max-w-80"
+        className="w-full min-w-32"
       >
         <div className="flex flex-row items-center space-x-2">
           <AutoField

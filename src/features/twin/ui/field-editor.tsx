@@ -1,23 +1,29 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useContext } from "react";
+import { ReactNode, useCallback, useContext } from "react";
 import { ZodType, z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
+import { TwinClassField } from "@/entities/twin-class-field";
 import { TwinUpdateRq } from "@/entities/twin/server";
 import { PrivateApiContext } from "@/shared/api";
-import { TableCell, TableRow } from "@/shared/ui";
+import { isPopulatedString } from "@/shared/libs";
 
 import { InPlaceEdit, InPlaceEditProps } from "../../inPlaceEdit";
+
+type FieldProps = {
+  key: string;
+  value: string;
+  descriptor: TwinClassField["descriptor"];
+};
 
 type Props = {
   id: string;
   twinId: string;
-  label?: string;
-  fieldKey: string;
-  fieldValue: string;
+  label?: ReactNode;
+  field: FieldProps;
   schema?: ZodType;
   onSuccess?: () => void;
 };
@@ -26,8 +32,7 @@ export function TwinFieldEditor({
   id,
   twinId,
   label,
-  fieldKey,
-  fieldValue,
+  field,
   schema,
   onSuccess,
 }: Props) {
@@ -39,9 +44,9 @@ export function TwinFieldEditor({
       try {
         await api.twin.update({ id: twinId, body });
         onSuccess?.() || router.refresh();
-      } catch (e) {
-        console.error("Failed to update twin:", e);
-        throw e;
+      } catch (error) {
+        console.error("Failed to update twin:", error);
+        throw error;
       }
     },
     [api.twin, twinId, router, onSuccess]
@@ -49,26 +54,29 @@ export function TwinFieldEditor({
 
   const editProps: InPlaceEditProps<string> = {
     id,
-    value: fieldValue,
+    value: field.value,
     valueInfo: {
-      type: AutoFormValueType.string,
-      inputProps: {
-        fieldSize: "sm",
-      },
+      type: AutoFormValueType.twinField,
+      label: undefined,
+      descriptor: field.descriptor,
+      twinId,
     },
     schema: schema ?? z.string().min(1),
     onSubmit: (value) =>
       updateTwin({
-        [fieldKey]: value,
+        [field.key]: value,
       }),
   };
 
   return (
-    <TableRow>
-      <TableCell>{label}</TableCell>
-      <TableCell className="cursor-pointer">
-        <InPlaceEdit {...editProps} />
-      </TableCell>
-    </TableRow>
+    <div className="space-y-0.5">
+      {label &&
+        (isPopulatedString(label) ? (
+          <label className="px-3 text-sm font-bold">{label}</label>
+        ) : (
+          label
+        ))}
+      <InPlaceEdit {...editProps} />
+    </div>
   );
 }
