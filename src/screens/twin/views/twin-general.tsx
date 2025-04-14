@@ -19,7 +19,11 @@ import {
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { TwinUpdateRq, Twin_DETAILED } from "@/entities/twin/server";
 import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
-import { InPlaceEditContextProvider } from "@/features/inPlaceEdit";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
 import { TransitionPerformer } from "@/features/transition-performer";
 import { TwinContext } from "@/features/twin";
 import { FieldDescriptorText, TwinFieldEditor } from "@/features/twin/ui";
@@ -100,6 +104,22 @@ export function TwinGeneral() {
         selectPlaceholder: "Select assignee...",
         ...uAdapter,
       },
+    },
+  };
+
+  const externalIdSettings: InPlaceEditProps<typeof twin.externalId> = {
+    id: "externalId",
+    value: twin.externalId,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      inputProps: {
+        fieldSize: "sm",
+      },
+      label: "",
+    },
+    schema: z.string(),
+    onSubmit: async (value) => {
+      return updateTwin({ externalId: value });
     },
   };
 
@@ -303,6 +323,13 @@ export function TwinGeneral() {
             <TableCell>Alias space</TableCell>
             <TableCell className="text-destructive">
               Not Implemented Yet
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>External id</TableCell>
+            <TableCell>
+              <InPlaceEdit {...externalIdSettings} />
             </TableCell>
           </TableRow>
 
