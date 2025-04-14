@@ -18,14 +18,10 @@ import {
   TwinClass_DETAILED,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
-import {
-  TwinFlowTransition,
-  usePerformTransition,
-} from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { Twin, TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
 import { User, UserResourceLink } from "@/entities/user";
-import { TransitionPerformer } from "@/features/transition-performer";
+import { TransitionPerformer } from "@/features/twin-flow-transition";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
@@ -96,7 +92,6 @@ export function TwinsTable({
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
-  const { performTransition } = usePerformTransition();
 
   const colDefs: Record<TwinStaticFieldKey, ColumnDef<Twin_DETAILED>> = {
     id: {
@@ -147,7 +142,10 @@ export function TwinsTable({
             />
           )}
           {isPopulatedArray(original.transitions) && (
-            <TransitionPerformer twin={original} onSelect={handleOnSelect} />
+            <TransitionPerformer
+              twin={original}
+              onSuccess={handleOnTransitionPerformSuccess}
+            />
           )}
         </div>
       ),
@@ -316,25 +314,10 @@ export function TwinsTable({
     toast.success(`Twin ${body.name} is created successfully!`);
   }
 
-  const handleOnSelect = async ({
-    transition,
-    twin,
-  }: {
-    transition: TwinFlowTransition;
-    twin: Twin_DETAILED;
-  }) => {
-    try {
-      await performTransition({
-        transitionId: transition.id!,
-        body: { twinId: twin.id },
-      });
-
-      tableRef.current?.resetPage();
-      toast.success("Transition is performed successfully");
-    } catch (error) {
-      toast.error("Error performing transition");
-    }
-  };
+  function handleOnTransitionPerformSuccess() {
+    tableRef.current?.resetPage();
+    toast.success("Transition is performed successfully");
+  }
 
   return (
     <CrudDataTable

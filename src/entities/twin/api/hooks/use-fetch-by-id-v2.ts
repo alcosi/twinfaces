@@ -29,6 +29,7 @@ export const useTwinFetchByIdV2 = () => {
             showTwinByHeadMode: "YELLOW",
             showTwinAliasMode: "C",
             showTwinTag2DataListOptionMode: "DETAILED",
+            showTwin2TransitionMode: "DETAILED",
           },
         });
       } finally {

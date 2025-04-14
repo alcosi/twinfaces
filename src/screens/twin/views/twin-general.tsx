@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
@@ -11,11 +12,20 @@ import {
   TwinClass_DETAILED,
   useTagsByTwinClassIdSelectAdapter,
 } from "@/entities/twin-class";
+import {
+  TwinFlowTransition,
+  usePerformTransition,
+} from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { TwinUpdateRq } from "@/entities/twin/server";
+import { TwinUpdateRq, Twin_DETAILED } from "@/entities/twin/server";
 import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
-import { InPlaceEditContextProvider } from "@/features/inPlaceEdit";
+import {
+  InPlaceEdit,
+  InPlaceEditContextProvider,
+  InPlaceEditProps,
+} from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
+import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { FieldDescriptorText, TwinFieldEditor } from "@/features/twin/ui";
 import { PrivateApiContext } from "@/shared/api";
 import {
@@ -34,6 +44,7 @@ export function TwinGeneral() {
     useState<AutoEditDialogSettings | undefined>(undefined);
   const uAdapter = useUserSelectAdapter();
   const tagAdapter = useTagsByTwinClassIdSelectAdapter(twin?.twinClassId);
+  const { performTransition } = usePerformTransition();
 
   async function updateTwin(body: TwinUpdateRq) {
     if (isUndefined(twin)) {
@@ -96,9 +107,34 @@ export function TwinGeneral() {
     },
   };
 
+  const externalIdSettings: InPlaceEditProps<typeof twin.externalId> = {
+    id: "externalId",
+    value: twin.externalId,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      inputProps: {
+        fieldSize: "sm",
+      },
+      label: "",
+    },
+    schema: z.string(),
+    onSubmit: async (value) => {
+      return updateTwin({ externalId: value });
+    },
+  };
+
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
     setEditFieldDialogOpen(true);
+  }
+
+  async function handleOnTransitionPerformSuccess() {
+    try {
+      updateTwin({});
+      toast.success("Transition is performed successfully");
+    } catch (error) {
+      toast.error("Error performing transition");
+    }
   }
 
   return (
@@ -131,12 +167,18 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Status</TableCell>
-            <TableCell>
+            <TableCell className="flex gap-2">
               {twin.twinClassId && twin.status && (
                 <TwinClassStatusResourceLink
                   data={twin.status}
                   twinClassId={twin.twinClassId!}
                   withTooltip
+                />
+              )}
+              {isPopulatedArray(twin.transitions) && (
+                <TransitionPerformer
+                  twin={twin}
+                  onSuccess={handleOnTransitionPerformSuccess}
                 />
               )}
             </TableCell>
@@ -273,6 +315,13 @@ export function TwinGeneral() {
             <TableCell>Alias space</TableCell>
             <TableCell className="text-destructive">
               Not Implemented Yet
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>External id</TableCell>
+            <TableCell>
+              <InPlaceEdit {...externalIdSettings} />
             </TableCell>
           </TableRow>
 
