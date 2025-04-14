@@ -28,3 +28,4 @@ export * from "./sonner";
 export * from "./table";
 export * from "./tabs";
 export * from "./tooltip";
+export * from "./redirect-button";

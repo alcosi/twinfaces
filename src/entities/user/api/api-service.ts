@@ -7,6 +7,7 @@ import {
   DomainUserViewQuery,
   PermissionGrantUserFilters,
   User,
+  UserPermissionListQuery,
 } from "./types";
 
 export function createUserApi(settings: ApiSettings) {
@@ -91,7 +92,29 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
-  return { searchDomainUsers, searchPermissionGrants, getById, update };
+  function getPermissionUserById({
+    userId,
+    query = {},
+  }: {
+    userId: string;
+    query?: UserPermissionListQuery;
+  }) {
+    return settings.client.GET(`/private/user/{userId}/permission/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId },
+        query: query,
+      },
+    });
+  }
+
+  return {
+    searchDomainUsers,
+    searchPermissionGrants,
+    getById,
+    update,
+    getPermissionUserById,
+  };
 }
 
 export type UserApi = ReturnType<typeof createUserApi>;

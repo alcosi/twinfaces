@@ -1,7 +1,15 @@
 import { FC } from "react";
 
-import { Face_DETAILED, fetchFaceById } from "@/entities/face";
+import {
+  Face_DETAILED,
+  fetchFaceById,
+  fetchUserPermissionListById,
+  getAuthTokenFromCookies,
+} from "@/entities/face";
+import { Permission } from "@/entities/permission";
+import { PlatformArea } from "@/shared/config";
 import { isPopulatedString, safe } from "@/shared/libs";
+import { RedirectButton } from "@/shared/ui";
 
 import { AlertError } from "../components";
 import { TWidgetFaceProps, Widget, WidgetFaceProps } from "./types";
@@ -29,6 +37,14 @@ export async function WidgetRenderer({ twinId, widget }: Props) {
     })
   );
 
+  const authToken = await getAuthTokenFromCookies();
+
+  const userPermissionList = await safe(() =>
+    fetchUserPermissionListById<Permission[]>(authToken, {
+      query: { showPermissionMode: "DETAILED" },
+    })
+  );
+
   if (!faceResult.ok) {
     return (
       <AlertError
@@ -41,6 +57,16 @@ export async function WidgetRenderer({ twinId, widget }: Props) {
 
   const face = faceResult.data;
   const componentName = face.component;
+
+  if (!userPermissionList.ok) {
+    return (
+      <AlertError message="Failed to load user permission. Try again later" />
+    );
+  }
+
+  const isPermissionDomainManaged = userPermissionList.data.some(
+    (el) => el.key === "DOMAIN_MANAGE"
+  );
 
   if (isPopulatedString(componentName) && componentName in WIDGETS) {
     const Comp = WIDGETS[componentName as keyof typeof WIDGETS]!;
@@ -60,7 +86,15 @@ export async function WidgetRenderer({ twinId, widget }: Props) {
       );
     }
 
-    return <Comp twinId={twinId} face={face} widget={widget} />;
+    return (
+      <>
+        {isPermissionDomainManaged && (
+          <RedirectButton linkHref={`/${PlatformArea.core}/twins/${twinId}`} />
+        )}
+
+        <Comp twinId={twinId} face={face} widget={widget} />
+      </>
+    );
   }
 
   return (
