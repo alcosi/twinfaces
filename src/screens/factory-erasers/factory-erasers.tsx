@@ -170,6 +170,7 @@ export function FactoryErasers() {
         filtersInfo: buildFilterFields(),
       }}
       onRowClick={(row) => {
+        // TODO: replace with PlatformAreaCore
         router.push(`/workspace/erasers/${row.id}`);
       }}
     />

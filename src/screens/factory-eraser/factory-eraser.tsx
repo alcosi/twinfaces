@@ -24,10 +24,11 @@ export function FactoryEraserScreen() {
     setBreadcrumbs([
       {
         label: "Erasers",
+        // TODO replace with PlatformArea.core
         href: "/workspace/erasers",
       },
       {
-        label: eraser.factory.name! || eraser.factory.key!,
+        label: eraser.factory.name || eraser.factory.key!,
         href: `/workspace/erasers/${eraserId}`,
       },
     ]);

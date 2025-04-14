@@ -45,7 +45,7 @@ export function FactoryEraserGeneral() {
   async function update(body: FactoryEraserUpdate) {
     try {
       await updateFactoryEraser({ factoryEraserId: eraser.id, body });
-      toast.success("Factory eraser update successfully!");
+      toast.success("Factory eraser was updated successfully!");
       refresh?.();
     } catch (e) {
       toast.error("Failed to update factory eraser");

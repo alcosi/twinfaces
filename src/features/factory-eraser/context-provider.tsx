@@ -58,7 +58,7 @@ export function FactoryEraserContextProvider({
 
   return (
     <FactoryEraserContext.Provider value={{ eraserId, eraser, refresh }}>
-      {loading ? <LoadingOverlay /> : children}
+      {children}
     </FactoryEraserContext.Provider>
   );
 }

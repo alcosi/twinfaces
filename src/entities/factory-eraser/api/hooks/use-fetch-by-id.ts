@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useContext, useState } from "react";
 
 import {
@@ -10,7 +8,6 @@ import {
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-// TODO: Apply caching-strategy
 export const useFactoryEraserById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);

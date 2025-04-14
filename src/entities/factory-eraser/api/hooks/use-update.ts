@@ -4,7 +4,6 @@ import { PrivateApiContext } from "@/shared/api";
 
 import { FactoryEraserUpdate } from "../types";
 
-// TODO: Apply caching-strategy
 export const useFactoryEraserUpdate = () => {
   const api = useContext(PrivateApiContext);
 
