@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 
+import { TextFormItem } from "@/components/form-fields";
+
 import { DomainPublicView } from "@/entities/domain";
 import { loginFormAction } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
@@ -13,13 +15,12 @@ import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
 import { isUndefined } from "@/shared/libs";
 import { Button, Combobox } from "@/shared/ui";
 
-import { TextFormItem } from "../../components/form-fields/text/text-form-item";
-
 type Props = {
   domains: DomainPublicView[];
+  domainConfig?: Partial<DomainPublicView> | null;
 };
 
-export function LoginForm({ domains }: Props) {
+export function LoginForm({ domains, domainConfig }: Props) {
   const router = useRouter();
   const { setAuthUser, logout } = useAuthUser();
   const config = useContext(ProductFlavorConfigContext);
@@ -42,6 +43,18 @@ export function LoginForm({ domains }: Props) {
     }
   }, [authUser]);
 
+  useEffect(() => {
+    if (domainConfig?.key) {
+      const matchedDomain = domains.find(
+        (domain) => domain.key === domainConfig.key
+      );
+
+      if (matchedDomain) {
+        setSelectedDomain(matchedDomain);
+      }
+    }
+  }, [domainConfig, domains]);
+
   return (
     <main className="flex flex-col justify-center items-center h-screen w-screen relative">
       <div className="absolute flex top-3 right-6">
@@ -51,13 +64,13 @@ export function LoginForm({ domains }: Props) {
       <div className="flex flex-col my-5 items-center -mt-32 min-w-96">
         <Image
           className="rounded-full"
-          src={config.favicon}
+          src={selectedDomain?.iconLight ?? config.favicon}
           width={56}
           height={56}
           alt="Domain icon"
         />
         <h1 className="text-lg font-bold my-3">
-          {config.key ?? config.productName}
+          {selectedDomain?.key ?? config.key ?? config.productName}
         </h1>
 
         <form
@@ -73,21 +86,23 @@ export function LoginForm({ domains }: Props) {
             return startTransition(() => formAction(formData));
           }}
         >
-          <label>
-            Domain
-            <Combobox
-              getById={() => Promise.resolve(undefined)}
-              getItems={() => Promise.resolve(domains)}
-              renderItem={(item) => item.key}
-              onSelect={(items) => {
-                setSelectedDomain(items?.[0] || null);
-              }}
-              selectPlaceholder="Select domain..."
-              buttonClassName="w-full"
-              contentClassName="w-[--radix-popover-trigger-width]"
-            />
-            {domainError && <p className="text-destructive">{domainError}</p>}
-          </label>
+          {isUndefined(domainConfig?.key) && (
+            <label>
+              Domain
+              <Combobox
+                getById={() => Promise.resolve(undefined)}
+                getItems={() => Promise.resolve(domains)}
+                renderItem={(item) => item.key}
+                onSelect={(items) => {
+                  setSelectedDomain(items?.[0] || null);
+                }}
+                selectPlaceholder="Select domain..."
+                buttonClassName="w-full"
+                contentClassName="w-[--radix-popover-trigger-width]"
+              />
+              {domainError && <p className="text-destructive">{domainError}</p>}
+            </label>
+          )}
 
           <TextFormItem
             label="User Id"
