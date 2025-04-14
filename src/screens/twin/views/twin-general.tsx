@@ -24,8 +24,8 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { TransitionPerformer } from "@/features/transition-performer";
 import { TwinContext } from "@/features/twin";
+import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { FieldDescriptorText, TwinFieldEditor } from "@/features/twin/ui";
 import { PrivateApiContext } from "@/shared/api";
 import {
@@ -128,25 +128,14 @@ export function TwinGeneral() {
     setEditFieldDialogOpen(true);
   }
 
-  const handleOnSelect = async ({
-    transition,
-    twin,
-  }: {
-    transition: TwinFlowTransition;
-    twin: Twin_DETAILED;
-  }) => {
+  async function handleOnTransitionPerformSuccess() {
     try {
-      await performTransition({
-        transitionId: transition.id!,
-        body: { twinId: twin.id },
-      });
-
       updateTwin({});
       toast.success("Transition is performed successfully");
     } catch (error) {
       toast.error("Error performing transition");
     }
-  };
+  }
 
   return (
     <InPlaceEditContextProvider>
@@ -187,7 +176,10 @@ export function TwinGeneral() {
                 />
               )}
               {isPopulatedArray(twin.transitions) && (
-                <TransitionPerformer twin={twin} onSelect={handleOnSelect} />
+                <TransitionPerformer
+                  twin={twin}
+                  onSuccess={handleOnTransitionPerformSuccess}
+                />
               )}
             </TableCell>
           </TableRow>
