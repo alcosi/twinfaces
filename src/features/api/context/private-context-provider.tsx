@@ -23,6 +23,10 @@ import {
   createFactoryConditionSetApi,
 } from "@/entities/factory-condition-set";
 import {
+  FactoryEraserApi,
+  createFactoryEraserApi,
+} from "@/entities/factory-eraser";
+import {
   FactoryMultiplierApi,
   createFactoryMultiplierApi,
 } from "@/entities/factory-multiplier";
@@ -106,6 +110,7 @@ export interface PrivateApiContextProps {
   factoryConditionSet: FactoryConditionSetApi;
   factoryMultiplier: FactoryMultiplierApi;
   factoryMultiplierFilter: FactoryMultiplierFilterApi;
+  factoryEraser: FactoryEraserApi;
   pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
@@ -153,6 +158,7 @@ export function PrivateApiContextProvider({
         factoryConditionSet: createFactoryConditionSetApi(settings),
         factoryMultiplier: createFactoryMultiplierApi(settings),
         factoryMultiplierFilter: createFactoryMultiplierFilterApi(settings),
+        factoryEraser: createFactoryEraserApi(settings),
         pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),

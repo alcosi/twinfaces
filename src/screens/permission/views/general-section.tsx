@@ -30,7 +30,7 @@ export function GeneralSection() {
         permissionId: permission.id,
         body: newPermission,
       });
-      toast.success("Permission update successfully!");
+      toast.success("Permission was updated successfully!");
       refresh?.();
     } catch (e) {
       toast.error("Failed to update Permission");
