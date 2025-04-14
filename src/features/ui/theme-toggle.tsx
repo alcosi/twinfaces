@@ -22,9 +22,9 @@ export function ThemeToggle() {
   const config = getProductFlavorConfig();
   const { setTheme, theme = config.theme.defaultTheme } = useTheme();
 
-  const CurrentThemeIcon = THEME_OPTIONS.find(
-    (option) => option.key === theme
-  )?.icon;
+  const CurrentThemeIcon = (
+    THEME_OPTIONS.find((option) => option.key === theme) ?? THEME_OPTIONS[0]
+  ).icon;
 
   return (
     <DropdownMenu>

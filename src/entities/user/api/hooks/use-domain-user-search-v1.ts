@@ -3,7 +3,7 @@ import { useCallback, useContext } from "react";
 
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-import { hydrateDomainUserFromMap } from "../../server";
+import { hydrateDomainUserFromMap } from "../../libs";
 import { DomainUserFilters, DomainUser_DETAILED } from "../types";
 
 export const useDomainUserSearchV1 = () => {

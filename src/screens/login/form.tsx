@@ -39,8 +39,6 @@ export function LoginForm({ domains }: Props) {
     },
   });
 
-  const { handleSubmit, control, setValue } = form;
-
   useEffect(() => {
     // Clear any existing user session
     logout();
@@ -52,6 +50,15 @@ export function LoginForm({ domains }: Props) {
       router.push(`/${PlatformArea.core}/twinclass`);
     }
   }, [authUser]);
+
+  function onSubmit(values: z.infer<typeof LOGIN_FORM_SCHEMA>) {
+    const formData = new FormData();
+    formData.set("userId", values.userId);
+    formData.set("domainId", values.domainId);
+    formData.set("businessAccountId", values.businessAccountId ?? "");
+
+    startTransition(() => formAction(formData));
+  }
 
   return (
     <main className="flex flex-col justify-center items-center h-screen w-screen relative">
@@ -73,17 +80,10 @@ export function LoginForm({ domains }: Props) {
         <FormProvider {...form}>
           <form
             className="flex flex-col gap-4 w-full"
-            onSubmit={handleSubmit((values) => {
-              const formData = new FormData();
-              formData.set("userId", values.userId);
-              formData.set("domainId", values.domainId);
-              formData.set("businessAccountId", values.businessAccountId ?? "");
-
-              startTransition(() => formAction(formData));
-            })}
+            onSubmit={form.handleSubmit(onSubmit)}
           >
             <ComboboxFormField
-              control={control}
+              control={form.control}
               name="domainId"
               required
               label="Domain"
@@ -92,7 +92,7 @@ export function LoginForm({ domains }: Props) {
               renderItem={(item) => item.key}
               onSelect={(items) => {
                 const domain = items?.[0] || null;
-                setValue("domainId", domain?.id ?? "");
+                form.setValue("domainId", domain?.id ?? "");
               }}
               selectPlaceholder="Select domain..."
               buttonClassName="w-full"
@@ -100,14 +100,14 @@ export function LoginForm({ domains }: Props) {
             />
 
             <TextFormField
-              control={control}
+              control={form.control}
               label="User Id"
               name="userId"
               required
             />
 
             <TextFormField
-              control={control}
+              control={form.control}
               label="Business Account Id"
               name="businessAccountId"
             />
