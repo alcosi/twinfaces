@@ -1,19 +1,22 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
-import { Form } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { ComboboxFormItem, TextFormItem } from "@/components/form-fields";
+import { ComboboxFormField, TextFormField } from "@/components/form-fields";
 
 import { DomainPublicView } from "@/entities/domain";
 import { loginFormAction } from "@/entities/user";
+import { LOGIN_FORM_SCHEMA } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { ThemeToggle } from "@/features/ui/theme-toggle";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
-import { Button, Combobox } from "@/shared/ui";
+import { Button } from "@/shared/ui";
 
 type Props = {
   domains: DomainPublicView[];
@@ -26,11 +29,17 @@ export function LoginForm({ domains }: Props) {
   const config = useContext(ProductFlavorConfigContext);
   const [authUser, formAction] = useFormState(loginFormAction, null);
   const [isPending, startTransition] = useTransition();
-  const [selectedDomain, setSelectedDomain] = useState<DomainPublicView | null>(
-    null
-  );
-  // TODO remove
-  // const [domainError, setDomainError] = useState<string | null>(null);
+
+  const form = useForm<z.infer<typeof LOGIN_FORM_SCHEMA>>({
+    resolver: zodResolver(LOGIN_FORM_SCHEMA),
+    defaultValues: {
+      domainId: "",
+      userId: config.loginPage.defaultFormValues.userId,
+      businessAccountId: "",
+    },
+  });
+
+  const { handleSubmit, control, setValue } = form;
 
   useEffect(() => {
     // Clear any existing user session
@@ -61,46 +70,45 @@ export function LoginForm({ domains }: Props) {
         <h1 className="text-lg font-bold my-3">
           {config.key ?? config.productName}
         </h1>
-        {/* // TODO: resolve */}
-        <Form>
+        <FormProvider {...form}>
           <form
             className="flex flex-col gap-4 w-full"
-            action={async (formData) => {
-              // if (!selectedDomain?.id) {
-              //   setDomainError("Please select a domain");
-              //   return;
-              // }
+            onSubmit={handleSubmit((values) => {
+              const formData = new FormData();
+              formData.set("userId", values.userId);
+              formData.set("domainId", values.domainId);
+              formData.set("businessAccountId", values.businessAccountId ?? "");
 
-              // setDomainError(null);
-              // formData.set("domainId", selectedDomain.id);
-              return startTransition(() => formAction(formData));
-            }}
+              startTransition(() => formAction(formData));
+            })}
           >
-            <ComboboxFormItem
+            <ComboboxFormField
+              control={control}
+              name="domainId"
+              required
               label="Domain"
               getById={() => Promise.resolve(undefined)}
               getItems={() => Promise.resolve(domains)}
               renderItem={(item) => item.key}
               onSelect={(items) => {
-                setSelectedDomain(items?.[0] || null);
+                const domain = items?.[0] || null;
+                setValue("domainId", domain?.id ?? "");
               }}
               selectPlaceholder="Select domain..."
               buttonClassName="w-full"
               contentClassName="w-[--radix-popover-trigger-width]"
             />
-            {/* {domainError && <p className="text-destructive">{domainError}</p>} */}
 
-            <TextFormItem
+            <TextFormField
+              control={control}
               label="User Id"
-              inputId="userId"
               name="userId"
-              defaultValue={config.loginPage.defaultFormValues.userId}
               required
             />
 
-            <TextFormItem
+            <TextFormField
+              control={control}
               label="Business Account Id"
-              inputId="businessAccountId"
               name="businessAccountId"
             />
 
@@ -113,7 +121,7 @@ export function LoginForm({ domains }: Props) {
               Login
             </Button>
           </form>
-        </Form>
+        </FormProvider>
       </div>
     </main>
   );
