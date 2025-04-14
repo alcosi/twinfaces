@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useTransition } from "react";
+import { useContext, useEffect, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 
 import { DomainPublicView } from "@/entities/domain";
@@ -10,7 +10,10 @@ import { loginFormAction } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { ThemeToggle } from "@/features/ui/theme-toggle";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
-import { Button, Input } from "@/shared/ui";
+import { isUndefined } from "@/shared/libs";
+import { Button, Combobox } from "@/shared/ui";
+
+import { TextFormItem } from "../../components/form-fields/text/text-form-item";
 
 type Props = {
   domains: DomainPublicView[];
@@ -22,6 +25,10 @@ export function LoginForm({ domains }: Props) {
   const config = useContext(ProductFlavorConfigContext);
   const [authUser, formAction] = useFormState(loginFormAction, null);
   const [isPending, startTransition] = useTransition();
+  const [selectedDomain, setSelectedDomain] = useState<DomainPublicView | null>(
+    null
+  );
+  const [domainError, setDomainError] = useState<string | null>(null);
 
   useEffect(() => {
     // Clear any existing user session
@@ -56,44 +63,45 @@ export function LoginForm({ domains }: Props) {
         <form
           className="flex flex-col gap-4 w-full"
           action={async (formData) => {
+            if (!selectedDomain?.id) {
+              setDomainError("Please select a domain");
+              return;
+            }
+
+            setDomainError(null);
+            formData.set("domainId", selectedDomain.id);
             return startTransition(() => formAction(formData));
           }}
         >
-          <label htmlFor="domainId">
+          <label>
             Domain
-            <select
-              id="domainId"
-              name="domainId"
-              defaultValue={[]}
-              className="block w-full border px-3 py-2 rounded-md"
-            >
-              {domains.map((domain) => (
-                <option key={domain.key} value={domain.id}>
-                  {domain.key}
-                </option>
-              ))}
-            </select>
+            <Combobox
+              getById={() => Promise.resolve(undefined)}
+              getItems={() => Promise.resolve(domains)}
+              renderItem={(item) => item.key}
+              onSelect={(items) => {
+                setSelectedDomain(items?.[0] || null);
+              }}
+              selectPlaceholder="Select domain..."
+              buttonClassName="w-full"
+              contentClassName="w-[--radix-popover-trigger-width]"
+            />
+            {domainError && <p className="text-destructive">{domainError}</p>}
           </label>
 
-          <label htmlFor="userId">
-            User Id
-            <Input
-              type="text"
-              id="userId"
-              name="userId"
-              defaultValue={config.loginPage.defaultFormValues.userId}
-              required
-            />
-          </label>
+          <TextFormItem
+            label="User Id"
+            inputId="userId"
+            name="userId"
+            defaultValue={config.loginPage.defaultFormValues.userId}
+            required
+          />
 
-          <label htmlFor="businessAccountId">
-            Business Account Id
-            <Input
-              type="text"
-              id="businessAccountId"
-              name="businessAccountId"
-            />
-          </label>
+          <TextFormItem
+            label="Business Account Id"
+            inputId="businessAccountId"
+            name="businessAccountId"
+          />
 
           <Button
             type="submit"

@@ -1,12 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
 import { TwinsAPI } from "@/shared/api";
-import { isPopulatedArray } from "@/shared/libs/types/checkers";
+import { isPopulatedArray } from "@/shared/libs";
 
 import { hydrateDomainUserFromMap } from "../libs/helpers";
+import { LOGIN_FORM_SCHEMA } from "../libs/schemas";
 
 async function login(authToken: string, domainId: string) {
   const { data, error } = await TwinsAPI.POST(
@@ -41,17 +41,8 @@ async function login(authToken: string, domainId: string) {
   return data;
 }
 
-const FORM_SCHEMA = z.object({
-  domainId: z.string().uuid("Domain ID must be a valid UUID"),
-  userId: z.string().uuid("Please enter a valid UUID"),
-  businessAccountId: z
-    .string()
-    .uuid("Please enter a valid UUID")
-    .optional()
-    .or(z.literal("")),
-});
 export async function loginFormAction(_: unknown, formData: FormData) {
-  const { userId, domainId, businessAccountId } = FORM_SCHEMA.parse({
+  const { userId, domainId, businessAccountId } = LOGIN_FORM_SCHEMA.parse({
     userId: formData.get("userId"),
     domainId: formData.get("domainId"),
     businessAccountId: formData.get("businessAccountId"),
