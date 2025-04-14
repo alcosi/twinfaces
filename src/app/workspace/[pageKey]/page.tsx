@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { fetchSidebarFace } from "@/entities/face";
-import { isUndefined } from "@/shared/libs";
+import { isUndefined, safe } from "@/shared/libs";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
 type Props = {
@@ -11,14 +11,20 @@ type Props = {
 };
 
 export default async function Page({ params: { pageKey } }: Props) {
-  const sidebarFace = await fetchSidebarFace();
-  const pageFace = sidebarFace.userAreaMenuItems?.find(
+  const pageFaceId = await resolvePageFaceId(pageKey);
+
+  if (isUndefined(pageFaceId)) return notFound();
+
+  return <LayoutRenderer pageFaceId={pageFaceId} />;
+}
+
+async function resolvePageFaceId(pageKey: string): Promise<string | undefined> {
+  const result = await safe(fetchSidebarFace);
+  if (!result.ok) return;
+
+  const page = result.data.userAreaMenuItems?.find(
     (item) => item.key === pageKey
   );
 
-  if (isUndefined(pageFace?.targetPageFaceId)) {
-    return notFound();
-  }
-
-  return <LayoutRenderer pageFaceId={pageFace.targetPageFaceId} />;
+  return page?.targetPageFaceId;
 }

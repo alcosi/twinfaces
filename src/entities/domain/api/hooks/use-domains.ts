@@ -1,3 +1,5 @@
+"use client";
+
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext, useEffect, useState } from "react";
 

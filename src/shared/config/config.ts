@@ -1,4 +1,13 @@
-import { LocalConfig, ProductFlavorConfig, RemoteConfig } from "./types";
+import {
+  LocalConfig,
+  ProductFlavorConfig,
+  RemoteConfig,
+  ThemeConfig,
+} from "./types";
+
+const theme: ThemeConfig = {
+  defaultTheme: "system",
+};
 
 const configs: Record<string, LocalConfig> = {
   twinfaces: {
@@ -10,6 +19,7 @@ const configs: Record<string, LocalConfig> = {
         businessAccountId: undefined,
       },
     },
+    theme,
   },
   onshelves: {
     productName: "TwinFaces",
@@ -20,17 +30,15 @@ const configs: Record<string, LocalConfig> = {
         businessAccountId: "9a3f6075-f175-41cd-a804-934201ec969c",
       },
     },
+    theme,
   },
 };
 
 export function getProductFlavorConfig(
   remoteConfig?: RemoteConfig
 ): ProductFlavorConfig {
-  // NOTE: does not scale!!!
-  const localConfig = remoteConfig
-    ? ((configs[remoteConfig.key ?? "twinfaces"] ??
-        configs["twinfaces"]) as LocalConfig)
-    : (configs["twinfaces"] as LocalConfig);
+  const key = remoteConfig?.key ?? "twinfaces";
+  const localConfig = configs[key] ?? configs["twinfaces"]!;
 
   return {
     ...localConfig,

@@ -2,15 +2,18 @@
 
 import { fetchCurrentDomain } from "@/entities/domain/api/actions";
 import { TwinsAPI } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
 
 import { getAuthHeaders } from "../../libs";
 import { Face, FaceNB001 } from "../types";
 
 export async function fetchSidebarFace(): Promise<FaceNB001> {
   const { domain } = await fetchCurrentDomain();
-  if (!domain?.navbarFaceId) throw new Error("Navbar id is not found");
 
-  return fetchSidebarFaceById(domain.navbarFaceId);
+  if (isUndefined(domain?.navbarFaceId))
+    throw new Error("Navbar id is not found");
+
+  return await fetchSidebarFaceById(domain.navbarFaceId);
 }
 
 async function fetchSidebarFaceById(faceId: string): Promise<Face> {

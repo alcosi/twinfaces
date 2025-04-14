@@ -3,6 +3,7 @@
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import { getProductFlavorConfig } from "@/shared/config";
 import {
   Button,
   DropdownMenu,
@@ -18,10 +19,12 @@ const THEME_OPTIONS = [
 ] as const;
 
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme();
+  const config = getProductFlavorConfig();
+  const { setTheme, theme = config.theme.defaultTheme } = useTheme();
 
-  const CurrentThemeIcon =
-    THEME_OPTIONS.find((option) => option.key === theme)?.icon ?? Sun;
+  const CurrentThemeIcon = (
+    THEME_OPTIONS.find((option) => option.key === theme) ?? THEME_OPTIONS[0]
+  ).icon;
 
   return (
     <DropdownMenu>

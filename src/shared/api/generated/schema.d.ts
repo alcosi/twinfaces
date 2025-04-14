@@ -163,6 +163,10 @@ export interface paths {
     /** Delete businessAccount */
     delete: operations["businessAccountDeleteV1"];
   };
+  "/public/domain/search/v1": {
+    /** Search public domain data by key */
+    post: operations["domainSearchPublicV1"];
+  };
   "/public/data_list_option/search/v1": {
     /** Return a list of all public data list options */
     post: operations["dataListOptionSearchPublicListV1"];
@@ -1094,6 +1098,8 @@ export interface components {
        * @description twin display page pointer
        */
       pageFaceId?: string;
+      /** @description assignee required */
+      assigneeRequired?: boolean;
     };
     TwinflowBaseV1: {
       /**
@@ -2670,6 +2676,8 @@ export interface components {
        * @description twin display page pointer
        */
       pageFaceId?: string;
+      /** @description assignee required */
+      assigneeRequired?: boolean;
       /** @description Class fields list */
       fields?: components["schemas"]["TwinClassFieldV1"][];
       /** @description Class fields id list */
@@ -3082,6 +3090,8 @@ export interface components {
        * @enum {string}
        */
       ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
+      /** @description [optional] is assignee required */
+      assigneeRequired?: boolean;
       /** @description [optional] should be filled on change marker data list id */
       markerDataListUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
       /** @description [optional] should be filled on change tag data list id */
@@ -5476,6 +5486,61 @@ export interface components {
        */
       name?: string;
     };
+    DomainSearchRqV1: {
+      /** @description domain public search */
+      search?: components["schemas"]["DomainSearchV1"];
+    };
+    DomainSearchV1: {
+      /** @description key like list */
+      keyLikeList?: string[];
+      /** @description key not like list */
+      keyNotLikeList?: string[];
+    };
+    DomainSearchRsV1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description pagination data */
+      pagination?: components["schemas"]["PaginationV1"];
+      /** @description domains */
+      domains?: components["schemas"]["DomainViewPublicV1"][];
+    };
+    DomainViewPublicV1: {
+      /**
+       * Format: uuid
+       * @description domain id
+       */
+      id?: string;
+      /**
+       * @description key
+       * @example alcosi
+       */
+      key?: string;
+      /**
+       * @description domain description
+       * @example alcosi
+       */
+      description?: string;
+      /** @description Icon dark uri. Might be relative */
+      iconDark?: string;
+      /** @description Icon light uri. Might be relative */
+      iconLight?: string;
+    };
     DataListOptionSearchRqV1: {
       /** @description id list */
       idList?: string[];
@@ -7047,6 +7112,8 @@ export interface components {
        * @enum {string}
        */
       ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
+      /** @description [optional] is assignee required */
+      assigneeRequired?: boolean;
       /**
        * Format: uuid
        * @description [optional] link to extends class. All fields and links will be valid for current class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
@@ -7168,6 +7235,12 @@ export interface components {
        * @enum {string}
        */
       aliasSpace?: "ONLY" | "ONLY_NOT" | "ANY";
+      /**
+       * @description twin class required assignee
+       * @example ANY
+       * @enum {string}
+       */
+      assigneeRequired?: "ONLY" | "ONLY_NOT" | "ANY";
       /** @description permission id list */
       viewPermissionIdList?: string[];
       /** @description permission id exclude list */
@@ -11115,27 +11188,6 @@ export interface components {
       /** @description domain */
       domain?: components["schemas"]["DomainViewPublicV1"];
     };
-    DomainViewPublicV1: {
-      /**
-       * Format: uuid
-       * @description domain id
-       */
-      id?: string;
-      /**
-       * @description key
-       * @example alcosi
-       */
-      key?: string;
-      /**
-       * @description domain description
-       * @example alcosi
-       */
-      description?: string;
-      /** @description Icon dark uri. Might be relative */
-      iconDark?: string;
-      /** @description Icon light uri. Might be relative */
-      iconLight?: string;
-    };
     DataListOptionRsV1: {
       /**
        * Format: int32
@@ -12504,6 +12556,11 @@ export interface components {
        * @description domain navigation bar pointer
        */
       targetPageFaceId?: string;
+      /**
+       * Format: uuid
+       * @description permission id
+       */
+      permissionId?: string;
     };
     FaceNB001ViewRsV1: {
       /**
@@ -15107,6 +15164,37 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["Response"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Search public domain data by key */
+  domainSearchPublicV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
+        offset?: unknown;
+        limit?: unknown;
+        sortAsc?: unknown;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DomainSearchRqV1"];
+      };
+    };
+    responses: {
+      /** @description Public domain details prepared */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainSearchRsV1"];
         };
       };
       /** @description Access is denied */
@@ -24321,7 +24409,33 @@ export interface operations {
         lazyRelation?: unknown;
         showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
         showFaceNB001MenuItem2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showFaceNB001MenuItem2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
         showFaceNB001MenuItemCollectionMode?: "HIDE" | "SHOW";
+        showFeaturerParamMode?: "HIDE" | "SHOW";
+        showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+        showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showPermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+        showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+        showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+        showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+        showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+        showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
       };
       header: {
         /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */

@@ -5,7 +5,7 @@ import { TwinsAPI } from "@/shared/api";
 import { RemoteConfig } from "@/shared/config";
 import { isUndefined } from "@/shared/libs";
 
-import { DomainViewRs } from "./types";
+import { DomainPublicView, DomainViewRs } from "./types";
 
 export async function fetchDomainByKey(
   domainKey: string
@@ -37,4 +37,21 @@ export async function fetchCurrentDomain(): Promise<DomainViewRs> {
   if (isUndefined(data)) throw new Error("Failed to fetch domain");
 
   return data;
+}
+
+export async function fetchDomains(): Promise<DomainPublicView[]> {
+  const { data } = await TwinsAPI.POST(`/public/domain/search/v1`, {
+    params: {
+      query: {
+        lazyRelation: false,
+        showDomainMode: "DETAILED",
+      },
+    },
+    body: { search: {} },
+  });
+
+  if (isUndefined(data?.domains))
+    throw new Error("Failed to fetch domain list");
+
+  return data.domains;
 }

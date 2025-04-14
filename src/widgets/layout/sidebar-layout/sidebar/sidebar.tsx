@@ -31,7 +31,7 @@ import { PlatformAreaSwitcher } from "./area-switcher";
 import { CoreAreaSidebarMenu, WorkspaceAreaSidebarMenu } from "./menu";
 
 type Props = {
-  face: FaceNB001;
+  face?: FaceNB001;
 };
 
 export function AppSidebar({ face }: Props) {
@@ -97,27 +97,35 @@ export function AppSidebar({ face }: Props) {
         </SidebarHeader>
 
         <SidebarContent>
-          <Tabs value={area} className="flex flex-col gap-2 h-full">
-            <section className="grow overflow-y-auto pb-2">
-              <SlideView activeIndex={area === PlatformArea.workspace ? 0 : 1}>
-                <nav key={PlatformArea.workspace}>
-                  {isPopulatedArray(face.userAreaMenuItems) && (
-                    <WorkspaceAreaSidebarMenu items={face.userAreaMenuItems} />
-                  )}
-                </nav>
-                <nav key={PlatformArea.core}>
-                  <CoreAreaSidebarMenu />
-                </nav>
-              </SlideView>
-            </section>
+          {face ? (
+            <Tabs value={area} className="flex flex-col gap-2 h-full">
+              <section className="grow overflow-y-auto pb-2">
+                <SlideView
+                  activeIndex={area === PlatformArea.workspace ? 0 : 1}
+                >
+                  <nav key={PlatformArea.workspace}>
+                    {isPopulatedArray(face.userAreaMenuItems) && (
+                      <WorkspaceAreaSidebarMenu
+                        items={face.userAreaMenuItems}
+                      />
+                    )}
+                  </nav>
+                  <nav key={PlatformArea.core}>
+                    <CoreAreaSidebarMenu />
+                  </nav>
+                </SlideView>
+              </section>
 
-            <PlatformAreaSwitcher
-              userLabel={face.userAreaLabel ?? ""}
-              adminLabel={face.adminAreaLabel ?? ""}
-              area={area}
-              setArea={setArea}
-            />
-          </Tabs>
+              <PlatformAreaSwitcher
+                userLabel={face.userAreaLabel ?? ""}
+                adminLabel={face.adminAreaLabel ?? ""}
+                area={area}
+                setArea={setArea}
+              />
+            </Tabs>
+          ) : (
+            <CoreAreaSidebarMenu />
+          )}
         </SidebarContent>
 
         <SidebarFooter className="border-t">

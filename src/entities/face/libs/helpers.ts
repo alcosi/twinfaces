@@ -34,6 +34,7 @@ async function getDomainIdFromCookies(): Promise<string> {
   const cookieStore = await cookies();
 
   const domainId = cookieStore.get("domainId")?.value;
+
   if (isUndefined(domainId)) {
     throw new Error("Missing domainId in cookies");
   }
@@ -41,7 +42,7 @@ async function getDomainIdFromCookies(): Promise<string> {
   return domainId;
 }
 
-export async function getAuthTokenFromCookies(): Promise<string> {
+async function getAuthTokenFromCookies(): Promise<string> {
   const cookieStore = await cookies();
 
   const token = cookieStore.get("authToken")?.value;

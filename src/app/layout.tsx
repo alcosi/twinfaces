@@ -2,7 +2,6 @@ import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
 
-import { getDomainFromHeaders } from "@/entities/face";
 import { getProductFlavorConfig } from "@/shared/config";
 import { cn } from "@/shared/libs";
 import { PublicLayoutProviders } from "@/widgets/layout";
@@ -19,8 +18,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const domainInfo = await getDomainFromHeaders();
-  const config = getProductFlavorConfig(domainInfo);
+  const config = getProductFlavorConfig();
 
   return (
     <html lang="en" suppressHydrationWarning>
