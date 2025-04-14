@@ -2,6 +2,10 @@ import { components } from "@/shared/api/generated/schema";
 
 export type RemoteConfig = components["schemas"]["DomainViewPublicV1"];
 
+export type ThemeConfig = {
+  defaultTheme: "light" | "dark" | "system";
+};
+
 export type LocalConfig = {
   // flavor: "twinfaces",
   // productTitle: "Twin Faces",
@@ -15,6 +19,7 @@ export type LocalConfig = {
       // domainId: string;
     };
   };
+  theme: ThemeConfig;
 };
 
 export type ProductFlavorConfig = LocalConfig & RemoteConfig;

@@ -18,7 +18,7 @@ export function PublicLayoutProviders({
       <PublicApiContextProvider>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme={config.theme.defaultTheme}
           enableSystem
           disableTransitionOnChange
         >

@@ -5,7 +5,8 @@ import { revalidatePath } from "next/cache";
 import { TwinsAPI } from "@/shared/api";
 import { isPopulatedArray } from "@/shared/libs";
 
-import { LOGIN_FORM_SCHEMA, hydrateDomainUserFromMap } from "../server";
+import { hydrateDomainUserFromMap } from "../libs/helpers";
+import { LOGIN_FORM_SCHEMA } from "../server";
 
 async function login(authToken: string, domainId: string) {
   const { data, error } = await TwinsAPI.POST(
