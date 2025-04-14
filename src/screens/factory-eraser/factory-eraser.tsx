@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { FactoryEraserContext } from "@/features/factory-eraser";
+import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { FactoryEraserGeneral } from "./views";
@@ -24,12 +25,11 @@ export function FactoryEraserScreen() {
     setBreadcrumbs([
       {
         label: "Erasers",
-        // TODO replace with PlatformArea.core
-        href: "/workspace/erasers",
+        href: `/${PlatformArea.core}/erasers`,
       },
       {
         label: eraser.factory.name || eraser.factory.key!,
-        href: `/workspace/erasers/${eraserId}`,
+        href: `/${PlatformArea.core}/erasers/${eraserId}`,
       },
     ]);
   }, [eraserId, eraser.factory.name, eraser.factory.key, setBreadcrumbs]);

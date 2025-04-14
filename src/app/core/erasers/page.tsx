@@ -1,5 +1,5 @@
-import { UnderConstructionScreen as UnderConstruction } from "@/screens/under-construction";
+import { FactoryErasers } from "@/screens/factory-erasers";
 
 export default function ErasersPage() {
-  return <UnderConstruction />;
+  return <FactoryErasers />;
 }

@@ -19,6 +19,7 @@ import {
 } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -170,8 +171,7 @@ export function FactoryErasers() {
         filtersInfo: buildFilterFields(),
       }}
       onRowClick={(row) => {
-        // TODO: replace with PlatformAreaCore
-        router.push(`/workspace/erasers/${row.id}`);
+        router.push(`/${PlatformArea.core}/erasers/${row.id}`);
       }}
     />
   );
