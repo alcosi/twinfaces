@@ -56,3 +56,10 @@ export function pluckProperty<
     Object.entries(obj).map(([key, nestedObj]) => [key, nestedObj[prop]])
   ) as Record<keyof T, T[string][K]>;
 }
+
+export function isFound<T>(
+  array: T[],
+  predicate: (item: T) => boolean
+): boolean {
+  return array.findIndex(predicate) !== -1;
+}

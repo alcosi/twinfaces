@@ -4,113 +4,109 @@
 
 @layer base {
   :root {
-    --brand-50: 215 90% 98%;
-    --brand-100: 215 90% 95%;
-    --brand-200: 215 90% 85%;
-    --brand-300: 215 90% 75%;
-    --brand-400: 215 90% 65%;
-    --brand-500: 215 90% 50%;
-    --brand-600: 215 90% 40%;
-    --brand-700: 215 90% 30%;
-    --brand-800: 215 90% 20%;
-    --brand-900: 215 90% 15%;
-    --brand-950: 215 90% 10%;
-
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-
-    --primary: 240 3.9% 15%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
-
+    /* Shared design variables used across themes */
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-
     --header-height: 4rem; /* Equivalent to Tailwind's h-16 (64px) */
+
+    /* Theme light colors */
+    --brand-50: hsl(215 90% 98%);
+    --brand-100: hsl(215 90% 95%);
+    --brand-200: hsl(215 90% 85%);
+    --brand-300: hsl(215 90% 75%);
+    --brand-400: hsl(215 90% 65%);
+    --brand-500: hsl(215 90% 50%);
+    --brand-600: hsl(215 90% 40%);
+    --brand-700: hsl(215 90% 30%);
+    --brand-800: hsl(215 90% 20%);
+    --brand-900: hsl(215 90% 15%);
+    --brand-950: hsl(215 90% 10%);
+
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(240 10% 3.9%);
+
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(240 10% 3.9%);
+
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(240 10% 3.9%);
+
+    --primary: hsl(240 3.9% 15%);
+    --primary-foreground: hsl(0 0% 98%);
+
+    --secondary: hsl(240 4.8% 95.9%);
+    --secondary-foreground: hsl(240 5.9% 10%);
+
+    --muted: hsl(240 4.8% 95.9%);
+    --muted-foreground: hsl(240 3.8% 46.1%);
+
+    --accent: hsl(240 4.8% 95.9%);
+    --accent-foreground: hsl(240 5.9% 10%);
+
+    --destructive: hsl(0 84.2% 60.2%);
+    --destructive-foreground: hsl(0 0% 98%);
+
+    --border: hsl(240 5.9% 90%);
+    --input: hsl(240 5.9% 90%);
+    --ring: hsl(240 10% 3.9%);
+
+    --sidebar-background: hsl(0 0% 98%);
+    --sidebar-foreground: hsl(240 5.3% 26.1%);
+    --sidebar-primary: hsl(240 5.9% 10%);
+    --sidebar-primary-foreground: hsl(0 0% 98%);
+    --sidebar-accent: hsl(240 4.8% 95.9%);
+    --sidebar-accent-foreground: hsl(240 5.9% 10%);
+    --sidebar-border: hsl(220 13% 91%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
   }
 
   .dark {
-    --brand-50: 40 100% 98%;
-    --brand-100: 40 100% 95%;
-    --brand-200: 40 100% 85%;
-    --brand-500: 40 100% 60%;
-    --brand-600: 40 100% 50%;
-    --brand-700: 40 100% 40%;
-    --brand-800: 40 100% 30%;
-    --brand-900: 40 100% 20%;
-    --brand-950: 40 100% 10%;
+    /* Theme dark colors */
+    --brand-50: hsl(40 100% 98%);
+    --brand-100: hsl(40 100% 95%);
+    --brand-200: hsl(40 100% 85%);
+    --brand-500: hsl(40 100% 60%);
+    --brand-600: hsl(40 100% 50%);
+    --brand-700: hsl(40 100% 40%);
+    --brand-800: hsl(40 100% 30%);
+    --brand-900: hsl(40 100% 20%);
+    --brand-950: hsl(40 100% 10%);
 
-    --background: 240 10% 7.9%;
-    --foreground: 0 0% 98%;
+    --background: hsl(240 10% 7.9%);
+    --foreground: hsl(0 0% 98%);
 
-    --card: 240 10% 7.9%;
-    --card-foreground: 0 0% 98%;
+    --card: hsl(240 10% 7.9%);
+    --card-foreground: hsl(0 0% 98%);
 
-    --popover: 240 10% 7.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: hsl(240 10% 7.9%);
+    --popover-foreground: hsl(0 0% 98%);
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: hsl(0 0% 98%);
+    --primary-foreground: hsl(240 5.9% 10%);
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: hsl(240 3.7% 15.9%);
+    --secondary-foreground: hsl(0 0% 98%);
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: hsl(240 3.7% 15.9%);
+    --muted-foreground: hsl(240 5% 64.9%);
 
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: hsl(240 3.7% 15.9%);
+    --accent-foreground: hsl(0 0% 98%);
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: hsl(0 62.8% 30.6%);
+    --destructive-foreground: hsl(0 0% 98%);
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: hsl(240 3.7% 15.9%);
+    --input: hsl(240 3.7% 15.9%);
+    --ring: hsl(240 4.9% 83.9%);
+
+    --sidebar-background: hsl(240 5.9% 10%);
+    --sidebar-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-primary: hsl(224.3 76.3% 48%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(240 3.7% 15.9%);
+    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-border: hsl(240 3.7% 15.9%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
   }
 }
 

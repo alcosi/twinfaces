@@ -1,4 +1,3 @@
-import { usePathname } from "next/navigation";
 import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -25,27 +24,22 @@ import { TwinContext } from "@/features/twin";
 import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { FieldDescriptorText, TwinFieldEditor } from "@/features/twin/ui";
 import { PrivateApiContext } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
   isUndefined,
 } from "@/shared/libs";
-import { RedirectButton } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinGeneral() {
   const api = useContext(PrivateApiContext);
-  const { twin, refresh, isPermissionDomainManaged } = useContext(TwinContext);
+  const { twin, refresh } = useContext(TwinContext);
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
   const uAdapter = useUserSelectAdapter();
   const tagAdapter = useTagsByTwinClassIdSelectAdapter(twin?.twinClassId);
-
-  const pathname = usePathname();
-  const isCorePath = pathname.includes(PlatformArea.core);
 
   async function updateTwin(body: TwinUpdateRq) {
     if (isUndefined(twin)) {
@@ -137,16 +131,9 @@ export function TwinGeneral() {
       toast.error("Error performing transition");
     }
   }
-  //TODO fix in the future /other-twin/
+
   return (
     <InPlaceEditContextProvider>
-      {isPermissionDomainManaged && (
-        <RedirectButton
-          isCorePath={isCorePath}
-          linkHref={`/${PlatformArea.workspace}/other-twin/${twin.id}`}
-        />
-      )}
-
       <Table className="mt-8">
         <TableBody>
           <TableRow>

@@ -19,14 +19,21 @@ export async function getAuthHeaders(): Promise<{
   DomainId: string;
   AuthToken: string;
   Channel: "WEB";
+  currentUserId: string;
 }> {
   const DomainId = await getDomainIdFromCookies();
   const AuthToken = await getAuthTokenFromCookies();
+  const currentUserId = AuthToken.split(",")[0];
+
+  if (isUndefined(currentUserId)) {
+    throw new Error("Failed to resolve current user ID from auth token.");
+  }
 
   return {
     DomainId: DomainId,
     AuthToken,
     Channel: "WEB",
+    currentUserId,
   };
 }
 
