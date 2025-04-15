@@ -17,7 +17,7 @@ type Props = {
   setArea: Dispatch<SetStateAction<keyof typeof PlatformArea>>;
 };
 
-export function PlatformAreaSwitcher({
+export function SidebarAreaSwitcher({
   userLabel,
   adminLabel,
   area,

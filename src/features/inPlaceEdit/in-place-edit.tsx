@@ -99,7 +99,9 @@ export function InPlaceEdit<T>({
         ) : (
           <>
             {(value as ReactNode) || (
-              <div className="font-light italic text-muted">None</div>
+              <div className="font-light italic text-muted-foreground">
+                None
+              </div>
             )}
           </>
         )}

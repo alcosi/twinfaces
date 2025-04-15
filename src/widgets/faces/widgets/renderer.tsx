@@ -1,6 +1,8 @@
 import { FC } from "react";
 
-import { Face_DETAILED, fetchFaceById } from "@/entities/face";
+import { Face_DETAILED, fetchFaceById, getAuthHeaders } from "@/entities/face";
+import { isGranted } from "@/entities/user/server";
+import { ViewAsAdminButton } from "@/features/twin/ui";
 import { isPopulatedString, safe } from "@/shared/libs";
 
 import { AlertError } from "../components";
@@ -60,7 +62,18 @@ export async function WidgetRenderer({ twinId, widget }: Props) {
       );
     }
 
-    return <Comp twinId={twinId} face={face} widget={widget} />;
+    const { currentUserId } = await getAuthHeaders();
+    const isAdmin = await isGranted({
+      userId: currentUserId,
+      permission: "DOMAIN_MANAGE",
+    });
+
+    return (
+      <>
+        <Comp twinId={twinId} face={face} widget={widget} />
+        {isAdmin && <ViewAsAdminButton twinId={twinId} />}
+      </>
+    );
   }
 
   return (

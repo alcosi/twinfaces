@@ -12,12 +12,8 @@ import {
   TwinClass_DETAILED,
   useTagsByTwinClassIdSelectAdapter,
 } from "@/entities/twin-class";
-import {
-  TwinFlowTransition,
-  usePerformTransition,
-} from "@/entities/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { TwinUpdateRq, Twin_DETAILED } from "@/entities/twin/server";
+import { TwinUpdateRq } from "@/entities/twin/server";
 import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
 import {
   InPlaceEdit,
@@ -44,7 +40,6 @@ export function TwinGeneral() {
     useState<AutoEditDialogSettings | undefined>(undefined);
   const uAdapter = useUserSelectAdapter();
   const tagAdapter = useTagsByTwinClassIdSelectAdapter(twin?.twinClassId);
-  const { performTransition } = usePerformTransition();
 
   async function updateTwin(body: TwinUpdateRq) {
     if (isUndefined(twin)) {

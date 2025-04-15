@@ -91,7 +91,12 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
-  return { searchDomainUsers, searchPermissionGrants, getById, update };
+  return {
+    searchDomainUsers,
+    searchPermissionGrants,
+    getById,
+    update,
+  };
 }
 
 export type UserApi = ReturnType<typeof createUserApi>;

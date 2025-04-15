@@ -27,7 +27,7 @@ import {
   Tabs,
 } from "@/shared/ui";
 
-import { PlatformAreaSwitcher } from "./area-switcher";
+import { SidebarAreaSwitcher } from "./area-switcher";
 import { CoreAreaSidebarMenu, WorkspaceAreaSidebarMenu } from "./menu";
 
 type Props = {
@@ -116,7 +116,7 @@ export function AppSidebar({ face }: Props) {
                 </SlideView>
               </section>
 
-              <PlatformAreaSwitcher
+              <SidebarAreaSwitcher
                 userLabel={face.userAreaLabel ?? ""}
                 adminLabel={face.adminAreaLabel ?? ""}
                 area={area}

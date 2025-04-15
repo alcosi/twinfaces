@@ -21,3 +21,6 @@ export type DomainUserFilters = Partial<
 
 export type DomainUserViewQuery =
   operations["domainUserViewV1"]["parameters"]["query"];
+
+export type UserPermissionListQuery =
+  operations["userPermissionListV1"]["parameters"]["query"];
