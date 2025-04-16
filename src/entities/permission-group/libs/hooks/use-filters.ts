@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
   type FilterFeature,
   toArray,
@@ -15,6 +16,8 @@ export function usePermissionGroupFilters(): FilterFeature<
   PermissionGroupFilterKeys,
   PermissionGroupFilters
 > {
+  const twinClassAdapter = useTwinClassSelectAdapter();
+
   function buildFilterFields(): Record<
     PermissionGroupFilterKeys,
     AutoFormValueInfo
@@ -29,6 +32,12 @@ export function usePermissionGroupFilters(): FilterFeature<
       keyLikeList: {
         type: AutoFormValueType.tag,
         label: "Key",
+      },
+      twinClassIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Class",
+        multi: true,
+        ...twinClassAdapter,
       },
       nameLikeList: {
         type: AutoFormValueType.tag,
@@ -49,6 +58,7 @@ export function usePermissionGroupFilters(): FilterFeature<
       keyLikeList: toArrayOfString(toArray(filters.keyLikeList), "key").map(
         wrapWithPercent
       ),
+      twinClassIdList: toArrayOfString(filters.twinClassIdList),
       nameLikeList: toArrayOfString(toArray(filters.nameLikeList), "name").map(
         wrapWithPercent
       ),
