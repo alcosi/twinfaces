@@ -20,8 +20,8 @@ export type ResourceLinkTooltipProps = PropsWithChildren<{
 const brandGradient = css`
   background: linear-gradient(
     to bottom,
-    hsl(var(--brand-500)) 0px,
-    hsl(var(--brand-500)) 56px,
+    var(--brand-500) 0px,
+    var(--brand-500) 56px,
     transparent 56px
   );
 `;
