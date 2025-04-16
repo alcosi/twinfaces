@@ -1,13 +1,11 @@
 import { FC } from "react";
 
-import { Face_DETAILED, fetchFaceById, getAuthHeaders } from "@/entities/face";
-import { isGranted } from "@/entities/user/server";
-import { ViewAsAdminButton } from "@/features/twin/ui";
+import { Face_DETAILED, fetchFaceById } from "@/entities/face";
 import { isPopulatedString, safe } from "@/shared/libs";
 
 import { AlertError } from "../components";
 import { TWidgetFaceProps, Widget, WidgetFaceProps } from "./types";
-import { TW001, TW002, TW004, WT001 } from "./views";
+import { TW001, TW002, TW004, TW005, WT001 } from "./views";
 
 const WIDGETS: Record<string, FC<WidgetFaceProps>> = {
   WT001,
@@ -17,6 +15,7 @@ const TWIDGETS: Record<string, FC<TWidgetFaceProps>> = {
   TW001,
   TW002,
   TW004,
+  TW005,
 };
 
 type Props = {
@@ -62,18 +61,7 @@ export async function WidgetRenderer({ twinId, widget }: Props) {
       );
     }
 
-    const { currentUserId } = await getAuthHeaders();
-    const isAdmin = await isGranted({
-      userId: currentUserId,
-      permission: "DOMAIN_MANAGE",
-    });
-
-    return (
-      <>
-        <Comp twinId={twinId} face={face} widget={widget} />
-        {isAdmin && <ViewAsAdminButton twinId={twinId} />}
-      </>
-    );
+    return <Comp twinId={twinId} face={face} widget={widget} />;
   }
 
   return (
