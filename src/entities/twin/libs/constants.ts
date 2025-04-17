@@ -1,10 +1,8 @@
-import {
-  FIRST_ID_EXTRACTOR,
-  FIRST_USER_ID_EXTRACTOR,
-  isPopulatedString,
-  isTruthy,
-} from "@/shared/libs";
 import { z } from "zod";
+
+import { FIRST_ID_EXTRACTOR, FIRST_USER_ID_EXTRACTOR } from "@/shared/libs";
+
+import { transformToTwinTags } from "./helpers";
 
 export const TwinTouchIds = ["WATCHED", "STARRED", "REVIEWED"] as const;
 
@@ -29,24 +27,23 @@ export const TWIN_SCHEMA = z.object({
         z.string(),
       ])
     )
-    .transform(transformTags)
+    .transform(transformToTwinTags)
     .optional(),
 });
 
-function transformTags(arr: Array<{ id?: string; name: string } | string>) {
-  return arr.reduce<{
-    existingTags: string[];
-    newTags: string[];
-  }>(
-    (acc, tag) => {
-      if (isPopulatedString(tag)) {
-        acc.newTags.push(tag);
-      } else if (isTruthy(tag.id)) {
-        acc.existingTags.push(tag.id);
-      }
+// === Twin fields ===
+export const FieldDescriptorText = {
+  fieldType: "textV1",
+  regExp: ".*",
+} as const;
 
-      return acc;
-    },
-    { existingTags: [], newTags: [] }
-  );
-}
+export const FieldDescriptorSelectUserV1 = {
+  fieldType: "selectUserV1",
+  regExp: ".*",
+} as const;
+
+export const FieldDescriptorSelectSharedInHeadV1 = {
+  fieldType: "selectSharedInHeadV1",
+  regExp: ".*",
+} as const;
+// === Twin fields ===

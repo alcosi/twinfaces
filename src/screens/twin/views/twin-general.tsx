@@ -6,7 +6,11 @@ import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { DatalistOptionResourceLink } from "@/entities/datalist-option";
-import { TwinResourceLink, categorizeTwinTags } from "@/entities/twin";
+import {
+  FieldDescriptorText,
+  TwinResourceLink,
+  categorizeTwinTags,
+} from "@/entities/twin";
 import {
   TwinClassResourceLink,
   TwinClass_DETAILED,
@@ -22,7 +26,7 @@ import {
 } from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
 import { TransitionPerformer } from "@/features/twin-flow-transition";
-import { FieldDescriptorText, TwinFieldEditor } from "@/features/twin/ui";
+import { TwinFieldEditor } from "@/features/twin/ui";
 import { PrivateApiContext } from "@/shared/api";
 import {
   formatToTwinfaceDate,

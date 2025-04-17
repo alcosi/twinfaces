@@ -5,6 +5,7 @@ import {
   isObject,
   isPopulatedArray,
   isPopulatedString,
+  isTruthy,
 } from "@/shared/libs";
 
 export function formatTwinDisplay({ aliases, name }: Twin): string {
@@ -45,4 +46,24 @@ export function categorizeTwinTags(
     newTags,
     deleteTags,
   };
+}
+
+export function transformToTwinTags(
+  arr: Array<{ id?: string; name: string } | string>
+) {
+  return arr.reduce<{
+    existingTags: string[];
+    newTags: string[];
+  }>(
+    (acc, tag) => {
+      if (isPopulatedString(tag)) {
+        acc.newTags.push(tag);
+      } else if (isTruthy(tag.id)) {
+        acc.existingTags.push(tag.id);
+      }
+
+      return acc;
+    },
+    { existingTags: [], newTags: [] }
+  );
 }
