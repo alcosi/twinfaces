@@ -15,7 +15,8 @@ export function useTransitionAliasSelectAdapter(): SelectAdapter<TransitionAlias
   }
 
   function renderItem({ alias, usagesCount }: TransitionAliasV1) {
-    return isPopulatedString(alias) && `${alias} | ${usagesCount}`;
+    if (!isPopulatedString(alias)) return null;
+    return usagesCount === undefined ? alias : `${alias} | ${usagesCount}`;
   }
 
   return {
