@@ -59,7 +59,11 @@ export function TwinFields() {
           >
             <InPlaceEdit
               id={original.key}
-              value={original.value}
+              value={
+                typeof original.value === "object" && original.value.id
+                  ? original.value.id
+                  : original.value
+              }
               valueInfo={{
                 type: AutoFormValueType.twinField,
                 descriptor: original.descriptor,
