@@ -1,3 +1,5 @@
+"use client";
+
 import { Ellipsis } from "lucide-react";
 import { ReactNode } from "react";
 
@@ -36,6 +38,7 @@ export const TransitionPerformer = ({ twin, onSuccess }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
+        {/* TODO fix: Warning: In HTML, <button> cannot be a descendant of <button>.  This will cause a hydration error. */}
         <Button size="iconS6" variant="outline">
           <Ellipsis />
         </Button>

@@ -4,7 +4,7 @@ import { safe } from "@/shared/libs";
 
 import { AlertError } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
-import { loadTwinFieldInfo } from "./utils";
+import { buildFieldEditorProps } from "./utils";
 
 export async function TW004(props: TWidgetFaceProps) {
   const { twinId, widget } = props;
@@ -17,15 +17,7 @@ export async function TW004(props: TWidgetFaceProps) {
   }
   const twidget = twidgetResult.data;
 
-  const {
-    key,
-    value,
-    descriptor,
-    editable,
-    twin,
-    relatedObjects,
-    resourceLinkKey,
-  } = await loadTwinFieldInfo(
+  const { twin, relatedObjects, field } = await buildFieldEditorProps(
     twidget.pointedTwinId!,
     twidget.twinClassFieldId!
   );
@@ -33,17 +25,11 @@ export async function TW004(props: TWidgetFaceProps) {
   return (
     <TwinFieldEditor
       id={twidget.id!}
+      label={twidget.label || "Unknown"}
       twinId={twidget.pointedTwinId!}
       twin={twin}
       relatedObjects={relatedObjects}
-      label={
-        twidget.label || (
-          <label className="px-3 text-sm font-bold italic text-muted">
-            Unknown
-          </label>
-        )
-      }
-      field={{ key, value, descriptor, editable, resourceLinkKey }}
+      field={field}
     />
   );
 }

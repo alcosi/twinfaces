@@ -1,8 +1,11 @@
+import { ReactNode } from "react";
+
 import {
   FieldDescriptorSelectSharedInHeadV1,
   FieldDescriptorSelectUserV1,
   FieldDescriptorText,
 } from "@/entities/twin";
+import { Twin } from "@/entities/twin/server";
 
 type FieldDescriptor =
   | typeof FieldDescriptorText
@@ -13,5 +16,5 @@ export type StaticTwinFieldMeta = {
   fieldName: string;
   fieldDescriptor?: FieldDescriptor;
   editable?: boolean;
-  resourceLinkKey?: string;
+  renderPreview?: (data: Twin, props?: any) => ReactNode;
 };

@@ -189,7 +189,10 @@ export function TwinGeneral() {
               <TwinFieldEditor
                 id="twin.name"
                 twinId={twin.id}
+                twin={twin}
                 field={{
+                  // TODO: FIX
+                  id: "00000000-0000-0000-0011-000000000003",
                   key: "name",
                   value: twin.name,
                   descriptor: FieldDescriptorText,
@@ -206,7 +209,10 @@ export function TwinGeneral() {
               <TwinFieldEditor
                 id="twin.description"
                 twinId={twin.id}
+                twin={twin}
                 field={{
+                  // TODO: FIX
+                  id: "00000000-0000-0000-0011-000000000004",
                   key: "description",
                   value: twin.description ?? "",
                   descriptor: FieldDescriptorText,

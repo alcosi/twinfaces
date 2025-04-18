@@ -3,6 +3,8 @@ import {
   FieldDescriptorSelectUserV1,
   FieldDescriptorText,
 } from "@/entities/twin/libs/constants";
+import { UserResourceLink } from "@/entities/user/components/resource-link";
+import { TransitionPerformer } from "@/features/twin-flow-transition/transition-performer";
 
 import { StaticTwinFieldMeta } from "./types";
 
@@ -22,30 +24,45 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
   "00000000-0000-0000-0011-000000000006": {
     fieldName: "ownerUserId",
     fieldDescriptor: FieldDescriptorSelectUserV1,
+
     editable: false,
-    resourceLinkKey: "ownerUser",
+    // resourceLinkKey: "ownerUser",
   },
   "00000000-0000-0000-0011-000000000007": {
     fieldName: "assignerUserId",
     fieldDescriptor: FieldDescriptorSelectUserV1,
-    resourceLinkKey: "assignerUser",
+    // resourceLinkKey: "assignerUser",
+    renderPreview: (twin) => {
+      return twin.assignerUser ? (
+        <UserResourceLink data={twin.assignerUser} />
+      ) : (
+        twin.assignerUserId
+      );
+    },
   },
   "00000000-0000-0000-0011-000000000008": {
     fieldName: "authorUserId",
     fieldDescriptor: FieldDescriptorSelectUserV1,
     editable: false,
-    resourceLinkKey: "authorUser",
+    // resourceLinkKey: "authorUser",
   },
   "00000000-0000-0000-0011-000000000009": {
     fieldName: "headTwinId",
     fieldDescriptor: FieldDescriptorSelectSharedInHeadV1,
+    renderPreview: (twin) => {
+      // return <TwinResourceLink data={twin.headTwin} />;
+      return <p>RESOLVE: TwinResourceLink</p>;
+    },
     editable: false,
-    resourceLinkKey: "headTwin",
+    // resourceLinkKey: "headTwin",
   },
   "00000000-0000-0000-0011-000000000010": {
     fieldName: "statusId",
     editable: false,
-    resourceLinkKey: "status",
+    // resourceLinkKey: "status",
+    renderPreview: (twin, props) => {
+      return <TransitionPerformer twin={twin} {...props} />;
+    },
   },
   "00000000-0000-0000-0011-000000000011": {
     fieldName: "createdAt",

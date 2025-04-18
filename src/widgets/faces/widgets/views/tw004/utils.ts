@@ -1,25 +1,15 @@
 import { getAuthHeaders } from "@/entities/face";
-import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin } from "@/entities/twin/server";
+import { TwinFieldEditorProps } from "@/features/twin/ui";
 import { RelatedObjects, TwinsAPI } from "@/shared/api";
 import { isTruthy } from "@/shared/libs";
 
 import { STATIC_FIELD_MAP } from "./constants";
 
-type TwinFieldEditorInfo = {
-  key: string;
-  value: string;
-  descriptor: TwinClassField["descriptor"];
-  editable: boolean;
-  twin: Twin;
-  relatedObjects: RelatedObjects;
-  resourceLinkKey: string;
-};
-
-export async function loadTwinFieldInfo(
+export async function buildFieldEditorProps(
   twinId: string,
   fieldId: string
-): Promise<TwinFieldEditorInfo> {
+): Promise<Pick<TwinFieldEditorProps, "twin" | "field" | "relatedObjects">> {
   const header = await getAuthHeaders();
   const { data, error } = await TwinsAPI.GET("/private/twin/{twinId}/v2", {
     params: {
@@ -52,20 +42,19 @@ export async function loadTwinFieldInfo(
 
   // Handle static system fields
   const staticField = STATIC_FIELD_MAP[fieldId];
-  const editable = staticField?.editable ?? true;
-  const resourceLinkKey = staticField?.resourceLinkKey;
 
   if (isTruthy(staticField)) {
     const { fieldName, fieldDescriptor } = staticField;
     const value = (twin[fieldName as keyof Twin] as string) ?? "";
     return {
-      key: fieldName,
-      value,
-      descriptor: fieldDescriptor,
-      editable: editable,
       twin,
       relatedObjects,
-      resourceLinkKey: resourceLinkKey!,
+      field: {
+        id: fieldId,
+        key: fieldName,
+        value,
+        descriptor: fieldDescriptor,
+      },
     };
   }
 
@@ -79,12 +68,13 @@ export async function loadTwinFieldInfo(
   }
 
   return {
-    key: inheritedKey,
-    value,
-    descriptor: twinClassField?.descriptor,
-    editable: editable,
     twin,
     relatedObjects,
-    resourceLinkKey: resourceLinkKey!,
+    field: {
+      id: fieldId,
+      key: inheritedKey,
+      value,
+      descriptor: twinClassField?.descriptor,
+    },
   };
 }
