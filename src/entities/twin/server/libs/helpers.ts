@@ -32,6 +32,10 @@ export function hydrateTwinFromMap<T extends Twin>(
     hydrated.assignerUser = relatedObjects.userMap[dto.assignerUserId] as User;
   }
 
+  if (dto.ownerUserId && relatedObjects.userMap) {
+    hydrated.ownerUser = relatedObjects.userMap[dto.ownerUserId];
+  }
+
   if (dto.headTwinId && relatedObjects.twinMap) {
     hydrated.headTwin = relatedObjects.twinMap[dto.headTwinId];
   }

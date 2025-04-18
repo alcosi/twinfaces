@@ -11,8 +11,8 @@ import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
 import { PrivateApiContext, RelatedObjects } from "@/shared/api";
 import { isPopulatedString } from "@/shared/libs";
-import { STATIC_FIELD_MAP } from "@/widgets/faces/widgets/views/tw004/constants";
 
+import { STATIC_FIELD_MAP } from "../../../widgets/faces/widgets/views/tw004/constants";
 import { InPlaceEdit, InPlaceEditProps } from "../../inPlaceEdit";
 
 type FieldProps = {
@@ -63,18 +63,15 @@ export function TwinFieldEditor({
 
   const hydratedTwin = hydrateTwinFromMap(twin, relatedObjects);
 
-  function renderPreview() {
+  function renderPreview(props?: { onTransitionPerformSuccess?: () => void }) {
     if (fieldRenderPreview) {
-      return fieldRenderPreview(hydratedTwin);
+      return fieldRenderPreview(hydratedTwin, props);
     }
 
-    // @ts-ignore
-    const dValue = relatedObjects.dataListsOptionMap[field.value]
-      ? // @ts-ignore
-        relatedObjects.dataListsOptionMap[field.value].name
-      : undefined;
+    const dValue =
+      relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value;
 
-    return <span className="text-white">{dValue ?? field.value}</span>;
+    return <span>{dValue}</span>;
   }
 
   const updateTwin = useCallback(
@@ -99,7 +96,10 @@ export function TwinFieldEditor({
       descriptor: field.descriptor,
       twinId,
     },
-    renderPreview: renderPreview,
+    renderPreview: () =>
+      renderPreview({
+        onTransitionPerformSuccess: handleOnTransitionPerformSuccess,
+      }),
     schema: schema ?? z.string().min(1),
     onSubmit: async (value) => {
       const body: TwinUpdateRq = STATIC_FIELDS.includes(field.key)
@@ -120,7 +120,7 @@ export function TwinFieldEditor({
   }
 
   return (
-    <div className="">
+    <div>
       {label &&
         (isPopulatedString(label) ? (
           <label className="px-3 text-sm font-bold">{label}</label>
@@ -130,7 +130,11 @@ export function TwinFieldEditor({
       {fieldEditable ? (
         <InPlaceEdit {...editProps} />
       ) : (
-        <div className="px-3 flex gap-2">{renderPreview()}</div>
+        <div className="px-3 flex gap-2">
+          {renderPreview({
+            onTransitionPerformSuccess: handleOnTransitionPerformSuccess,
+          })}
+        </div>
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 import { getAuthHeaders } from "@/entities/face";
 import { Twin } from "@/entities/twin/server";
+import { User } from "@/entities/user";
 import { TwinFieldEditorProps } from "@/features/twin/ui";
 import { RelatedObjects, TwinsAPI } from "@/shared/api";
 import { isTruthy } from "@/shared/libs";
@@ -37,7 +38,7 @@ export async function buildFieldEditorProps(
     throw new Error("Failed to load twin data.");
   }
 
-  const twin = data.twin;
+  const twin = data.twin as Twin & { ownerUser?: User };
   const relatedObjects = data.relatedObjects as RelatedObjects;
 
   // Handle static system fields

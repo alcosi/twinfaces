@@ -1,8 +1,11 @@
+import { TwinResourceLink } from "@/entities/twin";
+import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import {
   FieldDescriptorSelectSharedInHeadV1,
   FieldDescriptorSelectUserV1,
   FieldDescriptorText,
 } from "@/entities/twin/libs/constants";
+import { Twin_DETAILED } from "@/entities/twin/server";
 import { UserResourceLink } from "@/entities/user/components/resource-link";
 import { TransitionPerformer } from "@/features/twin-flow-transition/transition-performer";
 
@@ -26,12 +29,17 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     fieldDescriptor: FieldDescriptorSelectUserV1,
 
     editable: false,
-    // resourceLinkKey: "ownerUser",
+    renderPreview: (twin) => {
+      return twin.ownerUser ? (
+        <UserResourceLink data={twin.ownerUser} />
+      ) : (
+        twin.ownerUserId
+      );
+    },
   },
   "00000000-0000-0000-0011-000000000007": {
     fieldName: "assignerUserId",
     fieldDescriptor: FieldDescriptorSelectUserV1,
-    // resourceLinkKey: "assignerUser",
     renderPreview: (twin) => {
       return twin.assignerUser ? (
         <UserResourceLink data={twin.assignerUser} />
@@ -44,25 +52,52 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     fieldName: "authorUserId",
     fieldDescriptor: FieldDescriptorSelectUserV1,
     editable: false,
-    // resourceLinkKey: "authorUser",
+    renderPreview: (twin) => {
+      return twin.authorUser ? (
+        <UserResourceLink data={twin.authorUser} />
+      ) : (
+        twin.authorUserId
+      );
+    },
   },
   "00000000-0000-0000-0011-000000000009": {
     fieldName: "headTwinId",
     fieldDescriptor: FieldDescriptorSelectSharedInHeadV1,
-    renderPreview: (twin) => {
-      // return <TwinResourceLink data={twin.headTwin} />;
+    //TODO Replase this
+    renderPreview: () => {
       return <p>RESOLVE: TwinResourceLink</p>;
     },
+    //TODO by this after fix bug with SSR
+    // renderPreview: (twin) => {
+    //   return twin.headTwin ? (
+    //     <TwinResourceLink data={twin.headTwin} />
+    //   ) : (
+    //     twin.headTwinId
+    //   );
+    // },
     editable: false,
-    // resourceLinkKey: "headTwin",
   },
   "00000000-0000-0000-0011-000000000010": {
     fieldName: "statusId",
     editable: false,
-    // resourceLinkKey: "status",
+    //TODO Replase this
     renderPreview: (twin, props) => {
-      return <TransitionPerformer twin={twin} {...props} />;
+      return <p>RESOLVE: TwinClassStatusResourceLink</p>;
     },
+    //TODO by this after fix bug with SSR
+    // renderPreview: (twin, props) => {
+    //   return twin.status ? (
+    //     <>
+    //       <TwinClassStatusResourceLink
+    //         twinClassId={twin.twinClassId!}
+    //         data={twin.status}
+    //       />
+    //       {twin.transitions && <TransitionPerformer twin={twin as Twin_DETAILED} onSuccess={props?.onTransitionPerformSuccess} />}
+    //     </>
+    //   ) : (
+    //     twin.statusId
+    //   );
+    // },
   },
   "00000000-0000-0000-0011-000000000011": {
     fieldName: "createdAt",
