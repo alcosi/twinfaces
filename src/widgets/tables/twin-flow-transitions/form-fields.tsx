@@ -23,7 +23,7 @@ export function TwinFlowTransitionFormFields({
   const aliasWatch = useWatch({
     control,
     name: "alias",
-  }) as string | undefined;
+  });
   const isTwinFlowSelected = isTruthy(twinFlowWatch);
   const isPreselected = useRef(isTwinFlowSelected).current;
 
@@ -67,7 +67,7 @@ export function TwinFlowTransitionFormFields({
         noItemsText="No Alias found"
         required={true}
         creatable
-        key={aliasWatch ?? ""}
+        key={aliasWatch}
         {...transitionAliasAdapter}
       />
 
