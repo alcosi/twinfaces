@@ -32,6 +32,18 @@ export const TWIN_SCHEMA = z.object({
 });
 
 // === Twin fields ===
+export const STATIC_TWIN_FIELD_KEYS = [
+  "name",
+  "description",
+  "externalId",
+  "ownerUserId",
+  "assignerUserId",
+  "authorUserId",
+  "headTwinId",
+  "statusId",
+  "createdAt",
+] as const;
+
 export const FieldDescriptorText = {
   fieldType: "textV1",
   regExp: ".*",

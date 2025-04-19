@@ -1,3 +1,5 @@
+"use client";
+
 import { Twin } from "@/entities/twin/server";
 import { PlatformArea } from "@/shared/config";
 import { ResourceLink } from "@/shared/ui";

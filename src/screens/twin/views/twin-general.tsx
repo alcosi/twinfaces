@@ -8,6 +8,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import {
   FieldDescriptorText,
+  STATIC_TWIN_FIELD_NAME_TO_ID_MAP,
   TwinResourceLink,
   categorizeTwinTags,
 } from "@/entities/twin";
@@ -191,8 +192,7 @@ export function TwinGeneral() {
                 twinId={twin.id}
                 twin={twin}
                 field={{
-                  // TODO: FIX
-                  id: "00000000-0000-0000-0011-000000000003",
+                  id: STATIC_TWIN_FIELD_NAME_TO_ID_MAP["name"],
                   key: "name",
                   value: twin.name,
                   descriptor: FieldDescriptorText,
@@ -211,8 +211,7 @@ export function TwinGeneral() {
                 twinId={twin.id}
                 twin={twin}
                 field={{
-                  // TODO: FIX
-                  id: "00000000-0000-0000-0011-000000000004",
+                  id: STATIC_TWIN_FIELD_NAME_TO_ID_MAP["description"],
                   key: "description",
                   value: twin.description ?? "",
                   descriptor: FieldDescriptorText,

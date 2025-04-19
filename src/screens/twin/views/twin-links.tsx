@@ -2,8 +2,7 @@ import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 
-import { TwinLinkView } from "@/entities/link";
-import { LinkResourceLink } from "@/entities/link";
+import { LinkResourceLink, TwinLinkView } from "@/entities/link";
 import { TwinResourceLink, useFetchTwinLinks } from "@/entities/twin";
 import { UserResourceLink } from "@/entities/user";
 import { TwinContext } from "@/features/twin";

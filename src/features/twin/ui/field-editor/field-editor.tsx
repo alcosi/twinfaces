@@ -7,17 +7,18 @@ import { ZodType, z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
+import { STATIC_TWIN_FIELD_KEYS, StaticTwinFieldKey } from "@/entities/twin";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
 import { PrivateApiContext, RelatedObjects } from "@/shared/api";
 import { isPopulatedString } from "@/shared/libs";
 
-import { STATIC_FIELD_MAP } from "../../../widgets/faces/widgets/views/tw004/constants";
-import { InPlaceEdit, InPlaceEditProps } from "../../inPlaceEdit";
+import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
+import { STATIC_FIELD_MAP } from "./constants";
 
 type FieldProps = {
   id: string;
-  key: string;
+  key: StaticTwinFieldKey | string;
   value: string;
   descriptor: TwinClassField["descriptor"];
 };
@@ -33,18 +34,6 @@ export type TwinFieldEditorProps = {
   onSuccess?: () => void;
 };
 
-const STATIC_FIELDS = [
-  "name",
-  "description",
-  "externalId",
-  "ownerUserId",
-  "assignerUserId",
-  "authorUserId",
-  "headTwinId",
-  "statusId",
-  "createdAt",
-];
-
 export function TwinFieldEditor({
   id,
   twinId,
@@ -58,7 +47,6 @@ export function TwinFieldEditor({
   const api = useContext(PrivateApiContext);
   const router = useRouter();
 
-  const fieldEditable = STATIC_FIELD_MAP[field.id]?.editable ?? true;
   const fieldRenderPreview = STATIC_FIELD_MAP[field.id]?.renderPreview;
 
   const hydratedTwin = hydrateTwinFromMap(twin, relatedObjects);
@@ -68,10 +56,10 @@ export function TwinFieldEditor({
       return fieldRenderPreview(hydratedTwin, props);
     }
 
-    const dValue =
+    const displayValue =
       relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value;
 
-    return <span>{dValue}</span>;
+    return <span>{displayValue}</span>;
   }
 
   const updateTwin = useCallback(
@@ -96,13 +84,16 @@ export function TwinFieldEditor({
       descriptor: field.descriptor,
       twinId,
     },
-    renderPreview: () =>
-      renderPreview({
+    renderPreview: () => {
+      return renderPreview({
         onTransitionPerformSuccess: handleOnTransitionPerformSuccess,
-      }),
+      });
+    },
     schema: schema ?? z.string().min(1),
     onSubmit: async (value) => {
-      const body: TwinUpdateRq = STATIC_FIELDS.includes(field.key)
+      const body: TwinUpdateRq = STATIC_TWIN_FIELD_KEYS.includes(
+        field.key as StaticTwinFieldKey
+      )
         ? { [field.key]: value }
         : { fields: { [field.key]: value } };
 
@@ -127,7 +118,7 @@ export function TwinFieldEditor({
         ) : (
           label
         ))}
-      {fieldEditable ? (
+      {field.descriptor ? (
         <InPlaceEdit {...editProps} />
       ) : (
         <div className="px-3 flex gap-2">

@@ -2,10 +2,9 @@ import { getAuthHeaders } from "@/entities/face";
 import { Twin } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { TwinFieldEditorProps } from "@/features/twin/ui";
+import { STATIC_FIELD_MAP } from "@/features/twin/ui/field-editor/constants";
 import { RelatedObjects, TwinsAPI } from "@/shared/api";
 import { isTruthy } from "@/shared/libs";
-
-import { STATIC_FIELD_MAP } from "./constants";
 
 export async function buildFieldEditorProps(
   twinId: string,
@@ -45,16 +44,16 @@ export async function buildFieldEditorProps(
   const staticField = STATIC_FIELD_MAP[fieldId];
 
   if (isTruthy(staticField)) {
-    const { fieldName, fieldDescriptor } = staticField;
-    const value = (twin[fieldName as keyof Twin] as string) ?? "";
+    const { key, descriptor } = staticField;
+    const value = (twin[key as keyof Twin] as string) ?? "";
     return {
       twin,
       relatedObjects,
       field: {
         id: fieldId,
-        key: fieldName,
+        key,
         value,
-        descriptor: fieldDescriptor,
+        descriptor,
       },
     };
   }
