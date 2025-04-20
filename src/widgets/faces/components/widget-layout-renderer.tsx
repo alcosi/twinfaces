@@ -1,5 +1,8 @@
 import { ReactNode } from "react";
 
+import { getAuthHeaders } from "@/entities/face";
+import { isGranted } from "@/entities/user/server";
+import { ViewAsAdminButton } from "@/features/twin/ui";
 import { PartialFields } from "@/shared/libs";
 
 import { PGLayouts } from "../layouts/types";
@@ -18,23 +21,30 @@ const ColumnsCountMap: Record<PGLayouts, number> = {
   THREE_COLUMNS: 3,
 } as const;
 
-export function WidgetLayoutRenderer({
+export async function WidgetLayoutRenderer({
   layout = "ONE_COLUMN",
   widgets,
   twinId,
 }: Props) {
   const columns = ColumnsCountMap[layout];
 
+  const { currentUserId } = await getAuthHeaders();
+  const isAdmin = await isGranted({
+    userId: currentUserId,
+    permission: "DOMAIN_MANAGE",
+  });
+
   return (
     <main className="flex flex-col gap-4 py-4 md:flex-row">
       {Array.from({ length: columns }, (_, i) => (
-        <div key={i} className="flex w-full flex-1 flex-col gap-2">
+        <div key={i} className="flex w-full flex-1 flex-col gap-4">
           {mapWidgetsToNodes(
             widgets.filter((widget) => widget.column === i + 1),
             twinId
           )}
         </div>
       ))}
+      {isAdmin && twinId && <ViewAsAdminButton twinId={twinId} />}
     </main>
   );
 }
