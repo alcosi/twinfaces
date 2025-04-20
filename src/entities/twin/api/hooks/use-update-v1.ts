@@ -12,7 +12,13 @@ export const useTwinUpdate = () => {
     async ({ id, body }: { id: string; body: TwinUpdateRq }) => {
       setLoading(true);
       try {
-        return await api.twin.update({ id, body });
+        const { data, error } = await api.twin.update({ id, body });
+
+        if (error) {
+          throw error;
+        }
+
+        return data;
       } finally {
         setLoading(false);
       }

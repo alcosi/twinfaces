@@ -20,7 +20,6 @@ export function TwinStatusActions({ twin }: Props) {
       router.refresh();
       toast.success("Transition is performed successfully");
     } catch (error) {
-      console.error("Failed to update twin:", error);
       toast.error("Error performing transition");
       throw error;
     }

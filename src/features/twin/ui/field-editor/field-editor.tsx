@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import { toast } from "sonner";
 import { ZodType, z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
@@ -74,10 +75,10 @@ export function TwinFieldEditor({
 
     try {
       await updateTwin({ id: twinId, body });
+      toast.success("Twin was updated successfully!");
       onSuccess?.() || router.refresh();
     } catch (error) {
-      console.error("Failed to update twin:", error);
-      throw error;
+      toast.error("Failed to update twin!");
     }
   }
 
