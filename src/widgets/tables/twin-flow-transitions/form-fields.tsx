@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { Control, useFormContext, useWatch } from "react-hook-form";
+import { useRef } from "react";
+import { Control, useWatch } from "react-hook-form";
 
 import { ComboboxFormField, TextFormField } from "@/components/form-fields";
 
@@ -18,12 +18,7 @@ export function TwinFlowTransitionFormFields({
 }: {
   control: Control<TwinFlowTransitionFormValues>;
 }) {
-  const { setValue } = useFormContext();
   const twinFlowWatch = useWatch({ control, name: "twinflow" });
-  const aliasWatch = useWatch({
-    control,
-    name: "alias",
-  });
   const isTwinFlowSelected = isTruthy(twinFlowWatch);
   const isPreselected = useRef(isTwinFlowSelected).current;
 
@@ -32,17 +27,6 @@ export function TwinFlowTransitionFormFields({
   const factoryAdapter = useFactorySelectAdapter();
   const transitionAliasAdapter = useTransitionAliasSelectAdapter();
   const twinStatusAdapter = useTwinStatusSelectAdapter();
-
-  useEffect(() => {
-    if (aliasWatch) {
-      const value = aliasWatch[0];
-
-      if (typeof value === "string") {
-        const newAlias = [{ alias: value }];
-        setValue("alias", newAlias);
-      }
-    }
-  }, [aliasWatch, setValue]);
 
   return (
     <>
@@ -67,7 +51,6 @@ export function TwinFlowTransitionFormFields({
         noItemsText="No Alias found"
         required={true}
         creatable
-        key={aliasWatch}
         {...transitionAliasAdapter}
       />
 

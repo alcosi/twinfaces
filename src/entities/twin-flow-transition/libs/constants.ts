@@ -1,13 +1,26 @@
 import { z } from "zod";
 
-import { FIRST_ALIAS_EXTRACTOR, FIRST_ID_EXTRACTOR } from "@/shared/libs";
+import {
+  FIRST_ID_EXTRACTOR,
+  isPopulatedArray,
+  isPopulatedString,
+} from "@/shared/libs";
 
 export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
   twinflow: z
     .string()
     .uuid("Twinflow ID must be a valid UUID ")
     .or(FIRST_ID_EXTRACTOR),
-  alias: FIRST_ALIAS_EXTRACTOR,
+  alias: z
+    .array(z.union([z.object({ alias: z.string() }), z.string()]))
+    .min(1, "Required")
+    .transform((arr) => {
+      if (isPopulatedArray(arr) && isPopulatedString(arr[0])) {
+        return arr[0];
+      }
+
+      return isPopulatedArray<{ alias: string }>(arr) ? arr[0].alias : "";
+    }),
   name: z.string().min(1, "Name can not be empty"),
   description: z.string().optional(),
   factory: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),

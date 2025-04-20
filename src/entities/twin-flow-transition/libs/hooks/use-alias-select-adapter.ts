@@ -1,4 +1,4 @@
-import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+import { SelectAdapter, isPopulatedString, isUndefined } from "@/shared/libs";
 
 import { TransitionAliasV1, useTransitionAliasSearch } from "../../api";
 
@@ -14,9 +14,11 @@ export function useTransitionAliasSelectAdapter(): SelectAdapter<TransitionAlias
     return response.data;
   }
 
-  function renderItem({ alias, usagesCount }: TransitionAliasV1) {
-    if (!isPopulatedString(alias)) return null;
-    return usagesCount === undefined ? alias : `${alias} | ${usagesCount}`;
+  function renderItem(value: TransitionAliasV1) {
+    if (isPopulatedString(value)) return value;
+
+    const { alias, usagesCount } = value;
+    return isUndefined(usagesCount) ? alias : `${alias} | ${usagesCount}`;
   }
 
   return {
