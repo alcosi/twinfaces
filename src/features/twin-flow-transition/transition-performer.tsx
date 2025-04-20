@@ -19,6 +19,9 @@ type Props = {
 };
 
 export const TransitionPerformer = ({ twin, onSuccess }: Props) => {
+  // TODO: replace with const
+  // { performTransition, isLoading } = usePerformTransition();
+  // and use isLoading to display loading icon instead of <Ellipsis />
   const { performTransition } = usePerformTransition();
 
   async function handleTransition(transitionId: string) {
@@ -37,8 +40,7 @@ export const TransitionPerformer = ({ twin, onSuccess }: Props) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        {/* TODO fix: Warning: In HTML, <button> cannot be a descendant of <button>.  This will cause a hydration error. */}
+      <DropdownMenuTrigger asChild>
         <Button size="iconS6" variant="outline">
           <Ellipsis />
         </Button>

@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { ReactNode, useCallback, useContext } from "react";
-import { toast } from "sonner";
 import { ZodType, z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
@@ -44,6 +43,7 @@ export function TwinFieldEditor({
   relatedObjects,
   onSuccess,
 }: TwinFieldEditorProps) {
+  // TODO: replace useContext with custom api hook
   const api = useContext(PrivateApiContext);
   const router = useRouter();
 
@@ -51,9 +51,9 @@ export function TwinFieldEditor({
 
   const hydratedTwin = hydrateTwinFromMap(twin, relatedObjects);
 
-  function renderPreview(props?: { onTransitionPerformSuccess?: () => void }) {
+  function renderPreview() {
     if (fieldRenderPreview) {
-      return fieldRenderPreview(hydratedTwin, props);
+      return fieldRenderPreview(hydratedTwin);
     }
 
     const displayValue =
@@ -84,11 +84,7 @@ export function TwinFieldEditor({
       descriptor: field.descriptor,
       twinId,
     },
-    renderPreview: () => {
-      return renderPreview({
-        onTransitionPerformSuccess: handleOnTransitionPerformSuccess,
-      });
-    },
+    renderPreview: renderPreview,
     schema: schema ?? z.string().min(1),
     onSubmit: async (value) => {
       const body: TwinUpdateRq = STATIC_TWIN_FIELD_KEYS.includes(
@@ -101,15 +97,6 @@ export function TwinFieldEditor({
     },
   };
 
-  async function handleOnTransitionPerformSuccess() {
-    try {
-      updateTwin({});
-      toast.success("Transition is performed successfully");
-    } catch (error) {
-      toast.error("Error performing transition");
-    }
-  }
-
   return (
     <div>
       {label &&
@@ -121,11 +108,7 @@ export function TwinFieldEditor({
       {field.descriptor ? (
         <InPlaceEdit {...editProps} />
       ) : (
-        <div className="px-3 flex gap-2">
-          {renderPreview({
-            onTransitionPerformSuccess: handleOnTransitionPerformSuccess,
-          })}
-        </div>
+        <div className="flex gap-2 px-3">{renderPreview()}</div>
       )}
     </div>
   );

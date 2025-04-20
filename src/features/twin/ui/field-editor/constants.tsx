@@ -4,8 +4,10 @@ import {
   FieldDescriptorSelectUserV1,
   FieldDescriptorText,
 } from "@/entities/twin/libs/constants";
+import { Twin_DETAILED } from "@/entities/twin/server";
 import { UserResourceLink } from "@/entities/user/components/resource-link";
 
+import { TwinStatusActions } from "../twin-status-actions";
 import { StaticTwinFieldMeta } from "./types";
 
 export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
@@ -65,25 +67,13 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
   },
   "00000000-0000-0000-0011-000000000010": {
     key: "statusId",
-    //TODO Replase this
-    renderPreview: (twin, props) => {
-      console.log("foobar statusId", { twin, props });
-      return <p>RESOLVE: TwinClassStatusResourceLink</p>;
+    renderPreview: (twin) => {
+      return twin.status ? (
+        <TwinStatusActions twin={twin as Twin_DETAILED} />
+      ) : (
+        twin.statusId
+      );
     },
-    //TODO by this after fix bug with SSR
-    // renderPreview: (twin, props) => {
-    //   return twin.status ? (
-    //     <>
-    //       <TwinClassStatusResourceLink
-    //         twinClassId={twin.twinClassId!}
-    //         data={twin.status}
-    //       />
-    //       {twin.transitions && <TransitionPerformer twin={twin as Twin_DETAILED} onSuccess={props?.onTransitionPerformSuccess} />}
-    //     </>
-    //   ) : (
-    //     twin.statusId
-    //   );
-    // },
   },
   "00000000-0000-0000-0011-000000000011": {
     key: "createdAt",

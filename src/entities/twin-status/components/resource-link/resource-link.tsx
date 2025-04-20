@@ -1,3 +1,5 @@
+"use client";
+
 import { Square } from "lucide-react";
 
 import { PlatformArea } from "@/shared/config";
