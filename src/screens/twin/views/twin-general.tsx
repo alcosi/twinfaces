@@ -11,6 +11,7 @@ import {
   STATIC_TWIN_FIELD_NAME_TO_ID_MAP,
   TwinResourceLink,
   categorizeTwinTags,
+  useTwinUpdate,
 } from "@/entities/twin";
 import {
   TwinClassResourceLink,
@@ -28,7 +29,6 @@ import {
 import { TwinContext } from "@/features/twin";
 import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { TwinFieldEditor } from "@/features/twin/ui";
-import { PrivateApiContext } from "@/shared/api";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,
@@ -38,32 +38,27 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinGeneral() {
-  const api = useContext(PrivateApiContext);
   const { twin, refresh } = useContext(TwinContext);
+  const { updateTwin } = useTwinUpdate();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
   const uAdapter = useUserSelectAdapter();
   const tagAdapter = useTagsByTwinClassIdSelectAdapter(twin?.twinClassId);
 
-  async function updateTwin(body: TwinUpdateRq) {
+  async function handleTwinUpdate(body: TwinUpdateRq) {
     if (isUndefined(twin)) {
       console.error("updateTwin: no twin");
       return;
     }
 
     try {
-      await api.twin.update({ id: twin.id, body });
+      await updateTwin({ id: twin.id, body });
       refresh();
     } catch (e) {
       console.error(e);
       throw e;
     }
-  }
-
-  if (!twin) {
-    console.error("TwinGeneral: no twin");
-    return;
   }
 
   const tagsSettings: AutoEditDialogSettings = {
@@ -87,7 +82,7 @@ export function TwinGeneral() {
     },
     onSubmit: (values) => {
       const tagsUpdate = categorizeTwinTags(values.tags, twin.tags);
-      return updateTwin({ tagsUpdate });
+      return handleTwinUpdate({ tagsUpdate });
     },
   };
 
@@ -95,7 +90,9 @@ export function TwinGeneral() {
     value: { assignerUserId: twin.assignerUserId },
     title: "Update Assignee",
     onSubmit: (values) => {
-      return updateTwin({ assignerUserId: values.assignerUserId[0].userId });
+      return handleTwinUpdate({
+        assignerUserId: values.assignerUserId[0].userId,
+      });
     },
     valuesInfo: {
       assignerUserId: {
@@ -119,7 +116,7 @@ export function TwinGeneral() {
     },
     schema: z.string(),
     onSubmit: async (value) => {
-      return updateTwin({ externalId: value });
+      return handleTwinUpdate({ externalId: value });
     },
   };
 
@@ -130,7 +127,7 @@ export function TwinGeneral() {
 
   async function handleOnTransitionPerformSuccess() {
     try {
-      updateTwin({});
+      handleTwinUpdate({});
       toast.success("Transition is performed successfully");
     } catch (error) {
       toast.error("Error performing transition");

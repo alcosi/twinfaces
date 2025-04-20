@@ -1,15 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ReactNode, useCallback, useContext } from "react";
+import { ReactNode } from "react";
 import { ZodType, z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { STATIC_TWIN_FIELD_KEYS, StaticTwinFieldKey } from "@/entities/twin";
+import {
+  STATIC_TWIN_FIELD_KEYS,
+  StaticTwinFieldKey,
+  useTwinUpdate,
+} from "@/entities/twin";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
-import { PrivateApiContext, RelatedObjects } from "@/shared/api";
+import { RelatedObjects } from "@/shared/api";
 import { isPopulatedString } from "@/shared/libs";
 
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
@@ -43,8 +47,7 @@ export function TwinFieldEditor({
   relatedObjects,
   onSuccess,
 }: TwinFieldEditorProps) {
-  // TODO: replace useContext with custom api hook
-  const api = useContext(PrivateApiContext);
+  const { updateTwin } = useTwinUpdate();
   const router = useRouter();
 
   const fieldRenderPreview = STATIC_FIELD_MAP[field.id]?.renderPreview;
@@ -62,18 +65,21 @@ export function TwinFieldEditor({
     return <span>{displayValue}</span>;
   }
 
-  const updateTwin = useCallback(
-    async (body: TwinUpdateRq) => {
-      try {
-        await api.twin.update({ id: twinId, body });
-        onSuccess?.() || router.refresh();
-      } catch (error) {
-        console.error("Failed to update twin:", error);
-        throw error;
-      }
-    },
-    [api.twin, twinId, router, onSuccess]
-  );
+  async function handleOnSubmit(value: string) {
+    const body: TwinUpdateRq = STATIC_TWIN_FIELD_KEYS.includes(
+      field.key as StaticTwinFieldKey
+    )
+      ? { [field.key]: value }
+      : { fields: { [field.key]: value } };
+
+    try {
+      await updateTwin({ id: twinId, body });
+      onSuccess?.() || router.refresh();
+    } catch (error) {
+      console.error("Failed to update twin:", error);
+      throw error;
+    }
+  }
 
   const editProps: InPlaceEditProps<string> = {
     id,
@@ -86,15 +92,7 @@ export function TwinFieldEditor({
     },
     renderPreview: renderPreview,
     schema: schema ?? z.string().min(1),
-    onSubmit: async (value) => {
-      const body: TwinUpdateRq = STATIC_TWIN_FIELD_KEYS.includes(
-        field.key as StaticTwinFieldKey
-      )
-        ? { [field.key]: value }
-        : { fields: { [field.key]: value } };
-
-      await updateTwin(body);
-    },
+    onSubmit: handleOnSubmit,
   };
 
   return (
