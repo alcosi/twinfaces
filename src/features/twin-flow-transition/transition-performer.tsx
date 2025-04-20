@@ -1,8 +1,11 @@
+"use client";
+
 import { Ellipsis } from "lucide-react";
 import { ReactNode } from "react";
 
 import { usePerformTransition } from "@/entities/twin-flow-transition";
 import { Twin_DETAILED } from "@/entities/twin/server";
+import { isFalsy } from "@/shared/libs";
 import {
   Button,
   DropdownMenu,
@@ -17,7 +20,7 @@ type Props = {
 };
 
 export const TransitionPerformer = ({ twin, onSuccess }: Props) => {
-  const { performTransition } = usePerformTransition();
+  const { performTransition, loading } = usePerformTransition();
 
   async function handleTransition(transitionId: string) {
     try {
@@ -35,9 +38,9 @@ export const TransitionPerformer = ({ twin, onSuccess }: Props) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button size="iconS6" variant="outline">
-          <Ellipsis />
+      <DropdownMenuTrigger asChild>
+        <Button size="iconS6" variant="outline" loading={loading}>
+          {isFalsy(loading) && <Ellipsis />}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
