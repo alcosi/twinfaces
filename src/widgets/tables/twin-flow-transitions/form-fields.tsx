@@ -11,7 +11,7 @@ import {
   useTransitionAliasSelectAdapter,
 } from "@/entities/twin-flow-transition";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { isPopulatedString, reduceToObject, toArray } from "@/shared/libs";
+import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 
 export function TwinFlowTransitionFormFields({
   control,
@@ -19,7 +19,7 @@ export function TwinFlowTransitionFormFields({
   control: Control<TwinFlowTransitionFormValues>;
 }) {
   const twinFlowWatch = useWatch({ control, name: "twinflow" });
-  const isTwinFlowSelected = isPopulatedString(twinFlowWatch);
+  const isTwinFlowSelected = isTruthy(twinFlowWatch);
   const isPreselected = useRef(isTwinFlowSelected).current;
 
   const twinFlowAdapter = useTwinFlowSelectAdapter();

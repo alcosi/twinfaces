@@ -19,7 +19,7 @@ import {
 } from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
 import { PagedResponse } from "@/shared/api";
-import { isPopulatedString } from "@/shared/libs";
+import { isObject, isPopulatedString, isTruthy } from "@/shared/libs";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import {
   renderTwinFieldPreview,
@@ -59,7 +59,11 @@ export function TwinFields() {
           >
             <InPlaceEdit
               id={original.key}
-              value={original.value}
+              value={
+                isObject(original.value) && isTruthy(original.value.id)
+                  ? original.value.id
+                  : original.value
+              }
               valueInfo={{
                 type: AutoFormValueType.twinField,
                 descriptor: original.descriptor,
