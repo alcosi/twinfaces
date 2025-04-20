@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren } from "react";
 import { toast } from "sonner";
 
 import { usePerformTransition } from "@/entities/twin-flow-transition/api/hooks/use-perform-transition";
@@ -18,23 +18,19 @@ export function TransitionPerformButton({
   children,
   ...rest
 }: PropsWithChildren<Props>) {
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { performTransition } = usePerformTransition();
+  const { performTransition, loading } = usePerformTransition();
 
   async function handleClick() {
-    setLoading(true);
     try {
       await performTransition({
-        transitionId: transitionId,
-        body: { twinId: twinId },
+        transitionId,
+        body: { twinId },
       });
 
       router.refresh();
     } catch {
       toast.error("Failed to perform transition due to API error");
-    } finally {
-      setLoading(false);
     }
   }
 

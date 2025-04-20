@@ -44,7 +44,7 @@ export async function WidgetLayoutRenderer({
           )}
         </div>
       ))}
-      {isAdmin && <ViewAsAdminButton twinId={twinId!} />}
+      {isAdmin && twinId && <ViewAsAdminButton twinId={twinId} />}
     </main>
   );
 }
