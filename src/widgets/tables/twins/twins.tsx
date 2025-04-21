@@ -4,24 +4,25 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import {
   TWIN_SCHEMA,
   TwinFormValues,
-  TwinResourceLink,
   useCreateTwin,
   useTwinFilters,
   useTwinSearchV3,
 } from "@/entities/twin";
 import {
-  TwinClassResourceLink,
   TwinClass_DETAILED,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { Twin, TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
-import { User, UserResourceLink } from "@/entities/user";
+import { User } from "@/entities/user";
+import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TransitionPerformer } from "@/features/twin-flow-transition";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { TwinResourceLink } from "@/features/twin/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,

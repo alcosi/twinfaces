@@ -9,8 +9,8 @@ import {
   useFactoryConditionSetFilters,
   useFactoryConditionSetSearch,
 } from "@/entities/factory-condition-set";
-import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { UserResourceLink } from "@/features/user/ui";
 import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";

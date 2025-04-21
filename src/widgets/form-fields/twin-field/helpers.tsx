@@ -1,12 +1,10 @@
 import { ZodType, z } from "zod";
 
-import {
-  DataListOptionV3,
-  DatalistOptionResourceLink,
-} from "@/entities/datalist-option";
-import { TwinResourceLink } from "@/entities/twin";
+import { DataListOptionV3 } from "@/entities/datalist-option";
 import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
-import { UserResourceLink } from "@/entities/user";
+import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
+import { TwinResourceLink } from "@/features/twin/ui";
+import { UserResourceLink } from "@/features/user/ui";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI

@@ -2,13 +2,13 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
-import { BusinessAccountResourceLink } from "@/entities/business-account";
 import {
   UserGroup_DETAILED,
   useUserGroupSearchV1,
   useUserGroupsFilters,
 } from "@/entities/user-group";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { BusinessAccountResourceLink } from "@/features/business-account/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";

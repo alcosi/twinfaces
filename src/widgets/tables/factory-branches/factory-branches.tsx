@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { Factory, FactoryResourceLink } from "@/entities/factory";
+import { Factory } from "@/entities/factory";
 import {
   FACTORY_BRANCH_SCHEMA,
   FactoryBranch,
@@ -16,7 +16,8 @@ import {
   useFactoryBranchFilters,
   useFactoryBranchesSearch,
 } from "@/entities/factory-branch";
-import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
+import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
+import { FactoryResourceLink } from "@/features/factory/ui";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 

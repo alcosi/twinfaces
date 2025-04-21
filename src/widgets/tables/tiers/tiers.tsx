@@ -4,16 +4,12 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { toast } from "sonner";
 
-import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import { Tier_DETAILED, useTierFilters, useTierSearch } from "@/entities/tier";
-import {
-  TwinClassSchemaResourceLink,
-  TwinClassSchema_DETAILED,
-} from "@/entities/twin-class-schema";
-import {
-  TwinFlowSchemaResourceLink,
-  TwinFlowSchema_DETAILED,
-} from "@/entities/twinFlowSchema";
+import { TwinClassSchema_DETAILED } from "@/entities/twin-class-schema";
+import { TwinFlowSchema_DETAILED } from "@/entities/twinFlowSchema";
+import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
+import { TwinClassSchemaResourceLink } from "@/features/twin-class-schema/ui";
+import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";

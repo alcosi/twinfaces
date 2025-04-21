@@ -9,18 +9,18 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { DatalistResourceLink } from "@/entities/datalist";
-import { PermissionResourceLink } from "@/entities/permission";
 import {
   TWIN_CLASSES_SCHEMA,
   TwinClassCreateRq,
   TwinClassFieldValues,
-  TwinClassResourceLink,
   TwinClass_DETAILED,
   useTwinClassFilters,
   useTwinClassSearchV1,
 } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { DatalistResourceLink } from "@/features/datalist/ui";
+import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";

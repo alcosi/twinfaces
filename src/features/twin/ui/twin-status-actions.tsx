@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { Twin_DETAILED } from "@/entities/twin/server";
 
+import { TwinClassStatusResourceLink } from "../../../features/twin-status/ui";
 import { TransitionPerformer } from "../../twin-flow-transition";
 
 type Props = {

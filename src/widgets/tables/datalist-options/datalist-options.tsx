@@ -8,16 +8,17 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { DataList, DatalistResourceLink } from "@/entities/datalist";
+import { DataList } from "@/entities/datalist";
 import {
   DATALIST_OPTION_SCHEMA,
   DataListOptionCreateRqDV1,
   DataListOptionV3,
-  DatalistOptionResourceLink,
   useCreateDatalistOption,
   useDatalistOptionFilters,
   useDatalistOptionSearch,
 } from "@/entities/datalist-option";
+import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
+import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import {

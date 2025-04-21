@@ -4,13 +4,13 @@ import { z } from "zod";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { useUpdateFactory } from "@/entities/factory";
-import { UserResourceLink } from "@/entities/user";
 import { FactoryContext } from "@/features/factory";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { UserResourceLink } from "@/features/user/ui";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import {
   GuidWithCopy,

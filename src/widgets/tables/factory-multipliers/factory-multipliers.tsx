@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FactoryResourceLink } from "@/entities/factory";
 import {
   FACTORY_MULTIPLIER_SCHEMA,
   FactoryMultiplier_DETAILED,
@@ -15,11 +14,11 @@ import {
   useFactoryMultiplierFilters,
   useFactoryMultipliersSearch,
 } from "@/entities/factory-multiplier";
-import { FeaturerResourceLink, Featurer_DETAILED } from "@/entities/featurer";
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { Featurer_DETAILED } from "@/entities/featurer";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { FactoryResourceLink } from "@/features/factory/ui";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 

@@ -8,8 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FactoryResourceLink } from "@/entities/factory";
-import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 import {
   FactoryPipeline_DETAILED,
   useFactoryPipelineCreate,
@@ -17,11 +15,11 @@ import {
   useFactoryPipelineSearch,
 } from "@/entities/factory-pipeline";
 import { FACTORY_PIPELINE_SCHEMA } from "@/entities/factory-pipeline";
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
+import { FactoryResourceLink } from "@/features/factory/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 

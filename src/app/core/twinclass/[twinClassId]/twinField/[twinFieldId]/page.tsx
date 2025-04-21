@@ -4,7 +4,7 @@ import { useContext, useEffect } from "react";
 
 import { TwinClassContext } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { TwinFieldContext } from "@/features/twin-field";
+import { TwinFieldContext } from "@/features/twin-class-field";
 import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 

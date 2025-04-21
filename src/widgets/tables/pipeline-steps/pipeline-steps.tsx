@@ -9,9 +9,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FactoryResourceLink } from "@/entities/factory";
-import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
-import { FactoryPipelineResourceLink } from "@/entities/factory-pipeline";
 import {
   PIPELINE_STEP_SCHEMA,
   PipelineStepFilterKeys,
@@ -20,7 +17,11 @@ import {
   usePipelineStepFilters,
   usePipelineStepSearch,
 } from "@/entities/factory-pipeline-step";
-import { FeaturerResourceLink, Featurer_DETAILED } from "@/entities/featurer";
+import { Featurer_DETAILED } from "@/entities/featurer";
+import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
+import { FactoryPipelineResourceLink } from "@/features/factory-pipeline/ui";
+import { FactoryResourceLink } from "@/features/factory/ui";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import {

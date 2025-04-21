@@ -4,10 +4,7 @@ import { toast } from "sonner";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  TwinClassFieldResourceLink,
-  TwinClassField_DETAILED,
-} from "@/entities/twin-class-field";
+import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import {
   TwinFieldUI,
   useFetchFields,
@@ -18,6 +15,7 @@ import {
   InPlaceEditContextProvider,
 } from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
+import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { PagedResponse } from "@/shared/api";
 import { isObject, isPopulatedString, isTruthy } from "@/shared/libs";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";

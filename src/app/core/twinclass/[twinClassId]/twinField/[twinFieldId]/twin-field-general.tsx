@@ -5,26 +5,21 @@ import { z } from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  FeaturerResourceLink,
-  FeaturerTypes,
-  useFeaturerSelectAdapter,
-} from "@/entities/featurer";
-import {
-  PermissionResourceLink,
-  usePermissionSelectAdapter,
-} from "@/entities/permission";
-import { TwinClassResourceLink } from "@/entities/twin-class";
+import { FeaturerTypes, useFeaturerSelectAdapter } from "@/entities/featurer";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   TwinClassFieldUpdateRq,
   useFieldUpdate,
 } from "@/entities/twin-class-field";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { TwinFieldContext } from "@/features/twin-field";
+import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinFieldContext } from "@/features/twin-class-field";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 

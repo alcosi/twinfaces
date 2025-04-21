@@ -5,16 +5,14 @@ import { z } from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinStatusUpdateRq, useStatusUpdate } from "@/entities/twin-status";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinStatusContext } from "@/features/twin-status";
 import {
   ColorPicker,

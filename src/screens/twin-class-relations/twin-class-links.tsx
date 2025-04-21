@@ -10,17 +10,14 @@ import {
   CreateLinkRequestBody,
   LINK_SCHEMA,
   Link,
-  LinkResourceLink,
   LinkStrengthEnum,
   LinkTypesEnum,
   UpdateLinkRequestBody,
   useCreateLink,
 } from "@/entities/link";
-import {
-  TwinClassContext,
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { TwinClassContext, TwinClass_DETAILED } from "@/entities/twin-class";
+import { LinkResourceLink } from "@/features/link/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { Badge } from "@/shared/ui";

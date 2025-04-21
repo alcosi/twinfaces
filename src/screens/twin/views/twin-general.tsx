@@ -5,30 +5,31 @@ import { z } from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { DatalistOptionResourceLink } from "@/entities/datalist-option";
 import {
   FieldDescriptorText,
   STATIC_TWIN_FIELD_NAME_TO_ID_MAP,
-  TwinResourceLink,
   categorizeTwinTags,
   useTwinUpdate,
 } from "@/entities/twin";
 import {
-  TwinClassResourceLink,
   TwinClass_DETAILED,
   useTagsByTwinClassIdSelectAdapter,
 } from "@/entities/twin-class";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
 import { TwinUpdateRq } from "@/entities/twin/server";
-import { UserResourceLink, useUserSelectAdapter } from "@/entities/user";
+import { useUserSelectAdapter } from "@/entities/user";
+import "@/features/datalist-option/ui";
+import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TransitionPerformer } from "@/features/twin-flow-transition";
-import { TwinFieldEditor } from "@/features/twin/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { TwinFieldEditor, TwinResourceLink } from "@/features/twin/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import {
   formatToTwinfaceDate,
   isPopulatedArray,

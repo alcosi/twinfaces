@@ -9,15 +9,15 @@ import {
   PERMISSION_GRANT_TWIN_ROLE_SCHEMA,
   useCreatePermissionGrantTwinRole,
 } from "@/entities/permission";
-import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
-import { TwinClassResourceLink } from "@/entities/twin-class";
 import {
   PermissionGrantTwinRoles_DETAILED,
   TwinRoleEnum,
   usePermissionGrantTwinRolesSearchV1,
 } from "@/entities/twin-role";
-import { UserResourceLink } from "@/entities/user";
 import { PermissionContext } from "@/features/permission";
+import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";

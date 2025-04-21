@@ -6,18 +6,16 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-import { FactoryResourceLink } from "@/entities/factory";
-import { FactoryConditionSetResourceLink } from "@/entities/factory-condition-set";
 import {
   FactoryEraser_DETAILED,
   useFactoryEraserFilters,
   useFactoryEraserSearch,
 } from "@/entities/factory-eraser";
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
+import { FactoryResourceLink } from "@/features/factory/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";

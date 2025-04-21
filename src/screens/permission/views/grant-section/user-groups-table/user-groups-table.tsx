@@ -9,15 +9,15 @@ import {
   PERMISSION_GRANT_USER_GROUP_SCHEMA,
   useCreatePermissionGrantUserGroup,
 } from "@/entities/permission";
-import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
-import { UserResourceLink } from "@/entities/user";
 import {
   PermissionGrantUserGroup,
   PermissionGrantUserGroup_DETAILED,
-  UserGroupResourceLink,
   usePermissionGrantUserGroupSearchV1,
 } from "@/entities/user-group";
 import { PermissionContext } from "@/features/permission";
+import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
+import { UserGroupResourceLink } from "@/features/user-group/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate, isUndefined } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";

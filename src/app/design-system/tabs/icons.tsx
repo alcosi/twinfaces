@@ -1,18 +1,19 @@
-import { DatalistIcon } from "@/entities/datalist";
-import { FactoryBranchIcon } from "@/entities/factory-branch";
-import { FactoryConditionSetIcon } from "@/entities/factory-condition-set";
-import { FactoryPipelineIcon } from "@/entities/factory-pipeline";
-import { FactoryPipelineStepIcon } from "@/entities/factory-pipeline-step";
-import { PermissionIcon } from "@/entities/permission";
-import { PermissionGroupIcon } from "@/entities/permission-group";
-import { PermissionSchemaIcon } from "@/entities/permission-schema";
-import { TwinIcon } from "@/entities/twin";
-import { TwinClassIcon } from "@/entities/twin-class";
-import { FieldIcon } from "@/entities/twin-class-field";
-import { TwinFlowIcon } from "@/entities/twin-flow";
-import { TwinFlowTransitionIcon } from "@/entities/twin-flow-transition";
-import { TwinStatusIcon } from "@/entities/twin-status";
-import { BoxIcon, ShopingBagIcon, TierIcon } from "@/shared/ui";
+import { DatalistIcon } from "@/features/datalist/ui";
+import { FactoryBranchIcon } from "@/features/factory-branch/ui";
+import { FactoryConditionSetIcon } from "@/features/factory-condition-set/ui";
+import { FactoryPipelineStepIcon } from "@/features/factory-pipeline-step/ui";
+import { FactoryPipelineIcon } from "@/features/factory-pipeline/ui";
+import { PermissionGroupIcon } from "@/features/permission-group/ui";
+import { PermissionSchemaIcon } from "@/features/permission-schema/ui";
+import { PermissionIcon } from "@/features/permission/ui";
+import { TierIcon } from "@/features/tier/ui";
+import { FieldIcon } from "@/features/twin-class-field/ui";
+import { TwinClassIcon } from "@/features/twin-class/ui";
+import { TwinFlowTransitionIcon } from "@/features/twin-flow-transition/ui";
+import { TwinFlowIcon } from "@/features/twin-flow/ui";
+import { TwinStatusIcon } from "@/features/twin-status/ui";
+import { TwinIcon } from "@/features/twin/ui";
+import { BoxIcon, ShopingBagIcon } from "@/shared/ui";
 
 import { UiSection } from "../components/ui-section";
 

@@ -9,13 +9,13 @@ import {
   usePermissionUpdate,
 } from "@/entities/permission";
 import { usePermissionGroupSelectAdapter } from "@/entities/permission-group";
-import { UserGroupResourceLink } from "@/entities/user-group";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { PermissionContext } from "@/features/permission";
+import { UserGroupResourceLink } from "@/features/user-group/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 

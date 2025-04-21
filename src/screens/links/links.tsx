@@ -18,12 +18,10 @@ import {
   useLinkFilters,
   useLinkSearch,
 } from "@/entities/link";
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
-import { UserResourceLink } from "@/entities/user";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { Badge, GuidWithCopy } from "@/shared/ui";

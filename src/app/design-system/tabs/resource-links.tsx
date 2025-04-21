@@ -1,15 +1,15 @@
-import { CommentResourceLink } from "@/entities/comment";
-import { FeaturerResourceLink } from "@/entities/featurer";
-import { LinkResourceLink } from "@/entities/link";
-import { TwinResourceLink } from "@/entities/twin";
-import { TwinClassResourceLink } from "@/entities/twin-class";
-import { TwinClassFieldResourceLink } from "@/entities/twin-class-field";
-import { TwinFlowResourceLink } from "@/entities/twin-flow";
-import { TwinFlowTransitionResourceLink } from "@/entities/twin-flow-transition";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
-import { UserResourceLink } from "@/entities/user";
-import { UserGroupResourceLink } from "@/entities/user-group";
+import { CommentResourceLink } from "@/features/comment/ui";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
+import { LinkResourceLink } from "@/features/link/ui";
+import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
+import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
+import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { TwinResourceLink } from "@/features/twin/ui";
+import { UserGroupResourceLink } from "@/features/user-group/ui";
+import { UserResourceLink } from "@/features/user/ui";
 
 import { UiSection } from "../components/ui-section";
 import { Fake } from "../seeds";

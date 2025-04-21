@@ -13,11 +13,11 @@ import {
   PERMISSION_GRANT_ASSIGNEE_PROPAGATION_SCHEMA,
   useCreatePermissionGrantAssigneePropagation,
 } from "@/entities/permission";
-import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
-import { TwinClassResourceLink } from "@/entities/twin-class";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { UserResourceLink } from "@/entities/user";
 import { PermissionContext } from "@/features/permission";
+import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";

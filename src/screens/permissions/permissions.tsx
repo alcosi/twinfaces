@@ -16,12 +16,10 @@ import {
   usePermissionFilters,
   usePermissionSearchV1,
 } from "@/entities/permission";
-import {
-  PermissionGroup,
-  PermissionGroupResourceLink,
-} from "@/entities/permission-group";
-import { PermissionResourceLink } from "@/entities/permission/components/resource-link/resource-link";
+import { PermissionGroup } from "@/entities/permission-group";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PermissionGroupResourceLink } from "@/features/permission-group/ui";
+import { PermissionResourceLink } from "@/features/permission/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui/guid";

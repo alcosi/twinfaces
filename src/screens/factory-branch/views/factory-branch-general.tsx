@@ -3,16 +3,12 @@ import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  FactoryResourceLink,
-  useFactorySelectAdapter,
-} from "@/entities/factory";
+import { useFactorySelectAdapter } from "@/entities/factory";
 import { useUpdateFactoryBranch } from "@/entities/factory-branch";
-import {
-  FactoryConditionSetResourceLink,
-  useFactoryConditionSetSelectAdapter,
-} from "@/entities/factory-condition-set";
+import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import { FactoryBranchContext } from "@/features/factory-branch";
+import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
+import { FactoryResourceLink } from "@/features/factory/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
