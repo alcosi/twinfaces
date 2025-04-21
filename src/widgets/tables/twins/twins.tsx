@@ -238,6 +238,7 @@ export function TwinsTable({
     },
   };
 
+  console.log("foobar enabled", enabledColumns, colDefs);
   const staticKeys = filterValidKeys(enabledColumns ?? []);
   const [columnMap, setColumnMap] = useState(
     enabledColumns

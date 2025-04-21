@@ -14,11 +14,25 @@ export async function WT001({ widget }: WidgetFaceProps) {
 
   const wt001Face: FaceWT001 = wt001FaceResult.data;
 
+  console.log("foobar wt001Face", wt001Face);
+
+  const enabledColumns = wt001Face.columns
+    ?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .map((column) => column.label);
+
+  console.log("foobar enabled", { enabledColumns });
+
+  // ?.reduce((acc, column) => {
+  //   // TODO: Apply 'showByDefault' logic here after BE delivers
+  //   acc.push(column);
+  //   return acc;
+  // }, [])
+
   return (
     <WT001Client
       title={wt001Face.label}
       baseTwinClassId={wt001Face.twinClassId}
-      enabledColumns={wt001Face.showColumns}
+      enabledColumns={enabledColumns}
     />
   );
 }

@@ -2,6 +2,7 @@
 const nextConfig = {
   output: "standalone",
   images: {
+    domains: ["storage-api"],
     remotePatterns: [
       {
         protocol: "https",

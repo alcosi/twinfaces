@@ -37,6 +37,7 @@ export async function WidgetLayoutRenderer({
   return (
     <main className="flex flex-col gap-4 py-4 md:flex-row">
       {Array.from({ length: columns }, (_, i) => (
+        // <div key={i} className="flex min-w-0 flex-col gap-4">
         <div key={i} className="flex w-full flex-1 flex-col gap-4">
           {mapWidgetsToNodes(
             widgets.filter((widget) => widget.column === i + 1),

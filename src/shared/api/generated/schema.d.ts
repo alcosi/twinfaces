@@ -12162,8 +12162,8 @@ export interface components {
        * @description searchId
        */
       searchId?: string;
-      /** @description show given basic columns from table and filter */
-      showColumns?: string[];
+      /** @description show given columns from table and filter */
+      columns?: components["schemas"]["FaceWT001ColumnV1"][];
     };
     FaceWT005ViewRsV1: {
       /**
@@ -12458,9 +12458,8 @@ export interface components {
       /**
        * @deprecated
        * @description tab layout
-       * @enum {string}
        */
-      layout?: "ONE_COLUMN" | "TWO_COLUMNS" | "THREE_COLUMNS";
+      layout?: string;
       /** @description tab widgets list */
       widgets?: components["schemas"]["FacePG002WidgetV1"][];
     };
@@ -12637,9 +12636,8 @@ export interface components {
       /**
        * @deprecated
        * @description page layout
-       * @enum {string}
        */
-      layout?: "ONE_COLUMN" | "TWO_COLUMNS" | "THREE_COLUMNS";
+      layout?: string;
       /** @description page widgets list */
       widgets?: components["schemas"]["FacePG001WidgetV1"][];
     };
