@@ -8,7 +8,17 @@ import { isPopulatedArray } from "@/shared/libs";
 import { hydrateDomainUserFromMap } from "../libs/helpers";
 import { LOGIN_FORM_SCHEMA } from "../server";
 
-async function login(authToken: string, domainId: string) {
+async function login({
+  userId,
+  domainId,
+  businessAccountId,
+}: {
+  userId: string;
+  domainId: string;
+  businessAccountId?: string;
+}) {
+  const authToken = [userId, businessAccountId].filter(Boolean).join(",");
+
   const { data, error } = await TwinsAPI.POST(
     "/private/domain/user/search/v1",
     {
@@ -28,7 +38,7 @@ async function login(authToken: string, domainId: string) {
         },
       },
       body: {
-        userIdList: [authToken],
+        userIdList: [userId],
         businessAccountIdList: [],
       },
     }
@@ -38,7 +48,7 @@ async function login(authToken: string, domainId: string) {
     throw error;
   }
 
-  return data;
+  return { authToken, ...data };
 }
 
 export async function loginFormAction(_: unknown, formData: FormData) {
@@ -48,8 +58,11 @@ export async function loginFormAction(_: unknown, formData: FormData) {
     businessAccountId: formData.get("businessAccountId"),
   });
 
-  const authToken = [userId, businessAccountId].filter(Boolean).join(",");
-  const { users, relatedObjects } = await login(authToken, domainId);
+  const { authToken, users, relatedObjects } = await login({
+    userId,
+    domainId,
+    businessAccountId,
+  });
 
   const index = users?.findIndex((user) => user.userId === userId) ?? -1;
   if (isPopulatedArray(users) && index !== -1) {
