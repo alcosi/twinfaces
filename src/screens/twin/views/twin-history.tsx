@@ -4,8 +4,9 @@ import { toast } from "sonner";
 
 import { useFetchHistoryV1 } from "@/entities/twin";
 import { HistoryV1 } from "@/entities/twin/server";
-import { User, UserResourceLink } from "@/entities/user";
+import { User } from "@/entities/user";
 import { TwinContext } from "@/features/twin";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";

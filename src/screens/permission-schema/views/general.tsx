@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
-import { UserResourceLink } from "@/entities/user";
 import { PermissionSchemaContext } from "@/features/permission-schema";
+import { UserResourceLink } from "@/features/user/ui";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import {
   GuidWithCopy,

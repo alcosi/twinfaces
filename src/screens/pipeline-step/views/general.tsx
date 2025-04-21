@@ -5,22 +5,20 @@ import { z } from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { FactoryResourceLink } from "@/entities/factory";
-import {
-  FactoryConditionSetResourceLink,
-  useFactoryConditionSetSelectAdapter,
-} from "@/entities/factory-condition-set";
-import { FactoryPipelineResourceLink } from "@/entities/factory-pipeline";
+import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import {
   FactoryPipelineStepUpdateRq,
   useFactoryPipelineStepUpdate,
 } from "@/entities/factory-pipeline-step";
 import {
-  FeaturerResourceLink,
   FeaturerTypes,
   Featurer_DETAILED,
   useFeaturerSelectAdapter,
 } from "@/entities/featurer";
+import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
+import { FactoryPipelineResourceLink } from "@/features/factory-pipeline/ui";
+import { FactoryResourceLink } from "@/features/factory/ui";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,

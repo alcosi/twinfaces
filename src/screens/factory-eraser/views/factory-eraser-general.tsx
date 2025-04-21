@@ -6,27 +6,25 @@ import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { FactoryResourceLink } from "@/entities/factory";
-import {
-  FactoryConditionSetResourceLink,
-  useFactoryConditionSetSelectAdapter,
-} from "@/entities/factory-condition-set";
+import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import {
   ERASE_ACTION_TYPES,
   FactoryEraserUpdate,
   useFactoryEraserUpdate,
 } from "@/entities/factory-eraser";
 import {
-  TwinClassResourceLink,
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
+import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
 import { FactoryEraserContext } from "@/features/factory-eraser";
+import { FactoryResourceLink } from "@/features/factory/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { createFixedSelectAdapter } from "@/shared/libs";
 import {
   GuidWithCopy,

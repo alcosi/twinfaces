@@ -6,15 +6,15 @@ import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { FeaturerResourceLink } from "@/entities/featurer/components";
-import { PermissionResourceLink } from "@/entities/permission";
-import { TwinClassResourceLink } from "@/entities/twin-class";
 import {
   TwinClassFieldCreateRq,
   TwinClassFieldV2_DETAILED,
   useTwinClassFieldFilters,
   useTwinClassFieldSearchV1,
 } from "@/entities/twin-class-field";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
+import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";

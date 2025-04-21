@@ -4,31 +4,28 @@ import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  FactoryResourceLink,
-  useFactorySelectAdapter,
-} from "@/entities/factory";
-import {
-  PermissionResourceLink,
-  usePermissionSelectAdapter,
-} from "@/entities/permission";
-import { TwinFlowResourceLink, TwinFlow_DETAILED } from "@/entities/twin-flow";
+import { useFactorySelectAdapter } from "@/entities/factory";
+import { usePermissionSelectAdapter } from "@/entities/permission";
+import { TwinFlow_DETAILED } from "@/entities/twin-flow";
 import {
   TwinFlowTransitionUpdateRq,
   useTransitionAliasSelectAdapter,
   useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
 import {
-  TwinClassStatusResourceLink,
   TwinStatusV2,
   useTwinStatusSelectAdapter,
 } from "@/entities/twin-status";
+import { FactoryResourceLink } from "@/features/factory/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
+import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { formatToTwinfaceDate, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";

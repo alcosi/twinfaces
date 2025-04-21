@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 
-import { TwinFieldContextProvider } from "@/features/twin-field";
+import { TwinFieldContextProvider } from "@/features/twin-class-field";
 
 type TwinFieldLayoutProps = {
   params: {

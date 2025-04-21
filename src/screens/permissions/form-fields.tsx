@@ -3,7 +3,7 @@ import { Control } from "react-hook-form";
 import { TextFormField } from "@/components/form-fields";
 
 import { PermissionFormValues } from "@/entities/permission";
-import { PermissionGroupSelectField } from "@/features/permissionGroup";
+import { PermissionGroupSelectField } from "@/features/permission-group";
 
 export function PermissionsFormFields({
   control,

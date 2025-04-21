@@ -2,14 +2,14 @@ import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
 import { toast } from "sonner";
 
-import { PermissionSchemaResourceLink } from "@/entities/permission-schema";
 import {
   PermissionGrantSpaceRole_DETAILED,
-  SpaceRoleResourceLink,
   usePermissionSpaceRoleSearchV1,
 } from "@/entities/spaceRole";
-import { UserResourceLink } from "@/entities/user";
 import { PermissionContext } from "@/features/permission";
+import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
+import { SpaceRoleResourceLink } from "@/features/space-role/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";

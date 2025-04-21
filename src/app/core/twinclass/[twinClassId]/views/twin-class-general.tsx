@@ -5,33 +5,25 @@ import { z } from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  DataList,
-  DatalistResourceLink,
-  useDatalistSelectAdapter,
-} from "@/entities/datalist";
-import {
-  FeaturerResourceLink,
-  FeaturerTypes,
-  Featurer_DETAILED,
-} from "@/entities/featurer";
-import {
-  PermissionResourceLink,
-  usePermissionSelectAdapter,
-} from "@/entities/permission";
+import { DataList, useDatalistSelectAdapter } from "@/entities/datalist";
+import { FeaturerTypes, Featurer_DETAILED } from "@/entities/featurer";
+import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   TwinClassContext,
-  TwinClassResourceLink,
   TwinClassUpdateRq,
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
   useUpdateTwinClass,
 } from "@/entities/twin-class";
+import { DatalistResourceLink } from "@/features/datalist/ui";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";

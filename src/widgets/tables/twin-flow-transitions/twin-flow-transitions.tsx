@@ -6,13 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FactoryResourceLink } from "@/entities/factory";
-import { PermissionResourceLink } from "@/entities/permission";
-import {
-  TwinFlow,
-  TwinFlowResourceLink,
-  TwinFlow_DETAILED,
-} from "@/entities/twin-flow";
+import { TwinFlow, TwinFlow_DETAILED } from "@/entities/twin-flow";
 import {
   TWIN_FLOW_TRANSITION_SCHEMA,
   TwinFlowTransition,
@@ -23,7 +17,10 @@ import {
   useTwinFlowTransitionFilters,
   useTwinFlowTransitionSearchV1,
 } from "@/entities/twin-flow-transition";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
+import { FactoryResourceLink } from "@/features/factory/ui";
+import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import {

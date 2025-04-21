@@ -4,13 +4,14 @@ import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { DataList, DatalistResourceLink } from "@/entities/datalist";
+import { DataList } from "@/entities/datalist";
 import {
   DATALIST_OPTION_STATUS_TYPES,
   DataListOptionUpdateRqV1,
   useUpdateDatalistOption,
 } from "@/entities/datalist-option";
 import { DataListOptionContext } from "@/features/datalist-option";
+import { DatalistResourceLink } from "@/features/datalist/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,

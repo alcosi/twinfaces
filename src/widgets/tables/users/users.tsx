@@ -5,10 +5,10 @@ import { toast } from "sonner";
 import {
   DomainUser,
   DomainUser_DETAILED,
-  UserResourceLink,
   useDomainUserSearchV1,
   useUserFilters,
 } from "@/entities/user";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";

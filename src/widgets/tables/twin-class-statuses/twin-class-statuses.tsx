@@ -6,10 +6,7 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
@@ -19,6 +16,7 @@ import {
   useStatusFilters,
   useTwinStatusSearchV1,
 } from "@/entities/twin-status";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";

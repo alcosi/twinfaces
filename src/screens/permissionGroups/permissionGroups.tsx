@@ -6,16 +6,14 @@ import { toast } from "sonner";
 
 import {
   PermissionGroup,
-  PermissionGroupResourceLink,
   PermissionGroup_DETAILED,
   usePermissionGroupFilters,
   usePermissionGroupSearchV1,
 } from "@/entities/permission-group";
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { PermissionGroupResourceLink } from "@/features/permission-group/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui/guid";

@@ -4,25 +4,25 @@ import { z } from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { FactoryResourceLink } from "@/entities/factory";
 import { useUpdateFactoryMultiplier } from "@/entities/factory-multiplier";
 import {
-  FeaturerResourceLink,
   FeaturerTypes,
   Featurer_DETAILED,
   useFeaturerSelectAdapter,
 } from "@/entities/featurer";
 import {
-  TwinClassResourceLink,
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import { FactoryMultiplierContext } from "@/features/factory-multiplier";
+import { FactoryResourceLink } from "@/features/factory/ui";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
 
 export function FactoryMultiplierGeneral() {

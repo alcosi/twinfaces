@@ -4,20 +4,16 @@ import { z } from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinFlow, TwinFlowUpdateRq } from "@/entities/twin-flow";
-import {
-  TwinClassStatusResourceLink,
-  useTwinStatusSelectAdapter,
-} from "@/entities/twin-status";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PrivateApiContext } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";

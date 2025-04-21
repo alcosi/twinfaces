@@ -9,13 +9,13 @@ import { z } from "zod";
 import { TwinClassContext } from "@/entities/twin-class";
 import {
   TwinFlow,
-  TwinFlowResourceLink,
   TwinFlow_DETAILED,
   useTwinFlowFilters,
   useTwinFlowSearchV1,
 } from "@/entities/twin-flow";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { UserResourceLink } from "@/entities/user";
+import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { reduceToObject, toArray } from "@/shared/libs";

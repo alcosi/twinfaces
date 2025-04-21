@@ -8,8 +8,8 @@ import {
   usePermissionSchemaFilters,
   usePermissionSchemaSearchV1,
 } from "@/entities/permission-schema";
-import { UserResourceLink } from "@/entities/user";
 import { useBreadcrumbs } from "@/features/breadcrumb";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { formatToTwinfaceDate } from "@/shared/libs";

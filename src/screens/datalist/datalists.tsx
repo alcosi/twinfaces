@@ -12,7 +12,6 @@ import {
   DATALIST_SCHEMA,
   DataList,
   DataListCreateRqV1,
-  DatalistResourceLink,
   useDatalistCreate,
   useDatalistFilters,
   useDatalistSearchV1,

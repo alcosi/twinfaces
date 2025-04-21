@@ -2,10 +2,12 @@ import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 
-import { LinkResourceLink, TwinLinkView } from "@/entities/link";
-import { TwinResourceLink, useFetchTwinLinks } from "@/entities/twin";
-import { UserResourceLink } from "@/entities/user";
+import { TwinLinkView } from "@/entities/link";
+import { useFetchTwinLinks } from "@/entities/twin";
+import { LinkResourceLink } from "@/features/link/ui";
 import { TwinContext } from "@/features/twin";
+import { TwinResourceLink } from "@/features/twin/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";

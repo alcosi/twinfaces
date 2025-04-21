@@ -1,12 +1,12 @@
-import { TwinResourceLink } from "@/entities/twin/components/resource-link";
 import {
   FieldDescriptorSelectSharedInHeadV1,
   FieldDescriptorSelectUserV1,
   FieldDescriptorText,
 } from "@/entities/twin/libs/constants";
 import { Twin_DETAILED } from "@/entities/twin/server";
-import { UserResourceLink } from "@/entities/user/components/resource-link";
 
+import { TwinResourceLink } from "../../../../features/twin/ui";
+import { UserResourceLink } from "../../../../features/user/ui";
 import { TwinStatusActions } from "../twin-status-actions";
 import { StaticTwinFieldMeta } from "./types";
 

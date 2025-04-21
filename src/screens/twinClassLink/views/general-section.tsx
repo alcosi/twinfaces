@@ -13,17 +13,17 @@ import {
   useLinkUpdate,
 } from "@/entities/link";
 import {
-  TwinClassResourceLink,
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
-import { UserResourceLink } from "@/entities/user";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { LinkContext } from "@/features/link";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
