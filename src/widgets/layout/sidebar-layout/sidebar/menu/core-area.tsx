@@ -11,27 +11,49 @@ import {
 } from "@/shared/ui";
 
 import { SIDEBAR_GROUPS } from "../constants";
+import { CollapsibleMenu } from "./collapsible-menu";
 import { isItemActive } from "./helpers";
 import { MenuItem } from "./menu-item";
 import { Group } from "./types";
 
 export function CoreAreaSidebarMenu() {
   const { open } = useSidebar();
+  const pathname = usePathname() || "";
 
   return open ? (
     <SidebarMenu>
-      <AccordionMenu />
+      <AccordionMenu pathname={pathname} />
     </SidebarMenu>
   ) : (
     <SidebarMenu className="p-2">
-      <CollapsedMenu />
+      <CollapsibleMenu
+        items={Object.values(SIDEBAR_GROUPS).flatMap((group) =>
+          group.items.map((item, index) => ({
+            item,
+            group,
+            index,
+          }))
+        )}
+        getItemProps={({ item, group, index }) => {
+          const isGroupActive = group.items.some((item) =>
+            isItemActive(item.url, pathname)
+          );
+
+          return {
+            key: item.url,
+            label: item.title,
+            url: item.url,
+            Icon: item.icon,
+            hidden: !isGroupActive && index !== 0,
+            buttonClassName: isGroupActive ? "bg-sidebar-accent" : undefined,
+          };
+        }}
+      />
     </SidebarMenu>
   );
 }
 
-function AccordionMenu() {
-  const pathname = usePathname() || "";
-
+function AccordionMenu({ pathname }: { pathname: string }) {
   const activeGroup =
     Object.values(SIDEBAR_GROUPS).find((group) =>
       group.items.some((item) => isItemActive(item.url, pathname))
@@ -69,25 +91,4 @@ function AccordionGroup({ title, items }: Group) {
       </AccordionContent>
     </AccordionItem>
   );
-}
-
-function CollapsedMenu() {
-  const pathname = usePathname() || "";
-
-  return Object.values(SIDEBAR_GROUPS).flatMap(({ items }) => {
-    const isGroupActive = items.some((item) =>
-      isItemActive(item.url, pathname)
-    );
-
-    return items.map((item, index) => (
-      <MenuItem
-        key={item.url}
-        label={item.title}
-        url={item.url}
-        Icon={item.icon}
-        hidden={!isGroupActive && index !== 0}
-        buttonClassName={isGroupActive ? "bg-sidebar-accent" : undefined}
-      />
-    ));
-  });
 }

@@ -38,6 +38,11 @@ const config = {
           DEFAULT: "var(--brand-500)",
         },
         border: "var(--border)",
+        link: {
+          enabled: "var(--brand-500)",
+          disabled: "var(--input)",
+          DEFAULT: "var(--border)",
+        },
         input: "var(--input)",
         ring: "var(--ring)",
         background: "var(--background)",
@@ -69,16 +74,6 @@ const config = {
         card: {
           DEFAULT: "var(--card)",
           foreground: "var(--card-foreground)",
-        },
-        link: {
-          light: {
-            disabled: "#091e4224",
-            active: "#0c66e4",
-          },
-          dark: {
-            disabled: "#a6c5e229",
-            active: "#ffc030",
-          },
         },
         sidebar: {
           DEFAULT: "var(--sidebar-background)",

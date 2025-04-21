@@ -1,5 +1,7 @@
 import { ElementType } from "react";
 
+import { OneOf } from "@/shared/libs";
+
 export type GroupKeys =
   | "class"
   | "twin"
@@ -24,8 +26,9 @@ type GroupItem = {
 
 type MenuItemBase = {
   label: string;
-  url: string;
+  url?: string;
   hidden?: boolean;
+  className?: string;
   buttonClassName?: string;
 };
 
@@ -36,5 +39,7 @@ export type ComponentIconItem = MenuItemBase & {
 
 export type UrlIconItem = MenuItemBase & {
   Icon?: never;
-  iconSource: string;
+  iconSource?: string;
 };
+
+export type MenuItemProps = OneOf<[ComponentIconItem | UrlIconItem]>;

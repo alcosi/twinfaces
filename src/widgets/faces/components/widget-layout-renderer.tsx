@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+import { DOMAIN_MANAGE } from "@/entities/domain";
 import { getAuthHeaders } from "@/entities/face";
 import { isGranted } from "@/entities/user/server";
 import { ViewAsAdminButton } from "@/features/twin/ui";
@@ -31,7 +32,7 @@ export async function WidgetLayoutRenderer({
   const { currentUserId } = await getAuthHeaders();
   const isAdmin = await isGranted({
     userId: currentUserId,
-    permission: "DOMAIN_MANAGE",
+    permission: DOMAIN_MANAGE,
   });
 
   return (

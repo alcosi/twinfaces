@@ -1,5 +1,5 @@
 import { components, operations } from "@/shared/api/generated/schema";
-import { RequireFields } from "@/shared/libs";
+import { Redefine, RequireFields } from "@/shared/libs";
 
 // type FaceVariants = "nb001" | "pg001" | "wt001";
 
@@ -12,8 +12,18 @@ export type Face_DETAILED = RequireFields<
   "name" | "description" | "createdAt" | "createdByUserId"
 >;
 
-export type FaceNB001 = components["schemas"]["FaceNB001v1"];
-export type FaceNB001MenuItem = components["schemas"]["FaceNB001MenuItemV1"];
+export type FaceNB001 = Redefine<
+  components["schemas"]["FaceNB001v1"],
+  {
+    userAreaMenuItems?: FaceNB001MenuItem[];
+  }
+>;
+export type FaceNB001MenuItem = Redefine<
+  components["schemas"]["FaceNB001MenuItemV1"],
+  {
+    children?: FaceNB001MenuItem[];
+  }
+>;
 
 export type FacePG001 = components["schemas"]["FacePG001v1"];
 export type FacePG001Widget = components["schemas"]["FacePG001WidgetV1"];

@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { ForwardedRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
-import { cn, fixedForwardRef, isUndefined } from "@/shared/libs";
+import { Redefine, cn, fixedForwardRef, isUndefined } from "@/shared/libs";
 import { Input } from "@/shared/ui";
 import type { ButtonProps } from "@/shared/ui/button";
 import { Button } from "@/shared/ui/button";
@@ -27,7 +27,7 @@ export function ColorPickerInternal(
     name,
     className,
     ...props
-  }: Omit<ButtonProps, "value" | "onChange" | "onBlur"> & ColorPickerProps,
+  }: Redefine<ButtonProps, ColorPickerProps>,
   ref: ForwardedRef<HTMLInputElement>
 ) {
   const [open, setOpen] = useState(false);

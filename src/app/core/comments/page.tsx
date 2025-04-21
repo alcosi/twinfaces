@@ -1,6 +1,4 @@
-"use client";
-
-import { UnderConstructionScreen as UnderConstruction } from "@/screens/under-construction";
+import { UnderConstruction } from "@/widgets/under-construction";
 
 export default function CommentsPage() {
   return <UnderConstruction />;

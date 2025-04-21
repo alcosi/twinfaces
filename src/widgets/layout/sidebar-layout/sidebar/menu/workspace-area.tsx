@@ -1,30 +1,113 @@
+import { FaceNB001, FaceNB001MenuItem } from "@/entities/face";
 import { PlatformArea } from "@/shared/config";
-import { SidebarMenu } from "@/shared/ui";
+import { cn, isEmptyArray, slugify } from "@/shared/libs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  SidebarGroupLabel,
+  SidebarMenu,
+  useSidebar,
+} from "@/shared/ui";
 
+import { CollapsibleMenu } from "./collapsible-menu";
 import { MenuItem } from "./menu-item";
 
 type Props = {
-  items: {
-    label?: string;
-    key?: string;
-    icon?: string;
-  }[];
+  items: NonNullable<FaceNB001["userAreaMenuItems"]>;
 };
 
-const DEFAULT_ICON_SOURCE =
-  "https://www.svgrepo.com/show/478711/question-mark.svg";
+const MAX_NESTING_LEVEL = 3;
 
 export function WorkspaceAreaSidebarMenu({ items }: Props) {
-  return (
-    <SidebarMenu className="p-2">
-      {items?.map((item) => (
-        <MenuItem
-          key={item.key}
-          label={`${item.label}`}
-          url={`/${PlatformArea.workspace}/${item.key!}`}
-          iconSource={item.icon ?? DEFAULT_ICON_SOURCE}
-        />
-      ))}
+  const { open } = useSidebar();
+
+  return open ? (
+    <SidebarMenu>
+      <AccordionMenu items={items} />
     </SidebarMenu>
+  ) : (
+    <SidebarMenu className="p-2">
+      <CollapsibleMenu
+        items={items}
+        getItemProps={(item) => ({
+          key: item.key || "",
+          label: item.label ?? "N/A",
+          url: item.targetPageFaceId
+            ? `/${PlatformArea.workspace}/${slugify(item.key)}`
+            : undefined,
+          iconSource: item.icon ?? "",
+          hidden: false,
+        })}
+      />
+    </SidebarMenu>
+  );
+}
+
+function AccordionMenu({ items }: Props) {
+  const renderItems = (
+    items: FaceNB001MenuItem[],
+    level = 0,
+    parentKey = "root"
+  ) => {
+    return items.map((item) => {
+      const keyPath = `${parentKey}-${item.key}`;
+      const url = item.targetPageFaceId
+        ? `/${PlatformArea.workspace}/${slugify(item.key)}`
+        : undefined;
+
+      if (isEmptyArray(item.children)) {
+        return (
+          <MenuItem
+            key={keyPath}
+            label={item.label!}
+            url={url}
+            iconSource={item.icon ?? ""}
+            className={cn("px-2", `ml-${level * 2}`)}
+          />
+        );
+      }
+
+      return (
+        <AccordionItem
+          key={keyPath}
+          value={keyPath}
+          className="px-0 border-b-0"
+        >
+          <AccordionTrigger
+            className={cn(
+              "py-0 text-sm hover:no-underline",
+              `relative`,
+              `ml-${level * 2}`
+            )}
+          >
+            <SidebarGroupLabel className="w-full">
+              <MenuItem
+                label={item.label ?? "N/A"}
+                url={url}
+                iconSource={item.icon!}
+              />
+            </SidebarGroupLabel>
+          </AccordionTrigger>
+
+          {level + 1 < MAX_NESTING_LEVEL && (
+            <AccordionContent
+              className={cn("mt-1 py-1", `ml-${(level + 1) * 2}`)}
+            >
+              <div className="border-l ml-2">
+                {renderItems(item.children!, level, keyPath)}
+              </div>
+            </AccordionContent>
+          )}
+        </AccordionItem>
+      );
+    });
+  };
+
+  return (
+    <Accordion type="multiple" className="w-full p-0 pt-2 space-y-1">
+      {renderItems(items)}
+    </Accordion>
   );
 }
