@@ -8,7 +8,7 @@ import { isPopulatedArray } from "@/shared/libs";
 import { hydrateDomainUserFromMap } from "../libs/helpers";
 import { LOGIN_FORM_SCHEMA } from "../server";
 
-async function login(authToken: string, domainId: string) {
+async function login(authToken: string, domainId: string, userId: string) {
   const { data, error } = await TwinsAPI.POST(
     "/private/domain/user/search/v1",
     {
@@ -28,7 +28,7 @@ async function login(authToken: string, domainId: string) {
         },
       },
       body: {
-        userIdList: [authToken],
+        userIdList: [userId],
         businessAccountIdList: [],
       },
     }
@@ -49,7 +49,7 @@ export async function loginFormAction(_: unknown, formData: FormData) {
   });
 
   const authToken = [userId, businessAccountId].filter(Boolean).join(",");
-  const { users, relatedObjects } = await login(authToken, domainId);
+  const { users, relatedObjects } = await login(authToken, domainId, userId);
 
   const index = users?.findIndex((user) => user.userId === userId) ?? -1;
   if (isPopulatedArray(users) && index !== -1) {
