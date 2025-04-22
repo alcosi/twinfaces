@@ -1,6 +1,8 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { PermissionGroupFilters } from "./types";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
+import { PermissionGroupFilters, PermissionGroupRqQuery } from "./types";
 
 export function createPermissionGroupApi(settings: ApiSettings) {
   async function search({
@@ -25,14 +27,29 @@ export function createPermissionGroupApi(settings: ApiSettings) {
         },
       },
       body: {
-        keyLikeList: search ? ["%" + search + "%"] : undefined,
         ...filters,
         showSystemGroups: true,
       },
     });
   }
 
-  return { search };
+  function getById({
+    groupId,
+    query = {},
+  }: {
+    groupId: string;
+    query: PermissionGroupRqQuery;
+  }) {
+    return settings.client.GET("/private/permission_group/{groupId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { groupId },
+        query: { lazyRelation: false, ...query },
+      },
+    });
+  }
+
+  return { search, getById };
 }
 
 export type PermissionGroupApi = ReturnType<typeof createPermissionGroupApi>;

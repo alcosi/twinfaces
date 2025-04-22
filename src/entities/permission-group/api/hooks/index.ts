@@ -1,2 +1,2 @@
-export * from "./useFetchById";
-export * from "./useSearchV1";
+export * from "./use-fetch-by-id";
+export * from "./use-search-v1";

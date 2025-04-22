@@ -1,4 +1,5 @@
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+
 import {
   PermissionGroup_DETAILED,
   useFetchPermissionGroupById,
@@ -10,7 +11,13 @@ export function usePermissionGroupSelectAdapter(): SelectAdapter<PermissionGroup
   const { searchPermissionGroups } = usePermissionGroupSearchV1();
 
   async function getById(id: string) {
-    return await fetchPermissionGroupById(id);
+    return await fetchPermissionGroupById({
+      groupId: id,
+      query: {
+        showPermissionGroup2TwinClassMode: "DETAILED",
+        showPermissionGroupMode: "DETAILED",
+      },
+    });
   }
 
   async function getItems(search: string) {

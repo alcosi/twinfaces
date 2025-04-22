@@ -1,3 +1,3 @@
 export * from "./hooks";
-export * from "./permission-group-api";
+export * from "./api-service";
 export * from "./types";
