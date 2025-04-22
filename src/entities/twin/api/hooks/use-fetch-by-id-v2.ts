@@ -7,7 +7,6 @@ export const useTwinFetchByIdV2 = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const domainId = clientCookies.get("domainId");
   const authToken = clientCookies.get("authToken");
-  const decodedAuthToken = decodeURIComponent(authToken!);
 
   const fetchTwinById = useCallback(
     async (id: string): Promise<Twin_DETAILED | undefined> => {
@@ -17,7 +16,7 @@ export const useTwinFetchByIdV2 = () => {
         return await fetch<Twin_DETAILED>(id, {
           header: {
             DomainId: domainId ?? "",
-            AuthToken: decodedAuthToken ?? "",
+            AuthToken: authToken ?? "",
             Channel: "WEB",
           },
           query: {
