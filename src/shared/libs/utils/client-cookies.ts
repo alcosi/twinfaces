@@ -44,7 +44,8 @@ function get(name: string): string | undefined {
       {} as Record<string, string>
     );
 
-  return cookies[name];
+  const value = cookies[name];
+  return value ? decodeURIComponent(value) : undefined;
 }
 
 function remove(name: string, path = "/") {
