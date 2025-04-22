@@ -1,11 +1,9 @@
 import { useContext } from "react";
 
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { InPlaceEditContextProvider } from "@/features/inPlaceEdit";
 import { PermissionGroupContext } from "@/features/permission-group";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import {
   GuidWithCopy,
   Table,

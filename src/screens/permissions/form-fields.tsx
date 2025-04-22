@@ -20,7 +20,7 @@ export function PermissionsFormFields({
         label="Group"
         selectPlaceholder="Select permission group"
         searchPlaceholder="Search permission group..."
-        noItemsText={"No permission groups found"}
+        noItemsText="No permission groups found"
         {...permissionGroupAdapter}
       />
 
