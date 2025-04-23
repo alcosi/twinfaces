@@ -143,8 +143,8 @@ export function TwinFieldGeneral() {
     title: "Update field typer",
     onSubmit: (values) => {
       return update({
-        fieldTyperFeaturerId: values.fieldTyperFeaturerId.id,
-        fieldTyperParams: values.fieldTyperParams,
+        fieldTyperFeaturerId: values.fieldTyperFeaturerId[0].id,
+        fieldTyperParams: values.fieldTyperFeaturerParams,
       });
     },
     valuesInfo: {
