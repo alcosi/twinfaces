@@ -143,7 +143,9 @@ export function TwinFieldFormItem({
             getById={optionAdapter.getById}
             getItems={(search) =>
               optionAdapter.getItems(search, {
-                idList: descriptor.dataListId ?? [],
+                dataListIdList: descriptor.dataListId
+                  ? [descriptor.dataListId]
+                  : [],
               })
             }
             renderItem={optionAdapter.renderItem}
