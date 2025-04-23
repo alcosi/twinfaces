@@ -1,6 +1,7 @@
 import { DataListsMap } from "@/entities/datalist";
 import { Featurer_DETAILED } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
+import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
 import { TwinClass, TwinClass_DETAILED } from "../api";
@@ -64,6 +65,15 @@ export const hydrateTwinClassFromMap = (
     hydrated.deletePermission = relatedObjects.permissionMap[
       dto.deletePermissionId
     ] as Permission;
+  }
+
+  if (dto.fieldIds && relatedObjects.twinClassFieldMap) {
+    hydrated.fields = dto.fieldIds.reduce<TwinClassField[]>((acc, id) => {
+      const field = relatedObjects.twinClassFieldMap?.[id];
+      if (field) acc.push(field);
+
+      return acc;
+    }, []);
   }
 
   return hydrated;
