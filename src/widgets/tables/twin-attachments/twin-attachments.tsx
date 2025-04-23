@@ -8,12 +8,12 @@ import {
   useAttachmentFilters,
   useAttachmentSearchV1,
 } from "@/entities/attachment";
-import { CommentResourceLink } from "@/entities/comment";
-import { PermissionResourceLink } from "@/entities/permission";
-import { TwinResourceLink } from "@/entities/twin";
-import { TwinClassFieldResourceLink } from "@/entities/twin-class-field";
-import { TwinFlowTransitionResourceLink } from "@/entities/twin-flow-transition";
-import { UserResourceLink } from "@/entities/user";
+import { CommentResourceLink } from "@/features/comment/ui";
+import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
+import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
+import { TwinResourceLink } from "@/features/twin/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import {

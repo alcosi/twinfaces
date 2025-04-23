@@ -1,34 +1,41 @@
-import { FieldValues } from "react-hook-form";
+import { FieldPath, FieldValues } from "react-hook-form";
 
-import { FormField } from "@/shared/ui";
-
-import { FormFieldProps } from "../types";
-import { CalendarFormItem } from "./calendar-form-item";
-import { CalendarFormFieldProps } from "./types";
+import { AutoFormCalendarValueInfo } from "@/components/auto-field";
+import {
+  FormFieldProps,
+  FormItemLabel,
+  TextFormField,
+} from "@/components/form-fields";
 
 export function CalendarFormField<T extends FieldValues>({
   name,
   control,
-  idPrefix,
+  label,
   ...props
-}: FormFieldProps<T> & CalendarFormFieldProps) {
-  const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
-
+}: FormFieldProps<T> & AutoFormCalendarValueInfo) {
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => {
-        return (
-          <CalendarFormItem
-            fieldValue={field.value}
-            onChange={field.onChange}
-            inputId={inputId}
-            inForm={true}
-            {...props}
-          />
-        );
-      }}
-    />
+    <div className="flex flex-col space-y-2">
+      {label && (
+        <div className="col-span-2">
+          <FormItemLabel>{label}</FormItemLabel>
+        </div>
+      )}
+
+      <TextFormField
+        {...props}
+        name={`${name}.from` as FieldPath<T>}
+        control={control}
+        type="date"
+        className="cursor-pointer"
+      />
+
+      <TextFormField
+        {...props}
+        name={`${name}.to` as FieldPath<T>}
+        control={control}
+        type="date"
+        className="cursor-pointer"
+      />
+    </div>
   );
 }

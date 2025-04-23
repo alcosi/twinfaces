@@ -1,12 +1,12 @@
 import { useContext } from "react";
 
-import { CommentResourceLink } from "@/entities/comment";
-import { PermissionResourceLink } from "@/entities/permission";
-import { TwinResourceLink } from "@/entities/twin";
-import { TwinClassFieldResourceLink } from "@/entities/twin-class-field";
-import { TwinFlowTransitionResourceLink } from "@/entities/twin-flow-transition";
-import { UserResourceLink } from "@/entities/user";
 import { AttachmentContext } from "@/features/attachment";
+import { CommentResourceLink } from "@/features/comment/ui";
+import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
+import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
+import { TwinResourceLink } from "@/features/twin/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { formatToTwinfaceDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";

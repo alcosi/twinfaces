@@ -11,7 +11,6 @@ import {
 
 import {
   CalendarFormField,
-  CalendarFormFieldProps,
   CheckboxFormField,
   CheckboxFormItem,
   ColorPickerFormField,
@@ -113,7 +112,7 @@ export interface AutoFormNumberRangeValueInfo {
   placeholderTo?: string;
 }
 
-export interface AutoFormCalendarValueInfo extends CalendarFormFieldProps {
+export interface AutoFormCalendarValueInfo {
   type: AutoFormValueType.calendar;
 }
 
