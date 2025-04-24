@@ -12,7 +12,7 @@ import { TwinClassSchemaResourceLink } from "@/features/twin-class-schema/ui";
 import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -64,7 +64,7 @@ const colDefs: Record<
     header: "Permission schema",
     cell: ({ row: { original } }) =>
       original.permissionSchema && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <PermissionSchemaResourceLink
             data={original.permissionSchema}
             withTooltip
@@ -79,7 +79,7 @@ const colDefs: Record<
     header: "Twinflow schema",
     cell: ({ row: { original } }) =>
       original.twinflowSchema && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinFlowSchemaResourceLink
             data={original.twinflowSchema as TwinFlowSchema_DETAILED}
             withTooltip
@@ -94,7 +94,7 @@ const colDefs: Record<
     header: "Class schema",
     cell: ({ row: { original } }) =>
       original.twinClassSchema && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassSchemaResourceLink
             data={original.twinClassSchema as TwinClassSchema_DETAILED}
             withTooltip
@@ -133,7 +133,8 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 };
 

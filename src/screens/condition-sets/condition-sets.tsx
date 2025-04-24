@@ -12,7 +12,7 @@ import {
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { UserResourceLink } from "@/features/user/ui";
 import { PlatformArea } from "@/shared/config";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -76,7 +76,7 @@ const colDefs: Record<
     header: "Created by",
     cell: ({ row: { original } }) =>
       original.createdByUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink data={original.createdByUser} withTooltip />
         </div>
       ),
@@ -86,7 +86,8 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 };
 

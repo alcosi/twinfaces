@@ -26,7 +26,7 @@ import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
 import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
-import { formatToTwinfaceDate, reduceToObject, toArray } from "@/shared/libs";
+import { formatIntlDate, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -274,7 +274,9 @@ export function TwinflowTransitionGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(transition.createdAt)}</TableCell>
+            <TableCell>
+              {formatIntlDate(transition.createdAt, "datetime-local")}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

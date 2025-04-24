@@ -18,7 +18,7 @@ import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import {
-  formatToTwinfaceDate,
+  formatIntlDate,
   isFalsy,
   isTruthy,
   toArray,
@@ -172,7 +172,8 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 };
 

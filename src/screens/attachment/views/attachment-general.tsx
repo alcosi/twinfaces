@@ -10,7 +10,7 @@ import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { AnchorWithCopy } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
@@ -118,7 +118,9 @@ export function AttachmentGeneral() {
 
         <TableRow>
           <TableCell>Created at</TableCell>
-          <TableCell>{formatToTwinfaceDate(attachment.createdAt)}</TableCell>
+          <TableCell>
+            {formatIntlDate(attachment.createdAt, "datetime-local")}
+          </TableCell>
         </TableRow>
       </TableBody>
     </Table>

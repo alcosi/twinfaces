@@ -9,7 +9,7 @@ import { TwinContext } from "@/features/twin";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 
@@ -33,7 +33,7 @@ const colDefs: Record<
     header: "Link",
     cell: ({ row: { original } }) =>
       original.link && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <LinkResourceLink data={original.link} withTooltip />
         </div>
       ),
@@ -45,7 +45,7 @@ const colDefs: Record<
     header: "Destination Twin",
     cell: ({ row: { original } }) =>
       original.dstTwin && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinResourceLink data={original.dstTwin} withTooltip />
         </div>
       ),
@@ -57,7 +57,7 @@ const colDefs: Record<
     header: "Created by User",
     cell: ({ row: { original } }) =>
       original.createdByUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink data={original.createdByUser} withTooltip />
         </div>
       ),
@@ -68,7 +68,8 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 };
 

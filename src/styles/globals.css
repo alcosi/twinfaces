@@ -111,16 +111,22 @@
   }
 }
 
-input[type="date"] {
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="month"],
+input[type="week"] {
   position: relative;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator,
+input[type="week"]::-webkit-calendar-picker-indicator {
   position: absolute;
-  top: 50%;
   right: 0.75rem;
+  top: 50%;
   transform: translateY(-50%);
-
-  opacity: 1;
-  display: block;
+  cursor: pointer;
 }

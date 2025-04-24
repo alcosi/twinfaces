@@ -15,10 +15,12 @@ import { useTwinSelectAdapter } from "@/entities/twin";
 import { Twin } from "@/entities/twin/server";
 import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
 import { DomainUser_DETAILED, useUserSelectAdapter } from "@/entities/user";
-import { isPopulatedArray } from "@/shared/libs";
+import { isPopulatedArray, mapPatternToInputType } from "@/shared/libs";
 
-import { TwinFieldSelectLinkLongFormItem } from "./components";
-import { TwinFieldTextFormItem } from "./twin-field-text-form-item";
+import {
+  TwinFieldSelectLinkLongFormItem,
+  TwinFieldTextFormItem,
+} from "./components";
 
 export type TwinFieldFormItemProps = {
   descriptor?: TwinFieldUI["descriptor"];
@@ -44,13 +46,13 @@ export function TwinFieldFormItem({
   const optionAdapter = useDatalistOptionSelectAdapter();
   const userAdapter = useUserSelectAdapter();
 
-  function handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     return onChange?.(event.target.value);
   }
 
-  const handleMarkdownChange = (event: { target: { markdown: string } }) => {
+  function handleMarkdownChange(event: { target: { markdown: string } }) {
     onChange?.(event.target.markdown);
-  };
+  }
 
   function handleOnTwinSelect(twins?: Twin[]) {
     if (isPopulatedArray<Twin>(twins)) {
@@ -76,30 +78,32 @@ export function TwinFieldFormItem({
         return (
           <TwinFieldTextFormItem
             descriptor={descriptor}
-            onTextChange={handleTextChange}
+            onTextChange={handleInputChange}
             onMarkdownChange={handleMarkdownChange}
             {...props}
           />
         );
       case TwinFieldType.urlV1:
         return (
-          <TextFormItem type="url" onChange={handleTextChange} {...props} />
+          <TextFormItem type="url" onChange={handleInputChange} {...props} />
         );
       case TwinFieldType.numericFieldV1:
         return (
-          <TextFormItem type="number" onChange={handleTextChange} {...props} />
+          <TextFormItem type="number" onChange={handleInputChange} {...props} />
         );
       case TwinFieldType.colorHexV1:
         return <ColorPickerFormItem onChange={onChange} {...props} />;
-      case TwinFieldType.dateScrollV1:
+      case TwinFieldType.dateScrollV1: {
+        const type = mapPatternToInputType(descriptor.pattern!);
         return (
-          <TextFormItem type="date" onChange={handleTextChange} {...props} />
+          <TextFormItem {...props} onChange={handleInputChange} type={type} />
         );
+      }
       case TwinFieldType.immutableV1:
         return <TextFormItem disabled {...props} />;
       case TwinFieldType.attachmentFieldV1:
         return (
-          <TextFormItem type="file" onChange={handleTextChange} {...props} />
+          <TextFormItem type="file" onChange={handleInputChange} {...props} />
         );
       case TwinFieldType.selectLinkV1:
       case TwinFieldType.selectSharedInHeadV1:

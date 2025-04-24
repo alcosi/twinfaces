@@ -30,11 +30,7 @@ import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { TwinFieldEditor, TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import {
-  formatToTwinfaceDate,
-  isPopulatedArray,
-  isUndefined,
-} from "@/shared/libs";
+import { formatIntlDate, isPopulatedArray, isUndefined } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -330,7 +326,9 @@ export function TwinGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(twin.createdAt!)}</TableCell>
+            <TableCell>
+              {formatIntlDate(twin.createdAt!, "datetime-local")}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

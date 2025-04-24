@@ -24,7 +24,7 @@ import {
 import { LinkContext } from "@/features/link";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
+import { createFixedSelectAdapter, formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -223,7 +223,9 @@ export function GeneralSection() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(link.createdAt!)}</TableCell>
+            <TableCell>
+              {formatIntlDate(link.createdAt!, "datetime-local")}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

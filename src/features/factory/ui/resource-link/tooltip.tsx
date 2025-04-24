@@ -1,7 +1,7 @@
 import { Factory as FactoryIcon } from "lucide-react";
 
 import { Factory } from "@/entities/factory";
-import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
+import { formatIntlDate, isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 
 type Props = {
@@ -31,7 +31,7 @@ export function FactoryResourceTooltip({ data, link }: Props) {
 
         {data.createdAt && (
           <ResourceLinkTooltip.Item title={"Created At"}>
-            {formatToTwinfaceDate(data.createdAt)}
+            {formatIntlDate(data.createdAt, "datetime-local")}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

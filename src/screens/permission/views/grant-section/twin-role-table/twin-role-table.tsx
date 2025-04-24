@@ -19,7 +19,7 @@ import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable } from "@/widgets/crud-data-table";
 
@@ -50,7 +50,7 @@ const colDefs: Record<
     header: "Persmission Schema",
     cell: ({ row: { original } }) =>
       original.permissionSchema && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <PermissionSchemaResourceLink
             data={original.permissionSchema}
             withTooltip
@@ -65,7 +65,7 @@ const colDefs: Record<
     header: "Class",
     cell: ({ row: { original } }) =>
       original.twinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink data={original.twinClass} withTooltip />
         </div>
       ),
@@ -83,7 +83,7 @@ const colDefs: Record<
     header: "Granted by",
     cell: ({ row: { original } }) =>
       original.grantedByUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink data={original.grantedByUser} withTooltip />
         </div>
       ),
@@ -94,7 +94,8 @@ const colDefs: Record<
     accessorKey: "grantedAt",
     header: "Granted at",
     cell: ({ row: { original } }) =>
-      original.grantedAt && formatToTwinfaceDate(original.grantedAt),
+      original.grantedAt &&
+      formatIntlDate(original.grantedAt, "datetime-local"),
   },
 };
 

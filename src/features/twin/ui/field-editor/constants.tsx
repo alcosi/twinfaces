@@ -4,6 +4,7 @@ import {
   FieldDescriptorText,
 } from "@/entities/twin/libs/constants";
 import { Twin_DETAILED } from "@/entities/twin/server";
+import { formatIntlDate } from "@/shared/libs";
 
 import { TwinResourceLink } from "../../../../features/twin/ui";
 import { UserResourceLink } from "../../../../features/user/ui";
@@ -84,5 +85,8 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
   },
   "00000000-0000-0000-0011-000000000011": {
     key: "createdAt",
+    renderPreview: (twin) => {
+      return twin.createdAt && formatIntlDate(twin.createdAt, "datetime-local");
+    },
   },
 };

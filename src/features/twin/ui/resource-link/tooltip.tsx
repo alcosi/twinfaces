@@ -1,7 +1,7 @@
 import { formatTwinDisplay } from "@/entities/twin";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { Twin } from "@/entities/twin/server";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 
 import { TwinClassResourceLink } from "../../../../features/twin-class/ui";
@@ -51,7 +51,7 @@ export function TwinResourceTooltip({ data, link }: Props) {
         )}
         {data.createdAt && (
           <ResourceLinkTooltip.Item title="Created at">
-            {formatToTwinfaceDate(data.createdAt)}
+            {formatIntlDate(data.createdAt, "datetime-local")}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

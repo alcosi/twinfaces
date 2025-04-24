@@ -15,7 +15,7 @@ import {
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PrivateApiContext } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -154,7 +154,9 @@ export function TwinflowGeneral({
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(twinflow.createdAt!)}</TableCell>
+            <TableCell>
+              {formatIntlDate(twinflow.createdAt!, "datetime-local")}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
