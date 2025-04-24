@@ -2,8 +2,13 @@
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
-import * as React from "react";
+
+import { RenderOnClient } from "@/shared/ui";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <RenderOnClient>
+      <NextThemesProvider {...props}>{children}</NextThemesProvider>
+    </RenderOnClient>
+  );
 }
