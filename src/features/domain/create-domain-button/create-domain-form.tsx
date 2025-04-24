@@ -71,7 +71,7 @@ export function CreateDomainForm() {
     }
 
     form.reset({
-      name: "",
+      name: undefined,
       key: "",
       description: "",
       type: undefined,
@@ -104,12 +104,12 @@ export function CreateDomainForm() {
             <div className="w-2/3 space-y-6">
               <TextFormField
                 control={form.control}
-                name={"name"}
+                name="name"
                 label="Name"
                 autoFocus={true}
               />
 
-              <TextFormField control={form.control} name={"key"} label="Key" />
+              <TextFormField control={form.control} name="key" label="Key" />
 
               <TextAreaFormField
                 control={form.control}

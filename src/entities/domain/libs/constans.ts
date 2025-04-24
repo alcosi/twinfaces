@@ -2,11 +2,6 @@ import { z } from "zod";
 
 import { REGEX_PATTERNS } from "@/shared/libs";
 
-const DOMAIN_ICON_SCHEMA = z.any();
-// z.instanceof(File);
-// .optional()
-// .or(z.literal("").transform(() => undefined));
-
 export const DOMAIN_CREATE_SCHEMA = z.object({
   name: z.string().min(1, "Name can not be empty"),
   key: z
