@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { REGEX_PATTERNS } from "@/shared/libs";
 
 const DOMAIN_ICON_SCHEMA = z.any();
@@ -7,6 +8,7 @@ const DOMAIN_ICON_SCHEMA = z.any();
 // .or(z.literal("").transform(() => undefined));
 
 export const DOMAIN_CREATE_SCHEMA = z.object({
+  name: z.string().min(1, "Name can not be empty"),
   key: z
     .string()
     .min(3)
@@ -25,6 +27,4 @@ export const DOMAIN_CREATE_SCHEMA = z.object({
   defaultLocale: z.enum(["en", "ru"], {
     message: "Select language",
   }),
-  iconDark: DOMAIN_ICON_SCHEMA,
-  iconLight: DOMAIN_ICON_SCHEMA,
 });

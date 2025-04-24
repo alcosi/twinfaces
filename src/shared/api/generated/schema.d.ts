@@ -137,6 +137,12 @@ export interface paths {
     /** Commit draft by id */
     put: operations["draftCommitV1"];
   };
+  "/private/domain/v1": {
+    /** Domain update */
+    put: operations["domainUpdateV1"];
+    /** Add new domain. */
+    post: operations["domainCreateV1"];
+  };
   "/private/data_list_option/{dataListOptionId}/v1": {
     /** Returns list data */
     get: operations["dataListOptionViewV1"];
@@ -590,12 +596,8 @@ export interface paths {
     post: operations["domainBusinessAccountAddV1"];
   };
   "/private/domain/v2": {
-    /** Add new domain with icons */
-    post: operations["domainAddV2"];
-  };
-  "/private/domain/v1": {
-    /** Add new domain. */
-    post: operations["domainAddV1"];
+    /** Create new domain with icons */
+    post: operations["domainCreateV2"];
   };
   "/private/domain/user/search/v1": {
     /** Return a list of users by current domain */
@@ -2186,7 +2188,7 @@ export interface components {
        *   "png"
        * ]
        */
-      extensions?: string[];
+      extensions?: string;
       /**
        * @description Filename must match this regexp
        * @example .*
@@ -2215,17 +2217,15 @@ export interface components {
       /** @description Date pattern (default: yyyy-MM-ddTHH:mm:ss) */
       pattern?: string;
       /**
-       * Format: int32
-       * @description [option] Maximum number of days from current date in the past for a valid date range
-       * @example 30
+       * Format: date-time
+       * @description [option] Acceptable minimum date value
        */
-      daysPast?: number;
+      beforeDate?: string;
       /**
-       * Format: int32
-       * @description [option] The maximum number of days from the current date in the future for a valid date range
-       * @example 365
+       * Format: date-time
+       * @description [option] Acceptable maximum date value
        */
-      daysFuture?: number;
+      afterDate?: string;
     };
     TwinClassFieldDescriptorI18nV1: {
       fieldType: "i18nV1";
@@ -3756,6 +3756,12 @@ export interface components {
       permissionId?: string;
       /**
        * Format: uuid
+       * @description business account id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      businessAccountId?: string;
+      /**
+       * Format: uuid
        * @description user id
        * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
@@ -4598,8 +4604,10 @@ export interface components {
       multiplierFeaturerId?: number;
       /**
        * @description multiplier params
-       * @example {"outputTwinClassId"=>"da69c441-9c8f-4e73-a07e-b5648f8f4396",
-       * "copyHead"=>"true"}
+       * @example {
+       *   "outputTwinClassId": "da69c441-9c8f-4e73-a07e-b5648f8f4396",
+       *   "copyHead": "true"
+       * }
        */
       multiplierParams?: {
         [key: string]: string;
@@ -4670,8 +4678,10 @@ export interface components {
       multiplierFeaturerId?: number;
       /**
        * @description multiplier params
-       * @example {"outputTwinClassId"=>"da69c441-9c8f-4e73-a07e-b5648f8f4396",
-       * "copyHead"=>"true"}
+       * @example {
+       *   "outputTwinClassId": "da69c441-9c8f-4e73-a07e-b5648f8f4396",
+       *   "copyHead": "true"
+       * }
        */
       multiplierParams?: {
         [key: string]: string;
@@ -5025,8 +5035,10 @@ export interface components {
       fillerFeaturerId?: number;
       /**
        * @description filler params
-       * @example {"outputTwinClassId"=>"da69c441-9c8f-4e73-a07e-b5648f8f4396",
-       * "copyHead"=>"true"}
+       * @example {
+       *   "outputTwinClassId": "da69c441-9c8f-4e73-a07e-b5648f8f4396",
+       *   "copyHead": "true"
+       * }
        */
       fillerParams?: {
         [key: string]: string;
@@ -5321,6 +5333,273 @@ export interface components {
       status?: "UNDER_CONSTRUCTION" | "CONSTRUCTION_EXCEPTION" | "ERASE_SCOPE_COLLECT_PLANNED" | "ERASE_SCOPE_COLLECT_NEED_START" | "ERASE_SCOPE_COLLECT_IN_PROGRESS" | "ERASE_SCOPE_COLLECT_EXCEPTION" | "NORMALIZE_EXCEPTION" | "CHECK_CONFLICTS_EXCEPTION" | "UNCOMMITED" | "COMMIT_NEED_START" | "COMMIT_IN_PROGRESS" | "COMMIT_EXCEPTION" | "LOCKED" | "OUT_OF_DATE" | "COMMITED";
       /** @description created by user */
       createdByUser?: components["schemas"]["UserV1"];
+    };
+    DomainUpdateRqV1: {
+      /** @description domain */
+      domain?: components["schemas"]["DomainUpdateV1"];
+    };
+    DomainUpdateV1: {
+      /**
+       * @description name
+       * @example alcosi
+       */
+      name?: string;
+      /**
+       * @description description
+       * @example some domain
+       */
+      description?: string;
+      /**
+       * @description default locale for domain [en/de/by]
+       * @example en
+       */
+      defaultLocale?: string;
+      /**
+       * Format: uuid
+       * @description Resource storage type
+       * @example 00000000-0000-0000-0007-000000000001
+       */
+      resourceStorageId?: string;
+      /**
+       * Format: uuid
+       * @description Attachment storage type
+       * @example 00000000-0000-0000-0007-000000000001
+       */
+      attachmentStorageId?: string;
+      /**
+       * Format: int32
+       * @description business account initiator featurer id
+       * @example 1000
+       */
+      businessAccountInitiatorFeaturerId?: number;
+      /**
+       * @description business account initiator params
+       * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
+       * "GTEvalue"=>"2"}
+       */
+      businessAccountInitiatorParams?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: int32
+       * @description user group manager featurer id
+       * @example 1000
+       */
+      userGroupManagerFeaturerId?: number;
+      /**
+       * @description user group manager params
+       * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
+       * "GTEvalue"=>"2"}
+       */
+      userGroupManagerParams?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twin class schema id
+       * @example 8b9ea6ad-2b9b-4a4a-8ea9-1b17da4d603b
+       */
+      twinClassSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description business account template twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      businessAccountTemplateTwinId?: string;
+      /**
+       * Format: uuid
+       * @description default iter id
+       * @example 64807201-e3d6-4016-b699-b36c5f91c58e
+       */
+      defaultTierId?: string;
+      /**
+       * Format: uuid
+       * @description domain user template twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      domainUserTemplateTwinId?: string;
+      /**
+       * Format: uuid
+       * @description Icon dark resource id
+       * @example 09cd9a50-dcbe-4c73-b39e-65d2000a8e85
+       */
+      iconDarkResourceId?: string;
+      /**
+       * Format: uuid
+       * @description Icon light resource id
+       * @example 09cd9a50-dcbe-4c73-b39e-65d2000a8e85
+       */
+      iconLightResourceId?: string;
+      /**
+       * Format: uuid
+       * @description Navbar face id
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      navbarFaceId?: string;
+    };
+    DomainViewRsv1: {
+      /**
+       * Format: int32
+       * @description request processing status (see ErrorCode enum)
+       * @example 0
+       */
+      status?: number;
+      /**
+       * @description User friendly, localized request processing status description
+       * @example success
+       */
+      msg?: string;
+      /**
+       * @description request processing status description, technical
+       * @example success
+       */
+      statusDetails?: string;
+      /** @description results - related objects, if lazeRelation is false */
+      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+      /** @description domain */
+      domain?: components["schemas"]["DomainViewV1"];
+    };
+    DomainViewV1: {
+      /**
+       * Format: uuid
+       * @description domain id
+       */
+      id?: string;
+      /**
+       * @description key
+       * @example alcosi
+       */
+      key?: string;
+      /**
+       * @description domain description
+       * @example alcosi
+       */
+      description?: string;
+      /** @description Icon dark uri. Might be relative */
+      iconDark?: string;
+      /** @description Icon light uri. Might be relative */
+      iconLight?: string;
+      /**
+       * @description type [basic/b2b]
+       * @example basic
+       * @enum {string}
+       */
+      type?: "basic" | "b2b";
+      /**
+       * Format: int32
+       * @description business account initiator featurer id
+       * @example 1000
+       */
+      businessAccountInitiatorFeaturerId?: number;
+      /**
+       * @description business account initiator params
+       * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
+       * "GTEvalue"=>"2"}
+       */
+      businessAccountInitiatorParams?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: int32
+       * @description user group manager featurer id
+       * @example 1000
+       */
+      userGroupManagerFeaturerId?: number;
+      /**
+       * @description user group manager params
+       * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
+       * "GTEvalue"=>"2"}
+       */
+      userGroupManagerParams?: {
+        [key: string]: string;
+      };
+      /**
+       * Format: uuid
+       * @description permission schema id
+       * @example af143656-9899-4e1f-8683-48795cdefeac
+       */
+      permissionSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinflow schema id
+       * @example 2c618b09-e8dc-4712-a433-2e18915ee70d
+       */
+      twinflowSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description twinclass schema id
+       * @example 8b9ea6ad-2b9b-4a4a-8ea9-1b17da4d603b
+       */
+      twinClassSchemaId?: string;
+      /**
+       * Format: uuid
+       * @description business account template twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      businessAccountTemplateTwinId?: string;
+      /**
+       * Format: date-time
+       * @description created at
+       * @example 2023-09-13T09:32:08
+       */
+      createdAt?: string;
+      /**
+       * @description default locale
+       * @example en
+       */
+      defaultLocale?: string;
+      /**
+       * Format: uuid
+       * @description ancestor twin class id
+       * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      ancestorTwinClassId?: string;
+      /**
+       * Format: uuid
+       * @description default tier id
+       * @example 64807201-e3d6-4016-b699-b36c5f91c58e
+       */
+      defaultTierId?: string;
+      /**
+       * Format: int64
+       * @description attachment storage used count
+       */
+      attachmentStorageUsedCount?: number;
+      /**
+       * Format: int64
+       * @description attachment storage used size
+       */
+      attachmentStorageUsedSize?: number;
+      /**
+       * Format: uuid
+       * @description domain user template twin id
+       * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+       */
+      domainUserTemplateTwinId?: string;
+      /**
+       * Format: uuid
+       * @description Resource storage type
+       * @example 00000000-0000-0000-0007-000000000001
+       */
+      resourceStorageId?: string;
+      /**
+       * Format: uuid
+       * @description Attachment storage type
+       * @example 00000000-0000-0000-0007-000000000001
+       */
+      attachmentStorageId?: string;
+      /**
+       * Format: uuid
+       * @description domain navigation bar pointer
+       * @example 9a3f6075-f175-41cd-a804-934201ec969c
+       */
+      navbarFaceId?: string;
     };
     DataListOptionUpdateRqV1: {
       /** @description icon */
@@ -9099,6 +9378,12 @@ export interface components {
       permissionId?: string;
       /**
        * Format: uuid
+       * @description business account id
+       * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+       */
+      businessAccountId?: string;
+      /**
+       * Format: uuid
        * @description user id
        * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
        */
@@ -10277,8 +10562,10 @@ export interface components {
       multiplierFeaturerId?: number;
       /**
        * @description multiplier params
-       * @example {"outputTwinClassId"=>"da69c441-9c8f-4e73-a07e-b5648f8f4396",
-       * "copyHead"=>"true"}
+       * @example {
+       *   "outputTwinClassId": "da69c441-9c8f-4e73-a07e-b5648f8f4396",
+       *   "copyHead": "true"
+       * }
        */
       multiplierParams?: {
         [key: string]: string;
@@ -10528,23 +10815,21 @@ export interface components {
       /** @description Name */
       name?: string;
     };
-    DomainCreateRqDTOv1: {
+    DomainCreateRqV1: {
+      /** @description domain */
+      domain?: components["schemas"]["DomainCreateV1"];
+    };
+    DomainCreateV1: {
       /**
-       * @description will be used for url generation and for twins aliases
+       * @description name
        * @example alcosi
        */
-      key?: string;
+      name?: string;
       /**
-       * @description domain description
+       * @description description
        * @example some domain
        */
       description?: string;
-      /**
-       * @description type [basic/b2b]
-       * @example basic
-       * @enum {string}
-       */
-      type?: "basic" | "b2b";
       /**
        * @description default locale for domain [en/de/by]
        * @example en
@@ -10562,87 +10847,17 @@ export interface components {
        * @example 00000000-0000-0000-0007-000000000001
        */
       attachmentStorageId?: string;
-    };
-    DomainViewRsv1: {
       /**
-       * Format: int32
-       * @description request processing status (see ErrorCode enum)
-       * @example 0
-       */
-      status?: number;
-      /**
-       * @description User friendly, localized request processing status description
-       * @example success
-       */
-      msg?: string;
-      /**
-       * @description request processing status description, technical
-       * @example success
-       */
-      statusDetails?: string;
-      /** @description results - related objects, if lazeRelation is false */
-      relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-      /** @description domain */
-      domain?: components["schemas"]["DomainViewV1"];
-    };
-    DomainViewV1: {
-      /**
-       * Format: uuid
-       * @description domain id
-       */
-      id?: string;
-      /**
-       * @description key
+       * @description will be used for url generation and for twins aliases
        * @example alcosi
        */
       key?: string;
       /**
-       * @description domain description
-       * @example alcosi
-       */
-      description?: string;
-      /** @description Icon dark uri. Might be relative */
-      iconDark?: string;
-      /** @description Icon light uri. Might be relative */
-      iconLight?: string;
-      /**
        * @description type [basic/b2b]
+       * @example basic
        * @enum {string}
        */
       type?: "basic" | "b2b";
-      /**
-       * Format: uuid
-       * @description permission schema id
-       */
-      permissionSchemaId?: string;
-      /**
-       * Format: uuid
-       * @description twinflow schema id
-       */
-      twinflowSchemaId?: string;
-      /**
-       * Format: uuid
-       * @description twinclass schema id
-       */
-      twinClassSchemaId?: string;
-      /**
-       * Format: uuid
-       * @description business account template twin id
-       */
-      businessAccountTemplateTwinId?: string;
-      /**
-       * Format: date-time
-       * @description created at
-       * @example 2023-09-13T09:32:08
-       */
-      createdAt?: string;
-      /** @description default locale */
-      defaultLocale?: string;
-      /**
-       * Format: uuid
-       * @description domain navigation bar pointer
-       */
-      navbarFaceId?: string;
     };
     DomainUserSearchRqV1: {
       /** @description user id list */
@@ -12086,18 +12301,14 @@ export interface components {
        * Format: uuid
        * @description twin class field id
        */
-      transitionId?: string;
+      twinClassFieldId?: string;
       /**
        * Format: int32
        * @description order
        */
       order?: number;
-      /** @description Icon url. Might be relative */
-      icon?: string;
-      /** @description button extra style attributes */
-      styleAttributes?: {
-        [key: string]: string;
-      };
+      /** @description show by default */
+      showByDefault?: boolean;
     };
     FaceWT001ViewRsV1: {
       /**
@@ -12164,6 +12375,31 @@ export interface components {
       searchId?: string;
       /** @description show given basic columns from table and filter */
       showColumns?: string[];
+    };
+    FaceTW005ButtonV1: {
+      /**
+       * Format: uuid
+       * @description id
+       */
+      id?: string;
+      /** @description label */
+      label?: string;
+      /**
+       * Format: uuid
+       * @description twin class field id
+       */
+      transitionId?: string;
+      /**
+       * Format: int32
+       * @description order
+       */
+      order?: number;
+      /** @description Icon url. Might be relative */
+      icon?: string;
+      /** @description button extra style attributes */
+      styleAttributes?: {
+        [key: string]: string;
+      };
     };
     FaceWT005ViewRsV1: {
       /**
@@ -12233,7 +12469,7 @@ export interface components {
         [key: string]: string;
       };
       /** @description show given columns from table and filter */
-      buttons?: components["schemas"]["FaceWT001ColumnV1"][];
+      buttons?: components["schemas"]["FaceTW005ButtonV1"][];
     };
     FaceTW004ViewRsV1: {
       /**
@@ -12782,7 +13018,7 @@ export interface components {
       /** @description pagination data */
       pagination?: components["schemas"]["PaginationV1"];
       /** @description domain list */
-      domainList?: components["schemas"]["DomainViewV1"][];
+      domains?: components["schemas"]["DomainViewV1"][];
     };
     DomainClassOwnerTypeListRsV1: {
       /**
@@ -14869,6 +15105,73 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["DraftRsV1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Domain update */
+  domainUpdateV1: {
+    parameters: {
+      query?: {
+        lazyRelation?: unknown;
+        showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
+        showDomainNavbar2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+      };
+      header: {
+        /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+        DomainId: string;
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DomainUpdateRqV1"];
+      };
+    };
+    responses: {
+      /** @description domain was updated successfully */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainViewRsv1"];
+        };
+      };
+      /** @description Access is denied */
+      401: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Add new domain. */
+  domainCreateV1: {
+    parameters: {
+      header: {
+        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+        AuthToken: string;
+        /** @example WEB */
+        Channel: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DomainCreateRqV1"];
+      };
+    };
+    responses: {
+      /** @description Domain was added */
+      200: {
+        content: {
+          "application/json": components["schemas"]["DomainViewRsv1"];
         };
       };
       /** @description Access is denied */
@@ -21253,8 +21556,8 @@ export interface operations {
       };
     };
   };
-  /** Add new domain with icons */
-  domainAddV2: {
+  /** Create new domain with icons */
+  domainCreateV2: {
     parameters: {
       header: {
         /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
@@ -21267,7 +21570,7 @@ export interface operations {
       content: {
         "multipart/form-data": {
           /** @description request json */
-          request: components["schemas"]["DomainCreateRqDTOv1"];
+          request: components["schemas"]["DomainCreateRqV1"];
           /**
            * Format: binary
            * @description Dark icon
@@ -21282,37 +21585,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Domain was added */
-      200: {
-        content: {
-          "application/json": components["schemas"]["DomainViewRsv1"];
-        };
-      };
-      /** @description Access is denied */
-      401: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  /** Add new domain. */
-  domainAddV1: {
-    parameters: {
-      header: {
-        /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-        AuthToken: string;
-        /** @example WEB */
-        Channel: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["DomainCreateRqDTOv1"];
-      };
-    };
-    responses: {
-      /** @description Domain was added */
+      /** @description Domain was created */
       200: {
         content: {
           "application/json": components["schemas"]["DomainViewRsv1"];
@@ -24852,7 +25125,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description OK */
+      /** @description domain data list */
       200: {
         content: {
           "application/json": components["schemas"]["DomainListRsV1"];

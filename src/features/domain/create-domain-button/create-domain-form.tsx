@@ -35,12 +35,11 @@ export function CreateDomainForm() {
   const form = useForm<z.infer<typeof DOMAIN_CREATE_SCHEMA>>({
     resolver: zodResolver(DOMAIN_CREATE_SCHEMA),
     defaultValues: {
+      name: "",
       key: "",
       description: "",
       type: undefined,
       defaultLocale: undefined,
-      iconDark: undefined,
-      iconLight: undefined,
     },
   });
 
@@ -63,19 +62,20 @@ export function CreateDomainForm() {
     //   formData.append("iconLight", formValues.iconLight[0]);
     // }
 
-    const { error } = await api.domain.create({ body: formValues });
+    const { error } = await api.domain.create({
+      body: { domain: { ...formValues } },
+    });
 
     if (error) {
       throw error;
     }
 
     form.reset({
+      name: "",
       key: "",
       description: "",
       type: undefined,
       defaultLocale: undefined,
-      iconDark: undefined,
-      iconLight: undefined,
     });
 
     toast.success("Domain created successfully!");
@@ -104,10 +104,12 @@ export function CreateDomainForm() {
             <div className="w-2/3 space-y-6">
               <TextFormField
                 control={form.control}
-                name={"key"}
-                label="Key"
+                name={"name"}
+                label="Name"
                 autoFocus={true}
               />
+
+              <TextFormField control={form.control} name={"key"} label="Key" />
 
               <TextAreaFormField
                 control={form.control}

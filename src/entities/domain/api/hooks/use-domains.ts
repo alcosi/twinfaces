@@ -26,7 +26,7 @@ export const useDomains = () => {
         }
 
         const response = {
-          data: data.domainList?.map((dto) => hydrateDomainView(dto)) ?? [],
+          data: data.domains?.map((dto) => hydrateDomainView(dto)) ?? [],
           pagination: data.pagination ?? {},
         };
 
