@@ -20,7 +20,7 @@ export type DomainView_DETAILED = RequireFields<
 
 export type DomainPublicView = components["schemas"]["DomainViewPublicV1"];
 
-export type DomainAddRqV1 = components["schemas"]["DomainCreateRqDTOv1"];
+export type DomainAddRqV1 = components["schemas"]["DomainCreateRqV1"];
 export type DomainViewQuery =
   operations["domainViewPublicV1"]["parameters"]["query"];
 
