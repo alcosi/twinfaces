@@ -7,21 +7,28 @@ import { Twin_DETAILED } from "@/entities/twin/server";
 
 import { TwinResourceLink } from "../../../../features/twin/ui";
 import { UserResourceLink } from "../../../../features/user/ui";
+import { MarkdownPreview } from "../../../markdown";
 import { TwinStatusActions } from "../twin-status-actions";
 import { StaticTwinFieldMeta } from "./types";
 
 export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
   "00000000-0000-0000-0011-000000000003": {
     key: "name",
-    descriptor: FieldDescriptorText,
+    descriptor: FieldDescriptorText.PLAIN,
   },
   "00000000-0000-0000-0011-000000000004": {
     key: "description",
-    descriptor: FieldDescriptorText,
+    descriptor: FieldDescriptorText.MARKDOWN_GITHUB,
+    renderPreview: (twin) => {
+      return (
+        twin.description && <MarkdownPreview markdown={twin.description} />
+      );
+    },
+    className: "border border-border mt-1.5 border-dashed rounded-md",
   },
   "00000000-0000-0000-0011-000000000005": {
     key: "externalId",
-    descriptor: FieldDescriptorText,
+    descriptor: FieldDescriptorText.PLAIN,
   },
   "00000000-0000-0000-0011-000000000006": {
     key: "ownerUserId",

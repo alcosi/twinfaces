@@ -15,7 +15,7 @@ import {
 import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
 import { RelatedObjects } from "@/shared/api";
-import { isPopulatedString } from "@/shared/libs";
+import { cn, isPopulatedString } from "@/shared/libs";
 
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
 import { STATIC_FIELD_MAP } from "./constants";
@@ -36,6 +36,7 @@ export type TwinFieldEditorProps = {
   schema?: ZodType;
   relatedObjects?: RelatedObjects;
   onSuccess?: () => void;
+  className?: string;
 };
 
 export function TwinFieldEditor({
@@ -47,11 +48,13 @@ export function TwinFieldEditor({
   schema,
   relatedObjects,
   onSuccess,
+  className,
 }: TwinFieldEditorProps) {
   const { updateTwin } = useTwinUpdate();
   const router = useRouter();
 
   const fieldRenderPreview = STATIC_FIELD_MAP[field.id]?.renderPreview;
+  const staticFieldClassName = STATIC_FIELD_MAP[field.id]?.className;
 
   const hydratedTwin = hydrateTwinFromMap(twin, relatedObjects);
 
@@ -94,6 +97,7 @@ export function TwinFieldEditor({
     renderPreview: renderPreview,
     schema: schema ?? z.string().min(1),
     onSubmit: handleOnSubmit,
+    className: cn(className, staticFieldClassName),
   };
 
   return (

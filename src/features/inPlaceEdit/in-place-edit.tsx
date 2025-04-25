@@ -9,7 +9,7 @@ import { z } from "zod";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
 
-import { isFalsy } from "@/shared/libs";
+import { cn, isFalsy } from "@/shared/libs";
 import { Form } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import { LoadingSpinner } from "@/shared/ui/loading";
@@ -23,6 +23,7 @@ export interface InPlaceEditProps<T = unknown> {
   valueInfo: AutoFormValueInfo;
   onSubmit: (value: T) => Promise<void>;
   schema?: z.ZodType<any, any>;
+  className?: string;
 }
 
 export function InPlaceEdit<T>({
@@ -32,6 +33,7 @@ export function InPlaceEdit<T>({
   valueInfo,
   onSubmit,
   schema,
+  className,
 }: InPlaceEditProps<T>) {
   const context = useContext(InPlaceEditContext);
   const [isEdited, setIsEdited] = useState<boolean>(false);
@@ -92,14 +94,17 @@ export function InPlaceEdit<T>({
     return (
       <div
         onClick={handleEdit}
-        className="flex min-h-10 cursor-pointer flex-row items-center rounded-xs px-3 hover:bg-muted/50"
+        className={cn(
+          "hover:bg-muted/50 flex min-h-10 cursor-pointer flex-row items-center rounded-xs px-3",
+          className
+        )}
       >
         {renderPreview ? (
           renderPreview(value)
         ) : (
           <>
             {(value as ReactNode) || (
-              <div className="font-light italic text-muted-foreground">
+              <div className="text-muted-foreground font-light italic">
                 None
               </div>
             )}
