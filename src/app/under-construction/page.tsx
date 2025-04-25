@@ -1,5 +1,5 @@
-import { UnderConstruction } from "@/widgets/under-construction";
+import { UnderConstructionScreen } from "@/screens/under-construction";
 
 export default function Page() {
-  return <UnderConstruction />;
+  return <UnderConstructionScreen />;
 }

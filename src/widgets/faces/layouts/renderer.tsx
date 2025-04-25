@@ -1,7 +1,6 @@
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
 import { safe } from "@/shared/libs";
 
-import { UnderConstruction } from "../../under-construction";
 import { AlertError } from "../components";
 import { PGFaceProps } from "./types";
 import { PG001, PG002 } from "./views";
@@ -12,10 +11,6 @@ const LAYOUT_MAP = {
 } as const;
 
 export async function LayoutRenderer(props: PGFaceProps) {
-  if (!props || !props.pageFaceId) {
-    return <UnderConstruction />;
-  }
-
   const result = await safe(() =>
     fetchFaceById<Face_DETAILED>(props.pageFaceId, {
       query: { showFaceMode: "DETAILED" },

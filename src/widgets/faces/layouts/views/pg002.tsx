@@ -6,7 +6,7 @@ import { AlertError, WidgetLayoutRenderer } from "../../components";
 import { Widget } from "../../widgets/types";
 import { PGFaceProps } from "../types";
 
-export async function PG002({ pageFaceId, twinId }: NonNullable<PGFaceProps>) {
+export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
   const pageResult = await safe(() => fetchPG002Face(pageFaceId));
 
   if (!pageResult.ok) {

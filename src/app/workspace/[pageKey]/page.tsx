@@ -1,6 +1,5 @@
-import { notFound } from "next/navigation";
-
 import { fetchSidebarFace } from "@/entities/face";
+import { UnderConstructionScreen as UnderConstruction } from "@/screens/under-construction";
 import { isUndefined, safe } from "@/shared/libs";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
@@ -13,7 +12,7 @@ type Props = {
 export default async function Page({ params: { pageKey } }: Props) {
   const pageFaceId = await resolvePageFaceId(pageKey);
 
-  if (isUndefined(pageFaceId)) return notFound();
+  if (isUndefined(pageFaceId)) return <UnderConstruction />;
 
   return <LayoutRenderer pageFaceId={pageFaceId} />;
 }
