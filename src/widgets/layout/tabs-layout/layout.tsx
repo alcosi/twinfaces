@@ -41,7 +41,7 @@ export function TabsLayout({ tabs }: Props) {
                 className={cn(
                   "px-3 py-4 border-b-2 border-transparent transition-colors duration-200",
                   "hover:border-b-primary hover:bg-secondary",
-                  "data-[state=active]:border-b-link-light-active dark:data-[state=active]:border-b-link-dark-active"
+                  "data-[state=active]:border-b-border-enabled"
                 )}
               >
                 {tab.label}

@@ -24,3 +24,8 @@ export function capitalize(value: string): string {
   if (!isPopulatedString(value)) return "";
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
+
+export function slugify(input?: string): string {
+  if (!input) return "";
+  return input.trim().toLowerCase().replace(/\s+/g, "-");
+}

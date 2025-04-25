@@ -26,5 +26,5 @@ export async function isGranted({
 
   if (isUndefined(data) || isUndefined(data.permissions)) return false;
 
-  return isFound(data.permissions, (p) => p.key === permission);
+  return isFound(data.permissions, (p) => p.id === permission);
 }

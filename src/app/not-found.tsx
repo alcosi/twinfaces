@@ -11,7 +11,7 @@ export default function Page() {
         moved.
       </p>
       <div className="flex items-center justify-center">
-        <AlertTriangle className="w-32 h-32 text-link-dark-active" />
+        <AlertTriangle className="w-32 h-32 text-link-enabled" />
       </div>
     </div>
   );

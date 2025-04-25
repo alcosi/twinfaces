@@ -34,15 +34,11 @@ const ResourceLinkContent = ({
 }: ResourceLinkContentProps) => {
   const styles = {
     base: "inline-flex items-center h-6 max-w-full border rounded-lg px-2 transition-colors",
-    borderColor: disabled
-      ? "border-link-light-disabled dark:border-link-dark-disabled"
-      : "",
+    borderColor: disabled ? "border-link-disabled" : "",
     hover: disabled
-      ? "hover:border-link-light-disabled dark:hover:border-link-dark-disabled"
-      : "hover:border-link-light-active dark:hover:border-link-dark-active",
-    text: disabled
-      ? "text-link-light-disabled dark:text-link-dark-disabled"
-      : "text-link-light-active dark:text-link-dark-active",
+      ? "hover:border-link-disabled"
+      : "hover:border-link-enabled",
+    text: disabled ? "text-link-disabled" : "text-link-enabled",
   };
 
   return (

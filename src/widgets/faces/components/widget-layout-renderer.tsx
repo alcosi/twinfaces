@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 import { getAuthHeaders } from "@/entities/face";
+import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isGranted } from "@/entities/user/server";
 import { ViewAsAdminButton } from "@/features/twin/ui";
 import { PartialFields } from "@/shared/libs";
@@ -31,7 +32,7 @@ export async function WidgetLayoutRenderer({
   const { currentUserId } = await getAuthHeaders();
   const isAdmin = await isGranted({
     userId: currentUserId,
-    permission: "DOMAIN_MANAGE",
+    permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
   return (
