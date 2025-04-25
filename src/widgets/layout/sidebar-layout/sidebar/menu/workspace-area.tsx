@@ -11,7 +11,7 @@ import {
   useSidebar,
 } from "@/shared/ui";
 
-import { CollapsibleMenu } from "./collapsible-menu";
+import { CollapsedMenu } from "./collapsed-menu";
 import { MenuItem } from "./menu-item";
 
 type Props = {
@@ -23,24 +23,24 @@ const MAX_NESTING_LEVEL = 3;
 export function WorkspaceAreaSidebarMenu({ items }: Props) {
   const { open } = useSidebar();
 
-  return open ? (
-    <SidebarMenu>
-      <AccordionMenu items={items} />
-    </SidebarMenu>
-  ) : (
-    <SidebarMenu className="p-2">
-      <CollapsibleMenu
-        items={items}
-        getItemProps={(item) => ({
-          key: item.key || "",
-          label: item.label ?? "N/A",
-          url: item.targetPageFaceId
-            ? `/${PlatformArea.workspace}/${slugify(item.key)}`
-            : undefined,
-          iconSource: item.icon ?? "",
-          hidden: false,
-        })}
-      />
+  return (
+    <SidebarMenu className={cn(!open && "p-2")}>
+      {open ? (
+        <AccordionMenu items={items} />
+      ) : (
+        <CollapsedMenu
+          items={items}
+          getItemProps={(item) => ({
+            key: item.key || "",
+            label: item.label ?? "N/A",
+            url: item.targetPageFaceId
+              ? `/${PlatformArea.workspace}/${slugify(item.key)}`
+              : undefined,
+            iconSource: item.icon,
+            hidden: false,
+          })}
+        />
+      )}
     </SidebarMenu>
   );
 }
