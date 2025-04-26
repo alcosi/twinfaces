@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { cn, slugify } from "@/shared/libs";
 import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/shared/ui";
@@ -19,6 +18,7 @@ export function MenuItem({
 }: MenuItemProps) {
   const { open } = useSidebar();
   const pathname = usePathname() || "";
+  const router = useRouter();
   const isActive = url ? isItemActive(slugify(url), pathname) : false;
 
   function renderIcon() {
@@ -43,14 +43,18 @@ export function MenuItem({
 
   const menuButtonContent = (
     <SidebarMenuButton
+      asChild
+      onClick={url ? () => router.push(url) : undefined}
       className={cn(
-        "border border-transparent",
-        isActive && "border-link-enabled",
+        "border border-transparent rounded-md",
+        isActive && "border-link-enabled text-primary font-bold",
         buttonClassName
       )}
     >
-      {renderIcon()}
-      {open && <span>{label}</span>}
+      <div>
+        {renderIcon()}
+        {open && <span>{label}</span>}
+      </div>
     </SidebarMenuButton>
   );
 
@@ -64,16 +68,7 @@ export function MenuItem({
         className
       )}
     >
-      {url ? (
-        <Link
-          href={url}
-          className={cn("rounded-md", isActive && "text-primary font-bold")}
-        >
-          {menuButtonContent}
-        </Link>
-      ) : (
-        menuButtonContent
-      )}
+      {menuButtonContent}
     </SidebarMenuItem>
   );
 }
