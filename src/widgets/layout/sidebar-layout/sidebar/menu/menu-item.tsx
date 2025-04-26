@@ -51,7 +51,7 @@ export function MenuItem({
         buttonClassName
       )}
     >
-      <div className="">
+      <div>
         {renderIcon()}
         {open && <span>{label}</span>}
       </div>
