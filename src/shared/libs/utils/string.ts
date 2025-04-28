@@ -13,13 +13,6 @@ export function mergeUniqueStrings(
   return [...existing, ...uniqueIncoming];
 }
 
-export function shortenUUID(uuid: string): string {
-  if (isPopulatedString(uuid) && uuid.length >= 8) {
-    return `${uuid.slice(0, 8)}...${uuid.slice(-2)}`;
-  }
-  return uuid;
-}
-
 export function capitalize(value: string): string {
   if (!isPopulatedString(value)) return "";
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
