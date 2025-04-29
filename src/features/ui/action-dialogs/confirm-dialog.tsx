@@ -64,11 +64,17 @@ export function ConfirmDialog({
   return (
     <Dialog open={open}>
       <DialogContent>
-        <DialogHeader>
-          {title && <DialogTitle showCloseButton={false}>{title}</DialogTitle>}
-          {message && <DialogDescription>{message}</DialogDescription>}
-        </DialogHeader>
-        <DialogFooter className="sm:justify-end p-4">
+        {title && (
+          <DialogHeader>
+            <DialogTitle showCloseButton={false}>{title}</DialogTitle>
+          </DialogHeader>
+        )}
+
+        <DialogDescription className="text-balance p-6">
+          {message}
+        </DialogDescription>
+
+        <DialogFooter className="p-4 sm:justify-end">
           <Button
             variant="secondary"
             onClick={handleCancel}
