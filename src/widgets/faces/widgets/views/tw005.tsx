@@ -46,6 +46,7 @@ export async function TW005(props: TWidgetFaceProps) {
           key={transitionButton.id}
           twinId={pointedTwinId}
           transitionId={transitionButton.transitionId!}
+          icon={transitionButton.icon}
         >
           {transitionButton.label}
         </TransitionPerformButton>
