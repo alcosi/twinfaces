@@ -76,7 +76,7 @@ export function AppSidebar({ face }: Props) {
                     <ChevronsUpDown className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
+                <DropdownMenuContent className="w-(--radix-popper-anchor-width)">
                   <>
                     {data?.map((domain) => (
                       <DropdownMenuItem
@@ -140,7 +140,7 @@ export function AppSidebar({ face }: Props) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   side="top"
-                  className="w-[--radix-popper-anchor-width]"
+                  className="w-(--radix-popper-anchor-width)"
                 >
                   <DropdownMenuItem>
                     <SidebarMenuButton onClick={onLogout}>

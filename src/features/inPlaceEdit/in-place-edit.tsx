@@ -92,7 +92,7 @@ export function InPlaceEdit<T>({
     return (
       <div
         onClick={handleEdit}
-        className="flex min-h-10 cursor-pointer flex-row items-center rounded-sm px-3 hover:bg-muted/50"
+        className="flex min-h-10 cursor-pointer flex-row items-center rounded-xs px-3 hover:bg-muted/50"
       >
         {renderPreview ? (
           renderPreview(value)

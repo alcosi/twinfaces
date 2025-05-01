@@ -7,7 +7,7 @@ type Props = {
 export function ColorTile({ color }: Props) {
   return (
     <div
-      className="w-4 h-4 rounded"
+      className="w-4 h-4 rounded-sm"
       style={{
         backgroundColor: color,
       }}

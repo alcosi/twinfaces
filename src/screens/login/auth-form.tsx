@@ -9,6 +9,7 @@ import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { FlipCard } from "@/features/ui/flip-card";
 import { Button } from "@/shared/ui";
 
+// TODO: Refactor this file auth-form
 const domainIconUrl =
   "https://dev-cabinet-twinfaces.worknroll.pro/_next/image?url=%2Ffavicon.png&w=128&q=75";
 
@@ -58,7 +59,6 @@ export function AuthForm() {
               label="Email"
               placeholder="Enter your email"
               required
-              // autoComplete
             />
             <TextFormItem
               type="password"

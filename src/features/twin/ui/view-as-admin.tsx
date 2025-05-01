@@ -15,7 +15,7 @@ export function ViewAsAdminButton({ twinId }: { twinId: string }) {
     <Link
       href={href}
       target="_blank"
-      className="absolute bottom-6 right-6 z-50 rounded-md border bg-secondary shadow-sm"
+      className="absolute bottom-6 right-6 z-50 rounded-md border bg-secondary shadow-xs"
     >
       <Button variant="ghost" size={"icon"} title="View as Admin">
         <SettingsIcon className="h-6 w-6" />

@@ -90,7 +90,7 @@ export function LoginForm({ domains }: Props) {
             }}
             selectPlaceholder="Select domain..."
             buttonClassName="w-full"
-            contentClassName="w-[--radix-popover-trigger-width]"
+            contentClassName="w-(--radix-popover-trigger-width)"
           />
 
           <TextFormField
