@@ -95,7 +95,7 @@ function AccordionMenu({ items }: Props) {
             <AccordionContent
               className={cn("mt-1 py-1", `ml-${(level + 1) * 2}`)}
             >
-              <div className="border-l ml-2">
+              <div className="border-l border-border ml-2">
                 {renderItems(item.children!, level, keyPath)}
               </div>
             </AccordionContent>

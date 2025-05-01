@@ -32,7 +32,7 @@ export function TabsLayout({ tabs }: Props) {
 
   return (
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
-      <nav className="sticky top-0 flex w-full border-b bg-background z-10 overflow-x-auto">
+      <nav className="sticky top-0 flex w-full border-b border-border bg-background z-10 overflow-x-auto">
         <TabsList className="min-w-max">
           {tabs.map((tab) => (
             <Link href={`#${tab.key}`} key={tab.key}>
@@ -41,7 +41,7 @@ export function TabsLayout({ tabs }: Props) {
                 className={cn(
                   "px-3 py-4 border-b-2 border-transparent transition-colors duration-200",
                   "hover:border-b-primary hover:bg-secondary",
-                  "data-[state=active]:border-b-border-enabled"
+                  "data-[state=active]:border-b-link-enabled"
                 )}
               >
                 {tab.label}

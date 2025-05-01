@@ -33,7 +33,7 @@ const ResourceLinkContent = ({
   hideIcon,
 }: ResourceLinkContentProps) => {
   const styles = {
-    base: "inline-flex items-center h-6 max-w-full border rounded-lg px-2 transition-colors",
+    base: "inline-flex items-center h-6 max-w-full border border-border rounded-lg px-2 transition-colors",
     borderColor: disabled ? "border-link-disabled" : "",
     hover: disabled
       ? "hover:border-link-disabled"
@@ -60,7 +60,7 @@ const ResourceLinkContent = ({
       {isFalsy(hideIcon) && (
         <i
           className={cn(
-            "h-4 w-4 flex items-center",
+            "flex h-4 w-4 items-center",
             css`
               color: ${fontColor};
             `
@@ -72,7 +72,7 @@ const ResourceLinkContent = ({
 
       <span
         className={cn(
-          `${hideIcon ? "text-sm font-medium truncate" : "ml-2 text-sm font-medium truncate"}`,
+          `${hideIcon ? "truncate text-sm font-medium" : "ml-2 truncate text-sm font-medium"}`,
           css`
             color: ${fontColor};
           `

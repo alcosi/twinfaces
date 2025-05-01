@@ -65,7 +65,7 @@ export function AppSidebar({ face }: Props) {
   return (
     <nav>
       <Sidebar collapsible="icon">
-        <SidebarHeader className="h-16 items-center justify-center border-b">
+        <SidebarHeader className="h-16 items-center justify-center border-b border-border">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
@@ -98,7 +98,7 @@ export function AppSidebar({ face }: Props) {
 
         <SidebarContent>
           {face ? (
-            <Tabs value={area} className="flex flex-col gap-2 h-full">
+            <Tabs value={area} className="flex h-full flex-col gap-2">
               <section className="grow overflow-y-auto pb-2">
                 <SlideView
                   activeIndex={area === PlatformArea.workspace ? 0 : 1}
@@ -128,7 +128,7 @@ export function AppSidebar({ face }: Props) {
           )}
         </SidebarContent>
 
-        <SidebarFooter className="border-t">
+        <SidebarFooter className="border-t border-border">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>

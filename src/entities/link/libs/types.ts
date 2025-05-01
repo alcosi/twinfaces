@@ -1,5 +1,5 @@
 import { createEnum } from "@/shared/libs";
-import { z } from "zod";
+
 import { Link } from "../api";
 
 export type LinkType = NonNullable<Link["type"]>;
