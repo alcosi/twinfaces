@@ -9,6 +9,15 @@ import { ActionDialogProps, ActionDialogsContext } from "./context";
 export function useActionDialogs() {
   const { createDialog } = useContext(ActionDialogsContext);
 
+  function alert(
+    props: Omit<RequireFields<ActionDialogProps, "title">, "id" | "type">
+  ) {
+    createDialog({
+      ...props,
+      type: "alert",
+    });
+  }
+
   function confirm(
     props: Omit<RequireFields<ActionDialogProps, "title">, "id" | "type">
   ) {
@@ -18,5 +27,5 @@ export function useActionDialogs() {
     });
   }
 
-  return { confirm };
+  return { alert, confirm };
 }

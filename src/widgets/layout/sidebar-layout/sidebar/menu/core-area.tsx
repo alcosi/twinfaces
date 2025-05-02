@@ -76,11 +76,11 @@ function AccordionMenu({ pathname }: { pathname: string }) {
 
 function AccordionGroup({ title, items }: Group) {
   return (
-    <AccordionItem value={title.toLowerCase()} className="px-0 border-b-0">
+    <AccordionItem value={title.toLowerCase()} className="border-b-0 px-0">
       <AccordionTrigger className="py-0 text-sm hover:no-underline">
         <SidebarGroupLabel>{title}</SidebarGroupLabel>
       </AccordionTrigger>
-      <AccordionContent className="list-none border-l ml-2 py-0 pl-2">
+      <AccordionContent className="ml-2 list-none border-l border-border py-0 pl-2">
         {items.map((item) => (
           <MenuItem
             key={item.url}

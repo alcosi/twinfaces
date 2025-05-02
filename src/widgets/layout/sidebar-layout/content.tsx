@@ -16,7 +16,7 @@ export function SidebarLayoutContent({ children }: PropsWithChildren<{}>) {
 
   return (
     <main
-      className="border border-transparent rounded-lg px-8 overflow-y-auto overflow-x-hidden"
+      className="overflow-y-auto overflow-x-hidden rounded-lg border border-transparent px-8"
       style={{
         maxHeight: "calc(100vh - var(--header-height))",
         maxWidth: `calc(100vw - ${sidebarWidth})`,

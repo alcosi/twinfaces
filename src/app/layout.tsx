@@ -6,10 +6,11 @@ import { getProductFlavorConfig } from "@/shared/config";
 import { cn } from "@/shared/libs";
 import { PublicLayoutProviders } from "@/widgets/layout";
 
-import "./globals.css";
+import "../styles/globals.css";
 
 const fontSans = Inter({
   subsets: ["latin"],
+  // NOTE: Set by Tailwind's default theme — see docs: https://tailwindcss.com/docs/theme#default-theme-variable-reference
   variable: "--font-sans",
 });
 
@@ -37,8 +38,8 @@ export default async function RootLayout({
       </head>
       <body
         className={cn(
-          "min-h-screen fontSans font-sans antialiased overflow-hidden",
-          fontSans.variable
+          "min-h-screen overflow-hidden bg-background text-foreground antialiased",
+          fontSans.className
         )}
       >
         <PublicLayoutProviders config={config}>

@@ -19,15 +19,15 @@ export function SidebarLayoutHeader() {
   const { breadcrumbs } = useBreadcrumbs();
 
   return (
-    <header className="sticky top-0 z-10 flex justify-between items-center h-16 px-4 md:px-6 border-b bg-background">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6">
       <div className="flex items-center">
-        <SidebarTrigger className="border -ml-8 mr-8 mt-16 z-20 shadow bg-sidebar" />
+        <SidebarTrigger className="z-20 -ml-8 mr-8 mt-16 border border-border bg-sidebar shadow-sm" />
 
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
               <Link href="/">
-                <House className="w-4 h-4" />
+                <House className="h-4 w-4" />
               </Link>
             </BreadcrumbItem>
             {breadcrumbs.map((item, index) => (
@@ -38,7 +38,7 @@ export function SidebarLayoutHeader() {
                     href={item.href}
                     title={item.label}
                     className={cn(
-                      "truncate max-w-28",
+                      "max-w-28 truncate",
                       index === breadcrumbs.length - 1 && "font-semibold"
                     )}
                   >

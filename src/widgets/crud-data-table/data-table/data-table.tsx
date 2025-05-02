@@ -213,7 +213,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   return (
     <div>
-      <div className="relative rounded-md border mb-2">
+      <div className="relative mb-2 rounded-md border border-border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

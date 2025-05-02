@@ -4,6 +4,7 @@ import { ReactNode, createContext, useState } from "react";
 
 import { generateUUID } from "@/shared/libs";
 
+import { AlertDialog } from "./alert-dialog";
 import { ConfirmDialog } from "./confirm-dialog";
 
 type ActionDialogContextProps = {
@@ -16,7 +17,7 @@ export const ActionDialogsContext = createContext<ActionDialogContextProps>({
 
 export type ActionDialogProps = {
   id: string;
-  type: "confirm";
+  type: "alert" | "confirm";
   title: string;
   message?: string;
   successButtonText?: string;
@@ -73,6 +74,15 @@ export function ActionDialogsProvider({ children }: { children: ReactNode }) {
       <div>
         {dialogs.map((dialog) => (
           <div key={dialog.id}>
+            {dialog.type === "alert" && (
+              <AlertDialog
+                title={dialog.title}
+                message={dialog.message}
+                confirmButtonText={dialog.successButtonText ?? "OK"}
+                onConfirm={dialog.onSuccess}
+              />
+            )}
+
             {dialog.type === "confirm" && (
               <ConfirmDialog
                 title={dialog.title}
