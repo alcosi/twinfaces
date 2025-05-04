@@ -1,31 +1,37 @@
 "use client";
 
-import Image from "next/image";
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 
 import { TextFormItem } from "@/components/form-fields/text";
 
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { FlipCard } from "@/features/ui/flip-card";
-import { Button } from "@/shared/ui";
+import { ProductFlavorConfigContext } from "@/shared/config";
+import { Button, ThemeImage } from "@/shared/ui";
 
-// TODO: Refactor this file auth-form
-const domainIconUrl =
-  "https://dev-cabinet-twinfaces.worknroll.pro/_next/image?url=%2Ffavicon.png&w=128&q=75";
+function DomainLogo({
+  iconLight,
+  iconDark,
+}: {
+  iconLight: string;
+  iconDark: string;
+}) {
+  const domainIconUrl = "/favicon.png";
 
-function Logo() {
   return (
-    <Image
+    <ThemeImage
       className="absolute -top-7 left-1/2 z-10 h-14 w-14 -translate-x-1/2 transform rounded-full shadow-md"
-      src={domainIconUrl}
+      lightSrc={iconLight ?? domainIconUrl}
+      darkSrc={iconDark ?? domainIconUrl}
       width={56}
       height={56}
-      alt="Domain icon"
+      alt="Domain logo icon"
     />
   );
 }
 
 export function AuthForm() {
+  const config = useContext(ProductFlavorConfigContext);
   const { alert } = useActionDialogs();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
 
@@ -33,8 +39,8 @@ export function AuthForm() {
     setMode((prev) => (prev === "signin" ? "signup" : "signin"));
   }
 
-  function onForgotPasswordClick(e: React.MouseEvent) {
-    e.preventDefault();
+  function onForgotPasswordClick() {
+    // e.preventDefault();
     alert({
       title: "Forgot your password?",
       message:
@@ -47,13 +53,17 @@ export function AuthForm() {
       isFlipped={mode === "signup"}
       className="relative w-full max-w-md"
       front={
-        <div className="flex h-full flex-col items-center gap-4 space-y-6 rounded-lg p-8">
-          <Logo />
-          <form className="flex w-full flex-col space-y-4">
-            <h2 className="text-center text-2xl font-bold text-primary">
-              Sign In
-            </h2>
+        <div className="h-full rounded-lg p-8">
+          <DomainLogo
+            iconLight={config.iconLight ?? config.favicon}
+            iconDark={config.iconDark ?? config.favicon}
+          />
 
+          <h2 className="text-primary my-10 text-center text-2xl font-bold">
+            Sign In
+          </h2>
+
+          <form className="flex w-full flex-col space-y-4">
             <TextFormItem
               type="email"
               label="Email"
@@ -71,32 +81,43 @@ export function AuthForm() {
               Login
             </Button>
 
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <button
+            <div className="flex flex-col justify-between text-sm">
+              <Button
+                variant="link"
+                type="button"
                 onClick={onForgotPasswordClick}
-                className="text-muted-foreground hover:underline"
+                className="text-muted-foreground"
               >
                 Forgot password?
-              </button>
-              <button
-                type="button"
-                onClick={toggleMode}
-                className="text-muted-foreground hover:underline"
-              >
-                Sign Up
-              </button>
+              </Button>
+
+              <span className="text-muted-foreground text-center">
+                Don&apos;t have an account?
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={toggleMode}
+                  className="text-muted-foreground"
+                >
+                  Sign Up
+                </Button>
+              </span>
             </div>
           </form>
         </div>
       }
       back={
-        <div className="flex h-full items-center space-y-6 rounded-lg p-8">
-          <Logo />
-          <form className="flex w-full flex-col space-y-4">
-            <h2 className="text-center text-2xl font-bold text-primary">
-              Sign Up
-            </h2>
+        <div className="h-full rounded-lg p-8">
+          <DomainLogo
+            iconLight={config.iconLight ?? config.favicon}
+            iconDark={config.iconDark ?? config.favicon}
+          />
 
+          <h2 className="text-primary my-10 text-center text-2xl font-bold">
+            Sign Up
+          </h2>
+
+          <form className="flex w-full flex-col space-y-4">
             <TextFormItem
               type="text"
               label="Full Name"
@@ -126,15 +147,17 @@ export function AuthForm() {
               Create Account
             </Button>
 
-            <div className="flex justify-center text-sm text-muted-foreground">
-              <button
+            <span className="text-muted-foreground text-center text-sm">
+              Already have an account?
+              <Button
+                variant="link"
                 type="button"
                 onClick={toggleMode}
-                className="text-muted-foreground hover:underline"
+                className="text-muted-foreground"
               >
-                Already have an account? Sign In
-              </button>
-            </div>
+                Sign In
+              </Button>
+            </span>
           </form>
         </div>
       }

@@ -60,7 +60,7 @@ export function LoginForm({ domains }: Props) {
   }
 
   return (
-    <div className="flex flex-col my-5 items-center -mt-32 min-w-96">
+    <div className="my-5 -mt-32 flex min-w-96 flex-col items-center">
       <Image
         className="rounded-full"
         src={config.favicon}
@@ -68,12 +68,12 @@ export function LoginForm({ domains }: Props) {
         height={56}
         alt="Domain icon"
       />
-      <h1 className="text-lg font-bold my-3">
+      <h1 className="my-3 text-lg font-bold">
         {config.key ?? config.productName}
       </h1>
       <FormProvider {...form}>
         <form
-          className="flex flex-col gap-4 w-full"
+          className="flex w-full flex-col gap-4"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <ComboboxFormField
