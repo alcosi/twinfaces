@@ -27,4 +27,5 @@ export * from "./sliders";
 export * from "./sonner";
 export * from "./table";
 export * from "./tabs";
+export * from "./theme-image";
 export * from "./tooltip";

@@ -9,7 +9,7 @@ export async function Login() {
 
   return (
     <main className="relative flex h-screen w-screen flex-col items-center justify-center">
-      <div className="absolute right-6 top-3 flex">
+      <div className="absolute top-3 right-6 flex">
         <ThemeToggle />
       </div>
 
