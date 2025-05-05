@@ -1,14 +1,18 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { hydrateAttachmentFromMap } from "@/entities/twin";
-import { AttachmentFilters, Attachment_DETAILED } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
+import {
+  AttachmentFilters,
+  Attachment_DETAILED,
+  hydrateAttachmentFromMap,
+} from "../../libs";
 
 export const useAttachmentSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 
-  const searchAttachment = useCallback(
+  const searchAttachments = useCallback(
     async ({
       search,
       pagination = { pageIndex: 0, pageSize: 10 },
@@ -19,7 +23,7 @@ export const useAttachmentSearchV1 = () => {
       filters?: AttachmentFilters;
     }): Promise<PagedResponse<Attachment_DETAILED>> => {
       try {
-        const { data, error } = await api.twin.searchAttachment({
+        const { data, error } = await api.attachment.search({
           pagination,
           filters: filters,
         });
@@ -43,5 +47,5 @@ export const useAttachmentSearchV1 = () => {
     [api]
   );
 
-  return { searchAttachment };
+  return { searchAttachments };
 };

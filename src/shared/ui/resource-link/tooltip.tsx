@@ -107,7 +107,7 @@ ResourceLinkTooltip.Header = function Header({
 
   return (
     <header className="flex text-base h-16 gap-x-4 text-primary-foreground">
-      <div className="h-16 w-16  rounded-full bg-muted text-link-enabled flex shrink-0 justify-center items-center">
+      <div className="h-16 w-16 rounded-full bg-muted text-link-enabled flex shrink-0 justify-center items-center">
         {renderIcon()}
       </div>
 

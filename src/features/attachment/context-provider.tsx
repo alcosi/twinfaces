@@ -3,8 +3,10 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useAttachmentById } from "@/entities/twin";
-import { Attachment_DETAILED } from "@/entities/twin/server";
+import {
+  Attachment_DETAILED,
+  useAttachmentFetchById,
+} from "@/entities/attachment";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 
@@ -32,7 +34,7 @@ export function AttachmentContextProvider({
   const [attachment, setAttachment] = useState<Attachment_DETAILED | undefined>(
     undefined
   );
-  const { fetchAttachmentById, loading } = useAttachmentById();
+  const { fetchAttachmentById, loading } = useAttachmentFetchById();
 
   async function refresh() {
     try {

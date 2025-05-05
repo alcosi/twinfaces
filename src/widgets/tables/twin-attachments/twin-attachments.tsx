@@ -3,8 +3,11 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { toast } from "sonner";
 
-import { useAttachmentFilters, useAttachmentSearchV1 } from "@/entities/twin";
-import { Attachment_DETAILED } from "@/entities/twin/server";
+import {
+  Attachment_DETAILED,
+  useAttachmentFilters,
+  useAttachmentSearchV1,
+} from "@/entities/attachment";
 import { CommentResourceLink } from "@/features/comment/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
@@ -76,6 +79,7 @@ const colDefs: Record<
     accessorKey: "storageLink",
     header: "Link",
     cell: (data) => (
+      // TODO: complex solution! Please optimise
       <div onClick={(e) => e.stopPropagation()}>
         <a
           href={data.getValue<string>()}
@@ -196,7 +200,7 @@ export function TwinAttachmentsTable({ twinId }: { twinId?: string }) {
         ]
       : undefined,
   });
-  const { searchAttachment } = useAttachmentSearchV1();
+  const { searchAttachments } = useAttachmentSearchV1();
 
   async function fetchAttachments(
     pagination: PaginationState,
@@ -205,7 +209,7 @@ export function TwinAttachmentsTable({ twinId }: { twinId?: string }) {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      const response = await searchAttachment({
+      const response = await searchAttachments({
         pagination,
         filters: {
           ..._filters,

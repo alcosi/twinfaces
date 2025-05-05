@@ -6,6 +6,7 @@ import {
   PermissionAssigneePropagationApi,
   createPermissionAssigneePropagationApi,
 } from "@/entities/assigneePropagation";
+import { AttachmentApi, createAttachmentApi } from "@/entities/attachment";
 import { CommentApi, createCommentApi } from "@/entities/comment";
 import { DatalistApi, createDatalistApi } from "@/entities/datalist";
 import {
@@ -86,6 +87,7 @@ import { LoadingOverlay } from "@/shared/ui";
 import { useAuthUser } from "../../auth";
 
 export interface PrivateApiContextProps {
+  attachment: AttachmentApi;
   domain: DomainApi;
   twinFlowSchema: TwinFlowSchemaApi;
   twinClassField: TwinClassFieldApi;
@@ -134,6 +136,7 @@ export function PrivateApiContextProvider({
 
   const value = settings
     ? {
+        attachment: createAttachmentApi(settings),
         domain: createDomainApi(settings),
         twinFlowSchema: createTwinFlowSchemaApi(settings),
         twinClassField: createTwinClassFieldApi(settings),

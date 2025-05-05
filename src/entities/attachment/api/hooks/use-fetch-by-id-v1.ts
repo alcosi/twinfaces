@@ -1,11 +1,15 @@
 import { useCallback, useContext, useState } from "react";
 
-import { hydrateAttachmentFromMap } from "@/entities/twin";
-import { AttachmentRqQuery, Attachment_DETAILED } from "@/entities/twin/server";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-export const useAttachmentById = () => {
+import {
+  AttachmentRqQuery,
+  Attachment_DETAILED,
+  hydrateAttachmentFromMap,
+} from "../../libs";
+
+export const useAttachmentFetchById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -19,7 +23,7 @@ export const useAttachmentById = () => {
     }): Promise<Attachment_DETAILED> => {
       setLoading(true);
       try {
-        const { data, error } = await api.twin.getAttachment({
+        const { data, error } = await api.attachment.getById({
           attachmentId,
           query,
         });

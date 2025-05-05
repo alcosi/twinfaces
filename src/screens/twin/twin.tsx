@@ -6,9 +6,10 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinContext } from "@/features/twin";
 import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { TwinAttachmentsTable, TwinsTable } from "@/widgets/tables";
+import { TwinsTable } from "@/widgets/tables";
 
 import {
+  TwinAttachments,
   TwinComments,
   TwinFields,
   TwinGeneral,
@@ -16,42 +17,42 @@ import {
   TwinLinks,
 } from "./views";
 
+const DEFAULT_TABS = [
+  {
+    key: "general",
+    label: "General",
+    content: <TwinGeneral />,
+  },
+  {
+    key: "fields",
+    label: "Fields",
+    content: <TwinFields />,
+  },
+  {
+    key: "relations",
+    label: "Relations",
+    content: <TwinLinks />,
+  },
+  {
+    key: "comments",
+    label: "Comments",
+    content: <TwinComments />,
+  },
+  {
+    key: "attachments",
+    label: "Attachments",
+    content: <TwinAttachments />,
+  },
+  {
+    key: "history",
+    label: "History",
+    content: <TwinHistory />,
+  },
+];
+
 export function TwinScreen() {
   const { twin, twinId } = useContext(TwinContext);
   const { setBreadcrumbs } = useBreadcrumbs();
-
-  const DEFAULT_TABS = [
-    {
-      key: "general",
-      label: "General",
-      content: <TwinGeneral />,
-    },
-    {
-      key: "fields",
-      label: "Fields",
-      content: <TwinFields />,
-    },
-    {
-      key: "relations",
-      label: "Relations",
-      content: <TwinLinks />,
-    },
-    {
-      key: "comments",
-      label: "Comments",
-      content: <TwinComments />,
-    },
-    {
-      key: "attachments",
-      label: "Attachments",
-      content: <TwinAttachmentsTable twinId={twinId} />,
-    },
-    {
-      key: "history",
-      label: "History",
-      content: <TwinHistory />,
-    },
-  ];
 
   const tabs: Tab[] = [
     ...DEFAULT_TABS,
