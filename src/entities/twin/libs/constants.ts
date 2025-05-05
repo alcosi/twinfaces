@@ -1,9 +1,17 @@
-import { z } from "zod";
+import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
 
-import { FIRST_ID_EXTRACTOR, FIRST_USER_ID_EXTRACTOR } from "@/shared/libs";
+import {
+  DynamicFieldType,
+  TwinFieldSearchDate,
+  TwinFieldSearchList,
+  TwinFieldSearchNumeric,
+  TwinFieldSearchText,
+  TwinFieldValue,
+} from "./types";
 
-import { transformToTwinTags } from "./helpers";
-import { StaticTwinFieldId, StaticTwinFieldKey } from "./types";
+// TODO: @berdimyradov move to types solving import loop error
+export type StaticTwinFieldKey = (typeof STATIC_TWIN_FIELD_KEYS)[number];
+export type StaticTwinFieldId = (typeof STATIC_TWIN_FIELD_IDS)[number];
 
 export const TwinTouchIds = ["WATCHED", "STARRED", "REVIEWED"] as const;
 
@@ -13,24 +21,6 @@ export const TwinBasicFields = [
   "name",
   "description",
 ] as const;
-
-export const TWIN_SCHEMA = z.object({
-  classId: FIRST_ID_EXTRACTOR,
-  headTwinId: FIRST_ID_EXTRACTOR.optional(),
-  name: z.string().min(1, "Name can not be empty"),
-  assignerUserId: FIRST_USER_ID_EXTRACTOR,
-  description: z.string().optional(),
-  fields: z.record(z.string(), z.string().default("")).optional(),
-  tags: z
-    .array(
-      z.union([
-        z.object({ id: z.string().uuid(), name: z.string() }),
-        z.string(),
-      ])
-    )
-    .transform(transformToTwinTags)
-    .optional(),
-});
 
 // === Twin fields ===
 export const STATIC_TWIN_FIELD_KEYS = [
@@ -113,4 +103,26 @@ export const FieldDescriptorSelectSharedInHeadV1 = {
   fieldType: "selectSharedInHeadV1",
   regExp: ".*",
 } as const;
+
+export const DYNAMIC_FIELDS_MAP: Record<
+  DynamicFieldType,
+  (value: TwinFieldValue) => { type: string }
+> = {
+  textV1: (value: TwinFieldValue): TwinFieldSearchText => ({
+    type: "TwinFieldSearchTextV1",
+    valueLikeAllOfList: toArrayOfString(toArray(value)).map(wrapWithPercent),
+  }),
+  numericFieldV1: (value: TwinFieldValue): TwinFieldSearchNumeric => ({
+    type: "TwinFieldSearchNumericV1",
+    equals: toArrayOfString(toArray(value))[0],
+  }),
+  selectListV1: (value: TwinFieldValue): TwinFieldSearchList => ({
+    type: "TwinFieldSearchListV1",
+    optionsAllOfList: toArrayOfString(toArray(value)),
+  }),
+  dateScrollV1: (value: TwinFieldValue): TwinFieldSearchDate => ({
+    type: "TwinFieldSearchDateV1",
+    equals: `${toArrayOfString(toArray(value))[0]}T00:00:00`,
+  }),
+};
 // === Twin fields ===

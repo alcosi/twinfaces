@@ -34,13 +34,13 @@ export function TextFormItem({
     <FormItem className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-destructive">*</span>}
         </FormItemLabel>
       )}
       <Input
         id={inputId}
         list={suggestionsId}
-        value={fieldValue}
+        value={fieldValue ?? ""}
         onChange={onChange}
         {...props}
       />

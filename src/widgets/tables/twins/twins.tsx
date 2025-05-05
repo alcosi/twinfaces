@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { FaceWT001 } from "@/entities/face";
 import {
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
+  DYNAMIC_FIELDS_MAP,
   TWIN_SCHEMA,
   TwinFormValues,
   useCreateTwin,
@@ -34,6 +35,7 @@ import {
   FiltersState,
 } from "../../crud-data-table";
 import { TwinFormFields } from "./form-fields";
+import { TwinClassField } from "@/entities/twin-class-field";
 
 type Props = {
   title?: string;
@@ -50,8 +52,13 @@ export function TwinsTable({
   targetHeadTwinId,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
-  const { buildFilterFields, mapFiltersToPayload } =
-    useTwinFilters(baseTwinClassId);
+  const [twinClassFields, setTwinClassFields] = useState<
+    TwinClass_DETAILED["fields"]
+  >([]);
+  const { buildFilterFields, mapFiltersToPayload } = useTwinFilters(
+    baseTwinClassId,
+    twinClassFields
+  );
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
@@ -231,29 +238,39 @@ export function TwinsTable({
         showTwinClass2TwinClassFieldMode: "DETAILED",
       },
     }).then(({ fields = [] }) => {
+      // TODO: remove this when the BE supports all dynamic filters
+      const supportedFields: TwinClassField[] = [];
+
       const columns = Object.fromEntries(
         fields.reduce<[string, ColumnDef<Twin_DETAILED>][]>((acc, field) => {
           const isEnabled = enabledColumns.some(
             (col) => col.twinClassFieldId === field.id
           );
 
-          if (field.id && field.key && isEnabled) {
+          if (isEnabled) {
+            if (field.descriptor?.fieldType && field.descriptor.fieldType in DYNAMIC_FIELDS_MAP) {
+              supportedFields.push(field);
+            }
+
+          if (field.id && field.key) {
             acc.push([
               field.id,
               {
                 id: field.id,
-                accessorKey: `fields.${field.key}`,
+                accessorFn: (row) => row.fields?.[field.key!] ?? null,
                 header: field.name,
               },
             ]);
+          }
           }
 
           return acc;
         }, [])
       );
 
+      setTwinClassFields(supportedFields);
       setColumnMap((prev) => ({ ...prev, ...columns }));
-    });
+    })
   }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
 
   async function fetchTwins({

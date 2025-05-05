@@ -40,7 +40,7 @@ export function ComboboxFormItem<TFieldModel>({
 
   useEffect(() => {
     applySelectedValues(fieldValue);
-  }, [fieldValue]);
+  }, [JSON.stringify(fieldValue)]);
 
   async function applySelectedValues(values: TFieldModel[] | string) {
     if (isEmptyString(values)) {

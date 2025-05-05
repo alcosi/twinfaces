@@ -47,7 +47,8 @@ export type TwinFilterKeys =
   | "twinClassExtendsHierarchyContainsIdList"
   | "headTwinIdList"
   | "createdByUserIdList"
-  | "assignerUserIdList";
+  | "assignerUserIdList"
+  | "fields";
 
 export type TwinFilters = Partial<
   Pick<components["schemas"]["TwinSearchRqV1"], TwinFilterKeys>
