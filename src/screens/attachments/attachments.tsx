@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PlatformArea } from "@/shared/config";
-import { TwinAttachmentsTable } from "@/widgets/tables";
+import { AttachmentsTable } from "@/widgets/tables";
 
 export function AttachmentsScreen() {
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -15,5 +15,5 @@ export function AttachmentsScreen() {
     ]);
   }, [setBreadcrumbs]);
 
-  return <TwinAttachmentsTable />;
+  return <AttachmentsTable />;
 }

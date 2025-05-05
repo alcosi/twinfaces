@@ -23,6 +23,7 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs";
+import { GuidLink } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -78,17 +79,7 @@ const colDefs: Record<
     id: "storageLink",
     accessorKey: "storageLink",
     header: "Link",
-    cell: (data) => (
-      // TODO: complex solution! Please optimise
-      <div onClick={(e) => e.stopPropagation()}>
-        <a
-          href={data.getValue<string>()}
-          className="underline text-[color:var(--brand-600)] dark:text-[color:var(--brand-400)] hover:text-[color:var(--brand-400)] dark:hover:text-[color:var(--brand-300)] transition-colors duration-200"
-        >
-          <GuidWithCopy value={data.getValue<string>()} />
-        </a>
-      </div>
-    ),
+    cell: (data) => <GuidLink value={data.getValue<string>()} />,
   },
 
   title: {
@@ -180,11 +171,22 @@ const colDefs: Record<
   },
 };
 
-export function TwinAttachmentsTable({ twinId }: { twinId?: string }) {
+type Props = {
+  title?: string;
+  //TODO enabledColumns
+  enabledColumns?: string[];
+  baseTwinId?: string;
+};
+
+export function AttachmentsTable({
+  title = "Attachments",
+  enabledColumns,
+  baseTwinId,
+}: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } = useAttachmentFilters({
-    enabledFilters: isTruthy(twinId)
+    enabledFilters: isTruthy(baseTwinId)
       ? [
           "idList",
           "externalIdLikeList",
@@ -213,8 +215,8 @@ export function TwinAttachmentsTable({ twinId }: { twinId?: string }) {
         pagination,
         filters: {
           ..._filters,
-          twinIdList: twinId
-            ? toArrayOfString(toArray(twinId), "id")
+          twinIdList: baseTwinId
+            ? toArrayOfString(toArray(baseTwinId), "id")
             : _filters.twinIdList,
         },
       });
@@ -231,11 +233,11 @@ export function TwinAttachmentsTable({ twinId }: { twinId?: string }) {
 
   return (
     <CrudDataTable
-      title="Attachments"
+      title={title}
       ref={tableRef}
       columns={[
         colDefs.id,
-        ...(isFalsy(twinId) ? [colDefs.twinId] : []),
+        ...(isFalsy(baseTwinId) ? [colDefs.twinId] : []),
         colDefs.externalId,
         colDefs.storageLink,
         colDefs.title,
@@ -258,7 +260,7 @@ export function TwinAttachmentsTable({ twinId }: { twinId?: string }) {
       }}
       defaultVisibleColumns={[
         colDefs.id,
-        ...(isFalsy(twinId) ? [colDefs.twinId] : []),
+        ...(isFalsy(baseTwinId) ? [colDefs.twinId] : []),
         colDefs.externalId,
         colDefs.storageLink,
         colDefs.title,
