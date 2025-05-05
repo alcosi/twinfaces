@@ -79,6 +79,7 @@ const colDefs: Record<
     id: "storageLink",
     accessorKey: "storageLink",
     header: "Link",
+    // TODO: use AnchorWithCopy
     cell: (data) => <GuidLink value={data.getValue<string>()} />,
   },
 

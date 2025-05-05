@@ -41,6 +41,7 @@ export function AttachmentGeneral() {
         <TableRow>
           <TableCell>Link</TableCell>
           <TableCell>
+            {/* <Anchor /> */}
             <a
               href={attachment.storageLink}
               className="text-brand hover:underline"
