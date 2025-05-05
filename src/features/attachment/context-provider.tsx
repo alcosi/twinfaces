@@ -3,7 +3,8 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { Attachment_DETAILED, useAttachmentById } from "@/entities/attachment";
+import { useAttachmentById } from "@/entities/twin";
+import { Attachment_DETAILED } from "@/entities/twin/server";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 

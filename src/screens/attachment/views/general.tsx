@@ -43,7 +43,7 @@ export function AttachmentGeneral() {
           <TableCell>
             <a
               href={attachment.storageLink}
-              className="underline text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200"
+              className="underline text-[color:var(--brand-600)] dark:text-[color:var(--brand-400)] hover:text-[color:var(--brand-400)] dark:hover:text-[color:var(--brand-300)] transition-colors duration-200"
             >
               <GuidWithCopy value={attachment.storageLink} variant="long" />
             </a>

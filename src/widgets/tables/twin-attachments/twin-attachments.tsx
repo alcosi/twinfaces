@@ -3,11 +3,8 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { toast } from "sonner";
 
-import {
-  Attachment_DETAILED,
-  useAttachmentFilters,
-  useAttachmentSearchV1,
-} from "@/entities/attachment";
+import { useAttachmentFilters, useAttachmentSearchV1 } from "@/entities/twin";
+import { Attachment_DETAILED } from "@/entities/twin/server";
 import { CommentResourceLink } from "@/features/comment/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
@@ -82,7 +79,7 @@ const colDefs: Record<
       <div onClick={(e) => e.stopPropagation()}>
         <a
           href={data.getValue<string>()}
-          className="underline text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200"
+          className="underline text-[color:var(--brand-600)] dark:text-[color:var(--brand-400)] hover:text-[color:var(--brand-400)] dark:hover:text-[color:var(--brand-300)] transition-colors duration-200"
         >
           <GuidWithCopy value={data.getValue<string>()} />
         </a>
@@ -194,7 +191,8 @@ export function TwinAttachmentsTable({ twinId }: { twinId?: string }) {
           "descriptionLikeList",
           "viewPermissionIdList",
           "twinClassFieldIdList",
-          "createdAt",
+          "createdAtFrom",
+          "createdAtTo",
         ]
       : undefined,
   });
@@ -249,9 +247,7 @@ export function TwinAttachmentsTable({ twinId }: { twinId?: string }) {
       fetcher={fetchAttachments}
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
-        router.push(
-          `/${PlatformArea.core}/twins/${row.twinId}/attachment/${row.id}`
-        )
+        router.push(`/${PlatformArea.core}/attachments/${row.id}`)
       }
       filters={{
         filtersInfo: buildFilterFields(),

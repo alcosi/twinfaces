@@ -6,3 +6,5 @@ export * from "./use-update-v1";
 export * from "./use-valid-twins-for-link";
 export * from "./useFetchHistoryV1";
 export * from "./useSearchV3";
+export * from "./use-fetch-attachment";
+export * from "./use-search-attachment-v1";

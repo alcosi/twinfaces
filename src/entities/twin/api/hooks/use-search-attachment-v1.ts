@@ -1,12 +1,10 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { hydrateAttachmentFromMap } from "@/entities/attachment/libs/helpers";
+import { hydrateAttachmentFromMap } from "@/entities/twin";
+import { AttachmentFilters, Attachment_DETAILED } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-import { AttachmentFilters, Attachment_DETAILED } from "../types";
-
-// TODO: Apply caching-strategy
 export const useAttachmentSearchV1 = () => {
   const api = useContext(PrivateApiContext);
 
@@ -21,7 +19,7 @@ export const useAttachmentSearchV1 = () => {
       filters?: AttachmentFilters;
     }): Promise<PagedResponse<Attachment_DETAILED>> => {
       try {
-        const { data, error } = await api.attachment.search({
+        const { data, error } = await api.twin.searchAttachment({
           pagination,
           filters: filters,
         });

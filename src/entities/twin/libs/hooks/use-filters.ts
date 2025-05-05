@@ -2,20 +2,126 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { AttachmentFilterKeys, AttachmentFilters } from "@/entities/attachment";
 import { usePermissionSelectAdapter } from "@/entities/permission";
-import { useTwinSelectAdapter } from "@/entities/twin";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
 import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
+import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import {
+  AttachmentFilterKeys,
+  AttachmentFilters,
+  DataTimeRangeV1,
+  TwinFilterKeys,
+  TwinFilters,
+} from "@/entities/twin/server";
 import { useUserSelectAdapter } from "@/entities/user";
 import {
   type FilterFeature,
   extractEnabledFilters,
   isPopulatedArray,
+  isUndefined,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
+
+import { useTwinSelectAdapter } from "./use-select-adapter";
+
+export function useTwinFilters(
+  baseTwinClassId?: string
+): FilterFeature<TwinFilterKeys, TwinFilters> {
+  const tcAdapter = useTwinClassSelectAdapter();
+  const sAdapter = useTwinStatusSelectAdapter();
+  const uAdapter = useUserSelectAdapter();
+  const tAdapter = useTwinSelectAdapter();
+
+  function buildFilterFields(): Partial<
+    Record<TwinFilterKeys, AutoFormValueInfo>
+  > {
+    return {
+      twinIdList: {
+        type: AutoFormValueType.tag,
+        label: "ID",
+        schema: z.string().uuid("Please enter a valid UUID"),
+        placeholder: "Enter UUID",
+      },
+      twinClassIdList: isUndefined(baseTwinClassId)
+        ? {
+            type: AutoFormValueType.combobox,
+            label: "Twin Class",
+            multi: true,
+            ...tcAdapter,
+          }
+        : undefined,
+      statusIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Statuses",
+        multi: true,
+        ...sAdapter,
+      },
+      twinNameLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Name",
+      },
+      descriptionLikeList: {
+        type: AutoFormValueType.string,
+        label: "Description",
+      },
+      headTwinIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Head",
+        multi: true,
+        ...tAdapter,
+      },
+      createdByUserIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Author",
+        multi: true,
+        ...uAdapter,
+      },
+      assignerUserIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Assignee",
+        multi: true,
+        ...uAdapter,
+      },
+    } as const;
+  }
+
+  function mapFiltersToPayload(
+    filters: Record<TwinFilterKeys, unknown>
+  ): TwinFilters {
+    const result: TwinFilters = {
+      twinIdList: toArrayOfString(toArray(filters.twinIdList), "id"),
+      twinNameLikeList: toArrayOfString(
+        toArray(filters.twinNameLikeList),
+        "name"
+      ).map(wrapWithPercent),
+      twinClassIdList: toArrayOfString(toArray(filters.twinClassIdList), "id"),
+      statusIdList: toArrayOfString(toArray(filters.statusIdList), "id"),
+      createdByUserIdList: toArrayOfString(
+        toArray(filters.createdByUserIdList),
+        "userId"
+      ),
+      assignerUserIdList: toArrayOfString(
+        toArray(filters.assignerUserIdList),
+        "userId"
+      ),
+      descriptionLikeList: toArrayOfString(
+        toArray(filters.descriptionLikeList),
+        "description"
+      ).map(wrapWithPercent),
+      headTwinIdList: toArrayOfString(toArray(filters.headTwinIdList), "id"),
+    };
+
+    return result;
+  }
+
+  return {
+    buildFilterFields,
+    mapFiltersToPayload,
+  };
+}
 
 export function useAttachmentFilters({
   enabledFilters,
@@ -83,9 +189,15 @@ export function useAttachmentFilters({
       multi: true,
       ...twinClassFieldAdapter,
     },
-    createdAt: {
-      type: AutoFormValueType.calendar,
-      label: "Created at",
+    createdAtFrom: {
+      type: AutoFormValueType.string,
+      label: "Created from",
+      inputProps: { type: "date" },
+    },
+    createdAtTo: {
+      type: AutoFormValueType.string,
+      label: "Created to",
+      inputProps: { type: "date" },
     },
   };
 
@@ -101,7 +213,9 @@ export function useAttachmentFilters({
   function mapFiltersToPayload(
     filters: Record<AttachmentFilterKeys, unknown>
   ): AttachmentFilters {
-    const result: AttachmentFilters = {
+    const result: AttachmentFilters & {
+      createdAt: DataTimeRangeV1;
+    } = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
       twinIdList: toArrayOfString(toArray(filters.twinIdList), "id"),
       externalIdLikeList: toArrayOfString(
@@ -136,17 +250,8 @@ export function useAttachmentFilters({
         "id"
       ),
       createdAt: {
-        from: filters.createdAt
-          ? new Date((filters.createdAt as { from?: Date | string }).from || "")
-              .toISOString()
-              .slice(0, 19)
-          : "",
-
-        to: filters.createdAt
-          ? new Date((filters.createdAt as { to?: Date | string }).to || "")
-              .toISOString()
-              .slice(0, 19)
-          : "",
+        from: filters.createdAtFrom ? `${filters.createdAtFrom}T00:00:00` : "",
+        to: filters.createdAtTo ? `${filters.createdAtTo}T00:00:00` : "",
       },
     };
     return result;

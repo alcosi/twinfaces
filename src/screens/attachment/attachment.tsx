@@ -4,30 +4,23 @@ import { useContext, useEffect } from "react";
 
 import { AttachmentContext } from "@/features/attachment";
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { TwinContext } from "@/features/twin";
 import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
-import { AttachmentGeneral } from "./attachment-general";
+import { AttachmentGeneral } from "./views";
 
-export default function AttachmentPage() {
-  const { twin } = useContext(TwinContext);
+export function AttachmentScreen() {
   const { attachment } = useContext(AttachmentContext);
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Twins", href: `/${PlatformArea.core}/twins` },
-      {
-        label: twin?.name,
-        href: `/${PlatformArea.core}/twins/${twin.id}`,
-      },
       {
         label: "Attachments",
-        href: `/${PlatformArea.core}/twins/${twin.id}/#attachments`,
+        href: `/${PlatformArea.core}/attachments`,
       },
     ]);
-  }, [setBreadcrumbs, twin.id, twin.name]);
+  }, [setBreadcrumbs, attachment]);
 
   const tabs: Tab[] = attachment
     ? [

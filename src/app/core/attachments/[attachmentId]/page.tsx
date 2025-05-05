@@ -1,18 +1,16 @@
-import { ReactNode } from "react";
-
 import { AttachmentContextProvider } from "@/features/attachment";
+import { AttachmentScreen } from "@/screens/attachment";
 
 type Props = {
   params: {
     attachmentId: string;
   };
-  children: ReactNode;
 };
 
-export default function Layout({ params: { attachmentId }, children }: Props) {
+export default function Page({ params: { attachmentId } }: Props) {
   return (
     <AttachmentContextProvider attachmentId={attachmentId}>
-      {children}
+      <AttachmentScreen />
     </AttachmentContextProvider>
   );
 }

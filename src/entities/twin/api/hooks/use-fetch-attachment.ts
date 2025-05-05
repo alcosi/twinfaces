@@ -1,12 +1,10 @@
 import { useCallback, useContext, useState } from "react";
 
-import { hydrateAttachmentFromMap } from "@/entities/attachment/libs/helpers";
+import { hydrateAttachmentFromMap } from "@/entities/twin";
+import { AttachmentRqQuery, Attachment_DETAILED } from "@/entities/twin/server";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-import { AttachmentRqQuery, Attachment_DETAILED } from "../types";
-
-// TODO: Apply caching-strategy
 export const useAttachmentById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
@@ -21,7 +19,7 @@ export const useAttachmentById = () => {
     }): Promise<Attachment_DETAILED> => {
       setLoading(true);
       try {
-        const { data, error } = await api.attachment.getById({
+        const { data, error } = await api.twin.getAttachment({
           attachmentId,
           query,
         });

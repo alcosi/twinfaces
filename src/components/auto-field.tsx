@@ -10,7 +10,6 @@ import {
 } from "@/widgets/form-fields";
 
 import {
-  CalendarFormField,
   CheckboxFormField,
   CheckboxFormItem,
   ColorPickerFormField,
@@ -35,7 +34,6 @@ export enum AutoFormValueType {
   tag = "tag",
   twinField = "twinField",
   numberRange = "numberRange",
-  calendar = "calendar",
 }
 
 /* eslint-enable no-unused-vars */
@@ -51,7 +49,6 @@ export type AutoFormValueInfo = AutoFormCommonInfo &
     | AutoFormFeaturerValueInfo
     | AutoFormColorValueInfo
     | AutoFormNumberRangeValueInfo
-    | AutoFormCalendarValueInfo
   );
 
 export interface AutoFormCommonInfo {
@@ -110,10 +107,6 @@ export interface AutoFormNumberRangeValueInfo {
   type: AutoFormValueType.numberRange;
   placeholderFrom?: string;
   placeholderTo?: string;
-}
-
-export interface AutoFormCalendarValueInfo {
-  type: AutoFormValueType.calendar;
 }
 
 export function AutoField({
@@ -202,11 +195,6 @@ export function AutoField({
       case AutoFormValueType.numberRange:
         return name && control ? (
           <NumberRangeFormField name={name} control={control} {...info} />
-        ) : null;
-
-      case AutoFormValueType.calendar:
-        return name && control ? (
-          <CalendarFormField name={name} control={control} {...info} />
         ) : null;
 
       default:

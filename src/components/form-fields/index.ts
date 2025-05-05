@@ -6,4 +6,3 @@ export * from "./range";
 export * from "./tags";
 export * from "./text";
 export * from "./types";
-export * from "./calendar";
