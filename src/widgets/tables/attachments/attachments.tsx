@@ -23,7 +23,7 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs";
-import { GuidLink } from "@/shared/ui";
+import { AnchorWithCopy } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -79,8 +79,10 @@ const colDefs: Record<
     id: "storageLink",
     accessorKey: "storageLink",
     header: "Link",
-    // TODO: use AnchorWithCopy
-    cell: (data) => <GuidLink value={data.getValue<string>()} />,
+    cell: (data) => {
+      const link = data.getValue<string>();
+      return <AnchorWithCopy href={link} />;
+    },
   },
 
   title: {

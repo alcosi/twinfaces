@@ -8,6 +8,7 @@ import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { formatToTwinfaceDate } from "@/shared/libs";
+import { AnchorWithCopy } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -41,13 +42,7 @@ export function AttachmentGeneral() {
         <TableRow>
           <TableCell>Link</TableCell>
           <TableCell>
-            {/* <Anchor /> */}
-            <a
-              href={attachment.storageLink}
-              className="text-brand hover:underline"
-            >
-              {attachment.storageLink}
-            </a>
+            <AnchorWithCopy href={attachment.storageLink} variant={"long"} />
           </TableCell>
         </TableRow>
 
