@@ -3,11 +3,16 @@ import { PropsWithChildren } from "react";
 import { cn, shortenUUID } from "@/shared/libs";
 import { CopyButton } from "@/shared/ui/copy-button";
 
+type Props = {
+  href: string;
+  variant?: "short" | "long";
+};
+
 export function Anchor({
   href,
   variant = "short",
   children,
-}: PropsWithChildren<{ href: string; variant?: "short" | "long" }>) {
+}: PropsWithChildren<Props>) {
   const isStringChild = typeof children === "string";
   const displayValue =
     variant === "short" && isStringChild ? shortenUUID(children) : children;
@@ -26,7 +31,7 @@ export function Anchor({
 export function AnchorWithCopy({
   href,
   variant = "short",
-}: PropsWithChildren<{ href: string; variant?: "short" | "long" }>) {
+}: PropsWithChildren<Props>) {
   return (
     <div className="relative inline-flex items-center">
       <div className="group flex items-center">
