@@ -22,3 +22,28 @@ export function slugify(input?: string): string {
   if (!input) return "";
   return input.trim().toLowerCase().replace(/\s+/g, "-");
 }
+
+export function truncateStr(
+  value: string,
+  format?: "short" | "middle" | "long"
+): string {
+  if (!isPopulatedString(value)) return value;
+
+  switch (format) {
+    case "short":
+      if (value.length >= 8) {
+        return `${value.slice(0, 8)}...${value.slice(-2)}`;
+      }
+      break;
+    case "middle":
+      if (value.length >= 50) {
+        return `${value.slice(0, 30)}...${value.slice(-10)}`;
+      }
+      break;
+    case "long":
+    default:
+      return value;
+  }
+
+  return value;
+}

@@ -1,11 +1,11 @@
 import { PropsWithChildren } from "react";
 
-import { cn, shortenUUID } from "@/shared/libs";
+import { truncateStr } from "@/shared/libs";
 import { CopyButton } from "@/shared/ui/copy-button";
 
 type Props = {
   href: string;
-  variant?: "short" | "long";
+  variant?: "short" | "middle" | "long";
 };
 
 export function Anchor({
@@ -13,9 +13,7 @@ export function Anchor({
   variant = "short",
   children,
 }: PropsWithChildren<Props>) {
-  const isStringChild = typeof children === "string";
-  const displayValue =
-    variant === "short" && isStringChild ? shortenUUID(children) : children;
+  const displayValue = truncateStr(String(children), variant);
 
   return (
     <a
@@ -31,21 +29,15 @@ export function Anchor({
 export function AnchorWithCopy({
   href,
   variant = "short",
+  children,
 }: PropsWithChildren<Props>) {
   return (
-    <div className="relative inline-flex items-center">
-      <div className="group flex items-center">
-        <Anchor href={href} variant={variant}>
-          {href}
-        </Anchor>
-        <div
-          className={cn(
-            "flex items-center",
-            "ml-1 transform -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-          )}
-        >
-          <CopyButton textToCopy={href} />
-        </div>
+    <div className="group flex items-center">
+      <Anchor href={href} variant={variant}>
+        {children}
+      </Anchor>
+      <div className="flex items-center ml-1 transform -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+        <CopyButton textToCopy={href} />
       </div>
     </div>
   );

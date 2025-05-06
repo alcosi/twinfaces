@@ -81,7 +81,7 @@ const colDefs: Record<
     header: "Link",
     cell: (data) => {
       const link = data.getValue<string>();
-      return <AnchorWithCopy href={link} />;
+      return <AnchorWithCopy href={link}>{link}</AnchorWithCopy>;
     },
   },
 

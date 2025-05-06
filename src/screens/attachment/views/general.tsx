@@ -42,7 +42,9 @@ export function AttachmentGeneral() {
         <TableRow>
           <TableCell>Link</TableCell>
           <TableCell>
-            <AnchorWithCopy href={attachment.storageLink} variant={"long"} />
+            <AnchorWithCopy href={attachment.storageLink} variant={"middle"}>
+              {attachment.storageLink}
+            </AnchorWithCopy>
           </TableCell>
         </TableRow>
 
