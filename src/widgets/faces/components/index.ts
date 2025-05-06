@@ -1,2 +1,2 @@
 export * from "./alert-error";
-export * from "./widget-layout-renderer";
+export * from "./widgets-container";

@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
-import { isPopulatedString, safe } from "@/shared/libs";
+import { cn, isPopulatedString, safe } from "@/shared/libs";
 
 import { AlertError } from "../components";
 import { TWidgetFaceProps, Widget, WidgetFaceProps } from "./types";
@@ -21,9 +21,10 @@ const TWIDGETS: Record<string, FC<TWidgetFaceProps>> = {
 type Props = {
   twinId?: string;
   widget: Widget;
+  className?: string;
 };
 
-export async function WidgetRenderer({ twinId, widget }: Props) {
+export async function WidgetRenderer({ twinId, widget, className }: Props) {
   const faceResult = await safe(() =>
     fetchFaceById<Face_DETAILED>(widget.widgetFaceId!, {
       query: { showFaceMode: "DETAILED" },
@@ -61,7 +62,9 @@ export async function WidgetRenderer({ twinId, widget }: Props) {
       );
     }
 
-    return <Comp twinId={twinId} face={face} widget={widget} />;
+    return (
+      <Comp twinId={twinId} face={face} widget={widget} className={className} />
+    );
   }
 
   return (

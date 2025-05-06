@@ -1,8 +1,8 @@
 import { fetchPG002Face } from "@/entities/face";
-import { isPopulatedArray, safe } from "@/shared/libs";
+import { cn, isPopulatedArray, safe } from "@/shared/libs";
 
 import { Tab, TabsLayout } from "../../../layout";
-import { AlertError, WidgetLayoutRenderer } from "../../components";
+import { AlertError, WidgetsContainer } from "../../components";
 import { Widget } from "../../widgets/types";
 import { PGFaceProps } from "../types";
 
@@ -22,10 +22,11 @@ export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
       key: tab.title!.toLowerCase(),
       label: tab.title ?? "N/A",
       content: isPopulatedArray<Widget>(tab.widgets) ? (
-        <WidgetLayoutRenderer
-          layout={tab.layout}
+        <WidgetsContainer
+          faceId={tab.id!}
           widgets={tab.widgets}
           twinId={twinId}
+          className={tab.styleClasses}
         />
       ) : null,
     })) ?? [];

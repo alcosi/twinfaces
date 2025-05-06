@@ -2,6 +2,7 @@ import { Face_DETAILED } from "@/entities/face";
 
 export type Widget = {
   id: string;
+  styleClasses?: string[];
   column?: number;
   columnEnd?: number;
   columnSpan?: number;

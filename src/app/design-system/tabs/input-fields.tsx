@@ -68,10 +68,7 @@ export function InputFieldsTab() {
   });
 
   async function internalSubmit(newValue: FormValues) {
-    console.log("foobar onSubmit", newValue, {
-      // isValid: form.formState.isValid,
-      // errors: form.formState.errors,
-    });
+    // TBD
   }
 
   const mockTwinClassId = "e2b4b9c0-4cdd-42a0-a52a-a8e439b1c17b";
@@ -80,7 +77,7 @@ export function InputFieldsTab() {
     <>
       <Form {...twinFieldsForm}>
         <form
-          className="h-screen overflow-y-auto max-h-98"
+          className="h-screen max-h-98 overflow-y-auto"
           style={{
             maxHeight: "calc(100vh - var(--header-height) * 2)",
           }}
@@ -256,7 +253,7 @@ export function InputFieldsTab() {
 
       <Form {...form}>
         <form
-          className="h-screen overflow-y-auto max-h-98"
+          className="h-screen max-h-98 overflow-y-auto"
           style={{
             maxHeight: "calc(100vh - var(--header-height))",
           }}

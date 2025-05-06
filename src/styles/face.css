@@ -1,0 +1,7 @@
+/* NOTE: Color pallete (for testing purposes) */
+/* @source inline("{hover:,}bg-blue-{50,{100..900..100},950}"); */
+/* @source inline("{hover:,}bg-pink-{50,{100..900..100},950}"); */
+
+/* NOTE: Grid */
+@source inline("col-start-{1,2,3}");
+@source inline("row-start-{1..12..1}");

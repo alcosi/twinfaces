@@ -4,11 +4,10 @@ import { cn, safe } from "@/shared/libs";
 import { MediaType, SlotSlider } from "@/shared/ui";
 
 import { AlertError } from "../../components";
-import { widgetGridClasses } from "../../utils";
 import { TWidgetFaceProps } from "../types";
 
 export async function TW001(props: TWidgetFaceProps) {
-  const { twinId, widget } = props;
+  const { twinId, widget, className } = props;
   const header = await getAuthHeaders();
   const query = {
     showFaceTwidget2TwinMode: "DETAILED",
@@ -52,10 +51,8 @@ export async function TW001(props: TWidgetFaceProps) {
 
   return (
     <div
-      className={cn(
-        "h-auto w-full max-w-[480px] object-contain",
-        widgetGridClasses(widget)
-      )}
+      data-face-id={twidget.id}
+      className={cn("h-auto w-full max-w-[480px] object-contain", className)}
     >
       {twidget.label && <p>{twidget.label}</p>}
       <SlotSlider items={typedMedia} />
