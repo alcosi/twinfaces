@@ -21,9 +21,8 @@ export const hydrateAttachmentFromMap = (
   }
 
   if (dto.twinflowTransitionId && relatedObjects?.transitionsMap) {
-    hydrated.twinflowTransition = relatedObjects.transitionsMap[
-      dto.twinflowTransitionId
-    ] as TwinFlowTransition_DETAILED;
+    hydrated.twinflowTransition =
+      relatedObjects.transitionsMap[dto.twinflowTransitionId]!;
   }
 
   if (dto.commentId && relatedObjects?.commentMap) {
