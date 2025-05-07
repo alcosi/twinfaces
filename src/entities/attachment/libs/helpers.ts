@@ -1,5 +1,4 @@
 import { Attachment, Attachment_DETAILED } from "@/entities/attachment";
-import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
 import { RelatedObjects } from "@/shared/api";
 
 export const hydrateAttachmentFromMap = (

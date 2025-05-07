@@ -19,6 +19,7 @@ import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import {
   formatToTwinfaceDate,
+  isFalsy,
   isTruthy,
   toArray,
   toArrayOfString,
@@ -32,42 +33,21 @@ import {
   FiltersState,
 } from "../../crud-data-table";
 
-type AttachmentStaticFieldKey = keyof Pick<
-  Attachment_DETAILED,
-  | "id"
-  | "twinId"
-  | "externalId"
-  | "title"
-  | "description"
-  | "twinClassFieldId"
-  | "twinflowTransitionId"
-  | "commentId"
-  | "viewPermissionId"
-  | "authorUserId"
-  | "createdAt"
->;
-
-function filterValidKeys(keys: string[]): AttachmentStaticFieldKey[] {
-  const validKeys: AttachmentStaticFieldKey[] = [
-    "id",
-    "twinId",
-    "externalId",
-    "title",
-    "description",
-    "twinClassFieldId",
-    "twinflowTransitionId",
-    "commentId",
-    "viewPermissionId",
-    "authorUserId",
-    "createdAt",
-  ];
-  return keys.filter((key): key is AttachmentStaticFieldKey =>
-    validKeys.includes(key as AttachmentStaticFieldKey)
-  );
-}
-
 const colDefs: Record<
-  AttachmentStaticFieldKey,
+  keyof Pick<
+    Attachment_DETAILED,
+    | "id"
+    | "twinId"
+    | "externalId"
+    | "title"
+    | "description"
+    | "twinClassFieldId"
+    | "twinflowTransitionId"
+    | "commentId"
+    | "viewPermissionId"
+    | "authorUserId"
+    | "createdAt"
+  >,
   ColumnDef<Attachment_DETAILED>
 > = {
   id: {
@@ -198,15 +178,10 @@ const colDefs: Record<
 
 type Props = {
   title?: string;
-  enabledColumns?: string[];
   baseTwinId?: string;
 };
 
-export function AttachmentsTable({
-  title = "Attachments",
-  enabledColumns,
-  baseTwinId,
-}: Props) {
+export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } = useAttachmentFilters({
     enabledFilters: isTruthy(baseTwinId)
@@ -226,11 +201,6 @@ export function AttachmentsTable({
       : undefined,
   });
   const { searchAttachments } = useAttachmentSearchV1();
-
-  const staticKeys = filterValidKeys(enabledColumns ?? []);
-  const columnMap = enabledColumns
-    ? Object.fromEntries(staticKeys.map((key) => [key, colDefs[key]]))
-    : colDefs;
 
   async function fetchAttachments(
     pagination: PaginationState,
@@ -263,14 +233,38 @@ export function AttachmentsTable({
     <CrudDataTable
       title={title}
       ref={tableRef}
-      columns={Object.values(columnMap)}
+      columns={[
+        colDefs.id,
+        colDefs.title,
+        ...(isFalsy(baseTwinId) ? [colDefs.twinId] : []),
+        colDefs.externalId,
+        colDefs.description,
+        colDefs.twinClassFieldId,
+        colDefs.twinflowTransitionId,
+        colDefs.commentId,
+        colDefs.viewPermissionId,
+        colDefs.authorUserId,
+        colDefs.createdAt,
+      ]}
       getRowId={(row) => row.id!}
       fetcher={fetchAttachments}
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      defaultVisibleColumns={Object.values(columnMap)}
+      defaultVisibleColumns={[
+        colDefs.id,
+        colDefs.title,
+        ...(isFalsy(baseTwinId) ? [colDefs.twinId] : []),
+        colDefs.externalId,
+        colDefs.description,
+        colDefs.twinClassFieldId,
+        colDefs.twinflowTransitionId,
+        colDefs.commentId,
+        colDefs.viewPermissionId,
+        colDefs.authorUserId,
+        colDefs.createdAt,
+      ]}
     />
   );
 }
