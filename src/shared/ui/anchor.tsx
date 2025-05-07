@@ -18,7 +18,7 @@ export function Anchor({
     <a
       href={href}
       className={cn(
-        "text-brand hover:underline group-hover:underline",
+        "text-brand group-hover:underline hover:underline",
         className
       )}
       onClick={(e) => e.stopPropagation()}
@@ -41,7 +41,7 @@ export function AnchorWithCopy({
       </Anchor>
       <CopyButton
         textToCopy={href}
-        className="transform -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+        className="-translate-x-1 transform opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
       />
     </div>
   );

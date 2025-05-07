@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { toast } from "sonner";
 
 import {
   Attachment_DETAILED,
@@ -57,8 +56,8 @@ export function AttachmentContextProvider({
       if (response) {
         setAttachment(response);
       }
-    } catch {
-      toast.error("Failed to fetch attachment");
+    } catch (error) {
+      console.error("Failed to fetch attachment:", error);
     }
   }
 

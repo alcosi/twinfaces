@@ -1,10 +1,5 @@
 import { Attachment, Attachment_DETAILED } from "@/entities/attachment";
-import { Comment_DETAILED } from "@/entities/comment";
-import { Permission } from "@/entities/permission";
-import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
-import { Twin } from "@/entities/twin/server";
-import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 
 export const hydrateAttachmentFromMap = (
@@ -21,9 +16,8 @@ export const hydrateAttachmentFromMap = (
   }
 
   if (dto.twinClassFieldId && relatedObjects?.twinClassFieldMap) {
-    hydrated.twinClassField = relatedObjects.twinClassFieldMap[
-      dto.twinClassFieldId
-    ] as TwinClassField_DETAILED;
+    hydrated.twinClassField =
+      relatedObjects.twinClassFieldMap[dto.twinClassFieldId]!;
   }
 
   if (dto.twinflowTransitionId && relatedObjects?.transitionsMap) {
@@ -33,19 +27,16 @@ export const hydrateAttachmentFromMap = (
   }
 
   if (dto.commentId && relatedObjects?.commentMap) {
-    hydrated.comment = relatedObjects.commentMap[
-      dto.commentId
-    ] as Comment_DETAILED;
+    hydrated.comment = relatedObjects.commentMap[dto.commentId]!;
   }
 
   if (dto.viewPermissionId && relatedObjects?.permissionMap) {
-    hydrated.viewPermission = relatedObjects.permissionMap[
-      dto.viewPermissionId
-    ] as Permission;
+    hydrated.viewPermission =
+      relatedObjects.permissionMap[dto.viewPermissionId]!;
   }
 
   if (dto.authorUserId && relatedObjects?.userMap) {
-    hydrated.authorUser = relatedObjects.userMap[dto.authorUserId] as User;
+    hydrated.authorUser = relatedObjects.userMap[dto.authorUserId]!;
   }
 
   return hydrated;

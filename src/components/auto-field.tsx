@@ -198,23 +198,26 @@ export function AutoField({
         ) : null;
 
       default:
-        return name && control ? (
-          <TextFormField
-            {...info}
-            name={name}
-            control={control}
-            autoFocus={autoFocus}
-            {...(info.type == AutoFormValueType.string ? info.inputProps : {})}
-          />
-        ) : (
-          <TextFormItem
-            {...info}
-            value={value}
-            onChange={(e) => setValue(e?.target.value)}
-            autoFocus={autoFocus}
-            {...(info.type == AutoFormValueType.string ? info.inputProps : {})}
-          />
-        );
+        if (info.type === AutoFormValueType.string) {
+          const { inputProps = {}, ...restInfo } = info;
+          return name && control ? (
+            <TextFormField
+              {...restInfo}
+              name={name}
+              control={control}
+              autoFocus={autoFocus}
+              {...inputProps}
+            />
+          ) : (
+            <TextFormItem
+              {...restInfo}
+              value={value}
+              onChange={(e) => setValue(e?.target.value)}
+              autoFocus={autoFocus}
+              {...inputProps}
+            />
+          );
+        }
     }
   }
 

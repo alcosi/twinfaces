@@ -1,7 +1,7 @@
-import { Comment_DETAILED } from "@/entities/comment";
+import { Comment } from "@/entities/comment";
 import { Permission } from "@/entities/permission";
-import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
-import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
+import { TwinClassField } from "@/entities/twin-class-field";
+import { TwinFlowTransition } from "@/entities/twin-flow-transition";
 import { Twin } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { components, operations } from "@/shared/api/generated/schema";
@@ -10,11 +10,11 @@ export type Attachment = components["schemas"]["AttachmentV1"];
 export type Attachment_DETAILED = Required<
   Attachment & {
     twin: Twin;
-    twinClassField: TwinClassField_DETAILED;
-    twinflowTransition: TwinFlowTransition_DETAILED;
+    twinClassField: TwinClassField;
+    twinflowTransition: TwinFlowTransition;
     viewPermission: Permission;
     authorUser: User;
-    comment: Comment_DETAILED;
+    comment: Comment;
   }
 >;
 

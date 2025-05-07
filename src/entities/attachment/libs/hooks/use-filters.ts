@@ -46,8 +46,6 @@ export function useAttachmentFilters({
     externalIdLikeList: {
       type: AutoFormValueType.tag,
       label: "External Id",
-      schema: z.string().uuid("Please enter a valid UUID"),
-      placeholder: "Enter UUID",
     },
     twinflowTransitionIdList: {
       type: AutoFormValueType.combobox,
