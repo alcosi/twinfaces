@@ -16,3 +16,5 @@ export type SearchParams<TFilters> = {
   pagination?: PaginationState;
   filters?: TFilters;
 };
+
+export type DataTimeRangeV1 = components["schemas"]["DataTimeRangeV1"];

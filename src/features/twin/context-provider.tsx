@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useEffect, useState } from "react";
 
 import { useTwinFetchByIdV2 } from "@/entities/twin";

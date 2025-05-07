@@ -3,6 +3,7 @@ export * from "./pipeline-steps";
 export * from "./twin-class-fields";
 export * from "./twin-class-statuses";
 export * from "./twins";
+export * from "./attachments";
 export * from "./factory-multipliers";
 export * from "./factory-branches";
 export * from "./factory-pipelines";

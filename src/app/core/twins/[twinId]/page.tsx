@@ -1,3 +1,4 @@
+import { TwinContextProvider } from "@/features/twin";
 import { TwinScreen } from "@/screens/twin";
 
 type Props = {
@@ -6,6 +7,10 @@ type Props = {
   };
 };
 
-export default function TwinLayout({ params }: Props) {
-  return <TwinScreen {...params} />;
+export default function Page({ params: { twinId } }: Props) {
+  return (
+    <TwinContextProvider twinId={twinId}>
+      <TwinScreen />
+    </TwinContextProvider>
+  );
 }

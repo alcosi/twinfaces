@@ -6,7 +6,7 @@ import {
   FieldDescriptorText,
   StaticTwinFieldKey,
 } from "@/entities/twin";
-import { Twin } from "@/entities/twin/server";
+import { Twin_HYDRATED } from "@/entities/twin/server";
 
 type FieldDescriptor =
   | typeof FieldDescriptorText
@@ -16,5 +16,5 @@ type FieldDescriptor =
 export type StaticTwinFieldMeta = {
   key: StaticTwinFieldKey;
   descriptor?: FieldDescriptor;
-  renderPreview?: (twin: Twin) => ReactNode;
+  renderPreview?: (twin: Twin_HYDRATED) => ReactNode;
 };

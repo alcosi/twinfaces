@@ -1,7 +1,6 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { wrapWithPercent } from "@/shared/libs";
 
 import {
   TransitionAliasFilters,
@@ -39,7 +38,6 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
         },
       },
       body: {
-        aliasLikeList: search ? [wrapWithPercent(search)] : undefined,
         ...filters,
       },
     });

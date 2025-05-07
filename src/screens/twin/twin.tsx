@@ -3,22 +3,19 @@
 import { useContext, useEffect } from "react";
 
 import { useBreadcrumbs } from "@/features/breadcrumb";
-import { TwinContext, TwinContextProvider } from "@/features/twin";
+import { TwinContext } from "@/features/twin";
 import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinsTable } from "@/widgets/tables";
 
 import {
+  TwinAttachments,
   TwinComments,
   TwinFields,
   TwinGeneral,
   TwinHistory,
   TwinLinks,
 } from "./views";
-
-type Props = {
-  twinId: string;
-};
 
 const DEFAULT_TABS = [
   {
@@ -42,22 +39,19 @@ const DEFAULT_TABS = [
     content: <TwinComments />,
   },
   {
+    key: "attachments",
+    label: "Attachments",
+    content: <TwinAttachments />,
+  },
+  {
     key: "history",
     label: "History",
     content: <TwinHistory />,
   },
 ];
 
-export function TwinScreen(props: Props) {
-  return (
-    <TwinContextProvider twinId={props.twinId}>
-      <TwinScreenContent {...props} />
-    </TwinContextProvider>
-  );
-}
-
-function TwinScreenContent({ twinId }: Props) {
-  const { twin } = useContext(TwinContext);
+export function TwinScreen() {
+  const { twin, twinId } = useContext(TwinContext);
   const { setBreadcrumbs } = useBreadcrumbs();
 
   const tabs: Tab[] = [
