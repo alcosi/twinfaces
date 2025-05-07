@@ -1,44 +1,48 @@
-import { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 
-import { truncateStr } from "@/shared/libs";
 import { CopyButton } from "@/shared/ui/copy-button";
 
-type Props = {
+import { cn } from "../libs";
+
+type Props = React.HTMLProps<HTMLAnchorElement> & {
   href: string;
-  variant?: "short" | "middle" | "long";
 };
 
 export function Anchor({
   href,
-  variant = "short",
+  className,
   children,
+  ...props
 }: PropsWithChildren<Props>) {
-  const displayValue = truncateStr(String(children), variant);
-
   return (
     <a
       href={href}
-      className="text-brand hover:underline"
+      className={cn(
+        "text-brand hover:underline group-hover:underline",
+        className
+      )}
       onClick={(e) => e.stopPropagation()}
+      {...props}
     >
-      {displayValue}
+      {children}
     </a>
   );
 }
 
 export function AnchorWithCopy({
   href,
-  variant = "short",
   children,
+  ...props
 }: PropsWithChildren<Props>) {
   return (
     <div className="group flex items-center">
-      <Anchor href={href} variant={variant}>
+      <Anchor href={href} {...props}>
         {children}
       </Anchor>
-      <div className="flex items-center ml-1 transform -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-        <CopyButton textToCopy={href} />
-      </div>
+      <CopyButton
+        textToCopy={href}
+        className="transform -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+      />
     </div>
   );
 }

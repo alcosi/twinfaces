@@ -40,17 +40,15 @@ export function AttachmentGeneral() {
         </TableRow>
 
         <TableRow>
-          <TableCell>Link</TableCell>
+          <TableCell>Title</TableCell>
           <TableCell>
-            <AnchorWithCopy href={attachment.storageLink} variant={"middle"}>
-              {attachment.storageLink}
+            <AnchorWithCopy
+              href={attachment.storageLink}
+              className="max-w-lg truncate"
+            >
+              {attachment.title}
             </AnchorWithCopy>
           </TableCell>
-        </TableRow>
-
-        <TableRow>
-          <TableCell>Title</TableCell>
-          <TableCell>{attachment.title}</TableCell>
         </TableRow>
 
         <TableRow>

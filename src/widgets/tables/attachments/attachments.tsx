@@ -38,7 +38,6 @@ const colDefs: Record<
     | "id"
     | "twinId"
     | "externalId"
-    | "storageLink"
     | "title"
     | "description"
     | "twinClassFieldId"
@@ -62,7 +61,7 @@ const colDefs: Record<
     header: "Twin",
     cell: ({ row: { original } }) =>
       original.twin && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinResourceLink data={original.twin} withTooltip />
         </div>
       ),
@@ -75,20 +74,19 @@ const colDefs: Record<
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
 
-  storageLink: {
-    id: "storageLink",
-    accessorKey: "storageLink",
-    header: "Link",
-    cell: (data) => {
-      const link = data.getValue<string>();
-      return <AnchorWithCopy href={link}>{link}</AnchorWithCopy>;
-    },
-  },
-
   title: {
     id: "title",
     accessorKey: "title",
     header: "Title",
+    cell: ({ row: { original } }) => {
+      return (
+        <div className="max-w-48">
+          <AnchorWithCopy href={original.storageLink} className="truncate">
+            {original.title}
+          </AnchorWithCopy>
+        </div>
+      );
+    },
   },
 
   description: {
@@ -103,7 +101,7 @@ const colDefs: Record<
     header: "Field",
     cell: ({ row: { original } }) =>
       original.twinClassField && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassFieldResourceLink
             data={original.twinClassField}
             withTooltip
@@ -118,7 +116,7 @@ const colDefs: Record<
     header: "Transition",
     cell: ({ row: { original } }) =>
       original.twinflowTransition && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinFlowTransitionResourceLink
             data={original.twinflowTransition}
             twinClassId={original.twin?.twinClassId!}
@@ -135,7 +133,7 @@ const colDefs: Record<
     header: "Comment",
     cell: ({ row: { original } }) =>
       original.comment && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <CommentResourceLink data={original.comment} withTooltip />
         </div>
       ),
@@ -147,7 +145,7 @@ const colDefs: Record<
     header: "View Permission",
     cell: ({ row: { original } }) =>
       original.viewPermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink data={original.viewPermission} withTooltip />
         </div>
       ),
@@ -159,7 +157,7 @@ const colDefs: Record<
     header: "Author",
     cell: ({ row: { original } }) =>
       original.authorUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink data={original.authorUser} withTooltip />
         </div>
       ),
@@ -240,10 +238,9 @@ export function AttachmentsTable({
       ref={tableRef}
       columns={[
         colDefs.id,
+        colDefs.title,
         ...(isFalsy(baseTwinId) ? [colDefs.twinId] : []),
         colDefs.externalId,
-        colDefs.storageLink,
-        colDefs.title,
         colDefs.description,
         colDefs.twinClassFieldId,
         colDefs.twinflowTransitionId,
@@ -263,10 +260,9 @@ export function AttachmentsTable({
       }}
       defaultVisibleColumns={[
         colDefs.id,
+        colDefs.title,
         ...(isFalsy(baseTwinId) ? [colDefs.twinId] : []),
         colDefs.externalId,
-        colDefs.storageLink,
-        colDefs.title,
         colDefs.description,
         colDefs.twinClassFieldId,
         colDefs.twinflowTransitionId,

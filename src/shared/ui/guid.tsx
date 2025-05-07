@@ -34,18 +34,16 @@ export function GuidWithCopy({
   if (!value) return null;
 
   return (
-    <div className="relative inline-flex items-center">
-      <div className="group flex items-center">
-        <Guid value={value} disableTooltip={disableTooltip} variant={variant} />
-        <div
-          className={cn(
-            "flex items-center",
-            "ml-1 transform -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-          )}
-        >
-          <CopyButton textToCopy={value} disableTooltip={disableTooltip} />
-        </div>
-      </div>
+    <div className="group flex items-center">
+      <Guid value={value} disableTooltip={disableTooltip} variant={variant} />
+      <CopyButton
+        textToCopy={value}
+        disableTooltip={disableTooltip}
+        className={cn(
+          "flex items-center",
+          "transform -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+        )}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 export * from "./accordion";
 export * from "./alert";
+export * from "./anchor";
 export * from "./avatar";
 export * from "./badge";
 export * from "./breadcrumb";
@@ -29,4 +30,3 @@ export * from "./table";
 export * from "./tabs";
 export * from "./theme-image";
 export * from "./tooltip";
-export * from "./anchor";
