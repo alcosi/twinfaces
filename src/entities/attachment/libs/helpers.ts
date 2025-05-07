@@ -17,7 +17,7 @@ export const hydrateAttachmentFromMap = (
   ) as Attachment_DETAILED;
 
   if (dto.twinId && relatedObjects?.twinMap) {
-    hydrated.twin = relatedObjects.twinMap[dto.twinId] as Twin;
+    hydrated.twin = relatedObjects.twinMap[dto.twinId]!;
   }
 
   if (dto.twinClassFieldId && relatedObjects?.twinClassFieldMap) {

@@ -1,12 +1,11 @@
 import { DataListOptionV1 } from "@/entities/datalist-option";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
-import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 
-import { Twin } from "../api";
+import { Twin, Twin_HYDRATED } from "../api";
 
-export function hydrateTwinFromMap<T extends Twin>(
+export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
   dto: Twin,
   relatedObjects?: RelatedObjects
 ): T {
@@ -25,11 +24,11 @@ export function hydrateTwinFromMap<T extends Twin>(
   }
 
   if (dto.authorUserId && relatedObjects.userMap) {
-    hydrated.authorUser = relatedObjects.userMap[dto.authorUserId] as User;
+    hydrated.authorUser = relatedObjects.userMap[dto.authorUserId];
   }
 
   if (dto.assignerUserId && relatedObjects.userMap) {
-    hydrated.assignerUser = relatedObjects.userMap[dto.assignerUserId] as User;
+    hydrated.assignerUser = relatedObjects.userMap[dto.assignerUserId];
   }
 
   if (dto.ownerUserId && relatedObjects.userMap) {
