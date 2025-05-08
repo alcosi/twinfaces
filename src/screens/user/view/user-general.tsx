@@ -22,7 +22,7 @@ export function UserGeneral() {
     value: user.user?.fullName,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",
@@ -43,7 +43,7 @@ export function UserGeneral() {
     value: user.user?.email,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",

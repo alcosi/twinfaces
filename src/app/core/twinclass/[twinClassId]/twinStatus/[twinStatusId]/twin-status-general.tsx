@@ -56,7 +56,7 @@ export function TwinStatusGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -73,7 +73,7 @@ export function TwinStatusGeneral() {
     value: twinStatus.name,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",
@@ -91,7 +91,7 @@ export function TwinStatusGeneral() {
     value: twinStatus.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",

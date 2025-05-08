@@ -90,7 +90,7 @@ export function TwinClassGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -107,7 +107,7 @@ export function TwinClassGeneral() {
     value: twinClass.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",

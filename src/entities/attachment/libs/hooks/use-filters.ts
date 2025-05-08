@@ -86,12 +86,12 @@ export function useAttachmentFilters({
     createdAtFrom: {
       type: AutoFormValueType.string,
       label: "Created from",
-      inputProps: { type: "date" },
+      input_props: { type: "date" },
     },
     createdAtTo: {
       type: AutoFormValueType.string,
       label: "Created to",
-      inputProps: { type: "date" },
+      input_props: { type: "date" },
     },
   };
 

@@ -59,7 +59,7 @@ export interface AutoFormCommonInfo {
 
 export interface AutoFormTextValueInfo {
   type: AutoFormValueType.string;
-  inputProps?: InputProps;
+  input_props?: InputProps;
 }
 
 export interface AutoFormSimpleValueInfo {
@@ -172,52 +172,63 @@ export function AutoField({
         );
 
       case AutoFormValueType.twinField:
-        if (info.twinClassId || info.twinId) {
-          return name && control ? (
-            <TwinFieldFormField
-              name={name}
-              control={control}
-              label={info.label}
-              description={info.description}
-              {...info}
-            />
-          ) : (
-            <TwinFieldFormItem
-              fieldValue={value}
-              label={info.label}
-              description={info.description}
-              {...info}
-            />
-          );
-        }
-        break;
+        return name && control ? (
+          <TwinFieldFormField
+            name={name}
+            control={control}
+            label={info.label}
+            description={info.description}
+            {...info}
+          />
+        ) : (
+          <TwinFieldFormItem
+            fieldValue={value}
+            label={info.label}
+            description={info.description}
+            {...info}
+          />
+        );
 
       case AutoFormValueType.numberRange:
         return name && control ? (
           <NumberRangeFormField name={name} control={control} {...info} />
         ) : null;
 
+      case AutoFormValueType.string:
+        return name && control ? (
+          <TextFormField
+            {...info}
+            name={name}
+            control={control}
+            autoFocus={autoFocus}
+            {...info.input_props}
+          />
+        ) : (
+          <TextFormItem
+            {...info}
+            value={value}
+            onChange={(e) => setValue(e?.target.value)}
+            autoFocus={autoFocus}
+            {...info.input_props}
+          />
+        );
+
       default:
-        if (info.type === AutoFormValueType.string) {
-          const { inputProps = {}, ...restInfo } = info;
-          return name && control ? (
-            <TextFormField
-              {...restInfo}
-              name={name}
-              control={control}
-              autoFocus={autoFocus}
-              {...inputProps}
-            />
-          ) : (
-            <TextFormItem
-              {...restInfo}
-              value={value}
-              onChange={(e) => setValue(e?.target.value)}
-              autoFocus={autoFocus}
-              {...inputProps}
-            />
-          );
-        }
+        return name && control ? (
+          <TextFormField
+            {...info}
+            name={name}
+            control={control}
+            autoFocus={autoFocus}
+          />
+        ) : (
+          <TextFormItem
+            {...info}
+            value={value}
+            onChange={(e) => setValue(e?.target.value)}
+            autoFocus={autoFocus}
+          />
+        );
     }
   }
 

@@ -47,7 +47,7 @@ export function DatalistOptionGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -80,7 +80,7 @@ export function DatalistOptionGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },

@@ -110,7 +110,7 @@ export function TwinGeneral() {
     value: twin.externalId,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",
