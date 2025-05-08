@@ -46,8 +46,6 @@ export function useAttachmentFilters({
     externalIdLikeList: {
       type: AutoFormValueType.tag,
       label: "External Id",
-      schema: z.string().uuid("Please enter a valid UUID"),
-      placeholder: "Enter UUID",
     },
     twinflowTransitionIdList: {
       type: AutoFormValueType.combobox,
@@ -88,12 +86,12 @@ export function useAttachmentFilters({
     createdAtFrom: {
       type: AutoFormValueType.string,
       label: "Created from",
-      inputProps: { type: "date" },
+      input_props: { type: "date" },
     },
     createdAtTo: {
       type: AutoFormValueType.string,
       label: "Created to",
-      inputProps: { type: "date" },
+      input_props: { type: "date" },
     },
   };
 

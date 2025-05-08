@@ -14,7 +14,6 @@ export const useAttachmentSearchV1 = () => {
 
   const searchAttachments = useCallback(
     async ({
-      search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
     }: {
@@ -41,7 +40,9 @@ export const useAttachmentSearchV1 = () => {
           pagination: data.pagination ?? {},
         };
       } catch (error) {
-        throw new Error("An error occurred while fetching attachments");
+        throw new Error(
+          "An error occurred while fetching attachments: " + error
+        );
       }
     },
     [api]

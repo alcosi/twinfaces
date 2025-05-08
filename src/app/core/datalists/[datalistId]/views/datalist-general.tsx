@@ -74,7 +74,7 @@ export function DatalistGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -92,7 +92,7 @@ export function DatalistGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -113,7 +113,7 @@ export function DatalistGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -146,7 +146,7 @@ export function DatalistGeneral() {
       valueInfo: {
         type: AutoFormValueType.string,
         label: "",
-        inputProps: {
+        input_props: {
           fieldSize: "sm",
         },
       },
@@ -188,7 +188,7 @@ export function DatalistGeneral() {
       accessorKey: "key",
       cell: ({ row }) => {
         return (
-          <div className="relative ">
+          <div className="relative">
             <div className="absolute top-[-15px] left-0 z-10 w-full">
               <InPlaceEdit {...buildAttributeSetting(row.index + 1, "key")} />
             </div>

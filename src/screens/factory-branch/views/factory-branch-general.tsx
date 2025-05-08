@@ -120,7 +120,7 @@ export function FactoryBranchGeneral() {
     value: factoryBranch.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",

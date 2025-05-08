@@ -52,7 +52,7 @@ export function TwinFieldGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -69,7 +69,7 @@ export function TwinFieldGeneral() {
     value: twinField.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",

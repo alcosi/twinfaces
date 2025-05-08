@@ -59,7 +59,7 @@ export interface AutoFormCommonInfo {
 
 export interface AutoFormTextValueInfo {
   type: AutoFormValueType.string;
-  inputProps?: InputProps;
+  input_props?: InputProps;
 }
 
 export interface AutoFormSimpleValueInfo {
@@ -172,30 +172,46 @@ export function AutoField({
         );
 
       case AutoFormValueType.twinField:
-        if (info.twinClassId || info.twinId) {
-          return name && control ? (
-            <TwinFieldFormField
-              name={name}
-              control={control}
-              label={info.label}
-              description={info.description}
-              {...info}
-            />
-          ) : (
-            <TwinFieldFormItem
-              fieldValue={value}
-              label={info.label}
-              description={info.description}
-              {...info}
-            />
-          );
-        }
-        break;
+        return name && control ? (
+          <TwinFieldFormField
+            name={name}
+            control={control}
+            label={info.label}
+            description={info.description}
+            {...info}
+          />
+        ) : (
+          <TwinFieldFormItem
+            fieldValue={value}
+            label={info.label}
+            description={info.description}
+            {...info}
+          />
+        );
 
       case AutoFormValueType.numberRange:
         return name && control ? (
           <NumberRangeFormField name={name} control={control} {...info} />
         ) : null;
+
+      case AutoFormValueType.string:
+        return name && control ? (
+          <TextFormField
+            {...info}
+            name={name}
+            control={control}
+            autoFocus={autoFocus}
+            {...info.input_props}
+          />
+        ) : (
+          <TextFormItem
+            {...info}
+            value={value}
+            onChange={(e) => setValue(e?.target.value)}
+            autoFocus={autoFocus}
+            {...info.input_props}
+          />
+        );
 
       default:
         return name && control ? (
@@ -204,7 +220,6 @@ export function AutoField({
             name={name}
             control={control}
             autoFocus={autoFocus}
-            {...(info.type == AutoFormValueType.string ? info.inputProps : {})}
           />
         ) : (
           <TextFormItem
@@ -212,7 +227,6 @@ export function AutoField({
             value={value}
             onChange={(e) => setValue(e?.target.value)}
             autoFocus={autoFocus}
-            {...(info.type == AutoFormValueType.string ? info.inputProps : {})}
           />
         );
     }

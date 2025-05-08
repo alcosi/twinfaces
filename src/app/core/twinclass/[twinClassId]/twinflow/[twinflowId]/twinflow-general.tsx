@@ -48,7 +48,7 @@ export function TwinflowGeneral({
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -65,7 +65,7 @@ export function TwinflowGeneral({
     value: twinflow.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",

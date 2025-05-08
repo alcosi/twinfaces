@@ -1,5 +1,8 @@
 import { useContext } from "react";
 
+import { Comment_DETAILED } from "@/entities/comment";
+import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
+import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
 import { AttachmentContext } from "@/features/attachment";
 import { CommentResourceLink } from "@/features/comment/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
@@ -61,7 +64,7 @@ export function AttachmentGeneral() {
           <TableCell>
             {attachment.twinClassField && (
               <TwinClassFieldResourceLink
-                data={attachment.twinClassField}
+                data={attachment.twinClassField as TwinClassField_DETAILED}
                 withTooltip
               />
             )}
@@ -73,7 +76,9 @@ export function AttachmentGeneral() {
           <TableCell>
             {attachment.twinflowTransition && (
               <TwinFlowTransitionResourceLink
-                data={attachment.twinflowTransition}
+                data={
+                  attachment.twinflowTransition as TwinFlowTransition_DETAILED
+                }
                 twinClassId={attachment.twin.twinClassId!}
                 twinFlowId={attachment.twinflowTransitionId!}
                 withTooltip
@@ -86,7 +91,9 @@ export function AttachmentGeneral() {
           <TableCell>Comment</TableCell>
           <TableCell>
             {attachment.comment && (
-              <CommentResourceLink data={attachment.comment} />
+              <CommentResourceLink
+                data={attachment.comment as Comment_DETAILED}
+              />
             )}
           </TableCell>
         </TableRow>

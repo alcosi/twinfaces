@@ -204,7 +204,7 @@ export function FactoryPipelineGeneral() {
     value: pipeline.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",

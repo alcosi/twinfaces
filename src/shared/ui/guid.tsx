@@ -41,7 +41,7 @@ export function GuidWithCopy({
         disableTooltip={disableTooltip}
         className={cn(
           "flex items-center",
-          "transform -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+          "-translate-x-1 transform opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
         )}
       />
     </div>

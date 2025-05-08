@@ -167,7 +167,7 @@ export function FactoryEraserGeneral() {
     value: eraser.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",
