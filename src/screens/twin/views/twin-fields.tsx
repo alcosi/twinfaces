@@ -78,6 +78,7 @@ export function TwinFields() {
                     : fieldValue.id!,
                 }).then(tableRef.current?.refresh)
               }
+              className="hover:bg-transparent"
             />
           </div>
         );

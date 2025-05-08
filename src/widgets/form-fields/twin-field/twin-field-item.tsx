@@ -18,6 +18,7 @@ import { DomainUser_DETAILED, useUserSelectAdapter } from "@/entities/user";
 import { isPopulatedArray } from "@/shared/libs";
 
 import { TwinFieldSelectLinkLongFormItem } from "./components";
+import { TwinFieldTextFormItem } from "./twin-field-text-form-item";
 
 export type TwinFieldFormItemProps = {
   descriptor?: TwinFieldUI["descriptor"];
@@ -47,6 +48,10 @@ export function TwinFieldFormItem({
     return onChange?.(event.target.value);
   }
 
+  const handleMarkdownChange = (event: { target: { markdown: string } }) => {
+    onChange?.(event.target.markdown);
+  };
+
   function handleOnTwinSelect(twins?: Twin[]) {
     if (isPopulatedArray<Twin>(twins)) {
       return onChange?.(twins[0].id!);
@@ -68,7 +73,14 @@ export function TwinFieldFormItem({
   function renderByType() {
     switch (descriptor?.fieldType) {
       case TwinFieldType.textV1:
-        return <TextFormItem onChange={handleTextChange} {...props} />;
+        return (
+          <TwinFieldTextFormItem
+            descriptor={descriptor}
+            onTextChange={handleTextChange}
+            onMarkdownChange={handleMarkdownChange}
+            {...props}
+          />
+        );
       case TwinFieldType.urlV1:
         return (
           <TextFormItem type="url" onChange={handleTextChange} {...props} />

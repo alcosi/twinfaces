@@ -3,6 +3,7 @@ import { ZodType, z } from "zod";
 import { DataListOptionV3 } from "@/entities/datalist-option";
 import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
+import { MarkdownPreview } from "@/features/markdown";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 
@@ -45,6 +46,14 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
     case TwinFieldType.selectUserLongV1:
       return <UserResourceLink data={{ id: twinField.value as string }} />;
 
+    case TwinFieldType.textV1:
+      switch (twinField.descriptor.editorType) {
+        case "MARKDOWN_GITHUB":
+        case "MARKDOWN_BASIC":
+          return <MarkdownPreview markdown={twinField.value as string} />;
+        default:
+          return twinField.value as string;
+      }
     default:
       return twinField.value as string;
   }

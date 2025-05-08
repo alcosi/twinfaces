@@ -1,5 +1,6 @@
 import { DataListOptionV3 } from "@/entities/datalist-option";
 import { TwinClassField } from "@/entities/twin-class-field";
+import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type TwinFieldUI = RequireFields<
@@ -8,6 +9,9 @@ export type TwinFieldUI = RequireFields<
 > & {
   value: string | DataListOptionV3;
 };
+
+export type TwinClassFieldDescriptorTextV1 =
+  components["schemas"]["TwinClassFieldDescriptorTextV1"];
 
 export enum TwinFieldType {
   // TWINFACES-435

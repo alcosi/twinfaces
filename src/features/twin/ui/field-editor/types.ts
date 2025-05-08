@@ -9,7 +9,7 @@ import {
 import { Twin_HYDRATED } from "@/entities/twin/server";
 
 type FieldDescriptor =
-  | typeof FieldDescriptorText
+  | (typeof FieldDescriptorText)[keyof typeof FieldDescriptorText]
   | typeof FieldDescriptorSelectUserV1
   | typeof FieldDescriptorSelectSharedInHeadV1;
 
@@ -17,4 +17,5 @@ export type StaticTwinFieldMeta = {
   key: StaticTwinFieldKey;
   descriptor?: FieldDescriptor;
   renderPreview?: (twin: Twin_HYDRATED) => ReactNode;
+  className?: string;
 };

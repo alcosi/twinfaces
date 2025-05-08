@@ -45,8 +45,21 @@ export const STATIC_TWIN_FIELD_KEYS = [
 ] as const;
 
 export const FieldDescriptorText = {
-  fieldType: "textV1",
-  regExp: ".*",
+  PLAIN: {
+    fieldType: "textV1",
+    editorType: "PLAIN",
+    regExp: ".*",
+  },
+  MARKDOWN_GITHUB: {
+    fieldType: "textV1",
+    editorType: "MARKDOWN_GITHUB",
+    regExp: "[\\s\\S]*",
+  },
+  MARKDOWN_BASIC: {
+    fieldType: "textV1",
+    editorType: "MARKDOWN_BASIC",
+    regExp: "[\\s\\S]*",
+  },
 } as const;
 
 export const FieldDescriptorSelectUserV1 = {

@@ -193,7 +193,7 @@ export function TwinGeneral() {
                   id: STATIC_TWIN_FIELD_NAME_TO_ID_MAP["name"],
                   key: "name",
                   value: twin.name,
-                  descriptor: FieldDescriptorText,
+                  descriptor: FieldDescriptorText.PLAIN,
                 }}
                 schema={z.string().min(3)}
                 onSuccess={refresh}
@@ -212,10 +212,11 @@ export function TwinGeneral() {
                   id: STATIC_TWIN_FIELD_NAME_TO_ID_MAP["description"],
                   key: "description",
                   value: twin.description ?? "",
-                  descriptor: FieldDescriptorText,
+                  descriptor: FieldDescriptorText.MARKDOWN_GITHUB,
                 }}
                 schema={z.string().min(3)}
                 onSuccess={refresh}
+                className="hover:bg-transparent"
               />
             </TableCell>
           </TableRow>

@@ -2354,14 +2354,20 @@ export interface components {
     };
     TwinClassFieldDescriptorTextV1: {
       fieldType: "textV1";
-    } & Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+    } & Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & ({
       fieldType?: string;
       /**
        * @description Some validation regexp
        * @example .*
        */
       regExp?: string;
-    };
+      /**
+       * @description Type of editor
+       * @example PLAIN
+       * @enum {string}
+       */
+      editorType?: "PLAIN" | "MARKDOWN_GITHUB" | "MARKDOWN_BASIC";
+    });
     TwinClassFieldDescriptorUrlV1: {
       fieldType: "urlV1";
     } & Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
@@ -12694,7 +12700,6 @@ export interface components {
       /**
        * @deprecated
        * @description tab layout
-       * @enum {string}
        */
       layout?: "ONE_COLUMN" | "TWO_COLUMNS" | "THREE_COLUMNS";
       /** @description tab widgets list */
@@ -12873,7 +12878,6 @@ export interface components {
       /**
        * @deprecated
        * @description page layout
-       * @enum {string}
        */
       layout?: "ONE_COLUMN" | "TWO_COLUMNS" | "THREE_COLUMNS";
       /** @description page widgets list */
