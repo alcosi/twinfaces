@@ -19,6 +19,18 @@ export function DatalistResourceTooltip({ data, link }: Props) {
       />
 
       <ResourceLinkTooltip.Main>
+        {data.description && (
+          <ResourceLinkTooltip.Item title="Description">
+            {data.description}
+          </ResourceLinkTooltip.Item>
+        )}
+
+        {data.key && (
+          <ResourceLinkTooltip.Item title="Key">
+            {data.key}
+          </ResourceLinkTooltip.Item>
+        )}
+
         {data.updatedAt && (
           <ResourceLinkTooltip.Item title="Updated at">
             {new Date(data.updatedAt).toLocaleDateString()}
