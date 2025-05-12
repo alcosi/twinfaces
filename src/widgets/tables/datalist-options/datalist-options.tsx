@@ -60,7 +60,9 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
         pagination,
         filters: {
           ..._filters,
-          dataListIdList: toArrayOfString(toArray(datalist?.id), "id"),
+          dataListIdList: datalist
+            ? toArrayOfString(toArray(datalist?.id), "id")
+            : _filters.dataListIdList,
         },
       });
 
@@ -104,7 +106,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
                 header: "Datalist",
                 cell: ({ row }: { row: { original: DataListOptionV3 } }) =>
                   row.original.dataList ? (
-                    <div className="max-w-48 inline-flex">
+                    <div className="inline-flex max-w-48">
                       <DatalistResourceLink
                         data={row.original.dataList}
                         withTooltip
@@ -121,7 +123,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
           header: "Name",
           cell: ({ row: { original } }) =>
             original.dataList ? (
-              <div className="max-w-48 inline-flex">
+              <div className="inline-flex max-w-48">
                 <DatalistOptionResourceLink data={original} withTooltip />
               </div>
             ) : null,
