@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 import { toast } from "sonner";
@@ -43,18 +42,9 @@ export function TransitionPerformButton({
       key={transitionId}
       onClick={handleClick}
       loading={loading}
+      icon={icon}
       {...rest}
     >
-      {icon && (
-        <Image
-          src={icon}
-          alt="icon"
-          width={16}
-          height={16}
-          className="mr-2 dark:invert"
-        />
-      )}
-
       {children}
     </Button>
   );

@@ -1,5 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
+import Image from "next/image";
 import * as React from "react";
 
 import { cn } from "@/shared/libs";
@@ -43,11 +44,21 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
+  icon?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, asChild = false, children, loading, ...props },
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      children,
+      loading,
+      icon,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
@@ -59,6 +70,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {loading && <LoadingSpinner className={"mr-1"} />}
+        {icon && (
+          <Image
+            src={icon}
+            alt="icon"
+            width={16}
+            height={16}
+            className="mr-2 dark:invert"
+          />
+        )}
         {children}
       </Comp>
     );

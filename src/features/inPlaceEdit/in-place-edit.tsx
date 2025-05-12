@@ -95,7 +95,7 @@ export function InPlaceEdit<T>({
       <div
         onClick={handleEdit}
         className={cn(
-          "hover:bg-muted/50 flex min-h-10 cursor-pointer flex-row items-center rounded-xs px-3",
+          "hover:bg-muted/50 flex min-h-10 cursor-pointer flex-row items-center rounded-xs",
           className
         )}
       >
