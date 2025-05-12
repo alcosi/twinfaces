@@ -24,7 +24,7 @@ import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import {
-  formatToTwinfaceDate,
+  formatIntlDate,
   isFalsy,
   isTruthy,
   toArray,
@@ -64,7 +64,7 @@ const colDefs: Record<
     header: "Twinflow",
     cell: ({ row: { original } }) =>
       original.twinflow && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinFlowResourceLink
             data={original.twinflow as TwinFlow_DETAILED}
             withTooltip
@@ -91,7 +91,7 @@ const colDefs: Record<
     header: "From",
     cell: ({ row: { original } }) =>
       original.srcTwinStatus && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassStatusResourceLink
             data={original.srcTwinStatus}
             twinClassId={original.twinflow?.twinClassId!}
@@ -107,7 +107,7 @@ const colDefs: Record<
     header: "To",
     cell: ({ row: { original } }) =>
       original.dstTwinStatus && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassStatusResourceLink
             data={original.dstTwinStatus}
             twinClassId={original.twinflow?.twinClassId!}
@@ -122,7 +122,7 @@ const colDefs: Record<
     header: "Permission",
     cell: ({ row: { original } }) =>
       original.permission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink data={original.permission} withTooltip />
         </div>
       ),
@@ -134,7 +134,7 @@ const colDefs: Record<
     header: "Factory",
     cell: ({ row: { original } }) =>
       original.inbuiltTwinFactory && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryResourceLink data={original.inbuiltTwinFactory} withTooltip />
         </div>
       ),
@@ -151,7 +151,8 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 };
 
@@ -252,7 +253,7 @@ export function TwinFlowTransitionsTable({
   return (
     <CrudDataTable
       title="Transitions"
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
+      className="mx-auto mb-10 flex-col p-8 lg:flex lg:justify-center"
       columns={[
         colDefs.id,
         colDefs.twinflowId,

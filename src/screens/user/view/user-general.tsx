@@ -10,7 +10,7 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { UserContext } from "@/features/user";
-import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
+import { formatIntlDate, isPopulatedString } from "@/shared/libs";
 import { Avatar, GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
 
 export function UserGeneral() {
@@ -90,7 +90,9 @@ export function UserGeneral() {
 
         <TableRow>
           <TableCell>Created at</TableCell>
-          <TableCell>{formatToTwinfaceDate(user.createdAt!)}</TableCell>
+          <TableCell>
+            {formatIntlDate(user.createdAt!, "datetime-local")}
+          </TableCell>
         </TableRow>
 
         <TableRow>

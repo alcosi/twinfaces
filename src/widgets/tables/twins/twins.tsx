@@ -23,11 +23,7 @@ import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import {
-  formatToTwinfaceDate,
-  isPopulatedArray,
-  isUndefined,
-} from "@/shared/libs";
+import { formatIntlDate, isPopulatedArray, isUndefined } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import {
@@ -108,7 +104,7 @@ export function TwinsTable({
       header: "Twin class",
       cell: ({ row: { original } }) =>
         original.twinClass && (
-          <div className="max-w-48 inline-flex">
+          <div className="inline-flex max-w-48">
             <TwinClassResourceLink
               data={original.twinClass as TwinClass_DETAILED}
               withTooltip
@@ -134,7 +130,7 @@ export function TwinsTable({
       accessorKey: "statusId",
       header: "Status",
       cell: ({ row: { original } }) => (
-        <div className="max-w-48 inline-flex items-center gap-2">
+        <div className="inline-flex max-w-48 items-center gap-2">
           {original.status && (
             <TwinClassStatusResourceLink
               data={original.status}
@@ -164,7 +160,7 @@ export function TwinsTable({
       header: "Author",
       cell: ({ row: { original } }) =>
         original.authorUser && (
-          <div className="max-w-48 inline-flex">
+          <div className="inline-flex max-w-48">
             <UserResourceLink data={original.authorUser as User} withTooltip />
           </div>
         ),
@@ -176,7 +172,7 @@ export function TwinsTable({
       header: "Assignee",
       cell: ({ row: { original } }) =>
         original.assignerUser && (
-          <div className="max-w-48 inline-flex">
+          <div className="inline-flex max-w-48">
             <UserResourceLink
               data={original.assignerUser as User}
               withTooltip
@@ -191,7 +187,7 @@ export function TwinsTable({
       header: "Head",
       cell: ({ row: { original } }) =>
         original.headTwinId && original.headTwin ? (
-          <div className="max-w-48 inline-flex">
+          <div className="inline-flex max-w-48">
             <TwinResourceLink data={original.headTwin} withTooltip />
           </div>
         ) : null,
@@ -203,7 +199,7 @@ export function TwinsTable({
       header: "Tags",
       cell: ({ row: { original } }) =>
         isPopulatedArray(original.tags) && (
-          <div className="max-w-48 inline-flex flex-wrap gap-2">
+          <div className="inline-flex max-w-48 flex-wrap gap-2">
             {original.tags.map((tag) => (
               <DatalistOptionResourceLink key={tag.id} data={tag} />
             ))}
@@ -217,7 +213,7 @@ export function TwinsTable({
       header: "Markers",
       cell: ({ row: { original } }) =>
         original.markerIdList && original.markers ? (
-          <div className="max-w-48 inline-flex">
+          <div className="inline-flex max-w-48">
             <DatalistOptionResourceLink
               data={{
                 ...original.markers,
@@ -234,7 +230,8 @@ export function TwinsTable({
       accessorKey: "createdAt",
       header: "Created at",
       cell: ({ row: { original } }) =>
-        original.createdAt && formatToTwinfaceDate(original.createdAt),
+        original.createdAt &&
+        formatIntlDate(original.createdAt, "datetime-local"),
     },
   };
 

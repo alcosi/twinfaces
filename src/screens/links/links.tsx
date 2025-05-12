@@ -23,7 +23,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PlatformArea } from "@/shared/config";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { Badge, GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -63,7 +63,7 @@ const colDefs: Record<
     header: "Source Twin Class",
     cell: ({ row: { original } }) =>
       original.srcTwinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.srcTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -77,7 +77,7 @@ const colDefs: Record<
     header: "Destination Twin Class",
     cell: ({ row: { original } }) =>
       original.dstTwinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.dstTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -105,7 +105,7 @@ const colDefs: Record<
     header: "Created by User",
     cell: ({ row: { original } }) =>
       original.createdByUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink data={original.createdByUser} withTooltip />
         </div>
       ),
@@ -115,7 +115,8 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 };
 

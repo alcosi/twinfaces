@@ -6,6 +6,7 @@ import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { MarkdownPreview } from "@/features/markdown";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
+import { formatIntlDate, mapPatternToInputType } from "@/shared/libs";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI
@@ -41,7 +42,12 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
           withTooltip
         />
       );
-
+    case TwinFieldType.dateScrollV1: {
+      const inputFormatType = mapPatternToInputType(
+        twinField.descriptor.pattern!
+      );
+      return formatIntlDate(twinField.value as string, inputFormatType);
+    }
     case TwinFieldType.selectUserV1:
     case TwinFieldType.selectUserLongV1:
       return <UserResourceLink data={{ id: twinField.value as string }} />;

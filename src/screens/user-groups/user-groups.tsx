@@ -11,7 +11,7 @@ import { useBreadcrumbs } from "@/features/breadcrumb";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
@@ -54,7 +54,7 @@ const colDefs: Record<
     header: "Business account",
     cell: ({ row: { original } }) =>
       original.businessAccount && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <BusinessAccountResourceLink
             data={original.businessAccount}
             withTooltip
@@ -69,7 +69,7 @@ const colDefs: Record<
     header: "Created at",
     cell: ({ row: { original } }) =>
       original.businessAccount?.createdAt &&
-      formatToTwinfaceDate(original.businessAccount.createdAt),
+      formatIntlDate(original.businessAccount.createdAt, "datetime-local"),
   },
 };
 

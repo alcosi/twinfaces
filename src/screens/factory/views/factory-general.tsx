@@ -11,7 +11,7 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { UserResourceLink } from "@/features/user/ui";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import {
   GuidWithCopy,
   Table,
@@ -116,7 +116,9 @@ export function FactoryGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(factory.createdAt)}</TableCell>
+            <TableCell>
+              {formatIntlDate(factory.createdAt, "datetime-local")}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

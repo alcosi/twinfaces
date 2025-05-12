@@ -1,7 +1,7 @@
 import { BriefcaseBusinessIcon } from "lucide-react";
 
 import { BusinessAccount } from "@/entities/business-account";
-import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
+import { formatIntlDate, isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 
 type Props = {
@@ -23,7 +23,7 @@ export function BusinessAccountResourceTooltip({ data, link }: Props) {
       <ResourceLinkTooltip.Main>
         {data.createdAt && (
           <ResourceLinkTooltip.Item title="Created at">
-            {formatToTwinfaceDate(data.createdAt)}
+            {formatIntlDate(data.createdAt, "datetime-local")}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

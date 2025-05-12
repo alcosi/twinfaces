@@ -1,9 +1,5 @@
 import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
-import {
-  formatToTwinfaceDate,
-  isPopulatedString,
-  isUndefined,
-} from "@/shared/libs";
+import { formatIntlDate, isPopulatedString, isUndefined } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 
 import { PermissionResourceLink } from "../../../../features/permission/ui";
@@ -67,7 +63,7 @@ export function TwinFlowTransitionResourceTooltip({
 
         {data.createdAt && (
           <ResourceLinkTooltip.Item title="Created at">
-            {formatToTwinfaceDate(data.createdAt)}
+            {formatIntlDate(data.createdAt, "datetime-local")}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

@@ -15,7 +15,12 @@ import {
 import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
 import { RelatedObjects } from "@/shared/api";
-import { cn, isPopulatedString } from "@/shared/libs";
+import {
+  cn,
+  formatIntlDate,
+  isPopulatedString,
+  mapPatternToInputType,
+} from "@/shared/libs";
 
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
 import { STATIC_FIELD_MAP } from "./constants";
@@ -53,20 +58,17 @@ export function TwinFieldEditor({
   const { updateTwin } = useTwinUpdate();
   const router = useRouter();
 
-  const fieldRenderPreview = STATIC_FIELD_MAP[field.id]?.renderPreview;
+  const staticFieldRenderPreview = STATIC_FIELD_MAP[field.id]?.renderPreview;
   const staticFieldClassName = STATIC_FIELD_MAP[field.id]?.className;
 
   const hydratedTwin = hydrateTwinFromMap(twin, relatedObjects);
 
   function renderPreview() {
-    if (fieldRenderPreview) {
-      return fieldRenderPreview(hydratedTwin);
+    if (staticFieldRenderPreview) {
+      return staticFieldRenderPreview(hydratedTwin);
     }
 
-    const displayValue =
-      relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value;
-
-    return <span>{displayValue}</span>;
+    return renderDynamicFieldPreview(field, relatedObjects);
   }
 
   async function handleOnSubmit(value: string) {
@@ -115,4 +117,18 @@ export function TwinFieldEditor({
       )}
     </div>
   );
+}
+
+function renderDynamicFieldPreview(
+  field: FieldProps,
+  relatedObjects?: RelatedObjects
+): string {
+  if (field.descriptor?.fieldType === "dateScrollV1") {
+    const format = isPopulatedString(field.descriptor.pattern)
+      ? mapPatternToInputType(field.descriptor.pattern)
+      : "text";
+    return formatIntlDate(field.value, format);
+  }
+
+  return relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value;
 }

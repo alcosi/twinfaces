@@ -1,7 +1,7 @@
 import { MessageCircle } from "lucide-react";
 
 import { Comment_DETAILED } from "@/entities/comment";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 
 import { UserResourceLink } from "../../../../features/user/ui";
@@ -30,7 +30,7 @@ export const CommentResourceTooltip = ({ data, link }: Props) => {
 
         {data.createdAt && (
           <ResourceLinkTooltip.Item title="Created at">
-            {formatToTwinfaceDate(data.createdAt)}
+            {formatIntlDate(data.createdAt, "datetime-local")}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

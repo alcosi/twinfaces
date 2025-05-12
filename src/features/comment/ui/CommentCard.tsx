@@ -1,7 +1,7 @@
 import { CircleUserRound, EllipsisVertical } from "lucide-react";
 
 import { Comment_DETAILED } from "@/entities/comment";
-import { formatToTwinfaceDate, isPopulatedArray } from "@/shared/libs";
+import { formatIntlDate, isPopulatedArray } from "@/shared/libs";
 import {
   Avatar,
   Button,
@@ -35,7 +35,7 @@ export function CommentCard({ item }: CommentCardProps) {
               <UserResourceLink data={item.authorUser} withTooltip hideAvatar />
             </h2>
             <span className="text-xs text-gray-500">
-              {formatToTwinfaceDate(item.createdAt!)}
+              {formatIntlDate(item.createdAt!, "datetime-local")}
             </span>
           </div>
 

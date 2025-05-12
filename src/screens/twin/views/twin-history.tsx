@@ -8,7 +8,7 @@ import { User } from "@/entities/user";
 import { TwinContext } from "@/features/twin";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 
@@ -56,7 +56,7 @@ const colDefs: Record<
     header: "Actor",
     cell: ({ row: { original } }) =>
       original.twin?.authorUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink
             data={original.twin?.authorUser as User}
             withTooltip
@@ -70,7 +70,8 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 
   batchId: {

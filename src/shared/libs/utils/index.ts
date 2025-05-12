@@ -10,6 +10,7 @@ export * from "./env";
 export * from "./event";
 export * from "./local-storage";
 export * from "./mapping";
+export * from "./map-pattern-to-input-type";
 export * from "./safe";
 export * from "./string";
 export * from "./uuid";

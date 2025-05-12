@@ -1,5 +1,5 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { formatToTwinfaceDate, isPopulatedString } from "@/shared/libs";
+import { formatIntlDate, isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLinkTooltip } from "@/shared/ui";
 
 import { TwinClassIcon } from "../twin-class-icon";
@@ -28,7 +28,7 @@ export const TwinClassResourceTooltip = ({ data, link }: Props) => {
         {data.description && <p>{data.description}</p>}
         {data.createdAt && (
           <ResourceLinkTooltip.Item title="Created at">
-            {formatToTwinfaceDate(data.createdAt)}
+            {formatIntlDate(data.createdAt, "datetime-local")}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

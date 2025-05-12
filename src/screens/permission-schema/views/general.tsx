@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { PermissionSchemaContext } from "@/features/permission-schema";
 import { UserResourceLink } from "@/features/user/ui";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import {
   GuidWithCopy,
   Table,
@@ -55,7 +55,8 @@ export function PermissionSchemaGeneral() {
         <TableRow>
           <TableCell>Created at</TableCell>
           <TableCell>
-            {schema.createdAt && formatToTwinfaceDate(schema.createdAt)}
+            {schema.createdAt &&
+              formatIntlDate(schema.createdAt, "datetime-local")}
           </TableCell>
         </TableRow>
       </TableBody>
