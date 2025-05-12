@@ -38,7 +38,7 @@ export function TransitionPerformButton({
 
   return (
     <Button
-      variant={"outline"}
+      variant="outline"
       key={transitionId}
       onClick={handleClick}
       loading={loading}
