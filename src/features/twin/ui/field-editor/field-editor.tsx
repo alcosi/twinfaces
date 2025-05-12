@@ -110,10 +110,11 @@ export function TwinFieldEditor({
         ) : (
           label
         ))}
+
       {field.descriptor ? (
         <InPlaceEdit {...editProps} />
       ) : (
-        <div className="flex gap-2">{renderPreview()}</div>
+        <div className="flex gap-2 py-2">{renderPreview()}</div>
       )}
     </div>
   );
