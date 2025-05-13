@@ -12,7 +12,6 @@ import { Button, ButtonProps } from "@/shared/ui/button";
 type Props = ButtonProps & {
   twinId: string;
   transitionId: string;
-  icon?: string;
 };
 
 export function TransitionPerformButton({
@@ -38,23 +37,27 @@ export function TransitionPerformButton({
     }
   }
 
+  function IconComponent() {
+    if (!icon) return null;
+
+    return (
+      <Image
+        src={icon}
+        alt="icon"
+        width={16}
+        height={16}
+        className="mr-2 dark:invert"
+      />
+    );
+  }
+
   return (
     <Button
       variant="outline"
       key={transitionId}
       onClick={handleClick}
       loading={loading}
-      IconComponent={() =>
-        icon && (
-          <Image
-            src={icon}
-            alt="icon"
-            width={16}
-            height={16}
-            className="mr-2 dark:invert"
-          />
-        )
-      }
+      IconComponent={IconComponent}
       {...rest}
     >
       {children}

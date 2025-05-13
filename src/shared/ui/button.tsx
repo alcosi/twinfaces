@@ -44,6 +44,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
+  icon?: string;
   IconComponent?: ElementType;
 }
 
