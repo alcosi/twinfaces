@@ -63,7 +63,7 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
       switch (twinField.descriptor.editorType) {
         case "MARKDOWN_GITHUB":
         case "MARKDOWN_BASIC":
-          return <MarkdownPreview markdown={twinField.value as string} />;
+          return <MarkdownPreview source={twinField.value as string} />;
         default:
           return twinField.value as string;
       }

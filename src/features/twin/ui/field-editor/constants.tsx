@@ -21,11 +21,9 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     key: "description",
     descriptor: FieldDescriptorText.MARKDOWN_GITHUB,
     renderPreview: (twin) => {
-      return (
-        twin.description && <MarkdownPreview markdown={twin.description} />
-      );
+      return twin.description && <MarkdownPreview source={twin.description} />;
     },
-    className: "border border-border mt-1.5 border-dashed rounded-md",
+    className: "border border-border mt-1.5 border-dashed rounded-md px-0",
   },
   "00000000-0000-0000-0011-000000000005": {
     key: "externalId",
