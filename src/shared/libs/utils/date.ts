@@ -9,6 +9,13 @@ export function formatIntlDate(
   }
 
   const date = new Date(dateInput);
+
+  if (isNaN(date.getTime())) {
+    throw new Error(
+      `Invalid date input: ${JSON.stringify(dateInput)}. Ensure it's a valid Date, timestamp, or ISO string.`
+    );
+  }
+
   const locale = navigator.language;
   let options: Intl.DateTimeFormatOptions = {};
 

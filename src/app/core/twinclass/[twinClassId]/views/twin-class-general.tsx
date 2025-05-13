@@ -25,7 +25,7 @@ import {
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
-import { formatIntlDate } from "@/shared/libs";
+import { formatIntlDate, isPopulatedString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Switch } from "@/shared/ui/switch";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
@@ -379,7 +379,8 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell>Created at</TableCell>
             <TableCell>
-              {formatIntlDate(twinClass.createdAt!, "datetime-local")}
+              {isPopulatedString(twinClass.createdAt) &&
+                formatIntlDate(twinClass.createdAt, "datetime-local")}
             </TableCell>
           </TableRow>
         </TableBody>
