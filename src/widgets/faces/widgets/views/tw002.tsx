@@ -6,10 +6,9 @@ import {
 } from "@radix-ui/react-accordion";
 
 import { fetchTW002Face } from "@/entities/face";
-import { cn, safe } from "@/shared/libs";
+import { safe } from "@/shared/libs";
 
 import { AlertError } from "../../components";
-import { widgetGridClasses } from "../../utils";
 import { TWidgetFaceProps } from "../types";
 
 export async function TW002(props: TWidgetFaceProps) {
@@ -22,12 +21,7 @@ export async function TW002(props: TWidgetFaceProps) {
   }
 
   return (
-    <Accordion
-      type="single"
-      collapsible
-      className={(cn("w-full"), widgetGridClasses(widget))}
-      defaultValue="EN"
-    >
+    <Accordion type="single" collapsible className="w-full" defaultValue="EN">
       <AccordionItem key="EN" value="EN">
         <AccordionTrigger>EN</AccordionTrigger>
         <AccordionContent>

@@ -1,7 +1,7 @@
 import { fetchPG001Face } from "@/entities/face";
-import { isPopulatedArray, safe } from "@/shared/libs";
+import { cn, isPopulatedArray, safe } from "@/shared/libs";
 
-import { AlertError, WidgetLayoutRenderer } from "../../components";
+import { AlertError, WidgetsContainer } from "../../components";
 import { Widget } from "../../widgets/types";
 import { PGFaceProps } from "../types";
 
@@ -17,10 +17,11 @@ export async function PG001({ pageFaceId, twinId }: PGFaceProps) {
   const pageFace = pageResult.data;
 
   return isPopulatedArray<Widget>(pageFace.widgets) ? (
-    <WidgetLayoutRenderer
-      layout={pageFace.layout}
+    <WidgetsContainer
+      faceId={pageFaceId}
       widgets={pageFace.widgets}
       twinId={twinId}
+      className={pageFace.styleClasses}
     />
   ) : null;
 }

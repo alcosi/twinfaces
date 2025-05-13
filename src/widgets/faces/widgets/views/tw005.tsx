@@ -1,7 +1,7 @@
 import { fetchTW005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { TransitionPerformButton } from "@/features/twin-flow-transition/transition-perform-button";
-import { safe } from "@/shared/libs";
+import { cn, safe } from "@/shared/libs";
 
 import { AlertError } from "../../components";
 import { TWidgetFaceProps } from "../types";
@@ -40,7 +40,7 @@ export async function TW005(props: TWidgetFaceProps) {
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
-    <div className="flex gap-2">
+    <div className={cn("flex gap-2", widget.styleClasses)}>
       {availableTransitions.map((transitionButton) => (
         <TransitionPerformButton
           key={transitionButton.id}
