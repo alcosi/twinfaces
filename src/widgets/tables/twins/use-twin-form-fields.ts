@@ -36,7 +36,7 @@ export function useTwinClassFields(
           extendsHierarchyChildsForTwinClassSearch: baseTwinClassId
             ? {
                 idList: [baseTwinClassId],
-                depth: 1,
+                depth: 0,
               }
             : undefined,
         });
