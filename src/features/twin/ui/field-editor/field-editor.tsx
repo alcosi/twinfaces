@@ -127,7 +127,9 @@ function renderDynamicFieldPreview(
     const format = isPopulatedString(field.descriptor.pattern)
       ? mapPatternToInputType(field.descriptor.pattern)
       : "text";
-    return formatIntlDate(field.value, format);
+    return isPopulatedString(field.value)
+      ? formatIntlDate(field.value, format)
+      : "";
   }
 
   return relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value;
