@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
+import * as React from "react";
 import { toast } from "sonner";
 
 import { usePerformTransition } from "@/entities/twin-flow-transition/api/hooks/use-perform-transition";
@@ -42,7 +44,17 @@ export function TransitionPerformButton({
       key={transitionId}
       onClick={handleClick}
       loading={loading}
-      icon={icon}
+      IconComponent={() =>
+        icon && (
+          <Image
+            src={icon}
+            alt="icon"
+            width={16}
+            height={16}
+            className="mr-2 dark:invert"
+          />
+        )
+      }
       {...rest}
     >
       {children}

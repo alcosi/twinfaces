@@ -1,7 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
-import Image from "next/image";
 import * as React from "react";
+import { ElementType } from "react";
 
 import { cn } from "@/shared/libs";
 import { LoadingSpinner } from "@/shared/ui/loading";
@@ -44,7 +44,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
-  icon?: string;
+  IconComponent?: ElementType;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -56,7 +56,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       children,
       loading,
-      icon,
+      IconComponent,
       ...props
     },
     ref
@@ -69,16 +69,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={props.disabled || loading}
         {...props}
       >
-        {loading && <LoadingSpinner className={"mr-1"} />}
-        {icon && (
-          <Image
-            src={icon}
-            alt="icon"
-            width={16}
-            height={16}
-            className="mr-2 dark:invert"
-          />
-        )}
+        {loading && <LoadingSpinner className="mr-1" />}
+        {IconComponent && <IconComponent />}
         {children}
       </Comp>
     );
