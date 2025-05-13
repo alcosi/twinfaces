@@ -37,7 +37,7 @@ export function TwinFields() {
       header: "Fields",
       cell: ({ row: { original } }) =>
         original && (
-          <div className="max-w-48 inline-flex">
+          <div className="inline-flex max-w-48">
             <TwinClassFieldResourceLink
               data={original as TwinClassField_DETAILED}
               withTooltip
@@ -52,7 +52,7 @@ export function TwinFields() {
       cell: ({ row: { original } }) => {
         return (
           <div
-            className="inline-block min-w-[300px] w-full"
+            className="inline-block w-full min-w-[300px]"
             onClick={(e) => e.stopPropagation()}
           >
             <InPlaceEdit

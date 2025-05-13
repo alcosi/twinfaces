@@ -5,10 +5,10 @@ import { MouseEvent } from "react";
 import { MarkdownIcon } from "@/shared/ui";
 
 type MarkdownPreviewProps = {
-  markdown: string;
+  source?: string;
 };
 
-export const MarkdownPreview = ({ markdown }: MarkdownPreviewProps) => {
+export const MarkdownPreview = ({ source }: MarkdownPreviewProps) => {
   const { resolvedTheme } = useTheme();
 
   const handleClick = (e: MouseEvent) => {
@@ -22,12 +22,18 @@ export const MarkdownPreview = ({ markdown }: MarkdownPreviewProps) => {
   return (
     <div
       data-color-mode={resolvedTheme}
-      className="relative px-3.5 py-4"
+      className="relative w-full"
       onClick={handleClick}
     >
-      <MarkdownIcon className="absolute inset-y-1 -end-1 h-5 w-5" />
+      <MarkdownIcon className="absolute inset-y-1.5 end-2 h-5 w-5" />
 
-      <MDEditor.Markdown source={markdown} />
+      <MDEditor.Markdown
+        source={source}
+        style={{
+          padding: "1rem 1.5rem",
+          background: "var(--background)",
+        }}
+      />
     </div>
   );
 };
