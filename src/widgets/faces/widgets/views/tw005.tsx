@@ -1,3 +1,6 @@
+import Image from "next/image";
+import * as React from "react";
+
 import { fetchTW005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { TransitionPerformButton } from "@/features/twin-flow-transition/transition-perform-button";
@@ -46,7 +49,17 @@ export async function TW005(props: TWidgetFaceProps) {
           key={transitionButton.id}
           twinId={pointedTwinId}
           transitionId={transitionButton.transitionId!}
-          icon={transitionButton.icon}
+          Icon={() =>
+            transitionButton.icon && (
+              <Image
+                src={transitionButton.icon}
+                alt="icon"
+                width={16}
+                height={16}
+                className="mr-2 dark:invert"
+              />
+            )
+          }
         >
           {transitionButton.label}
         </TransitionPerformButton>

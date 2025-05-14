@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 import * as React from "react";
@@ -17,7 +16,7 @@ type Props = ButtonProps & {
 export function TransitionPerformButton({
   twinId,
   transitionId,
-  icon,
+  Icon,
   children,
   ...rest
 }: PropsWithChildren<Props>) {
@@ -37,27 +36,13 @@ export function TransitionPerformButton({
     }
   }
 
-  function IconComponent() {
-    if (!icon) return null;
-
-    return (
-      <Image
-        src={icon}
-        alt="icon"
-        width={16}
-        height={16}
-        className="mr-2 dark:invert"
-      />
-    );
-  }
-
   return (
     <Button
       variant="outline"
       key={transitionId}
       onClick={handleClick}
       loading={loading}
-      IconComponent={IconComponent}
+      Icon={Icon}
       {...rest}
     >
       {children}

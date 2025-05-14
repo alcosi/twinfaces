@@ -44,8 +44,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
-  icon?: string;
-  IconComponent?: ElementType;
+  Icon?: ElementType;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -57,7 +56,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       children,
       loading,
-      IconComponent,
+      Icon,
       ...props
     },
     ref
@@ -70,8 +69,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={props.disabled || loading}
         {...props}
       >
-        {loading && <LoadingSpinner className="mr-1" />}
-        {IconComponent && <IconComponent />}
+        {loading ? <LoadingSpinner className="mr-1" /> : Icon && <Icon />}
         {children}
       </Comp>
     );
