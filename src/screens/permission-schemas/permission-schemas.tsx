@@ -1,5 +1,4 @@
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
@@ -49,6 +48,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 
   createdByUserId: {
@@ -82,7 +87,6 @@ const colDefs: Record<
 
 export function PermissionSchemasScreen() {
   const tableRef = useRef<DataTableHandle>(null);
-  const router = useRouter();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissionSchemas } = usePermissionSchemaSearchV1();
   const { buildFilterFields, mapFiltersToPayload } =
@@ -126,9 +130,6 @@ export function PermissionSchemasScreen() {
       ]}
       fetcher={fetchPermissionSchemas}
       getRowId={(row) => row.id!}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/permission-schemas/${row.id}`)
-      }
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

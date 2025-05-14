@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -23,7 +22,6 @@ import { FactoryPipelineResourceLink } from "@/features/factory-pipeline/ui";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PagedResponse } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import {
   OneOf,
   isFalsy,
@@ -62,6 +60,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
   factoryPipelineId: {
     id: "factory",
@@ -69,7 +73,7 @@ const colDefs: Record<
     header: "Factory",
     cell: ({ row: { original } }) =>
       original.factoryPipeline?.factory && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryResourceLink
             data={original.factoryPipeline.factory}
             withTooltip
@@ -83,7 +87,7 @@ const colDefs: Record<
     header: "Pipeline",
     cell: ({ row: { original } }) =>
       original.factoryPipeline && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryPipelineResourceLink
             data={original.factoryPipeline}
             withTooltip
@@ -103,7 +107,7 @@ const colDefs: Record<
     header: "Condition Set",
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryConditionSetResourceLink
             data={original.factoryConditionSet}
             withTooltip
@@ -123,7 +127,7 @@ const colDefs: Record<
     header: "Filler featurer",
     cell: ({ row: { original } }) =>
       original.fillerFeaturer && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FeaturerResourceLink
             data={original.fillerFeaturer as Featurer_DETAILED}
             withTooltip
@@ -156,7 +160,6 @@ type Props = {
 export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
   const { searchPipelineStep } = usePipelineStepSearch();
   const { createPipelineStep } = usePipelineStepCreate();
-  const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } = usePipelineStepFilters({
     enabledFilters:
       isTruthy(pipelineId) || isTruthy(factoryId)
@@ -249,9 +252,6 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
         colDefs.active,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/pipeline-steps/${row.id}`)
-      }
       dialogForm={pipelineStepForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

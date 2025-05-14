@@ -43,6 +43,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
   inputTwinClass: {
     id: "inputTwinClass",
@@ -50,7 +56,7 @@ const colDefs: Record<
     header: "Input class",
     cell: ({ row: { original } }) =>
       original.inputTwinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.inputTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -64,7 +70,7 @@ const colDefs: Record<
     header: "Factory",
     cell: ({ row: { original } }) =>
       original.multiplier.factory && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryResourceLink data={original.multiplier.factory} withTooltip />
         </div>
       ),
@@ -75,7 +81,7 @@ const colDefs: Record<
     header: "Multiplier",
     cell: ({ row: { original } }) =>
       original.multiplier && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryMultiplierResourceLink
             data={original.multiplier as FactoryMultiplier_DETAILED}
             withTooltip
@@ -89,7 +95,7 @@ const colDefs: Record<
     header: "Condition set",
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryConditionSetResourceLink
             data={original.factoryConditionSet}
             withTooltip

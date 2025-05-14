@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -96,6 +95,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
   headClassId: {
     id: "headClassId",
@@ -103,7 +108,7 @@ const colDefs: Record<
     header: "Head",
     cell: ({ row: { original } }) =>
       original.headClass ? (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.headClass as TwinClass_DETAILED}
             withTooltip
@@ -117,7 +122,7 @@ const colDefs: Record<
     header: "Extends",
     cell: ({ row: { original } }) =>
       original.extendsClass ? (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.extendsClass as TwinClass_DETAILED}
             withTooltip
@@ -166,7 +171,7 @@ const colDefs: Record<
     header: "Markers list",
     cell: ({ row: { original } }) =>
       original.markerMap ? (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <DatalistResourceLink data={original.markerMap} withTooltip />
         </div>
       ) : null,
@@ -177,7 +182,7 @@ const colDefs: Record<
     header: "Tags list",
     cell: ({ row: { original } }) =>
       original.tagMap ? (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <DatalistResourceLink data={original.tagMap} withTooltip />
         </div>
       ) : null,
@@ -188,7 +193,7 @@ const colDefs: Record<
     header: "View permission",
     cell: ({ row: { original } }) =>
       original.viewPermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink data={original.viewPermission} withTooltip />
         </div>
       ),
@@ -199,7 +204,7 @@ const colDefs: Record<
     header: "Create permission",
     cell: ({ row: { original } }) =>
       original.createPermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink
             data={original.createPermission}
             withTooltip
@@ -213,7 +218,7 @@ const colDefs: Record<
     header: "Edit permission",
     cell: ({ row: { original } }) =>
       original.editPermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink data={original.editPermission} withTooltip />
         </div>
       ),
@@ -224,7 +229,7 @@ const colDefs: Record<
     header: "Delete permission",
     cell: ({ row: { original } }) =>
       original.deletePermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink
             data={original.deletePermission}
             withTooltip
@@ -236,7 +241,6 @@ const colDefs: Record<
 
 export function TwinClasses() {
   const api = useContext(PrivateApiContext);
-  const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
@@ -346,9 +350,6 @@ export function TwinClasses() {
     <CrudDataTable
       ref={tableRef}
       fetcher={fetchTwinClasses}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
-      }
       columns={[
         colDefs.logo,
         colDefs.id,

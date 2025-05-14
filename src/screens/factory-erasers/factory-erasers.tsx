@@ -2,7 +2,6 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -17,7 +16,6 @@ import { FactoryConditionSetResourceLink } from "@/features/factory-condition-se
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -48,7 +46,7 @@ const colDefs: Record<
     header: "Factory",
     cell: ({ row: { original } }) =>
       original.factory && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryResourceLink data={original.factory} withTooltip />
         </div>
       ),
@@ -60,7 +58,7 @@ const colDefs: Record<
     header: "Input class",
     cell: ({ row: { original } }) =>
       original.inputTwinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.inputTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -75,7 +73,7 @@ const colDefs: Record<
     header: "Condition set",
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryConditionSetResourceLink
             data={original.factoryConditionSet}
             withTooltip
@@ -108,13 +106,18 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 };
 
 export function FactoryErasers() {
   const { searchFactoryErasers } = useFactoryEraserSearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryEraserFilters();
-  const router = useRouter();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
@@ -141,7 +144,7 @@ export function FactoryErasers() {
   return (
     <CrudDataTable
       title="Erasers"
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
+      className="mx-auto mb-10 flex-col p-8 lg:flex lg:justify-center"
       columns={[
         colDefs.id,
         colDefs.factoryId,
@@ -167,9 +170,6 @@ export function FactoryErasers() {
       ]}
       filters={{
         filtersInfo: buildFilterFields(),
-      }}
-      onRowClick={(row) => {
-        router.push(`/${PlatformArea.core}/erasers/${row.id}`);
       }}
     />
   );
