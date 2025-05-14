@@ -1,6 +1,6 @@
 "use client";
 
-import { TwinClasses } from "@/screens/twinClasses";
+import { TwinClasses } from "@/screens/twin-classes";
 
 export default function TwinClassesPage() {
   return <TwinClasses />;

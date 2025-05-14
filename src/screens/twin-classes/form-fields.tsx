@@ -133,7 +133,7 @@ export function TwinClassFormFields({
       />
 
       {isFalsy(isAutoCreatePermission) && (
-        <fieldset className="px-1.5 py-2.5 rounded-md border border-dashed">
+        <fieldset className="rounded-md border border-dashed px-1.5 py-2.5">
           <legend className="text-sm font-medium italic">Permissions</legend>
           <ComboboxFormField
             control={control}
@@ -185,7 +185,7 @@ export function TwinClassFormFields({
       />
 
       {isSpaceChecked && (
-        <fieldset className="px-1.5 py-2.5 rounded-md border border-dashed flex flex-col gap-4">
+        <fieldset className="flex flex-col gap-4 rounded-md border border-dashed px-1.5 py-2.5">
           <legend className="text-sm font-medium italic">Spaces</legend>
           <CheckboxFormField
             control={control}
