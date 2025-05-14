@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -53,7 +52,7 @@ const colDefs: Record<
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => (
-      <div className="max-w-48 column-flex space-y-2">
+      <div className="column-flex max-w-48 space-y-2">
         <PermissionResourceLink data={row.original} withTooltip />
       </div>
     ),
@@ -65,7 +64,7 @@ const colDefs: Record<
     header: "Group",
     cell: ({ row: { original } }) =>
       original.group && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <PermissionGroupResourceLink
             data={original.group as PermissionGroup}
             withTooltip
@@ -78,12 +77,17 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 };
 
 export function Permissions() {
   const tableRef = useRef<DataTableHandle>(null);
-  const router = useRouter();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissions } = usePermissionSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
@@ -159,9 +163,6 @@ export function Permissions() {
       ]}
       fetcher={fetchPermissions}
       getRowId={(row) => row.id!}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/permissions/${row.id}`)
-      }
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

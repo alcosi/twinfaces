@@ -50,7 +50,7 @@ const colDefs: Record<
     header: "Factory",
     cell: ({ row: { original } }) =>
       original.factory && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryResourceLink data={original.factory} withTooltip />
         </div>
       ),
@@ -62,7 +62,7 @@ const colDefs: Record<
     header: "Input Class",
     cell: ({ row: { original } }) =>
       original.inputTwinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.inputTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -77,7 +77,7 @@ const colDefs: Record<
     header: "Condition Set",
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryConditionSetResourceLink
             data={original.factoryConditionSet}
             withTooltip
@@ -106,7 +106,7 @@ const colDefs: Record<
     header: "Output Status",
     cell: ({ row: { original } }) =>
       original.outputTwinStatus && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassStatusResourceLink
             data={original.outputTwinStatus}
             twinClassId={original.inputTwinClassId!}
@@ -122,7 +122,7 @@ const colDefs: Record<
     header: "Next Factory",
     cell: ({ row: { original } }) =>
       original.nextFactory && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryResourceLink data={original.nextFactory} withTooltip />
         </div>
       ),
@@ -132,6 +132,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 
   nextFactoryLimitScope: {

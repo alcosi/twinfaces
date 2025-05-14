@@ -56,7 +56,7 @@ const colDefs: Record<
     header: "Class",
     cell: ({ row: { original } }) =>
       original.twinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink data={original.twinClass} withTooltip />
         </div>
       ),
@@ -75,6 +75,12 @@ const colDefs: Record<
   description: {
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 
   fieldTyperFeaturerId: {
@@ -82,7 +88,7 @@ const colDefs: Record<
     header: "Field typer",
     cell: ({ row: { original } }) =>
       original.fieldTyperFeaturer && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FeaturerResourceLink
             data={original.fieldTyperFeaturer}
             withTooltip
@@ -96,7 +102,7 @@ const colDefs: Record<
     header: "View permission",
     cell: ({ row: { original } }) =>
       original.viewPermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink data={original.viewPermission} withTooltip />
         </div>
       ),
@@ -107,7 +113,7 @@ const colDefs: Record<
     header: "Edit permission",
     cell: ({ row: { original } }) =>
       original.editPermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink data={original.editPermission} withTooltip />
         </div>
       ),

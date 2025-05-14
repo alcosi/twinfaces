@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -58,6 +57,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 
   createdAt: {
@@ -83,7 +88,6 @@ const colDefs: Record<
 
 export const DatalistsScreen = () => {
   const tableRef = useRef<DataTableHandle>(null);
-  const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistFilters();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { searchDatalist } = useDatalistSearchV1();
@@ -154,9 +158,6 @@ export const DatalistsScreen = () => {
       getRowId={(row) => row.id!}
       fetcher={fetchDataLists}
       pageSizes={[10, 20, 50]}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/datalists/${row.id}`)
-      }
       filters={{
         filtersInfo: buildFilterFields(),
       }}

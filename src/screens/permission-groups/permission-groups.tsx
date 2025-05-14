@@ -40,7 +40,7 @@ const colDefs: Record<
     accessorKey: "name",
     header: "Name",
     cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
+      <div className="inline-flex max-w-48">
         <PermissionGroupResourceLink data={original} withTooltip />
       </div>
     ),
@@ -49,6 +49,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
   twinClassId: {
     id: "twinClassId",
@@ -56,7 +62,7 @@ const colDefs: Record<
     header: "Twin Class",
     cell: ({ row: { original } }) =>
       original.twinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.twinClass as TwinClass_DETAILED}
             withTooltip
@@ -116,13 +122,7 @@ export function PermissionGroups() {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      defaultVisibleColumns={[
-        colDefs.id,
-        // colDefs.key,
-        colDefs.name,
-        // colDefs.description,
-        colDefs.twinClassId,
-      ]}
+      defaultVisibleColumns={[colDefs.id, colDefs.name, colDefs.twinClassId]}
       orderedColumns={[
         colDefs.id,
         colDefs.key,

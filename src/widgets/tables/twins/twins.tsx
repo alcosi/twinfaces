@@ -152,6 +152,12 @@ export function TwinsTable({
       id: "description",
       accessorKey: "description",
       header: "Description",
+      cell: ({ row: { original } }) =>
+        original.description && (
+          <div className="text-muted-foreground line-clamp-2 max-w-64">
+            {original.description}
+          </div>
+        ),
     },
 
     authorUserId: {

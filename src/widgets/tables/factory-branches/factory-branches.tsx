@@ -43,7 +43,7 @@ const colDefs: Record<
     header: "Factory",
     cell: ({ row: { original } }) =>
       original.factory && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryResourceLink data={original.factory} withTooltip />
         </div>
       ),
@@ -54,7 +54,7 @@ const colDefs: Record<
     header: "Condition set",
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryConditionSetResourceLink
             data={original.factoryConditionSet}
             withTooltip
@@ -80,7 +80,7 @@ const colDefs: Record<
     header: "Next Factory",
     cell: ({ row: { original } }) =>
       original.nextFactory && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FactoryResourceLink
             data={original.nextFactory as Factory}
             withTooltip
@@ -92,6 +92,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 };
 
