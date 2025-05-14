@@ -3,6 +3,7 @@ import React from "react";
 import {
   ColorPickerFormItem,
   ComboboxFormItem,
+  DatetimeFormItem,
   FormItemProps,
   SecretTextFormItem,
   TextFormItem,
@@ -105,7 +106,7 @@ export function TwinFieldFormItem({
       case TwinFieldType.dateScrollV1: {
         const type = mapPatternToInputType(descriptor.pattern!);
         return (
-          <TextFormItem {...props} onChange={handleInputChange} type={type} />
+          <DatetimeFormItem {...props} onChange={onChange} inputType={type} />
         );
       }
       case TwinFieldType.immutableV1:
