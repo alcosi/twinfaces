@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
+import * as React from "react";
 import { toast } from "sonner";
 
 import { usePerformTransition } from "@/entities/twin-flow-transition/api/hooks/use-perform-transition";
@@ -15,6 +16,7 @@ type Props = ButtonProps & {
 export function TransitionPerformButton({
   twinId,
   transitionId,
+  IconComponent,
   children,
   ...rest
 }: PropsWithChildren<Props>) {
@@ -36,9 +38,11 @@ export function TransitionPerformButton({
 
   return (
     <Button
+      variant="outline"
       key={transitionId}
       onClick={handleClick}
       loading={loading}
+      IconComponent={IconComponent}
       {...rest}
     >
       {children}

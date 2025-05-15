@@ -1,6 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
+import { ElementType } from "react";
 
 import { cn } from "@/shared/libs";
 import { LoadingSpinner } from "@/shared/ui/loading";
@@ -43,14 +44,30 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
+  IconComponent?: ElementType;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, asChild = false, children, loading, ...props },
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      children,
+      loading,
+      IconComponent,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
+    const icon = loading ? (
+      <LoadingSpinner className={children ? "mr-1" : undefined} />
+    ) : IconComponent ? (
+      <IconComponent />
+    ) : null;
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
@@ -58,7 +75,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={props.disabled || loading}
         {...props}
       >
-        {loading && <LoadingSpinner className={"mr-1"} />}
+        {icon}
         {children}
       </Comp>
     );

@@ -106,14 +106,15 @@ export function TwinFieldEditor({
     <div>
       {label &&
         (isPopulatedString(label) ? (
-          <label className="px-3 text-sm font-bold">{label}</label>
+          <label className="text-sm font-bold">{label}</label>
         ) : (
           label
         ))}
+
       {field.descriptor ? (
         <InPlaceEdit {...editProps} />
       ) : (
-        <div className="flex gap-2 px-3">{renderPreview()}</div>
+        <div className="flex gap-2 py-2">{renderPreview()}</div>
       )}
     </div>
   );
