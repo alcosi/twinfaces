@@ -12,7 +12,12 @@ import { CheckboxFormItem } from "@/components/form-fields";
 
 import { cn } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverFooter,
+  PopoverTrigger,
+} from "@/shared/ui/popover";
 
 interface Column {
   id: string;
@@ -104,11 +109,11 @@ export function ColumnManagerPopover({
           </DndContext>
         </div>
 
-        <div className="bg-background rounded-b-md p-4 sm:justify-start">
+        <PopoverFooter>
           <Button onClick={() => resetColumns()} type="reset" variant="outline">
             Reset
           </Button>
-        </div>
+        </PopoverFooter>
       </PopoverContent>
     </Popover>
   );

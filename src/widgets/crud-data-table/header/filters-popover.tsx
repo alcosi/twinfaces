@@ -10,6 +10,7 @@ import {
   Form,
   Popover,
   PopoverContent,
+  PopoverFooter,
   PopoverTrigger,
 } from "@/shared/ui";
 
@@ -68,24 +69,23 @@ export function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
           <FilterIcon />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="max-h-[80vh] overflow-y-auto">
+      <PopoverContent className="p-0">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(internalSubmit)}
-            className="space-y-4"
-          >
-            {keys.map((filterKey) => {
-              return (
-                <AutoField
-                  key={filterKey}
-                  info={filtersInfo[filterKey]!}
-                  name={filterKey}
-                  control={form.control}
-                />
-              );
-            })}
+          <form onSubmit={form.handleSubmit(internalSubmit)}>
+            <div className="max-h-[60vh] space-y-4 overflow-y-auto p-4">
+              {keys.map((filterKey) => {
+                return (
+                  <AutoField
+                    key={filterKey}
+                    info={filtersInfo[filterKey]!}
+                    name={filterKey}
+                    control={form.control}
+                  />
+                );
+              })}
+            </div>
 
-            <div className={"flex flex-row justify-end gap-2"}>
+            <PopoverFooter>
               <Button
                 onClick={onReset}
                 type="reset"
@@ -97,7 +97,7 @@ export function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
               <Button type="submit" loading={form.formState.isSubmitting}>
                 Apply
               </Button>
-            </div>
+            </PopoverFooter>
           </form>
         </Form>
       </PopoverContent>
