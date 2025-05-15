@@ -70,10 +70,7 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
 
       let fieldValue;
 
-      if (
-        typeof value === "string" &&
-        relatedObjects.dataListsOptionMap?.[value]
-      ) {
+      if (relatedObjects.dataListsOptionMap?.[value]) {
         fieldValue = relatedObjects.dataListsOptionMap[value];
       } else {
         fieldValue = value ?? "";
