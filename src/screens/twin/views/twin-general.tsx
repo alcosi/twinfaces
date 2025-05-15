@@ -7,7 +7,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 
 import {
   FieldDescriptorText,
-  STATIC_TWIN_FIELD_NAME_TO_ID_MAP,
+  STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   categorizeTwinTags,
   useTwinUpdate,
 } from "@/entities/twin";
@@ -186,7 +186,7 @@ export function TwinGeneral() {
                 twinId={twin.id}
                 twin={twin}
                 field={{
-                  id: STATIC_TWIN_FIELD_NAME_TO_ID_MAP["name"],
+                  id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP["name"],
                   key: "name",
                   value: twin.name,
                   descriptor: FieldDescriptorText.PLAIN,
@@ -205,7 +205,7 @@ export function TwinGeneral() {
                 twinId={twin.id}
                 twin={twin}
                 field={{
-                  id: STATIC_TWIN_FIELD_NAME_TO_ID_MAP["description"],
+                  id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP["description"],
                   key: "description",
                   value: twin.description ?? "",
                   descriptor: FieldDescriptorText.MARKDOWN_GITHUB,

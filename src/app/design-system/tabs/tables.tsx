@@ -16,7 +16,7 @@ export function TablesTab() {
   const [secondId, setSecondId] = useState<string | undefined>(undefined);
 
   return (
-    <div className="h-screen overflow-y-auto max-h-98">
+    <div className="h-screen max-h-98 overflow-y-auto">
       <div className="space-y-4 p-4">
         <UiSection title="#1" className="grid grid-cols-1 gap-4">
           <Combobox
@@ -37,7 +37,7 @@ export function TablesTab() {
                 <TwinsTable
                   title=""
                   baseTwinClassId={firstId}
-                  enabledColumns={["id", "name"]}
+                  enabledColumns={[]}
                 />
               }
             />
@@ -63,7 +63,7 @@ export function TablesTab() {
                 <TwinsTable
                   title=""
                   baseTwinClassId={secondId}
-                  enabledColumns={["id", "name"]}
+                  enabledColumns={[]}
                 />
               }
             />
