@@ -28,7 +28,13 @@ import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { formatIntlDate, isPopulatedArray, isUndefined } from "@/shared/libs";
+import {
+  formatIntlDate,
+  isEmptyString,
+  isFalsy,
+  isPopulatedArray,
+  isUndefined,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { renderTwinFieldPreview } from "../../../widgets/form-fields";
@@ -263,7 +269,7 @@ export function TwinsTable({
                   | TwinFieldUI
                   | undefined;
 
-                if (!fieldValue || fieldValue.value === "") {
+                if (isFalsy(fieldValue) || isEmptyString(fieldValue.value)) {
                   return null;
                 }
 
