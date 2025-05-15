@@ -1,13 +1,10 @@
-import Image from "next/image";
-import * as React from "react";
-
 import { fetchTW005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { TransitionPerformButton } from "@/features/twin-flow-transition/transition-perform-button";
-import { cn, safe } from "@/shared/libs";
+import { safe } from "@/shared/libs";
 
-import { AlertError } from "../../components";
-import { TWidgetFaceProps } from "../types";
+import { AlertError } from "../../../components";
+import { TWidgetFaceProps } from "../../types";
+import { TW005Buttons } from "./tw005-buttons";
 
 export async function TW005(props: TWidgetFaceProps) {
   const { twinId, widget } = props;
@@ -43,27 +40,10 @@ export async function TW005(props: TWidgetFaceProps) {
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
-    <div className={cn("flex gap-2", widget.styleClasses)}>
-      {availableTransitions.map((transitionButton) => (
-        <TransitionPerformButton
-          key={transitionButton.id}
-          twinId={pointedTwinId}
-          transitionId={transitionButton.transitionId!}
-          Icon={() =>
-            transitionButton.icon && (
-              <Image
-                src={transitionButton.icon}
-                alt="icon"
-                width={16}
-                height={16}
-                className="mr-2 dark:invert"
-              />
-            )
-          }
-        >
-          {transitionButton.label}
-        </TransitionPerformButton>
-      ))}
-    </div>
+    <TW005Buttons
+      transitions={availableTransitions}
+      twinId={pointedTwinId}
+      className={widget.styleClasses}
+    />
   );
 }

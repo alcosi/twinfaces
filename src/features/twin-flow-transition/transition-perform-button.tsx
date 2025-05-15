@@ -16,7 +16,7 @@ type Props = ButtonProps & {
 export function TransitionPerformButton({
   twinId,
   transitionId,
-  Icon,
+  IconComponent,
   children,
   ...rest
 }: PropsWithChildren<Props>) {
@@ -42,7 +42,7 @@ export function TransitionPerformButton({
       key={transitionId}
       onClick={handleClick}
       loading={loading}
-      Icon={Icon}
+      IconComponent={IconComponent}
       {...rest}
     >
       {children}
