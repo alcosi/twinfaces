@@ -39,6 +39,7 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
       );
 
     case TwinFieldType.selectListV1:
+    case TwinFieldType.selectLongV1:
     case TwinFieldType.selectSharedInHeadV1:
       return (
         <DatalistOptionResourceLink

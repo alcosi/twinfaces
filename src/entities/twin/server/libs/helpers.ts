@@ -1,6 +1,7 @@
 import { DataListOptionV1 } from "@/entities/datalist-option";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
+import { TwinFieldUI } from "@/entities/twinField";
 import { RelatedObjects } from "@/shared/api";
 
 import { Twin, Twin_HYDRATED } from "../api";
@@ -58,6 +59,30 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
       },
       []
     );
+  }
+
+  if (dto.fields && relatedObjects.twinClassFieldMap) {
+    hydrated.fieldsTest = {};
+    for (const [key, value] of Object.entries(dto.fields)) {
+      const twinClassField = Object.values(
+        relatedObjects.twinClassFieldMap
+      ).find((field) => field.key === key);
+
+      let fieldValue: any;
+      if (
+        typeof value === "string" &&
+        relatedObjects.dataListsOptionMap?.[value]
+      ) {
+        fieldValue = relatedObjects.dataListsOptionMap[value];
+      } else {
+        fieldValue = value ?? "";
+      }
+
+      hydrated.fieldsTest[key] = {
+        ...twinClassField,
+        value: fieldValue,
+      } as TwinFieldUI;
+    }
   }
 
   return hydrated;

@@ -20,6 +20,7 @@ import {
 } from "@/entities/twin-class";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
+import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
@@ -30,6 +31,7 @@ import { UserResourceLink } from "@/features/user/ui";
 import { formatIntlDate, isPopulatedArray, isUndefined } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
+import { renderTwinFieldPreview } from "../../../widgets/form-fields";
 import {
   CrudDataTable,
   DataTableHandle,
@@ -249,7 +251,27 @@ export function TwinsTable({
       setTwinClassFields(supportedFields);
       setColumnMap((prev) => ({
         ...prev,
-        ...Object.fromEntries(columnEntries),
+        ...Object.fromEntries(
+          supportedFields.map((field) => [
+            field.key,
+            {
+              id: field.key,
+              accessorKey: `fields.${field.key}`,
+              header: field.name,
+              cell: ({ row: { original } }) => {
+                const fieldValue = original.fieldsTest?.[field.key] as
+                  | TwinFieldUI
+                  | undefined;
+
+                if (!fieldValue || fieldValue.value === "") {
+                  return null;
+                }
+
+                return renderTwinFieldPreview(fieldValue);
+              },
+            },
+          ])
+        ),
       }));
     });
   }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
