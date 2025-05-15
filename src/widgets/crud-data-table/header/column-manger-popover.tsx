@@ -11,6 +11,7 @@ import { useState } from "react";
 import { CheckboxFormItem } from "@/components/form-fields";
 
 import { cn } from "@/shared/libs";
+import { DialogFooter } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
@@ -84,30 +85,31 @@ export function ColumnManagerPopover({
           <EyeIcon />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="space-y-4">
-        <DndContext onDragEnd={handleDragEnd}>
-          {/*<form className="space-y-8">*/}
-          <SortableContext
-            items={columns}
-            strategy={verticalListSortingStrategy}
-          >
-            {columns.map((column) => {
-              return (
-                <DraggableCheckbox
-                  key={column.id}
-                  column={column}
-                  onChange={() => onColumnSwitch(column.id)}
-                />
-              );
-            })}
-          </SortableContext>
+      <PopoverContent className="p-0">
+        <div className="max-h-[60vh] space-y-4 overflow-y-auto p-4 pb-0">
+          <DndContext onDragEnd={handleDragEnd}>
+            <SortableContext
+              items={columns}
+              strategy={verticalListSortingStrategy}
+            >
+              {columns.map((column) => {
+                return (
+                  <DraggableCheckbox
+                    key={column.id}
+                    column={column}
+                    onChange={() => onColumnSwitch(column.id)}
+                  />
+                );
+              })}
+            </SortableContext>
+          </DndContext>
+        </div>
 
-          {/*<div className={"flex flex-row justify-end gap-2"}>*/}
+        <DialogFooter className="bg-background rounded-b-md p-4 sm:justify-start">
           <Button onClick={() => resetColumns()} type="reset" variant="outline">
             Reset
           </Button>
-        </DndContext>
-        {/*</form>*/}
+        </DialogFooter>
       </PopoverContent>
     </Popover>
   );
