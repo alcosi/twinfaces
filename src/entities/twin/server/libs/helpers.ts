@@ -62,13 +62,14 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
   }
 
   if (dto.fields && relatedObjects.twinClassFieldMap) {
-    hydrated.fieldsTest = {};
+    hydrated.fields = {};
     for (const [key, value] of Object.entries(dto.fields)) {
       const twinClassField = Object.values(
         relatedObjects.twinClassFieldMap
       ).find((field) => field.key === key);
 
-      let fieldValue: any;
+      let fieldValue;
+
       if (
         typeof value === "string" &&
         relatedObjects.dataListsOptionMap?.[value]
@@ -78,7 +79,7 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
         fieldValue = value ?? "";
       }
 
-      hydrated.fieldsTest[key] = {
+      hydrated.fields[key] = {
         ...twinClassField,
         value: fieldValue,
       } as TwinFieldUI;

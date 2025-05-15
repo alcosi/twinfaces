@@ -1,10 +1,15 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type Twin = components["schemas"]["TwinV2"];
-export type Twin_HYDRATED = components["schemas"]["TwinV2"] & {
+
+export type Twin_HYDRATED = Omit<components["schemas"]["TwinV2"], "fields"> & {
+  fields?: {
+    [key: string]: TwinFieldUI;
+  };
   ownerUser?: User;
 
   // TODO: implement selfFields, inheritedFields, and allFields (combined)
@@ -24,12 +29,14 @@ export type Twin_SHORT = RequireFields<
   | "tagIdList"
   | "twinClassId"
 >;
-export type Twin_DETAILED = RequireFields<
-  Twin_SHORT,
-  "twinClass" | "createdAt" | "headTwinId" | "tags"
-> & {
-  subordinates?: TwinClass_DETAILED[];
-};
+
+export type Twin_DETAILED = Twin_HYDRATED &
+  RequireFields<
+    Twin_SHORT,
+    "twinClass" | "createdAt" | "headTwinId" | "tags"
+  > & {
+    subordinates?: TwinClass_DETAILED[];
+  };
 
 export type TwinCreateRq = RequireFields<
   components["schemas"]["TwinCreateRqV2"],

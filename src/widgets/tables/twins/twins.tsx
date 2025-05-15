@@ -259,7 +259,7 @@ export function TwinsTable({
               accessorKey: `fields.${field.key}`,
               header: field.name,
               cell: ({ row: { original } }) => {
-                const fieldValue = original.fieldsTest?.[field.key] as
+                const fieldValue = original.fields?.[field.key!] as
                   | TwinFieldUI
                   | undefined;
 
