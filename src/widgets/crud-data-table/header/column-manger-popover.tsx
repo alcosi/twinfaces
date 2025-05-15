@@ -11,7 +11,6 @@ import { useState } from "react";
 import { CheckboxFormItem } from "@/components/form-fields";
 
 import { cn } from "@/shared/libs";
-import { DialogFooter } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
@@ -105,11 +104,11 @@ export function ColumnManagerPopover({
           </DndContext>
         </div>
 
-        <DialogFooter className="bg-background rounded-b-md p-4 sm:justify-start">
+        <div className="bg-background rounded-b-md p-4 sm:justify-start">
           <Button onClick={() => resetColumns()} type="reset" variant="outline">
             Reset
           </Button>
-        </DialogFooter>
+        </div>
       </PopoverContent>
     </Popover>
   );
