@@ -2,16 +2,14 @@ import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
 
 import {
   DynamicFieldType,
+  StaticTwinFieldId,
+  StaticTwinFieldKey,
   TwinFieldSearchDate,
   TwinFieldSearchList,
   TwinFieldSearchNumeric,
   TwinFieldSearchText,
   TwinFieldValue,
 } from "./types";
-
-// TODO: @berdimyradov move to types solving import loop error
-export type StaticTwinFieldKey = (typeof STATIC_TWIN_FIELD_KEYS)[number];
-export type StaticTwinFieldId = (typeof STATIC_TWIN_FIELD_IDS)[number];
 
 export const TwinTouchIds = ["WATCHED", "STARRED", "REVIEWED"] as const;
 

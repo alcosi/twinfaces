@@ -2,6 +2,10 @@ import { z } from "zod";
 
 import type { components } from "@/shared/api/generated/schema";
 
+import type {
+  STATIC_TWIN_FIELD_IDS,
+  STATIC_TWIN_FIELD_KEYS,
+} from "./constants";
 import { TWIN_SCHEMA } from "./schemas";
 
 export type TwinFormValues = z.infer<typeof TWIN_SCHEMA>;
@@ -18,6 +22,8 @@ export type TwinFieldSearchDate =
 
 export type TwinFieldValue = string | string[];
 
+export type StaticTwinFieldKey = (typeof STATIC_TWIN_FIELD_KEYS)[number];
+export type StaticTwinFieldId = (typeof STATIC_TWIN_FIELD_IDS)[number];
 export type DynamicFieldType =
   | "textV1"
   | "numericFieldV1"
