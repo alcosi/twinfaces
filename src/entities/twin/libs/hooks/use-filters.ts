@@ -36,7 +36,7 @@ export function useTwinFilters(
   function buildFilterFields(): Partial<
     Record<TwinFilterKeys, AutoFormValueInfo>
   > {
-    const staticFilters: Partial<Record<TwinFilterKeys, AutoFormValueInfo>> = {
+    const selfFilters: Partial<Record<TwinFilterKeys, AutoFormValueInfo>> = {
       twinIdList: {
         type: AutoFormValueType.tag,
         label: "ID",
@@ -85,7 +85,7 @@ export function useTwinFilters(
       },
     } as const;
 
-    const dynamicFilters =
+    const inheritedFields =
       twinClassFields?.reduce<Record<string, AutoFormValueInfo>>(
         (acc, field) => {
           acc[`fields.${field.key}`] = {
@@ -101,8 +101,8 @@ export function useTwinFilters(
       ) ?? {};
 
     return {
-      ...staticFilters,
-      ...dynamicFilters,
+      ...selfFilters,
+      ...inheritedFields,
     };
   }
 
