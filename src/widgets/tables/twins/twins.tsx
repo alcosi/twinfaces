@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { FaceWT001 } from "@/entities/face";
 import {
+  STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   TWIN_SCHEMA,
   TwinFormValues,
   useCreateTwin,
@@ -15,7 +17,7 @@ import {
   TwinClass_DETAILED,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
-import { Twin, TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
+import { TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
@@ -33,45 +35,9 @@ import {
 } from "../../crud-data-table";
 import { TwinFormFields } from "./form-fields";
 
-type TwinStaticFieldKey = keyof Pick<
-  Twin,
-  | "id"
-  | "twinClassId"
-  | "name"
-  | "statusId"
-  | "description"
-  | "authorUserId"
-  | "assignerUserId"
-  | "headTwinId"
-  | "tags"
-  | "markers"
-  | "createdAt"
-  | "aliases"
->;
-
-function filterValidKeys(keys: string[]): TwinStaticFieldKey[] {
-  const validKeys: TwinStaticFieldKey[] = [
-    "id",
-    "twinClassId",
-    "name",
-    "statusId",
-    "description",
-    "authorUserId",
-    "assignerUserId",
-    "headTwinId",
-    "tags",
-    "markers",
-    "createdAt",
-    "aliases",
-  ];
-  return keys.filter((key): key is TwinStaticFieldKey =>
-    validKeys.includes(key as TwinStaticFieldKey)
-  );
-}
-
 type Props = {
   title?: string;
-  enabledColumns?: string[];
+  enabledColumns?: FaceWT001["columns"];
   // NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
@@ -90,16 +56,15 @@ export function TwinsTable({
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
 
-  const colDefs: Record<TwinStaticFieldKey, ColumnDef<Twin_DETAILED>> = {
-    id: {
-      id: "id",
+  const staticColDefs: Record<string, ColumnDef<Twin_DETAILED>> = {
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id,
       accessorKey: "id",
       header: "ID",
       cell: (data) => <GuidWithCopy value={data.row.original.id} />,
     },
-
-    twinClassId: {
-      id: "twinClassId",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.twinClassId]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.twinClassId,
       accessorKey: "twinClassId",
       header: "Twin class",
       cell: ({ row: { original } }) =>
@@ -112,21 +77,18 @@ export function TwinsTable({
           </div>
         ),
     },
-
-    aliases: {
-      id: "aliases",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.aliases]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.aliases,
       accessorKey: "aliases",
       header: "Alias",
     },
-
-    name: {
-      id: "name",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.name]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.name,
       accessorKey: "name",
       header: "Name",
     },
-
-    statusId: {
-      id: "statusId",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.statusId]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.statusId,
       accessorKey: "statusId",
       header: "Status",
       cell: ({ row: { original } }) => (
@@ -147,9 +109,8 @@ export function TwinsTable({
         </div>
       ),
     },
-
-    description: {
-      id: "description",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.description]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.description,
       accessorKey: "description",
       header: "Description",
       cell: ({ row: { original } }) =>
@@ -159,9 +120,8 @@ export function TwinsTable({
           </div>
         ),
     },
-
-    authorUserId: {
-      id: "authorUserId",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.authorUserId]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.authorUserId,
       accessorKey: "authorUserId",
       header: "Author",
       cell: ({ row: { original } }) =>
@@ -171,9 +131,8 @@ export function TwinsTable({
           </div>
         ),
     },
-
-    assignerUserId: {
-      id: "assignerUserId",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.assignerUserId]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.assignerUserId,
       accessorKey: "assignerUserId",
       header: "Assignee",
       cell: ({ row: { original } }) =>
@@ -186,9 +145,8 @@ export function TwinsTable({
           </div>
         ),
     },
-
-    headTwinId: {
-      id: "headTwinId",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.headTwinId]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.headTwinId,
       accessorKey: "headTwinId",
       header: "Head",
       cell: ({ row: { original } }) =>
@@ -198,9 +156,8 @@ export function TwinsTable({
           </div>
         ) : null,
     },
-
-    tags: {
-      id: "tags",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.tags]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.tags,
       accessorKey: "tags",
       header: "Tags",
       cell: ({ row: { original } }) =>
@@ -212,9 +169,8 @@ export function TwinsTable({
           </div>
         ),
     },
-
-    markers: {
-      id: "markers",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.markers]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.markers,
       accessorKey: "markers",
       header: "Markers",
       cell: ({ row: { original } }) =>
@@ -230,9 +186,8 @@ export function TwinsTable({
           </div>
         ) : null,
     },
-
-    createdAt: {
-      id: "createdAt",
+    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.createdAt]: {
+      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.createdAt,
       accessorKey: "createdAt",
       header: "Created at",
       cell: ({ row: { original } }) =>
@@ -240,16 +195,34 @@ export function TwinsTable({
         formatIntlDate(original.createdAt, "datetime-local"),
     },
   };
-
-  const staticKeys = filterValidKeys(enabledColumns ?? []);
-  const [columnMap, setColumnMap] = useState(
-    enabledColumns
-      ? Object.fromEntries(staticKeys.map((key) => [key, colDefs[key]]))
-      : colDefs
-  );
+  const staticFieldColumnMap = isPopulatedArray(enabledColumns)
+    ? Object.fromEntries(
+        enabledColumns.reduce<[string, ColumnDef<Twin_DETAILED>][]>(
+          (acc, { twinClassFieldId: fieldId }) => {
+            const colDef = fieldId ? staticColDefs[fieldId] : undefined;
+            if (fieldId && colDef) {
+              acc.push([fieldId, colDef]);
+            }
+            return acc;
+          },
+          []
+        )
+      )
+    : staticColDefs;
+  const [columnMap, setColumnMap] = useState(staticFieldColumnMap);
+  const defaultVisibleColumns = enabledColumns
+    ? enabledColumns.reduce<ColumnDef<Twin_DETAILED>[]>((acc, col) => {
+        if (col.showByDefault && col.twinClassFieldId) {
+          const def = columnMap[col.twinClassFieldId];
+          if (def) acc.push(def);
+        }
+        return acc;
+      }, [])
+    : Object.values(staticColDefs);
 
   useEffect(() => {
-    if (isUndefined(baseTwinClassId)) return;
+    if (isUndefined(baseTwinClassId) || !isPopulatedArray(enabledColumns))
+      return;
 
     fetchTwinClassById({
       id: baseTwinClassId,
@@ -257,25 +230,33 @@ export function TwinsTable({
         showTwinClassMode: "SHORT",
         showTwinClass2TwinClassFieldMode: "DETAILED",
       },
-    }).then((twinClass) => {
-      const twinClassFields = twinClass.fields ?? [];
-      setColumnMap((prev) => ({
-        ...prev,
-        ...Object.fromEntries(
-          twinClassFields.map((field) => [
-            field.key,
-            {
-              id: field.key,
-              accessorKey: `fields.${field.key}`,
-              header: field.name,
-            },
-          ])
-        ),
-      }));
-    });
-  }, []);
+    }).then(({ fields = [] }) => {
+      const columns = Object.fromEntries(
+        fields.reduce<[string, ColumnDef<Twin_DETAILED>][]>((acc, field) => {
+          const isEnabled = enabledColumns.some(
+            (col) => col.twinClassFieldId === field.id
+          );
 
-  async function fetchTwin({
+          if (field.id && field.key && isEnabled) {
+            acc.push([
+              field.id,
+              {
+                id: field.id,
+                accessorKey: `fields.${field.key}`,
+                header: field.name,
+              },
+            ]);
+          }
+
+          return acc;
+        }, [])
+      );
+
+      setColumnMap((prev) => ({ ...prev, ...columns }));
+    });
+  }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
+
+  async function fetchTwins({
     pagination,
     filters,
   }: {
@@ -329,12 +310,12 @@ export function TwinsTable({
       title={title}
       columns={Object.values(columnMap)}
       getRowId={(row) => row.id}
-      fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
+      fetcher={(pagination, filters) => fetchTwins({ pagination, filters })}
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      defaultVisibleColumns={Object.values(columnMap)}
+      defaultVisibleColumns={defaultVisibleColumns}
       dialogForm={form}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
