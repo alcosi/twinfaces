@@ -6,8 +6,8 @@ import { toast } from "sonner";
 
 import { FaceWT001 } from "@/entities/face";
 import {
-  STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   DYNAMIC_FIELDS_MAP,
+  STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   TWIN_SCHEMA,
   TwinFormValues,
   useCreateTwin,
@@ -18,6 +18,7 @@ import {
   TwinClass_DETAILED,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
+import { TwinClassField } from "@/entities/twin-class-field";
 import { TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
@@ -35,7 +36,6 @@ import {
   FiltersState,
 } from "../../crud-data-table";
 import { TwinFormFields } from "./form-fields";
-import { TwinClassField } from "@/entities/twin-class-field";
 
 type Props = {
   title?: string;
@@ -248,20 +248,23 @@ export function TwinsTable({
           );
 
           if (isEnabled) {
-            if (field.descriptor?.fieldType && field.descriptor.fieldType in DYNAMIC_FIELDS_MAP) {
+            if (
+              field.descriptor?.fieldType &&
+              field.descriptor.fieldType in DYNAMIC_FIELDS_MAP
+            ) {
               supportedFields.push(field);
             }
 
-          if (field.id && field.key) {
-            acc.push([
-              field.id,
-              {
-                id: field.id,
-                accessorFn: (row) => row.fields?.[field.key!] ?? null,
-                header: field.name,
-              },
-            ]);
-          }
+            if (field.id && field.key) {
+              acc.push([
+                field.id,
+                {
+                  id: field.id,
+                  accessorFn: (row) => row.fields?.[field.key!] ?? null,
+                  header: field.name,
+                },
+              ]);
+            }
           }
 
           return acc;
@@ -270,7 +273,7 @@ export function TwinsTable({
 
       setTwinClassFields(supportedFields);
       setColumnMap((prev) => ({ ...prev, ...columns }));
-    })
+    });
   }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
 
   async function fetchTwins({
