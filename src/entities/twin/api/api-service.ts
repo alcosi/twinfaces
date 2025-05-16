@@ -42,6 +42,43 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
+  function searchBySearchId({
+    pagination,
+    filters,
+    searchId,
+  }: {
+    pagination: PaginationState;
+    filters?: TwinFilters;
+    searchId: string;
+  }) {
+    return settings.client.POST("/private/twin/search/{searchId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { searchId },
+        query: {
+          lazyRelation: false,
+          showTwinMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
+          showTwin2TwinClassMode: "DETAILED",
+          showTwin2UserMode: "DETAILED",
+          showTwin2StatusMode: "DETAILED",
+          showTwinMarker2DataListOptionMode: "DETAILED",
+          showTwinTag2DataListOptionMode: "DETAILED",
+          showTwinByHeadMode: "YELLOW",
+          showTwinAliasMode: "C",
+          showTwinFieldCollectionMode: "ALL_FIELDS",
+          showTwin2TransitionMode: "DETAILED",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+        },
+      },
+      body: {
+        narrow: filters,
+      },
+    });
+  }
+
   function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
     return settings.client.GET("/private/twin/{twinId}/v2", {
       params: {
@@ -187,6 +224,7 @@ export function createTwinApi(settings: ApiSettings) {
     getLinks,
     upsertField,
     getValidTwinsForLink,
+    searchBySearchId,
   };
 }
 

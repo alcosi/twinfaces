@@ -9,6 +9,7 @@ import {
   TwinFormValues,
   useCreateTwin,
   useTwinFilters,
+  useTwinSearchBySearchId,
   useTwinSearchV3,
 } from "@/entities/twin";
 import {
@@ -23,7 +24,12 @@ import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { formatIntlDate, isPopulatedArray, isUndefined } from "@/shared/libs";
+import {
+  formatIntlDate,
+  isPopulatedArray,
+  isTruthy,
+  isUndefined,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import {
@@ -75,6 +81,7 @@ type Props = {
   // NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
+  searchId?: string;
 };
 
 export function TwinsTable({
@@ -82,12 +89,14 @@ export function TwinsTable({
   enabledColumns,
   baseTwinClassId,
   targetHeadTwinId,
+  searchId,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } =
     useTwinFilters(baseTwinClassId);
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
+  const { searchTwinsBySearchId } = useTwinSearchBySearchId();
   const { createTwin } = useCreateTwin();
 
   const colDefs: Record<TwinStaticFieldKey, ColumnDef<Twin_DETAILED>> = {
@@ -275,28 +284,40 @@ export function TwinsTable({
     });
   }, []);
 
-  async function fetchTwin({
+  async function fetchTwins({
     pagination,
     filters,
+    searchId,
   }: {
     pagination?: PaginationState;
     filters: FiltersState;
+    searchId?: string;
   }) {
     const _filters = mapFiltersToPayload(filters.filters);
 
+    const filtersPayload = {
+      ..._filters,
+      twinClassExtendsHierarchyContainsIdList: baseTwinClassId
+        ? [baseTwinClassId]
+        : _filters.twinClassExtendsHierarchyContainsIdList,
+      headTwinIdList: targetHeadTwinId
+        ? [targetHeadTwinId]
+        : _filters.headTwinIdList,
+    };
+
     try {
-      return await searchTwins({
-        pagination: pagination,
-        filters: {
-          ..._filters,
-          twinClassExtendsHierarchyContainsIdList: baseTwinClassId
-            ? [baseTwinClassId]
-            : _filters.twinClassExtendsHierarchyContainsIdList,
-          headTwinIdList: targetHeadTwinId
-            ? [targetHeadTwinId]
-            : _filters.headTwinIdList,
-        },
-      });
+      if (isTruthy(searchId)) {
+        return await searchTwinsBySearchId({
+          pagination: pagination,
+          filters: filtersPayload,
+          searchId: searchId,
+        });
+      } else {
+        return await searchTwins({
+          pagination: pagination,
+          filters: filtersPayload,
+        });
+      }
     } catch (e) {
       toast.error("Failed to fetch twins");
       return { data: [], pagination: {} };
@@ -329,7 +350,9 @@ export function TwinsTable({
       title={title}
       columns={Object.values(columnMap)}
       getRowId={(row) => row.id}
-      fetcher={(pagination, filters) => fetchTwin({ pagination, filters })}
+      fetcher={(pagination, filters) =>
+        fetchTwins({ pagination, filters, searchId })
+      }
       pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),

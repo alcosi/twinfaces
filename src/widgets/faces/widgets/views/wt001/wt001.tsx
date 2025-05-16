@@ -19,6 +19,7 @@ export async function WT001({ widget }: WidgetFaceProps) {
       title={wt001Face.label}
       baseTwinClassId={wt001Face.twinClassId}
       enabledColumns={wt001Face.showColumns}
+      searchId={wt001Face.searchId}
     />
   );
 }
