@@ -24,3 +24,11 @@ export function fixedForwardRef<T, P = {}>(
 ): (props: P & RefAttributes<T>) => ReactNode {
   return forwardRef(render) as any;
 }
+
+// Utility function to create an enum from a string union type
+export const createEnum = <T extends string>(values: T[]): { [K in T]: K } => {
+  return values.reduce((acc, value) => {
+    acc[value] = value;
+    return acc;
+  }, Object.create(null));
+};

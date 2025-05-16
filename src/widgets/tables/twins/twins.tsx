@@ -6,8 +6,8 @@ import { toast } from "sonner";
 
 import { FaceWT001 } from "@/entities/face";
 import {
-  DYNAMIC_FIELDS_MAP,
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
+  TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
   TwinFormValues,
   useCreateTwin,
@@ -250,7 +250,8 @@ export function TwinsTable({
           if (isEnabled) {
             if (
               field.descriptor?.fieldType &&
-              field.descriptor.fieldType in DYNAMIC_FIELDS_MAP
+              field.descriptor.fieldType in
+                TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD
             ) {
               supportedFields.push(field);
             }

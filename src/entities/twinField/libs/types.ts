@@ -1,7 +1,9 @@
 import { DataListOptionV3 } from "@/entities/datalist-option";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { components } from "@/shared/api/generated/schema";
-import { RequireFields } from "@/shared/libs";
+import { RequireFields, createEnum } from "@/shared/libs";
+
+import { TWIN_FIELD_TYPES } from "./constants";
 
 export type TwinFieldUI = RequireFields<
   TwinClassField,
@@ -13,45 +15,4 @@ export type TwinFieldUI = RequireFields<
 export type TwinClassFieldDescriptorTextV1 =
   components["schemas"]["TwinClassFieldDescriptorTextV1"];
 
-export enum TwinFieldType {
-  // TWINFACES-435
-  textV1 = "textV1",
-
-  // TWINFACES-436
-  urlV1 = "urlV1",
-
-  // TWINFACES-434
-  numericV1 = "numericV1",
-  numericFieldV1 = "numericFieldV1",
-  // TWINFACES-437
-
-  colorHexV1 = "colorHexV1",
-
-  // TWINFACES-438
-  dateScrollV1 = "dateScrollV1",
-
-  // TWINFACES-
-  immutableV1 = "immutableV1",
-
-  // TWINFACES-
-  attachmentFieldV1 = "attachmentFieldV1",
-  attachmentV1 = "attachmentV1",
-
-  // TWINFACES-439
-  selectLinkV1 = "selectLinkV1",
-  // TWINFACES-440
-  selectLinkLongV1 = "selectLinkLongV1",
-
-  // TWINFACES-442
-  selectListV1 = "selectListV1",
-
-  selectLongV1 = "selectLongV1",
-
-  // TWINFACES-
-  selectSharedInHeadV1 = "selectSharedInHeadV1",
-
-  // TWINFACES-
-  selectUserV1 = "selectUserV1",
-  // TWINFACES-
-  selectUserLongV1 = "selectUserLongV1",
-}
+export const TwinFieldType = createEnum(TWIN_FIELD_TYPES.slice());

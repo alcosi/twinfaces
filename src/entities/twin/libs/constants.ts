@@ -1,14 +1,14 @@
 import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
 
 import {
-  DynamicFieldType,
+  SearchableTwinFieldType,
   StaticTwinFieldId,
   StaticTwinFieldKey,
+  TwinFieldFilterInput,
   TwinFieldSearchDate,
   TwinFieldSearchList,
   TwinFieldSearchNumeric,
   TwinFieldSearchText,
-  TwinFieldValue,
 } from "./types";
 
 export const TwinTouchIds = ["WATCHED", "STARRED", "REVIEWED"] as const;
@@ -102,23 +102,23 @@ export const FieldDescriptorSelectSharedInHeadV1 = {
   regExp: ".*",
 } as const;
 
-export const DYNAMIC_FIELDS_MAP: Record<
-  DynamicFieldType,
-  (value: TwinFieldValue) => { type: string }
+export const TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD: Record<
+  SearchableTwinFieldType,
+  (value: TwinFieldFilterInput) => { type: string }
 > = {
-  textV1: (value: TwinFieldValue): TwinFieldSearchText => ({
+  textV1: (value: TwinFieldFilterInput): TwinFieldSearchText => ({
     type: "TwinFieldSearchTextV1",
     valueLikeAllOfList: toArrayOfString(toArray(value)).map(wrapWithPercent),
   }),
-  numericFieldV1: (value: TwinFieldValue): TwinFieldSearchNumeric => ({
+  numericFieldV1: (value: TwinFieldFilterInput): TwinFieldSearchNumeric => ({
     type: "TwinFieldSearchNumericV1",
     equals: toArrayOfString(toArray(value))[0],
   }),
-  selectListV1: (value: TwinFieldValue): TwinFieldSearchList => ({
+  selectListV1: (value: TwinFieldFilterInput): TwinFieldSearchList => ({
     type: "TwinFieldSearchListV1",
     optionsAllOfList: toArrayOfString(toArray(value)),
   }),
-  dateScrollV1: (value: TwinFieldValue): TwinFieldSearchDate => ({
+  dateScrollV1: (value: TwinFieldFilterInput): TwinFieldSearchDate => ({
     type: "TwinFieldSearchDateV1",
     equals: `${toArrayOfString(toArray(value))[0]}T00:00:00`,
   }),

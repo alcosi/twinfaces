@@ -20,8 +20,8 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 
-import { DYNAMIC_FIELDS_MAP } from "../constants";
-import { DynamicFieldType } from "../types";
+import { TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD } from "../constants";
+import { SearchableTwinFieldType } from "../types";
 import { useTwinSelectAdapter } from "./use-select-adapter";
 
 export function useTwinFilters(
@@ -164,7 +164,10 @@ function mapDynamicTwinFieldFilters(
         return acc;
       }
 
-      acc[fieldId] = DYNAMIC_FIELDS_MAP[fieldType as DynamicFieldType](value);
+      acc[fieldId] =
+        TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD[
+          fieldType as SearchableTwinFieldType
+        ](value);
 
       return acc;
     },

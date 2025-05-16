@@ -11,6 +11,12 @@ import { TWIN_SCHEMA } from "./schemas";
 export type TwinFormValues = z.infer<typeof TWIN_SCHEMA>;
 
 // === Twin fields ===
+export type SearchableTwinFieldType =
+  | "textV1"
+  | "numericFieldV1"
+  | "selectListV1"
+  | "dateScrollV1";
+
 export type TwinFieldSearchText =
   components["schemas"]["TwinFieldSearchTextV1"];
 export type TwinFieldSearchNumeric =
@@ -20,12 +26,8 @@ export type TwinFieldSearchList =
 export type TwinFieldSearchDate =
   components["schemas"]["TwinFieldSearchDateV1"];
 
-export type TwinFieldValue = string | string[];
+export type TwinFieldFilterInput = string | string[];
 
 export type StaticTwinFieldKey = (typeof STATIC_TWIN_FIELD_KEYS)[number];
 export type StaticTwinFieldId = (typeof STATIC_TWIN_FIELD_IDS)[number];
-export type DynamicFieldType =
-  | "textV1"
-  | "numericFieldV1"
-  | "selectListV1"
-  | "dateScrollV1";
+// === Twin fields ===
