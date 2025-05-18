@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { FaceWT001 } from "@/entities/face";
 import {
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
+  TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
   TwinFormValues,
   useCreateTwin,
@@ -17,6 +18,7 @@ import {
   TwinClass_DETAILED,
   useFetchTwinClassById,
 } from "@/entities/twin-class";
+import { TwinClassField } from "@/entities/twin-class-field";
 import { TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
@@ -50,8 +52,15 @@ export function TwinsTable({
   targetHeadTwinId,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
-  const { buildFilterFields, mapFiltersToPayload } =
-    useTwinFilters(baseTwinClassId);
+  const [twinClassFields, setTwinClassFields] = useState<
+    TwinClass_DETAILED["fields"]
+  >([]);
+  // NOTE: `twinClassFields` is passed directly into `useTwinFilters`, which may trigger unnecessary recomputations.
+  // If this component becomes a performance bottleneck, consider memoizing `twinClassFields` via `useMemo`.
+  const { buildFilterFields, mapFiltersToPayload } = useTwinFilters({
+    baseTwinClassId,
+    twinClassFields,
+  });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
@@ -231,28 +240,14 @@ export function TwinsTable({
         showTwinClass2TwinClassFieldMode: "DETAILED",
       },
     }).then(({ fields = [] }) => {
-      const columns = Object.fromEntries(
-        fields.reduce<[string, ColumnDef<Twin_DETAILED>][]>((acc, field) => {
-          const isEnabled = enabledColumns.some(
-            (col) => col.twinClassFieldId === field.id
-          );
+      const { supportedFields, columnEntries } =
+        extractTwinFieldColumnsAndFilters(fields, enabledColumns);
 
-          if (field.id && field.key && isEnabled) {
-            acc.push([
-              field.id,
-              {
-                id: field.id,
-                accessorKey: `fields.${field.key}`,
-                header: field.name,
-              },
-            ]);
-          }
-
-          return acc;
-        }, [])
-      );
-
-      setColumnMap((prev) => ({ ...prev, ...columns }));
+      setTwinClassFields(supportedFields);
+      setColumnMap((prev) => ({
+        ...prev,
+        ...Object.fromEntries(columnEntries),
+      }));
     });
   }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
 
@@ -325,5 +320,49 @@ export function TwinsTable({
         />
       )}
     />
+  );
+}
+
+function extractTwinFieldColumnsAndFilters(
+  fields: TwinClassField[],
+  enabledColumns: NonNullable<FaceWT001["columns"]>
+): {
+  supportedFields: TwinClassField[];
+  columnEntries: [string, ColumnDef<Twin_DETAILED>][];
+} {
+  return fields.reduce<{
+    supportedFields: TwinClassField[];
+    columnEntries: [string, ColumnDef<Twin_DETAILED>][];
+  }>(
+    ({ supportedFields, columnEntries }, field) => {
+      const isEnabled = enabledColumns.some(
+        (col) => col.twinClassFieldId === field.id
+      );
+
+      if (!isEnabled || isUndefined(field.id) || isUndefined(field.key)) {
+        return { supportedFields, columnEntries };
+      }
+
+      columnEntries.push([
+        field.id,
+        {
+          id: field.id,
+          accessorFn: (row) => row.fields?.[field.key!] ?? null,
+          header: field.name,
+        },
+      ]);
+
+      // TODO: remove supportedFields filter once the backend supports all field types for filtering
+      const isSearchable =
+        field.descriptor?.fieldType &&
+        field.descriptor.fieldType in TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD;
+
+      if (isSearchable) {
+        supportedFields.push(field);
+      }
+
+      return { supportedFields, columnEntries };
+    },
+    { supportedFields: [], columnEntries: [] }
   );
 }

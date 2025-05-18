@@ -55,7 +55,7 @@ export function isNull(value: unknown): value is null {
 }
 
 export function isObject<T extends object>(value: unknown): value is T {
-  return typeof value === "object" && value !== null;
+  return Object.prototype.toString.call(value) === "[object Object]";
 }
 
 // React-specific type-checking utility functions

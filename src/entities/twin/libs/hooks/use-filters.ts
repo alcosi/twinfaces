@@ -2,23 +2,34 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  TwinClass_DETAILED,
+  useTwinClassSelectAdapter,
+} from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { TwinFilterKeys, TwinFilters } from "@/entities/twin/server";
 import { useUserSelectAdapter } from "@/entities/user";
 import {
   type FilterFeature,
+  isObject,
+  isPopulatedArray,
   isUndefined,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
 
+import { TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD } from "../constants";
+import { SearchableTwinFieldType } from "../types";
 import { useTwinSelectAdapter } from "./use-select-adapter";
 
-export function useTwinFilters(
-  baseTwinClassId?: string
-): FilterFeature<TwinFilterKeys, TwinFilters> {
+export function useTwinFilters({
+  baseTwinClassId,
+  twinClassFields,
+}: {
+  baseTwinClassId?: string;
+  twinClassFields?: TwinClass_DETAILED["fields"];
+}): FilterFeature<TwinFilterKeys, TwinFilters> {
   const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
   const uAdapter = useUserSelectAdapter();
@@ -27,7 +38,7 @@ export function useTwinFilters(
   function buildFilterFields(): Partial<
     Record<TwinFilterKeys, AutoFormValueInfo>
   > {
-    return {
+    const selfFilters: Partial<Record<TwinFilterKeys, AutoFormValueInfo>> = {
       twinIdList: {
         type: AutoFormValueType.tag,
         label: "ID",
@@ -75,11 +86,39 @@ export function useTwinFilters(
         ...uAdapter,
       },
     } as const;
+
+    const inheritedFields =
+      twinClassFields?.reduce<Record<string, AutoFormValueInfo>>(
+        (acc, field) => {
+          acc[`fields.${field.key}`] = {
+            type: AutoFormValueType.twinField,
+            label: field.name,
+            twinClassId: baseTwinClassId!,
+            descriptor: field.descriptor,
+          };
+
+          return acc;
+        },
+        {}
+      ) ?? {};
+
+    return {
+      ...selfFilters,
+      ...inheritedFields,
+    };
   }
 
   function mapFiltersToPayload(
     filters: Record<TwinFilterKeys, unknown>
   ): TwinFilters {
+    const fields =
+      isObject(filters.fields) && isPopulatedArray(twinClassFields)
+        ? mapInheritedFieldFiltersToPayload(
+            filters.fields as Record<string, string | undefined>,
+            twinClassFields
+          )
+        : {};
+
     const result: TwinFilters = {
       twinIdList: toArrayOfString(toArray(filters.twinIdList), "id"),
       twinNameLikeList: toArrayOfString(
@@ -101,6 +140,7 @@ export function useTwinFilters(
         "description"
       ).map(wrapWithPercent),
       headTwinIdList: toArrayOfString(toArray(filters.headTwinIdList), "id"),
+      fields: fields,
     };
 
     return result;
@@ -110,4 +150,28 @@ export function useTwinFilters(
     buildFilterFields,
     mapFiltersToPayload,
   };
+}
+
+function mapInheritedFieldFiltersToPayload(
+  filterFields: Record<string, string | undefined>,
+  twinClassFields: NonNullable<TwinClass_DETAILED["fields"]>
+): NonNullable<TwinFilters["fields"]> {
+  return twinClassFields.reduce<NonNullable<TwinFilters["fields"]>>(
+    (acc, { id: fieldId, key: fieldKey, descriptor }) => {
+      if (
+        isUndefined(fieldId) ||
+        isUndefined(fieldKey) ||
+        isUndefined(descriptor?.fieldType)
+      ) {
+        return acc;
+      }
+
+      acc[fieldId] = TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD[
+        descriptor.fieldType as SearchableTwinFieldType
+      ](filterFields[fieldKey]!);
+
+      return acc;
+    },
+    {}
+  );
 }

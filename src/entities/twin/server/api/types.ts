@@ -6,6 +6,11 @@ import { RequireFields } from "@/shared/libs";
 export type Twin = components["schemas"]["TwinV2"];
 export type Twin_HYDRATED = components["schemas"]["TwinV2"] & {
   ownerUser?: User;
+
+  // TODO: implement selfFields, inheritedFields, and allFields (combined)
+  // selfFields?: Record<string, unknown>;
+  // inheritedFields?: Record<string, unknown>;
+  // fields?: Record<string, unknown>; | allFields?: Record<string, unknown>;
 };
 
 export type Twin_SHORT = RequireFields<
@@ -47,7 +52,8 @@ export type TwinFilterKeys =
   | "twinClassExtendsHierarchyContainsIdList"
   | "headTwinIdList"
   | "createdByUserIdList"
-  | "assignerUserIdList";
+  | "assignerUserIdList"
+  | "fields";
 
 export type TwinFilters = Partial<
   Pick<components["schemas"]["TwinSearchRqV1"], TwinFilterKeys>
