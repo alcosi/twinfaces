@@ -55,10 +55,12 @@ export function TwinsTable({
   const [twinClassFields, setTwinClassFields] = useState<
     TwinClass_DETAILED["fields"]
   >([]);
-  const { buildFilterFields, mapFiltersToPayload } = useTwinFilters(
+  // NOTE: `twinClassFields` is passed directly into `useTwinFilters`, which may trigger unnecessary recomputations.
+  // If this component becomes a performance bottleneck, consider memoizing `twinClassFields` via `useMemo`.
+  const { buildFilterFields, mapFiltersToPayload } = useTwinFilters({
     baseTwinClassId,
-    twinClassFields
-  );
+    twinClassFields,
+  });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
@@ -238,42 +240,14 @@ export function TwinsTable({
         showTwinClass2TwinClassFieldMode: "DETAILED",
       },
     }).then(({ fields = [] }) => {
-      // TODO: remove this when the BE supports all dynamic filters
-      const supportedFields: TwinClassField[] = [];
-
-      const columns = Object.fromEntries(
-        fields.reduce<[string, ColumnDef<Twin_DETAILED>][]>((acc, field) => {
-          const isEnabled = enabledColumns.some(
-            (col) => col.twinClassFieldId === field.id
-          );
-
-          if (isEnabled) {
-            if (
-              field.descriptor?.fieldType &&
-              field.descriptor.fieldType in
-                TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD
-            ) {
-              supportedFields.push(field);
-            }
-
-            if (field.id && field.key) {
-              acc.push([
-                field.id,
-                {
-                  id: field.id,
-                  accessorFn: (row) => row.fields?.[field.key!] ?? null,
-                  header: field.name,
-                },
-              ]);
-            }
-          }
-
-          return acc;
-        }, [])
-      );
+      const { supportedFields, columnEntries } =
+        extractTwinFieldColumnsAndFilters(fields, enabledColumns);
 
       setTwinClassFields(supportedFields);
-      setColumnMap((prev) => ({ ...prev, ...columns }));
+      setColumnMap((prev) => ({
+        ...prev,
+        ...Object.fromEntries(columnEntries),
+      }));
     });
   }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
 
@@ -346,5 +320,49 @@ export function TwinsTable({
         />
       )}
     />
+  );
+}
+
+function extractTwinFieldColumnsAndFilters(
+  fields: TwinClassField[],
+  enabledColumns: NonNullable<FaceWT001["columns"]>
+): {
+  supportedFields: TwinClassField[];
+  columnEntries: [string, ColumnDef<Twin_DETAILED>][];
+} {
+  return fields.reduce<{
+    supportedFields: TwinClassField[];
+    columnEntries: [string, ColumnDef<Twin_DETAILED>][];
+  }>(
+    ({ supportedFields, columnEntries }, field) => {
+      const isEnabled = enabledColumns.some(
+        (col) => col.twinClassFieldId === field.id
+      );
+
+      if (!isEnabled || isUndefined(field.id) || isUndefined(field.key)) {
+        return { supportedFields, columnEntries };
+      }
+
+      columnEntries.push([
+        field.id,
+        {
+          id: field.id,
+          accessorFn: (row) => row.fields?.[field.key!] ?? null,
+          header: field.name,
+        },
+      ]);
+
+      // TODO: remove supportedFields filter once the backend supports all field types for filtering
+      const isSearchable =
+        field.descriptor?.fieldType &&
+        field.descriptor.fieldType in TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD;
+
+      if (isSearchable) {
+        supportedFields.push(field);
+      }
+
+      return { supportedFields, columnEntries };
+    },
+    { supportedFields: [], columnEntries: [] }
   );
 }

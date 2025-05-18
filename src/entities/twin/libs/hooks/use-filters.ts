@@ -13,7 +13,6 @@ import {
   type FilterFeature,
   isObject,
   isPopulatedArray,
-  isTruthy,
   isUndefined,
   toArray,
   toArrayOfString,
@@ -24,10 +23,13 @@ import { TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD } from "../constants";
 import { SearchableTwinFieldType } from "../types";
 import { useTwinSelectAdapter } from "./use-select-adapter";
 
-export function useTwinFilters(
-  baseTwinClassId?: string,
-  twinClassFields?: TwinClass_DETAILED["fields"]
-): FilterFeature<TwinFilterKeys, TwinFilters> {
+export function useTwinFilters({
+  baseTwinClassId,
+  twinClassFields,
+}: {
+  baseTwinClassId?: string;
+  twinClassFields?: TwinClass_DETAILED["fields"];
+}): FilterFeature<TwinFilterKeys, TwinFilters> {
   const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
   const uAdapter = useUserSelectAdapter();
@@ -111,7 +113,7 @@ export function useTwinFilters(
   ): TwinFilters {
     const fields =
       isObject(filters.fields) && isPopulatedArray(twinClassFields)
-        ? mapDynamicTwinFieldFilters(
+        ? mapInheritedFieldFiltersToPayload(
             filters.fields as Record<string, string | undefined>,
             twinClassFields
           )
@@ -150,24 +152,23 @@ export function useTwinFilters(
   };
 }
 
-function mapDynamicTwinFieldFilters(
+function mapInheritedFieldFiltersToPayload(
   filterFields: Record<string, string | undefined>,
   twinClassFields: NonNullable<TwinClass_DETAILED["fields"]>
 ): NonNullable<TwinFilters["fields"]> {
   return twinClassFields.reduce<NonNullable<TwinFilters["fields"]>>(
     (acc, { id: fieldId, key: fieldKey, descriptor }) => {
-      // TODO: @berdimyradov review & refactor
-      const value = fieldKey ? filterFields[fieldKey] : undefined;
-      const fieldType = descriptor?.fieldType;
-
-      if (typeof fieldId !== "string" || !isTruthy(value) || !fieldType) {
+      if (
+        isUndefined(fieldId) ||
+        isUndefined(fieldKey) ||
+        isUndefined(descriptor?.fieldType)
+      ) {
         return acc;
       }
 
-      acc[fieldId] =
-        TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD[
-          fieldType as SearchableTwinFieldType
-        ](value);
+      acc[fieldId] = TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD[
+        descriptor.fieldType as SearchableTwinFieldType
+      ](filterFields[fieldKey]!);
 
       return acc;
     },
