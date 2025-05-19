@@ -43,6 +43,7 @@ type Props = {
   // NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
+  showCreateButton?: boolean;
 };
 
 export function TwinsTable({
@@ -50,6 +51,7 @@ export function TwinsTable({
   enabledColumns,
   baseTwinClassId,
   targetHeadTwinId,
+  showCreateButton,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -312,7 +314,9 @@ export function TwinsTable({
       }}
       defaultVisibleColumns={defaultVisibleColumns}
       dialogForm={form}
-      onCreateSubmit={handleOnCreateSubmit}
+      onCreateSubmit={
+        showCreateButton === false ? undefined : handleOnCreateSubmit
+      }
       renderFormFields={() => (
         <TwinFormFields
           control={form.control}

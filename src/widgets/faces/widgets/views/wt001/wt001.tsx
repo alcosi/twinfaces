@@ -12,7 +12,7 @@ export async function WT001({ widget }: WidgetFaceProps) {
     return <AlertError message="Widget WT001 failed to load." />;
   }
 
-  const { label, twinClassId, columns } = result.data;
+  const { label, twinClassId, columns, showCreateButton } = result.data;
   const sortedEnabledColumns = Array.isArray(columns)
     ? [...columns].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     : [];
@@ -22,6 +22,7 @@ export async function WT001({ widget }: WidgetFaceProps) {
       title={label}
       baseTwinClassId={twinClassId}
       enabledColumns={sortedEnabledColumns}
+      showCreateButton={showCreateButton}
     />
   );
 }
