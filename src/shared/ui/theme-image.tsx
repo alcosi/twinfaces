@@ -29,7 +29,7 @@ export function ThemeImage({
         alt={alt}
         width={width}
         height={height}
-        className={cn("dark:hidden", className)}
+        className={cn("block dark:hidden", className)}
         {...props}
       />
       <Image
@@ -37,7 +37,7 @@ export function ThemeImage({
         alt={alt}
         width={width}
         height={height}
-        className={cn("dark:block", className)}
+        className={cn("hidden dark:block", className)}
         {...props}
       />
     </>

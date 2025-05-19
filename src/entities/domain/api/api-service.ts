@@ -13,7 +13,7 @@ export function createDomainApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
-          showDomainMode: "SHORT",
+          showDomainMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
         },
