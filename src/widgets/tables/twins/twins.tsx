@@ -40,10 +40,11 @@ import { TwinFormFields } from "./form-fields";
 type Props = {
   title?: string;
   enabledColumns?: FaceWT001["columns"];
-  // NOTE: Filtering criteria for retrieving related twins
+  showCreateButton?: boolean;
+  // === start === NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
-  showCreateButton?: boolean;
+  // === end ===
 };
 
 export function TwinsTable({
@@ -51,7 +52,7 @@ export function TwinsTable({
   enabledColumns,
   baseTwinClassId,
   targetHeadTwinId,
-  showCreateButton,
+  showCreateButton = true,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -314,9 +315,7 @@ export function TwinsTable({
       }}
       defaultVisibleColumns={defaultVisibleColumns}
       dialogForm={form}
-      onCreateSubmit={
-        showCreateButton === false ? undefined : handleOnCreateSubmit
-      }
+      onCreateSubmit={showCreateButton ? handleOnCreateSubmit : undefined}
       renderFormFields={() => (
         <TwinFormFields
           control={form.control}
