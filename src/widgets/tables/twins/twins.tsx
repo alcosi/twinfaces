@@ -310,7 +310,9 @@ export function TwinsTable({
         return await searchTwinsBySearchId({
           pagination: pagination,
           filters: filtersPayload,
-          searchId: searchId,
+          //TODO hardcode waiting for backend support storageId
+          storageId: "5fa88b37-8e9b-48f6-a39c-9b629a148e9d",
+          searchId,
         });
       } else {
         return await searchTwins({

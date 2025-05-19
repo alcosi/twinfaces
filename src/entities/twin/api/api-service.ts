@@ -46,10 +46,12 @@ export function createTwinApi(settings: ApiSettings) {
     pagination,
     filters,
     searchId,
+    storageId,
   }: {
     pagination: PaginationState;
     filters?: TwinFilters;
     searchId: string;
+    storageId: string;
   }) {
     return settings.client.POST("/private/twin/search/{searchId}/v1", {
       params: {
@@ -74,6 +76,9 @@ export function createTwinApi(settings: ApiSettings) {
         },
       },
       body: {
+        params: {
+          storageId,
+        },
         narrow: filters,
       },
     });

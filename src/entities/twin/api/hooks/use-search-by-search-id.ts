@@ -16,16 +16,19 @@ export const useTwinSearchBySearchId = () => {
       pagination = { pageIndex: 0, pageSize: 10 },
       filters,
       searchId,
+      storageId,
     }: {
       pagination?: PaginationState;
       filters?: TwinFilters;
       searchId: string;
+      storageId: string;
     }): Promise<PagedResponse<Twin_DETAILED>> => {
       try {
         const { data, error } = await api.twin.searchBySearchId({
           pagination,
           filters,
           searchId,
+          storageId,
         });
 
         if (error) {
