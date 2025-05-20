@@ -28,9 +28,11 @@ export function MasonryLayout({
       (child.props as { className?: string })?.className ?? "";
     const { columnIndex, rowIndex } = parseGridPlacement(childClassName);
 
-    if (!isNumber(columnIndex)) return;
-
-    const targetColumn = columns[columnIndex];
+    // NOTE: use the parsed columnIndex if provided, otherwise fallback to [round-robin](https://en.wikipedia.org/wiki/Round-robin_scheduling)
+    const distributedColIndex = isNumber(columnIndex)
+      ? columnIndex
+      : index % colCount;
+    const targetColumn = columns[distributedColIndex];
     if (!targetColumn) return;
 
     const item = <Masonry.Item key={index}>{child}</Masonry.Item>;
