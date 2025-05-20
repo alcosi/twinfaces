@@ -23,7 +23,7 @@ export function TwinflowGeneral({
   onChange,
 }: {
   twinflow: TwinFlow;
-  onChange: () => any;
+  onChange: () => void;
 }) {
   const api = useContext(PrivateApiContext);
   const twinStatusAdapter = useTwinStatusSelectAdapter();
@@ -38,7 +38,7 @@ export function TwinflowGeneral({
     }
   }
 
-  const nameSettings: InPlaceEditProps = {
+  const nameSettings: InPlaceEditProps<typeof twinflow.name> = {
     id: "name",
     value: twinflow.name,
     valueInfo: {
@@ -51,12 +51,12 @@ export function TwinflowGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return updateTwinFlow({
-        nameI18n: { translationInCurrentLocale: value as string },
+        nameI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const descriptionSettings: InPlaceEditProps = {
+  const descriptionSettings: InPlaceEditProps<typeof twinflow.description> = {
     id: "description",
     value: twinflow.description,
     valueInfo: {
@@ -69,7 +69,7 @@ export function TwinflowGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return updateTwinFlow({
-        descriptionI18n: { translationInCurrentLocale: value as string },
+        descriptionI18n: { translationInCurrentLocale: value },
       });
     },
   };
