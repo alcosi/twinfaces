@@ -5,10 +5,11 @@ import { cn, isPopulatedString, safe } from "@/shared/libs";
 
 import { AlertError } from "../components";
 import { TWidgetFaceProps, Widget, WidgetFaceProps } from "./types";
-import { TW001, TW002, TW004, TW005, WT001 } from "./views";
+import { TW001, TW002, TW004, TW005, WT001, WT003 } from "./views";
 
 const WIDGETS: Record<string, FC<WidgetFaceProps>> = {
   WT001,
+  WT003,
 };
 
 const TWIDGETS: Record<string, FC<TWidgetFaceProps>> = {
