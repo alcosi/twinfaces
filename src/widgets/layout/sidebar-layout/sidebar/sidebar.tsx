@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
   SlideView,
   Tabs,
+  ThemeImage,
 } from "@/shared/ui";
 
 import { SidebarAreaSwitcher } from "./area-switcher";
@@ -65,13 +66,24 @@ export function AppSidebar({ face }: Props) {
   return (
     <nav>
       <Sidebar collapsible="icon">
-        <SidebarHeader className="h-16 items-center justify-center border-b border-border">
+        <SidebarHeader className="border-border h-16 items-center justify-center border-b">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
-                    <Globe className="h-4 w-4" />
+                    {currentDomain?.iconLight && currentDomain?.iconDark ? (
+                      <ThemeImage
+                        className="h-4 w-4 rounded-full"
+                        lightSrc={currentDomain?.iconLight}
+                        darkSrc={currentDomain?.iconDark}
+                        width={56}
+                        height={56}
+                        alt="Domain logo icon"
+                      />
+                    ) : (
+                      <Globe className="h-4 w-4" />
+                    )}
                     {currentDomain?.key ?? "Select Domain"}
                     <ChevronsUpDown className="ml-auto" />
                   </SidebarMenuButton>
@@ -83,7 +95,20 @@ export function AppSidebar({ face }: Props) {
                         key={domain.id}
                         disabled={domain.id === currentDomain?.id}
                         onClick={() => onDomainSwitch(domain)}
+                        className="gap-x-2"
                       >
+                        {domain.iconLight && domain.iconDark ? (
+                          <ThemeImage
+                            className="h-4 w-4 rounded-full"
+                            lightSrc={domain.iconLight}
+                            darkSrc={domain.iconDark}
+                            width={56}
+                            height={56}
+                            alt="Domain logo icon"
+                          />
+                        ) : (
+                          <Globe className="h-4 w-4" />
+                        )}
                         <span>{domain.key}</span>
                       </DropdownMenuItem>
                     ))}
@@ -128,7 +153,7 @@ export function AppSidebar({ face }: Props) {
           )}
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-border">
+        <SidebarFooter className="border-border border-t">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
