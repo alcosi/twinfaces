@@ -1,7 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { z } from "zod";
 
-import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";
@@ -15,7 +14,7 @@ import {
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PrivateApiContext } from "@/shared/api";
-import { formatIntlDate } from "@/shared/libs";
+import { formatIntlDate, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -24,13 +23,10 @@ export function TwinflowGeneral({
   onChange,
 }: {
   twinflow: TwinFlow;
-  onChange: () => any;
+  onChange: () => void;
 }) {
   const api = useContext(PrivateApiContext);
-  const sAdapter = useTwinStatusSelectAdapter();
-  const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
-  const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
-    useState<AutoEditDialogSettings | undefined>(undefined);
+  const twinStatusAdapter = useTwinStatusSelectAdapter();
 
   async function updateTwinFlow(newFlow: TwinFlowUpdateRq) {
     try {
@@ -42,7 +38,7 @@ export function TwinflowGeneral({
     }
   }
 
-  const nameSettings: InPlaceEditProps = {
+  const nameSettings: InPlaceEditProps<typeof twinflow.name> = {
     id: "name",
     value: twinflow.name,
     valueInfo: {
@@ -55,12 +51,12 @@ export function TwinflowGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return updateTwinFlow({
-        nameI18n: { translationInCurrentLocale: value as string },
+        nameI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const descriptionSettings: InPlaceEditProps = {
+  const descriptionSettings: InPlaceEditProps<typeof twinflow.description> = {
     id: "description",
     value: twinflow.description,
     valueInfo: {
@@ -73,31 +69,43 @@ export function TwinflowGeneral({
     schema: z.string().min(3),
     onSubmit: (value) => {
       return updateTwinFlow({
-        descriptionI18n: { translationInCurrentLocale: value as string },
+        descriptionI18n: { translationInCurrentLocale: value },
       });
     },
   };
 
-  const initialStatusIdAutoDialogSettings: AutoEditDialogSettings = {
-    value: { initialStatusId: twinflow.initialStatusId },
-    title: "Update initial status",
-    onSubmit: (values) => {
-      return updateTwinFlow({ initialStatusId: values.initialStatusId });
-    },
-    valuesInfo: {
-      initialStatusId: {
-        type: AutoFormValueType.combobox,
-        label: "Initial status",
-        selectPlaceholder: "Select status...",
-        ...sAdapter,
+  const initialStatusAutoDialogSettings: InPlaceEditProps<
+    typeof twinflow.initialStatusId
+  > = {
+    id: "initialStatusId",
+    value: twinflow.initialStatusId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select status...",
+      ...twinStatusAdapter,
+      getItems: async (search: string) => {
+        return twinStatusAdapter.getItems(search, {
+          twinClassIdMap: reduceToObject({
+            list: toArray(twinflow.twinClassId),
+            defaultValue: true,
+          }),
+        });
       },
     },
+    renderPreview: twinflow.initialStatus
+      ? (_) => (
+          <TwinClassStatusResourceLink
+            data={twinflow.initialStatus!}
+            twinClassId={twinflow.twinClassId!}
+            withTooltip
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return updateTwinFlow({ initialStatusId: id });
+    },
   };
-
-  function openWithSettings(settings: AutoEditDialogSettings) {
-    setCurrentAutoEditDialogSettings(settings);
-    setEditFieldDialogOpen(true);
-  }
 
   return (
     <InPlaceEditContextProvider>
@@ -136,19 +144,10 @@ export function TwinflowGeneral({
             </TableCell>
           </TableRow>
 
-          <TableRow
-            className="cursor-pointer"
-            onClick={() => openWithSettings(initialStatusIdAutoDialogSettings)}
-          >
+          <TableRow>
             <TableCell>Initial status</TableCell>
             <TableCell>
-              {twinflow.initialStatus && (
-                <TwinClassStatusResourceLink
-                  data={twinflow.initialStatus}
-                  twinClassId={twinflow.twinClassId!}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...initialStatusAutoDialogSettings} />
             </TableCell>
           </TableRow>
 
@@ -160,12 +159,6 @@ export function TwinflowGeneral({
           </TableRow>
         </TableBody>
       </Table>
-
-      <AutoDialog
-        open={editFieldDialogOpen}
-        onOpenChange={setEditFieldDialogOpen}
-        settings={currentAutoEditDialogSettings}
-      />
     </InPlaceEditContextProvider>
   );
 }
