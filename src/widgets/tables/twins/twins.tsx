@@ -20,6 +20,7 @@ import {
 } from "@/entities/twin-class";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
+import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
@@ -27,9 +28,15 @@ import { TransitionPerformer } from "@/features/twin-flow-transition";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { formatIntlDate, isPopulatedArray, isUndefined } from "@/shared/libs";
+import {
+  formatIntlDate,
+  isEmptyString,
+  isPopulatedArray,
+  isUndefined,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
+import { renderTwinFieldPreview } from "../../../widgets/form-fields";
 import {
   CrudDataTable,
   DataTableHandle,
@@ -222,7 +229,7 @@ export function TwinsTable({
       )
     : staticColDefs;
   const [columnMap, setColumnMap] = useState(staticFieldColumnMap);
-  const defaultVisibleColumns = enabledColumns
+  const defaultVisibleColumns = isPopulatedArray(enabledColumns)
     ? enabledColumns.reduce<ColumnDef<Twin_DETAILED>[]>((acc, col) => {
         if (col.showByDefault && col.twinClassFieldId) {
           const def = columnMap[col.twinClassFieldId];
@@ -349,9 +356,18 @@ function extractTwinFieldColumnsAndFilters(
       columnEntries.push([
         field.id,
         {
-          id: field.id,
-          accessorFn: (row) => row.fields?.[field.key!] ?? null,
+          id: field.key,
+          accessorKey: `fields.${field.key}`,
           header: field.name,
+          cell: ({ row: { original } }) => {
+            const twinField = original.fields?.[field.key!] as TwinFieldUI;
+
+            if (isEmptyString(twinField.value)) {
+              return twinField.value;
+            }
+
+            return renderTwinFieldPreview(twinField);
+          },
         },
       ]);
 

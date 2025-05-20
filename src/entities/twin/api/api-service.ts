@@ -36,6 +36,8 @@ export function createTwinApi(settings: ApiSettings) {
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
+          showTwinField2DataListOptionMode: "DETAILED",
+          showTwinClass2TwinClassFieldMode: "DETAILED",
         },
       },
       body: [{ ...filters }],

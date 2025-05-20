@@ -2,9 +2,9 @@ import { TwinsAPI } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinFromMap } from "../libs";
-import { Twin, TwinViewQuery } from "./types";
+import { TwinViewQuery, Twin_HYDRATED } from "./types";
 
-export async function fetchTwinById<T extends Twin>(
+export async function fetchTwinById<T extends Twin_HYDRATED>(
   twinId: string,
   options: {
     header: {
