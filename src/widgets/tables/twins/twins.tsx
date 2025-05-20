@@ -31,7 +31,6 @@ import { UserResourceLink } from "@/features/user/ui";
 import {
   formatIntlDate,
   isEmptyString,
-  isFalsy,
   isPopulatedArray,
   isUndefined,
 } from "@/shared/libs";
@@ -230,7 +229,7 @@ export function TwinsTable({
       )
     : staticColDefs;
   const [columnMap, setColumnMap] = useState(staticFieldColumnMap);
-  const defaultVisibleColumns = enabledColumns
+  const defaultVisibleColumns = isPopulatedArray(enabledColumns)
     ? enabledColumns.reduce<ColumnDef<Twin_DETAILED>[]>((acc, col) => {
         if (col.showByDefault && col.twinClassFieldId) {
           const def = columnMap[col.twinClassFieldId];
@@ -257,27 +256,7 @@ export function TwinsTable({
       setTwinClassFields(supportedFields);
       setColumnMap((prev) => ({
         ...prev,
-        ...Object.fromEntries(
-          supportedFields.map((field) => [
-            field.key,
-            {
-              id: field.key,
-              accessorKey: `fields.${field.key}`,
-              header: field.name,
-              cell: ({ row: { original } }) => {
-                const fieldValue = original.fields?.[field.key!] as
-                  | TwinFieldUI
-                  | undefined;
-
-                if (isFalsy(fieldValue) || isEmptyString(fieldValue.value)) {
-                  return null;
-                }
-
-                return renderTwinFieldPreview(fieldValue);
-              },
-            },
-          ])
-        ),
+        ...Object.fromEntries(columnEntries),
       }));
     });
   }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
@@ -377,9 +356,18 @@ function extractTwinFieldColumnsAndFilters(
       columnEntries.push([
         field.id,
         {
-          id: field.id,
-          accessorFn: (row) => row.fields?.[field.key!] ?? null,
+          id: field.key,
+          accessorKey: `fields.${field.key}`,
           header: field.name,
+          cell: ({ row: { original } }) => {
+            const twinField = original.fields?.[field.key!] as TwinFieldUI;
+
+            if (isEmptyString(twinField.value)) {
+              return twinField.value;
+            }
+
+            return renderTwinFieldPreview(twinField);
+          },
         },
       ]);
 

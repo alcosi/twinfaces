@@ -30,11 +30,11 @@ export type Twin_SHORT = RequireFields<
   | "twinClassId"
 >;
 
-export type Twin_DETAILED = Twin_HYDRATED &
-  RequireFields<
-    Twin_SHORT,
-    "twinClass" | "createdAt" | "headTwinId" | "tags"
-  > & {
+export type Twin_DETAILED = RequireFields<
+  Twin_SHORT,
+  "twinClass" | "createdAt" | "headTwinId" | "tags"
+> &
+  Twin_HYDRATED & {
     subordinates?: TwinClass_DETAILED[];
   };
 

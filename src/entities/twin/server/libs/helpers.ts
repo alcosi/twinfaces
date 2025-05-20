@@ -1,5 +1,6 @@
 import { DataListOptionV1 } from "@/entities/datalist-option";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinClassField } from "@/entities/twin-class-field";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
 import { TwinFieldUI } from "@/entities/twinField";
 import { RelatedObjects } from "@/shared/api";
@@ -62,25 +63,27 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
   }
 
   if (dto.fields && relatedObjects.twinClassFieldMap) {
-    hydrated.fields = {};
-    for (const [key, value] of Object.entries(dto.fields)) {
-      const twinClassField = Object.values(
-        relatedObjects.twinClassFieldMap
-      ).find((field) => field.key === key);
+    const KEY_TO_TWIN_CLASS_FIELD_MAP = Object.values(
+      relatedObjects.twinClassFieldMap
+    ).reduce<Record<string, TwinClassField>>((acc, field) => {
+      if (field.key) acc[field.key] = field;
+      return acc;
+    }, {});
 
-      let fieldValue;
+    hydrated.fields = Object.entries(dto.fields).reduce<
+      Record<string, TwinFieldUI>
+    >((acc, [key, value]) => {
+      const twinClassField = KEY_TO_TWIN_CLASS_FIELD_MAP[key];
+      const fieldValue =
+        relatedObjects.dataListsOptionMap?.[value] ?? value ?? "";
 
-      if (relatedObjects.dataListsOptionMap?.[value]) {
-        fieldValue = relatedObjects.dataListsOptionMap[value];
-      } else {
-        fieldValue = value ?? "";
-      }
-
-      hydrated.fields[key] = {
+      acc[key] = {
         ...twinClassField,
         value: fieldValue,
       } as TwinFieldUI;
-    }
+
+      return acc;
+    }, {});
   }
 
   return hydrated;
