@@ -1,5 +1,5 @@
-import { Login } from "@/screens/login";
+import { DomainSelector } from "@/screens/domain-selector";
 
 export default function Page() {
-  return <Login />;
+  return <DomainSelector />;
 }

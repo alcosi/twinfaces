@@ -2525,6 +2525,108 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/refresh/v2": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh auth_token by refresh_token and fingerprint */
+        post: operations["authRefreshV2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/refresh/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh auth_token by refresh_token */
+        post: operations["authRefreshV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Logout from identity provider, linked to current domain */
+        post: operations["authLogoutV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/login/v2": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns auth/refresh tokens by username/password/fingerprint */
+        post: operations["authLoginV2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/login/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns auth/refresh tokens by username/password */
+        post: operations["authLoginV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/config/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns auth configuration for selected domain. Wit */
+        post: operations["authConfigV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/public/resource/{id}/v1": {
         parameters: {
             query?: never;
@@ -4282,6 +4384,16 @@ export interface components {
             attributes?: {
                 [key: string]: string;
             };
+            /**
+             * @description background color
+             * @example #ff00ff
+             */
+            backgroundColor?: string;
+            /**
+             * @description font color
+             * @example #ff00ff
+             */
+            fontColor?: string;
         };
         DataListV1: {
             /**
@@ -6507,6 +6619,16 @@ export interface components {
             attributes?: {
                 [key: string]: string;
             };
+            /**
+             * @description background color
+             * @example #ff00ff
+             */
+            backgroundColor?: string;
+            /**
+             * @description font color
+             * @example #ff00ff
+             */
+            fontColor?: string;
             /**
              * Format: uuid
              * @description id
@@ -14517,6 +14639,154 @@ export interface components {
             /** @description attachment list */
             attachments?: components["schemas"]["AttachmentV1"][];
         };
+        AuthRefreshRqV2: {
+            /** @description refreshToken */
+            refreshToken?: string;
+            /** @description agent fingerprint (hash) */
+            fingerprint?: string;
+        };
+        AuthRefreshRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description tokens data */
+            authData?: {
+                [key: string]: string;
+            };
+        };
+        AuthRefreshRqV1: {
+            /** @description refreshToken */
+            refreshToken?: string;
+        };
+        AuthLogoutRqV1: {
+            /** @description logout data. depends upon IDP */
+            authData?: {
+                [key: string]: string;
+            };
+        };
+        FaceViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - face details */
+            face?: components["schemas"]["FaceV1"];
+        };
+        AuthLoginRqV2: {
+            /**
+             * @description username
+             * @example user@example.com
+             */
+            username?: string;
+            /**
+             * @description password
+             * @example secret
+             */
+            password?: string;
+            /** @description agent fingerprint (hash) */
+            fingerprint?: string;
+        };
+        AuthLoginRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description tokens data */
+            authData?: {
+                [key: string]: string;
+            };
+        };
+        AuthLoginRqV1: {
+            /**
+             * @description username
+             * @example user@example.com
+             */
+            username?: string;
+            /**
+             * @description password
+             * @example secret
+             */
+            password?: string;
+        };
+        AuthConfigRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description supported auth methods by linked identity provider */
+            config?: components["schemas"]["AuthConfigV1"];
+        };
+        AuthConfigV1: {
+            /** @description some name */
+            name?: string;
+            /** @description supported auth methods by linked identity provider */
+            authMethods?: components["schemas"]["AuthMethodPasswordV1"][];
+        };
+        /** @description One of values */
+        AuthMethodDTOv1: {
+            type: string;
+        };
+        /** @description Stub auth token = user_id + business_account_id */
+        AuthMethodPasswordV1: Omit<components["schemas"]["AuthMethodDTOv1"], "type"> & {
+            type?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "AuthMethodPasswordV1" | "AuthMethodPasswordV2" | "AuthMethodOath2V1" | "AuthMethodStubV1";
+        };
         LocaleV1: {
             /** @description id */
             id?: string;
@@ -15431,7 +15701,48 @@ export interface components {
             /** @description result - factory */
             factory?: components["schemas"]["FactoryV2"];
         };
-        FaceViewRsV1: {
+        FaceWT003DTOv1: {
+            /**
+             * Format: uuid
+             * @description config id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            id?: string;
+            /**
+             * @description component
+             * @example some domain
+             */
+            component?: string;
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: uuid
+             * @description createdByUserId
+             */
+            createdByUserId?: string;
+            /**
+             * @description level (info, warn, etc.)
+             * @enum {string}
+             */
+            level?: "INFO" | "WARN" | "ERROR" | "SUCCESS" | "DEFAULT";
+            /** @description title */
+            titleI18n?: string;
+            /** @description message */
+            messageI18n?: string;
+            /** @description icon */
+            icon?: string;
+            /** @description styles, converted to css classes */
+            styleClasses?: string[];
+        };
+        FaceWT003ViewRsV1: {
             /**
              * Format: int32
              * @description request processing status (see ErrorCode enum)
@@ -15450,8 +15761,8 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description results - face details */
-            face?: components["schemas"]["FaceV1"];
+            /** @description result - widget details */
+            widget?: components["schemas"]["FaceWT003DTOv1"];
         };
         FaceWT003DTOv1: {
             /**
@@ -26913,6 +27224,236 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AttachmentSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authRefreshV2: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthRefreshRqV2"];
+            };
+        };
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthRefreshRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authRefreshV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthRefreshRqV1"];
+            };
+        };
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthRefreshRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authLogoutV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthLogoutRqV1"];
+            };
+        };
+        responses: {
+            /** @description Logout success   */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FaceViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authLoginV2: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthLoginRqV2"];
+            };
+        };
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthLoginRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authLoginV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthLoginRqV1"];
+            };
+        };
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthLoginRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authConfigV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthConfigRsV1"];
                 };
             };
             /** @description Access is denied */

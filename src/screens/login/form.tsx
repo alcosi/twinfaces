@@ -2,28 +2,23 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { ComboboxFormField, TextFormField } from "@/components/form-fields";
+import { TextFormField } from "@/components/form-fields";
 
-import { DomainPublicView } from "@/entities/domain";
 import { loginFormAction } from "@/entities/user";
 import { LOGIN_FORM_SCHEMA } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
 import { Button } from "@/shared/ui";
 
-type Props = {
-  domains: DomainPublicView[];
-  domainConfig?: Partial<DomainPublicView> | null;
-};
-
-export function LoginForm({ domains }: Props) {
+export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { setAuthUser, logout } = useAuthUser();
   const config = useContext(ProductFlavorConfigContext);
   const [authUser, formAction] = useFormState(loginFormAction, null);
@@ -32,18 +27,19 @@ export function LoginForm({ domains }: Props) {
   const form = useForm<z.infer<typeof LOGIN_FORM_SCHEMA>>({
     resolver: zodResolver(LOGIN_FORM_SCHEMA),
     defaultValues: {
-      domainId: "",
+      domainId: searchParams.get("domainId") ?? "",
       userId: config.loginPage.defaultFormValues.userId,
       businessAccountId: "",
     },
   });
 
   useEffect(() => {
-    // Clear any existing user session
+    // Clear any existing user session on mount
     logout();
   }, []);
 
   useEffect(() => {
+    console.log("foobar authUser", authUser);
     if (authUser) {
       setAuthUser(authUser);
       router.push(`/${PlatformArea.core}/twinclass`);
@@ -71,39 +67,23 @@ export function LoginForm({ domains }: Props) {
       <h1 className="my-3 text-lg font-bold">
         {config.key ?? config.productName}
       </h1>
+
       <FormProvider {...form}>
         <form
           className="flex w-full flex-col gap-4"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <ComboboxFormField
-            control={form.control}
-            name="domainId"
-            required
-            label="Domain"
-            getById={() => Promise.resolve(undefined)}
-            getItems={() => Promise.resolve(domains)}
-            renderItem={(item) => item.key}
-            onSelect={(items) => {
-              const domain = items?.[0] || null;
-              form.setValue("domainId", domain?.id ?? "");
-            }}
-            selectPlaceholder="Select domain..."
-            buttonClassName="w-full"
-            contentClassName="w-(--radix-popover-trigger-width)"
-          />
-
           <TextFormField
             control={form.control}
-            label="User Id"
             name="userId"
+            label="User Id"
             required
           />
 
           <TextFormField
             control={form.control}
-            label="Business Account Id"
             name="businessAccountId"
+            label="Business Account Id"
           />
 
           <Button
