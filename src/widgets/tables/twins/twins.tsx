@@ -70,6 +70,7 @@ export function TwinsTable({
   const { buildFilterFields, mapFiltersToPayload } = useTwinFilters({
     baseTwinClassId,
     twinClassFields,
+    enabledColumns,
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();

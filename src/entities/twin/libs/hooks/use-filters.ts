@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import { FaceWT001 } from "@/entities/face";
 import {
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
@@ -13,6 +14,7 @@ import {
   type FilterFeature,
   isObject,
   isPopulatedArray,
+  isTruthy,
   isUndefined,
   toArray,
   toArrayOfString,
@@ -26,9 +28,11 @@ import { useTwinSelectAdapter } from "./use-select-adapter";
 export function useTwinFilters({
   baseTwinClassId,
   twinClassFields,
+  enabledColumns,
 }: {
   baseTwinClassId?: string;
   twinClassFields?: TwinClass_DETAILED["fields"];
+  enabledColumns?: FaceWT001["columns"];
 }): FilterFeature<TwinFilterKeys, TwinFilters> {
   const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
@@ -55,7 +59,7 @@ export function useTwinFilters({
         : undefined,
       statusIdList: {
         type: AutoFormValueType.combobox,
-        label: "Statuses",
+        label: "Status",
         multi: true,
         ...sAdapter,
       },
@@ -87,6 +91,15 @@ export function useTwinFilters({
       },
     } as const;
 
+    const filteredSelfFilters = Object.fromEntries(
+      Object.entries(selfFilters).filter(
+        ([_, filter]) =>
+          filter &&
+          enabledColumns?.some((column) => column.label === filter.label)
+      )
+    ) as Partial<Record<TwinFilterKeys, AutoFormValueInfo>>;
+    console.log(filteredSelfFilters);
+
     const inheritedFields =
       twinClassFields?.reduce<Record<string, AutoFormValueInfo>>(
         (acc, field) => {
@@ -103,7 +116,7 @@ export function useTwinFilters({
       ) ?? {};
 
     return {
-      ...selfFilters,
+      ...(isTruthy(enabledColumns) ? filteredSelfFilters : selfFilters),
       ...inheritedFields,
     };
   }
@@ -161,7 +174,8 @@ function mapInheritedFieldFiltersToPayload(
       if (
         isUndefined(fieldId) ||
         isUndefined(fieldKey) ||
-        isUndefined(descriptor?.fieldType)
+        isUndefined(descriptor?.fieldType) ||
+        isUndefined(filterFields[fieldKey])
       ) {
         return acc;
       }
