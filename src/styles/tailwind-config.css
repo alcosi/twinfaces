@@ -24,8 +24,8 @@
   --color-error: var(--error);
   --color-error-bg: var(--error-bg);
   --color-error-fg: var(--error-fg);
-  --color-destructive: var(--error-bg);
-  --color-destructive-foreground: var(--error-foreground);
+  --color-destructive: var(--error);
+  --color-destructive-foreground: var(--error-fg);
 
   --color-warn: var(--warn);
   --color-warn-bg: var(--warn-bg);

@@ -26,21 +26,21 @@
     --brand-950: hsl(215 90% 10%);
 
     /* Supporting Colors */
-    --success: hsl(142 71% 45%);
-    --success-bg: hsl(142 71% 90%);
-    --success-fg: hsl(142 71% 35%);
+    --success: hsl(125 55% 50%);
+    --success-bg: hsl(125 55% 80%);
+    --success-fg: hsl(125 55% 20%);
 
-    --error: hsl(0 72% 80%);
-    --error-bg: hsl(0 72% 97%);
-    --error-fg: hsl(0 72% 35%);
+    --error: hsl(0, 55%, 50%);
+    --error-bg: hsl(0, 55%, 80%);
+    --error-fg: hsl(0, 55%, 20%);
 
-    --warn: hsl(30 100% 75%);
-    --warn-bg: hsl(30 100% 96%);
-    --warn-fg: hsl(30 100% 30%);
+    --warn: hsl(35 55% 50%);
+    --warn-bg: hsl(35 55% 80%);
+    --warn-fg: hsl(35 55% 20%);
 
-    --info: hsl(215 90% 80%);
-    --info-bg: hsl(215 90% 97%);
-    --info-fg: hsl(215 90% 30%);
+    --info: hsl(207 55% 50%);
+    --info-bg: hsl(207 55% 80%);
+    --info-fg: hsl(207 55% 20%);
 
     /* Neutral Colors */
     --background: hsl(0 0% 100%);
@@ -90,21 +90,21 @@
     --brand-950: hsl(40 100% 10%);
 
     /* Supporting Colors - Dark */
-    --success: hsl(142 40% 35%);
-    --success-bg: hsl(142 40% 15%);
-    --success-fg: hsl(142 40% 75%);
+    --success: hsl(125 45% 50%);
+    --success-bg: hsl(125 45% 80%);
+    --success-fg: hsl(125 45% 20%);
 
-    --error: hsl(0 60% 40%);
-    --error-bg: hsl(0 60% 20%);
-    --error-fg: hsl(0 60% 80%);
+    --error: hsl(0 45% 50%);
+    --error-bg: hsl(0 45% 80%);
+    --error-fg: hsl(0 45% 20%);
 
-    --warn: hsl(30 80% 40%);
-    --warn-bg: hsl(30 80% 20%);
-    --warn-fg: hsl(30 80% 80%);
+    --warn: hsl(35 80% 50%);
+    --warn-bg: hsl(35 80% 80%);
+    --warn-fg: hsl(35 80% 20%);
 
-    --info: hsl(215 60% 45%);
-    --info-bg: hsl(215 60% 20%);
-    --info-fg: hsl(215 60% 80%);
+    --info: hsl(207 45% 50%);
+    --info-bg: hsl(207 45% 80%);
+    --info-fg: hsl(207 45% 20%);
 
     /* Neutral Colors - Dark */
     --background: hsl(240 10% 7.9%);
