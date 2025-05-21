@@ -31,6 +31,7 @@ export type FacePG002 = components["schemas"]["FacePG002v1"];
 export type FacePG002Widget = components["schemas"]["FacePG002WidgetV1"];
 
 export type FaceWT001 = components["schemas"]["FaceWT001v1"];
+export type FaceWT003 = components["schemas"]["FaceWT003DTOv1"];
 
 export type FaceTW001 = components["schemas"]["FaceTW001v1"];
 export type FaceTW002 = components["schemas"]["FaceTW002v1"];

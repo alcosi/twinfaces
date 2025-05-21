@@ -8,7 +8,7 @@ import {
 import { fetchTW002Face } from "@/entities/face";
 import { safe } from "@/shared/libs";
 
-import { AlertError } from "../../components";
+import { StatusAlert } from "../../components";
 import { TWidgetFaceProps } from "../types";
 
 export async function TW002(props: TWidgetFaceProps) {
@@ -17,7 +17,9 @@ export async function TW002(props: TWidgetFaceProps) {
   const result = await safe(() => fetchTW002Face(widget.widgetFaceId, twinId));
 
   if (!result.ok) {
-    return <AlertError message="Widget TW002 failed to load." />;
+    return (
+      <StatusAlert variant="error" message="Widget TW002 failed to load." />
+    );
   }
 
   return (

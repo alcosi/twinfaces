@@ -3293,6 +3293,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/face/wt003/{faceId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns WT003 widget */
+        get: operations["faceWT003ViewV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/face/wt002/{faceId}/v1": {
         parameters: {
             query?: never;
@@ -8531,6 +8548,16 @@ export interface components {
             /** @description external id */
             externalId?: string;
             /**
+             * @description background color hex
+             * @example #ff00ff
+             */
+            backgroundColor?: string;
+            /**
+             * @description font color hex
+             * @example #ff00ff
+             */
+            fontColor?: string;
+            /**
              * Format: uuid
              * @description data list id
              * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
@@ -8558,6 +8585,16 @@ export interface components {
             };
             /** @description external id */
             externalId?: string;
+            /**
+             * @description background color hex
+             * @example #ff00ff
+             */
+            backgroundColor?: string;
+            /**
+             * @description font color hex
+             * @example #ff00ff
+             */
+            fontColor?: string;
             /**
              * Format: uuid
              * @description data list option id
@@ -9345,6 +9382,10 @@ export interface components {
             userNameLikeList?: string[];
             /** @description name exclude list */
             userNameLikeExcludeList?: string[];
+            /** @description email list */
+            userEmailLikeList?: string[];
+            /** @description email exclude list */
+            userEmailLikeExcludeList?: string[];
             /** @description status id list */
             statusIdList?: ("ACTIVE" | "DELETED" | "BLOCKED")[];
             /** @description status id exclude list */
@@ -14135,6 +14176,16 @@ export interface components {
             /** @description external id */
             externalId?: string;
             /**
+             * @description background color hex
+             * @example #ff00ff
+             */
+            backgroundColor?: string;
+            /**
+             * @description font color hex
+             * @example #ff00ff
+             */
+            fontColor?: string;
+            /**
              * Format: uuid
              * @description data list id
              * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
@@ -14156,6 +14207,16 @@ export interface components {
             };
             /** @description external id */
             externalId?: string;
+            /**
+             * @description background color hex
+             * @example #ff00ff
+             */
+            backgroundColor?: string;
+            /**
+             * @description font color hex
+             * @example #ff00ff
+             */
+            fontColor?: string;
             /**
              * Format: uuid
              * @description data list id
@@ -15392,6 +15453,69 @@ export interface components {
             /** @description results - face details */
             face?: components["schemas"]["FaceV1"];
         };
+        FaceWT003DTOv1: {
+            /**
+             * Format: uuid
+             * @description config id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            id?: string;
+            /**
+             * @description component
+             * @example some domain
+             */
+            component?: string;
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: uuid
+             * @description createdByUserId
+             */
+            createdByUserId?: string;
+            /**
+             * @description level (info, warn, etc.)
+             * @enum {string}
+             */
+            level?: "INFO" | "WARN" | "ERROR" | "SUCCESS" | "DEFAULT";
+            /** @description title */
+            titleI18n?: string;
+            /** @description message */
+            messageI18n?: string;
+            /** @description icon */
+            icon?: string;
+            /** @description styles, converted to css classes */
+            styleClasses?: string[];
+        };
+        FaceWT003ViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description result - widget details */
+            widget?: components["schemas"]["FaceWT003DTOv1"];
+        };
         FaceWT002ButtonV1: {
             /**
              * Format: uuid
@@ -15946,11 +16070,6 @@ export interface components {
             icon?: string;
             /** @description page layout */
             styleClasses?: string[];
-            /**
-             * @deprecated
-             * @description tab layout
-             */
-            layout?: string;
             /** @description tab widgets list */
             widgets?: components["schemas"]["FacePG002WidgetV1"][];
         };
@@ -15985,18 +16104,6 @@ export interface components {
             id?: string;
             /** @description page layout */
             styleClasses?: string[];
-            /**
-             * Format: int32
-             * @deprecated
-             * @description column id
-             */
-            column?: number;
-            /**
-             * Format: int32
-             * @deprecated
-             * @description row id
-             */
-            row?: number;
             /** @description is widget active */
             active?: boolean;
             /**
@@ -16073,18 +16180,6 @@ export interface components {
             id?: string;
             /** @description page layout */
             styleClasses?: string[];
-            /**
-             * Format: int32
-             * @deprecated
-             * @description column id
-             */
-            column?: number;
-            /**
-             * Format: int32
-             * @deprecated
-             * @description row id
-             */
-            row?: number;
             /** @description is widget active */
             active?: boolean;
             /**
@@ -16124,11 +16219,6 @@ export interface components {
             title?: string;
             /** @description page layout */
             styleClasses?: string[];
-            /**
-             * @deprecated
-             * @description page layout
-             */
-            layout?: string;
             /** @description page widgets list */
             widgets?: components["schemas"]["FacePG001WidgetV1"][];
         };
@@ -29355,6 +29445,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FaceViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    faceWT003ViewV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example 9a3f6075-f175-41cd-a804-934201ec969c */
+                faceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WT003 face config */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FaceWT003ViewRsV1"];
                 };
             };
             /** @description Access is denied */

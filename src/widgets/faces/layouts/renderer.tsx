@@ -1,7 +1,7 @@
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
 import { safe } from "@/shared/libs";
 
-import { AlertError } from "../components";
+import { StatusAlert } from "../components";
 import { PGFaceProps } from "./types";
 import { PG001, PG002 } from "./views";
 
@@ -18,7 +18,12 @@ export async function LayoutRenderer(props: PGFaceProps) {
   );
 
   if (!result.ok) {
-    return <AlertError message="Widget not found or inaccessible." />;
+    return (
+      <StatusAlert
+        variant="error"
+        message="Widget not found or inaccessible."
+      />
+    );
   }
 
   const pageFace = result.data;
@@ -27,7 +32,8 @@ export async function LayoutRenderer(props: PGFaceProps) {
 
   if (!Component) {
     return (
-      <AlertError
+      <StatusAlert
+        variant="warn"
         title="Unsupported page"
         message={`Page "${pageFace.name}" of component "${pageFace.component}"  is not supported.`}
         className="mt-4"

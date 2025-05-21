@@ -2,7 +2,7 @@ import { fetchTW005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { safe } from "@/shared/libs";
 
-import { AlertError } from "../../../components";
+import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
 import { TW005Buttons } from "./tw005-buttons";
 
@@ -19,7 +19,9 @@ export async function TW005(props: TWidgetFaceProps) {
   );
 
   if (!faceResult.ok) {
-    return <AlertError message="Widget TW005 failed to load." />;
+    return (
+      <StatusAlert variant="error" message="Widget TW005 failed to load." />
+    );
   }
 
   const { pointedTwinId = "", buttons = [] } = faceResult.data;
@@ -29,7 +31,7 @@ export async function TW005(props: TWidgetFaceProps) {
   );
 
   if (!twinResult.ok) {
-    return <AlertError message="Failed to load twin." />;
+    return <StatusAlert variant="error" message="Failed to load twin." />;
   }
 
   const { transitionsIdList = [] } = twinResult.data;

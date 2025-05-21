@@ -1,0 +1,143 @@
+/*
+  Color variables structured by semantic purpose:
+  - Brand Colors: Primary identity palette used for emphasis and highlights
+  - Supporting Colors: Status-based colors (success, warning, error, info) for alerts and feedback
+  - Neutral Colors: Foundational UI colors for backgrounds, borders, text, and surfaces
+*/
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    /* Shared design variables used across themes */
+    --header-height: 4rem; /* Equivalent to Tailwind's h-16 (64px) */
+
+    /* Brand Colors */
+    --brand-50: hsl(215 90% 98%);
+    --brand-100: hsl(215 90% 95%);
+    --brand-200: hsl(215 90% 85%);
+    --brand-300: hsl(215 90% 75%);
+    --brand-400: hsl(215 90% 65%);
+    --brand-500: hsl(215 90% 50%);
+    --brand-600: hsl(215 90% 40%);
+    --brand-700: hsl(215 90% 30%);
+    --brand-800: hsl(215 90% 20%);
+    --brand-900: hsl(215 90% 15%);
+    --brand-950: hsl(215 90% 10%);
+
+    /* Supporting Colors */
+    --success: hsl(125 55% 50%);
+    --success-bg: hsl(125 55% 80%);
+    --success-fg: hsl(125 55% 20%);
+
+    --error: hsl(0, 55%, 50%);
+    --error-bg: hsl(0, 55%, 80%);
+    --error-fg: hsl(0, 55%, 20%);
+
+    --warn: hsl(35 55% 50%);
+    --warn-bg: hsl(35 55% 80%);
+    --warn-fg: hsl(35 55% 20%);
+
+    --info: hsl(207 55% 50%);
+    --info-bg: hsl(207 55% 80%);
+    --info-fg: hsl(207 55% 20%);
+
+    /* Neutral Colors */
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(240 10% 3.9%);
+    --primary: hsl(240 3.9% 15%);
+    --primary-foreground: hsl(0 0% 98%);
+    --secondary: hsl(240 4.8% 95.9%);
+    --secondary-foreground: hsl(240 5.9% 10%);
+
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(240 10% 3.9%);
+
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(240 10% 3.9%);
+
+    --muted: hsl(240 4.8% 95.9%);
+    --muted-foreground: hsl(240 3.8% 46.1%);
+
+    --accent: hsl(240 4.8% 95.9%);
+    --accent-foreground: hsl(240 5.9% 10%);
+
+    --border: hsl(240 5.9% 90%);
+    --input: hsl(240 5.9% 90%);
+    --ring: hsl(240 10% 3.9%);
+
+    /* Sidebar Colors */
+    --sidebar-background: hsl(0 0% 98%);
+    --sidebar-foreground: hsl(240 5.3% 26.1%);
+    --sidebar-primary: hsl(240 5.9% 10%);
+    --sidebar-primary-foreground: hsl(0 0% 98%);
+    --sidebar-accent: hsl(240 4.8% 95.9%);
+    --sidebar-accent-foreground: hsl(240 5.9% 10%);
+    --sidebar-border: hsl(220 13% 91%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  }
+
+  .dark {
+    /* Brand Colors - Dark */
+    --brand-50: hsl(40 100% 98%);
+    --brand-100: hsl(40 100% 95%);
+    --brand-200: hsl(40 100% 85%);
+    --brand-500: hsl(40 100% 60%);
+    --brand-600: hsl(40 100% 50%);
+    --brand-700: hsl(40 100% 40%);
+    --brand-800: hsl(40 100% 30%);
+    --brand-900: hsl(40 100% 20%);
+    --brand-950: hsl(40 100% 10%);
+
+    /* Supporting Colors - Dark */
+    --success: hsl(125 45% 50%);
+    --success-bg: hsl(125 45% 80%);
+    --success-fg: hsl(125 45% 20%);
+
+    --error: hsl(0 45% 50%);
+    --error-bg: hsl(0 45% 80%);
+    --error-fg: hsl(0 45% 20%);
+
+    --warn: hsl(35 80% 50%);
+    --warn-bg: hsl(35 80% 80%);
+    --warn-fg: hsl(35 80% 20%);
+
+    --info: hsl(207 45% 50%);
+    --info-bg: hsl(207 45% 80%);
+    --info-fg: hsl(207 45% 20%);
+
+    /* Neutral Colors - Dark */
+    --background: hsl(240 10% 7.9%);
+    --foreground: hsl(0 0% 98%);
+    --primary: hsl(0 0% 98%);
+    --primary-foreground: hsl(240 5.9% 10%);
+    --secondary: hsl(240 3.7% 15.9%);
+    --secondary-foreground: hsl(0 0% 98%);
+
+    --card: hsl(240 10% 7.9%);
+    --card-foreground: hsl(0 0% 98%);
+
+    --popover: hsl(240 10% 7.9%);
+    --popover-foreground: hsl(0 0% 98%);
+
+    --muted: hsl(240 3.7% 15.9%);
+    --muted-foreground: hsl(240 5% 64.9%);
+
+    --accent: hsl(240 3.7% 15.9%);
+    --accent-foreground: hsl(0 0% 98%);
+
+    --border: hsl(240 3.7% 15.9%);
+    --input: hsl(240 3.7% 15.9%);
+    --ring: hsl(240 4.9% 83.9%);
+
+    /* Sidebar Colors - Dark */
+    --sidebar-background: hsl(240 5.9% 10%);
+    --sidebar-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-primary: hsl(224.3 76.3% 48%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(240 3.7% 15.9%);
+    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-border: hsl(240 3.7% 15.9%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  }
+}
