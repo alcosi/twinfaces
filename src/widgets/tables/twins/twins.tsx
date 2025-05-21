@@ -357,7 +357,7 @@ function extractTwinFieldColumnsAndFilters(
         field.id,
         {
           id: field.key,
-          accessorKey: `fields.${field.key}`,
+          accessorFn: (row) => row.fields?.[field.key!] ?? null,
           header: field.name,
           cell: ({ row: { original } }) => {
             const twinField = original.fields?.[field.key!] as TwinFieldUI;
