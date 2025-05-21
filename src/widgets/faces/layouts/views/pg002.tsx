@@ -19,9 +19,18 @@ export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
   }
 
   const pageFace = pageResult.data;
+  const fetchedTabs = pageFace.tabs ?? [];
+
+  const hasDefinedTabOrders = fetchedTabs?.every(
+    (tab) => typeof tab.order === "number"
+  );
+
+  const orderedTabs = hasDefinedTabOrders
+    ? [...fetchedTabs].sort((a, b) => a.order! - b.order!)
+    : fetchedTabs;
 
   const tabs: Tab[] =
-    pageFace.tabs?.map((tab) => ({
+    orderedTabs.map((tab) => ({
       key: tab.title!.toLowerCase(),
       label: tab.title ?? "N/A",
       content: isPopulatedArray<Widget>(tab.widgets) ? (
