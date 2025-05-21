@@ -1,9 +1,9 @@
 import { FC } from "react";
 
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
-import { cn, isPopulatedString, safe } from "@/shared/libs";
+import { isPopulatedString, safe } from "@/shared/libs";
 
-import { AlertError } from "../components";
+import { StatusAlert } from "../components";
 import { TWidgetFaceProps, Widget, WidgetFaceProps } from "./types";
 import { TW001, TW002, TW004, TW005, WT001, WT003 } from "./views";
 
@@ -34,8 +34,9 @@ export async function WidgetRenderer({ twinId, widget, className }: Props) {
 
   if (!faceResult.ok) {
     return (
-      <AlertError
+      <StatusAlert
         key={widget.widgetFaceId}
+        variant="error"
         title="Widget failed to load"
         message={(faceResult.error as Error)?.message}
       />
@@ -55,7 +56,7 @@ export async function WidgetRenderer({ twinId, widget, className }: Props) {
 
     if (!twinId) {
       return (
-        <AlertError
+        <StatusAlert
           key={widget.widgetFaceId}
           title="Missing twinId"
           message={`Component "${componentName}" requires twinId but it was not provided.`}
@@ -69,8 +70,9 @@ export async function WidgetRenderer({ twinId, widget, className }: Props) {
   }
 
   return (
-    <AlertError
+    <StatusAlert
       key={widget.widgetFaceId}
+      variant="warn"
       title="Unsupported widget"
       message={`Component "${componentName}" is not supported.`}
     />

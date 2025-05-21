@@ -2,7 +2,7 @@ import { fetchTW004Face } from "@/entities/face";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
 import { cn, safe } from "@/shared/libs";
 
-import { AlertError } from "../../../components";
+import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
 import { buildFieldEditorProps } from "./utils";
 
@@ -13,7 +13,9 @@ export async function TW004(props: TWidgetFaceProps) {
     fetchTW004Face(widget.widgetFaceId, twinId)
   );
   if (!twidgetResult.ok) {
-    return <AlertError message="Widget TW004 failed to load." />;
+    return (
+      <StatusAlert variant="error" message="Widget TW004 failed to load." />
+    );
   }
   const twidget = twidgetResult.data;
 

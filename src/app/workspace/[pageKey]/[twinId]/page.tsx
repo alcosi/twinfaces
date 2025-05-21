@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getAuthHeaders } from "@/entities/face";
 import { Twin_DETAILED, fetchTwinById } from "@/entities/twin/server";
 import { safe } from "@/shared/libs";
-import { AlertError } from "@/widgets/faces/components";
+import { StatusAlert } from "@/widgets/faces/components";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
 type Props = {
@@ -36,7 +36,8 @@ export default async function Page({ params }: Props) {
   }
 
   return (
-    <AlertError
+    <StatusAlert
+      variant="warn"
       title="Page not set up yet"
       message="We're working on it. Please check back soon!"
       className="mt-4"

@@ -1,7 +1,7 @@
 import { fetchPG001Face } from "@/entities/face";
-import { cn, isPopulatedArray, safe } from "@/shared/libs";
+import { isPopulatedArray, safe } from "@/shared/libs";
 
-import { AlertError, WidgetsContainer } from "../../components";
+import { StatusAlert, WidgetsContainer } from "../../components";
 import { Widget } from "../../widgets/types";
 import { PGFaceProps } from "../types";
 
@@ -10,7 +10,10 @@ export async function PG001({ pageFaceId, twinId }: PGFaceProps) {
 
   if (!pageResult.ok) {
     return (
-      <AlertError message="Failed to load PG001 layout. Try again later" />
+      <StatusAlert
+        variant="error"
+        message="Failed to load PG001 layout. Try again later"
+      />
     );
   }
 

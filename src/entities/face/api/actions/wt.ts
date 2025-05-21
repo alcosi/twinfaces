@@ -13,7 +13,7 @@ type FetchFaceOptions = {
   endpoint:
     | "/private/face/wt001/{faceId}/v1"
     | "/private/face/wt003/{faceId}/v1";
-  query?: Record<string, any>;
+  query?: Record<string, string | boolean>;
 };
 
 async function fetchFaceWidget<T>({

@@ -1,12 +1,8 @@
-/* NOTE: TailWind Config */
-@layer base {
-  button:not(:disabled),
-  [role="button"]:not(:disabled) {
-    cursor: pointer;
-  }
-}
+@import "./color-palette.css";
 
+/* Tailwind-compatible variable remapping based on semantic color system */
 @theme {
+  /* Brand Colors */
   --color-brand-50: var(--brand-50);
   --color-brand-100: var(--brand-100);
   --color-brand-200: var(--brand-200);
@@ -20,27 +16,38 @@
   --color-brand-950: var(--brand-950);
   --color-brand: var(--brand-500);
 
-  --color-border: var(--border);
+  /* Supporting Colors */
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-success-fg: var(--success-fg);
 
-  --color-link-enabled: var(--brand-500);
-  --color-link-disabled: var(--input);
-  --color-link: var(--border);
+  --color-error: var(--error);
+  --color-error-bg: var(--error-bg);
+  --color-error-fg: var(--error-fg);
+  --color-destructive: var(--error-bg);
+  --color-destructive-foreground: var(--error-foreground);
 
-  --color-input: var(--input);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-fg: var(--warn-fg);
 
-  --color-ring: var(--ring);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-info-fg: var(--info-fg);
 
+  /* Neutral Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
 
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -48,12 +55,11 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
 
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-
+  /* Sidebar Colors */
   --color-sidebar: var(--sidebar-background);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -63,11 +69,16 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --animate-accordion-down: "accordion-down 0.2s ease-out";
-  --animate-accordion-up: "accordion-up 0.2s ease-out";
+  /* Links */
+  --color-link-enabled: var(--brand-500);
+  --color-link-disabled: var(--input);
+  --color-link: var(--border);
 }
 
 @theme {
+  --animate-accordion-down: "accordion-down 0.2s ease-out";
+  --animate-accordion-up: "accordion-up 0.2s ease-out";
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   @keyframes accordion-down {
     from {

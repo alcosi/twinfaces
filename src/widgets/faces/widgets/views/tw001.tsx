@@ -3,7 +3,7 @@ import { fetchTwinById } from "@/entities/twin/server";
 import { cn, safe } from "@/shared/libs";
 import { MediaType, SlotSlider } from "@/shared/ui";
 
-import { AlertError } from "../../components";
+import { StatusAlert } from "../../components";
 import { TWidgetFaceProps } from "../types";
 
 export async function TW001(props: TWidgetFaceProps) {
@@ -20,7 +20,9 @@ export async function TW001(props: TWidgetFaceProps) {
     fetchTW001Face(widget.widgetFaceId, twinId)
   );
   if (!twidgetResult.ok) {
-    return <AlertError message="Widget TW001 failed to load." />;
+    return (
+      <StatusAlert variant="error" message="Widget TW001 failed to load." />
+    );
   }
   const twidget = twidgetResult.data;
 
@@ -28,7 +30,7 @@ export async function TW001(props: TWidgetFaceProps) {
     fetchTwinById(twidget.pointedTwinId!, { header, query })
   );
   if (!twinResult.ok) {
-    return <AlertError message="Failed to load twin." />;
+    return <StatusAlert message="Failed to load twin." />;
   }
   const twin = twinResult.data;
   const allAttachments = twin.attachments ?? [];
