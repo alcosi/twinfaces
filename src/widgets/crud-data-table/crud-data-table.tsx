@@ -44,6 +44,7 @@ type CrudDataTableProps<
       filters: { search?: string; filters: { [key: string]: any } }
     ) => Promise<PagedResponse<TData>>;
     getRowId: (row: TData) => string;
+    viewMode?: "horizontal" | "vertical";
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -56,6 +57,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onCreateSubmit,
     renderFormFields,
     onRowClick,
+    viewMode = "horizontal",
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -152,6 +154,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         columns={visibleColumns}
         fetcher={fetchWrapper}
         onRowClick={handleOnRowClick}
+        viewMode={viewMode}
       />
 
       <CrudDataTableDialog
