@@ -10,7 +10,7 @@ import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields";
 
-import { loginFormAction } from "@/entities/user";
+import { stubLoginFormAction } from "@/entities/user";
 import { LOGIN_FORM_SCHEMA } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
@@ -21,7 +21,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const { setAuthUser, logout } = useAuthUser();
   const config = useContext(ProductFlavorConfigContext);
-  const [authUser, formAction] = useFormState(loginFormAction, null);
+  const [authUser, formAction] = useFormState(stubLoginFormAction, null);
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof LOGIN_FORM_SCHEMA>>({
