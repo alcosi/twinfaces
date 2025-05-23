@@ -6,7 +6,10 @@ import { isUndefined } from "@/shared/libs";
 import { getAuthHeaders } from "../../libs";
 import { FacePG001, FacePG002 } from "../types";
 
-export async function fetchPG001Face(pageFaceId: string): Promise<FacePG001> {
+export async function fetchPG001Face(
+  pageFaceId: string,
+  twinId?: string
+): Promise<FacePG001> {
   const headers = await getAuthHeaders();
 
   const { data } = await TwinsAPI.GET("/private/face/pg001/{faceId}/v1", {
@@ -14,6 +17,7 @@ export async function fetchPG001Face(pageFaceId: string): Promise<FacePG001> {
       header: headers,
       path: { faceId: pageFaceId },
       query: {
+        twinId,
         lazyRelation: false,
         showFaceMode: "DETAILED",
         showFacePG001WidgetCollectionMode: "SHOW",
@@ -30,7 +34,10 @@ export async function fetchPG001Face(pageFaceId: string): Promise<FacePG001> {
   return data?.page;
 }
 
-export async function fetchPG002Face(pageFaceId: string): Promise<FacePG002> {
+export async function fetchPG002Face(
+  pageFaceId: string,
+  twinId?: string
+): Promise<FacePG002> {
   const headers = await getAuthHeaders();
 
   const { data } = await TwinsAPI.GET("/private/face/pg002/{faceId}/v1", {
@@ -38,6 +45,7 @@ export async function fetchPG002Face(pageFaceId: string): Promise<FacePG002> {
       header: headers,
       path: { faceId: pageFaceId },
       query: {
+        twinId,
         lazyRelation: false,
         showFaceMode: "DETAILED",
         showFacePG002TabCollectionMode: "SHOW",

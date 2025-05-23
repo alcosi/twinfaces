@@ -7,7 +7,7 @@ import { Widget } from "../../widgets/types";
 import { PGFaceProps } from "../types";
 
 export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
-  const pageResult = await safe(() => fetchPG002Face(pageFaceId));
+  const pageResult = await safe(() => fetchPG002Face(pageFaceId, twinId));
 
   if (!pageResult.ok) {
     return (
