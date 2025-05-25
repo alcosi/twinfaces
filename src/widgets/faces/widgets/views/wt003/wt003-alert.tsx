@@ -13,7 +13,7 @@ const ALERT_VARIANT_MAP = {
 } as const;
 
 export function WT003Alert({ data }: { data: FaceWT003 }) {
-  const { titleI18n, messageI18n, icon, level, styleClasses } = data;
+  const { title, message, icon, level, styleClasses } = data;
   const variant = ALERT_VARIANT_MAP[level as keyof typeof ALERT_VARIANT_MAP];
 
   return (
@@ -30,8 +30,8 @@ export function WT003Alert({ data }: { data: FaceWT003 }) {
           />
         )
       }
-      title={titleI18n}
-      message={messageI18n}
+      title={title}
+      message={message}
       className={styleClasses}
     />
   );
