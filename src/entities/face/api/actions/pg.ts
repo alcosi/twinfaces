@@ -6,22 +6,18 @@ import { isUndefined } from "@/shared/libs";
 import { getAuthHeaders } from "../../libs";
 import { FacePG001, FacePG002 } from "../types";
 
-type PGFaceEndpoint =
-  | "/private/face/pg001/{faceId}/v1"
-  | "/private/face/pg002/{faceId}/v1";
-
 type FetchPGFaceOptions = {
   faceId: string;
-  endpoint: PGFaceEndpoint;
-  faceName: string;
-  query?: Record<string, string | boolean>;
+  endpoint:
+    | "/private/face/pg001/{faceId}/v1"
+    | "/private/face/pg002/{faceId}/v1";
   twinId?: string;
+  query?: Record<string, string | boolean>;
 };
 
 async function fetchPGFace<T>({
   faceId,
   endpoint,
-  faceName,
   query = {},
   twinId,
 }: FetchPGFaceOptions): Promise<T> {
@@ -41,7 +37,7 @@ async function fetchPGFace<T>({
   });
 
   if (isUndefined(data?.page)) {
-    const message = `[${faceName}] Page face not found for faceId=${faceId}`;
+    const message = `[${endpoint}] Page face not found for faceId=${faceId}`;
     console.warn(message);
     throw new Error(message);
   }
@@ -56,7 +52,6 @@ export async function fetchPG001Face(
   return fetchPGFace<FacePG001>({
     faceId,
     endpoint: "/private/face/pg001/{faceId}/v1",
-    faceName: "fetchPG001Face",
     query: {
       showFacePG001WidgetCollectionMode: "SHOW",
     },
@@ -71,7 +66,6 @@ export async function fetchPG002Face(
   return fetchPGFace<FacePG002>({
     faceId,
     endpoint: "/private/face/pg002/{faceId}/v1",
-    faceName: "fetchPG002Face",
     query: {
       showFacePG002TabCollectionMode: "SHOW",
       showFacePG002TabWidgetCollectionMode: "SHOW",
