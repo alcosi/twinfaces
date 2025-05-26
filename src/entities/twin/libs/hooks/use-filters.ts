@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { FaceWT001 } from "@/entities/face";
 import {
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
@@ -14,7 +13,6 @@ import {
   type FilterFeature,
   isObject,
   isPopulatedArray,
-  isTruthy,
   isUndefined,
   toArray,
   toArrayOfString,
@@ -28,20 +26,18 @@ import { useTwinSelectAdapter } from "./use-select-adapter";
 export function useTwinFilters({
   baseTwinClassId,
   twinClassFields,
-  enabledColumns,
 }: {
   baseTwinClassId?: string;
   twinClassFields?: TwinClass_DETAILED["fields"];
-  enabledColumns?: FaceWT001["columns"];
 }): FilterFeature<TwinFilterKeys, TwinFilters> {
   const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
   const uAdapter = useUserSelectAdapter();
   const tAdapter = useTwinSelectAdapter();
 
-  function buildFilterFields(): Partial<
-    Record<TwinFilterKeys, AutoFormValueInfo>
-  > {
+  function buildFilterFields(
+    filters?: TwinFilterKeys[]
+  ): Partial<Record<TwinFilterKeys, AutoFormValueInfo>> {
     const selfFilters: Partial<Record<TwinFilterKeys, AutoFormValueInfo>> = {
       twinIdList: {
         type: AutoFormValueType.tag,
@@ -91,14 +87,13 @@ export function useTwinFilters({
       },
     } as const;
 
-    const filteredSelfFilters = Object.fromEntries(
-      Object.entries(selfFilters).filter(
-        ([_, filter]) =>
-          filter &&
-          enabledColumns?.some((column) => column.label === filter.label)
-      )
-    ) as Partial<Record<TwinFilterKeys, AutoFormValueInfo>>;
-    console.log(filteredSelfFilters);
+    const filteredSelfFilters = filters
+      ? Object.fromEntries(
+          Object.entries(selfFilters).filter(
+            ([key, filter]) => filter && filters.includes(key as TwinFilterKeys)
+          )
+        )
+      : selfFilters;
 
     const inheritedFields =
       twinClassFields?.reduce<Record<string, AutoFormValueInfo>>(
@@ -116,7 +111,7 @@ export function useTwinFilters({
       ) ?? {};
 
     return {
-      ...(isTruthy(enabledColumns) ? filteredSelfFilters : selfFilters),
+      ...filteredSelfFilters,
       ...inheritedFields,
     };
   }

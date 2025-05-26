@@ -1,5 +1,6 @@
 import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
 
+import { TwinFilterKeys } from "../server";
 import {
   SearchableTwinFieldType,
   StaticTwinFieldId,
@@ -73,6 +74,17 @@ export const STATIC_TWIN_FIELD_KEY_TO_ID_MAP: Record<
   tags: "00000000-0000-0000-0011-000000000015",
   markers: "00000000-0000-0000-0011-000000000016",
 } as const;
+
+export const LABEL_TO_KEY_MAP: Partial<Record<string, TwinFilterKeys>> = {
+  ID: "twinIdList",
+  "Twin Class": "twinClassIdList",
+  Status: "statusIdList",
+  Name: "twinNameLikeList",
+  Description: "descriptionLikeList",
+  Head: "headTwinIdList",
+  Author: "createdByUserIdList",
+  Assignee: "assignerUserIdList",
+};
 
 export const FieldDescriptorText = {
   PLAIN: {

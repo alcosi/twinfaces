@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { FaceWT001 } from "@/entities/face";
 import {
+  LABEL_TO_KEY_MAP,
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
@@ -19,7 +20,11 @@ import {
   useFetchTwinClassById,
 } from "@/entities/twin-class";
 import { TwinClassField } from "@/entities/twin-class-field";
-import { TwinCreateRq, Twin_DETAILED } from "@/entities/twin/server";
+import {
+  TwinCreateRq,
+  TwinFilterKeys,
+  Twin_DETAILED,
+} from "@/entities/twin/server";
 import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
@@ -70,11 +75,16 @@ export function TwinsTable({
   const { buildFilterFields, mapFiltersToPayload } = useTwinFilters({
     baseTwinClassId,
     twinClassFields,
-    enabledColumns,
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
+
+  const enabledFilters = isPopulatedArray(enabledColumns)
+    ? enabledColumns
+        .map((col) => LABEL_TO_KEY_MAP[col.label!])
+        .filter((key): key is TwinFilterKeys => !isUndefined(key))
+    : undefined;
 
   const staticColDefs: Record<string, ColumnDef<Twin_DETAILED>> = {
     [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id]: {
@@ -319,7 +329,7 @@ export function TwinsTable({
       fetcher={(pagination, filters) => fetchTwins({ pagination, filters })}
       pageSizes={[10, 20, 50]}
       filters={{
-        filtersInfo: buildFilterFields(),
+        filtersInfo: buildFilterFields(enabledFilters),
       }}
       defaultVisibleColumns={defaultVisibleColumns}
       dialogForm={form}
