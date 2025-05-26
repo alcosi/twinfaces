@@ -7,7 +7,10 @@ import { TwinsAPI } from "@/shared/api";
 import { isPopulatedArray } from "@/shared/libs";
 
 import { hydrateDomainUserFromMap } from "../libs/helpers";
-import { LOGIN_FORM_SCHEMA } from "../server";
+import {
+  EMAIL_PASSWORD_AUTH_FORM_SCHEMA,
+  STUB_AUTH_FORM_SCHEMA,
+} from "../server";
 
 async function stubLogin({
   userId,
@@ -53,7 +56,7 @@ async function stubLogin({
 }
 
 export async function stubLoginFormAction(_: unknown, formData: FormData) {
-  const { userId, domainId, businessAccountId } = LOGIN_FORM_SCHEMA.parse({
+  const { userId, domainId, businessAccountId } = STUB_AUTH_FORM_SCHEMA.parse({
     userId: formData.get("userId"),
     domainId: formData.get("domainId"),
     businessAccountId: formData.get("businessAccountId"),
@@ -81,21 +84,10 @@ export async function stubLoginFormAction(_: unknown, formData: FormData) {
   }
 }
 
-export async function loginAction(_: unknown, formData: FormData) {
-  console.log(
-    "FOOBAR formData",
-    formData.get("username"),
-    formData.get("password")
-  );
-  const { username, password } = z
-    .object({
-      username: z.string().email(),
-      password: z
-        .string()
-        .min(8, { message: "minLengthErrorMessage" })
-        .max(20, { message: "maxLengthErrorMessage" }),
-    })
-    .parse({
+export async function emailPasswordAuthAction(_: unknown, formData: FormData) {
+  const { domainId, username, password } =
+    EMAIL_PASSWORD_AUTH_FORM_SCHEMA.parse({
+      domainId: formData.get("domainId"),
       username: formData.get("username"),
       password: formData.get("password"),
     });
@@ -103,11 +95,12 @@ export async function loginAction(_: unknown, formData: FormData) {
   const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
     body: { username, password },
     params: {
-      header: undefined as never,
+      header: {
+        DomainId: domainId,
+      },
     },
   });
 
-  console.log("FOOBAR DATA", data, error);
   if (error) {
     throw error;
   }

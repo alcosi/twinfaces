@@ -11,12 +11,12 @@ import { z } from "zod";
 import { TextFormField } from "@/components/form-fields";
 
 import { stubLoginFormAction } from "@/entities/user";
-import { LOGIN_FORM_SCHEMA } from "@/entities/user/server";
+import { STUB_AUTH_FORM_SCHEMA } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
-import { Button } from "@/shared/ui";
+import { Button, Card } from "@/shared/ui";
 
-export function LoginForm() {
+export function StubAuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setAuthUser, logout } = useAuthUser();
@@ -24,8 +24,8 @@ export function LoginForm() {
   const [authUser, formAction] = useFormState(stubLoginFormAction, null);
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LOGIN_FORM_SCHEMA>>({
-    resolver: zodResolver(LOGIN_FORM_SCHEMA),
+  const form = useForm<z.infer<typeof STUB_AUTH_FORM_SCHEMA>>({
+    resolver: zodResolver(STUB_AUTH_FORM_SCHEMA),
     defaultValues: {
       domainId: searchParams.get("domainId") ?? "",
       userId: config.loginPage.defaultFormValues.userId,
@@ -46,7 +46,7 @@ export function LoginForm() {
     }
   }, [authUser]);
 
-  function onSubmit(values: z.infer<typeof LOGIN_FORM_SCHEMA>) {
+  function onSubmit(values: z.infer<typeof STUB_AUTH_FORM_SCHEMA>) {
     const formData = new FormData();
     formData.set("userId", values.userId);
     formData.set("domainId", values.domainId);
@@ -56,7 +56,7 @@ export function LoginForm() {
   }
 
   return (
-    <div className="my-5 -mt-32 flex min-w-96 flex-col items-center">
+    <Card className="flex min-w-96 flex-col items-center p-8">
       <Image
         className="rounded-full"
         src={config.favicon}
@@ -96,6 +96,6 @@ export function LoginForm() {
           </Button>
         </form>
       </FormProvider>
-    </div>
+    </Card>
   );
 }

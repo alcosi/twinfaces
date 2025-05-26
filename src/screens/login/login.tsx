@@ -11,21 +11,19 @@ import {
   AccordionTrigger,
 } from "@/shared/ui";
 
-import { AuthForm } from "./auth-form";
-import { LoginForm } from "./form";
+import { EmailPasswordAuthForm, StubAuthForm } from "./auth-methods";
 
 function AuthMehtodPasswordForm() {
   // TBD
 }
 
 const AUTH_METHOD_TO_FORM_MAP = {
-  AuthMethodStubV1: LoginForm,
-  AuthMethodPasswordV1: AuthForm,
+  AuthMethodStubV1: EmailPasswordAuthForm,
+  AuthMethodPasswordV1: StubAuthForm,
 };
 
 export async function Login({ domainId }: { domainId: string }) {
   const authConfig = await fetchAuthConfig(domainId);
-  console.log("foobar autoConfig", authConfig);
 
   const firstConfig = authConfig.authMethods[0];
   const FirstConfigComponent = AUTH_METHOD_TO_FORM_MAP[firstConfig.type];
@@ -93,8 +91,6 @@ async function fetchAuthConfig(domainId: string): Promise<AuthConfigV1> {
   if (isUndefined(result.data.data.config)) {
     throw new Error("Config is not returned");
   }
-
-  console.log("foobar RESPONSE", result.data.data.config.authMethods);
 
   // result.data.data.config.authMethods?.push({ type: "AuthMethodPasswordV1" });
   // result.data.data.config.authMethods?.push({ type: "AuthMethodStubV1" });
