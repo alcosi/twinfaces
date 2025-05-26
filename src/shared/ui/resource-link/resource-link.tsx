@@ -90,12 +90,19 @@ export const ResourceLink = <T,>({
   renderTooltip,
   getDisplayName,
   link,
-  disabled,
+  disabled = true,
   backgroundColor,
   fontColor,
   hideIcon,
 }: ResourceLinkProps<T>) => {
   const displayName = getDisplayName(data);
+
+  // TODO: Variant#1
+  // 1. check permission here DOMAIN_MANAGE
+  // 2. if true => link = #
+
+  // TODO: Variant#2
+  // For /workspace area we render ResrourceLink with link=undefined prop
 
   const ResourceLinkWrapper = disabled ? (
     <ResourceLinkContent

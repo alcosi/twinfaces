@@ -54,6 +54,7 @@ type Props = {
   // === end ===
 };
 
+// TODO: #Variant2
 export function TwinsTable({
   title,
   enabledColumns,
@@ -117,6 +118,7 @@ export function TwinsTable({
               data={original.status}
               twinClassId={original.twinClassId!}
               withTooltip
+              disabled
             />
           )}
           {isPopulatedArray(original.transitions) && (

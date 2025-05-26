@@ -71,7 +71,8 @@
 
   /* Links */
   --color-link-enabled: var(--brand-500);
-  --color-link-disabled: var(--input);
+  /* --color-link-disabled: var(--input); */
+  --color-link-disabled: var(--muted-foreground);
   --color-link: var(--border);
 }
 

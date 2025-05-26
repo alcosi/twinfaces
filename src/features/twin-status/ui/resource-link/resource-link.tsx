@@ -23,16 +23,17 @@ export function TwinClassStatusResourceLink({
   disabled,
   withTooltip,
 }: Props) {
+  // TODO: #Variant2 extract link into prop
   const link = `/${PlatformArea.core}/twinclass/${twinClassId}/twinStatus/${data.id}`;
 
   const Icon = data.backgroundColor ? (
     <Square
-      className="w-4 h-4"
+      className="h-4 w-4"
       fill={data.backgroundColor}
       stroke={data.backgroundColor}
     />
   ) : (
-    <TwinStatusIcon className="w-4 h-4" />
+    <TwinStatusIcon className="h-4 w-4" />
   );
 
   return (

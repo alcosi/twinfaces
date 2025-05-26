@@ -23,6 +23,7 @@ export function resolveTwinFieldSchema(
   }
 }
 
+// TODO: #Variant2
 export function renderTwinFieldPreview(twinField: TwinFieldUI) {
   switch (twinField.descriptor.fieldType) {
     case TwinFieldType.selectLinkV1:
