@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,6 +33,7 @@ import {
   formatIntlDate,
   isEmptyString,
   isPopulatedArray,
+  isTruthy,
   isUndefined,
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
@@ -54,7 +56,6 @@ type Props = {
   // === end ===
 };
 
-// TODO: #Variant2
 export function TwinsTable({
   title,
   enabledColumns,
@@ -75,6 +76,7 @@ export function TwinsTable({
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
+  const pathName = usePathname();
 
   const staticColDefs: Record<string, ColumnDef<Twin_DETAILED>> = {
     [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id]: {
@@ -93,6 +95,7 @@ export function TwinsTable({
             <TwinClassResourceLink
               data={original.twinClass as TwinClass_DETAILED}
               withTooltip
+              disabled={isTruthy(pathName.includes("/workspace"))}
             />
           </div>
         ),
@@ -118,7 +121,7 @@ export function TwinsTable({
               data={original.status}
               twinClassId={original.twinClassId!}
               withTooltip
-              disabled
+              disabled={isTruthy(pathName.includes("/workspace"))}
             />
           )}
           {isPopulatedArray(original.transitions) && (
@@ -148,7 +151,11 @@ export function TwinsTable({
       cell: ({ row: { original } }) =>
         original.authorUser && (
           <div className="inline-flex max-w-48">
-            <UserResourceLink data={original.authorUser as User} withTooltip />
+            <UserResourceLink
+              data={original.authorUser as User}
+              withTooltip
+              disabled={isTruthy(pathName.includes("/workspace"))}
+            />
           </div>
         ),
     },
@@ -162,6 +169,7 @@ export function TwinsTable({
             <UserResourceLink
               data={original.assignerUser as User}
               withTooltip
+              disabled={isTruthy(pathName.includes("/workspace"))}
             />
           </div>
         ),
@@ -173,7 +181,11 @@ export function TwinsTable({
       cell: ({ row: { original } }) =>
         original.headTwinId && original.headTwin ? (
           <div className="inline-flex max-w-48">
-            <TwinResourceLink data={original.headTwin} withTooltip />
+            <TwinResourceLink
+              data={original.headTwin}
+              withTooltip
+              disabled={isTruthy(pathName.includes("/workspace"))}
+            />
           </div>
         ) : null,
     },
@@ -185,7 +197,11 @@ export function TwinsTable({
         isPopulatedArray(original.tags) && (
           <div className="inline-flex max-w-48 flex-wrap gap-2">
             {original.tags.map((tag) => (
-              <DatalistOptionResourceLink key={tag.id} data={tag} />
+              <DatalistOptionResourceLink
+                key={tag.id}
+                data={tag}
+                disabled={isTruthy(pathName.includes("/workspace"))}
+              />
             ))}
           </div>
         ),
@@ -203,6 +219,7 @@ export function TwinsTable({
                 dataListId: original.twinClass?.markersDataListId,
               }}
               withTooltip
+              disabled={isTruthy(pathName.includes("/workspace"))}
             />
           </div>
         ) : null,
@@ -253,7 +270,7 @@ export function TwinsTable({
       },
     }).then(({ fields = [] }) => {
       const { supportedFields, columnEntries } =
-        extractTwinFieldColumnsAndFilters(fields, enabledColumns);
+        extractTwinFieldColumnsAndFilters(fields, enabledColumns, pathName);
 
       setTwinClassFields(supportedFields);
       setColumnMap((prev) => ({
@@ -337,7 +354,8 @@ export function TwinsTable({
 
 function extractTwinFieldColumnsAndFilters(
   fields: TwinClassField[],
-  enabledColumns: NonNullable<FaceWT001["columns"]>
+  enabledColumns: NonNullable<FaceWT001["columns"]>,
+  pathName?: string
 ): {
   supportedFields: TwinClassField[];
   columnEntries: [string, ColumnDef<Twin_DETAILED>][];
@@ -368,7 +386,7 @@ function extractTwinFieldColumnsAndFilters(
               return twinField.value;
             }
 
-            return renderTwinFieldPreview(twinField);
+            return renderTwinFieldPreview(twinField, pathName);
           },
         },
       ]);

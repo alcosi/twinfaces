@@ -1,3 +1,5 @@
+"use client";
+
 import { css } from "@emotion/css";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
@@ -90,19 +92,12 @@ export const ResourceLink = <T,>({
   renderTooltip,
   getDisplayName,
   link,
-  disabled = true,
+  disabled,
   backgroundColor,
   fontColor,
   hideIcon,
 }: ResourceLinkProps<T>) => {
   const displayName = getDisplayName(data);
-
-  // TODO: Variant#1
-  // 1. check permission here DOMAIN_MANAGE
-  // 2. if true => link = #
-
-  // TODO: Variant#2
-  // For /workspace area we render ResrourceLink with link=undefined prop
 
   const ResourceLinkWrapper = disabled ? (
     <ResourceLinkContent

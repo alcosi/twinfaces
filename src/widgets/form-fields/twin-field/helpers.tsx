@@ -9,6 +9,7 @@ import { UserResourceLink } from "@/features/user/ui";
 import {
   formatIntlDate,
   isPopulatedString,
+  isTruthy,
   mapPatternToInputType,
 } from "@/shared/libs";
 
@@ -24,7 +25,10 @@ export function resolveTwinFieldSchema(
 }
 
 // TODO: #Variant2
-export function renderTwinFieldPreview(twinField: TwinFieldUI) {
+export function renderTwinFieldPreview(
+  twinField: TwinFieldUI,
+  pathName?: string
+) {
   switch (twinField.descriptor.fieldType) {
     case TwinFieldType.selectLinkV1:
     case TwinFieldType.selectLinkLongV1:
@@ -36,6 +40,7 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
             description: twinField.description,
           }}
           withTooltip
+          disabled={isTruthy(pathName?.includes("/workspace"))}
         />
       );
 
@@ -46,6 +51,7 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
         <DatalistOptionResourceLink
           data={twinField.value as DataListOptionV3}
           withTooltip
+          disabled={isTruthy(pathName?.includes("/workspace"))}
         />
       );
     case TwinFieldType.dateScrollV1: {
@@ -59,7 +65,12 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
     }
     case TwinFieldType.selectUserV1:
     case TwinFieldType.selectUserLongV1:
-      return <UserResourceLink data={{ id: twinField.value as string }} />;
+      return (
+        <UserResourceLink
+          data={{ id: twinField.value as string }}
+          disabled={isTruthy(pathName?.includes("/workspace"))}
+        />
+      );
 
     case TwinFieldType.textV1:
       switch (twinField.descriptor.editorType) {

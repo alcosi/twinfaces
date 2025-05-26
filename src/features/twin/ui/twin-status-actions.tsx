@@ -10,9 +10,10 @@ import { TransitionPerformer } from "../../twin-flow-transition";
 
 type Props = {
   twin: Twin_DETAILED;
+  disabled?: boolean;
 };
 
-export function TwinStatusActions({ twin }: Props) {
+export function TwinStatusActions({ twin, disabled }: Props) {
   const router = useRouter();
 
   async function handleOnSuccess() {
@@ -30,6 +31,7 @@ export function TwinStatusActions({ twin }: Props) {
       <TwinClassStatusResourceLink
         twinClassId={twin.twinClassId!}
         data={twin.status!}
+        disabled={disabled}
       />
       {twin.transitions && (
         <TransitionPerformer twin={twin} onSuccess={handleOnSuccess} />
