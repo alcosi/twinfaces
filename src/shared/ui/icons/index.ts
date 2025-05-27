@@ -12,3 +12,7 @@ export * from "./rows";
 export * from "./settings";
 export * from "./shopping-bag-icon";
 export * from "./switch-horizontal";
+export * from "./html";
+export * from "./table";
+export * from "./list";
+export * from "./attachment";
