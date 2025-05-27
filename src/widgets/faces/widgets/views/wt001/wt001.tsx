@@ -7,14 +7,14 @@ import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
 import { WT001Client } from "./wt001-client";
 
-export async function WT001({ widget }: WidgetFaceProps) {
+export async function WT001({ widget, twinId }: WidgetFaceProps) {
   const { currentUserId } = await getAuthHeaders();
   const isAdmin = await isGranted({
     userId: currentUserId,
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const result = await safe(() => fetchWT001Face(widget.widgetFaceId));
+  const result = await safe(() => fetchWT001Face(widget.widgetFaceId, twinId));
 
   if (!result.ok) {
     return (

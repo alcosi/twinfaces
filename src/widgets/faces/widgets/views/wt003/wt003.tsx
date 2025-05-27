@@ -5,8 +5,8 @@ import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
 import { WT003Alert } from "./wt003-alert";
 
-export async function WT003({ widget }: WidgetFaceProps) {
-  const result = await safe(() => fetchWT003Face(widget.widgetFaceId));
+export async function WT003({ widget, twinId }: WidgetFaceProps) {
+  const result = await safe(() => fetchWT003Face(widget.widgetFaceId, twinId));
 
   if (!result.ok) {
     return (

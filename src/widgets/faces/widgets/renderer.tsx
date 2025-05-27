@@ -48,7 +48,7 @@ export async function WidgetRenderer({ twinId, widget, className }: Props) {
 
   if (isPopulatedString(componentName) && componentName in WIDGETS) {
     const Comp = WIDGETS[componentName as keyof typeof WIDGETS]!;
-    return <Comp face={face} widget={widget} />;
+    return <Comp face={face} widget={widget} twinId={twinId} />;
   }
 
   if (isPopulatedString(componentName) && componentName in TWIDGETS) {

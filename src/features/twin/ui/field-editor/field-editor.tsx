@@ -44,6 +44,7 @@ export type TwinFieldEditorProps = {
   onSuccess?: () => void;
   className?: string;
   mode?: "admin";
+  editable?: boolean;
 };
 
 export function TwinFieldEditor({
@@ -57,6 +58,7 @@ export function TwinFieldEditor({
   onSuccess,
   className,
   mode,
+  editable = true,
 }: TwinFieldEditorProps) {
   const { updateTwin } = useTwinUpdate();
   const router = useRouter();
@@ -116,7 +118,7 @@ export function TwinFieldEditor({
           label
         ))}
 
-      {field.descriptor ? (
+      {editable && field.descriptor ? (
         <InPlaceEdit {...editProps} />
       ) : (
         <div className="flex gap-2 py-2">{renderPreview()}</div>

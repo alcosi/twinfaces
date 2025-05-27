@@ -17,8 +17,9 @@ export type WidgetFaceProps = {
   face: Face_DETAILED;
   widget: Widget;
   className?: string;
+  twinId?: string;
 };
 
-export type TWidgetFaceProps = WidgetFaceProps & {
+export type TWidgetFaceProps = Omit<WidgetFaceProps, "twinId"> & {
   twinId: string;
 };

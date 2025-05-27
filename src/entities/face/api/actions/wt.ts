@@ -14,12 +14,14 @@ type FetchFaceOptions = {
     | "/private/face/wt001/{faceId}/v1"
     | "/private/face/wt003/{faceId}/v1";
   query?: Record<string, string | boolean>;
+  twinId?: string;
 };
 
 async function fetchFaceWidget<T>({
   faceId,
   endpoint,
   query = {},
+  twinId,
 }: FetchFaceOptions): Promise<T> {
   const headers = await getAuthHeaders();
 
@@ -28,6 +30,7 @@ async function fetchFaceWidget<T>({
       path: { faceId },
       header: headers,
       query: {
+        twinId,
         lazyRelation: false,
         showFaceMode: "DETAILED",
         ...query,
@@ -42,16 +45,24 @@ async function fetchFaceWidget<T>({
   return data.widget as T;
 }
 
-export async function fetchWT001Face(faceId: string): Promise<FaceWT001> {
+export async function fetchWT001Face(
+  faceId: string,
+  twinId?: string
+): Promise<FaceWT001> {
   return fetchFaceWidget<FaceWT001>({
     faceId,
     endpoint: "/private/face/wt001/{faceId}/v1",
+    twinId,
   });
 }
 
-export async function fetchWT003Face(faceId: string): Promise<FaceWT003> {
+export async function fetchWT003Face(
+  faceId: string,
+  twinId?: string
+): Promise<FaceWT003> {
   return fetchFaceWidget<FaceWT003>({
     faceId,
     endpoint: "/private/face/wt003/{faceId}/v1",
+    twinId,
   });
 }

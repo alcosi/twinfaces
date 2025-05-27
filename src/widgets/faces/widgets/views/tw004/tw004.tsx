@@ -45,6 +45,7 @@ export async function TW004(props: TWidgetFaceProps) {
         relatedObjects={relatedObjects}
         field={field}
         mode={isAdmin ? "admin" : undefined}
+        editable={twidget.editable!}
       />
     </div>
   );
