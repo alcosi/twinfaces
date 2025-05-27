@@ -26,7 +26,7 @@ export function resolveTwinFieldSchema(
 
 export function renderTwinFieldPreview(
   twinField: TwinFieldUI,
-  pathName?: string
+  disabledLinkNavigation?: boolean
 ) {
   switch (twinField.descriptor.fieldType) {
     case TwinFieldType.selectLinkV1:
@@ -39,7 +39,7 @@ export function renderTwinFieldPreview(
             description: twinField.description,
           }}
           withTooltip
-          disabled={isTruthy(pathName?.includes("/workspace"))}
+          disabled={isTruthy(disabledLinkNavigation)}
         />
       );
 
@@ -50,7 +50,7 @@ export function renderTwinFieldPreview(
         <DatalistOptionResourceLink
           data={twinField.value as DataListOptionV3}
           withTooltip
-          disabled={isTruthy(pathName?.includes("/workspace"))}
+          disabled={isTruthy(disabledLinkNavigation)}
         />
       );
     case TwinFieldType.dateScrollV1: {
@@ -67,7 +67,7 @@ export function renderTwinFieldPreview(
       return (
         <UserResourceLink
           data={{ id: twinField.value as string }}
-          disabled={isTruthy(pathName?.includes("/workspace"))}
+          disabled={isTruthy(disabledLinkNavigation)}
         />
       );
 

@@ -21,6 +21,7 @@ export function WT001Client({
       baseTwinClassId={baseTwinClassId}
       enabledColumns={enabledColumns}
       showCreateButton={showCreateButton}
+      navigatable={false}
     />
   );
 }

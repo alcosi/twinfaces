@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -25,15 +24,13 @@ import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { TransitionPerformer } from "@/features/twin-flow-transition";
-import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
-import { TwinResourceLink } from "@/features/twin/ui";
+import { TwinResourceLink, TwinStatusActions } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import {
   formatIntlDate,
   isEmptyString,
+  isFalsy,
   isPopulatedArray,
-  isTruthy,
   isUndefined,
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
@@ -50,6 +47,7 @@ type Props = {
   title?: string;
   enabledColumns?: FaceWT001["columns"];
   showCreateButton?: boolean;
+  navigatable?: boolean;
   // === start === NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
@@ -62,6 +60,7 @@ export function TwinsTable({
   baseTwinClassId,
   targetHeadTwinId,
   showCreateButton = true,
+  navigatable = true,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -76,7 +75,6 @@ export function TwinsTable({
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
-  const pathName = usePathname();
 
   const staticColDefs: Record<string, ColumnDef<Twin_DETAILED>> = {
     [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id]: {
@@ -95,7 +93,7 @@ export function TwinsTable({
             <TwinClassResourceLink
               data={original.twinClass as TwinClass_DETAILED}
               withTooltip
-              disabled={isTruthy(pathName.includes("/workspace"))}
+              disabled={isFalsy(navigatable)}
             />
           </div>
         ),
@@ -117,17 +115,10 @@ export function TwinsTable({
       cell: ({ row: { original } }) => (
         <div className="inline-flex max-w-48 items-center gap-2">
           {original.status && (
-            <TwinClassStatusResourceLink
-              data={original.status}
-              twinClassId={original.twinClassId!}
-              withTooltip
-              disabled={isTruthy(pathName.includes("/workspace"))}
-            />
-          )}
-          {isPopulatedArray(original.transitions) && (
-            <TransitionPerformer
+            <TwinStatusActions
               twin={original}
-              onSuccess={handleOnTransitionPerformSuccess}
+              disabledLinkNavigation={isFalsy(navigatable)}
+              onTransitionSuccess={handleOnTransitionPerformSuccess}
             />
           )}
         </div>
@@ -154,7 +145,7 @@ export function TwinsTable({
             <UserResourceLink
               data={original.authorUser as User}
               withTooltip
-              disabled={isTruthy(pathName.includes("/workspace"))}
+              disabled={isFalsy(navigatable)}
             />
           </div>
         ),
@@ -169,7 +160,7 @@ export function TwinsTable({
             <UserResourceLink
               data={original.assignerUser as User}
               withTooltip
-              disabled={isTruthy(pathName.includes("/workspace"))}
+              disabled={isFalsy(navigatable)}
             />
           </div>
         ),
@@ -184,7 +175,7 @@ export function TwinsTable({
             <TwinResourceLink
               data={original.headTwin}
               withTooltip
-              disabled={isTruthy(pathName.includes("/workspace"))}
+              disabled={isFalsy(navigatable)}
             />
           </div>
         ) : null,
@@ -200,7 +191,7 @@ export function TwinsTable({
               <DatalistOptionResourceLink
                 key={tag.id}
                 data={tag}
-                disabled={isTruthy(pathName.includes("/workspace"))}
+                disabled={isFalsy(navigatable)}
               />
             ))}
           </div>
@@ -219,7 +210,7 @@ export function TwinsTable({
                 dataListId: original.twinClass?.markersDataListId,
               }}
               withTooltip
-              disabled={isTruthy(pathName.includes("/workspace"))}
+              disabled={isFalsy(navigatable)}
             />
           </div>
         ) : null,
@@ -270,7 +261,7 @@ export function TwinsTable({
       },
     }).then(({ fields = [] }) => {
       const { supportedFields, columnEntries } =
-        extractTwinFieldColumnsAndFilters(fields, enabledColumns, pathName);
+        extractTwinFieldColumnsAndFilters(fields, enabledColumns);
 
       setTwinClassFields(supportedFields);
       setColumnMap((prev) => ({
@@ -354,8 +345,7 @@ export function TwinsTable({
 
 function extractTwinFieldColumnsAndFilters(
   fields: TwinClassField[],
-  enabledColumns: NonNullable<FaceWT001["columns"]>,
-  pathName?: string
+  enabledColumns: NonNullable<FaceWT001["columns"]>
 ): {
   supportedFields: TwinClassField[];
   columnEntries: [string, ColumnDef<Twin_DETAILED>][];
@@ -386,7 +376,7 @@ function extractTwinFieldColumnsAndFilters(
               return twinField.value;
             }
 
-            return renderTwinFieldPreview(twinField, pathName);
+            return renderTwinFieldPreview(twinField, true);
           },
         },
       ]);

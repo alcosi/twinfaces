@@ -75,7 +75,10 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     key: "statusId",
     renderPreview: (twin) => {
       return twin.status ? (
-        <TwinStatusActions twin={twin as Twin_DETAILED} disabled />
+        <TwinStatusActions
+          twin={twin as Twin_DETAILED}
+          disabledLinkNavigation={true}
+        />
       ) : (
         twin.statusId
       );

@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 
 import { usePerformTransition } from "@/entities/twin-flow-transition";
 import { Twin_DETAILED } from "@/entities/twin/server";
-import { isFalsy } from "@/shared/libs";
+import { isEmptyArray, isFalsy } from "@/shared/libs";
 import {
   Button,
   DropdownMenu,
@@ -21,6 +21,8 @@ type Props = {
 
 export const TransitionPerformer = ({ twin, onSuccess }: Props) => {
   const { performTransition, loading } = usePerformTransition();
+
+  if (isEmptyArray(twin.transitions)) return null;
 
   async function handleTransition(transitionId: string) {
     try {

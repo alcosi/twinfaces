@@ -4,16 +4,22 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Twin_DETAILED } from "@/entities/twin/server";
+import { isTruthy } from "@/shared/libs";
 
 import { TwinClassStatusResourceLink } from "../../../features/twin-status/ui";
 import { TransitionPerformer } from "../../twin-flow-transition";
 
 type Props = {
   twin: Twin_DETAILED;
-  disabled?: boolean;
+  disabledLinkNavigation?: boolean;
+  onTransitionSuccess?: () => void;
 };
 
-export function TwinStatusActions({ twin, disabled }: Props) {
+export function TwinStatusActions({
+  twin,
+  disabledLinkNavigation = false,
+  onTransitionSuccess,
+}: Props) {
   const router = useRouter();
 
   async function handleOnSuccess() {
@@ -26,15 +32,23 @@ export function TwinStatusActions({ twin, disabled }: Props) {
     }
   }
 
+  const handleSuccess = async () => {
+    if (onTransitionSuccess) {
+      onTransitionSuccess();
+    } else {
+      await handleOnSuccess();
+    }
+  };
+
   return (
     <>
       <TwinClassStatusResourceLink
         twinClassId={twin.twinClassId!}
         data={twin.status!}
-        disabled={disabled}
+        disabled={isTruthy(disabledLinkNavigation)}
       />
       {twin.transitions && (
-        <TransitionPerformer twin={twin} onSuccess={handleOnSuccess} />
+        <TransitionPerformer twin={twin} onSuccess={handleSuccess} />
       )}
     </>
   );

@@ -1,5 +1,3 @@
-"use client";
-
 import { css } from "@emotion/css";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
