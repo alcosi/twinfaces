@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
 
+import { AuthMethodPassword, fetchAuthConfig } from "@/entities/user/server";
 import { ThemeToggle } from "@/features/ui/theme-toggle";
-import { TwinsAPI } from "@/shared/api";
-import { components } from "@/shared/api/generated/schema";
-import { isUndefined, safe } from "@/shared/libs";
+import { isMultiElementArray, isPopulatedArray } from "@/shared/libs";
 import {
   Accordion,
   AccordionContent,
@@ -11,19 +10,25 @@ import {
   AccordionTrigger,
 } from "@/shared/ui";
 
-import { EmailPasswordAuthForm, StubAuthForm } from "./auth-methods";
-
-function AuthMehtodPasswordForm() {
-  // TBD
-}
+import {
+  EmailPasswordAuthForm,
+  StubAuthForm,
+  UnderConstructionForm,
+} from "./auth-methods";
 
 const AUTH_METHOD_TO_FORM_MAP = {
-  AuthMethodStubV1: EmailPasswordAuthForm,
-  AuthMethodPasswordV1: StubAuthForm,
+  AuthMethodStubV1: StubAuthForm,
+  AuthMethodPasswordV1: EmailPasswordAuthForm,
+  AuthMethodPasswordV2: UnderConstructionForm,
+  AuthMethodOath2V1: UnderConstructionForm,
 };
 
 export async function Login({ domainId }: { domainId: string }) {
   const authConfig = await fetchAuthConfig(domainId);
+
+  if (!isPopulatedArray<AuthMethodPassword>(authConfig.authMethods)) {
+    notFound();
+  }
 
   const firstConfig = authConfig.authMethods[0];
   const FirstConfigComponent = AUTH_METHOD_TO_FORM_MAP[firstConfig.type];
@@ -59,55 +64,9 @@ export async function Login({ domainId }: { domainId: string }) {
             })}
           </Accordion>
         ) : (
-          <FirstConfigComponent className="" />
+          <FirstConfigComponent />
         )}
       </div>
     </main>
   );
-}
-
-type AuthConfigV1 = components["schemas"]["AuthConfigV1"];
-
-async function fetchAuthConfig(domainId: string): Promise<AuthConfigV1> {
-  const result = await safe(() =>
-    TwinsAPI.POST("/auth/config/v1", {
-      params: {
-        header: {
-          DomainId: domainId,
-          Channel: "WEB",
-        },
-      },
-    })
-  );
-
-  if (!result.ok) {
-    notFound();
-  }
-
-  if (result.data.error) {
-    throw new Error(result.data.error.msg);
-  }
-
-  if (isUndefined(result.data.data.config)) {
-    throw new Error("Config is not returned");
-  }
-
-  // result.data.data.config.authMethods?.push({ type: "AuthMethodPasswordV1" });
-  // result.data.data.config.authMethods?.push({ type: "AuthMethodStubV1" });
-
-  return result.data.data.config;
-}
-
-/**
- * Type guard for arrays with exactly one element.
- */
-export function isSingleElementArray<T>(arr: unknown): arr is [T] {
-  return Array.isArray(arr) && arr.length === 1;
-}
-
-/**
- * Type guard for arrays with two or more elements.
- */
-export function isMultiElementArray<T>(arr: unknown): arr is [T, T, ...T[]] {
-  return Array.isArray(arr) && arr.length > 1;
 }

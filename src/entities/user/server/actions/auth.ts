@@ -1,16 +1,44 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { notFound } from "next/navigation";
 
 import { TwinsAPI } from "@/shared/api";
-import { isPopulatedArray } from "@/shared/libs";
+import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 
-import { hydrateDomainUserFromMap } from "../libs/helpers";
+import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {
   EMAIL_PASSWORD_AUTH_FORM_SCHEMA,
   STUB_AUTH_FORM_SCHEMA,
-} from "../server";
+} from "../libs";
+import { AuthConfig, AuthLoginRs } from "../types";
+
+export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
+  const result = await safe(() =>
+    TwinsAPI.POST("/auth/config/v1", {
+      params: {
+        header: {
+          DomainId: domainId,
+          Channel: "WEB",
+        },
+      },
+    })
+  );
+
+  if (!result.ok) {
+    notFound();
+  }
+
+  if (result.data.error) {
+    throw new Error(result.data.error.msg);
+  }
+
+  if (isUndefined(result.data.data.config)) {
+    throw new Error("Config is not returned");
+  }
+
+  return result.data.data.config;
+}
 
 async function stubLogin({
   userId,
@@ -84,7 +112,10 @@ export async function stubLoginFormAction(_: unknown, formData: FormData) {
   }
 }
 
-export async function emailPasswordAuthAction(_: unknown, formData: FormData) {
+export async function emailPasswordAuthAction(
+  _: unknown,
+  formData: FormData
+): Promise<AuthLoginRs> {
   const { domainId, username, password } =
     EMAIL_PASSWORD_AUTH_FORM_SCHEMA.parse({
       domainId: formData.get("domainId"),
@@ -92,18 +123,25 @@ export async function emailPasswordAuthAction(_: unknown, formData: FormData) {
       password: formData.get("password"),
     });
 
-  const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
-    body: { username, password },
-    params: {
-      header: {
-        DomainId: domainId,
-      },
-    },
-  });
+  try {
+    const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
+      body: { username, password },
+      params: { header: { DomainId: domainId, Channel: "WEB" } },
+    });
 
-  if (error) {
-    throw error;
+    if (error) {
+      console.error("Login error response:", error);
+      const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
+      throw new Error(message);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Login request failed:", err);
+    const message =
+      err instanceof Error
+        ? err.message
+        : "An unknown error occurred during login";
+    throw new Error(message);
   }
-
-  return data;
 }

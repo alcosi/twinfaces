@@ -1,17 +1,17 @@
 "use client";
 
-import { DevTool } from "@hookform/devtools";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { TextFormField, TextFormItem } from "@/components/form-fields/text";
 
-import { emailPasswordAuthAction } from "@/entities/user";
-import { EMAIL_PASSWORD_AUTH_FORM_SCHEMA } from "@/entities/user/server";
+import {
+  EMAIL_PASSWORD_AUTH_FORM_SCHEMA,
+  emailPasswordAuthAction,
+} from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { FlipCard } from "@/features/ui/flip-card";
@@ -41,19 +41,22 @@ function DomainLogo({
 }
 
 export function EmailPasswordAuthForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const config = useContext(ProductFlavorConfigContext);
   const { alert } = useActionDialogs();
-  const router = useRouter();
   const { setAuthUser, logout } = useAuthUser();
+  const domainId = searchParams.get("domainId") ?? undefined;
 
   const [mode, setMode] = useState<"login" | "register">("login");
   const [isAuthenticating, startAuthTransition] = useTransition();
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const loginForm = useForm<z.infer<typeof EMAIL_PASSWORD_AUTH_FORM_SCHEMA>>({
     resolver: zodResolver(EMAIL_PASSWORD_AUTH_FORM_SCHEMA),
     defaultValues: {
-      domainId: config.id,
-      username: "admin@twinbox.io",
+      domainId,
+      username: "fake-admin@twinbox.io",
       password: "some_test_password",
     },
   });
@@ -61,7 +64,7 @@ export function EmailPasswordAuthForm() {
   const registerForm = useForm<any>({
     resolver: zodResolver(z.any()),
     defaultValues: {
-      domainId: config.id,
+      domainId,
       email: "",
       username: "",
       password: "",
@@ -88,7 +91,7 @@ export function EmailPasswordAuthForm() {
   function onLoginSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_AUTH_FORM_SCHEMA>
   ) {
-    if (isUndefined(config.id)) {
+    if (isUndefined(domainId)) {
       throw new Error("Domain ID is required");
     }
 
@@ -99,168 +102,170 @@ export function EmailPasswordAuthForm() {
 
     startAuthTransition(async () => {
       try {
-        const result = await emailPasswordAuthAction(null, formData);
+        const { authData } = await emailPasswordAuthAction(null, formData);
 
-        if (isUndefined(result.authData?.auth_token)) {
+        if (isUndefined(authData?.auth_token)) {
           throw new Error("Login failed. Please check your credentials");
         }
 
         setAuthUser({
           domainUser: undefined,
-          authToken: result.authData.auth_token,
-          domainId: config.id!,
+          authToken: authData.auth_token,
+          domainId,
         });
         router.push(`/${PlatformArea.core}/twinclass`);
-      } catch {
-        // TODO: show form error message instead of toast
-        toast.error("Login failed. Please check your credentials.");
+      } catch (err) {
+        setAuthError(
+          err instanceof Error ? err.message : "An unexpected error occurred."
+        );
         loginForm.reset();
       }
     });
   }
 
   return (
-    <>
-      <FlipCard
-        isFlipped={mode === "register"}
-        className="relative w-full"
-        front={
-          <div className="h-full rounded-lg p-8">
-            <DomainLogo
-              iconLight={config.iconLight ?? config.favicon}
-              iconDark={config.iconDark ?? config.favicon}
-            />
+    <FlipCard
+      isFlipped={mode === "register"}
+      className="relative w-full"
+      front={
+        <div className="h-full rounded-lg p-8">
+          <DomainLogo
+            iconLight={config.iconLight ?? config.favicon}
+            iconDark={config.iconDark ?? config.favicon}
+          />
 
-            <h2 className="text-primary my-6 text-center text-2xl font-bold">
-              Welcome
-            </h2>
+          <h2 className="text-primary my-6 text-center text-2xl font-bold">
+            Welcome
+          </h2>
 
-            <FormProvider {...loginForm}>
-              <form
-                className="flex w-full flex-col space-y-4"
-                onSubmit={loginForm.handleSubmit(onLoginSubmit)}
-              >
-                <TextFormField
-                  control={loginForm.control}
-                  type="text"
-                  name="domainId"
-                  required
-                  disabled
-                  hidden
-                />
-                <TextFormField
-                  control={loginForm.control}
-                  type="email"
-                  name="username"
-                  label="Username"
-                  placeholder="Enter your username"
-                  required
-                />
-                <TextFormField
-                  control={loginForm.control}
-                  type="password"
-                  name="password"
-                  label="Password"
-                  placeholder="Enter your password"
-                  required
-                />
-
-                <Button
-                  type="submit"
-                  className="w-full"
-                  loading={isAuthenticating}
-                  size="lg"
-                >
-                  Login
-                </Button>
-
-                <div className="flex flex-col justify-between text-sm">
-                  <Button
-                    variant="link"
-                    type="button"
-                    onClick={onForgotPasswordClick}
-                    className="text-muted-foreground"
-                  >
-                    Forgot password?
-                  </Button>
-
-                  <span className="text-muted-foreground text-center">
-                    Don&apos;t have an account?
-                    <Button
-                      variant="link"
-                      type="button"
-                      onClick={toggleMode}
-                      className="text-muted-foreground"
-                    >
-                      Create Account
-                    </Button>
-                  </span>
-                </div>
-              </form>
-            </FormProvider>
-          </div>
-        }
-        back={
-          <div className="h-full rounded-lg p-8">
-            <DomainLogo
-              iconLight={config.iconLight ?? config.favicon}
-              iconDark={config.iconDark ?? config.favicon}
-            />
-
-            <h2 className="text-primary my-6 text-center text-2xl font-bold">
-              Create Account
-            </h2>
-
-            <form className="flex w-full flex-col space-y-4">
-              <TextFormItem
-                type="email"
-                label="Email"
-                placeholder="Enter your email"
+          <FormProvider {...loginForm}>
+            <form
+              className="flex w-full flex-col space-y-4"
+              onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+            >
+              <TextFormField
+                control={loginForm.control}
+                type="text"
+                name="domainId"
                 required
                 disabled
+                hidden
               />
-              <TextFormItem
-                type="username"
+              <TextFormField
+                control={loginForm.control}
+                type="email"
+                name="username"
                 label="Username"
                 placeholder="Enter your username"
                 required
-                disabled
               />
-              <TextFormItem
+              <TextFormField
+                control={loginForm.control}
                 type="password"
+                name="password"
                 label="Password"
-                placeholder="Create a password"
+                placeholder="Enter your password"
                 required
-                disabled
-              />
-              <TextFormItem
-                type="password"
-                label="Confirm Password"
-                placeholder="Repeat your password"
-                required
-                disabled
               />
 
-              <Button type="submit" className="w-full" size="lg" disabled>
-                Sign Up
+              <Button
+                type="submit"
+                className="w-full"
+                loading={isAuthenticating}
+                size="lg"
+              >
+                Login
               </Button>
 
-              <span className="text-muted-foreground text-center text-sm">
-                Already have an account?
+              {authError && (
+                <p className="text-error text-center">{authError}</p>
+              )}
+
+              <div className="flex flex-col justify-between text-sm">
                 <Button
                   variant="link"
                   type="button"
-                  onClick={toggleMode}
+                  onClick={onForgotPasswordClick}
                   className="text-muted-foreground"
                 >
-                  Login
+                  Forgot password?
                 </Button>
-              </span>
+
+                <span className="text-muted-foreground text-center">
+                  Don&apos;t have an account?
+                  <Button
+                    variant="link"
+                    type="button"
+                    onClick={toggleMode}
+                    className="text-muted-foreground"
+                  >
+                    Create Account
+                  </Button>
+                </span>
+              </div>
             </form>
-          </div>
-        }
-      />
-      <DevTool control={loginForm.control} />
-    </>
+          </FormProvider>
+        </div>
+      }
+      back={
+        <div className="h-full rounded-lg p-8">
+          <DomainLogo
+            iconLight={config.iconLight ?? config.favicon}
+            iconDark={config.iconDark ?? config.favicon}
+          />
+
+          <h2 className="text-primary my-6 text-center text-2xl font-bold">
+            Create Account
+          </h2>
+
+          <form className="flex w-full flex-col space-y-4">
+            <TextFormItem
+              type="email"
+              label="Email"
+              placeholder="Enter your email"
+              required
+              disabled
+            />
+            <TextFormItem
+              type="username"
+              label="Username"
+              placeholder="Enter your username"
+              required
+              disabled
+            />
+            <TextFormItem
+              type="password"
+              label="Password"
+              placeholder="Create a password"
+              required
+              disabled
+            />
+            <TextFormItem
+              type="password"
+              label="Confirm Password"
+              placeholder="Repeat your password"
+              required
+              disabled
+            />
+
+            <Button type="submit" className="w-full" size="lg" disabled>
+              Sign Up
+            </Button>
+
+            <span className="text-muted-foreground text-center text-sm">
+              Already have an account?
+              <Button
+                variant="link"
+                type="button"
+                onClick={toggleMode}
+                className="text-muted-foreground"
+              >
+                Login
+              </Button>
+            </span>
+          </form>
+        </div>
+      }
+    />
   );
 }

@@ -10,8 +10,10 @@ import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields";
 
-import { stubLoginFormAction } from "@/entities/user";
-import { STUB_AUTH_FORM_SCHEMA } from "@/entities/user/server";
+import {
+  STUB_AUTH_FORM_SCHEMA,
+  stubLoginFormAction,
+} from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
 import { Button, Card } from "@/shared/ui";
@@ -39,7 +41,6 @@ export function StubAuthForm() {
   }, []);
 
   useEffect(() => {
-    console.log("foobar authUser", authUser);
     if (authUser) {
       setAuthUser(authUser);
       router.push(`/${PlatformArea.core}/twinclass`);

@@ -30,6 +30,14 @@ export function isPopulatedArray<T>(arr: unknown): arr is [T, ...T[]] {
   return Array.isArray(arr) && arr.length > 0;
 }
 
+export function isSingleElementArray<T>(arr: unknown): arr is [T] {
+  return Array.isArray(arr) && arr.length === 1;
+}
+
+export function isMultiElementArray<T>(arr: unknown): arr is [T, T, ...T[]] {
+  return Array.isArray(arr) && arr.length > 1;
+}
+
 export function isNumber(value: unknown): value is number {
   return typeof value === "number" && !isNaN(value);
 }
