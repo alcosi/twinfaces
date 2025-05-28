@@ -93,7 +93,7 @@ export function TwinsTable({
             <TwinClassResourceLink
               data={original.twinClass as TwinClass_DETAILED}
               withTooltip
-              disabled={isFalsy(resourceNavigationEnabled)}
+              disabled={resourceNavigationEnabled}
             />
           </div>
         ),
@@ -117,7 +117,7 @@ export function TwinsTable({
           {original.status && (
             <TwinStatusActions
               twin={original}
-              allowNavigation={isFalsy(resourceNavigationEnabled)}
+              allowNavigation={resourceNavigationEnabled}
               onTransitionSuccess={handleOnTransitionPerformSuccess}
             />
           )}
@@ -145,7 +145,7 @@ export function TwinsTable({
             <UserResourceLink
               data={original.authorUser as User}
               withTooltip
-              disabled={isFalsy(resourceNavigationEnabled)}
+              disabled={!resourceNavigationEnabled}
             />
           </div>
         ),
@@ -160,7 +160,7 @@ export function TwinsTable({
             <UserResourceLink
               data={original.assignerUser as User}
               withTooltip
-              disabled={isFalsy(resourceNavigationEnabled)}
+              disabled={!resourceNavigationEnabled}
             />
           </div>
         ),
@@ -175,7 +175,7 @@ export function TwinsTable({
             <TwinResourceLink
               data={original.headTwin}
               withTooltip
-              disabled={isFalsy(resourceNavigationEnabled)}
+              disabled={!resourceNavigationEnabled}
             />
           </div>
         ) : null,
@@ -191,7 +191,7 @@ export function TwinsTable({
               <DatalistOptionResourceLink
                 key={tag.id}
                 data={tag}
-                disabled={isFalsy(resourceNavigationEnabled)}
+                disabled={!resourceNavigationEnabled}
               />
             ))}
           </div>
@@ -210,7 +210,7 @@ export function TwinsTable({
                 dataListId: original.twinClass?.markersDataListId,
               }}
               withTooltip
-              disabled={isFalsy(resourceNavigationEnabled)}
+              disabled={!resourceNavigationEnabled}
             />
           </div>
         ) : null,
