@@ -1,2 +1,1 @@
-export * from "./tier-icon";
 export * from "./resource-link";

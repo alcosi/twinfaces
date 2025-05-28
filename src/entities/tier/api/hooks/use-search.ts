@@ -3,6 +3,7 @@ import { useCallback, useContext } from "react";
 
 import { hydrateTierFromMap } from "@/entities/tier";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
 import { TierFilters, Tier_DETAILED } from "../types";
 
@@ -11,16 +12,23 @@ export const useTierSearch = () => {
 
   const searchTiers = useCallback(
     async ({
+      search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters,
     }: {
+      search?: string;
       pagination?: PaginationState;
       filters?: TierFilters;
     }): Promise<PagedResponse<Tier_DETAILED>> => {
       try {
         const { data, error } = await api.tier.search({
           pagination,
-          filters,
+          filters: {
+            ...filters,
+            nameLikeList: isPopulatedString(search)
+              ? [wrapWithPercent(search)]
+              : filters?.nameLikeList,
+          },
         });
 
         if (error) {

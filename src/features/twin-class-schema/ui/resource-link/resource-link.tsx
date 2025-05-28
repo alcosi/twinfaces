@@ -29,7 +29,7 @@ export const TwinClassSchemaResourceLink = ({
           : undefined
       }
       getDisplayName={(data) =>
-        isPopulatedString(data.name) ? data.name : "N/A"
+        isPopulatedString(data?.name) ? data.name : "N/A"
       }
       link={link}
     />
