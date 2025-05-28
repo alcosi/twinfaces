@@ -68,7 +68,12 @@ export function TwinFields() {
                 twinId,
               }}
               schema={resolveTwinFieldSchema(original)}
-              renderPreview={(_) => renderTwinFieldPreview(original)}
+              renderPreview={(_) =>
+                renderTwinFieldPreview({
+                  twinField: original,
+                  allowNavigation: false,
+                })
+              }
               onSubmit={(fieldValue) =>
                 upsertTwinField({
                   twinId,

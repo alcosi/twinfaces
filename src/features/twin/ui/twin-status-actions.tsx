@@ -17,7 +17,7 @@ type Props = {
 
 export function TwinStatusActions({
   twin,
-  allowNavigation = false,
+  allowNavigation = true,
   onTransitionSuccess,
 }: Props) {
   const router = useRouter();

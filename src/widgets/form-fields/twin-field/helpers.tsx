@@ -9,7 +9,6 @@ import { UserResourceLink } from "@/features/user/ui";
 import {
   formatIntlDate,
   isPopulatedString,
-  isTruthy,
   mapPatternToInputType,
 } from "@/shared/libs";
 
@@ -24,10 +23,13 @@ export function resolveTwinFieldSchema(
   }
 }
 
-export function renderTwinFieldPreview(
-  twinField: TwinFieldUI,
-  allowNavigation?: boolean
-) {
+export function renderTwinFieldPreview({
+  twinField,
+  allowNavigation,
+}: {
+  twinField: TwinFieldUI;
+  allowNavigation: boolean;
+}) {
   switch (twinField.descriptor.fieldType) {
     case TwinFieldType.selectLinkV1:
     case TwinFieldType.selectLinkLongV1:
@@ -39,7 +41,7 @@ export function renderTwinFieldPreview(
             description: twinField.description,
           }}
           withTooltip
-          disabled={isTruthy(allowNavigation)}
+          disabled={!allowNavigation}
         />
       );
 
@@ -50,7 +52,7 @@ export function renderTwinFieldPreview(
         <DatalistOptionResourceLink
           data={twinField.value as DataListOptionV3}
           withTooltip
-          disabled={isTruthy(allowNavigation)}
+          disabled={!allowNavigation}
         />
       );
     case TwinFieldType.dateScrollV1: {
@@ -67,7 +69,7 @@ export function renderTwinFieldPreview(
       return (
         <UserResourceLink
           data={{ id: twinField.value as string }}
-          disabled={isTruthy(allowNavigation)}
+          disabled={!allowNavigation}
         />
       );
 

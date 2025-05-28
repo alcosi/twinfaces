@@ -376,7 +376,7 @@ function extractTwinFieldColumnsAndFilters(
               return twinField.value;
             }
 
-            return renderTwinFieldPreview(twinField, true);
+            return renderTwinFieldPreview({ twinField, allowNavigation: true });
           },
         },
       ]);
