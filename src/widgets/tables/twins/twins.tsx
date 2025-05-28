@@ -24,9 +24,7 @@ import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { TransitionPerformer } from "@/features/twin-flow-transition";
-import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
-import { TwinResourceLink } from "@/features/twin/ui";
+import { TwinResourceLink, TwinStatusActions } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import {
   formatIntlDate,
@@ -48,6 +46,7 @@ type Props = {
   title?: string;
   enabledColumns?: FaceWT001["columns"];
   showCreateButton?: boolean;
+  resourceNavigationEnabled?: boolean;
   // === start === NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
@@ -60,6 +59,7 @@ export function TwinsTable({
   baseTwinClassId,
   targetHeadTwinId,
   showCreateButton = true,
+  resourceNavigationEnabled = true,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -92,6 +92,7 @@ export function TwinsTable({
             <TwinClassResourceLink
               data={original.twinClass as TwinClass_DETAILED}
               withTooltip
+              disabled={!resourceNavigationEnabled}
             />
           </div>
         ),
@@ -113,16 +114,10 @@ export function TwinsTable({
       cell: ({ row: { original } }) => (
         <div className="inline-flex max-w-48 items-center gap-2">
           {original.status && (
-            <TwinClassStatusResourceLink
-              data={original.status}
-              twinClassId={original.twinClassId!}
-              withTooltip
-            />
-          )}
-          {isPopulatedArray(original.transitions) && (
-            <TransitionPerformer
+            <TwinStatusActions
               twin={original}
-              onSuccess={handleOnTransitionPerformSuccess}
+              allowNavigation={resourceNavigationEnabled}
+              onTransitionSuccess={handleOnTransitionPerformSuccess}
             />
           )}
         </div>
@@ -146,7 +141,11 @@ export function TwinsTable({
       cell: ({ row: { original } }) =>
         original.authorUser && (
           <div className="inline-flex max-w-48">
-            <UserResourceLink data={original.authorUser as User} withTooltip />
+            <UserResourceLink
+              data={original.authorUser as User}
+              withTooltip
+              disabled={!resourceNavigationEnabled}
+            />
           </div>
         ),
     },
@@ -160,6 +159,7 @@ export function TwinsTable({
             <UserResourceLink
               data={original.assignerUser as User}
               withTooltip
+              disabled={!resourceNavigationEnabled}
             />
           </div>
         ),
@@ -171,7 +171,11 @@ export function TwinsTable({
       cell: ({ row: { original } }) =>
         original.headTwinId && original.headTwin ? (
           <div className="inline-flex max-w-48">
-            <TwinResourceLink data={original.headTwin} withTooltip />
+            <TwinResourceLink
+              data={original.headTwin}
+              withTooltip
+              disabled={!resourceNavigationEnabled}
+            />
           </div>
         ) : null,
     },
@@ -183,7 +187,11 @@ export function TwinsTable({
         isPopulatedArray(original.tags) && (
           <div className="inline-flex max-w-48 flex-wrap gap-2">
             {original.tags.map((tag) => (
-              <DatalistOptionResourceLink key={tag.id} data={tag} />
+              <DatalistOptionResourceLink
+                key={tag.id}
+                data={tag}
+                disabled={!resourceNavigationEnabled}
+              />
             ))}
           </div>
         ),
@@ -201,6 +209,7 @@ export function TwinsTable({
                 dataListId: original.twinClass?.markersDataListId,
               }}
               withTooltip
+              disabled={!resourceNavigationEnabled}
             />
           </div>
         ) : null,
@@ -251,7 +260,11 @@ export function TwinsTable({
       },
     }).then(({ fields = [] }) => {
       const { supportedFields, columnEntries } =
-        extractTwinFieldColumnsAndFilters(fields, enabledColumns);
+        extractTwinFieldColumnsAndFilters({
+          fields,
+          enabledColumns,
+          resourceNavigationEnabled,
+        });
 
       setTwinClassFields(supportedFields);
       setColumnMap((prev) => ({
@@ -333,10 +346,15 @@ export function TwinsTable({
   );
 }
 
-function extractTwinFieldColumnsAndFilters(
-  fields: TwinClassField[],
-  enabledColumns: NonNullable<FaceWT001["columns"]>
-): {
+function extractTwinFieldColumnsAndFilters({
+  fields,
+  enabledColumns,
+  resourceNavigationEnabled,
+}: {
+  fields: TwinClassField[];
+  enabledColumns: NonNullable<FaceWT001["columns"]>;
+  resourceNavigationEnabled: boolean;
+}): {
   supportedFields: TwinClassField[];
   columnEntries: [string, ColumnDef<Twin_DETAILED>][];
 } {
@@ -366,7 +384,10 @@ function extractTwinFieldColumnsAndFilters(
               return twinField.value;
             }
 
-            return renderTwinFieldPreview(twinField);
+            return renderTwinFieldPreview({
+              twinField,
+              allowNavigation: resourceNavigationEnabled,
+            });
           },
         },
       ]);

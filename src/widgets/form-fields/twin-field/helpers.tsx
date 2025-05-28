@@ -23,7 +23,13 @@ export function resolveTwinFieldSchema(
   }
 }
 
-export function renderTwinFieldPreview(twinField: TwinFieldUI) {
+export function renderTwinFieldPreview({
+  twinField,
+  allowNavigation,
+}: {
+  twinField: TwinFieldUI;
+  allowNavigation: boolean;
+}) {
   switch (twinField.descriptor.fieldType) {
     case TwinFieldType.selectLinkV1:
     case TwinFieldType.selectLinkLongV1:
@@ -35,6 +41,7 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
             description: twinField.description,
           }}
           withTooltip
+          disabled={!allowNavigation}
         />
       );
 
@@ -45,6 +52,7 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
         <DatalistOptionResourceLink
           data={twinField.value as DataListOptionV3}
           withTooltip
+          disabled={!allowNavigation}
         />
       );
     case TwinFieldType.dateScrollV1: {
@@ -58,7 +66,12 @@ export function renderTwinFieldPreview(twinField: TwinFieldUI) {
     }
     case TwinFieldType.selectUserV1:
     case TwinFieldType.selectUserLongV1:
-      return <UserResourceLink data={{ id: twinField.value as string }} />;
+      return (
+        <UserResourceLink
+          data={{ id: twinField.value as string }}
+          disabled={!allowNavigation}
+        />
+      );
 
     case TwinFieldType.textV1:
       switch (twinField.descriptor.editorType) {

@@ -27,12 +27,12 @@ export function TwinClassStatusResourceLink({
 
   const Icon = data.backgroundColor ? (
     <Square
-      className="w-4 h-4"
+      className="h-4 w-4"
       fill={data.backgroundColor}
       stroke={data.backgroundColor}
     />
   ) : (
-    <TwinStatusIcon className="w-4 h-4" />
+    <TwinStatusIcon className="h-4 w-4" />
   );
 
   return (

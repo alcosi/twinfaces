@@ -33,7 +33,7 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     key: "ownerUserId",
     renderPreview: (twin) => {
       return twin.ownerUser ? (
-        <UserResourceLink data={twin.ownerUser} />
+        <UserResourceLink data={twin.ownerUser} disabled />
       ) : (
         twin.ownerUserId
       );
@@ -44,7 +44,7 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     descriptor: FieldDescriptorSelectUserV1,
     renderPreview: (twin) => {
       return twin.assignerUser ? (
-        <UserResourceLink data={twin.assignerUser} />
+        <UserResourceLink data={twin.assignerUser} disabled />
       ) : (
         twin.assignerUserId
       );
@@ -54,7 +54,7 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     key: "authorUserId",
     renderPreview: (twin) => {
       return twin.authorUser ? (
-        <UserResourceLink data={twin.authorUser} />
+        <UserResourceLink data={twin.authorUser} disabled />
       ) : (
         twin.authorUserId
       );
@@ -65,7 +65,7 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     descriptor: FieldDescriptorSelectSharedInHeadV1,
     renderPreview: (twin) => {
       return twin.headTwin ? (
-        <TwinResourceLink data={twin.headTwin} />
+        <TwinResourceLink data={twin.headTwin} disabled />
       ) : (
         twin.headTwinId
       );
@@ -75,7 +75,10 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
     key: "statusId",
     renderPreview: (twin) => {
       return twin.status ? (
-        <TwinStatusActions twin={twin as Twin_DETAILED} />
+        <TwinStatusActions
+          twin={twin as Twin_DETAILED}
+          allowNavigation={true}
+        />
       ) : (
         twin.statusId
       );
