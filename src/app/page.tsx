@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { getDomainFromHeaders } from "@/entities/face";
-import { DomainSelector } from "@/screens/domain-selector";
+import { DomainSelectorScreen } from "@/screens/domain-selector";
 import { isPopulatedString } from "@/shared/libs";
 
 export default async function Page() {
@@ -11,5 +11,5 @@ export default async function Page() {
     redirect(`/auth?domainId=${encodeURIComponent(remoteConfig.id)}`);
   }
 
-  return <DomainSelector />;
+  return <DomainSelectorScreen />;
 }

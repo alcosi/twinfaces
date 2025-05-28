@@ -1,4 +1,4 @@
-import { Login } from "@/screens/login";
+import { LoginScreen } from "@/screens/login";
 
 type Props = {
   searchParams: {
@@ -9,5 +9,5 @@ type Props = {
 export default function Page({ searchParams }: Props) {
   const { domainId } = searchParams;
 
-  return <Login domainId={domainId!} />;
+  return <LoginScreen domainId={domainId!} />;
 }

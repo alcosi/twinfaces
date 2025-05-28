@@ -23,7 +23,7 @@ const AUTH_METHOD_TO_FORM_MAP = {
   AuthMethodOath2V1: UnderConstructionForm,
 };
 
-export async function Login({ domainId }: { domainId: string }) {
+export async function LoginScreen({ domainId }: { domainId: string }) {
   const authConfig = await fetchAuthConfig(domainId);
 
   if (!isPopulatedArray<AuthMethodPassword>(authConfig.authMethods)) {

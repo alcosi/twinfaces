@@ -3,7 +3,7 @@ import { ThemeToggle } from "@/features/ui/theme-toggle";
 
 import { DomainSelectForm } from "./form";
 
-export async function DomainSelector() {
+export async function DomainSelectorScreen() {
   const domains = await fetchDomains();
 
   return (

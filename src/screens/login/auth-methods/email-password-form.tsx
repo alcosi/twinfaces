@@ -13,32 +13,12 @@ import {
   emailPasswordAuthAction,
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
+import { DomainLogo } from "@/features/domain/ui";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { FlipCard } from "@/features/ui/flip-card";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
-import { isUndefined } from "@/shared/libs";
-import { Button, ThemeImage } from "@/shared/ui";
-
-function DomainLogo({
-  iconLight,
-  iconDark,
-}: {
-  iconLight: string;
-  iconDark: string;
-}) {
-  const domainIconUrl = "/favicon.png";
-
-  return (
-    <ThemeImage
-      className="mx-auto h-14 w-14 rounded-full shadow-md"
-      lightSrc={iconLight ?? domainIconUrl}
-      darkSrc={iconDark ?? domainIconUrl}
-      width={56}
-      height={56}
-      alt="Domain logo icon"
-    />
-  );
-}
+import { cn, isUndefined } from "@/shared/libs";
+import { Button } from "@/shared/ui";
 
 export function EmailPasswordAuthForm() {
   const router = useRouter();
@@ -52,12 +32,14 @@ export function EmailPasswordAuthForm() {
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
 
+  const [isShaking, setShake] = useState(false);
+
   const loginForm = useForm<z.infer<typeof EMAIL_PASSWORD_AUTH_FORM_SCHEMA>>({
     resolver: zodResolver(EMAIL_PASSWORD_AUTH_FORM_SCHEMA),
     defaultValues: {
       domainId,
-      username: "fake-admin@twinbox.io",
-      password: "some_test_password",
+      username: "",
+      password: "",
     },
   });
 
@@ -115,10 +97,15 @@ export function EmailPasswordAuthForm() {
         });
         router.push(`/${PlatformArea.core}/twinclass`);
       } catch (err) {
+        setShake(true);
         setAuthError(
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
         loginForm.reset();
+      } finally {
+        setTimeout(() => {
+          setShake(false);
+        }, 500);
       }
     });
   }
@@ -126,7 +113,7 @@ export function EmailPasswordAuthForm() {
   return (
     <FlipCard
       isFlipped={mode === "register"}
-      className="relative w-full"
+      className={cn("relative w-full", isShaking && "animate-shake")}
       front={
         <div className="h-full rounded-lg p-8">
           <DomainLogo
@@ -171,7 +158,7 @@ export function EmailPasswordAuthForm() {
               <Button
                 type="submit"
                 className="w-full"
-                loading={isAuthenticating}
+                loading={isAuthenticating || isShaking}
                 size="lg"
               >
                 Login

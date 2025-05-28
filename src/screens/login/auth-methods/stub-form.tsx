@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useTransition } from "react";
 import { useFormState } from "react-dom";
@@ -15,6 +14,7 @@ import {
   stubLoginFormAction,
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
+import { DomainLogo } from "@/features/domain/ui";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
 import { Button, Card } from "@/shared/ui";
 
@@ -36,7 +36,6 @@ export function StubAuthForm() {
   });
 
   useEffect(() => {
-    // Clear any existing user session on mount
     logout();
   }, []);
 
@@ -58,16 +57,14 @@ export function StubAuthForm() {
 
   return (
     <Card className="flex min-w-96 flex-col items-center p-8">
-      <Image
-        className="rounded-full"
-        src={config.favicon}
-        width={56}
-        height={56}
-        alt="Domain icon"
+      <DomainLogo
+        iconLight={config.iconLight ?? config.favicon}
+        iconDark={config.iconDark ?? config.favicon}
       />
-      <h1 className="my-3 text-lg font-bold">
+
+      <h2 className="text-primary my-6 text-center text-2xl font-bold">
         {config.key ?? config.productName}
-      </h1>
+      </h2>
 
       <FormProvider {...form}>
         <form

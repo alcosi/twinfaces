@@ -9,10 +9,9 @@ import { z } from "zod";
 
 import { ComboboxFormField } from "@/components/form-fields";
 
-import { DomainPublicView } from "@/entities/domain";
+import { DOMAIN_ID_SCHEMA, DomainPublicView } from "@/entities/domain";
 import { useAuthUser } from "@/features/auth";
 import { ProductFlavorConfigContext } from "@/shared/config";
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 type Props = {
@@ -20,10 +19,7 @@ type Props = {
 };
 
 const Schema = z.object({
-  domainId: z
-    .string()
-    .uuid("Domain ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR),
+  domainId: DOMAIN_ID_SCHEMA,
 });
 
 export function DomainSelectForm({ domains }: Props) {
@@ -36,7 +32,6 @@ export function DomainSelectForm({ domains }: Props) {
     defaultValues: { domainId: "" },
   });
 
-  // Clear any existing user session on mount
   useEffect(() => {
     logout();
   }, []);
@@ -46,7 +41,7 @@ export function DomainSelectForm({ domains }: Props) {
   }
 
   return (
-    <div className="my-5 -mt-32 flex min-w-96 flex-col items-center">
+    <div className="flex min-w-96 flex-col items-center">
       <Image
         className="rounded-full"
         src={config.favicon}
@@ -54,7 +49,7 @@ export function DomainSelectForm({ domains }: Props) {
         height={56}
         alt="Domain icon"
       />
-      <h1 className="my-3 text-lg font-bold">
+      <h1 className="text-primary my-6 text-center text-2xl font-bold">
         {config.key ?? config.productName}
       </h1>
 

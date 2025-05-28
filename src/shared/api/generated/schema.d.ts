@@ -123,9 +123,30 @@ export interface paths {
         };
         /** Returns twin class by id */
         get: operations["twinClassViewV1"];
-        /** Update twin class by id */
+        /**
+         * Update twin class by id
+         * @deprecated
+         */
         put: operations["twinClassUpdateV1"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin_class/v2": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update twin classes batch */
+        put: operations["twinClassUpdateV2"];
+        /** Create twin classes batch */
+        post: operations["twinClassCreateV2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -915,7 +936,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create new twin class */
+        /**
+         * Create new twin class
+         * @deprecated
+         */
         post: operations["twinClassCreateV1"];
         delete?: never;
         options?: never;
@@ -2576,7 +2600,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/login/v2": {
+    "/auth/login_key/v1": {
         parameters: {
             query?: never;
             header?: never;
@@ -2585,8 +2609,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Returns auth/refresh tokens by username/password/fingerprint */
-        post: operations["authLoginV2"];
+        /** Get public key to encrypt password during login */
+        post: operations["authLoginKeyV2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2602,7 +2626,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Returns auth/refresh tokens by username/password */
+        /** Returns auth/refresh tokens by username/password and fingerprint (if required) */
         post: operations["authLoginV1"];
         delete?: never;
         options?: never;
@@ -3419,7 +3443,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Returns WT002 widget config: twin class buttons widget */
+        /** Returns WT002 widget config: twin create buttons widget */
         get: operations["faceWT002ViewV1"];
         put?: never;
         post?: never;
@@ -6173,6 +6197,108 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description results - twin class */
             twinClass?: components["schemas"]["TwinClassV1"];
+        };
+        TwinClassUpdateRqV2: {
+            /** @description twin classes list for update */
+            twinClassUpdates?: components["schemas"]["TwinClassUpdateV1"][];
+        };
+        TwinClassUpdateV1: {
+            /**
+             * @description unique key within the domain
+             * @example TOOL
+             */
+            key?: string;
+            /**
+             * @description name
+             * @example Tool
+             */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * @description [optional] description
+             * @example Professional tool class
+             */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: int32
+             * @description [optional] an id of head hunter featurer. The field has a sense only if headTwinClassId filled
+             */
+            headHunterFeaturerId?: number;
+            /** @description [optional] head hunter featurer params */
+            headHunterParams?: {
+                [key: string]: string;
+            };
+            /**
+             * @description [optional] if true, then not twin of given class can be created. Abstract classes must be extended
+             * @example false
+             */
+            abstractClass?: boolean;
+            /**
+             * @description [optional] url for class UI logo
+             * @example https://twins.org/img/twin_class_default.png
+             */
+            logo?: string;
+            /**
+             * @description [optional] if true then twins of current class can have own permission_schema and this schema will cover children twins
+             * @example false
+             */
+            permissionSchemaSpace?: boolean;
+            /**
+             * @description [optional] if true then twins of current class can have own twinflow_schema and this schema will cover children twins
+             * @example false
+             */
+            twinflowSchemaSpace?: boolean;
+            /**
+             * @description [optional] if true then twins of current class can have own twin_class_schema and this schema will cover children twins
+             * @example false
+             */
+            twinClassSchemaSpace?: boolean;
+            /**
+             * @description [optional] if true then twins of current class must have own alias key and this key will be used to generate alias for children twins
+             * @example false
+             */
+            aliasSpace?: boolean;
+            /**
+             * Format: uuid
+             * @description [optional] this field helps to set extra permission, needed by users to view twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            viewPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] this field helps to set extra permission, needed by users to create twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            createPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] this field helps to set extra permission, needed by users to edit twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            editPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] this field helps to set extra permission, needed by users to delete twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            deletePermissionId?: string;
+            /**
+             * @description [optional] owner typ of class
+             * @enum {string}
+             */
+            ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
+            /** @description [optional] is assignee required */
+            assigneeRequired?: boolean;
+            /** @description [optional] external id */
+            externalId?: string;
+            /** @description [optional] should be filled on change marker data list id */
+            markerDataListUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
+            /** @description [optional] should be filled on change tag data list id */
+            tagDataListUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
+            /** @description [optional] should be filled on change extends twins class id */
+            extendsTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
+            /** @description [optional] should be filled on change extends twins class id */
+            headTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
+            /**
+             * Format: uuid
+             * @description twin class id
+             */
+            twinClassId?: string;
         };
         AttachmentCreateV1: {
             /**
@@ -10521,6 +10647,117 @@ export interface components {
              */
             newKey?: string;
         };
+        TwinClassCreateRqV2: {
+            /** @description twin classes list for create */
+            twinClassCreates?: components["schemas"]["TwinClassCreateV1"][];
+        };
+        TwinClassCreateV1: {
+            /**
+             * @description unique key within the domain
+             * @example TOOL
+             */
+            key?: string;
+            /**
+             * @description name
+             * @example Tool
+             */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * @description [optional] description
+             * @example Professional tool class
+             */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: int32
+             * @description [optional] an id of head hunter featurer. The field has a sense only if headTwinClassId filled
+             */
+            headHunterFeaturerId?: number;
+            /** @description [optional] head hunter featurer params */
+            headHunterParams?: {
+                [key: string]: string;
+            };
+            /**
+             * @description [optional] if true, then not twin of given class can be created. Abstract classes must be extended
+             * @example false
+             */
+            abstractClass?: boolean;
+            /**
+             * @description [optional] url for class UI logo
+             * @example https://twins.org/img/twin_class_default.png
+             */
+            logo?: string;
+            /**
+             * @description [optional] if true then twins of current class can have own permission_schema and this schema will cover children twins
+             * @example false
+             */
+            permissionSchemaSpace?: boolean;
+            /**
+             * @description [optional] if true then twins of current class can have own twinflow_schema and this schema will cover children twins
+             * @example false
+             */
+            twinflowSchemaSpace?: boolean;
+            /**
+             * @description [optional] if true then twins of current class can have own twin_class_schema and this schema will cover children twins
+             * @example false
+             */
+            twinClassSchemaSpace?: boolean;
+            /**
+             * @description [optional] if true then twins of current class must have own alias key and this key will be used to generate alias for children twins
+             * @example false
+             */
+            aliasSpace?: boolean;
+            /**
+             * Format: uuid
+             * @description [optional] this field helps to set extra permission, needed by users to view twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            viewPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] this field helps to set extra permission, needed by users to create twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            createPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] this field helps to set extra permission, needed by users to edit twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            editPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] this field helps to set extra permission, needed by users to delete twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            deletePermissionId?: string;
+            /**
+             * @description [optional] owner typ of class
+             * @enum {string}
+             */
+            ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
+            /** @description [optional] is assignee required */
+            assigneeRequired?: boolean;
+            /** @description [optional] external id */
+            externalId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] link to extends class. All fields and links will be valid for current class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            extendsTwinClassId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] link to head (parent) class. It should be used in case, when twins of some class can not exist without some parent twin. Example: Task and Sub-task. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            headTwinClassId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] id of linked marker list. Markers in some cases similar to secondary statuses. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            markerDataListId?: string;
+            /**
+             * Format: uuid
+             * @description [optional] id of linked tags cloud. Tags differ from markers in that new tags can be added to the cloud by the users themselves. And the list of markers is configured only by the domain manager. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
+             */
+            tagDataListId?: string;
+            /** @description [optional] if true - permissions will be created and assign to class (if not specified another permission ids in this dto) */
+            autoCreatePermissions?: boolean;
+        };
         TwinClassCreateRqV1: {
             /**
              * @description unique key within the domain
@@ -14699,7 +14936,44 @@ export interface components {
             /** @description results - face details */
             face?: components["schemas"]["FaceV1"];
         };
-        AuthLoginRqV2: {
+        AuthLoginKeyRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description public key to encrypt login */
+            publicKey?: components["schemas"]["LoginKeyV1"];
+        };
+        LoginKeyV1: {
+            /**
+             * Format: uuid
+             * @description key id
+             */
+            id?: string;
+            algorithm?: string;
+            format?: string;
+            /** Format: int32 */
+            keySize?: number;
+            key?: string;
+            /**
+             * Format: date-time
+             * @description expires at
+             */
+            expiresAt?: string;
+        };
+        AuthLoginRqV1: {
             /**
              * @description username
              * @example user@example.com
@@ -14712,6 +14986,11 @@ export interface components {
             password?: string;
             /** @description agent fingerprint (hash) */
             fingerprint?: string;
+            /**
+             * Format: uuid
+             * @description public key id
+             */
+            publicKeyId?: string;
         };
         AuthLoginRsV1: {
             /**
@@ -14734,18 +15013,6 @@ export interface components {
             authData?: {
                 [key: string]: string;
             };
-        };
-        AuthLoginRqV1: {
-            /**
-             * @description username
-             * @example user@example.com
-             */
-            username?: string;
-            /**
-             * @description password
-             * @example secret
-             */
-            password?: string;
         };
         AuthConfigRsV1: {
             /**
@@ -14771,21 +15038,62 @@ export interface components {
             /** @description some name */
             name?: string;
             /** @description supported auth methods by linked identity provider */
-            authMethods?: components["schemas"]["AuthMethodPasswordV1"][];
+            authMethods?: (components["schemas"]["AuthMethodOath2V1"] | components["schemas"]["AuthMethodPasswordV1"] | components["schemas"]["AuthMethodStubV1"])[];
         };
         /** @description One of values */
         AuthMethodDTOv1: {
             type: string;
         };
-        /** @description Stub auth token = user_id + business_account_id */
-        AuthMethodPasswordV1: Omit<components["schemas"]["AuthMethodDTOv1"], "type"> & {
+        AuthMethodOath2V1: Omit<components["schemas"]["AuthMethodDTOv1"], "type"> & {
             type?: string;
+            /** @description icon */
+            icon?: string;
+            /** @description label */
+            label?: string;
+            /** @description redirect url */
+            redirectUrl?: string;
         } & {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            type: "AuthMethodPasswordV1" | "AuthMethodPasswordV2" | "AuthMethodOath2V1" | "AuthMethodStubV1";
+            type: "AuthMethodOath2V1";
+        };
+        /** @description Login by username/password */
+        AuthMethodPasswordV1: Omit<components["schemas"]["AuthMethodDTOv1"], "type"> & {
+            type?: string;
+            /** @description icon */
+            icon?: string;
+            /** @description label */
+            label?: string;
+            /** @description New user register is supported */
+            registerSupported?: boolean;
+            /** @description Password recover is supported */
+            recoverSupported?: boolean;
+            /** @description Agent finger print check is supported */
+            fingerPrintRequired?: boolean;
+            /** @description Public key to crypt password (if supported) */
+            publicKey?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "AuthMethodPasswordV1";
+        };
+        /** @description Stub auth token = user_id + business_account_id */
+        AuthMethodStubV1: Omit<components["schemas"]["AuthMethodDTOv1"], "type"> & {
+            type?: string;
+            /** @description icon */
+            icon?: string;
+            /** @description label */
+            label?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "AuthMethodStubV1";
         };
         LocaleV1: {
             /** @description id */
@@ -15734,72 +16042,9 @@ export interface components {
              */
             level?: "INFO" | "WARN" | "ERROR" | "SUCCESS" | "DEFAULT";
             /** @description title */
-            titleI18n?: string;
+            title?: string;
             /** @description message */
-            messageI18n?: string;
-            /** @description icon */
-            icon?: string;
-            /** @description styles, converted to css classes */
-            styleClasses?: string[];
-        };
-        FaceWT003ViewRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description result - widget details */
-            widget?: components["schemas"]["FaceWT003DTOv1"];
-        };
-        FaceWT003DTOv1: {
-            /**
-             * Format: uuid
-             * @description config id
-             * @example 9a3f6075-f175-41cd-a804-934201ec969c
-             */
-            id?: string;
-            /**
-             * @description component
-             * @example some domain
-             */
-            component?: string;
-            /** @description name */
-            name?: string;
-            /** @description description */
-            description?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /**
-             * Format: uuid
-             * @description createdByUserId
-             */
-            createdByUserId?: string;
-            /**
-             * @description level (info, warn, etc.)
-             * @enum {string}
-             */
-            level?: "INFO" | "WARN" | "ERROR" | "SUCCESS" | "DEFAULT";
-            /** @description title */
-            titleI18n?: string;
-            /** @description message */
-            messageI18n?: string;
+            message?: string;
             /** @description icon */
             icon?: string;
             /** @description styles, converted to css classes */
@@ -15905,7 +16150,7 @@ export interface components {
             key?: string;
             /** @description widget layout */
             styleClasses?: string[];
-            /** @description show given columns from table and filter */
+            /** @description creat twin buttons array */
             buttons?: components["schemas"]["FaceWT002ButtonV1"][];
         };
         FaceWT001ColumnV1: {
@@ -16383,6 +16628,8 @@ export interface components {
             styleClasses?: string[];
             /** @description tab widgets list */
             widgets?: components["schemas"]["FacePG002WidgetV1"][];
+            /** Format: int32 */
+            order?: number;
         };
         FacePG002ViewRsV1: {
             /**
@@ -17502,6 +17749,86 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TwinClassRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassUpdateV2: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassUpdateRqV2"];
+            };
+        };
+        responses: {
+            /** @description Twin classes updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassCreateV2: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassCreateRqV2"];
+            };
+        };
+        responses: {
+            /** @description Twin classes created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
                 };
             };
             /** @description Access is denied */
@@ -27357,7 +27684,7 @@ export interface operations {
             };
         };
     };
-    authLoginV2: {
+    authLoginKeyV2: {
         parameters: {
             query?: never;
             header: {
@@ -27369,11 +27696,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AuthLoginRqV2"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Login to  */
             200: {
@@ -27381,7 +27704,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthLoginRsV1"];
+                    "application/json": components["schemas"]["AuthLoginKeyRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -30002,6 +30325,7 @@ export interface operations {
     faceWT003ViewV1: {
         parameters: {
             query?: {
+                twinId?: string;
                 lazyRelation?: unknown;
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
             };
@@ -30044,6 +30368,7 @@ export interface operations {
     faceWT002ViewV1: {
         parameters: {
             query?: {
+                twinId?: string;
                 lazyRelation?: unknown;
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFaceWT002Button2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -30109,6 +30434,7 @@ export interface operations {
     faceWT001ViewV1: {
         parameters: {
             query?: {
+                twinId?: string;
                 lazyRelation?: unknown;
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFaceWT001Column2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -30634,6 +30960,7 @@ export interface operations {
     facePG002ViewV1: {
         parameters: {
             query?: {
+                twinId?: string;
                 lazyRelation?: unknown;
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFacePG002TabCollectionMode?: "HIDE" | "SHOW";
@@ -30679,6 +31006,7 @@ export interface operations {
     facePG001ViewV1: {
         parameters: {
             query?: {
+                twinId?: string;
                 lazyRelation?: unknown;
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFacePG001Widget2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
