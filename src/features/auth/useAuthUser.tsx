@@ -3,18 +3,18 @@ import { useCallback, useEffect, useState } from "react";
 import { DomainUser_DETAILED } from "@/entities/user";
 import { clientCookies, useLocalStorage } from "@/shared/libs";
 
-interface AuthUser {
+type AuthUser = {
   domainUser?: DomainUser_DETAILED;
   authToken: string;
   domainId: string;
-}
+};
 
-interface UseAuthUser {
+type UseAuthUser = {
   authUser: AuthUser | null;
   setAuthUser: (user: AuthUser | null) => void;
   updateUser: (updatedFields: Partial<AuthUser>) => void;
   logout: () => void;
-}
+};
 
 export function useAuthUser(): UseAuthUser {
   const [storedValue, setStoredValue] = useLocalStorage<AuthUser | null>(

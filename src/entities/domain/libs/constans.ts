@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-import { REGEX_PATTERNS } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
+
+export const DOMAIN_ID_SCHEMA = z
+  .string()
+  .uuid("Domain ID must be a valid UUID")
+  .or(FIRST_ID_EXTRACTOR);
 
 export const DOMAIN_CREATE_SCHEMA = z.object({
   name: z.string().min(1, "Name can not be empty"),

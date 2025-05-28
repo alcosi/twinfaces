@@ -140,6 +140,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
   function renderRow(row: Row<TData>) {
     return (
       <TableRow
+        role={onRowClick && "button"}
         key={row.id}
         data-state={row.getIsSelected() && "selected"}
         onClick={() => onRowClick?.(row.original)}
@@ -213,7 +214,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   return (
     <div>
-      <div className="relative mb-2 rounded-md border border-border">
+      <div className="border-border relative mb-2 rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

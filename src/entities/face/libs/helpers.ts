@@ -8,11 +8,11 @@ import { isFalsy, isUndefined } from "@/shared/libs";
 export async function getDomainFromHeaders(): Promise<
   RemoteConfig | undefined
 > {
-  const header = headers().get("X-Domain-Config");
+  const domainConfig = headers().get("X-Domain-Config");
 
-  if (isFalsy(header)) return undefined;
+  if (isFalsy(domainConfig)) return undefined;
 
-  return JSON.parse(header) as RemoteConfig;
+  return JSON.parse(domainConfig) as RemoteConfig;
 }
 
 export async function getAuthHeaders(): Promise<{

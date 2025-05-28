@@ -1,8 +1,8 @@
-"use server";
-
 import { getAuthHeaders } from "@/entities/face";
 import { TwinsAPI } from "@/shared/api";
 import { isFound, isUndefined } from "@/shared/libs";
+
+export * from "./auth";
 
 export async function isGranted({
   userId,
