@@ -47,7 +47,7 @@ type Props = {
   title?: string;
   enabledColumns?: FaceWT001["columns"];
   showCreateButton?: boolean;
-  navigatable?: boolean;
+  resourceNavigationEnabled?: boolean;
   // === start === NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
@@ -60,7 +60,7 @@ export function TwinsTable({
   baseTwinClassId,
   targetHeadTwinId,
   showCreateButton = true,
-  navigatable = true,
+  resourceNavigationEnabled = true,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -93,7 +93,7 @@ export function TwinsTable({
             <TwinClassResourceLink
               data={original.twinClass as TwinClass_DETAILED}
               withTooltip
-              disabled={isFalsy(navigatable)}
+              disabled={isFalsy(resourceNavigationEnabled)}
             />
           </div>
         ),
@@ -117,7 +117,7 @@ export function TwinsTable({
           {original.status && (
             <TwinStatusActions
               twin={original}
-              allowNavigation={isFalsy(navigatable)}
+              allowNavigation={isFalsy(resourceNavigationEnabled)}
               onTransitionSuccess={handleOnTransitionPerformSuccess}
             />
           )}
@@ -145,7 +145,7 @@ export function TwinsTable({
             <UserResourceLink
               data={original.authorUser as User}
               withTooltip
-              disabled={isFalsy(navigatable)}
+              disabled={isFalsy(resourceNavigationEnabled)}
             />
           </div>
         ),
@@ -160,7 +160,7 @@ export function TwinsTable({
             <UserResourceLink
               data={original.assignerUser as User}
               withTooltip
-              disabled={isFalsy(navigatable)}
+              disabled={isFalsy(resourceNavigationEnabled)}
             />
           </div>
         ),
@@ -175,7 +175,7 @@ export function TwinsTable({
             <TwinResourceLink
               data={original.headTwin}
               withTooltip
-              disabled={isFalsy(navigatable)}
+              disabled={isFalsy(resourceNavigationEnabled)}
             />
           </div>
         ) : null,
@@ -191,7 +191,7 @@ export function TwinsTable({
               <DatalistOptionResourceLink
                 key={tag.id}
                 data={tag}
-                disabled={isFalsy(navigatable)}
+                disabled={isFalsy(resourceNavigationEnabled)}
               />
             ))}
           </div>
@@ -210,7 +210,7 @@ export function TwinsTable({
                 dataListId: original.twinClass?.markersDataListId,
               }}
               withTooltip
-              disabled={isFalsy(navigatable)}
+              disabled={isFalsy(resourceNavigationEnabled)}
             />
           </div>
         ) : null,
