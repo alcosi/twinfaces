@@ -4,50 +4,46 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Twin_DETAILED } from "@/entities/twin/server";
-import { isTruthy } from "@/shared/libs";
+import { isPopulatedArray, isTruthy } from "@/shared/libs";
 
 import { TwinClassStatusResourceLink } from "../../../features/twin-status/ui";
 import { TransitionPerformer } from "../../twin-flow-transition";
 
 type Props = {
   twin: Twin_DETAILED;
-  disabledLinkNavigation?: boolean;
+  allowNavigation?: boolean;
   onTransitionSuccess?: () => void;
 };
 
 export function TwinStatusActions({
   twin,
-  disabledLinkNavigation = false,
+  allowNavigation = false,
   onTransitionSuccess,
 }: Props) {
   const router = useRouter();
 
-  async function handleOnSuccess() {
+  async function handleSuccess() {
     try {
-      router.refresh();
-      toast.success("Transition is performed successfully");
-    } catch (error) {
+      if (onTransitionSuccess) {
+        onTransitionSuccess();
+      } else {
+        router.refresh();
+        toast.success("Transition performed successfully");
+      }
+    } catch (err) {
       toast.error("Error performing transition");
-      throw error;
+      throw err;
     }
   }
-
-  const handleSuccess = async () => {
-    if (onTransitionSuccess) {
-      onTransitionSuccess();
-    } else {
-      await handleOnSuccess();
-    }
-  };
 
   return (
     <>
       <TwinClassStatusResourceLink
         twinClassId={twin.twinClassId!}
         data={twin.status!}
-        disabled={isTruthy(disabledLinkNavigation)}
+        disabled={isTruthy(allowNavigation)}
       />
-      {twin.transitions && (
+      {isPopulatedArray(twin.transitions) && (
         <TransitionPerformer twin={twin} onSuccess={handleSuccess} />
       )}
     </>

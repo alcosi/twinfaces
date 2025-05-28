@@ -77,7 +77,7 @@ export const STATIC_FIELD_MAP: Record<string, StaticTwinFieldMeta> = {
       return twin.status ? (
         <TwinStatusActions
           twin={twin as Twin_DETAILED}
-          disabledLinkNavigation={true}
+          allowNavigation={true}
         />
       ) : (
         twin.statusId

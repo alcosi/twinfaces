@@ -117,7 +117,7 @@ export function TwinsTable({
           {original.status && (
             <TwinStatusActions
               twin={original}
-              disabledLinkNavigation={isFalsy(navigatable)}
+              allowNavigation={isFalsy(navigatable)}
               onTransitionSuccess={handleOnTransitionPerformSuccess}
             />
           )}
