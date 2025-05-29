@@ -9,6 +9,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 
 import {
   STATIC_TWIN_FIELD_KEYS,
+  StaticTwinFieldId,
   StaticTwinFieldKey,
   useTwinUpdate,
 } from "@/entities/twin";
@@ -42,6 +43,7 @@ export type TwinFieldEditorProps = {
   relatedObjects?: RelatedObjects;
   onSuccess?: () => void;
   className?: string;
+  mode?: "admin";
 };
 
 export function TwinFieldEditor({
@@ -54,18 +56,21 @@ export function TwinFieldEditor({
   relatedObjects,
   onSuccess,
   className,
+  mode,
 }: TwinFieldEditorProps) {
   const { updateTwin } = useTwinUpdate();
   const router = useRouter();
 
-  const staticFieldRenderPreview = STATIC_FIELD_MAP[field.id]?.renderPreview;
-  const staticFieldClassName = STATIC_FIELD_MAP[field.id]?.className;
+  const staticFieldRenderPreview =
+    STATIC_FIELD_MAP[field.id as StaticTwinFieldId]?.renderPreview;
+  const staticFieldClassName =
+    STATIC_FIELD_MAP[field.id as StaticTwinFieldId]?.className;
 
   const hydratedTwin = hydrateTwinFromMap(twin, relatedObjects);
 
   function renderPreview() {
     if (staticFieldRenderPreview) {
-      return staticFieldRenderPreview(hydratedTwin);
+      return staticFieldRenderPreview(hydratedTwin, mode);
     }
 
     return renderDynamicFieldPreview(field, relatedObjects);

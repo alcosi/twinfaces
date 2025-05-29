@@ -71,7 +71,7 @@ export function TwinFields() {
               renderPreview={(_) =>
                 renderTwinFieldPreview({
                   twinField: original,
-                  allowNavigation: false,
+                  allowNavigation: true,
                 })
               }
               onSubmit={(fieldValue) =>

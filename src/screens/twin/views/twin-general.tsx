@@ -193,6 +193,7 @@ export function TwinGeneral() {
                 }}
                 schema={z.string().min(3)}
                 onSuccess={refresh}
+                mode="admin"
               />
             </TableCell>
           </TableRow>
@@ -213,6 +214,7 @@ export function TwinGeneral() {
                 schema={z.string().min(3)}
                 onSuccess={refresh}
                 className="hover:bg-transparent"
+                mode="admin"
               />
             </TableCell>
           </TableRow>

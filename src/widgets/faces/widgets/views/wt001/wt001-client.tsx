@@ -9,11 +9,13 @@ export function WT001Client({
   baseTwinClassId,
   enabledColumns,
   showCreateButton,
+  isAdmin,
 }: {
   title?: string;
   baseTwinClassId?: string;
   enabledColumns?: FaceWT001["columns"];
   showCreateButton?: boolean;
+  isAdmin: boolean;
 }) {
   return (
     <TwinsTable
@@ -21,7 +23,7 @@ export function WT001Client({
       baseTwinClassId={baseTwinClassId}
       enabledColumns={enabledColumns}
       showCreateButton={showCreateButton}
-      resourceNavigationEnabled={false}
+      resourceNavigationEnabled={isAdmin}
     />
   );
 }

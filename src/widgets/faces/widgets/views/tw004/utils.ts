@@ -1,4 +1,5 @@
 import { getAuthHeaders } from "@/entities/face";
+import { StaticTwinFieldId } from "@/entities/twin";
 import { Twin } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { TwinFieldEditorProps } from "@/features/twin/ui";
@@ -41,7 +42,7 @@ export async function buildFieldEditorProps(
   const relatedObjects = data.relatedObjects as RelatedObjects;
 
   // Handle static system fields
-  const staticField = STATIC_FIELD_MAP[fieldId];
+  const staticField = STATIC_FIELD_MAP[fieldId as StaticTwinFieldId];
 
   if (isTruthy(staticField)) {
     const { key, descriptor } = staticField;

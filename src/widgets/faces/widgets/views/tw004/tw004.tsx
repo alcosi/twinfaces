@@ -1,4 +1,6 @@
-import { fetchTW004Face } from "@/entities/face";
+import { fetchTW004Face, getAuthHeaders } from "@/entities/face";
+import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
+import { isGranted } from "@/entities/user/server";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
 import { cn, safe } from "@/shared/libs";
 
@@ -8,6 +10,12 @@ import { buildFieldEditorProps } from "./utils";
 
 export async function TW004(props: TWidgetFaceProps) {
   const { twinId, widget, className } = props;
+
+  const { currentUserId } = await getAuthHeaders();
+  const isAdmin = await isGranted({
+    userId: currentUserId,
+    permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
+  });
 
   const twidgetResult = await safe(() =>
     fetchTW004Face(widget.widgetFaceId, twinId)
@@ -36,6 +44,7 @@ export async function TW004(props: TWidgetFaceProps) {
         twin={twin}
         relatedObjects={relatedObjects}
         field={field}
+        mode={isAdmin ? "admin" : undefined}
       />
     </div>
   );

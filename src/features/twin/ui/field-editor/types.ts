@@ -16,6 +16,6 @@ type FieldDescriptor =
 export type StaticTwinFieldMeta = {
   key: StaticTwinFieldKey;
   descriptor?: FieldDescriptor;
-  renderPreview?: (twin: Twin_HYDRATED) => ReactNode;
+  renderPreview?: (twin: Twin_HYDRATED, mode?: "admin") => ReactNode;
   className?: string;
 };

@@ -37,9 +37,9 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
     },
     "00000000-0000-0000-0011-000000000006": {
       key: "ownerUserId",
-      renderPreview: (twin) => {
+      renderPreview: (twin, mode) => {
         return twin.ownerUser ? (
-          <UserResourceLink data={twin.ownerUser} disabled />
+          <UserResourceLink data={twin.ownerUser} disabled={mode === "admin"} />
         ) : (
           twin.ownerUserId
         );
@@ -48,9 +48,12 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
     "00000000-0000-0000-0011-000000000007": {
       key: "assignerUserId",
       descriptor: FieldDescriptorSelectUserV1,
-      renderPreview: (twin) => {
+      renderPreview: (twin, mode) => {
         return twin.assignerUser ? (
-          <UserResourceLink data={twin.assignerUser} disabled />
+          <UserResourceLink
+            data={twin.assignerUser}
+            disabled={mode === "admin"}
+          />
         ) : (
           twin.assignerUserId
         );
@@ -58,9 +61,12 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
     },
     "00000000-0000-0000-0011-000000000008": {
       key: "authorUserId",
-      renderPreview: (twin) => {
+      renderPreview: (twin, mode) => {
         return twin.authorUser ? (
-          <UserResourceLink data={twin.authorUser} disabled />
+          <UserResourceLink
+            data={twin.authorUser}
+            disabled={mode === "admin"}
+          />
         ) : (
           twin.authorUserId
         );
@@ -69,9 +75,9 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
     "00000000-0000-0000-0011-000000000009": {
       key: "headTwinId",
       descriptor: FieldDescriptorSelectSharedInHeadV1,
-      renderPreview: (twin) => {
+      renderPreview: (twin, mode) => {
         return twin.headTwin ? (
-          <TwinResourceLink data={twin.headTwin} disabled />
+          <TwinResourceLink data={twin.headTwin} disabled={mode === "admin"} />
         ) : (
           twin.headTwinId
         );
@@ -79,11 +85,11 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
     },
     "00000000-0000-0000-0011-000000000010": {
       key: "statusId",
-      renderPreview: (twin) => {
+      renderPreview: (twin, mode) => {
         return twin.status ? (
           <TwinStatusActions
             twin={twin as Twin_DETAILED}
-            allowNavigation={true}
+            allowNavigation={mode === "admin"}
           />
         ) : (
           twin.statusId
