@@ -30,7 +30,6 @@ export const MarkdownPreview = ({ source }: MarkdownPreviewProps) => {
       <MDEditor.Markdown
         source={source}
         style={{
-          padding: "1rem 1.5rem",
           background: "var(--background)",
         }}
       />

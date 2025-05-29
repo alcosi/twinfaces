@@ -194,13 +194,14 @@ export function TwinGeneral() {
                 schema={z.string().min(3)}
                 onSuccess={refresh}
                 mode="admin"
+                editable
               />
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow className="cursor-pointer">
             <TableCell>Description</TableCell>
-            <TableCell>
+            <TableCell className="max-w-xl">
               <TwinFieldEditor
                 id="twin.description"
                 twinId={twin.id}
@@ -215,6 +216,7 @@ export function TwinGeneral() {
                 onSuccess={refresh}
                 className="hover:bg-transparent"
                 mode="admin"
+                editable
               />
             </TableCell>
           </TableRow>

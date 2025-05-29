@@ -5348,7 +5348,7 @@ export interface components {
              * @example PLAIN
              * @enum {string}
              */
-            editorType?: "PLAIN" | "MARKDOWN_GITHUB" | "MARKDOWN_BASIC";
+            editorType?: "PLAIN" | "MARKDOWN_GITHUB" | "MARKDOWN_BASIC" | "HTML";
         } & {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -10757,6 +10757,8 @@ export interface components {
             tagDataListId?: string;
             /** @description [optional] if true - permissions will be created and assign to class (if not specified another permission ids in this dto) */
             autoCreatePermissions?: boolean;
+            /** @description [optional] if true - twinflow and status will be created and assign to class */
+            autoCreateTwinflow?: boolean;
         };
         TwinClassCreateRqV1: {
             /**
@@ -16347,6 +16349,8 @@ export interface components {
              * @description twin field (also basic field constants supported)
              */
             twinClassFieldId?: string;
+            /** @description is editable */
+            editable?: boolean;
         };
         FaceTW004ViewRsV2: {
             /**
@@ -16470,6 +16474,8 @@ export interface components {
              * @description twin field (also basic field constants supported)
              */
             twinClassFieldId?: string;
+            /** @description is editable */
+            editable?: boolean;
         };
         FaceTW002AccordionItemV1: {
             /**

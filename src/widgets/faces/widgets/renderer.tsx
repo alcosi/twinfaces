@@ -47,12 +47,12 @@ export async function WidgetRenderer({ twinId, widget, className }: Props) {
   const componentName = face.component;
 
   if (isPopulatedString(componentName) && componentName in WIDGETS) {
-    const Comp = WIDGETS[componentName as keyof typeof WIDGETS]!;
-    return <Comp face={face} widget={widget} />;
+    const WidgetComp = WIDGETS[componentName as keyof typeof WIDGETS]!;
+    return <WidgetComp face={face} widget={widget} twinId={twinId} />;
   }
 
   if (isPopulatedString(componentName) && componentName in TWIDGETS) {
-    const Comp = TWIDGETS[componentName]!;
+    const TWidgetComp = TWIDGETS[componentName]!;
 
     if (!twinId) {
       return (
@@ -65,7 +65,12 @@ export async function WidgetRenderer({ twinId, widget, className }: Props) {
     }
 
     return (
-      <Comp twinId={twinId} face={face} widget={widget} className={className} />
+      <TWidgetComp
+        twinId={twinId}
+        face={face}
+        widget={widget}
+        className={className}
+      />
     );
   }
 

@@ -5,11 +5,14 @@ import { isUndefined } from "@/shared/libs";
 
 import { getAuthHeaders } from "../../libs";
 import { FaceTW001, FaceTW002, FaceTW004, FaceTW005 } from "../types";
+import { FaceWT001, FaceWT003 } from "../types";
 
 type FetchFaceOptions = {
-  twinId: string;
   faceId: string;
+  twinId?: string;
   endpoint:
+    | "/private/face/wt001/{faceId}/v1"
+    | "/private/face/wt003/{faceId}/v1"
     | "/private/face/tw001/{faceId}/v1"
     | "/private/face/tw002/{faceId}/v1"
     | "/private/face/tw004/{faceId}/v1"
@@ -18,9 +21,9 @@ type FetchFaceOptions = {
 };
 
 async function fetchFaceWidget<T>({
-  endpoint,
   twinId,
   faceId,
+  endpoint,
   query,
 }: FetchFaceOptions): Promise<T> {
   const headers = await getAuthHeaders();
@@ -45,6 +48,30 @@ async function fetchFaceWidget<T>({
   }
 
   return data.widget as T;
+}
+
+export async function fetchWT001Face(
+  faceId: string,
+  twinId?: string
+): Promise<FaceWT001> {
+  return fetchFaceWidget<FaceWT001>({
+    faceId,
+    endpoint: "/private/face/wt001/{faceId}/v1",
+    twinId,
+    query: {},
+  });
+}
+
+export async function fetchWT003Face(
+  faceId: string,
+  twinId?: string
+): Promise<FaceWT003> {
+  return fetchFaceWidget<FaceWT003>({
+    faceId,
+    endpoint: "/private/face/wt003/{faceId}/v1",
+    twinId,
+    query: {},
+  });
 }
 
 export async function fetchTW001Face(

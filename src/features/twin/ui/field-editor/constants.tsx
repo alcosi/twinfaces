@@ -29,7 +29,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
           twin.description && <MarkdownPreview source={twin.description} />
         );
       },
-      className: "border border-border mt-1.5 border-dashed rounded-md px-0",
+      className: "px-0",
     },
     "00000000-0000-0000-0011-000000000005": {
       key: "externalId",
@@ -111,9 +111,12 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
     "00000000-0000-0000-0011-000000000013": {
       key: "twinClassId",
       descriptor: FieldDescriptorText.PLAIN,
-      renderPreview: (twin) => {
+      renderPreview: (twin, mode) => {
         return twin.twinClass ? (
-          <TwinClassResourceLink data={twin.twinClass as TwinClass_DETAILED} />
+          <TwinClassResourceLink
+            data={twin.twinClass as TwinClass_DETAILED}
+            disabled={mode === "admin"}
+          />
         ) : (
           twin.twinClassId
         );
