@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Twin_DETAILED } from "@/entities/twin/server";
-import { isPopulatedArray, isTruthy } from "@/shared/libs";
+import { isPopulatedArray } from "@/shared/libs";
 
 import { TwinClassStatusResourceLink } from "../../../features/twin-status/ui";
 import { TransitionPerformer } from "../../twin-flow-transition";
@@ -37,7 +37,7 @@ export function TwinStatusActions({
   }
 
   return (
-    <>
+    <div className="flex items-center gap-2">
       <TwinClassStatusResourceLink
         twinClassId={twin.twinClassId!}
         data={twin.status!}
@@ -46,6 +46,6 @@ export function TwinStatusActions({
       {isPopulatedArray(twin.transitions) && (
         <TransitionPerformer twin={twin} onSuccess={handleSuccess} />
       )}
-    </>
+    </div>
   );
 }

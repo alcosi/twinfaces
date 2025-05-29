@@ -109,7 +109,7 @@ export const ResourceLink = <T,>({
   ) : (
     <Link
       href={link}
-      className="max-w-full"
+      className="flex max-w-full"
       passHref
       onClick={(e) => e.stopPropagation()}
     >
