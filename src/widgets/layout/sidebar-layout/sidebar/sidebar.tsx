@@ -2,14 +2,15 @@
 
 import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
 import { FaceNB001 } from "@/entities/face";
+import { isGranted } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";
-import { isPopulatedArray } from "@/shared/libs";
+import { isUndefined } from "@/shared/libs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,9 +34,10 @@ import { CoreAreaSidebarMenu, WorkspaceAreaSidebarMenu } from "./menu";
 
 type Props = {
   face?: FaceNB001;
+  mode?: "user" | "admin";
 };
 
-export function AppSidebar({ face }: Props) {
+export function AppSidebar({ face, mode = "user" }: Props) {
   const { data } = useDomains();
   const { authUser, updateUser, logout } = useAuthUser();
   const currentDomain = data?.find((i) => i.id === authUser?.domainId);
@@ -61,6 +63,40 @@ export function AppSidebar({ face }: Props) {
   function onLogout() {
     logout();
     router.replace("/");
+  }
+
+  function renderSidebarContent() {
+    if (isUndefined(face)) {
+      return mode === "admin" && <CoreAreaSidebarMenu />;
+    }
+
+    if (mode === "admin") {
+      return (
+        <Tabs value={area} className="flex h-full flex-col gap-2">
+          <section className="grow overflow-y-auto pb-2">
+            <SlideView activeIndex={area === PlatformArea.workspace ? 0 : 1}>
+              <nav key={PlatformArea.workspace}>
+                <WorkspaceAreaSidebarMenu
+                  items={face.userAreaMenuItems ?? []}
+                />
+              </nav>
+              <nav key={PlatformArea.core}>
+                <CoreAreaSidebarMenu />
+              </nav>
+            </SlideView>
+          </section>
+
+          <SidebarAreaSwitcher
+            userLabel={face.userAreaLabel ?? ""}
+            adminLabel={face.adminAreaLabel ?? ""}
+            area={area}
+            setArea={setArea}
+          />
+        </Tabs>
+      );
+    }
+
+    return <WorkspaceAreaSidebarMenu items={face.userAreaMenuItems ?? []} />;
   }
 
   return (
@@ -121,37 +157,7 @@ export function AppSidebar({ face }: Props) {
           </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent>
-          {face ? (
-            <Tabs value={area} className="flex h-full flex-col gap-2">
-              <section className="grow overflow-y-auto pb-2">
-                <SlideView
-                  activeIndex={area === PlatformArea.workspace ? 0 : 1}
-                >
-                  <nav key={PlatformArea.workspace}>
-                    {isPopulatedArray(face.userAreaMenuItems) && (
-                      <WorkspaceAreaSidebarMenu
-                        items={face.userAreaMenuItems}
-                      />
-                    )}
-                  </nav>
-                  <nav key={PlatformArea.core}>
-                    <CoreAreaSidebarMenu />
-                  </nav>
-                </SlideView>
-              </section>
-
-              <SidebarAreaSwitcher
-                userLabel={face.userAreaLabel ?? ""}
-                adminLabel={face.adminAreaLabel ?? ""}
-                area={area}
-                setArea={setArea}
-              />
-            </Tabs>
-          ) : (
-            <CoreAreaSidebarMenu />
-          )}
-        </SidebarContent>
+        <SidebarContent>{renderSidebarContent()}</SidebarContent>
 
         <SidebarFooter className="border-border border-t">
           <SidebarMenu>

@@ -6,6 +6,7 @@ import {
   fetchSidebarFace,
   getAuthHeaders,
 } from "@/entities/face";
+import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isGranted } from "@/entities/user/server";
 import { safe } from "@/shared/libs";
 import { RenderOnClient, SidebarProvider } from "@/shared/ui";
@@ -16,22 +17,22 @@ import { AppSidebar } from "./sidebar";
 
 type Props = PropsWithChildren<{}>;
 
-async function resolveAccessibleMenuItems(
+async function filterAccessibleMenuItems(
   items: FaceNB001MenuItem[],
   userId: string
 ): Promise<FaceNB001MenuItem[]> {
   const result: FaceNB001MenuItem[] = [];
 
   for (const item of items) {
-    const permission = item.guardedByPermissionId;
-    const hasAccess = permission
-      ? await isGranted({ userId, permission })
+    const { guardedByPermissionId, children } = item;
+    const hasAccess = guardedByPermissionId
+      ? await isGranted({ userId, permission: guardedByPermissionId })
       : true;
 
     if (!hasAccess) continue;
 
-    const filteredChildren = item.children
-      ? await resolveAccessibleMenuItems(item.children, userId)
+    const filteredChildren = children
+      ? await filterAccessibleMenuItems(children, userId)
       : [];
 
     result.push({ ...item, children: filteredChildren });
@@ -40,33 +41,32 @@ async function resolveAccessibleMenuItems(
   return result;
 }
 
-async function getSidebarFace(): Promise<FaceNB001 | undefined> {
-  const result = await safe(fetchSidebarFace);
-  const face = result.ok ? result.data : undefined;
+export async function SidebarLayout({ children }: Props) {
+  const { currentUserId } = await getAuthHeaders();
+  const isAdmin = await isGranted({
+    userId: currentUserId,
+    permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
+  });
 
-  if (face?.userAreaMenuItems) {
-    const { currentUserId } = await getAuthHeaders();
-    const menuItems = await resolveAccessibleMenuItems(
-      face.userAreaMenuItems,
-      currentUserId
-    );
+  const faceResult = await safe(fetchSidebarFace);
+  let sidebarFace: FaceNB001 | undefined = faceResult.ok
+    ? faceResult.data
+    : undefined;
 
-    return {
-      ...face,
-      userAreaMenuItems: menuItems,
+  if (sidebarFace?.userAreaMenuItems) {
+    sidebarFace = {
+      ...sidebarFace,
+      userAreaMenuItems: await filterAccessibleMenuItems(
+        sidebarFace.userAreaMenuItems,
+        currentUserId
+      ),
     };
   }
-
-  return face;
-}
-
-export async function SidebarLayout({ children }: Props) {
-  const face = await getSidebarFace();
 
   return (
     <SidebarProvider>
       <RenderOnClient>
-        <AppSidebar face={face} />
+        <AppSidebar face={sidebarFace} mode={isAdmin ? "admin" : undefined} />
         <div className="w-full">
           <SidebarLayoutHeader />
           <SidebarLayoutContent>{children}</SidebarLayoutContent>
