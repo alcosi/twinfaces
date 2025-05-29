@@ -1,4 +1,5 @@
 import { Face_DETAILED } from "@/entities/face";
+import { RequireFields } from "@/shared/libs";
 
 export type Widget = {
   id: string;
@@ -20,6 +21,4 @@ export type WidgetFaceProps = {
   twinId?: string;
 };
 
-export type TWidgetFaceProps = Omit<WidgetFaceProps, "twinId"> & {
-  twinId: string;
-};
+export type TWidgetFaceProps = RequireFields<WidgetFaceProps, "twinId">;
