@@ -342,7 +342,6 @@ export function TwinsTable({
           baseTwinClassId={baseTwinClassId}
         />
       )}
-      viewMode="vertical"
     />
   );
 }

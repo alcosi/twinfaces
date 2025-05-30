@@ -19,6 +19,7 @@ import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersPopover } from "./filters-popover";
 import { GroupByButton } from "./group-by-button";
 
+// TODO: @berdimyradov think about renaming
 export type FilterState = {
   query: string;
   filters: Record<string, any>;

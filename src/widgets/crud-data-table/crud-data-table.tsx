@@ -58,7 +58,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onCreateSubmit,
     renderFormFields,
     onRowClick,
-    viewMode = "horizontal",
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -155,7 +154,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         columns={visibleColumns}
         fetcher={fetchWrapper}
         onRowClick={handleOnRowClick}
-        viewMode={viewMode}
+        // viewMode={viewSettings.layoutMode}
       />
 
       <CrudDataTableDialog
