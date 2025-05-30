@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 import { FaceWT001 } from "@/entities/face";
 import {
-  LABEL_TO_KEY_MAP,
+  STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP,
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
@@ -82,7 +82,10 @@ export function TwinsTable({
 
   const enabledFilters = isPopulatedArray(enabledColumns)
     ? enabledColumns
-        .map((col) => LABEL_TO_KEY_MAP[col.label!])
+        .map(
+          (col) =>
+            STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP[col.twinClassFieldId!]
+        )
         .filter((key): key is TwinFilterKeys => !isUndefined(key))
     : undefined;
 
