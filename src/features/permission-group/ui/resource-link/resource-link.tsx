@@ -17,7 +17,7 @@ export const PermissionGroupResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/${PlatformArea.core}/permission-group/${data.id}`;
+  const link = `/${PlatformArea.core}/permission-groups/${data.id}`;
 
   return (
     <ResourceLink
