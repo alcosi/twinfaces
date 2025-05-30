@@ -10,7 +10,7 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { UserContext } from "@/features/user";
-import { formatIntlDate, isPopulatedString } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { Avatar, GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
 
 export function UserGeneral() {

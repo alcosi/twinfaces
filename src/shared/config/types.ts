@@ -7,16 +7,12 @@ export type ThemeConfig = {
 };
 
 export type LocalConfig = {
-  // flavor: "twinfaces",
-  // productTitle: "Twin Faces",
-  // productDescription: "Admin panel for the Twins framework",
   productName: string;
   favicon: string;
   loginPage: {
     defaultFormValues: {
       userId: string;
       businessAccountId: string | undefined;
-      // domainId: string;
     };
   };
   theme: ThemeConfig;
