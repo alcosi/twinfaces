@@ -1,14 +1,10 @@
 import { Plus, RefreshCw, Search } from "lucide-react";
-// TODO: replace with https://www.svgrepo.com/svg/502689/grid
-import { Grid3x3 } from "lucide-react";
-// TODO: replace with https://www.svgrepo.com/svg/471838/rows-03
-import { Rows3 } from "lucide-react";
 import React, { ForwardedRef, useCallback, useEffect } from "react";
 
 import { AutoFormValueInfo } from "@/components/auto-field";
 
 import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
-import { Input } from "@/shared/ui";
+import { GridIcon, Input, RowsIcon } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 
@@ -167,10 +163,17 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {/* // TODO: implement */}
-        <Button>
-          {viewSettings.layoutMode === "grid" ? <Grid3x3 /> : <Rows3 />}
-        </Button>
+        <Button
+          IconComponent={
+            viewSettings.layoutMode === "grid" ? GridIcon : RowsIcon
+          }
+          iconClassName="h-6 w-6"
+          onClick={() =>
+            updateViewSettings({
+              layoutMode: viewSettings.layoutMode === "grid" ? "rows" : "grid",
+            })
+          }
+        />
 
         {onCreateClick && (
           <>

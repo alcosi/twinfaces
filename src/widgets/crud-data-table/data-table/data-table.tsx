@@ -47,7 +47,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     pageSizes = [10, 25, 50],
     onFetchError,
     onRowClick,
-    viewMode = "horizontal",
+    layoutMode = "grid",
   }: DataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
@@ -67,18 +67,6 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
       total: 0,
     },
   });
-  // const [isTabletView, setIsTabletView] = useState(false);
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setIsTabletView(window.innerWidth < 768);
-  //   };
-
-  //   handleResize();
-
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
 
   const pageCount = useMemo(() => {
     if (!pagination.api?.limit || !pagination.api?.total) return 0;
@@ -329,12 +317,10 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
       <div
         className={cn(
           "border-border relative mb-2 rounded-md",
-          viewMode === "horizontal" && "border"
+          layoutMode === "grid" && "border"
         )}
       >
-        {viewMode === "vertical"
-          ? renderVerticalRows()
-          : renderHorizontalRows()}
+        {layoutMode === "rows" ? renderVerticalRows() : renderHorizontalRows()}
         {loading && <LoadingOverlay />}
       </div>
       {!disablePagination && (

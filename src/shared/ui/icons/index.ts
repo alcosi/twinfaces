@@ -10,3 +10,5 @@ export * from "./shopping-bag-icon";
 export * from "./switch-horizontal";
 export * from "./pdf-icon";
 export * from "./file-question-icon";
+export * from "./grid";
+export * from "./rows";

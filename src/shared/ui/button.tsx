@@ -45,6 +45,7 @@ export interface ButtonProps
   asChild?: boolean;
   loading?: boolean;
   IconComponent?: ElementType;
+  iconClassName?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -57,6 +58,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       loading,
       IconComponent,
+      iconClassName,
       ...props
     },
     ref
@@ -65,7 +67,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const icon = loading ? (
       <LoadingSpinner className={children ? "mr-1" : undefined} />
     ) : IconComponent ? (
-      <IconComponent />
+      <IconComponent className={iconClassName} />
     ) : null;
 
     return (

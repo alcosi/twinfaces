@@ -24,5 +24,5 @@ export type DataTableProps<TData extends DataTableRow<TData>, TValue> = {
   onFetchError?: (e: Error) => void;
   onRowClick?: (row: TData) => void;
   // TODO: ??? @berdimyradov
-  viewMode?: "horizontal" | "vertical";
+  layoutMode?: "grid" | "rows";
 };
