@@ -88,10 +88,14 @@ export function useTwinFilters({
     } as const;
 
     const filteredSelfFilters = filters
-      ? Object.fromEntries(
-          Object.entries(selfFilters).filter(
-            ([key, filter]) => filter && filters.includes(key as TwinFilterKeys)
-          )
+      ? (Object.keys(selfFilters) as TwinFilterKeys[]).reduce(
+          (acc, key) => {
+            if (filters.includes(key) && selfFilters[key]) {
+              acc[key] = selfFilters[key]!;
+            }
+            return acc;
+          },
+          {} as Partial<Record<TwinFilterKeys, AutoFormValueInfo>>
         )
       : selfFilters;
 

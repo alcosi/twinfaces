@@ -76,7 +76,7 @@ export const STATIC_TWIN_FIELD_KEY_TO_ID_MAP: Record<
 } as const;
 
 export const STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP: Partial<
-  Record<string, TwinFilterKeys>
+  Record<StaticTwinFieldId, TwinFilterKeys>
 > = {
   "00000000-0000-0000-0011-000000000012": "twinIdList",
   "00000000-0000-0000-0011-000000000013": "twinClassIdList",
