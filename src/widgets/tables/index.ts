@@ -8,3 +8,5 @@ export * from "./factory-multipliers";
 export * from "./factory-branches";
 export * from "./factory-pipelines";
 export * from "./twin-flow-transitions";
+export * from "./permissions";
+export * from "./permission-groups";

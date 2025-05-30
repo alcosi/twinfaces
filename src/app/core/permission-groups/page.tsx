@@ -1,7 +1,5 @@
-"use client";
+import { PermissionGroupsScreen } from "@/screens/permission-groups";
 
-import { PermissionGroups } from "@/screens/permission-groups";
-
-export default function PermissionGroupsPage() {
-  return <PermissionGroups />;
+export default function Page() {
+  return <PermissionGroupsScreen />;
 }
