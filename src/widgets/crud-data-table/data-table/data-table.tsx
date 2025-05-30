@@ -67,18 +67,18 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
       total: 0,
     },
   });
-  const [isTabletView, setIsTabletView] = useState(false);
+  // const [isTabletView, setIsTabletView] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsTabletView(window.innerWidth < 768);
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setIsTabletView(window.innerWidth < 768);
+  //   };
 
-    handleResize();
+  //   handleResize();
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  //   window.addEventListener("resize", handleResize);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
   const pageCount = useMemo(() => {
     if (!pagination.api?.limit || !pagination.api?.total) return 0;
@@ -329,10 +329,10 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
       <div
         className={cn(
           "border-border relative mb-2 rounded-md",
-          !(isTabletView || viewMode === "vertical") && "border"
+          viewMode === "horizontal" && "border"
         )}
       >
-        {isTabletView || viewMode === "vertical"
+        {viewMode === "vertical"
           ? renderVerticalRows()
           : renderHorizontalRows()}
         {loading && <LoadingOverlay />}

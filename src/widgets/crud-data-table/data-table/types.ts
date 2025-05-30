@@ -15,7 +15,7 @@ export interface DataTableRow<TData> extends Object, Identifiable {
   [key: string]: any; // Allow indexing by string
 }
 
-export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
+export type DataTableProps<TData extends DataTableRow<TData>, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   getRowId: (row: TData, index: number) => string;
   fetcher: (pagination: PaginationState) => Promise<PagedResponse<TData>>;
@@ -24,4 +24,4 @@ export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
   onFetchError?: (e: Error) => void;
   onRowClick?: (row: TData) => void;
   viewMode?: "horizontal" | "vertical";
-}
+};

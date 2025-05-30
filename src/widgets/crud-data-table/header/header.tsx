@@ -1,4 +1,8 @@
 import { Plus, RefreshCw, Search } from "lucide-react";
+// TODO: replace with https://www.svgrepo.com/svg/502689/grid
+import { Grid3x3 } from "lucide-react";
+// TODO: replace with https://www.svgrepo.com/svg/471838/rows-03
+import { Rows3 } from "lucide-react";
 import React, { ForwardedRef, useCallback, useEffect } from "react";
 
 import { AutoFormValueInfo } from "@/components/auto-field";
@@ -21,6 +25,7 @@ export type FilterState = {
   visibleKeys: string[];
   orderKeys: string[];
   groupByKey: string | undefined;
+  layoutMode: "grid" | "rows";
 };
 
 export type CrudDataTableHeaderProps = {
@@ -160,6 +165,11 @@ function CrudDataTableHeaderComponent<
             onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
           />
         )}
+
+        {/* // TODO: implement */}
+        <Button>
+          {viewSettings.layoutMode === "grid" ? <Grid3x3 /> : <Rows3 />}
+        </Button>
 
         {onCreateClick && (
           <>

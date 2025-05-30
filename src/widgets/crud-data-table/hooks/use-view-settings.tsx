@@ -19,6 +19,7 @@ export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
       visibleKeys: defaultVisibleColumns?.map(getColumnKey) ?? [],
       orderKeys: orderedColumns?.map(getColumnKey) ?? [],
       groupByKey: undefined,
+      layoutMode: "grid",
     }
   );
 

@@ -44,7 +44,8 @@ type CrudDataTableProps<
       filters: { search?: string; filters: { [key: string]: any } }
     ) => Promise<PagedResponse<TData>>;
     getRowId: (row: TData) => string;
-    viewMode?: "horizontal" | "vertical";
+    // TODO: remove `viewMode`
+    // viewMode?: "horizontal" | "vertical";
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
