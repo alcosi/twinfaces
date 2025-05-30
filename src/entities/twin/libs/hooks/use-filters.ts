@@ -13,6 +13,7 @@ import {
   type FilterFeature,
   isObject,
   isPopulatedArray,
+  isTruthy,
   isUndefined,
   toArray,
   toArrayOfString,
@@ -88,10 +89,12 @@ export function useTwinFilters({
     } as const;
 
     const filteredSelfFilters = filters
-      ? (Object.keys(selfFilters) as TwinFilterKeys[]).reduce(
+      ? filters.reduce(
           (acc, key) => {
-            if (filters.includes(key) && selfFilters[key]) {
-              acc[key] = selfFilters[key]!;
+            const filter = selfFilters[key];
+
+            if (isTruthy(filter)) {
+              acc[key] = filter;
             }
             return acc;
           },

@@ -83,17 +83,18 @@ export function TwinsTable({
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
-    ? enabledColumns
-        .filter((col): col is { twinClassFieldId: StaticTwinFieldId } =>
-          STATIC_TWIN_FIELD_IDS.includes(
-            col.twinClassFieldId as StaticTwinFieldId
-          )
-        )
-        .map(
-          (col) =>
-            STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP[col.twinClassFieldId!]
-        )
-        .filter((key): key is TwinFilterKeys => !isUndefined(key))
+    ? enabledColumns.reduce((acc: TwinFilterKeys[], col) => {
+        const fieldId = col.twinClassFieldId as StaticTwinFieldId;
+
+        if (STATIC_TWIN_FIELD_IDS.includes(fieldId)) {
+          const key = STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP[fieldId];
+
+          if (!isUndefined(key)) {
+            acc.push(key);
+          }
+        }
+        return acc;
+      }, [])
     : undefined;
 
   const staticColDefs: Record<string, ColumnDef<Twin_DETAILED>> = {
