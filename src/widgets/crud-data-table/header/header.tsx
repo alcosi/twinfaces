@@ -15,8 +15,7 @@ import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersPopover } from "./filters-popover";
 import { GroupByButton } from "./group-by-button";
 
-// TODO: @berdimyradov think about renaming
-export type FilterState = {
+export type TableViewState = {
   query: string;
   filters: Record<string, any>;
   visibleKeys: string[];
@@ -36,7 +35,7 @@ export type CrudDataTableHeaderProps = {
   };
   hideRefresh?: boolean;
   onCreateClick?: () => void;
-  onViewSettingsChange?: (data: FilterState) => void;
+  onViewSettingsChange?: (data: TableViewState) => void;
 };
 
 type Props<
@@ -74,7 +73,7 @@ function CrudDataTableHeaderComponent<
 
   const debouncedUpdate = useCallback(
     debounce(
-      (updates: Partial<FilterState>) => updateViewSettings(updates),
+      (updates: Partial<TableViewState>) => updateViewSettings(updates),
       150
     ),
     []
@@ -165,9 +164,10 @@ function CrudDataTableHeaderComponent<
 
         <Button
           IconComponent={
-            viewSettings.layoutMode === "grid" ? GridIcon : RowsIcon
+            viewSettings.layoutMode === "grid"
+              ? () => <GridIcon className="h-6 w-6" />
+              : () => <RowsIcon className="h-6 w-6" />
           }
-          iconClassName="h-6 w-6"
           onClick={() =>
             updateViewSettings({
               layoutMode: viewSettings.layoutMode === "grid" ? "rows" : "grid",

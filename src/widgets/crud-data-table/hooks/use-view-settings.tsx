@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 
 import { DataTableProps, DataTableRow } from "../data-table";
-import { FilterState } from "../header";
+import { TableViewState } from "../header";
 import { getColumnKey } from "../helpers";
 
 export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
@@ -9,7 +9,7 @@ export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
   orderedColumns: DataTableProps<TData, TValue>["columns"] = []
 ) {
   const [viewSettings, updateViewSettings] = useReducer(
-    (state: FilterState, updates: Partial<FilterState>) => ({
+    (state: TableViewState, updates: Partial<TableViewState>) => ({
       ...state,
       ...updates,
     }),

@@ -213,6 +213,32 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
       ));
   };
 
+  function renderHorizontalRows() {
+    return (
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>{renderTableBodyRows()}</TableBody>
+      </Table>
+    );
+  }
+
   function renderVerticalRows() {
     if (!table.getRowModel().rows?.length) {
       return (
@@ -286,41 +312,15 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     );
   }
 
-  function renderHorizontalRows() {
-    return (
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>{renderTableBodyRows()}</TableBody>
-      </Table>
-    );
-  }
-
   return (
     <div>
       <div
         className={cn(
-          "border-border relative mb-2 rounded-md",
-          layoutMode === "grid" && "border"
+          "relative mb-2",
+          layoutMode === "grid" && "border-border rounded-md border"
         )}
       >
-        {layoutMode === "rows" ? renderVerticalRows() : renderHorizontalRows()}
+        {layoutMode === "grid" ? renderHorizontalRows() : renderVerticalRows()}
         {loading && <LoadingOverlay />}
       </div>
       {!disablePagination && (
