@@ -22,7 +22,13 @@ import React, {
 } from "react";
 
 import { PaginationV1 } from "@/shared/api";
-import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import {
+  cn,
+  fixedForwardRef,
+  isEmptyArray,
+  isPopulatedArray,
+} from "@/shared/libs";
+import { Card } from "@/shared/ui";
 import { LoadingOverlay } from "@/shared/ui/loading";
 import {
   Table,
@@ -192,16 +198,6 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }
 
   const renderTableBodyRows = () => {
-    if (!table.getRowModel().rows?.length) {
-      return (
-        <TableRow>
-          <TableCell colSpan={columns.length} className="h-24 text-center">
-            No results.
-          </TableCell>
-        </TableRow>
-      );
-    }
-
     return table
       .getRowModel()
       .rows.map((row) => (
@@ -239,15 +235,8 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     );
   }
 
+  // TODO: see
   function renderVerticalRows() {
-    if (!table.getRowModel().rows?.length) {
-      return (
-        <div className="text-muted-foreground rounded-md p-4 text-center">
-          No results.
-        </div>
-      );
-    }
-
     const visibleColumns = table.getVisibleLeafColumns();
     const headersMap = new Map(
       table
@@ -258,24 +247,16 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
     return (
       <div className="flex flex-col gap-4">
-        {table.getRowModel().rows.map((row, index) => (
-          <div
+        {table.getRowModel().rows.map((row) => (
+          <Card
             key={row.id}
             onClick={() => onRowClick?.(row.original)}
             className={cn(
-              "border-muted relative overflow-hidden rounded-md border p-4",
-              index % 2 === 0 ? "bg-background" : "bg-primary-foreground",
-              onRowClick && "group cursor-pointer"
+              "border-muted bg-background overflow-hidden rounded-md border px-2 py-1",
+              onRowClick && "hover:bg-primary-foreground cursor-pointer"
             )}
           >
-            {onRowClick && (
-              <div
-                className="group-hover:bg-accent/30 pointer-events-none absolute inset-0 z-0 transition-colors duration-150"
-                aria-hidden="true"
-              />
-            )}
-
-            <dl className="relative z-10 grid grid-cols-1">
+            <dl className="">
               {visibleColumns.map((column, index) => {
                 const cell = row
                   .getAllCells()
@@ -306,21 +287,29 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
                 );
               })}
             </dl>
-          </div>
+          </Card>
         ))}
       </div>
     );
   }
 
   return (
-    <div>
+    <>
       <div
         className={cn(
           "relative mb-2",
           layoutMode === "grid" && "border-border rounded-md border"
         )}
       >
-        {layoutMode === "grid" ? renderHorizontalRows() : renderVerticalRows()}
+        {isEmptyArray(table.getRowModel().rows) ? (
+          <div className="text-muted-foreground rounded-md p-4 text-center">
+            No results.
+          </div>
+        ) : layoutMode === "grid" ? (
+          renderHorizontalRows()
+        ) : (
+          renderVerticalRows()
+        )}
         {loading && <LoadingOverlay />}
       </div>
       {!disablePagination && (
@@ -330,6 +319,6 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
           pageState={pagination.api}
         />
       )}
-    </div>
+    </>
   );
 }
