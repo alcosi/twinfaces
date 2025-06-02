@@ -86,7 +86,7 @@ export function TwinsTable({
     ? enabledColumns.reduce((acc: TwinFilterKeys[], col) => {
         const fieldId = col.twinClassFieldId as StaticTwinFieldId;
 
-        if (STATIC_TWIN_FIELD_IDS.includes(fieldId)) {
+        if (STATIC_TWIN_FIELD_IDS) {
           const key = STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP[fieldId];
 
           if (!isUndefined(key)) {
