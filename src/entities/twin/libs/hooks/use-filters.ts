@@ -13,6 +13,7 @@ import {
   type FilterFeature,
   isObject,
   isPopulatedArray,
+  isTruthy,
   isUndefined,
   toArray,
   toArrayOfString,
@@ -35,9 +36,9 @@ export function useTwinFilters({
   const uAdapter = useUserSelectAdapter();
   const tAdapter = useTwinSelectAdapter();
 
-  function buildFilterFields(): Partial<
-    Record<TwinFilterKeys, AutoFormValueInfo>
-  > {
+  function buildFilterFields(
+    filters?: TwinFilterKeys[]
+  ): Partial<Record<TwinFilterKeys, AutoFormValueInfo>> {
     const selfFilters: Partial<Record<TwinFilterKeys, AutoFormValueInfo>> = {
       twinIdList: {
         type: AutoFormValueType.tag,
@@ -55,7 +56,7 @@ export function useTwinFilters({
         : undefined,
       statusIdList: {
         type: AutoFormValueType.combobox,
-        label: "Statuses",
+        label: "Status",
         multi: true,
         ...sAdapter,
       },
@@ -87,6 +88,20 @@ export function useTwinFilters({
       },
     } as const;
 
+    const filteredSelfFilters = filters
+      ? filters.reduce(
+          (acc, key) => {
+            const filter = selfFilters[key];
+
+            if (isTruthy(filter)) {
+              acc[key] = filter;
+            }
+            return acc;
+          },
+          {} as Partial<Record<TwinFilterKeys, AutoFormValueInfo>>
+        )
+      : selfFilters;
+
     const inheritedFields =
       twinClassFields?.reduce<Record<string, AutoFormValueInfo>>(
         (acc, field) => {
@@ -103,7 +118,7 @@ export function useTwinFilters({
       ) ?? {};
 
     return {
-      ...selfFilters,
+      ...filteredSelfFilters,
       ...inheritedFields,
     };
   }
@@ -161,7 +176,8 @@ function mapInheritedFieldFiltersToPayload(
       if (
         isUndefined(fieldId) ||
         isUndefined(fieldKey) ||
-        isUndefined(descriptor?.fieldType)
+        isUndefined(descriptor?.fieldType) ||
+        isUndefined(filterFields[fieldKey])
       ) {
         return acc;
       }
