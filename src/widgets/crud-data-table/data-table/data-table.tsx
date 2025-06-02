@@ -1,19 +1,16 @@
 "use client";
 
 import {
-  flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
   PaginationState,
-  Row,
   getExpandedRowModel,
   isFunction,
 } from "@tanstack/table-core";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import React, {
+import {
   ForwardedRef,
   useEffect,
   useImperativeHandle,
@@ -28,19 +25,11 @@ import {
   isEmptyArray,
   isPopulatedArray,
 } from "@/shared/libs";
-import { Card } from "@/shared/ui";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/shared/ui/table";
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableHandle, DataTableProps, DataTableRow } from "./types";
+import { DataTableGrid, DataTableList } from "./views";
 
 export const DataTable = fixedForwardRef(DataTableInternal);
 
@@ -144,155 +133,6 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     fetchData();
   }, [pagination.tanstask]);
 
-  function renderRow(row: Row<TData>) {
-    return (
-      <TableRow
-        role={onRowClick && "button"}
-        key={row.id}
-        data-state={row.getIsSelected() && "selected"}
-        onClick={() => onRowClick?.(row.original)}
-        className={cn(onRowClick && "cursor-pointer")}
-      >
-        {row.getVisibleCells().map((cell) => (
-          <TableCell key={cell.id}>
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </TableCell>
-        ))}
-      </TableRow>
-    );
-  }
-
-  function renderExpandableRows(row: Row<TData>) {
-    const groupByCell = row.getVisibleCells().find((c) => c.getValue());
-    return (
-      <>
-        <TableRow
-          key={row.id}
-          data-state={row.getIsSelected() && "selected"}
-          onClick={() => onRowClick?.(row.original)}
-          className={cn(onRowClick && "cursor-pointer", "bg-accent")}
-        >
-          <TableCell
-            colSpan={row.getVisibleCells().length}
-            key={groupByCell?.id}
-          >
-            <div className="inline-flex items-center font-semibold">
-              <button
-                className="pointer me-2"
-                onClick={row.getToggleExpandedHandler()}
-              >
-                {row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}
-              </button>
-              {groupByCell &&
-                flexRender(
-                  groupByCell?.column.columnDef.cell,
-                  groupByCell?.getContext()
-                )}
-            </div>
-          </TableCell>
-        </TableRow>
-
-        {row.getParentRow()?.getIsExpanded() && renderRow(row)}
-      </>
-    );
-  }
-
-  const renderTableBodyRows = () => {
-    return table
-      .getRowModel()
-      .rows.map((row) => (
-        <React.Fragment key={row.id}>
-          {isPopulatedArray(row.subRows)
-            ? renderExpandableRows(row)
-            : renderRow(row)}
-        </React.Fragment>
-      ));
-  };
-
-  function renderHorizontalRows() {
-    return (
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>{renderTableBodyRows()}</TableBody>
-      </Table>
-    );
-  }
-
-  // TODO: see
-  function renderVerticalRows() {
-    const visibleColumns = table.getVisibleLeafColumns();
-    const headersMap = new Map(
-      table
-        .getHeaderGroups()
-        .flatMap((group) => group.headers)
-        .map((header) => [header.column.id, header])
-    );
-
-    return (
-      <div className="flex flex-col gap-4">
-        {table.getRowModel().rows.map((row) => (
-          <Card
-            key={row.id}
-            onClick={() => onRowClick?.(row.original)}
-            className={cn(
-              "border-muted bg-background overflow-hidden rounded-md border px-2 py-1",
-              onRowClick && "hover:bg-primary-foreground cursor-pointer"
-            )}
-          >
-            <dl className="">
-              {visibleColumns.map((column, index) => {
-                const cell = row
-                  .getAllCells()
-                  .find((c) => c.column.id === column.id);
-                const header = headersMap.get(column.id);
-
-                return (
-                  <div
-                    key={column.id}
-                    className={cn(
-                      "flex items-start gap-2 py-2",
-                      index !== 0 && "border-muted border-t"
-                    )}
-                  >
-                    <dt className="text-muted-foreground min-w-[120px] text-sm font-medium">
-                      {header
-                        ? flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )
-                        : column.id}
-                    </dt>
-                    <dd className="text-sm font-normal">
-                      {cell &&
-                        flexRender(column.columnDef.cell, cell.getContext())}
-                    </dd>
-                  </div>
-                );
-              })}
-            </dl>
-          </Card>
-        ))}
-      </div>
-    );
-  }
-
   return (
     <>
       <div
@@ -306,9 +146,9 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
             No results.
           </div>
         ) : layoutMode === "grid" ? (
-          renderHorizontalRows()
+          <DataTableGrid table={table} onRowClick={onRowClick} />
         ) : (
-          renderVerticalRows()
+          <DataTableList table={table} onRowClick={onRowClick} />
         )}
         {loading && <LoadingOverlay />}
       </div>

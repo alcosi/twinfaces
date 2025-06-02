@@ -21,7 +21,7 @@ export type TableViewState = {
   visibleKeys: string[];
   orderKeys: string[];
   groupByKey: string | undefined;
-  layoutMode: "grid" | "rows";
+  layoutMode: "grid" | "list";
 };
 
 export type CrudDataTableHeaderProps = {
@@ -170,7 +170,7 @@ function CrudDataTableHeaderComponent<
           }
           onClick={() =>
             updateViewSettings({
-              layoutMode: viewSettings.layoutMode === "grid" ? "rows" : "grid",
+              layoutMode: viewSettings.layoutMode === "grid" ? "list" : "grid",
             })
           }
         />
