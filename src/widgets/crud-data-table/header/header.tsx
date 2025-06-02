@@ -4,7 +4,7 @@ import React, { ForwardedRef, useCallback, useEffect } from "react";
 import { AutoFormValueInfo } from "@/components/auto-field";
 
 import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
-import { Input } from "@/shared/ui";
+import { GridIcon, Input, RowsIcon } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 
@@ -15,12 +15,13 @@ import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersPopover } from "./filters-popover";
 import { GroupByButton } from "./group-by-button";
 
-export type FilterState = {
+export type TableViewState = {
   query: string;
   filters: Record<string, any>;
   visibleKeys: string[];
   orderKeys: string[];
   groupByKey: string | undefined;
+  layoutMode: "grid" | "list";
 };
 
 export type CrudDataTableHeaderProps = {
@@ -34,7 +35,7 @@ export type CrudDataTableHeaderProps = {
   };
   hideRefresh?: boolean;
   onCreateClick?: () => void;
-  onViewSettingsChange?: (data: FilterState) => void;
+  onViewSettingsChange?: (data: TableViewState) => void;
 };
 
 type Props<
@@ -72,7 +73,7 @@ function CrudDataTableHeaderComponent<
 
   const debouncedUpdate = useCallback(
     debounce(
-      (updates: Partial<FilterState>) => updateViewSettings(updates),
+      (updates: Partial<TableViewState>) => updateViewSettings(updates),
       150
     ),
     []
@@ -160,6 +161,19 @@ function CrudDataTableHeaderComponent<
             onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
           />
         )}
+
+        <Button
+          IconComponent={
+            viewSettings.layoutMode === "grid"
+              ? () => <GridIcon className="h-6 w-6" />
+              : () => <RowsIcon className="h-6 w-6" />
+          }
+          onClick={() =>
+            updateViewSettings({
+              layoutMode: viewSettings.layoutMode === "grid" ? "list" : "grid",
+            })
+          }
+        />
 
         {onCreateClick && (
           <>

@@ -152,6 +152,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         columns={visibleColumns}
         fetcher={fetchWrapper}
         onRowClick={handleOnRowClick}
+        layoutMode={viewSettings.layoutMode}
       />
 
       <CrudDataTableDialog
