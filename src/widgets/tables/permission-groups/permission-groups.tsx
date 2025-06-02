@@ -1,11 +1,13 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
   PermissionGroup,
   PermissionGroup_DETAILED,
+  useFetchPermissionGroupsByUserId,
   usePermissionGroupFilters,
   usePermissionGroupSearchV1,
 } from "@/entities/permission-group";
@@ -13,12 +15,14 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { PermissionGroupResourceLink } from "@/features/permission-group/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import { isFalsy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
 
 const colDefs: Record<
-  keyof Omit<PermissionGroup, "twinClass">,
+  keyof Omit<PermissionGroup, "twinClass" | "permissions">,
   ColumnDef<PermissionGroup>
 > = {
   id: {
@@ -69,24 +73,44 @@ const colDefs: Record<
   },
 };
 
-export function PermissionGroupsTable() {
+export function PermissionGroupsTable({
+  userId,
+  title,
+}: {
+  userId?: string;
+  title?: string;
+}) {
   const { searchPermissionGroups } = usePermissionGroupSearchV1();
   const { buildFilterFields, mapFiltersToPayload } =
     usePermissionGroupFilters();
+  const { fetchPermissionGroupsByUserId } = useFetchPermissionGroupsByUserId();
+  const router = useRouter();
 
   async function fetchData(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<PagedResponse<PermissionGroup_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
+  ): Promise<PagedResponse<PermissionGroup_DETAILED | PermissionGroup>> {
     try {
-      const response = await searchPermissionGroups({
-        pagination,
-        filters: _filters,
-      });
+      if (userId) {
+        const response = await fetchPermissionGroupsByUserId(userId);
 
-      return response;
+        return {
+          data: response ?? [],
+          pagination: {
+            //TODO custom client plug pagination (BE don't support pagination in this endpoint)
+            limit: pagination.pageSize,
+            total: response?.length,
+          },
+        };
+      } else {
+        const _filters = mapFiltersToPayload(filters.filters);
+        const response = await searchPermissionGroups({
+          pagination,
+          filters: _filters,
+        });
+
+        return response;
+      }
     } catch (e) {
       console.error("Failed to fetch permission groups", e);
       toast.error("Failed to fetch permissions");
@@ -106,9 +130,14 @@ export function PermissionGroupsTable() {
       fetcher={fetchData}
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
+      {...(isFalsy(userId) && {
+        filters: {
+          filtersInfo: buildFilterFields(),
+        },
+      })}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/permission-groups/${row.id}`)
+      }
       defaultVisibleColumns={[colDefs.id, colDefs.name, colDefs.twinClassId]}
       orderedColumns={[
         colDefs.id,
@@ -118,6 +147,7 @@ export function PermissionGroupsTable() {
         colDefs.twinClassId,
       ]}
       groupableColumns={[colDefs.id, colDefs.name, colDefs.twinClassId]}
+      title={title}
     />
   );
 }

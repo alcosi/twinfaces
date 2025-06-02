@@ -7,13 +7,18 @@ import { UserContext } from "@/features/user";
 import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
-import { UserGeneral } from "./view";
+import { UserGeneral, UserPermissions } from "./view";
 
 const tabs: Tab[] = [
   {
     key: "genera",
     label: "General",
     content: <UserGeneral />,
+  },
+  {
+    key: "permissions",
+    label: "Permissions",
+    content: <UserPermissions />,
   },
 ];
 

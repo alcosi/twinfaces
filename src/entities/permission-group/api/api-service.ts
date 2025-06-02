@@ -49,7 +49,23 @@ export function createPermissionGroupApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById };
+  function getPermissionGroupsByUserId({
+    userId,
+    query = {},
+  }: {
+    userId: string;
+    query?: PermissionGroupRqQuery;
+  }) {
+    return settings.client.GET("/private/user/{userId}/permission_group/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId },
+        query: query,
+      },
+    });
+  }
+
+  return { search, getById, getPermissionGroupsByUserId };
 }
 
 export type PermissionGroupApi = ReturnType<typeof createPermissionGroupApi>;
