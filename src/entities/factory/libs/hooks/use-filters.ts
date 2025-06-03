@@ -14,16 +14,17 @@ export function useFactoryFilters(): FilterFeature<
   FactoryFilterKeys,
   FactoryFilters
 > {
-  function buildFilterFields(): Record<
-    Exclude<FactoryFilterKeys, "keyLikeList">,
-    AutoFormValueInfo
-  > {
+  function buildFilterFields(): Record<FactoryFilterKeys, AutoFormValueInfo> {
     return {
       idList: {
         type: AutoFormValueType.tag,
         label: "Id",
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
+      },
+      keyLikeList: {
+        type: AutoFormValueType.tag,
+        label: "Key",
       },
       nameLikeList: {
         type: AutoFormValueType.tag,
@@ -41,6 +42,9 @@ export function useFactoryFilters(): FilterFeature<
   ): FactoryFilters {
     return {
       idList: toArrayOfString(filters.idList),
+      keyLikeList: toArrayOfString(filters.keyLikeList, "key").map(
+        wrapWithPercent
+      ),
       nameLikeList: toArrayOfString(filters.nameLikeList).map(wrapWithPercent),
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),
