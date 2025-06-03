@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,6 +12,7 @@ import {
   type Permission,
   PermissionFormValues,
   Permission_DETAILED,
+  useFetchPermissionsByUserId,
   usePermissionCreate,
   usePermissionFilters,
   usePermissionSearchV1,
@@ -19,6 +21,8 @@ import { PermissionGroup } from "@/entities/permission-group";
 import { PermissionGroupResourceLink } from "@/features/permission-group/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import { isFalsy, isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -84,11 +88,19 @@ const colDefs: Record<
   },
 };
 
-export function PermissionsTable() {
+export function PermissionsTable({
+  userId,
+  title,
+}: {
+  userId?: string;
+  title?: string;
+}) {
   const tableRef = useRef<DataTableHandle>(null);
   const { searchPermissions } = usePermissionSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
   const { createPermission } = usePermissionCreate();
+  const { fetchPermissionsByUserId } = useFetchPermissionsByUserId();
+  const router = useRouter();
 
   const form = useForm<PermissionFormValues>({
     resolver: zodResolver(PERMISSION_SCHEMA),
@@ -103,16 +115,24 @@ export function PermissionsTable() {
   async function fetchPermissions(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<PagedResponse<Permission_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
+  ): Promise<PagedResponse<Permission_DETAILED | Permission>> {
     try {
-      const response = await searchPermissions({
-        pagination,
-        filters: _filters,
-      });
+      if (userId) {
+        const response = await fetchPermissionsByUserId(userId);
 
-      return response;
+        return {
+          data: response ?? [],
+          pagination: {},
+        };
+      } else {
+        const _filters = mapFiltersToPayload(filters.filters);
+        const response = await searchPermissions({
+          pagination,
+          filters: _filters,
+        });
+
+        return response;
+      }
     } catch (e) {
       console.error("Failed to fetch permissions", e);
       toast.error("Failed to fetch permissions");
@@ -155,9 +175,15 @@ export function PermissionsTable() {
       fetcher={fetchPermissions}
       getRowId={(row) => row.id!}
       pageSizes={[10, 20, 50]}
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
+      disablePagination={isTruthy(userId)}
+      {...(isFalsy(userId) && {
+        filters: {
+          filtersInfo: buildFilterFields(),
+        },
+      })}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/permissions/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.key,
@@ -176,6 +202,7 @@ export function PermissionsTable() {
       dialogForm={form}
       onCreateSubmit={handleCreate}
       renderFormFields={() => <PermissionsFormFields control={form.control} />}
+      title={title}
     />
   );
 }

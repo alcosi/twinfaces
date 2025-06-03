@@ -16,7 +16,7 @@ import { PermissionGroupResourceLink } from "@/features/permission-group/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { isFalsy } from "@/shared/libs";
+import { isFalsy, isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -96,11 +96,7 @@ export function PermissionGroupsTable({
 
         return {
           data: response ?? [],
-          pagination: {
-            //TODO custom client plug pagination (BE don't support pagination in this endpoint)
-            limit: pagination.pageSize,
-            total: response?.length,
-          },
+          pagination: {},
         };
       } else {
         const _filters = mapFiltersToPayload(filters.filters);
@@ -135,6 +131,7 @@ export function PermissionGroupsTable({
           filtersInfo: buildFilterFields(),
         },
       })}
+      disablePagination={isTruthy(userId)}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/permission-groups/${row.id}`)
       }
