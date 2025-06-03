@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,6 +20,7 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
@@ -114,6 +116,7 @@ export function FactoryMultipliersTable({
   factoryId?: string;
   title?: string;
 }) {
+  const router = useRouter();
   const { searchFactoryMultipliers } = useFactoryMultipliersSearch();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryMultiplierFilters({
@@ -190,6 +193,9 @@ export function FactoryMultipliersTable({
       ]}
       fetcher={fetchFactoryMultipliers}
       getRowId={(row) => row.id}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/multipliers/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(factoryId) ? [colDefs.factory] : []),

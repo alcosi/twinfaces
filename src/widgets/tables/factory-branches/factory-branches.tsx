@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -18,6 +19,7 @@ import {
 } from "@/entities/factory-branch";
 import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
 import { FactoryResourceLink } from "@/features/factory/ui";
+import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
@@ -108,6 +110,7 @@ export function FactoryBranchesTable({
   factoryId?: string;
   title?: string;
 }) {
+  const router = useRouter();
   const { searchFactoryBranches } = useFactoryBranchesSearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryBranchFilters({
     enabledFilters: isTruthy(factoryId)
@@ -179,6 +182,9 @@ export function FactoryBranchesTable({
       ]}
       fetcher={fetchFactoryBranches}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/branches/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(factoryId) ? [colDefs.factory] : []),

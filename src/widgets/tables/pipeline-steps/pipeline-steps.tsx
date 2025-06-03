@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -22,6 +23,7 @@ import { FactoryPipelineResourceLink } from "@/features/factory-pipeline/ui";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import {
   OneOf,
   isFalsy,
@@ -158,6 +160,7 @@ type Props = {
 } & OneOf<[PipelineOnlyProps, FactoryOnlyProps]>;
 
 export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
+  const router = useRouter();
   const { searchPipelineStep } = usePipelineStepSearch();
   const { createPipelineStep } = usePipelineStepCreate();
   const { buildFilterFields, mapFiltersToPayload } = usePipelineStepFilters({
@@ -242,6 +245,9 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
       ]}
       fetcher={fetchPipelineStep}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/pipeline-steps/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),

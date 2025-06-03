@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -20,6 +21,7 @@ import { FactoryConditionSetResourceLink } from "@/features/factory-condition-se
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
@@ -161,6 +163,7 @@ export function FactoryPipelinesTable({
   factoryId?: string;
   title?: string;
 }) {
+  const router = useRouter();
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
   const { createFactoryPipeline } = useFactoryPipelineCreate();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryPipelineFilters({
@@ -248,6 +251,9 @@ export function FactoryPipelinesTable({
       ]}
       fetcher={fetchFactoryPipelines}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/pipelines/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(factoryId) ? [colDefs.factory] : []),
