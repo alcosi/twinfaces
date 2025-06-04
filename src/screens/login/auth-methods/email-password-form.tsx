@@ -6,16 +6,19 @@ import { useContext, useEffect, useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { TextFormField, TextFormItem } from "@/components/form-fields/text";
+import { TextFormField } from "@/components/form-fields/text";
 
 import {
-  EMAIL_PASSWORD_AUTH_FORM_SCHEMA,
-  emailPasswordAuthAction,
+  LOGIN_AUTH_FORM_SCHEMA,
+  REGISTER_AUTH_FORM_SCHEMA,
+  loginAuthAction,
+  registerAuthAction,
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { FlipCard } from "@/features/ui/flip-card";
+import { RegisterStatusBar } from "@/features/ui/register-status-bar";
 import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
@@ -32,10 +35,14 @@ export function EmailPasswordAuthForm() {
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
 
+  const [registerStep, setRegisterStep] = useState<"register" | "confirm">(
+    "register"
+  );
+
   const [isShaking, setShake] = useState(false);
 
-  const loginForm = useForm<z.infer<typeof EMAIL_PASSWORD_AUTH_FORM_SCHEMA>>({
-    resolver: zodResolver(EMAIL_PASSWORD_AUTH_FORM_SCHEMA),
+  const loginForm = useForm<z.infer<typeof LOGIN_AUTH_FORM_SCHEMA>>({
+    resolver: zodResolver(LOGIN_AUTH_FORM_SCHEMA),
     defaultValues: {
       domainId,
       username: "",
@@ -43,12 +50,12 @@ export function EmailPasswordAuthForm() {
     },
   });
 
-  const registerForm = useForm<any>({
-    resolver: zodResolver(z.any()),
+  const registerForm = useForm<z.infer<typeof REGISTER_AUTH_FORM_SCHEMA>>({
+    resolver: zodResolver(REGISTER_AUTH_FORM_SCHEMA),
     defaultValues: {
       domainId,
       email: "",
-      username: "",
+      firstName: "",
       password: "",
       confirmPassword: "",
     },
@@ -70,9 +77,7 @@ export function EmailPasswordAuthForm() {
     });
   }
 
-  function onLoginSubmit(
-    values: z.infer<typeof EMAIL_PASSWORD_AUTH_FORM_SCHEMA>
-  ) {
+  function onLoginSubmit(values: z.infer<typeof LOGIN_AUTH_FORM_SCHEMA>) {
     if (isUndefined(domainId)) {
       throw new Error("Domain ID is required");
     }
@@ -84,7 +89,7 @@ export function EmailPasswordAuthForm() {
 
     startAuthTransition(async () => {
       try {
-        const { authData } = await emailPasswordAuthAction(null, formData);
+        const { authData } = await loginAuthAction(null, formData);
 
         if (isUndefined(authData?.auth_token)) {
           throw new Error("Login failed. Please check your credentials");
@@ -102,6 +107,42 @@ export function EmailPasswordAuthForm() {
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
         loginForm.reset();
+      } finally {
+        setTimeout(() => {
+          setShake(false);
+        }, 500);
+      }
+    });
+  }
+
+  function onRegisterSubmit(values: z.infer<typeof REGISTER_AUTH_FORM_SCHEMA>) {
+    if (isUndefined(domainId)) {
+      throw new Error("Domain ID is required");
+    }
+
+    const formData = new FormData();
+    formData.set("domainId", values.domainId);
+    formData.set("firstName", values.firstName);
+    formData.set("email", values.email);
+    formData.set("password", values.password);
+
+    console.log(formData);
+
+    startAuthTransition(async () => {
+      try {
+        const response = await registerAuthAction(null, formData);
+
+        if (response.status !== 0) {
+          throw new Error("Registration failed");
+        }
+
+        //TODO logic for endpoint /auth/signup_by_email/confirm/v1
+      } catch (err) {
+        setShake(true);
+        setAuthError(
+          err instanceof Error ? err.message : "An unexpected error occurred."
+        );
+        registerForm.reset();
       } finally {
         setTimeout(() => {
           setShake(false);
@@ -142,8 +183,8 @@ export function EmailPasswordAuthForm() {
                 control={loginForm.control}
                 type="email"
                 name="username"
-                label="Username"
-                placeholder="Enter your username"
+                label="Email"
+                placeholder="Enter your email"
                 required
               />
               <TextFormField
@@ -205,52 +246,63 @@ export function EmailPasswordAuthForm() {
             Create Account
           </h2>
 
-          <form className="flex w-full flex-col space-y-4">
-            <TextFormItem
-              type="email"
-              label="Email"
-              placeholder="Enter your email"
-              required
-              disabled
-            />
-            <TextFormItem
-              type="username"
-              label="Username"
-              placeholder="Enter your username"
-              required
-              disabled
-            />
-            <TextFormItem
-              type="password"
-              label="Password"
-              placeholder="Create a password"
-              required
-              disabled
-            />
-            <TextFormItem
-              type="password"
-              label="Confirm Password"
-              placeholder="Repeat your password"
-              required
-              disabled
-            />
+          <FormProvider {...registerForm}>
+            <form
+              className="flex w-full flex-col space-y-4"
+              onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
+            >
+              <TextFormField
+                control={registerForm.control}
+                name="email"
+                type="email"
+                label="Email"
+                placeholder="Enter your email"
+                required
+              />
+              <TextFormField
+                control={registerForm.control}
+                name="firstName"
+                type="text"
+                label="Username"
+                placeholder="Enter your username"
+                required
+              />
+              <TextFormField
+                control={registerForm.control}
+                name="password"
+                type="password"
+                label="Password"
+                placeholder="Create a password"
+                required
+              />
+              <TextFormField
+                control={registerForm.control}
+                name="confirmPassword"
+                type="password"
+                label="Confirm Password"
+                placeholder="Repeat your password"
+                required
+              />
 
-            <Button type="submit" className="w-full" size="lg" disabled>
-              Sign Up
-            </Button>
-
-            <span className="text-muted-foreground text-center text-sm">
-              Already have an account?
-              <Button
-                variant="link"
-                type="button"
-                onClick={toggleMode}
-                className="text-muted-foreground"
-              >
-                Login
+              <Button type="submit" className="w-full" size="lg">
+                Sign Up
               </Button>
-            </span>
-          </form>
+
+              <span className="text-muted-foreground text-center text-sm">
+                Already have an account?
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={toggleMode}
+                  className="text-muted-foreground"
+                >
+                  Login
+                </Button>
+              </span>
+            </form>
+          </FormProvider>
+
+          <RegisterStatusBar step={registerStep} />
         </div>
       }
     />

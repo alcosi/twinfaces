@@ -8,10 +8,11 @@ import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {
-  EMAIL_PASSWORD_AUTH_FORM_SCHEMA,
+  LOGIN_AUTH_FORM_SCHEMA,
+  REGISTER_AUTH_PAYLOAD_SCHEMA,
   STUB_AUTH_FORM_SCHEMA,
 } from "../libs";
-import { AuthConfig, AuthLoginRs } from "../types";
+import { AuthConfig, AuthLoginRs, AuthRegisterRs } from "../types";
 
 export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
   const result = await safe(() =>
@@ -112,16 +113,15 @@ export async function stubLoginFormAction(_: unknown, formData: FormData) {
   }
 }
 
-export async function emailPasswordAuthAction(
+export async function loginAuthAction(
   _: unknown,
   formData: FormData
 ): Promise<AuthLoginRs> {
-  const { domainId, username, password } =
-    EMAIL_PASSWORD_AUTH_FORM_SCHEMA.parse({
-      domainId: formData.get("domainId"),
-      username: formData.get("username"),
-      password: formData.get("password"),
-    });
+  const { domainId, username, password } = LOGIN_AUTH_FORM_SCHEMA.parse({
+    domainId: formData.get("domainId"),
+    username: formData.get("username"),
+    password: formData.get("password"),
+  });
 
   try {
     const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
@@ -142,6 +142,44 @@ export async function emailPasswordAuthAction(
       err instanceof Error
         ? err.message
         : "An unknown error occurred during login";
+    throw new Error(message);
+  }
+}
+
+export async function registerAuthAction(
+  _: unknown,
+  formData: FormData
+): Promise<AuthRegisterRs> {
+  const { domainId, firstName, email, password } =
+    REGISTER_AUTH_PAYLOAD_SCHEMA.parse({
+      domainId: formData.get("domainId"),
+      firstName: formData.get("firstName"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
+
+  try {
+    const { data, error } = await TwinsAPI.POST(
+      "/auth/signup_by_email/initiate/v1",
+      {
+        body: { firstName, email, password },
+        params: { header: { DomainId: domainId, Channel: "WEB" } },
+      }
+    );
+
+    if (error) {
+      console.error("Register error response:", error);
+      const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
+      throw new Error(message);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Register request failed:", err);
+    const message =
+      err instanceof Error
+        ? err.message
+        : "An unknown error occured during register";
     throw new Error(message);
   }
 }

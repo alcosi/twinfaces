@@ -2567,7 +2567,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/signup_by_email/initiate/v1": {
+    "/auth/refresh/v2": {
         parameters: {
             query?: never;
             header?: never;
@@ -2601,74 +2601,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/refresh/v2": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Refresh auth_token by refresh_token and fingerprint */
-        post: operations["authRefreshV2"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/refresh/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Refresh auth_token by refresh_token */
-        post: operations["authRefreshV1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/m2m/refresh/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Refresh M2M auth_token by refresh_token */
-        post: operations["authM2MRefreshV1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/m2m/login/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Returns auth data for machine-to-machine + act-as-user public key */
-        post: operations["authM2MLoginV1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/auth/logout/v1": {
         parameters: {
             query?: never;
@@ -2680,6 +2612,23 @@ export interface paths {
         put?: never;
         /** Logout from identity provider, linked to current domain */
         post: operations["authLogoutV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/login_key/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get public key to encrypt password during login */
+        post: operations["authLoginKeyV2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -15006,32 +14955,11 @@ export interface components {
             /** @description attachment list */
             attachments?: components["schemas"]["AttachmentV1"][];
         };
-        AuthSignupByEmailRqV1: {
-            /**
-             * @description first name
-             * @example Some name
-             */
-            firstName?: string;
-            /**
-             * @description last name
-             * @example Some name
-             */
-            lastName?: string;
-            /**
-             * @description password
-             * @example user@example.com
-             */
-            email?: string;
-            /**
-             * @description password
-             * @example secret
-             */
-            password?: string;
-            /**
-             * Format: uuid
-             * @description public key id
-             */
-            publicKeyId?: string;
+        AuthRefreshRqV2: {
+            /** @description refreshToken */
+            refreshToken?: string;
+            /** @description agent fingerprint (hash) */
+            fingerprint?: string;
         };
         AuthSignupByEmailRsV1: {
             /**
@@ -15101,7 +15029,7 @@ export interface components {
             /** @description refreshToken */
             refreshToken?: string;
         };
-        AuthM2MRefreshRsV1: {
+        AuthLoginKeyRsV1: {
             /**
              * Format: int32
              * @description request processing status (see ErrorCode enum)
@@ -15118,14 +15046,10 @@ export interface components {
              * @example success
              */
             statusDetails?: string;
-            /** @description tokens data */
-            authData?: {
-                [key: string]: string;
-            };
-            /** @description public key to encrypt act as user data [optional] */
-            actAsUserPublicKey?: components["schemas"]["CryptKeyV1"];
+            /** @description public key to encrypt login */
+            publicKey?: components["schemas"]["LoginKeyV1"];
         };
-        CryptKeyV1: {
+        LoginKeyV1: {
             /**
              * Format: uuid
              * @description key id
@@ -15141,69 +15065,6 @@ export interface components {
              * @description expires at
              */
             expiresAt?: string;
-        };
-        AuthM2MLoginRqV1: {
-            /** @description client id */
-            clientId?: string;
-            /** @description client secret */
-            clientSecret?: string;
-            /**
-             * Format: uuid
-             * @description public key id
-             */
-            publicKeyId?: string;
-        };
-        AuthM2MLoginRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description tokens data */
-            authData?: {
-                [key: string]: string;
-            };
-            /** @description public key to encrypt act as user data [optional] */
-            actAsUserPublicKey?: components["schemas"]["CryptKeyV1"];
-        };
-        AuthLogoutRqV1: {
-            /** @description logout data. depends upon IDP */
-            authData?: {
-                [key: string]: string;
-            };
-        };
-        FaceViewRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description results - face details */
-            face?: components["schemas"]["FaceV1"];
         };
         AuthLoginRqV1: {
             /**
@@ -17306,26 +17167,6 @@ export interface components {
             statusDetails?: string;
             /** @description attachment quotas details */
             quotas?: components["schemas"]["AttachmentQuotasBaseV1"];
-        };
-        AuthLoginKeyRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description public key to encrypt login */
-            publicKey?: components["schemas"]["CryptKeyV1"];
         };
     };
     responses: never;
@@ -27850,7 +27691,7 @@ export interface operations {
             };
         };
     };
-    authSignupByEmailInitiateV1: {
+    authRefreshV2: {
         parameters: {
             query?: never;
             header: {
@@ -27964,124 +27805,6 @@ export interface operations {
             };
         };
     };
-    authRefreshV1: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AuthRefreshRqV1"];
-            };
-        };
-        responses: {
-            /** @description Login to  */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthRefreshRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
-    authM2MRefreshV1: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AuthRefreshRqV1"];
-            };
-        };
-        responses: {
-            /** @description Token refreshed  */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthM2MRefreshRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
-    authM2MLoginV1: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AuthM2MLoginRqV1"];
-            };
-        };
-        responses: {
-            /** @description Login to  */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthM2MLoginRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
     authLogoutV1: {
         parameters: {
             query?: never;
@@ -28098,7 +27821,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AuthLogoutRqV1"];
+                "application/json": components["schemas"]["AuthRefreshRqV1"];
             };
         };
         responses: {
@@ -28109,6 +27832,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FaceViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authLoginKeyV2: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Logout success   */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthLoginKeyRsV1"];
                 };
             };
             /** @description Access is denied */
