@@ -37,3 +37,8 @@ export const REGISTER_AUTH_FORM_SCHEMA = REGISTER_AUTH_PAYLOAD_SCHEMA.extend({
   path: ["confirmPassword"],
   message: "Passwords must match",
 });
+
+export const CONFIRM_AUTH_FORM_SCHEMA = z.object({
+  domainId: DOMAIN_ID_SCHEMA,
+  verificationToken: z.string(),
+});

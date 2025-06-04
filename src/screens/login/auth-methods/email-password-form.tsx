@@ -23,6 +23,8 @@ import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
+import { ConfirmAuthForm } from "./confirm-form";
+
 export function EmailPasswordAuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -130,11 +132,13 @@ export function EmailPasswordAuthForm() {
 
     startAuthTransition(async () => {
       try {
-        const response = await registerAuthAction(null, formData);
+        // const response = await registerAuthAction(null, formData);
 
-        if (response.status !== 0) {
-          throw new Error("Registration failed");
-        }
+        // if (response.status !== 0) {
+        //   throw new Error("Registration failed");
+        // }
+
+        setRegisterStep("confirm");
 
         //TODO logic for endpoint /auth/signup_by_email/confirm/v1
       } catch (err) {
@@ -243,64 +247,79 @@ export function EmailPasswordAuthForm() {
           />
 
           <h2 className="text-primary my-6 text-center text-2xl font-bold">
-            Create Account
+            {registerStep === "register"
+              ? "Create Account"
+              : "Confirm Your Email"}
           </h2>
 
-          <FormProvider {...registerForm}>
-            <form
-              className="flex w-full flex-col space-y-4"
-              onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
-            >
-              <TextFormField
-                control={registerForm.control}
-                name="email"
-                type="email"
-                label="Email"
-                placeholder="Enter your email"
-                required
-              />
-              <TextFormField
-                control={registerForm.control}
-                name="firstName"
-                type="text"
-                label="Username"
-                placeholder="Enter your username"
-                required
-              />
-              <TextFormField
-                control={registerForm.control}
-                name="password"
-                type="password"
-                label="Password"
-                placeholder="Create a password"
-                required
-              />
-              <TextFormField
-                control={registerForm.control}
-                name="confirmPassword"
-                type="password"
-                label="Confirm Password"
-                placeholder="Repeat your password"
-                required
-              />
+          {registerStep === "register" ? (
+            <FormProvider {...registerForm}>
+              <form
+                className="flex w-full flex-col space-y-4"
+                onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
+              >
+                <TextFormField
+                  control={registerForm.control}
+                  name="email"
+                  type="email"
+                  label="Email"
+                  placeholder="Enter your email"
+                  required
+                />
+                <TextFormField
+                  control={registerForm.control}
+                  name="firstName"
+                  type="text"
+                  label="Username"
+                  placeholder="Enter your username"
+                  required
+                />
+                <TextFormField
+                  control={registerForm.control}
+                  name="password"
+                  type="password"
+                  label="Password"
+                  placeholder="Create a password"
+                  required
+                />
+                <TextFormField
+                  control={registerForm.control}
+                  name="confirmPassword"
+                  type="password"
+                  label="Confirm Password"
+                  placeholder="Repeat your password"
+                  required
+                />
 
-              <Button type="submit" className="w-full" size="lg">
-                Sign Up
-              </Button>
-
-              <span className="text-muted-foreground text-center text-sm">
-                Already have an account?
                 <Button
-                  variant="link"
-                  type="button"
-                  onClick={toggleMode}
-                  className="text-muted-foreground"
+                  type="submit"
+                  className="w-full"
+                  size="lg"
+                  loading={isAuthenticating || isShaking}
                 >
-                  Login
+                  Continue
                 </Button>
-              </span>
-            </form>
-          </FormProvider>
+
+                {authError && (
+                  <p className="text-error text-center">{authError}</p>
+                )}
+
+                <span className="text-muted-foreground text-center text-sm">
+                  Already have an account?
+                  <Button
+                    variant="link"
+                    type="button"
+                    onClick={toggleMode}
+                    className="text-muted-foreground"
+                  >
+                    Login
+                  </Button>
+                </span>
+              </form>
+            </FormProvider>
+          ) : (
+            <ConfirmAuthForm onBack={() => setRegisterStep("register")} />
+          )}
 
           <RegisterStatusBar step={registerStep} />
         </div>

@@ -22,16 +22,16 @@ export function FlipCard({ isFlipped, front, back, className }: Props) {
     >
       <div
         className={cn(
-          "transform-3d absolute h-full w-full transition-transform duration-500 ease-in-out",
+          "absolute h-full w-full transition-transform duration-500 ease-in-out transform-3d",
           {
             "rotate-y-0": !isFlipped,
             "rotate-y-180": isFlipped,
           }
         )}
       >
-        <Card className="backface-hidden absolute inset-0">{front}</Card>
+        <Card className="absolute inset-0 backface-hidden">{front}</Card>
 
-        <Card className="backface-hidden rotate-y-180 absolute inset-0">
+        <Card className="absolute inset-0 rotate-y-180 backface-hidden">
           {back}
         </Card>
       </div>
