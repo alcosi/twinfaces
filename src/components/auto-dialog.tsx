@@ -89,7 +89,10 @@ export function AutoDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="max-h-[100%] sm:max-h-[80%] sm:max-w-md">
+      <DialogContent
+        className="max-h-[100%] sm:max-h-[80%] sm:max-w-md"
+        aria-describedby={keys.join("-")}
+      >
         <DialogTrigger asChild>Open</DialogTrigger>
         <DialogHeader>
           {settings?.title && <DialogTitle>{settings.title}</DialogTitle>}

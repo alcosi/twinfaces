@@ -98,13 +98,13 @@ export function HTMLEditor({ initialHTML = "" }: { initialHTML?: string }) {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="relative max-h-[600px] overflow-auto">
+      <div className="relative">
         <div className="sticky top-0 z-10">
           <ToolbarPlugin />
         </div>
         <RichTextPlugin
           contentEditable={
-            <ContentEditable className="html-preview dark:bg-background border-muted mb-2 min-h-[200px] rounded-b-md border p-4 font-sans focus:outline-none" />
+            <ContentEditable className="html-preview dark:bg-background border-muted mb-2 max-h-[600px] min-h-[200px] overflow-auto rounded-b-md border p-4 font-sans focus:outline-none" />
           }
           placeholder={<div>Enter text…</div>}
           ErrorBoundary={LexicalErrorBoundary}

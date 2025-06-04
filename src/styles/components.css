@@ -9,3 +9,14 @@
 .html-preview li {
   @apply mb-1;
 }
+
+/* NOTE: temp solution */
+.ContentEditable__root ul {
+  list-style: disc;
+}
+.ContentEditable__root ol {
+  list-style: disc;
+}
+.ContentEditable__root table td {
+  border-color: var(--color-border);
+}

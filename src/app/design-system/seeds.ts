@@ -189,7 +189,7 @@ export const Fake = {
       required: false,
       descriptor: {
         fieldType: "dateScrollV1",
-        pattern: undefined,
+        pattern: "",
       } as NonNullable<TwinClassField["descriptor"]>,
       value: undefined,
     },

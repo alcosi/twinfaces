@@ -17,7 +17,7 @@ export class ColorPickerFormItem extends Component<
       <FormItem>
         {label && <FormItemLabel inForm={inForm}>{label}</FormItemLabel>}
         <FormControl>
-          <ColorPicker value={fieldValue} onChange={onChange} />
+          <ColorPicker color={fieldValue} onChange={onChange} />
         </FormControl>
         {description && (
           <FormItemDescription inForm={inForm}>

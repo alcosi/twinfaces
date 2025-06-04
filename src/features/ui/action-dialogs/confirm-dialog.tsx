@@ -63,14 +63,14 @@ export function ConfirmDialog({
 
   return (
     <Dialog open={open}>
-      <DialogContent>
+      <DialogContent aria-describedby={title}>
         {title && (
           <DialogHeader>
             <DialogTitle showCloseButton={false}>{title}</DialogTitle>
           </DialogHeader>
         )}
 
-        <DialogDescription className="text-balance p-6">
+        <DialogDescription className="p-6 text-balance">
           {message}
         </DialogDescription>
 
