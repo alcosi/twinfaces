@@ -8,11 +8,17 @@ import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {
+  CONFIRM_AUTH_FORM_SCHEMA,
   LOGIN_AUTH_FORM_SCHEMA,
   REGISTER_AUTH_PAYLOAD_SCHEMA,
   STUB_AUTH_FORM_SCHEMA,
 } from "../libs";
-import { AuthConfig, AuthLoginRs, AuthRegisterRs } from "../types";
+import {
+  AuthConfig,
+  AuthConfirmRs,
+  AuthLoginRs,
+  AuthRegisterRs,
+} from "../types";
 
 export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
   const result = await safe(() =>
@@ -180,6 +186,48 @@ export async function registerAuthAction(
       err instanceof Error
         ? err.message
         : "An unknown error occured during register";
+    throw new Error(message);
+  }
+}
+
+export async function confirmAuthAction(
+  _: unknown,
+  formData: FormData
+): Promise<AuthConfirmRs> {
+  const { domainId, verificationToken } = CONFIRM_AUTH_FORM_SCHEMA.parse({
+    domainId: formData.get("domainId"),
+    verificationToken: formData.get("verificationToken"),
+  });
+
+  try {
+    const { data, error } = await TwinsAPI.POST(
+      "/auth/signup_by_email/confirm/v1",
+      {
+        params: {
+          header: {
+            DomainId: domainId,
+            Channel: "WEB",
+          },
+          query: {
+            verificationToken,
+          },
+        },
+      }
+    );
+
+    if (error) {
+      console.error("Confirm error response:", error);
+      const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
+      throw new Error(message);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Confirm request failed:", err);
+    const message =
+      err instanceof Error
+        ? err.message
+        : "An unknown error occured during confirm";
     throw new Error(message);
   }
 }

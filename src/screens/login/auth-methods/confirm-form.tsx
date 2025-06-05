@@ -1,14 +1,34 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields";
 
-import { CONFIRM_AUTH_FORM_SCHEMA } from "@/entities/user/server";
+import {
+  CONFIRM_AUTH_FORM_SCHEMA,
+  confirmAuthAction,
+} from "@/entities/user/server";
+import { isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
-export function ConfirmAuthForm({ onBack }: { onBack: () => void }) {
+export function ConfirmAuthForm({
+  onBack,
+  setShake,
+  email,
+  isShaking,
+  toggleMode,
+}: {
+  onBack: () => void;
+  setShake: (value: boolean) => void;
+  email: string | null;
+  isShaking: boolean;
+  toggleMode: () => void;
+}) {
+  const [isAuthenticating, startAuthTransition] = useTransition();
+  const [authError, setAuthError] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const domainId = searchParams.get("domainId") ?? undefined;
 
@@ -20,14 +40,55 @@ export function ConfirmAuthForm({ onBack }: { onBack: () => void }) {
     },
   });
 
-  function onConfirmSubmit() {
-    //TODO implement functional /auth/signup_by_email/confirm/v1
+  function onConfirmSubmit(values: z.infer<typeof CONFIRM_AUTH_FORM_SCHEMA>) {
+    if (isUndefined(domainId)) {
+      throw new Error("Domain ID is required");
+    }
+
+    const formData = new FormData();
+    formData.set("domainId", values.domainId);
+    formData.set("verificationToken", values.verificationToken);
+
+    startAuthTransition(async () => {
+      try {
+        const response = await confirmAuthAction(null, formData);
+
+        if (response.status !== 0) {
+          throw new Error("Confirm failed");
+        }
+
+        toggleMode();
+        toast.success("Confirm success! User was created");
+      } catch (err) {
+        setShake(true);
+        setAuthError(
+          err instanceof Error ? err.message : "An unexpected error occurred."
+        );
+        confirmForm.reset();
+      } finally {
+        setTimeout(() => {
+          setShake(false);
+        }, 500);
+      }
+    });
   }
 
   return (
     <FormProvider {...confirmForm}>
-      <span className="text-muted-foreground text-center">
-        We sent a verification token to TODO: email
+      <span className="text-muted-foreground block w-full text-center">
+        {email ? (
+          <>
+            We sent a verification token to{" "}
+            <a
+              href={`mailto:${email}`}
+              className="text-primary underline hover:opacity-80"
+            >
+              {email}
+            </a>
+          </>
+        ) : (
+          "We sent a verification token to your email"
+        )}
       </span>
       <form
         className="mt-6 flex w-full flex-col space-y-4"
@@ -42,9 +103,16 @@ export function ConfirmAuthForm({ onBack }: { onBack: () => void }) {
           required
         />
 
-        <Button type="submit" className="w-full" size="lg">
+        <Button
+          type="submit"
+          className="w-full"
+          size="lg"
+          loading={isAuthenticating || isShaking}
+        >
           Confirm
         </Button>
+
+        {authError && <p className="text-error text-center">{authError}</p>}
 
         <Button
           type="button"

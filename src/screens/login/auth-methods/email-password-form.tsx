@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields/text";
@@ -36,6 +37,7 @@ export function EmailPasswordAuthForm() {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
+  const [registerEmail, setRegisterEmail] = useState<string | null>(null);
 
   const [registerStep, setRegisterStep] = useState<"register" | "confirm">(
     "register"
@@ -128,19 +130,17 @@ export function EmailPasswordAuthForm() {
     formData.set("email", values.email);
     formData.set("password", values.password);
 
-    console.log(formData);
-
     startAuthTransition(async () => {
       try {
-        // const response = await registerAuthAction(null, formData);
+        const response = await registerAuthAction(null, formData);
 
-        // if (response.status !== 0) {
-        //   throw new Error("Registration failed");
-        // }
+        if (response.status !== 0) {
+          throw new Error("Registration failed");
+        }
 
+        toast.success("Verification token was sent to email");
+        setRegisterEmail(values.email);
         setRegisterStep("confirm");
-
-        //TODO logic for endpoint /auth/signup_by_email/confirm/v1
       } catch (err) {
         setShake(true);
         setAuthError(
@@ -318,7 +318,13 @@ export function EmailPasswordAuthForm() {
               </form>
             </FormProvider>
           ) : (
-            <ConfirmAuthForm onBack={() => setRegisterStep("register")} />
+            <ConfirmAuthForm
+              onBack={() => setRegisterStep("register")}
+              setShake={setShake}
+              email={registerEmail}
+              isShaking={isShaking}
+              toggleMode={toggleMode}
+            />
           )}
 
           <RegisterStatusBar step={registerStep} />
