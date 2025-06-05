@@ -58,7 +58,7 @@ export function ConfirmAuthForm({
         }
 
         toggleMode();
-        toast.success("Confirm success! User was created");
+        toast.success("Confirm success! Account was created");
       } catch (err) {
         setShake(true);
         setAuthError(

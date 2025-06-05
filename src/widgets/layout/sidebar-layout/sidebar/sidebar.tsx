@@ -174,6 +174,11 @@ export function AppSidebar({ face, mode = "user" }: Props) {
                   className="w-(--radix-popper-anchor-width)"
                 >
                   <DropdownMenuItem>
+                    <SidebarMenuButton onClick={() => router.push("/profile")}>
+                      Profile
+                    </SidebarMenuButton>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
                     <SidebarMenuButton onClick={onLogout}>
                       Log out
                     </SidebarMenuButton>

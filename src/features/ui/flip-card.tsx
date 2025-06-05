@@ -29,9 +29,9 @@ export function FlipCard({ isFlipped, front, back, className }: Props) {
           }
         )}
       >
-        <Card className="absolute inset-0 backface-hidden">{front}</Card>
+        <Card className="absolute inset-0 h-fit backface-hidden">{front}</Card>
 
-        <Card className="absolute inset-0 rotate-y-180 backface-hidden">
+        <Card className="absolute inset-0 h-fit rotate-y-180 backface-hidden">
           {back}
         </Card>
       </div>
