@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -10,7 +10,9 @@ import { TextFormField } from "@/components/form-fields";
 import {
   CONFIRM_AUTH_FORM_SCHEMA,
   confirmAuthAction,
+  loginAuthAction,
 } from "@/entities/user/server";
+import { useAuthUser } from "@/features/auth";
 import { isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
@@ -18,18 +20,22 @@ export function ConfirmAuthForm({
   onBack,
   setShake,
   email,
+  password,
   isShaking,
-  toggleMode,
+  userName,
 }: {
   onBack: () => void;
   setShake: (value: boolean) => void;
   email: string | null;
+  password: string | null;
+  userName: string | null;
   isShaking: boolean;
-  toggleMode: () => void;
 }) {
+  const { setAuthUser } = useAuthUser();
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const domainId = searchParams.get("domainId") ?? undefined;
 
   const confirmForm = useForm<z.infer<typeof CONFIRM_AUTH_FORM_SCHEMA>>({
@@ -49,16 +55,31 @@ export function ConfirmAuthForm({
     formData.set("domainId", values.domainId);
     formData.set("verificationToken", values.verificationToken);
 
+    const userCredentials = new FormData();
+    userCredentials.set("domainId", values.domainId);
+    userCredentials.set("username", email!);
+    userCredentials.set("password", password!);
+
     startAuthTransition(async () => {
       try {
         const response = await confirmAuthAction(null, formData);
+        const { authData } = await loginAuthAction(null, userCredentials);
 
         if (response.status !== 0) {
           throw new Error("Confirm failed");
         }
 
-        toggleMode();
-        toast.success("Confirm success! Account was created");
+        if (!isUndefined(authData?.auth_token)) {
+          setAuthUser({
+            domainUser: undefined,
+            authToken: authData.auth_token,
+            domainId,
+            userName: userName!,
+          });
+
+          router.push("/profile");
+          toast.success("Confirm success! You are logged into your account");
+        }
       } catch (err) {
         setShake(true);
         setAuthError(

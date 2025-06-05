@@ -20,7 +20,7 @@ import { DomainLogo } from "@/features/domain/ui";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { FlipCard } from "@/features/ui/flip-card";
 import { RegisterStatusBar } from "@/features/ui/register-status-bar";
-import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
+import { ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
@@ -38,6 +38,8 @@ export function EmailPasswordAuthForm() {
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
   const [registerEmail, setRegisterEmail] = useState<string | null>(null);
+  const [registerUserName, setRegisterUserName] = useState<string | null>(null);
+  const [registerPassword, setRegisterPassword] = useState<string | null>(null);
 
   const [registerStep, setRegisterStep] = useState<"register" | "confirm">(
     "register"
@@ -103,8 +105,9 @@ export function EmailPasswordAuthForm() {
           domainUser: undefined,
           authToken: authData.auth_token,
           domainId,
+          userName: values.username, //TODO wrong userName, because this is EMAIL!
         });
-        router.push(`/${PlatformArea.core}/twinclass`);
+        router.push(`/profile`);
       } catch (err) {
         setShake(true);
         setAuthError(
@@ -130,6 +133,8 @@ export function EmailPasswordAuthForm() {
     formData.set("email", values.email);
     formData.set("password", values.password);
 
+    console.log(formData);
+
     startAuthTransition(async () => {
       try {
         const response = await registerAuthAction(null, formData);
@@ -140,6 +145,8 @@ export function EmailPasswordAuthForm() {
 
         toast.success("Verification token was sent to email");
         setRegisterEmail(values.email);
+        setRegisterUserName(values.firstName);
+        setRegisterPassword(values.password);
         setRegisterStep("confirm");
       } catch (err) {
         setShake(true);
@@ -147,6 +154,9 @@ export function EmailPasswordAuthForm() {
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
         registerForm.reset();
+        setRegisterEmail(null);
+        setRegisterUserName(null);
+        setRegisterPassword(null);
       } finally {
         setTimeout(() => {
           setShake(false);
@@ -323,7 +333,8 @@ export function EmailPasswordAuthForm() {
               setShake={setShake}
               email={registerEmail}
               isShaking={isShaking}
-              toggleMode={toggleMode}
+              password={registerPassword}
+              userName={registerUserName}
             />
           )}
 
