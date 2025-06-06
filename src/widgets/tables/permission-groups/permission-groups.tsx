@@ -7,11 +7,11 @@ import { toast } from "sonner";
 import {
   PermissionGroup,
   PermissionGroup_DETAILED,
-  useFetchPermissionGroupsByUserId,
   usePermissionGroupFilters,
   usePermissionGroupSearchV1,
 } from "@/entities/permission-group";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { useFetchPermissionGroupsByUserId } from "@/entities/user";
 import { PermissionGroupResourceLink } from "@/features/permission-group/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";

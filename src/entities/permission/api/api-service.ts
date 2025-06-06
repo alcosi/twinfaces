@@ -80,22 +80,6 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  function getPermissionsByUserId({
-    userId,
-    query = {},
-  }: {
-    userId: string;
-    query?: QueryPermissionViewV1;
-  }) {
-    return settings.client.GET("/private/user/{userId}/permission/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { userId },
-        query: query,
-      },
-    });
-  }
-
   function grantUserPermission({ body }: { body: GrantUserPermissionPayload }) {
     return settings.client.POST(`/private/permission_grant/user/v1`, {
       params: {
@@ -156,7 +140,6 @@ export function createPermissionApi(settings: ApiSettings) {
     grantUserGroupPermission,
     grantTwinRolePermission,
     grantAssigneePropagationPermission,
-    getPermissionsByUserId,
   };
 }
 

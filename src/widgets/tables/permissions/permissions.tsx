@@ -12,12 +12,12 @@ import {
   type Permission,
   PermissionFormValues,
   Permission_DETAILED,
-  useFetchPermissionsByUserId,
   usePermissionCreate,
   usePermissionFilters,
   usePermissionSearchV1,
 } from "@/entities/permission";
 import { PermissionGroup } from "@/entities/permission-group";
+import { useFetchPermissionsByUserId } from "@/entities/user";
 import { PermissionGroupResourceLink } from "@/features/permission-group/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { PagedResponse } from "@/shared/api";

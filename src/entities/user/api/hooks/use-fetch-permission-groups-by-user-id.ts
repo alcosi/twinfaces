@@ -1,9 +1,8 @@
 import { useCallback, useContext, useState } from "react";
 
+import { PermissionGroup } from "@/entities/permission-group";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-
-import { PermissionGroup } from "../types";
 
 export const useFetchPermissionGroupsByUserId = () => {
   const api = useContext(PrivateApiContext);
@@ -14,15 +13,14 @@ export const useFetchPermissionGroupsByUserId = () => {
       setLoading(true);
 
       try {
-        const { data, error } =
-          await api.permissionGroup.getPermissionGroupsByUserId({
-            userId,
-            query: {
-              lazyRelation: false,
-              showPermissionGroupMode: "DETAILED",
-              showPermissionGroup2TwinClassMode: "DETAILED",
-            },
-          });
+        const { data, error } = await api.user.getPermissionGroupsByUserId({
+          userId,
+          query: {
+            lazyRelation: false,
+            showPermissionGroupMode: "DETAILED",
+            showPermissionGroup2TwinClassMode: "DETAILED",
+          },
+        });
 
         if (error) {
           throw new Error(

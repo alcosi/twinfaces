@@ -6,11 +6,9 @@ import { PermissionGroupFilters, PermissionGroupRqQuery } from "./types";
 
 export function createPermissionGroupApi(settings: ApiSettings) {
   async function search({
-    search,
     pagination,
     filters,
   }: {
-    search?: string;
     pagination: PaginationState;
     filters: PermissionGroupFilters;
   }) {
@@ -49,23 +47,7 @@ export function createPermissionGroupApi(settings: ApiSettings) {
     });
   }
 
-  function getPermissionGroupsByUserId({
-    userId,
-    query = {},
-  }: {
-    userId: string;
-    query?: PermissionGroupRqQuery;
-  }) {
-    return settings.client.GET("/private/user/{userId}/permission_group/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { userId },
-        query: query,
-      },
-    });
-  }
-
-  return { search, getById, getPermissionGroupsByUserId };
+  return { search, getById };
 }
 
 export type PermissionGroupApi = ReturnType<typeof createPermissionGroupApi>;

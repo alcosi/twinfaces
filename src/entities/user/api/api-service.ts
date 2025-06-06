@@ -6,6 +6,8 @@ import {
   DomainUserFilters,
   DomainUserViewQuery,
   PermissionGrantUserFilters,
+  QueryUserPermissionGroupViewV1,
+  QueryUserPermissionViewV1,
   User,
 } from "./types";
 
@@ -91,11 +93,45 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
+  function getPermissionsByUserId({
+    userId,
+    query = {},
+  }: {
+    userId: string;
+    query?: QueryUserPermissionViewV1;
+  }) {
+    return settings.client.GET("/private/user/{userId}/permission/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId },
+        query: query,
+      },
+    });
+  }
+
+  function getPermissionGroupsByUserId({
+    userId,
+    query = {},
+  }: {
+    userId: string;
+    query?: QueryUserPermissionGroupViewV1;
+  }) {
+    return settings.client.GET("/private/user/{userId}/permission_group/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId },
+        query: query,
+      },
+    });
+  }
+
   return {
     searchDomainUsers,
     searchPermissionGrants,
     getById,
     update,
+    getPermissionsByUserId,
+    getPermissionGroupsByUserId,
   };
 }
 

@@ -1,9 +1,8 @@
 import { useCallback, useContext, useState } from "react";
 
+import { Permission } from "@/entities/permission";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-
-import { Permission } from "../types";
 
 export const useFetchPermissionsByUserId = () => {
   const api = useContext(PrivateApiContext);
@@ -14,7 +13,7 @@ export const useFetchPermissionsByUserId = () => {
       setLoading(true);
 
       try {
-        const { data, error } = await api.permission.getPermissionsByUserId({
+        const { data, error } = await api.user.getPermissionsByUserId({
           userId,
           query: {
             lazyRelation: false,
