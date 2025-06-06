@@ -25,7 +25,7 @@ export async function fetchCurrentDomain(): Promise<DomainViewRs> {
   const { data } = await TwinsAPI.GET("/private/domain/{domainId}/v1", {
     params: {
       path: { domainId: DomainId },
-      header: { AuthToken, Channel },
+      header: { AuthToken, Channel, DomainId },
       query: {
         lazyRelation: false,
         showDomainMode: "DETAILED",

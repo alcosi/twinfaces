@@ -574,7 +574,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Update businessAccount */
+        /**
+         * Update businessAccount
+         * @deprecated
+         */
         put: operations["businessAccountUpdateV1"];
         post?: never;
         /** Delete businessAccount */
@@ -695,7 +698,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Smart endpoint for adding new user. It will also add user to domain and businessAccount if specified. If given businessAccount is not registered in domain, it will register it */
+        /**
+         * Smart endpoint for adding new user. It will also add user to domain and businessAccount if specified. If given businessAccount is not registered in domain, it will register it
+         * @deprecated
+         */
         post: operations["userAddV1"];
         delete?: never;
         options?: never;
@@ -2282,7 +2288,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Add user to domainIf user is not exist it will be created. */
+        /**
+         * Add user to domainIf user is not exist it will be created.
+         * @deprecated
+         */
         post: operations["domainUserAddV1"];
         delete?: never;
         options?: never;
@@ -2299,7 +2308,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Update settings for businessAccount in domain */
+        /**
+         * Update settings for businessAccount in domain
+         * @deprecated
+         */
         post: operations["domainBusinessAccountUpdateV1"];
         delete?: never;
         options?: never;
@@ -2316,7 +2328,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Add businessAccount to domain. If business account is not exist it will be created. Domain must be already present. */
+        /**
+         * Add businessAccount to domain. If business account is not exist it will be created. Domain must be already present.
+         * @deprecated
+         */
         post: operations["domainBusinessAccountAddV1"];
         delete?: never;
         options?: never;
@@ -2507,7 +2522,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Add user to business account. If business account is not exist it will be created. If user is not exist it will be created */
+        /**
+         * Add user to business account. If business account is not exist it will be created. If user is not exist it will be created
+         * @deprecated
+         */
         post: operations["businessAccountUserAddV1"];
         delete?: never;
         options?: never;
@@ -2549,6 +2567,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/signup_by_email/initiate/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Initiate signup by email */
+        post: operations["authSignupByEmailInitiateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/signup_by_email/confirm/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm email be token, which was sent to given email */
+        post: operations["authSignupByEmailConfirmV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/refresh/v2": {
         parameters: {
             query?: never;
@@ -2583,6 +2635,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/m2m/refresh/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh M2M auth_token by refresh_token */
+        post: operations["authM2MRefreshV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/m2m/login/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns auth data for machine-to-machine + act-as-user public key */
+        post: operations["authM2MLoginV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/logout/v1": {
         parameters: {
             query?: never;
@@ -2594,23 +2680,6 @@ export interface paths {
         put?: never;
         /** Logout from identity provider, linked to current domain */
         post: operations["authLogoutV1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/login_key/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Get public key to encrypt password during login */
-        post: operations["authLoginKeyV2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3763,6 +3832,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/crypt_key/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get public key to encrypt password during auth */
+        get: operations["authCryptKeyV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin/{twinId}/delete_drafted/v1": {
         parameters: {
             query?: never;
@@ -3824,7 +3910,10 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete businessAccount from domain */
+        /**
+         * Delete businessAccount from domain
+         * @deprecated
+         */
         delete: operations["domainBusinessAccountDeleteV1"];
         options?: never;
         head?: never;
@@ -3841,7 +3930,10 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete user from businessAccount */
+        /**
+         * Delete user from businessAccount
+         * @deprecated
+         */
         delete: operations["businessAccountUserDeleteV1"];
         options?: never;
         head?: never;
@@ -5336,6 +5428,20 @@ export interface components {
              */
             fieldType: "numericFieldV1";
         };
+        TwinClassFieldDescriptorSecretV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            fieldType?: string;
+            /**
+             * @description Some validation regexp
+             * @example .*
+             */
+            regExp?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "secretV1";
+        };
         TwinClassFieldDescriptorTextV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             fieldType?: string;
             /**
@@ -5449,7 +5555,7 @@ export interface components {
             /** @description description */
             description?: string;
             /** @description field descriptor */
-            descriptor?: components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"];
+            descriptor?: components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"];
             /**
              * Format: uuid
              * @description twin class id
@@ -5512,7 +5618,7 @@ export interface components {
             /** @description description */
             description?: string;
             /** @description field descriptor */
-            descriptor?: components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"];
+            descriptor?: components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"];
             /**
              * Format: uuid
              * @description twin class id
@@ -9635,9 +9741,9 @@ export interface components {
             /** @description email exclude list */
             userEmailLikeExcludeList?: string[];
             /** @description status id list */
-            statusIdList?: ("ACTIVE" | "DELETED" | "BLOCKED")[];
+            statusIdList?: ("ACTIVE" | "DELETED" | "EMAIL_VERIFICATION_REQUIRED" | "BLOCKED")[];
             /** @description status id exclude list */
-            statusIdExcludeList?: ("ACTIVE" | "DELETED" | "BLOCKED")[];
+            statusIdExcludeList?: ("ACTIVE" | "DELETED" | "EMAIL_VERIFICATION_REQUIRED" | "BLOCKED")[];
             /** @description space list */
             spaceList?: components["schemas"]["SpaceSearchV1"][];
             /** @description space exclude list */
@@ -10759,6 +10865,28 @@ export interface components {
             autoCreatePermissions?: boolean;
             /** @description [optional] if true - twinflow and status will be created and assign to class */
             autoCreateTwinflow?: boolean;
+        };
+        TwinClassCreateRsV2: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - twin class list */
+            twinClassList?: components["schemas"]["TwinClassV1"][];
         };
         TwinClassCreateRqV1: {
             /**
@@ -14352,9 +14480,9 @@ export interface components {
             /** @description email not like list */
             emailNotLikeList?: string[];
             /** @description status id list */
-            statusIdList?: ("ACTIVE" | "DELETED" | "BLOCKED")[];
+            statusIdList?: ("ACTIVE" | "DELETED" | "EMAIL_VERIFICATION_REQUIRED" | "BLOCKED")[];
             /** @description status id exclude list */
-            statusIdExcludeList?: ("ACTIVE" | "DELETED" | "BLOCKED")[];
+            statusIdExcludeList?: ("ACTIVE" | "DELETED" | "EMAIL_VERIFICATION_REQUIRED" | "BLOCKED")[];
             /** @description business account id list */
             businessAccountIdList?: string[];
             /** @description business account id exclude list */
@@ -14878,6 +15006,69 @@ export interface components {
             /** @description attachment list */
             attachments?: components["schemas"]["AttachmentV1"][];
         };
+        AuthSignupByEmailRqV1: {
+            /**
+             * @description first name
+             * @example Some name
+             */
+            firstName?: string;
+            /**
+             * @description last name
+             * @example Some name
+             */
+            lastName?: string;
+            /**
+             * @description password
+             * @example user@example.com
+             */
+            email?: string;
+            /**
+             * @description password
+             * @example secret
+             */
+            password?: string;
+            /**
+             * Format: uuid
+             * @description public key id
+             */
+            publicKeyId?: string;
+        };
+        AuthSignupByEmailRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+        };
+        AuthSignupByEmailConfirmRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+        };
         AuthRefreshRqV2: {
             /** @description refreshToken */
             refreshToken?: string;
@@ -14910,6 +15101,82 @@ export interface components {
             /** @description refreshToken */
             refreshToken?: string;
         };
+        AuthM2MRefreshRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description tokens data */
+            authData?: {
+                [key: string]: string;
+            };
+            /** @description public key to encrypt act as user data [optional] */
+            actAsUserPublicKey?: components["schemas"]["CryptKeyV1"];
+        };
+        CryptKeyV1: {
+            /**
+             * Format: uuid
+             * @description key id
+             */
+            id?: string;
+            algorithm?: string;
+            format?: string;
+            /** Format: int32 */
+            keySize?: number;
+            key?: string;
+            /**
+             * Format: date-time
+             * @description expires at
+             */
+            expiresAt?: string;
+        };
+        AuthM2MLoginRqV1: {
+            /** @description client id */
+            clientId?: string;
+            /** @description client secret */
+            clientSecret?: string;
+            /**
+             * Format: uuid
+             * @description public key id
+             */
+            publicKeyId?: string;
+        };
+        AuthM2MLoginRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description tokens data */
+            authData?: {
+                [key: string]: string;
+            };
+            /** @description public key to encrypt act as user data [optional] */
+            actAsUserPublicKey?: components["schemas"]["CryptKeyV1"];
+        };
         AuthLogoutRqV1: {
             /** @description logout data. depends upon IDP */
             authData?: {
@@ -14937,43 +15204,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description results - face details */
             face?: components["schemas"]["FaceV1"];
-        };
-        AuthLoginKeyRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description public key to encrypt login */
-            publicKey?: components["schemas"]["LoginKeyV1"];
-        };
-        LoginKeyV1: {
-            /**
-             * Format: uuid
-             * @description key id
-             */
-            id?: string;
-            algorithm?: string;
-            format?: string;
-            /** Format: int32 */
-            keySize?: number;
-            key?: string;
-            /**
-             * Format: date-time
-             * @description expires at
-             */
-            expiresAt?: string;
         };
         AuthLoginRqV1: {
             /**
@@ -16269,6 +16499,8 @@ export interface components {
             icon?: string;
             /** @description styles, converted to css classes */
             styleClasses?: string[];
+            /** @description is showing needed when button inactive */
+            showWhenInactive?: boolean;
         };
         FaceWT005ViewRsV1: {
             /**
@@ -17075,6 +17307,26 @@ export interface components {
             /** @description attachment quotas details */
             quotas?: components["schemas"]["AttachmentQuotasBaseV1"];
         };
+        AuthLoginKeyRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description public key to encrypt login */
+            publicKey?: components["schemas"]["CryptKeyV1"];
+        };
     };
     responses: never;
     parameters: never;
@@ -17810,7 +18062,31 @@ export interface operations {
     };
     twinClassCreateV2: {
         parameters: {
-            query?: never;
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
                 DomainId: string;
@@ -17834,7 +18110,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Response"];
+                    "application/json": components["schemas"]["TwinClassCreateRsV2"];
                 };
             };
             /** @description Access is denied */
@@ -19485,6 +19761,8 @@ export interface operations {
         parameters: {
             query?: never;
             header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
                 /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
                 AuthToken: string;
                 /** @example WEB */
@@ -26740,6 +27018,8 @@ export interface operations {
         parameters: {
             query?: never;
             header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
                 /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
                 AuthToken: string;
                 /** @example WEB */
@@ -27570,6 +27850,80 @@ export interface operations {
             };
         };
     };
+    authSignupByEmailInitiateV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthSignupByEmailRqV1"];
+            };
+        };
+        responses: {
+            /** @description SignUp to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSignupByEmailRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authSignupByEmailConfirmV1: {
+        parameters: {
+            query: {
+                verificationToken: string;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description SignUp to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSignupByEmailConfirmRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     authRefreshV2: {
         parameters: {
             query?: never;
@@ -27650,6 +28004,84 @@ export interface operations {
             };
         };
     };
+    authM2MRefreshV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthRefreshRqV1"];
+            };
+        };
+        responses: {
+            /** @description Token refreshed  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthM2MRefreshRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authM2MLoginV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthM2MLoginRqV1"];
+            };
+        };
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthM2MLoginRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     authLogoutV1: {
         parameters: {
             query?: never;
@@ -27677,40 +28109,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FaceViewRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
-    authLoginKeyV2: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Login to  */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthLoginKeyRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -31132,6 +31530,8 @@ export interface operations {
                 showDomainNavbar2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
                 /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
                 AuthToken: string;
                 /** @example WEB */
@@ -31224,6 +31624,8 @@ export interface operations {
                 sortAsc?: unknown;
             };
             header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
                 /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
                 AuthToken: string;
                 /** @example WEB */
@@ -31569,6 +31971,40 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AttachmentQuotasRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authCryptKeyV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthLoginKeyRsV1"];
                 };
             };
             /** @description Access is denied */
