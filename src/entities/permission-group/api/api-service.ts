@@ -6,9 +6,11 @@ import { PermissionGroupFilters, PermissionGroupRqQuery } from "./types";
 
 export function createPermissionGroupApi(settings: ApiSettings) {
   async function search({
+    search,
     pagination,
     filters,
   }: {
+    search?: string;
     pagination: PaginationState;
     filters: PermissionGroupFilters;
   }) {
