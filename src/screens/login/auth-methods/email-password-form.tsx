@@ -38,7 +38,6 @@ export function EmailPasswordAuthForm() {
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
   const [registerEmail, setRegisterEmail] = useState<string | null>(null);
-  const [registerUserName, setRegisterUserName] = useState<string | null>(null);
   const [registerPassword, setRegisterPassword] = useState<string | null>(null);
 
   const [registerStep, setRegisterStep] = useState<"register" | "confirm">(
@@ -105,7 +104,7 @@ export function EmailPasswordAuthForm() {
           domainUser: undefined,
           authToken: authData.auth_token,
           domainId,
-          userName: values.username, //TODO wrong userName, because this is EMAIL!
+          userEmail: values.username,
         });
         router.push(`/profile`);
       } catch (err) {
@@ -145,7 +144,6 @@ export function EmailPasswordAuthForm() {
 
         toast.success("Verification token was sent to email");
         setRegisterEmail(values.email);
-        setRegisterUserName(values.firstName);
         setRegisterPassword(values.password);
         setRegisterStep("confirm");
       } catch (err) {
@@ -155,7 +153,6 @@ export function EmailPasswordAuthForm() {
         );
         registerForm.reset();
         setRegisterEmail(null);
-        setRegisterUserName(null);
         setRegisterPassword(null);
       } finally {
         setTimeout(() => {
@@ -334,7 +331,6 @@ export function EmailPasswordAuthForm() {
               email={registerEmail}
               isShaking={isShaking}
               password={registerPassword}
-              userName={registerUserName}
             />
           )}
 

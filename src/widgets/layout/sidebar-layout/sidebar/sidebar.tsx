@@ -165,7 +165,8 @@ export function AppSidebar({ face, mode = "user" }: Props) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
-                    <User2 /> {authUser?.domainUser?.user.fullName}
+                    <User2 />
+                    {authUser?.domainUser?.user.fullName || authUser!.userEmail}
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>

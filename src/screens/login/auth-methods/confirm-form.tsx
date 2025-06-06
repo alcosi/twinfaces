@@ -22,13 +22,11 @@ export function ConfirmAuthForm({
   email,
   password,
   isShaking,
-  userName,
 }: {
   onBack: () => void;
   setShake: (value: boolean) => void;
   email: string | null;
   password: string | null;
-  userName: string | null;
   isShaking: boolean;
 }) {
   const { setAuthUser } = useAuthUser();
@@ -74,7 +72,7 @@ export function ConfirmAuthForm({
             domainUser: undefined,
             authToken: authData.auth_token,
             domainId,
-            userName: userName!,
+            userEmail: email!,
           });
 
           router.push("/profile");

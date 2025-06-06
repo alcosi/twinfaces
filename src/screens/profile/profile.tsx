@@ -6,7 +6,7 @@ import { useAuthUser } from "@/features/auth";
 
 export default function ProfileScreen() {
   const { authUser } = useAuthUser();
-  console.log(authUser?.userName);
+
   return (
     <div className="bg-background text-foreground flex min-h-screen flex-col">
       <div className="border-border bg-secondary text-secondary-foreground flex h-16 items-center border-b px-6 shadow-sm">
@@ -18,7 +18,7 @@ export default function ProfileScreen() {
           <div className="flex justify-center">
             <User className="text-brand-500 h-16 w-16" />
           </div>
-          <h2 className="text-2xl font-semibold">{authUser?.userName}</h2>
+          <h2 className="text-2xl font-semibold">{authUser?.userEmail}</h2>
           <p className="text-muted-foreground">Description</p>
         </div>
       </div>
