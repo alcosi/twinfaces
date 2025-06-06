@@ -1,0 +1,22 @@
+.html-preview ul {
+  @apply my-2 list-inside list-disc pl-4;
+}
+
+.html-preview ol {
+  @apply my-2 list-inside list-decimal pl-4;
+}
+
+.html-preview li {
+  @apply mb-1;
+}
+
+/* NOTE: temp solution */
+.ContentEditable__root ul {
+  list-style: disc;
+}
+.ContentEditable__root ol {
+  list-style: disc;
+}
+.ContentEditable__root table td {
+  border-color: var(--color-border);
+}

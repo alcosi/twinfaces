@@ -22,7 +22,7 @@ export function cn(...inputs: ClassValue[]) {
 export function fixedForwardRef<T, P = {}>(
   render: (props: P, ref: Ref<T>) => ReactNode
 ): (props: P & RefAttributes<T>) => ReactNode {
-  return forwardRef(render) as any;
+  return forwardRef(render as any) as any;
 }
 
 // Utility function to create an enum from a string union type

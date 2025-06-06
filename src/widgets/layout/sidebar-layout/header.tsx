@@ -19,9 +19,9 @@ export function SidebarLayoutHeader() {
   const { breadcrumbs } = useBreadcrumbs();
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6">
+    <header className="border-border bg-background sticky top-0 z-10 flex h-16 items-center justify-between border-b px-4 md:px-6">
       <div className="flex items-center">
-        <SidebarTrigger className="z-20 -ml-8 mr-8 mt-16 border border-border bg-sidebar shadow-sm" />
+        <SidebarTrigger className="border-border bg-sidebar z-20 mt-16 mr-8 -ml-8 border shadow-sm" />
 
         <Breadcrumb>
           <BreadcrumbList>

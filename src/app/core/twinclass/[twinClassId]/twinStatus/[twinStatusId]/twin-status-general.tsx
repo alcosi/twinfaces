@@ -190,7 +190,7 @@ export function TwinStatusGeneral() {
           >
             <TableCell>Background Color</TableCell>
             <TableCell>
-              <ColorPicker value={backgroundColor} />
+              <ColorPicker color={backgroundColor} />
             </TableCell>
           </TableRow>
 
@@ -200,7 +200,7 @@ export function TwinStatusGeneral() {
           >
             <TableCell>Font Color</TableCell>
             <TableCell>
-              <ColorPicker value={fontColor} />
+              <ColorPicker color={fontColor} />
             </TableCell>
           </TableRow>
         </TableBody>

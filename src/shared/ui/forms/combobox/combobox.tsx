@@ -1,9 +1,11 @@
 "use client";
 
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import { ForwardedRef } from "react";
+
 import {
   cn,
   fixedForwardRef,
-  isFalsy,
   isPopulatedString,
   isTruthy,
 } from "@/shared/libs";
@@ -18,8 +20,7 @@ import {
 } from "@/shared/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Separator } from "@/shared/ui/separator";
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
-import { ForwardedRef } from "react";
+
 import { useComboboxController } from "./hooks";
 import { SelectedOptions } from "./selected-options";
 import { ComboboxHandle, ComboboxProps } from "./types";
@@ -71,7 +72,7 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
           role="combobox"
           aria-expanded={isOpen}
           className={cn(
-            "flex w-auto min-w-[120px] h-auto min-h-10 justify-between truncate disabled:bg-secondary",
+            "disabled:bg-secondary flex h-auto min-h-10 w-auto min-w-[120px] justify-between truncate",
             props.buttonClassName
           )}
         >
@@ -130,7 +131,7 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
             <Separator />
             <Button
               variant="ghost"
-              className="flex w-full font-bold justify-start truncate"
+              className="flex w-full justify-start truncate font-bold"
               onClick={() => {
                 // TODO: Reevaluate `as T` type assertion.
                 // `ComboboxProps<T>` depends on `SelectAdapter<T>`, but `T` lacks `T & string` support.

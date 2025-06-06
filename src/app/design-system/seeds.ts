@@ -189,7 +189,7 @@ export const Fake = {
       required: false,
       descriptor: {
         fieldType: "dateScrollV1",
-        pattern: undefined,
+        pattern: "",
       } as NonNullable<TwinClassField["descriptor"]>,
       value: undefined,
     },
@@ -310,3 +310,28 @@ export const Fake = {
     },
   },
 };
+
+export const MOCK_HTML = `
+<table>
+  <tr>
+    <td>
+      <p>Ajfon ten 16 giga</p>
+    </td>
+    <td>
+      <img src="https://a.allegroimg.allegrosandbox.pl/original/110715/127374ac4b1dacacda72c8b003c7">
+    </td>
+  </tr>
+</table>
+
+  <ul>
+    <li>Test 1</li>
+    <li>Test 2</li>
+    <li>Test 3</li>
+  </ul>
+
+  <ol>
+    <li>Test 1</li>
+    <li>Test 2</li>
+    <li>Test 3</li>
+  </ol>
+`;
