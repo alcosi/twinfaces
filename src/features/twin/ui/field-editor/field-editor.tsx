@@ -131,8 +131,14 @@ function renderDynamicFieldPreview(
   field: FieldProps,
   relatedObjects?: RelatedObjects
 ): string {
-  if (field.descriptor?.fieldType === "dateScrollV1") {
-    const format = isPopulatedString(field.descriptor.pattern)
+  const fieldType = field.descriptor?.fieldType;
+
+  if (fieldType === "secretV1") {
+    return "•".repeat(field.value.length);
+  }
+
+  if (fieldType === "dateScrollV1") {
+    const format = isPopulatedString(field.descriptor?.pattern)
       ? mapPatternToInputType(field.descriptor.pattern)
       : "text";
     return isPopulatedString(field.value)

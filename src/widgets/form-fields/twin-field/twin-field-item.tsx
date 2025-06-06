@@ -4,6 +4,7 @@ import {
   ColorPickerFormItem,
   ComboboxFormItem,
   FormItemProps,
+  SecretTextFormItem,
   TextFormItem,
 } from "@/components/form-fields";
 
@@ -74,6 +75,14 @@ export function TwinFieldFormItem({
 
   function renderByType() {
     switch (descriptor?.fieldType) {
+      case TwinFieldType.secretV1:
+        return (
+          <SecretTextFormItem
+            {...props}
+            type="password"
+            onChange={handleInputChange}
+          />
+        );
       case TwinFieldType.textV1:
         return (
           <TwinFieldTextFormItem

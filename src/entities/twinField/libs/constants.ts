@@ -39,4 +39,7 @@ export const TWIN_FIELD_TYPES = [
   "selectUserV1",
   // TWINFACES-
   "selectUserLongV1",
+
+  //TWINFACES-566
+  "secretV1",
 ] as const;

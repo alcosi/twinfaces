@@ -18,6 +18,10 @@ export function resolveTwinFieldSchema(
   switch (twinField.descriptor.fieldType) {
     case TwinFieldType.urlV1:
       return z.string().url();
+    case TwinFieldType.secretV1:
+      return z.string().regex(/^\S*$/, {
+        message: "Value must not contain spaces",
+      });
     default:
       return undefined;
   }
@@ -81,6 +85,8 @@ export function renderTwinFieldPreview({
         default:
           return twinField.value as string;
       }
+    case TwinFieldType.secretV1:
+      return "•".repeat(String(twinField.value).length);
     default:
       return twinField.value as string;
   }
