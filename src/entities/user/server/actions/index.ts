@@ -5,18 +5,15 @@ import { isFound, isUndefined } from "@/shared/libs";
 export * from "./auth";
 
 export async function isGranted({
-  userId,
   permission,
 }: {
-  userId: string;
   permission: string;
 }): Promise<boolean> {
   const header = await getAuthHeaders();
 
-  const { data } = await TwinsAPI.GET("/private/user/{userId}/permission/v1", {
+  const { data } = await TwinsAPI.GET("/private/user/permission/v1", {
     params: {
       header,
-      path: { userId },
       query: {
         lazyRelation: false,
         showPermissionMode: "DETAILED",
