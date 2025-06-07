@@ -7,7 +7,6 @@ type AuthUser = {
   domainUser?: DomainUser_DETAILED;
   authToken: string;
   domainId: string;
-  userEmail?: string;
 };
 
 type UseAuthUser = {

@@ -18,7 +18,9 @@ export default function ProfileScreen() {
           <div className="flex justify-center">
             <User className="text-brand-500 h-16 w-16" />
           </div>
-          <h2 className="text-2xl font-semibold">{authUser?.userEmail}</h2>
+          <h2 className="text-2xl font-semibold">
+            {authUser?.domainUser?.user.fullName}
+          </h2>
           <p className="text-muted-foreground">Description</p>
         </div>
       </div>

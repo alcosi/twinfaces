@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { TwinsAPI } from "@/shared/api";
 import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 
+import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {
   CONFIRM_AUTH_FORM_SCHEMA,
@@ -88,6 +89,40 @@ async function stubLogin({
   }
 
   return { authToken, ...data };
+}
+
+export async function getDomainUserData({
+  domainId,
+  authToken,
+}: {
+  domainId: string;
+  authToken: string;
+}) {
+  const { data, error } = await TwinsAPI.GET("/private/domain/user/v1", {
+    params: {
+      header: {
+        DomainId: domainId,
+        AuthToken: authToken,
+        Channel: "WEB",
+      },
+      query: {
+        lazyRelation: false,
+        showDomainUser2UserMode: "DETAILED",
+        showDomainUserMode: "DETAILED",
+      },
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const hydratedDomainUser = hydrateDomainUserFromMap(
+    data.user as DomainUser_DETAILED,
+    data.relatedObjects
+  );
+
+  return hydratedDomainUser;
 }
 
 export async function stubLoginFormAction(_: unknown, formData: FormData) {

@@ -12,6 +12,7 @@ import { TextFormField } from "@/components/form-fields/text";
 import {
   LOGIN_AUTH_FORM_SCHEMA,
   REGISTER_AUTH_FORM_SCHEMA,
+  getDomainUserData,
   loginAuthAction,
   registerAuthAction,
 } from "@/entities/user/server";
@@ -95,16 +96,22 @@ export function EmailPasswordAuthForm() {
     startAuthTransition(async () => {
       try {
         const { authData } = await loginAuthAction(null, formData);
+        const authToken = authData?.auth_token;
 
-        if (isUndefined(authData?.auth_token)) {
+        if (isUndefined(authToken)) {
           throw new Error("Login failed. Please check your credentials");
         }
 
+        const domainUser = await getDomainUserData({ domainId, authToken });
+
+        if (isUndefined(domainUser)) {
+          throw new Error("Failed to fetch domain user data");
+        }
+
         setAuthUser({
-          domainUser: undefined,
-          authToken: authData.auth_token,
+          domainUser: domainUser,
+          authToken: authToken,
           domainId,
-          userEmail: values.username,
         });
         router.push(`/profile`);
       } catch (err) {

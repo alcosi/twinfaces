@@ -10,6 +10,7 @@ import { TextFormField } from "@/components/form-fields";
 import {
   CONFIRM_AUTH_FORM_SCHEMA,
   confirmAuthAction,
+  getDomainUserData,
   loginAuthAction,
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
@@ -61,23 +62,32 @@ export function ConfirmAuthForm({
     startAuthTransition(async () => {
       try {
         const response = await confirmAuthAction(null, formData);
-        const { authData } = await loginAuthAction(null, userCredentials);
 
         if (response.status !== 0) {
           throw new Error("Confirm failed");
         }
 
-        if (!isUndefined(authData?.auth_token)) {
-          setAuthUser({
-            domainUser: undefined,
-            authToken: authData.auth_token,
-            domainId,
-            userEmail: email!,
-          });
+        const { authData } = await loginAuthAction(null, userCredentials);
+        const authToken = authData?.auth_token;
 
-          router.push("/profile");
-          toast.success("Confirm success! You are logged into your account");
+        if (isUndefined(authToken)) {
+          throw new Error("Login failed: no auth token returned");
         }
+
+        const domainUser = await getDomainUserData({ domainId, authToken });
+
+        if (isUndefined(domainUser)) {
+          throw new Error("Failed to load domain user");
+        }
+
+        setAuthUser({
+          domainUser: domainUser,
+          authToken: authToken,
+          domainId,
+        });
+
+        router.push("/profile");
+        toast.success("Confirm success! You are logged into your account");
       } catch (err) {
         setShake(true);
         setAuthError(
