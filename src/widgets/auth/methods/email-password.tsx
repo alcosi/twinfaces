@@ -254,6 +254,7 @@ export function EmailPasswordAuthWidget() {
             </form>
           </FormProvider>
         </div>
+        // NOTE: Somewerhe here we migh also render <EmailVerificationForm />
       }
       back={
         <div className="flex h-full flex-col justify-between rounded-lg p-8">
