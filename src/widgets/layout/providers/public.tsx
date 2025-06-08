@@ -1,5 +1,4 @@
 import React from "react";
-import { Toaster } from "sonner";
 
 import { PublicApiContextProvider } from "@/features/api";
 import { ActionDialogsProvider } from "@/features/ui/action-dialogs";
@@ -26,7 +25,6 @@ export function PublicLayoutProviders({
           >
             {children}
           </ThemeProvider>
-          <Toaster />
         </PublicApiContextProvider>
       </ProductFlavorConfigProvider>
     </ActionDialogsProvider>

@@ -3,27 +3,29 @@
 import { User } from "lucide-react";
 
 import { useAuthUser } from "@/features/auth";
+import { Card, CardContent, CardHeader } from "@/shared/ui";
 
-export default function ProfileScreen() {
+export function ProfileScreen() {
   const { authUser } = useAuthUser();
 
   return (
-    <div className="bg-background text-foreground flex min-h-screen flex-col">
-      <div className="border-border bg-secondary text-secondary-foreground flex h-16 items-center border-b px-6 shadow-sm">
-        <h1 className="text-xl font-semibold">Profile Page</h1>
-      </div>
-
-      <div className="flex flex-1 items-center justify-center p-6">
-        <div className="border-border bg-card text-card-foreground w-full max-w-sm space-y-4 rounded-2xl border p-8 text-center shadow-lg">
-          <div className="flex justify-center">
-            <User className="text-brand-500 h-16 w-16" />
-          </div>
+    <div className="mt-16 flex h-full justify-center">
+      <Card className="flex h-96 w-96 flex-col items-center justify-center text-center">
+        <User className="text-brand-500 h-16 w-16" />
+        <CardHeader>
           <h2 className="text-2xl font-semibold">
             {authUser?.domainUser?.user.fullName}
           </h2>
-          <p className="text-muted-foreground">Description</p>
-        </div>
-      </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Impedit
+            eius autem natus reprehenderit obcaecati, quidem ipsa cupiditate
+            temporibus repellat fugiat veritatis enim, tempora quod deserunt
+            laudantium earum nemo minima corrupti?
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

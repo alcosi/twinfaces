@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields";
@@ -17,7 +16,7 @@ import { useAuthUser } from "@/features/auth";
 import { isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
-export function ConfirmAuthForm({
+export function EmailVerificationForm({
   onBack,
   setShake,
   email,
@@ -87,7 +86,6 @@ export function ConfirmAuthForm({
         });
 
         router.push("/profile");
-        toast.success("Confirm success! You are logged into your account");
       } catch (err) {
         setShake(true);
         setAuthError(

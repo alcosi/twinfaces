@@ -2,11 +2,10 @@
 
 import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
 import { FaceNB001 } from "@/entities/face";
-import { isGranted } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";

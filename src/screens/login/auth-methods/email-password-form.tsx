@@ -25,7 +25,7 @@ import { ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
-import { ConfirmAuthForm } from "./confirm-form";
+import { EmailVerificationForm } from "./email-verification";
 
 export function EmailPasswordAuthForm() {
   const router = useRouter();
@@ -332,7 +332,7 @@ export function EmailPasswordAuthForm() {
               </form>
             </FormProvider>
           ) : (
-            <ConfirmAuthForm
+            <EmailVerificationForm
               onBack={() => setRegisterStep("register")}
               setShake={setShake}
               email={registerEmail}
