@@ -40,5 +40,5 @@ export const REGISTER_AUTH_FORM_SCHEMA = REGISTER_AUTH_PAYLOAD_SCHEMA.extend({
 
 export const CONFIRM_AUTH_FORM_SCHEMA = z.object({
   domainId: DOMAIN_ID_SCHEMA,
-  verificationToken: z.string(),
+  verificationToken: z.string().uuid(),
 });

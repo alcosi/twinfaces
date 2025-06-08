@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { TextFormField } from "@/components/form-fields/text";
@@ -20,10 +19,9 @@ import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { FlipCard } from "@/features/ui/flip-card";
-import { RegisterStatusBar } from "@/features/ui/register-status-bar";
 import { ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined } from "@/shared/libs";
-import { Button } from "@/shared/ui";
+import { Button, StepsProgressBar } from "@/shared/ui";
 
 import { EmailVerificationForm } from "./email-verification";
 
@@ -64,6 +62,10 @@ export function EmailPasswordAuthForm() {
       firstName: "",
       password: "",
       confirmPassword: "",
+      // email: "somsa@email.com",
+      // firstName: "john doe",
+      // password: "helloworld",
+      // confirmPassword: "helloworld",
     },
   });
 
@@ -149,7 +151,6 @@ export function EmailPasswordAuthForm() {
           throw new Error("Registration failed");
         }
 
-        toast.success("Verification token was sent to email");
         setRegisterEmail(values.email);
         setRegisterPassword(values.password);
         setRegisterStep("confirm");
@@ -180,7 +181,7 @@ export function EmailPasswordAuthForm() {
             iconDark={config.iconDark ?? config.favicon}
           />
 
-          <h2 className="text-primary my-6 text-center text-2xl font-bold">
+          <h2 className="text-primary my-4 text-center text-2xl font-bold">
             Welcome
           </h2>
 
@@ -219,6 +220,7 @@ export function EmailPasswordAuthForm() {
                 className="w-full"
                 loading={isAuthenticating || isShaking}
                 size="lg"
+                disabled={!loginForm.formState.isDirty}
               >
                 Login
               </Button>
@@ -254,17 +256,19 @@ export function EmailPasswordAuthForm() {
         </div>
       }
       back={
-        <div className="h-full rounded-lg p-8">
-          <DomainLogo
-            iconLight={config.iconLight ?? config.favicon}
-            iconDark={config.iconDark ?? config.favicon}
-          />
+        <div className="flex h-full flex-col justify-between rounded-lg p-8">
+          <div>
+            <DomainLogo
+              iconLight={config.iconLight ?? config.favicon}
+              iconDark={config.iconDark ?? config.favicon}
+            />
 
-          <h2 className="text-primary my-6 text-center text-2xl font-bold">
-            {registerStep === "register"
-              ? "Create Account"
-              : "Confirm Your Email"}
-          </h2>
+            <h2 className="text-primary my-4 text-center text-2xl font-bold">
+              {registerStep === "register"
+                ? "Create Account"
+                : "Confirm Your Email"}
+            </h2>
+          </div>
 
           {registerStep === "register" ? (
             <FormProvider {...registerForm}>
@@ -310,6 +314,7 @@ export function EmailPasswordAuthForm() {
                   className="w-full"
                   size="lg"
                   loading={isAuthenticating || isShaking}
+                  disabled={!registerForm.formState.isDirty}
                 >
                   Continue
                 </Button>
@@ -341,7 +346,11 @@ export function EmailPasswordAuthForm() {
             />
           )}
 
-          <RegisterStatusBar step={registerStep} />
+          <StepsProgressBar
+            steps={["register", "confirm"]}
+            current={registerStep}
+            containerClassName="flex justify-center"
+          />
         </div>
       }
     />

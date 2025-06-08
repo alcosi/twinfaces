@@ -49,9 +49,9 @@ export function DomainSelectForm({ domains }: Props) {
         height={56}
         alt="Domain icon"
       />
-      <h1 className="text-primary my-6 text-center text-2xl font-bold">
+      <h2 className="text-primary my-4 text-center text-2xl font-bold">
         {config.key ?? config.productName}
-      </h1>
+      </h2>
 
       <FormProvider {...form}>
         <form

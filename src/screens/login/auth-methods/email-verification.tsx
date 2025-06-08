@@ -100,56 +100,59 @@ export function EmailVerificationForm({
     });
   }
 
+  const recipient = email ? (
+    <a
+      href={`mailto:${email}`}
+      className="text-primary underline hover:opacity-80"
+    >
+      {email}
+    </a>
+  ) : (
+    "your email"
+  );
+
   return (
-    <FormProvider {...confirmForm}>
-      <span className="text-muted-foreground block w-full text-center">
-        {email ? (
-          <>
-            We sent a verification token to{" "}
-            <a
-              href={`mailto:${email}`}
-              className="text-primary underline hover:opacity-80"
-            >
-              {email}
-            </a>
-          </>
-        ) : (
-          "We sent a verification token to your email"
-        )}
-      </span>
-      <form
-        className="mt-6 flex w-full flex-col space-y-4"
-        onSubmit={confirmForm.handleSubmit(onConfirmSubmit)}
-      >
-        <TextFormField
-          control={confirmForm.control}
-          type="text"
-          name="verificationToken"
-          label="Verification token"
-          placeholder="Enter your verification token from email"
-          required
-        />
+    <div className="flex flex-1 flex-col justify-center">
+      <p className="text-muted-foreground block w-full text-center">
+        We&#39;ve sent a verification token to {recipient}.
+      </p>
 
-        <Button
-          type="submit"
-          className="w-full"
-          size="lg"
-          loading={isAuthenticating || isShaking}
+      <FormProvider {...confirmForm}>
+        <form
+          className="mt-6 flex w-full flex-col space-y-4"
+          onSubmit={confirmForm.handleSubmit(onConfirmSubmit)}
         >
-          Confirm
-        </Button>
+          <TextFormField
+            control={confirmForm.control}
+            type="text"
+            name="verificationToken"
+            label="Verification token"
+            placeholder="Enter your verification token from email"
+            required
+          />
 
-        {authError && <p className="text-error text-center">{authError}</p>}
+          <Button
+            type="submit"
+            className="w-full"
+            size="lg"
+            loading={isAuthenticating || isShaking}
+            disabled={!confirmForm.formState.isDirty}
+          >
+            Confirm
+          </Button>
 
-        <Button
-          type="button"
-          variant="ghost"
-          className="w-full"
-          onClick={onBack}
-        >
-          Go back to the previous step
-        </Button>
-      </form>
-    </FormProvider>
+          {authError && <p className="text-error text-center">{authError}</p>}
+
+          <Button
+            type="button"
+            variant="ghost"
+            className="w-full"
+            onClick={onBack}
+          >
+            Go back to the previous step
+          </Button>
+        </form>
+      </FormProvider>
+    </div>
   );
 }
