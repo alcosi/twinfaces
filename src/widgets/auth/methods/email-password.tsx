@@ -23,9 +23,9 @@ import { ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined } from "@/shared/libs";
 import { Button, StepsProgressBar } from "@/shared/ui";
 
-import { EmailVerificationForm } from "./email-verification";
+import { EmailVerificationForm } from "../forms/email-verification";
 
-export function EmailPasswordAuthForm() {
+export function EmailPasswordAuthWidget() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const config = useContext(ProductFlavorConfigContext);
