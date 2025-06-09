@@ -7,7 +7,7 @@ import z from "zod";
 import { TextFormField } from "@/components/form-fields";
 
 import {
-  LOGIN_AUTH_FORM_SCHEMA,
+  EMAIL_PASSWORD_SIGN_IN_SCHEMA,
   getDomainUserData,
   loginAuthAction,
 } from "@/entities/user/server";
@@ -17,13 +17,11 @@ import { isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignInForm({
-  setShake,
-  isShaking,
   toggleMode,
+  onError,
 }: {
-  setShake: (value: boolean) => void;
-  isShaking: boolean;
   toggleMode: () => void;
+  onError?: () => void;
 }) {
   const router = useRouter();
   const { setAuthUser } = useAuthUser();
@@ -33,8 +31,8 @@ export function EmailPasswordSignInForm({
   const [authError, setAuthError] = useState<string | null>(null);
   const domainId = searchParams.get("domainId") ?? undefined;
 
-  const loginForm = useForm<z.infer<typeof LOGIN_AUTH_FORM_SCHEMA>>({
-    resolver: zodResolver(LOGIN_AUTH_FORM_SCHEMA),
+  const signInForm = useForm<z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>>({
+    resolver: zodResolver(EMAIL_PASSWORD_SIGN_IN_SCHEMA),
     defaultValues: {
       domainId,
       username: "",
@@ -50,7 +48,9 @@ export function EmailPasswordSignInForm({
     });
   }
 
-  function onLoginSubmit(values: z.infer<typeof LOGIN_AUTH_FORM_SCHEMA>) {
+  function onSignInSubmit(
+    values: z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>
+  ) {
     if (isUndefined(domainId)) {
       throw new Error("Domain ID is required");
     }
@@ -83,27 +83,23 @@ export function EmailPasswordSignInForm({
         });
         router.push(`/profile`);
       } catch (err) {
-        setShake(true);
         setAuthError(
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
-        loginForm.reset();
-      } finally {
-        setTimeout(() => {
-          setShake(false);
-        }, 500);
+        onError?.();
+        signInForm.reset();
       }
     });
   }
 
   return (
-    <FormProvider {...loginForm}>
+    <FormProvider {...signInForm}>
       <form
         className="flex w-full flex-col space-y-4"
-        onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+        onSubmit={signInForm.handleSubmit(onSignInSubmit)}
       >
         <TextFormField
-          control={loginForm.control}
+          control={signInForm.control}
           type="text"
           name="domainId"
           required
@@ -111,7 +107,7 @@ export function EmailPasswordSignInForm({
           hidden
         />
         <TextFormField
-          control={loginForm.control}
+          control={signInForm.control}
           type="email"
           name="username"
           label="Email"
@@ -119,7 +115,7 @@ export function EmailPasswordSignInForm({
           required
         />
         <TextFormField
-          control={loginForm.control}
+          control={signInForm.control}
           type="password"
           name="password"
           label="Password"
@@ -130,9 +126,9 @@ export function EmailPasswordSignInForm({
         <Button
           type="submit"
           className="w-full"
-          loading={isAuthenticating || isShaking}
+          loading={isAuthenticating}
           size="lg"
-          disabled={!loginForm.formState.isDirty}
+          disabled={!signInForm.formState.isDirty}
         >
           Login
         </Button>

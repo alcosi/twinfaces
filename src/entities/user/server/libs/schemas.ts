@@ -12,7 +12,7 @@ export const STUB_AUTH_FORM_SCHEMA = z.object({
     .or(z.literal("")),
 });
 
-export const LOGIN_AUTH_FORM_SCHEMA = z.object({
+export const EMAIL_PASSWORD_SIGN_IN_SCHEMA = z.object({
   domainId: DOMAIN_ID_SCHEMA,
   username: z.string().email(),
   password: z

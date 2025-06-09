@@ -9,8 +9,8 @@ import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {
+  EMAIL_PASSWORD_SIGN_IN_SCHEMA,
   EMAIL_VERIFICATION_FORM_SCHEMA,
-  LOGIN_AUTH_FORM_SCHEMA,
   SIGN_UP_AUTH_PAYLOAD_SCHEMA,
   STUB_AUTH_FORM_SCHEMA,
 } from "../libs";
@@ -158,7 +158,7 @@ export async function loginAuthAction(
   _: unknown,
   formData: FormData
 ): Promise<AuthLoginRs> {
-  const { domainId, username, password } = LOGIN_AUTH_FORM_SCHEMA.parse({
+  const { domainId, username, password } = EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
     domainId: formData.get("domainId"),
     username: formData.get("username"),
     password: formData.get("password"),

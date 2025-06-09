@@ -6,7 +6,7 @@ import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { FlipCard } from "@/features/ui/flip-card";
 import { ProductFlavorConfigContext } from "@/shared/config";
-import { cn } from "@/shared/libs";
+import { cn, sleep } from "@/shared/libs";
 import { StepsProgressBar } from "@/shared/ui";
 
 import { EmailPasswordSignInForm } from "../forms/email-password-sign-in";
@@ -51,9 +51,12 @@ export function EmailPasswordAuthWidget() {
           </h2>
 
           <EmailPasswordSignInForm
-            setShake={setShake}
-            isShaking={isShaking}
             toggleMode={toggleMode}
+            onError={async () => {
+              setShake(true);
+              await sleep(500);
+              setShake(false);
+            }}
           />
         </div>
         // NOTE: Somewerhe here we migh also render <EmailVerificationForm />
