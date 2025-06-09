@@ -2567,7 +2567,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/refresh/v2": {
+    "/auth/signup_by_email/initiate/v1": {
         parameters: {
             query?: never;
             header?: never;
@@ -2601,7 +2601,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/logout/v1": {
+    "/auth/refresh/v2": {
         parameters: {
             query?: never;
             header?: never;
@@ -2610,15 +2610,15 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Logout from identity provider, linked to current domain */
-        post: operations["authLogoutV1"];
+        /** Refresh auth_token by refresh_token and fingerprint */
+        post: operations["authRefreshV2"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/auth/login_key/v1": {
+    "/auth/refresh/v1": {
         parameters: {
             query?: never;
             header?: never;
@@ -2629,6 +2629,43 @@ export interface paths {
         put?: never;
         /** Refresh auth_token by refresh_token */
         post: operations["authRefreshV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/m2m/token/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns auth data for machine-to-machine + act-as-user public key */
+        post: operations["authM2MTokenV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/m2m/login/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Returns auth data for machine-to-machine + act-as-user public key
+         * @deprecated
+         */
+        post: operations["authM2MLoginV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -9643,6 +9680,19 @@ export interface components {
              */
             type: "TwinFieldSearchTextV1";
         };
+        TwinFieldSearchUserV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+            type?: string;
+            /** @description User id list */
+            idList?: string[];
+            /** @description User id exclude list */
+            idExcludeList?: string[];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "TwinFieldSearchUserV1";
+        };
         TwinSearchByLinkV1: {
             /**
              * Format: uuid
@@ -15023,11 +15073,32 @@ export interface components {
             /** @description attachment list */
             attachments?: components["schemas"]["AttachmentV1"][];
         };
-        AuthRefreshRqV2: {
-            /** @description refreshToken */
-            refreshToken?: string;
-            /** @description agent fingerprint (hash) */
-            fingerprint?: string;
+        AuthSignupByEmailRqV1: {
+            /**
+             * @description first name
+             * @example Some name
+             */
+            firstName?: string;
+            /**
+             * @description last name
+             * @example Some name
+             */
+            lastName?: string;
+            /**
+             * @description password
+             * @example user@example.com
+             */
+            email?: string;
+            /**
+             * @description password
+             * @example secret
+             */
+            password?: string;
+            /**
+             * Format: uuid
+             * @description public key id
+             */
+            publicKeyId?: string;
         };
         AuthSignupByEmailRsV1: {
             /**
@@ -15097,6 +15168,58 @@ export interface components {
             /** @description refreshToken */
             refreshToken?: string;
         };
+        AuthM2MLoginRqV1: {
+            /** @description client id */
+            clientId?: string;
+            /** @description client secret */
+            clientSecret?: string;
+            /**
+             * Format: uuid
+             * @description public key id
+             */
+            publicKeyId?: string;
+        };
+        AuthM2MTokenRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description tokens data */
+            authData?: {
+                [key: string]: string;
+            };
+            /** @description public key to encrypt act as user data [optional] */
+            actAsUserPublicKey?: components["schemas"]["CryptKeyV1"];
+        };
+        CryptKeyV1: {
+            /**
+             * Format: uuid
+             * @description key id
+             */
+            id?: string;
+            algorithm?: string;
+            format?: string;
+            /** Format: int32 */
+            keySize?: number;
+            key?: string;
+            /**
+             * Format: date-time
+             * @description expires at
+             */
+            expiresAt?: string;
+        };
         AuthLogoutRqV1: {
             /** @description logout data. depends upon IDP */
             authData?: {
@@ -15120,25 +15243,10 @@ export interface components {
              * @example success
              */
             statusDetails?: string;
-            /** @description public key to encrypt login */
-            publicKey?: components["schemas"]["LoginKeyV1"];
-        };
-        LoginKeyV1: {
-            /**
-             * Format: uuid
-             * @description key id
-             */
-            id?: string;
-            algorithm?: string;
-            format?: string;
-            /** Format: int32 */
-            keySize?: number;
-            key?: string;
-            /**
-             * Format: date-time
-             * @description expires at
-             */
-            expiresAt?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - face details */
+            face?: components["schemas"]["FaceV1"];
         };
         AuthLoginRqV1: {
             /**
@@ -17261,23 +17369,6 @@ export interface components {
             statusDetails?: string;
             /** @description public key to encrypt login */
             publicKey?: components["schemas"]["CryptKeyV1"];
-        };
-        CryptKeyV1: {
-            /**
-             * Format: uuid
-             * @description key id
-             */
-            id?: string;
-            algorithm?: string;
-            format?: string;
-            /** Format: int32 */
-            keySize?: number;
-            key?: string;
-            /**
-             * Format: date-time
-             * @description expires at
-             */
-            expiresAt?: string;
         };
     };
     responses: never;
@@ -27802,7 +27893,7 @@ export interface operations {
             };
         };
     };
-    authRefreshV2: {
+    authSignupByEmailInitiateV1: {
         parameters: {
             query?: never;
             header: {
@@ -27916,7 +28007,7 @@ export interface operations {
             };
         };
     };
-    authLogoutV1: {
+    authRefreshV1: {
         parameters: {
             query?: never;
             header: {
@@ -27936,13 +28027,89 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Logout success   */
+            /** @description Login to  */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["FaceViewRsV1"];
+                    "application/json": components["schemas"]["AuthRefreshRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authM2MTokenV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthM2MLoginRqV1"];
+            };
+        };
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthM2MTokenRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    authM2MLoginV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthM2MLoginRqV1"];
+            };
+        };
+        responses: {
+            /** @description Login to  */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthM2MTokenRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -27970,7 +28137,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthLogoutRqV1"];
+            };
+        };
         responses: {
             /** @description Logout success   */
             200: {
@@ -27978,7 +28149,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthLoginKeyRsV1"];
+                    "application/json": components["schemas"]["FaceViewRsV1"];
                 };
             };
             /** @description Access is denied */

@@ -10,8 +10,8 @@ import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {
   EMAIL_PASSWORD_SIGN_IN_SCHEMA,
+  EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA,
   EMAIL_VERIFICATION_FORM_SCHEMA,
-  SIGN_UP_AUTH_PAYLOAD_SCHEMA,
   STUB_AUTH_FORM_SCHEMA,
 } from "../libs";
 import {
@@ -91,7 +91,7 @@ async function stubLogin({
   return { authToken, ...data };
 }
 
-export async function getDomainUserData({
+export async function getAuthenticatedUser({
   domainId,
   authToken,
 }: {
@@ -192,7 +192,7 @@ export async function signUpAuthAction(
   formData: FormData
 ): Promise<AuthSignupByEmailRs> {
   const { domainId, firstName, lastName, email, password } =
-    SIGN_UP_AUTH_PAYLOAD_SCHEMA.parse({
+    EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.parse({
       domainId: formData.get("domainId"),
       firstName: formData.get("firstName"),
       lastName: formData.get("lastName"),

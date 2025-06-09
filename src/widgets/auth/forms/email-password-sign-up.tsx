@@ -7,7 +7,7 @@ import z from "zod";
 import { TextFormField } from "@/components/form-fields";
 
 import {
-  SIGN_UP_AUTH_FORM_SCHEMA,
+  EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA,
   signUpAuthAction,
 } from "@/entities/user/server";
 import { isUndefined } from "@/shared/libs";
@@ -27,8 +27,10 @@ export function EmailPasswordSignUpForm({
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
 
-  const singUpForm = useForm<z.infer<typeof SIGN_UP_AUTH_FORM_SCHEMA>>({
-    resolver: zodResolver(SIGN_UP_AUTH_FORM_SCHEMA),
+  const singUpForm = useForm<
+    z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
+  >({
+    resolver: zodResolver(EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA),
     defaultValues: {
       domainId,
       email: "",
@@ -39,7 +41,9 @@ export function EmailPasswordSignUpForm({
     },
   });
 
-  function onSignUpSubmit(values: z.infer<typeof SIGN_UP_AUTH_FORM_SCHEMA>) {
+  function onSignUpSubmit(
+    values: z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
+  ) {
     if (isUndefined(domainId)) {
       throw new Error("Domain ID is required");
     }

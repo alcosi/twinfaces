@@ -8,7 +8,7 @@ import { TextFormField } from "@/components/form-fields";
 
 import {
   EMAIL_PASSWORD_SIGN_IN_SCHEMA,
-  getDomainUserData,
+  getAuthenticatedUser,
   loginAuthAction,
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
@@ -69,7 +69,7 @@ export function EmailPasswordSignInForm({
           throw new Error("Login failed. Please check your credentials");
         }
 
-        const domainUser = await getDomainUserData({ domainId, authToken });
+        const domainUser = await getAuthenticatedUser({ domainId, authToken });
 
         if (isUndefined(domainUser)) {
           throw new Error("Failed to fetch domain user data");

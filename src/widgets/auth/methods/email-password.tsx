@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
-import { getDomainUserData, loginAuthAction } from "@/entities/user/server";
+import { getAuthenticatedUser, loginAuthAction } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { FlipCard } from "@/features/ui/flip-card";
@@ -39,7 +39,7 @@ export function EmailPasswordAuthWidget() {
     setMode((prev) => (prev === "sign-in" ? "sign-up" : "sign-in"));
   }
 
-  const handleEmailVerification = async () => {
+  async function handleEmailVerification() {
     if (isUndefined(domainId)) {
       throw new Error("Domain ID is required");
     }
@@ -56,7 +56,7 @@ export function EmailPasswordAuthWidget() {
       throw new Error("Login failed: no auth token returned");
     }
 
-    const domainUser = await getDomainUserData({
+    const domainUser = await getAuthenticatedUser({
       domainId,
       authToken,
     });
@@ -72,12 +72,12 @@ export function EmailPasswordAuthWidget() {
     });
 
     router.push("/profile");
-  };
+  }
 
-  const handleSignUp = (credentials: { email?: string; password?: string }) => {
+  function handleSignUp(credentials: { email?: string; password?: string }) {
     setStep("email-verification");
     setCredentials(credentials);
-  };
+  }
 
   return (
     <FlipCard

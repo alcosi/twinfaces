@@ -20,7 +20,7 @@ export const EMAIL_PASSWORD_SIGN_IN_SCHEMA = z.object({
     .min(8, { message: "Password must be at least 8 characters long" }),
 });
 
-export const SIGN_UP_AUTH_PAYLOAD_SCHEMA = z.object({
+export const EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA = z.object({
   domainId: DOMAIN_ID_SCHEMA,
   firstName: z
     .string()
@@ -34,12 +34,13 @@ export const SIGN_UP_AUTH_PAYLOAD_SCHEMA = z.object({
     .min(8, { message: "Password must be at least 8 characters long" }),
 });
 
-export const SIGN_UP_AUTH_FORM_SCHEMA = SIGN_UP_AUTH_PAYLOAD_SCHEMA.extend({
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  path: ["confirmPassword"],
-  message: "Passwords must match",
-});
+export const EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA =
+  EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.extend({
+    confirmPassword: z.string(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords must match",
+  });
 
 export const EMAIL_VERIFICATION_FORM_SCHEMA = z.object({
   domainId: DOMAIN_ID_SCHEMA,
