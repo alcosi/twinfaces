@@ -2,65 +2,71 @@
 
 import Image from "next/image";
 
-import { FaceTW005 } from "@/entities/face";
+import { FaceTW005, FaceTW005Button } from "@/entities/face";
 import { TransitionPerformButton } from "@/features/twin-flow-transition/transition-perform-button";
-import { cn } from "@/shared/libs";
+import { isPopulatedString, isTruthy } from "@/shared/libs";
 
 type Props = {
-  transitionsButtons: NonNullable<FaceTW005["buttons"]>;
-  transitionsIdList: string[];
+  transitionButtons: NonNullable<FaceTW005["buttons"]>;
+  transitionIdList: string[];
   twinId: string;
-  className?: string | string[];
 };
 
 export function TW005Buttons({
-  transitionsButtons,
-  transitionsIdList,
+  transitionButtons,
+  transitionIdList,
   twinId,
-  className,
 }: Props) {
-  const availableTransitions = transitionsButtons
-    .filter(
-      (btn) =>
-        (btn.transitionId && transitionsIdList.includes(btn.transitionId)) ||
-        btn.showWhenInactive
-    )
+  const transitionsSet = new Set(transitionIdList);
+
+  const availableTransitions = transitionButtons
+    .reduce<typeof transitionButtons>((acc, btn) => {
+      const { showWhenInactive, transitionId } = btn;
+
+      const hasValidTransition =
+        isPopulatedString(transitionId) && transitionsSet.has(transitionId);
+      const shouldShowButton = hasValidTransition || showWhenInactive;
+
+      if (shouldShowButton) {
+        acc.push(btn);
+      }
+
+      return acc;
+    }, [])
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
-  return (
-    <div className={cn("flex gap-2", className)}>
-      {availableTransitions.map(
-        ({ id, transitionId, label, icon, showWhenInactive }) => {
-          const isDisabled =
-            showWhenInactive &&
-            !!transitionId &&
-            !transitionsIdList.includes(transitionId);
+  function renderButton(btn: FaceTW005Button) {
+    const { id, transitionId, label, icon, showWhenInactive } = btn;
 
-          const Icon = icon
-            ? () => (
-                <Image
-                  src={icon}
-                  alt="icon"
-                  width={16}
-                  height={16}
-                  className="mr-2 dark:invert"
-                />
-              )
-            : undefined;
+    const disabled =
+      showWhenInactive &&
+      isTruthy(transitionId) &&
+      !transitionsSet.has(transitionId);
 
-          return (
-            <TransitionPerformButton
-              key={id}
-              twinId={twinId}
-              transitionId={transitionId!}
-              IconComponent={Icon}
-              disabled={isDisabled}
-            >
-              {label}
-            </TransitionPerformButton>
-          );
-        }
-      )}
-    </div>
-  );
+    const Icon = isPopulatedString(icon)
+      ? () => (
+          <Image
+            src={icon}
+            alt="icon"
+            width={16}
+            height={16}
+            className="mr-2 dark:invert"
+          />
+        )
+      : undefined;
+
+    return (
+      <TransitionPerformButton
+        key={id}
+        twinId={twinId}
+        transitionId={transitionId!}
+        IconComponent={Icon}
+        disabled={disabled}
+      >
+        {label}
+      </TransitionPerformButton>
+    );
+  }
+
+  return availableTransitions.map(renderButton);
 }

@@ -1,6 +1,6 @@
 import { fetchTW005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { safe } from "@/shared/libs";
+import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -24,7 +24,7 @@ export async function TW005(props: TWidgetFaceProps) {
     );
   }
 
-  const { pointedTwinId = "", buttons = [] } = faceResult.data;
+  const { id, pointedTwinId = "", buttons = [] } = faceResult.data;
 
   const twinResult = await safe(() =>
     fetchTwinById(pointedTwinId, { header, query })
@@ -37,11 +37,12 @@ export async function TW005(props: TWidgetFaceProps) {
   const { transitionsIdList = [] } = twinResult.data;
 
   return (
-    <TW005Buttons
-      transitionsButtons={buttons}
-      transitionsIdList={transitionsIdList}
-      twinId={pointedTwinId}
-      className={widget.styleClasses}
-    />
+    <div data-face-id={id} className={cn("flex gap-2", widget.styleClasses)}>
+      <TW005Buttons
+        transitionButtons={buttons}
+        transitionIdList={transitionsIdList}
+        twinId={pointedTwinId}
+      />
+    </div>
   );
 }
