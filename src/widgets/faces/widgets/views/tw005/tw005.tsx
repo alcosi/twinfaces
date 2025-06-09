@@ -35,15 +35,11 @@ export async function TW005(props: TWidgetFaceProps) {
   }
 
   const { transitionsIdList = [] } = twinResult.data;
-  const availableTransitions = buttons
-    .filter(
-      (btn) => btn.transitionId && transitionsIdList.includes(btn.transitionId)
-    )
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
     <TW005Buttons
-      transitions={availableTransitions}
+      transitionsButtons={buttons}
+      transitionsIdList={transitionsIdList}
       twinId={pointedTwinId}
       className={widget.styleClasses}
     />
