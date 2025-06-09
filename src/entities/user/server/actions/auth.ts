@@ -191,10 +191,11 @@ export async function signUpAuthAction(
   _: unknown,
   formData: FormData
 ): Promise<AuthSignupByEmailRs> {
-  const { domainId, firstName, email, password } =
+  const { domainId, firstName, lastName, email, password } =
     SIGN_UP_AUTH_PAYLOAD_SCHEMA.parse({
       domainId: formData.get("domainId"),
       firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
       email: formData.get("email"),
       password: formData.get("password"),
     });
@@ -203,7 +204,7 @@ export async function signUpAuthAction(
     const { data, error } = await TwinsAPI.POST(
       "/auth/signup_by_email/initiate/v1",
       {
-        body: { firstName, email, password },
+        body: { firstName, lastName, email, password },
         params: { header: { DomainId: domainId, Channel: "WEB" } },
       }
     );

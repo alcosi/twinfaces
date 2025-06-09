@@ -39,6 +39,46 @@ export function EmailPasswordAuthWidget() {
     setMode((prev) => (prev === "sign-in" ? "sign-up" : "sign-in"));
   }
 
+  const handleEmailVerification = async () => {
+    if (isUndefined(domainId)) {
+      throw new Error("Domain ID is required");
+    }
+
+    const userCredentials = new FormData();
+    userCredentials.set("domainId", domainId);
+    userCredentials.set("username", credentials.email!);
+    userCredentials.set("password", credentials.password!);
+
+    const { authData } = await loginAuthAction(null, userCredentials);
+    const authToken = authData?.auth_token;
+
+    if (isUndefined(authToken)) {
+      throw new Error("Login failed: no auth token returned");
+    }
+
+    const domainUser = await getDomainUserData({
+      domainId,
+      authToken,
+    });
+
+    if (isUndefined(domainUser)) {
+      throw new Error("Failed to load domain user");
+    }
+
+    setAuthUser({
+      domainUser: domainUser,
+      authToken: authToken,
+      domainId,
+    });
+
+    router.push("/profile");
+  };
+
+  const handleSignUp = (credentials: { email?: string; password?: string }) => {
+    setStep("email-verification");
+    setCredentials(credentials);
+  };
+
   return (
     <FlipCard
       isFlipped={mode === "sign-up"}
@@ -81,11 +121,7 @@ export function EmailPasswordAuthWidget() {
           {step === "sign-up" ? (
             <EmailPasswordSignUpForm
               toggleMode={toggleMode}
-              // TODO: extract
-              onSuccess={(credentials) => {
-                setStep("email-verification");
-                setCredentials(credentials);
-              }}
+              onSuccess={handleSignUp}
               onError={async () => {
                 setShake(true);
                 await sleep(500);
@@ -96,44 +132,7 @@ export function EmailPasswordAuthWidget() {
             <EmailVerificationForm
               onBack={() => setStep("sign-up")}
               email={credentials.email || ""}
-              // TODO: extract to some `handleEmailVerification`
-              onSuccess={async () => {
-                if (isUndefined(domainId)) {
-                  throw new Error("Domain ID is required");
-                }
-
-                const userCredentials = new FormData();
-                userCredentials.set("domainId", domainId);
-                userCredentials.set("username", credentials.email!);
-                userCredentials.set("password", credentials.password!);
-
-                const { authData } = await loginAuthAction(
-                  null,
-                  userCredentials
-                );
-                const authToken = authData?.auth_token;
-
-                if (isUndefined(authToken)) {
-                  throw new Error("Login failed: no auth token returned");
-                }
-
-                const domainUser = await getDomainUserData({
-                  domainId,
-                  authToken,
-                });
-
-                if (isUndefined(domainUser)) {
-                  throw new Error("Failed to load domain user");
-                }
-
-                setAuthUser({
-                  domainUser: domainUser,
-                  authToken: authToken,
-                  domainId,
-                });
-
-                router.push("/profile");
-              }}
+              onSuccess={handleEmailVerification}
               onError={async () => {
                 setShake(true);
                 await sleep(500);

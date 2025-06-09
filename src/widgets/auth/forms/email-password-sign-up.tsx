@@ -6,22 +6,19 @@ import z from "zod";
 
 import { TextFormField } from "@/components/form-fields";
 
-import { SIGN_UP_AUTH_FORM_SCHEMA } from "@/entities/user/server";
+import {
+  SIGN_UP_AUTH_FORM_SCHEMA,
+  signUpAuthAction,
+} from "@/entities/user/server";
 import { isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignUpForm({
   toggleMode,
-  // setRegisterStep,
-  // setRegisterEmail,
-  // setRegisterPassword,
   onSuccess,
   onError,
 }: {
   toggleMode: () => void;
-  // setRegisterStep: (value: "register" | "confirm") => void;
-  // setRegisterEmail: (value: string | null) => void;
-  // setRegisterPassword: (value: string | null) => void;
   onSuccess?: (_: { email?: string; password?: string }) => void;
   onError?: () => void;
 }) {
@@ -34,14 +31,11 @@ export function EmailPasswordSignUpForm({
     resolver: zodResolver(SIGN_UP_AUTH_FORM_SCHEMA),
     defaultValues: {
       domainId,
-      // email: "",
-      // firstName: "",
-      // password: "",
-      // confirmPassword: "",
-      email: "somsa@email.com",
-      firstName: "john doe",
-      password: "helloworld",
-      confirmPassword: "helloworld",
+      email: "",
+      firstName: "",
+      lastName: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -53,16 +47,17 @@ export function EmailPasswordSignUpForm({
     const formData = new FormData();
     formData.set("domainId", values.domainId);
     formData.set("firstName", values.firstName);
+    formData.set("lastName", values.lastName);
     formData.set("email", values.email);
     formData.set("password", values.password);
 
     startAuthTransition(async () => {
       try {
-        // const response = await signUpAuthAction(null, formData);
+        const response = await signUpAuthAction(null, formData);
 
-        // if (response.status !== 0) {
-        //   throw new Error("Registration failed");
-        // }
+        if (response.status !== 0) {
+          throw new Error("Registration failed");
+        }
 
         onSuccess?.({
           email: values.email,
@@ -96,8 +91,16 @@ export function EmailPasswordSignUpForm({
           control={singUpForm.control}
           name="firstName"
           type="text"
-          label="Username"
-          placeholder="Enter your username"
+          label="First name"
+          placeholder="Enter your first name"
+          required
+        />
+        <TextFormField
+          control={singUpForm.control}
+          name="lastName"
+          type="text"
+          label="Last name"
+          placeholder="Enter your last name"
           required
         />
         <TextFormField

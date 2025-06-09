@@ -24,7 +24,10 @@ export const SIGN_UP_AUTH_PAYLOAD_SCHEMA = z.object({
   domainId: DOMAIN_ID_SCHEMA,
   firstName: z
     .string()
-    .min(2, { message: "Username must be at least 2 characters long" }),
+    .min(2, { message: "First name must be at least 2 characters long" }),
+  lastName: z
+    .string()
+    .min(2, { message: "Last name must be at least 2 characters long" }),
   email: z.string().email(),
   password: z
     .string()

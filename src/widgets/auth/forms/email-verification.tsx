@@ -53,11 +53,11 @@ export function EmailVerificationForm({
 
     startVerifyTransition(async () => {
       try {
-        // const response = await verifyEmailAction(null, formData);
+        const response = await verifyEmailAction(null, formData);
 
-        // if (response.status !== 0) {
-        //   throw new Error("Email verification has filed!");
-        // }
+        if (response.status !== 0) {
+          throw new Error("Email verification has filed!");
+        }
 
         onSuccess?.();
       } catch (err) {

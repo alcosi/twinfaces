@@ -79,7 +79,6 @@ export function EmailPasswordSignInForm({
           domainUser: domainUser,
           authToken: authToken,
           domainId,
-          userId: domainUser.userId,
         });
         router.push(`/profile`);
       } catch (err) {
