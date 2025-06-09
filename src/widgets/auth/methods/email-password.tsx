@@ -144,7 +144,7 @@ export function EmailPasswordAuthWidget() {
           <StepsProgressBar
             steps={["register", "confirm"]}
             current={step}
-            containerClassName="flex justify-center"
+            containerClassName="flex justify-center pb-4"
           />
         </div>
       }
