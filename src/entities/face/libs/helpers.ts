@@ -59,3 +59,15 @@ async function getAuthTokenFromCookies(): Promise<string> {
 
   return token;
 }
+
+export async function getUserIdFromCookies(): Promise<string> {
+  const cookieStore = await cookies();
+
+  const userId = cookieStore.get("userId")?.value;
+
+  if (isUndefined(userId)) {
+    throw new Error("Missing userId in cookies");
+  }
+
+  return userId;
+}

@@ -1,4 +1,4 @@
-import { fetchWT001Face, getAuthHeaders } from "@/entities/face";
+import { fetchWT001Face, getUserIdFromCookies } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isGranted } from "@/entities/user/server";
 import { safe } from "@/shared/libs";
@@ -8,9 +8,9 @@ import { WidgetFaceProps } from "../../types";
 import { WT001Client } from "./wt001-client";
 
 export async function WT001({ widget, twinId }: WidgetFaceProps) {
-  const { currentUserId } = await getAuthHeaders();
+  const userId = await getUserIdFromCookies();
   const isAdmin = await isGranted({
-    userId: currentUserId,
+    userId: userId,
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 

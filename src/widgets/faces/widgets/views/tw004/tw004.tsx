@@ -1,4 +1,4 @@
-import { fetchTW004Face, getAuthHeaders } from "@/entities/face";
+import { fetchTW004Face, getUserIdFromCookies } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isGranted } from "@/entities/user/server";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
@@ -11,9 +11,9 @@ import { buildFieldEditorProps } from "./utils";
 export async function TW004(props: TWidgetFaceProps) {
   const { twinId, widget, className } = props;
 
-  const { currentUserId } = await getAuthHeaders();
+  const userId = await getUserIdFromCookies();
   const isAdmin = await isGranted({
-    userId: currentUserId,
+    userId: userId,
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 

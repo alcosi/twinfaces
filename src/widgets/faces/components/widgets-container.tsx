@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { getAuthHeaders } from "@/entities/face";
+import { getUserIdFromCookies } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isGranted } from "@/entities/user/server";
 import { ViewAsAdminButton } from "@/features/twin/ui";
@@ -23,9 +23,9 @@ export async function WidgetsContainer({
   widgets,
   twinId,
 }: Props) {
-  const { currentUserId } = await getAuthHeaders();
+  const userId = await getUserIdFromCookies();
   const isAdmin = await isGranted({
-    userId: currentUserId,
+    userId: userId,
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 

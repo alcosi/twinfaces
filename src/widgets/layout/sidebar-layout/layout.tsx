@@ -5,6 +5,7 @@ import {
   FaceNB001MenuItem,
   fetchSidebarFace,
   getAuthHeaders,
+  getUserIdFromCookies,
 } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isGranted } from "@/entities/user/server";
@@ -43,8 +44,9 @@ async function filterAccessibleMenuItems(
 
 export async function SidebarLayout({ children }: Props) {
   const { currentUserId } = await getAuthHeaders();
+  const userId = await getUserIdFromCookies();
   const isAdmin = await isGranted({
-    userId: currentUserId,
+    userId: userId,
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 

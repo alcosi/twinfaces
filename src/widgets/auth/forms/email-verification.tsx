@@ -87,6 +87,7 @@ export function EmailVerificationForm({
           domainUser: domainUser,
           authToken: authToken,
           domainId,
+          userId: domainUser.userId,
         });
 
         router.push("/profile");
