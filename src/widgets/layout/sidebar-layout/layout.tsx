@@ -26,7 +26,7 @@ async function filterAccessibleMenuItems(
   for (const item of items) {
     const { guardedByPermissionId, children } = item;
     const hasAccess = guardedByPermissionId
-      ? await isGranted({ permission: guardedByPermissionId })
+      ? await isGranted({ userId, permission: guardedByPermissionId })
       : true;
 
     if (!hasAccess) continue;
@@ -44,6 +44,7 @@ async function filterAccessibleMenuItems(
 export async function SidebarLayout({ children }: Props) {
   const { currentUserId } = await getAuthHeaders();
   const isAdmin = await isGranted({
+    userId: currentUserId,
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
