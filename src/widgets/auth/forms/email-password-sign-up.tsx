@@ -6,24 +6,23 @@ import z from "zod";
 
 import { TextFormField } from "@/components/form-fields";
 
-import {
-  SIGN_UP_AUTH_FORM_SCHEMA,
-  signUpAuthAction,
-} from "@/entities/user/server";
+import { SIGN_UP_AUTH_FORM_SCHEMA } from "@/entities/user/server";
 import { isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignUpForm({
   toggleMode,
-  setRegisterStep,
-  setRegisterEmail,
-  setRegisterPassword,
+  // setRegisterStep,
+  // setRegisterEmail,
+  // setRegisterPassword,
+  onSuccess,
   onError,
 }: {
   toggleMode: () => void;
-  setRegisterStep: (value: "register" | "confirm") => void;
-  setRegisterEmail: (value: string | null) => void;
-  setRegisterPassword: (value: string | null) => void;
+  // setRegisterStep: (value: "register" | "confirm") => void;
+  // setRegisterEmail: (value: string | null) => void;
+  // setRegisterPassword: (value: string | null) => void;
+  onSuccess?: (_: { email?: string; password?: string }) => void;
   onError?: () => void;
 }) {
   const searchParams = useSearchParams();
@@ -35,14 +34,14 @@ export function EmailPasswordSignUpForm({
     resolver: zodResolver(SIGN_UP_AUTH_FORM_SCHEMA),
     defaultValues: {
       domainId,
-      email: "",
-      firstName: "",
-      password: "",
-      confirmPassword: "",
-      // email: "somsa@email.com",
-      // firstName: "john doe",
-      // password: "helloworld",
-      // confirmPassword: "helloworld",
+      // email: "",
+      // firstName: "",
+      // password: "",
+      // confirmPassword: "",
+      email: "somsa@email.com",
+      firstName: "john doe",
+      password: "helloworld",
+      confirmPassword: "helloworld",
     },
   });
 
@@ -59,23 +58,22 @@ export function EmailPasswordSignUpForm({
 
     startAuthTransition(async () => {
       try {
-        const response = await signUpAuthAction(null, formData);
+        // const response = await signUpAuthAction(null, formData);
 
-        if (response.status !== 0) {
-          throw new Error("Registration failed");
-        }
+        // if (response.status !== 0) {
+        //   throw new Error("Registration failed");
+        // }
 
-        setRegisterEmail(values.email);
-        setRegisterPassword(values.password);
-        setRegisterStep("confirm");
+        onSuccess?.({
+          email: values.email,
+          password: values.password,
+        });
       } catch (err) {
         setAuthError(
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
         onError?.();
         singUpForm.reset();
-        setRegisterEmail(null);
-        setRegisterPassword(null);
       }
     });
   }

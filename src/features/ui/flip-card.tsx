@@ -29,12 +29,14 @@ export function FlipCard({ isFlipped, front, back, className }: Props) {
           }
         )}
       >
-        <Card className="absolute inset-0 backface-hidden">{front}</Card>
+        <Card className="absolute inset-0 overflow-y-auto backface-hidden">
+          {front}
+        </Card>
 
         {
           //TODO find a solution to the broken layout of the form when validation errors occur (a temporary solution option is "h-fit")
         }
-        <Card className="absolute inset-0 rotate-y-180 backface-hidden">
+        <Card className="absolute inset-0 rotate-y-180 overflow-y-auto backface-hidden">
           {back}
         </Card>
       </div>

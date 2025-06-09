@@ -225,7 +225,7 @@ export async function signUpAuthAction(
   }
 }
 
-export async function confirmAuthAction(
+export async function verifyEmailAction(
   _: unknown,
   formData: FormData
 ): Promise<AuthSignUpVerificationByEmailRs> {

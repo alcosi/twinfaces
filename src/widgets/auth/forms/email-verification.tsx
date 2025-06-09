@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -8,30 +9,25 @@ import { TextFormField } from "@/components/form-fields";
 
 import {
   EMAIL_VERIFICATION_FORM_SCHEMA,
-  confirmAuthAction,
-  getDomainUserData,
-  loginAuthAction,
+  verifyEmailAction,
 } from "@/entities/user/server";
-import { useAuthUser } from "@/features/auth";
-import { isUndefined } from "@/shared/libs";
+import { isPopulatedString, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailVerificationForm({
   onBack,
   email,
-  password,
+  onSuccess,
   onError,
 }: {
   onBack: () => void;
-  email: string | null;
-  password: string | null;
+  email: string;
+  onSuccess?: () => void;
   onError?: () => void;
 }) {
-  const { setAuthUser } = useAuthUser();
-  const [isAuthenticating, startAuthTransition] = useTransition();
-  const [authError, setAuthError] = useState<string | null>(null);
+  const [isVerifying, startVerifyTransition] = useTransition();
+  const [verificationError, setVerificationError] = useState<string>("");
   const searchParams = useSearchParams();
-  const router = useRouter();
   const domainId = searchParams.get("domainId") ?? undefined;
 
   const emailVerificationForm = useForm<
@@ -55,42 +51,17 @@ export function EmailVerificationForm({
     formData.set("domainId", values.domainId);
     formData.set("verificationToken", values.verificationToken);
 
-    const userCredentials = new FormData();
-    userCredentials.set("domainId", values.domainId);
-    userCredentials.set("username", email!);
-    userCredentials.set("password", password!);
-
-    startAuthTransition(async () => {
+    startVerifyTransition(async () => {
       try {
-        const response = await confirmAuthAction(null, formData);
+        // const response = await verifyEmailAction(null, formData);
 
-        if (response.status !== 0) {
-          throw new Error("Confirm failed");
-        }
+        // if (response.status !== 0) {
+        //   throw new Error("Email verification has filed!");
+        // }
 
-        const { authData } = await loginAuthAction(null, userCredentials);
-        const authToken = authData?.auth_token;
-
-        if (isUndefined(authToken)) {
-          throw new Error("Login failed: no auth token returned");
-        }
-
-        const domainUser = await getDomainUserData({ domainId, authToken });
-
-        if (isUndefined(domainUser)) {
-          throw new Error("Failed to load domain user");
-        }
-
-        setAuthUser({
-          domainUser: domainUser,
-          authToken: authToken,
-          domainId,
-          userId: domainUser.userId,
-        });
-
-        router.push("/profile");
+        onSuccess?.();
       } catch (err) {
-        setAuthError(
+        setVerificationError(
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
         onError?.();
@@ -99,13 +70,13 @@ export function EmailVerificationForm({
     });
   }
 
-  const recipient = email ? (
-    <a
+  const recipient = isPopulatedString(email) ? (
+    <Link
       href={`mailto:${email}`}
       className="text-primary underline hover:opacity-80"
     >
       {email}
-    </a>
+    </Link>
   ) : (
     "your email"
   );
@@ -134,13 +105,15 @@ export function EmailVerificationForm({
             type="submit"
             className="w-full"
             size="lg"
-            loading={isAuthenticating}
+            loading={isVerifying}
             disabled={!emailVerificationForm.formState.isDirty}
           >
             Confirm
           </Button>
 
-          {authError && <p className="text-error text-center">{authError}</p>}
+          {isPopulatedString(verificationError) && (
+            <p className="text-error text-center">{verificationError}</p>
+          )}
 
           <Button
             type="button"

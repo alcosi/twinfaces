@@ -7,7 +7,6 @@ type AuthUser = {
   domainUser?: DomainUser_DETAILED;
   authToken: string;
   domainId: string;
-  userId?: string;
 };
 
 type UseAuthUser = {
@@ -33,7 +32,7 @@ export function useAuthUser(): UseAuthUser {
       setStoredValue(user);
       clientCookies.set("authToken", `${user?.authToken}`);
       clientCookies.set("domainId", `${user?.domainId}`);
-      clientCookies.set("userId", `${user?.userId}`);
+      clientCookies.set("userId", `${user?.domainUser?.userId}`);
     },
     [setStoredValue]
   );
