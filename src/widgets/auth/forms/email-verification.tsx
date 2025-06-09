@@ -18,16 +18,14 @@ import { Button } from "@/shared/ui";
 
 export function EmailVerificationForm({
   onBack,
-  setShake,
   email,
   password,
-  isShaking,
+  onError,
 }: {
   onBack: () => void;
-  setShake: (value: boolean) => void;
   email: string | null;
   password: string | null;
-  isShaking: boolean;
+  onError?: () => void;
 }) {
   const { setAuthUser } = useAuthUser();
   const [isAuthenticating, startAuthTransition] = useTransition();
@@ -92,15 +90,11 @@ export function EmailVerificationForm({
 
         router.push("/profile");
       } catch (err) {
-        setShake(true);
         setAuthError(
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
+        onError?.();
         emailVerificationForm.reset();
-      } finally {
-        setTimeout(() => {
-          setShake(false);
-        }, 500);
       }
     });
   }
@@ -140,7 +134,7 @@ export function EmailVerificationForm({
             type="submit"
             className="w-full"
             size="lg"
-            loading={isAuthenticating || isShaking}
+            loading={isAuthenticating}
             disabled={!emailVerificationForm.formState.isDirty}
           >
             Confirm

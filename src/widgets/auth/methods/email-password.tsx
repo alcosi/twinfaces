@@ -78,20 +78,26 @@ export function EmailPasswordAuthWidget() {
 
           {registerStep === "register" ? (
             <EmailPasswordSignUpForm
-              setShake={setShake}
-              isShaking={isShaking}
               toggleMode={toggleMode}
               setRegisterStep={setRegisterStep}
               setRegisterEmail={setRegisterEmail}
               setRegisterPassword={setRegisterPassword}
+              onError={async () => {
+                setShake(true);
+                await sleep(500);
+                setShake(false);
+              }}
             />
           ) : (
             <EmailVerificationForm
               onBack={() => setRegisterStep("register")}
-              setShake={setShake}
               email={registerEmail}
-              isShaking={isShaking}
               password={registerPassword}
+              onError={async () => {
+                setShake(true);
+                await sleep(500);
+                setShake(false);
+              }}
             />
           )}
 

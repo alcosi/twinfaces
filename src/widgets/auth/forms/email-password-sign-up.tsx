@@ -14,19 +14,17 @@ import { isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignUpForm({
-  setShake,
-  isShaking,
   toggleMode,
   setRegisterStep,
   setRegisterEmail,
   setRegisterPassword,
+  onError,
 }: {
-  setShake: (value: boolean) => void;
-  isShaking: boolean;
   toggleMode: () => void;
   setRegisterStep: (value: "register" | "confirm") => void;
   setRegisterEmail: (value: string | null) => void;
   setRegisterPassword: (value: string | null) => void;
+  onError?: () => void;
 }) {
   const searchParams = useSearchParams();
   const domainId = searchParams.get("domainId") ?? undefined;
@@ -71,17 +69,13 @@ export function EmailPasswordSignUpForm({
         setRegisterPassword(values.password);
         setRegisterStep("confirm");
       } catch (err) {
-        setShake(true);
         setAuthError(
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
+        onError?.();
         singUpForm.reset();
         setRegisterEmail(null);
         setRegisterPassword(null);
-      } finally {
-        setTimeout(() => {
-          setShake(false);
-        }, 500);
       }
     });
   }
@@ -129,7 +123,7 @@ export function EmailPasswordSignUpForm({
           type="submit"
           className="w-full"
           size="lg"
-          loading={isAuthenticating || isShaking}
+          loading={isAuthenticating}
           disabled={!singUpForm.formState.isDirty}
         >
           Continue
