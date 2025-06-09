@@ -7,7 +7,7 @@ import { z } from "zod";
 import { TextFormField } from "@/components/form-fields";
 
 import {
-  CONFIRM_AUTH_FORM_SCHEMA,
+  EMAIL_VERIFICATION_FORM_SCHEMA,
   confirmAuthAction,
   getDomainUserData,
   loginAuthAction,
@@ -36,15 +36,19 @@ export function EmailVerificationForm({
   const router = useRouter();
   const domainId = searchParams.get("domainId") ?? undefined;
 
-  const confirmForm = useForm<z.infer<typeof CONFIRM_AUTH_FORM_SCHEMA>>({
-    resolver: zodResolver(CONFIRM_AUTH_FORM_SCHEMA),
+  const emailVerificationForm = useForm<
+    z.infer<typeof EMAIL_VERIFICATION_FORM_SCHEMA>
+  >({
+    resolver: zodResolver(EMAIL_VERIFICATION_FORM_SCHEMA),
     defaultValues: {
       domainId,
       verificationToken: "",
     },
   });
 
-  function onConfirmSubmit(values: z.infer<typeof CONFIRM_AUTH_FORM_SCHEMA>) {
+  function onConfirmSubmit(
+    values: z.infer<typeof EMAIL_VERIFICATION_FORM_SCHEMA>
+  ) {
     if (isUndefined(domainId)) {
       throw new Error("Domain ID is required");
     }
@@ -91,7 +95,7 @@ export function EmailVerificationForm({
         setAuthError(
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
-        confirmForm.reset();
+        emailVerificationForm.reset();
       } finally {
         setTimeout(() => {
           setShake(false);
@@ -117,13 +121,13 @@ export function EmailVerificationForm({
         We&#39;ve sent a verification token to {recipient}.
       </p>
 
-      <FormProvider {...confirmForm}>
+      <FormProvider {...emailVerificationForm}>
         <form
           className="mt-6 flex w-full flex-col space-y-4"
-          onSubmit={confirmForm.handleSubmit(onConfirmSubmit)}
+          onSubmit={emailVerificationForm.handleSubmit(onConfirmSubmit)}
         >
           <TextFormField
-            control={confirmForm.control}
+            control={emailVerificationForm.control}
             type="text"
             name="verificationToken"
             label="Verification token"
@@ -136,7 +140,7 @@ export function EmailVerificationForm({
             className="w-full"
             size="lg"
             loading={isAuthenticating || isShaking}
-            disabled={!confirmForm.formState.isDirty}
+            disabled={!emailVerificationForm.formState.isDirty}
           >
             Confirm
           </Button>

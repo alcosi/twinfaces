@@ -9,16 +9,16 @@ import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {
-  CONFIRM_AUTH_FORM_SCHEMA,
+  EMAIL_VERIFICATION_FORM_SCHEMA,
   LOGIN_AUTH_FORM_SCHEMA,
-  REGISTER_AUTH_PAYLOAD_SCHEMA,
+  SIGN_UP_AUTH_PAYLOAD_SCHEMA,
   STUB_AUTH_FORM_SCHEMA,
 } from "../libs";
 import {
   AuthConfig,
-  AuthConfirmRs,
   AuthLoginRs,
-  AuthRegisterRs,
+  AuthSignUpVerificationByEmailRs,
+  AuthSignupByEmailRs,
 } from "../types";
 
 export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
@@ -187,12 +187,12 @@ export async function loginAuthAction(
   }
 }
 
-export async function registerAuthAction(
+export async function signUpAuthAction(
   _: unknown,
   formData: FormData
-): Promise<AuthRegisterRs> {
+): Promise<AuthSignupByEmailRs> {
   const { domainId, firstName, email, password } =
-    REGISTER_AUTH_PAYLOAD_SCHEMA.parse({
+    SIGN_UP_AUTH_PAYLOAD_SCHEMA.parse({
       domainId: formData.get("domainId"),
       firstName: formData.get("firstName"),
       email: formData.get("email"),
@@ -228,8 +228,8 @@ export async function registerAuthAction(
 export async function confirmAuthAction(
   _: unknown,
   formData: FormData
-): Promise<AuthConfirmRs> {
-  const { domainId, verificationToken } = CONFIRM_AUTH_FORM_SCHEMA.parse({
+): Promise<AuthSignUpVerificationByEmailRs> {
+  const { domainId, verificationToken } = EMAIL_VERIFICATION_FORM_SCHEMA.parse({
     domainId: formData.get("domainId"),
     verificationToken: formData.get("verificationToken"),
   });

@@ -10,10 +10,10 @@ import { TextFormField } from "@/components/form-fields/text";
 
 import {
   LOGIN_AUTH_FORM_SCHEMA,
-  REGISTER_AUTH_FORM_SCHEMA,
+  SIGN_UP_AUTH_FORM_SCHEMA,
   getDomainUserData,
   loginAuthAction,
-  registerAuthAction,
+  signUpAuthAction,
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
@@ -54,8 +54,8 @@ export function EmailPasswordAuthWidget() {
     },
   });
 
-  const registerForm = useForm<z.infer<typeof REGISTER_AUTH_FORM_SCHEMA>>({
-    resolver: zodResolver(REGISTER_AUTH_FORM_SCHEMA),
+  const singUpForm = useForm<z.infer<typeof SIGN_UP_AUTH_FORM_SCHEMA>>({
+    resolver: zodResolver(SIGN_UP_AUTH_FORM_SCHEMA),
     defaultValues: {
       domainId,
       email: "",
@@ -130,7 +130,7 @@ export function EmailPasswordAuthWidget() {
     });
   }
 
-  function onRegisterSubmit(values: z.infer<typeof REGISTER_AUTH_FORM_SCHEMA>) {
+  function onSignUpSubmit(values: z.infer<typeof SIGN_UP_AUTH_FORM_SCHEMA>) {
     if (isUndefined(domainId)) {
       throw new Error("Domain ID is required");
     }
@@ -145,7 +145,7 @@ export function EmailPasswordAuthWidget() {
 
     startAuthTransition(async () => {
       try {
-        const response = await registerAuthAction(null, formData);
+        const response = await signUpAuthAction(null, formData);
 
         if (response.status !== 0) {
           throw new Error("Registration failed");
@@ -159,7 +159,7 @@ export function EmailPasswordAuthWidget() {
         setAuthError(
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
-        registerForm.reset();
+        singUpForm.reset();
         setRegisterEmail(null);
         setRegisterPassword(null);
       } finally {
@@ -272,13 +272,13 @@ export function EmailPasswordAuthWidget() {
           </div>
 
           {registerStep === "register" ? (
-            <FormProvider {...registerForm}>
+            <FormProvider {...singUpForm}>
               <form
                 className="flex w-full flex-col space-y-4"
-                onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
+                onSubmit={singUpForm.handleSubmit(onSignUpSubmit)}
               >
                 <TextFormField
-                  control={registerForm.control}
+                  control={singUpForm.control}
                   name="email"
                   type="email"
                   label="Email"
@@ -286,7 +286,7 @@ export function EmailPasswordAuthWidget() {
                   required
                 />
                 <TextFormField
-                  control={registerForm.control}
+                  control={singUpForm.control}
                   name="firstName"
                   type="text"
                   label="Username"
@@ -294,7 +294,7 @@ export function EmailPasswordAuthWidget() {
                   required
                 />
                 <TextFormField
-                  control={registerForm.control}
+                  control={singUpForm.control}
                   name="password"
                   type="password"
                   label="Password"
@@ -302,7 +302,7 @@ export function EmailPasswordAuthWidget() {
                   required
                 />
                 <TextFormField
-                  control={registerForm.control}
+                  control={singUpForm.control}
                   name="confirmPassword"
                   type="password"
                   label="Confirm Password"
@@ -315,7 +315,7 @@ export function EmailPasswordAuthWidget() {
                   className="w-full"
                   size="lg"
                   loading={isAuthenticating || isShaking}
-                  disabled={!registerForm.formState.isDirty}
+                  disabled={!singUpForm.formState.isDirty}
                 >
                   Continue
                 </Button>
