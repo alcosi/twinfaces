@@ -23,7 +23,7 @@ export async function getAuthHeaders(): Promise<{
 }> {
   const DomainId = await getDomainIdFromCookies();
   const AuthToken = await getAuthTokenFromCookies();
-  const currentUserId = AuthToken.split(",")[0];
+  const currentUserId = await getUserIdFromCookies();
 
   if (isUndefined(currentUserId)) {
     throw new Error("Failed to resolve current user ID from auth token.");
@@ -60,7 +60,7 @@ async function getAuthTokenFromCookies(): Promise<string> {
   return token;
 }
 
-export async function getUserIdFromCookies(): Promise<string> {
+async function getUserIdFromCookies(): Promise<string> {
   const cookieStore = await cookies();
 
   const userId = cookieStore.get("userId")?.value;
