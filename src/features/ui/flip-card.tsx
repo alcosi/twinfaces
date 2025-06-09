@@ -22,16 +22,21 @@ export function FlipCard({ isFlipped, front, back, className }: Props) {
     >
       <div
         className={cn(
-          "transform-3d absolute h-full w-full transition-transform duration-500 ease-in-out",
+          "absolute h-full w-full transition-transform duration-500 ease-in-out transform-3d",
           {
             "rotate-y-0": !isFlipped,
             "rotate-y-180": isFlipped,
           }
         )}
       >
-        <Card className="backface-hidden absolute inset-0">{front}</Card>
+        <Card className="absolute inset-0 overflow-y-auto backface-hidden">
+          {front}
+        </Card>
 
-        <Card className="backface-hidden rotate-y-180 absolute inset-0">
+        {
+          //TODO find a solution to the broken layout of the form when validation errors occur (a temporary solution option is "h-fit")
+        }
+        <Card className="absolute inset-0 rotate-y-180 overflow-y-auto backface-hidden">
           {back}
         </Card>
       </div>

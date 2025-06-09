@@ -62,7 +62,7 @@ export function StubAuthForm() {
         iconDark={config.iconDark ?? config.favicon}
       />
 
-      <h2 className="text-primary my-6 text-center text-2xl font-bold">
+      <h2 className="text-primary my-4 text-center text-2xl font-bold">
         {config.key ?? config.productName}
       </h2>
 

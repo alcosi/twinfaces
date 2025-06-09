@@ -2635,7 +2635,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/m2m/refresh/v1": {
+    "/auth/m2m/token/v1": {
         parameters: {
             query?: never;
             header?: never;
@@ -2644,8 +2644,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Refresh M2M auth_token by refresh_token */
-        post: operations["authM2MRefreshV1"];
+        /** Returns auth data for machine-to-machine + act-as-user public key */
+        post: operations["authM2MTokenV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2661,7 +2661,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Returns auth data for machine-to-machine + act-as-user public key */
+        /**
+         * Returns auth data for machine-to-machine + act-as-user public key
+         * @deprecated
+         */
         post: operations["authM2MLoginV1"];
         delete?: never;
         options?: never;
@@ -2882,6 +2885,40 @@ export interface paths {
         };
         /** Returns permission list for selected user */
         get: operations["userPermissionListV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/user/permission_group/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns grouped permission list for current user */
+        get: operations["currentUserPermissionGroupedListV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/user/permission/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns permission list for current user */
+        get: operations["currentUserPermissionListV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3704,6 +3741,23 @@ export interface paths {
         };
         /** Return the user by id */
         get: operations["domainUserViewV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/domain/user/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns current user */
+        get: operations["domainCurrentUserViewV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9626,6 +9680,19 @@ export interface components {
              */
             type: "TwinFieldSearchTextV1";
         };
+        TwinFieldSearchUserV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+            type?: string;
+            /** @description User id list */
+            idList?: string[];
+            /** @description User id exclude list */
+            idExcludeList?: string[];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "TwinFieldSearchUserV1";
+        };
         TwinSearchByLinkV1: {
             /**
              * Format: uuid
@@ -15101,7 +15168,18 @@ export interface components {
             /** @description refreshToken */
             refreshToken?: string;
         };
-        AuthM2MRefreshRsV1: {
+        AuthM2MLoginRqV1: {
+            /** @description client id */
+            clientId?: string;
+            /** @description client secret */
+            clientSecret?: string;
+            /**
+             * Format: uuid
+             * @description public key id
+             */
+            publicKeyId?: string;
+        };
+        AuthM2MTokenRsV1: {
             /**
              * Format: int32
              * @description request processing status (see ErrorCode enum)
@@ -15141,41 +15219,6 @@ export interface components {
              * @description expires at
              */
             expiresAt?: string;
-        };
-        AuthM2MLoginRqV1: {
-            /** @description client id */
-            clientId?: string;
-            /** @description client secret */
-            clientSecret?: string;
-            /**
-             * Format: uuid
-             * @description public key id
-             */
-            publicKeyId?: string;
-        };
-        AuthM2MLoginRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description tokens data */
-            authData?: {
-                [key: string]: string;
-            };
-            /** @description public key to encrypt act as user data [optional] */
-            actAsUserPublicKey?: components["schemas"]["CryptKeyV1"];
         };
         AuthLogoutRqV1: {
             /** @description logout data. depends upon IDP */
@@ -28004,14 +28047,12 @@ export interface operations {
             };
         };
     };
-    authM2MRefreshV1: {
+    authM2MTokenV1: {
         parameters: {
             query?: never;
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
                 DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
                 /** @example WEB */
                 Channel: string;
             };
@@ -28020,17 +28061,17 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AuthRefreshRqV1"];
+                "application/json": components["schemas"]["AuthM2MLoginRqV1"];
             };
         };
         responses: {
-            /** @description Token refreshed  */
+            /** @description Login to  */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthM2MRefreshRsV1"];
+                    "application/json": components["schemas"]["AuthM2MTokenRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -28068,7 +28109,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthM2MLoginRsV1"];
+                    "application/json": components["schemas"]["AuthM2MTokenRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -28616,6 +28657,131 @@ export interface operations {
                 /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
                 userId: string;
             };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    currentUserPermissionGroupedListV1: {
+        parameters: {
+            query?: {
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionGroupedListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    currentUserPermissionListV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -31589,6 +31755,51 @@ export interface operations {
                 /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
                 userId: string;
             };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainUserViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    domainCurrentUserViewV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showBusinessAccountUser2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showBusinessAccountUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showBusinessAccountUserCollectionMode?: "HIDE" | "SHOW";
+                showDomainUser2BusinessAccountUserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainUserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;

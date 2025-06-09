@@ -9,16 +9,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/shared/ui";
-
 import {
-  EmailPasswordAuthForm,
-  StubAuthForm,
+  AuthMethodStubWidget,
+  EmailPasswordAuthWidget,
   UnderConstructionForm,
-} from "./auth-methods";
+} from "@/widgets/auth/methods";
 
 const AUTH_METHOD_TO_FORM_MAP = {
-  AuthMethodStubV1: StubAuthForm,
-  AuthMethodPasswordV1: EmailPasswordAuthForm,
+  AuthMethodStubV1: AuthMethodStubWidget,
+  AuthMethodPasswordV1: EmailPasswordAuthWidget,
   AuthMethodPasswordV2: UnderConstructionForm,
   AuthMethodOath2V1: UnderConstructionForm,
 };

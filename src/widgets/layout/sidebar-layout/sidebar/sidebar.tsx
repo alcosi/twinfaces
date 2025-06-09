@@ -2,11 +2,10 @@
 
 import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
 import { FaceNB001 } from "@/entities/face";
-import { isGranted } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";
@@ -165,7 +164,8 @@ export function AppSidebar({ face, mode = "user" }: Props) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
-                    <User2 /> {authUser?.domainUser?.user.fullName}
+                    <User2 />
+                    {authUser?.domainUser?.user.fullName}
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
@@ -173,6 +173,11 @@ export function AppSidebar({ face, mode = "user" }: Props) {
                   side="top"
                   className="w-(--radix-popper-anchor-width)"
                 >
+                  <DropdownMenuItem>
+                    <SidebarMenuButton onClick={() => router.push("/profile")}>
+                      Profile
+                    </SidebarMenuButton>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>
                     <SidebarMenuButton onClick={onLogout}>
                       Log out

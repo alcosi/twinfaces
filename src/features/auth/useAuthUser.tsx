@@ -32,6 +32,7 @@ export function useAuthUser(): UseAuthUser {
       setStoredValue(user);
       clientCookies.set("authToken", `${user?.authToken}`);
       clientCookies.set("domainId", `${user?.domainId}`);
+      clientCookies.set("userId", `${user?.domainUser?.userId}`);
     },
     [setStoredValue]
   );
@@ -50,6 +51,7 @@ export function useAuthUser(): UseAuthUser {
     setStoredValue(null);
     clientCookies.remove("authToken");
     clientCookies.remove("domainId");
+    clientCookies.remove("userId");
   }, [setStoredValue]);
 
   return {

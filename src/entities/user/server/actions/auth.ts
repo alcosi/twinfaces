@@ -6,12 +6,20 @@ import { notFound } from "next/navigation";
 import { TwinsAPI } from "@/shared/api";
 import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 
+import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {
-  EMAIL_PASSWORD_AUTH_FORM_SCHEMA,
+  EMAIL_PASSWORD_SIGN_IN_SCHEMA,
+  EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA,
+  EMAIL_VERIFICATION_FORM_SCHEMA,
   STUB_AUTH_FORM_SCHEMA,
 } from "../libs";
-import { AuthConfig, AuthLoginRs } from "../types";
+import {
+  AuthConfig,
+  AuthLoginRs,
+  AuthSignUpVerificationByEmailRs,
+  AuthSignupByEmailRs,
+} from "../types";
 
 export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
   const result = await safe(() =>
@@ -83,6 +91,40 @@ async function stubLogin({
   return { authToken, ...data };
 }
 
+export async function getAuthenticatedUser({
+  domainId,
+  authToken,
+}: {
+  domainId: string;
+  authToken: string;
+}) {
+  const { data, error } = await TwinsAPI.GET("/private/domain/user/v1", {
+    params: {
+      header: {
+        DomainId: domainId,
+        AuthToken: authToken,
+        Channel: "WEB",
+      },
+      query: {
+        lazyRelation: false,
+        showDomainUser2UserMode: "DETAILED",
+        showDomainUserMode: "DETAILED",
+      },
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const hydratedDomainUser = hydrateDomainUserFromMap(
+    data.user as DomainUser_DETAILED,
+    data.relatedObjects
+  );
+
+  return hydratedDomainUser;
+}
+
 export async function stubLoginFormAction(_: unknown, formData: FormData) {
   const { userId, domainId, businessAccountId } = STUB_AUTH_FORM_SCHEMA.parse({
     userId: formData.get("userId"),
@@ -112,16 +154,15 @@ export async function stubLoginFormAction(_: unknown, formData: FormData) {
   }
 }
 
-export async function emailPasswordAuthAction(
+export async function loginAuthAction(
   _: unknown,
   formData: FormData
 ): Promise<AuthLoginRs> {
-  const { domainId, username, password } =
-    EMAIL_PASSWORD_AUTH_FORM_SCHEMA.parse({
-      domainId: formData.get("domainId"),
-      username: formData.get("username"),
-      password: formData.get("password"),
-    });
+  const { domainId, username, password } = EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
+    domainId: formData.get("domainId"),
+    username: formData.get("username"),
+    password: formData.get("password"),
+  });
 
   try {
     const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
@@ -142,6 +183,87 @@ export async function emailPasswordAuthAction(
       err instanceof Error
         ? err.message
         : "An unknown error occurred during login";
+    throw new Error(message);
+  }
+}
+
+export async function signUpAuthAction(
+  _: unknown,
+  formData: FormData
+): Promise<AuthSignupByEmailRs> {
+  const { domainId, firstName, lastName, email, password } =
+    EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.parse({
+      domainId: formData.get("domainId"),
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
+
+  try {
+    const { data, error } = await TwinsAPI.POST(
+      "/auth/signup_by_email/initiate/v1",
+      {
+        body: { firstName, lastName, email, password },
+        params: { header: { DomainId: domainId, Channel: "WEB" } },
+      }
+    );
+
+    if (error) {
+      console.error("Register error response:", error);
+      const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
+      throw new Error(message);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Register request failed:", err);
+    const message =
+      err instanceof Error
+        ? err.message
+        : "An unknown error occured during register";
+    throw new Error(message);
+  }
+}
+
+export async function verifyEmailAction(
+  _: unknown,
+  formData: FormData
+): Promise<AuthSignUpVerificationByEmailRs> {
+  const { domainId, verificationToken } = EMAIL_VERIFICATION_FORM_SCHEMA.parse({
+    domainId: formData.get("domainId"),
+    verificationToken: formData.get("verificationToken"),
+  });
+
+  try {
+    const { data, error } = await TwinsAPI.POST(
+      "/auth/signup_by_email/confirm/v1",
+      {
+        params: {
+          header: {
+            DomainId: domainId,
+            Channel: "WEB",
+          },
+          query: {
+            verificationToken,
+          },
+        },
+      }
+    );
+
+    if (error) {
+      console.error("Confirm error response:", error);
+      const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
+      throw new Error(message);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Confirm request failed:", err);
+    const message =
+      err instanceof Error
+        ? err.message
+        : "An unknown error occured during confirm";
     throw new Error(message);
   }
 }

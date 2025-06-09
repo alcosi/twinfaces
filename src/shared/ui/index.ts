@@ -18,6 +18,7 @@ export * from "./guid";
 export * from "./icons";
 export * from "./loading";
 export * from "./popover";
+export * from "./progress-bar";
 export * from "./render-on-client";
 export * from "./resource-link";
 export * from "./separator";
