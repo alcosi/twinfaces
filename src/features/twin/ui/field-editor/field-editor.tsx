@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ import {
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
+import { Button } from "@/shared/ui";
 
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
 import { STATIC_FIELD_MAP } from "./constants";
@@ -138,11 +140,7 @@ function renderDynamicFieldPreview(
     // return (
     //   <div className="flex flex-1 items-center justify-between">
     //     <span>{UNICODE_SYMBOLS.bullet.repeat(field.value.length)}</span>
-    //     <Button
-    //       size="xs"
-    //       variant="ghost"
-    //       IconComponent={Eye}
-    //     />
+    //     <Button size="xs" variant="ghost" IconComponent={Eye} />
     //   </div>
     // );
     return UNICODE_SYMBOLS.bullet.repeat(field.value.length);

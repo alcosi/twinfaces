@@ -122,17 +122,17 @@ export function InPlaceEdit<T>({
       <form
         onSubmit={form.handleSubmit(handleConfirm)}
         onAbort={handleCancel}
-        className="w-full min-w-32"
+        className="flex w-full min-w-32 flex-col space-y-1.5"
       >
-        <div className="flex flex-row items-center space-x-2">
-          <AutoField
-            info={valueInfo}
-            name={"value"}
-            control={form.control}
-            autoFocus
-            // TODO auto cancel edit on lost focus/on closed for popups
-          />
+        <AutoField
+          info={valueInfo}
+          name={"value"}
+          control={form.control}
+          autoFocus
+          // TODO auto cancel edit on lost focus/on closed for popups
+        />
 
+        <div className="flex w-full space-x-1">
           <Button
             type="submit"
             variant="outline"
@@ -146,6 +146,7 @@ export function InPlaceEdit<T>({
             variant="outline"
             size="iconSm"
             onClick={handleCancel}
+            className="shadow-md"
           >
             <X />
           </Button>
