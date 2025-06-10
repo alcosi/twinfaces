@@ -33,9 +33,7 @@ export const useFetchPermissionsByUserId = () => {
           throw new Error("Response does not have permissions data", error);
         }
 
-        if (data.permissions) {
-          return data.permissions;
-        }
+        return data.permissions;
       } finally {
         setLoading(false);
       }

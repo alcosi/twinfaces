@@ -36,9 +36,7 @@ export const useFetchPermissionGroupsByUserId = () => {
           );
         }
 
-        if (data.permissionGroups) {
-          return data.permissionGroups;
-        }
+        return data.permissionGroups;
       } finally {
         setLoading(false);
       }
