@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
+import { getAuthHeaders } from "@/entities/face";
+import { isGranted } from "@/entities/user/server";
 import { TwinsAPI } from "@/shared/api";
 import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 
@@ -265,5 +267,22 @@ export async function verifyEmailAction(
         ? err.message
         : "An unknown error occured during confirm";
     throw new Error(message);
+  }
+}
+
+/**
+ * Throws a 404 if the current user lacks any of the given permission IDs.
+ */
+export async function requirePermissionsOr404(permissionIds: string[]) {
+  const { currentUserId } = await getAuthHeaders();
+
+  for (const permission of permissionIds) {
+    const allowed = await isGranted({
+      userId: currentUserId,
+      permission,
+    });
+    if (!allowed) {
+      notFound();
+    }
   }
 }

@@ -15,7 +15,7 @@ import {
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
-import { PlatformArea, ProductFlavorConfigContext } from "@/shared/config";
+import { ProductFlavorConfigContext } from "@/shared/config";
 import { Button, Card } from "@/shared/ui";
 
 export function StubAuthForm() {
@@ -42,7 +42,7 @@ export function StubAuthForm() {
   useEffect(() => {
     if (authUser) {
       setAuthUser(authUser);
-      router.push(`/${PlatformArea.core}/twinclass`);
+      router.push("/profile");
     }
   }, [authUser]);
 
