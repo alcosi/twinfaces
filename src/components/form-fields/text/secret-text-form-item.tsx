@@ -42,7 +42,7 @@ export const SecretTextFormItem = ({
         />
         <Button
           size="xs"
-          variant="outline"
+          variant="ghost"
           onClick={(e) => {
             e.preventDefault();
             toggleVisibility();

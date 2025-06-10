@@ -1,3 +1,4 @@
+import { Eye } from "lucide-react";
 import { ZodType, z } from "zod";
 
 import { DataListOptionV3 } from "@/entities/datalist-option";
@@ -7,10 +8,12 @@ import { MarkdownPreview } from "@/features/markdown";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import {
+  UNICODE_SYMBOLS,
   formatIntlDate,
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
+import { Button } from "@/shared/ui";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI
@@ -86,7 +89,15 @@ export function renderTwinFieldPreview({
           return twinField.value as string;
       }
     case TwinFieldType.secretV1:
-      return "•".repeat(String(twinField.value).length);
+      return (
+        <div className="flex flex-1 items-center justify-between">
+          <span>
+            {UNICODE_SYMBOLS.bullet.repeat(String(twinField.value).length)}
+          </span>
+
+          <Button size="xs" variant="ghost" IconComponent={Eye} />
+        </div>
+      );
     default:
       return twinField.value as string;
   }

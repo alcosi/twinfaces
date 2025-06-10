@@ -17,6 +17,7 @@ import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
 import { RelatedObjects } from "@/shared/api";
 import {
+  UNICODE_SYMBOLS,
   cn,
   formatIntlDate,
   isPopulatedString,
@@ -134,7 +135,17 @@ function renderDynamicFieldPreview(
   const fieldType = field.descriptor?.fieldType;
 
   if (fieldType === "secretV1") {
-    return "•".repeat(field.value.length);
+    // return (
+    //   <div className="flex flex-1 items-center justify-between">
+    //     <span>{UNICODE_SYMBOLS.bullet.repeat(field.value.length)}</span>
+    //     <Button
+    //       size="xs"
+    //       variant="ghost"
+    //       IconComponent={Eye}
+    //     />
+    //   </div>
+    // );
+    return UNICODE_SYMBOLS.bullet.repeat(field.value.length);
   }
 
   if (fieldType === "dateScrollV1") {
