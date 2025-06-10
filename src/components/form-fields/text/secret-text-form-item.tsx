@@ -29,7 +29,7 @@ export const SecretTextFormItem = ({
     <FormItem className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-destructive">*</span>}
         </FormItemLabel>
       )}
 
@@ -41,6 +41,7 @@ export const SecretTextFormItem = ({
           {...props}
         />
         <Button
+          type="button"
           size="xs"
           variant="ghost"
           onClick={(e) => {

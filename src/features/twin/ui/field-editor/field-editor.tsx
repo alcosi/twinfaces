@@ -1,6 +1,5 @@
 "use client";
 
-import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { toast } from "sonner";
@@ -18,15 +17,14 @@ import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
 import { RelatedObjects } from "@/shared/api";
 import {
-  UNICODE_SYMBOLS,
   cn,
   formatIntlDate,
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
-import { Button } from "@/shared/ui";
 
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
+import { SecretFieldPreview } from "../../../ui/secret-field-preview";
 import { STATIC_FIELD_MAP } from "./constants";
 
 type FieldProps = {
@@ -133,17 +131,11 @@ export function TwinFieldEditor({
 function renderDynamicFieldPreview(
   field: FieldProps,
   relatedObjects?: RelatedObjects
-): string {
+): ReactNode {
   const fieldType = field.descriptor?.fieldType;
 
   if (fieldType === "secretV1") {
-    // return (
-    //   <div className="flex flex-1 items-center justify-between">
-    //     <span>{UNICODE_SYMBOLS.bullet.repeat(field.value.length)}</span>
-    //     <Button size="xs" variant="ghost" IconComponent={Eye} />
-    //   </div>
-    // );
-    return UNICODE_SYMBOLS.bullet.repeat(field.value.length);
+    return <SecretFieldPreview value={field.value} />;
   }
 
   if (fieldType === "dateScrollV1") {
