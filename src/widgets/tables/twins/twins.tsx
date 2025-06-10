@@ -244,10 +244,16 @@ export function TwinsTable({
   const staticFieldColumnMap = isPopulatedArray(enabledColumns)
     ? Object.fromEntries(
         enabledColumns.reduce<[string, ColumnDef<Twin_DETAILED>][]>(
-          (acc, { twinClassFieldId: fieldId }) => {
+          (acc, { twinClassFieldId: fieldId, label }) => {
             const colDef = fieldId ? staticColDefs[fieldId] : undefined;
             if (fieldId && colDef) {
-              acc.push([fieldId, colDef]);
+              acc.push([
+                fieldId,
+                {
+                  ...colDef,
+                  header: label ?? colDef.header,
+                } as ColumnDef<Twin_DETAILED>,
+              ]);
             }
             return acc;
           },
