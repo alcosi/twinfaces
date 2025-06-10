@@ -1,7 +1,5 @@
-"use client";
+import { PermissionsScreen } from "@/screens/permissions";
 
-import { Permissions } from "@/screens/permissions";
-
-export default function PermissionPage() {
-  return <Permissions />;
+export default function Page() {
+  return <PermissionsScreen />;
 }

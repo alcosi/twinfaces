@@ -1,21 +1,19 @@
 import { RelatedObjects } from "@/shared/api";
+
 import { Permission, Permission_DETAILED } from "../api";
 
 export const hydratePermissionFromMap = (
-  permissionDTO: Permission,
+  dto: Permission,
   relatedObjects?: RelatedObjects
 ): Permission_DETAILED => {
-  const permission: Permission_DETAILED = Object.assign(
+  const hydrated: Permission_DETAILED = Object.assign(
     {},
-    permissionDTO
+    dto
   ) as Permission_DETAILED;
 
-  if (!relatedObjects?.permissionGroupMap) return permission;
-
-  if (permissionDTO.groupId) {
-    permission.group =
-      relatedObjects.permissionGroupMap[permissionDTO.groupId]!;
+  if (dto.groupId && relatedObjects?.permissionGroupMap) {
+    hydrated.group = relatedObjects.permissionGroupMap[dto.groupId]!;
   }
 
-  return permission;
+  return hydrated;
 };
