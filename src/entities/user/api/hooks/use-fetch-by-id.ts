@@ -6,6 +6,9 @@ import { isUndefined } from "@/shared/libs";
 import { hydrateDomainUserFromMap } from "../../libs";
 import { DomainUser } from "../types";
 
+/**
+ * @deprecated Replaced by the `useFetchUserByAuthToken` hook.
+ */
 export const useFetchUserById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);

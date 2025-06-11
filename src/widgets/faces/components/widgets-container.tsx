@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
 
-import { getAuthHeaders } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
-import { isGranted } from "@/entities/user/server";
+import { isAuthUserGranted } from "@/entities/user/server";
 import { ViewAsAdminButton } from "@/features/twin/ui";
 import { MasonryLayout } from "@/features/ui/masonry";
 import { PartialFields, cn } from "@/shared/libs";
@@ -23,9 +22,7 @@ export async function WidgetsContainer({
   widgets,
   twinId,
 }: Props) {
-  const { currentUserId } = await getAuthHeaders();
-  const isAdmin = await isGranted({
-    userId: currentUserId,
+  const isAdmin = await isAuthUserGranted({
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 

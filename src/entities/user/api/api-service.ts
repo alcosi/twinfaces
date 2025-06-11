@@ -67,6 +67,9 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
+  /*
+   * @deprecated Use `getByAuthToken` instead of this unused function
+   */
   function getById({
     id,
     query = {},
@@ -78,6 +81,15 @@ export function createUserApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         path: { userId: id },
+        query: query,
+      },
+    });
+  }
+
+  function getByAuthToken({ query = {} }: { query?: DomainUserViewQuery }) {
+    return settings.client.GET("/private/domain/user/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
         query: query,
       },
     });
@@ -132,6 +144,7 @@ export function createUserApi(settings: ApiSettings) {
     update,
     getPermissionsByUserId,
     getPermissionGroupsByUserId,
+    getByAuthToken,
   };
 }
 
