@@ -67,7 +67,9 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
-  // NOTE: not used, replased by getByAuthToken
+  /*
+   * @deprecated Use `getByAuthToken` instead of this unused function
+   */
   function getById({
     id,
     query = {},

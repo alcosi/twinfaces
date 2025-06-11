@@ -28,7 +28,6 @@ export function UserContextProvider({
   }, [userId]);
 
   const [user, setUser] = useState<DomainUser | undefined>(undefined);
-  // NOTE: if you needed you can use useFetchUserById hook to fetch user by userId
   const { fetchUserByAuthToken, loading } = useFetchUserByAuthToken();
 
   async function refresh() {

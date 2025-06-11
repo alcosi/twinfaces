@@ -4,7 +4,7 @@ import { isFound, isUndefined } from "@/shared/libs";
 
 export * from "./auth";
 
-// NOTE: not used, needed in core area
+// NOTE: Not currently used! Keep for future use in the `core-area`
 export async function isGranted({
   userId,
   permission,
