@@ -10,6 +10,7 @@ type SecretTextFormItemProps = FormItemProps & {
   fieldValue: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   type: string;
+  inputId?: string;
 };
 
 export const SecretTextFormItem = ({
@@ -20,6 +21,7 @@ export const SecretTextFormItem = ({
   required,
   inForm,
   type,
+  inputId,
   ...props
 }: SecretTextFormItemProps) => {
   const [showSecret, setShowSecret] = useState<boolean>(false);
@@ -35,6 +37,7 @@ export const SecretTextFormItem = ({
 
       <div className="relative">
         <Input
+          id={inputId}
           value={fieldValue ?? ""}
           onChange={onChange}
           type={type === "password" ? (showSecret ? "text" : "password") : type}
