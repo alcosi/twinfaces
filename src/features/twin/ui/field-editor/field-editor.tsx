@@ -147,8 +147,6 @@ function renderDynamicFieldPreview(
       : "";
   }
 
-  console.log(field);
-
   return (
     <div>
       {relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value}
