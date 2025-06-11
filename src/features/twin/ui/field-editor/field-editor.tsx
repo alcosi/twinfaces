@@ -147,5 +147,11 @@ function renderDynamicFieldPreview(
       : "";
   }
 
-  return relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value;
+  console.log(field);
+
+  return (
+    <div>
+      {relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value}
+    </div>
+  );
 }
