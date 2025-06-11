@@ -1,5 +1,7 @@
 import { LoginScreen } from "@/screens/login";
 
+export const revalidate = 0;
+
 type Props = {
   searchParams: {
     domainId?: string;

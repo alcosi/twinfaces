@@ -2,7 +2,7 @@
 
 import { ReactNode, createContext, useEffect, useState } from "react";
 
-import { DomainUser, useFetchUserById } from "@/entities/user";
+import { DomainUser, useFetchUserByAuthToken } from "@/entities/user";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 
@@ -28,11 +28,12 @@ export function UserContextProvider({
   }, [userId]);
 
   const [user, setUser] = useState<DomainUser | undefined>(undefined);
-  const { fetchUserById, loading } = useFetchUserById();
+  // NOTE: if you needed you can use useFetchUserById hook to fetch user by userId
+  const { fetchUserByAuthToken, loading } = useFetchUserByAuthToken();
 
   async function refresh() {
     try {
-      const fetchUser = await fetchUserById(userId);
+      const fetchUser = await fetchUserByAuthToken();
 
       if (fetchUser) {
         setUser(fetchUser);
