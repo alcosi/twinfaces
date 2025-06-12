@@ -1,10 +1,12 @@
+"use client";
+
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
-import { UNICODE_SYMBOLS } from "@/shared/libs";
-import { Button } from "@/shared/ui";
+import { UNICODE_SYMBOLS } from "../libs";
+import { Button } from "./button";
 
-export function SecretFieldPreview({ value }: { value: string }) {
+export function MaskedValue({ value }: { value: string }) {
   const [visible, setVisible] = useState<boolean>(false);
 
   return (

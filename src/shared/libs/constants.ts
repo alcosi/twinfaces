@@ -20,7 +20,8 @@ export const UNICODE_SYMBOLS = {
   horizontalBar: "\u2015",
   lowLine: "\u2017",
 
-  // single quotation marks
+  // single quotation marks / apostrophe
+  apostrophe: "\u0027",
   leftSingleQuote: "\u2018",
   rightSingleQuote: "\u2019",
   singleLow9Quote: "\u201A",

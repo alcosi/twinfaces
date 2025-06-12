@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 
+import { useToggle } from "@/shared/libs";
 import { Button, FormItem, FormMessage, Input } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
@@ -24,8 +25,7 @@ export const SecretTextFormItem = ({
   inputId,
   ...props
 }: SecretTextFormItemProps) => {
-  const [showSecret, setShowSecret] = useState<boolean>(false);
-  const toggleVisibility = () => setShowSecret((prev) => !prev);
+  const [showSecret, toggleVisibility] = useToggle(false);
 
   return (
     <FormItem className="w-full">

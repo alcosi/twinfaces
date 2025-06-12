@@ -22,10 +22,10 @@ import {
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
+import { MaskedValue } from "@/shared/ui";
 
 import { MarkdownPreview } from "../../../../features/markdown";
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
-import { SecretFieldPreview } from "../../../ui/secret-field-preview";
 import { STATIC_FIELD_MAP } from "./constants";
 
 type FieldProps = {
@@ -136,7 +136,7 @@ function renderDynamicFieldPreview(
   const fieldType = field.descriptor?.fieldType;
 
   if (fieldType === "secretV1") {
-    return <SecretFieldPreview value={field.value} />;
+    return <MaskedValue value={field.value} />;
   }
 
   if (

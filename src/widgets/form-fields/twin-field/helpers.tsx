@@ -5,13 +5,13 @@ import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { MarkdownPreview } from "@/features/markdown";
 import { TwinResourceLink } from "@/features/twin/ui";
-import { SecretFieldPreview } from "@/features/ui/secret-field-preview";
 import { UserResourceLink } from "@/features/user/ui";
 import {
   formatIntlDate,
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
+import { MaskedValue } from "@/shared/ui";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI
@@ -87,7 +87,7 @@ export function renderTwinFieldPreview({
           return twinField.value as string;
       }
     case TwinFieldType.secretV1:
-      return <SecretFieldPreview value={String(twinField.value)} />;
+      return <MaskedValue value={String(twinField.value)} />;
     default:
       return twinField.value as string;
   }
