@@ -23,6 +23,7 @@ import {
   mapPatternToInputType,
 } from "@/shared/libs";
 
+import { MarkdownPreview } from "../../../../features/markdown";
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
 import { SecretFieldPreview } from "../../../ui/secret-field-preview";
 import { STATIC_FIELD_MAP } from "./constants";
@@ -136,6 +137,13 @@ function renderDynamicFieldPreview(
 
   if (fieldType === "secretV1") {
     return <SecretFieldPreview value={field.value} />;
+  }
+
+  if (
+    fieldType === "textV1" &&
+    field.descriptor?.editorType === "MARKDOWN_BASIC"
+  ) {
+    return <MarkdownPreview source={field.value} />;
   }
 
   if (fieldType === "dateScrollV1") {
