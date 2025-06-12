@@ -7,18 +7,21 @@ import { MarkdownPreview } from "@/features/markdown";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import {
+  REGEX_PATTERNS,
   formatIntlDate,
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
-import { MaskedValue } from "@/shared/ui";
+import { AnchorWithCopy, MaskedValue } from "@/shared/ui";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI
 ): ZodType<string> | undefined {
   switch (twinField.descriptor.fieldType) {
     case TwinFieldType.urlV1:
-      return z.string().url();
+      return z
+        .string()
+        .regex(REGEX_PATTERNS.URL_REGEX, { message: "Invalid URL format" });
     case TwinFieldType.secretV1:
       return z.string().regex(/^\S*$/, {
         message: "Value must not contain spaces",
@@ -86,6 +89,15 @@ export function renderTwinFieldPreview({
         default:
           return twinField.value as string;
       }
+
+    case TwinFieldType.urlV1: {
+      return (
+        <AnchorWithCopy href={twinField.value as string} target="_blank">
+          {twinField.value as string}
+        </AnchorWithCopy>
+      );
+    }
+
     case TwinFieldType.secretV1:
       return <MaskedValue value={String(twinField.value)} />;
     default:

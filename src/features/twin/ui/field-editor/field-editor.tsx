@@ -22,7 +22,7 @@ import {
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
-import { MaskedValue } from "@/shared/ui";
+import { AnchorWithCopy, MaskedValue } from "@/shared/ui";
 
 import { MarkdownPreview } from "../../../../features/markdown";
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
@@ -135,6 +135,14 @@ function renderDynamicFieldPreview(
 ): ReactNode {
   const fieldType = field.descriptor?.fieldType;
 
+  if (field.descriptor?.fieldType === "urlV1") {
+    return (
+      <AnchorWithCopy href={field.value} target="_blank">
+        {field.value}
+      </AnchorWithCopy>
+    );
+  }
+
   if (fieldType === "secretV1") {
     return <MaskedValue value={field.value} />;
   }
@@ -156,8 +164,8 @@ function renderDynamicFieldPreview(
   }
 
   return (
-    <div>
+    <p>
       {relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value}
-    </div>
+    </p>
   );
 }

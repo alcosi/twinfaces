@@ -17,6 +17,7 @@ export function Anchor({
   return (
     <a
       href={href}
+      target={props.target}
       className={cn(
         "text-brand group-hover:underline hover:underline",
         className
