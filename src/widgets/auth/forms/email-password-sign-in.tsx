@@ -86,7 +86,7 @@ export function EmailPasswordSignInForm({
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
         onError?.();
-        signInForm.reset();
+        signInForm.resetField("password");
       }
     });
   }
