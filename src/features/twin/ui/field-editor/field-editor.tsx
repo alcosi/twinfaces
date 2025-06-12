@@ -22,7 +22,9 @@ import {
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
+import { MaskedValue } from "@/shared/ui";
 
+import { MarkdownPreview } from "../../../../features/markdown";
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
 import { STATIC_FIELD_MAP } from "./constants";
 
@@ -130,9 +132,22 @@ export function TwinFieldEditor({
 function renderDynamicFieldPreview(
   field: FieldProps,
   relatedObjects?: RelatedObjects
-): string {
-  if (field.descriptor?.fieldType === "dateScrollV1") {
-    const format = isPopulatedString(field.descriptor.pattern)
+): ReactNode {
+  const fieldType = field.descriptor?.fieldType;
+
+  if (fieldType === "secretV1") {
+    return <MaskedValue value={field.value} />;
+  }
+
+  if (
+    fieldType === "textV1" &&
+    field.descriptor?.editorType === "MARKDOWN_BASIC"
+  ) {
+    return <MarkdownPreview source={field.value} />;
+  }
+
+  if (fieldType === "dateScrollV1") {
+    const format = isPopulatedString(field.descriptor?.pattern)
       ? mapPatternToInputType(field.descriptor.pattern)
       : "text";
     return isPopulatedString(field.value)
@@ -140,5 +155,9 @@ function renderDynamicFieldPreview(
       : "";
   }
 
-  return relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value;
+  return (
+    <div>
+      {relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value}
+    </div>
+  );
 }

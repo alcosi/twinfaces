@@ -17,6 +17,7 @@ export * from "./forms";
 export * from "./guid";
 export * from "./icons";
 export * from "./loading";
+export * from "./masked-value";
 export * from "./popover";
 export * from "./progress-bar";
 export * from "./render-on-client";
