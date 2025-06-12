@@ -1,11 +1,10 @@
-import { env } from "next-runtime-env";
 import { NextRequest, NextResponse } from "next/server";
 
 import { fetchDomainByKey } from "@/entities/domain/api";
 import { isDev, isPopulatedArray, isTruthy } from "@/shared/libs";
 
 const SUBDOMAIN_DEPTH = isDev ? 2 : 3;
-const FIXED_DOMAIN_KEY = env("NEXT_PUBLIC_FIXED_DOMAIN_KEY") || null;
+const FIXED_DOMAIN_KEY = process.env.FIXED_DOMAIN_KEY || null;
 
 // NOTE: Middleware Function
 export async function middleware(req: NextRequest) {
