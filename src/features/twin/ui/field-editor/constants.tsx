@@ -100,7 +100,9 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
       key: "createdAt",
       renderPreview: (twin) => {
         return (
-          twin.createdAt && formatIntlDate(twin.createdAt, "datetime-local")
+          twin.createdAt && (
+            <p>{formatIntlDate(twin.createdAt, "datetime-local")}</p>
+          )
         );
       },
     },
