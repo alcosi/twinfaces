@@ -50,6 +50,7 @@ export function TwinFields() {
       accessorKey: "value",
       header: "Value",
       cell: ({ row: { original } }) => {
+        // TODO: replace with <TwinFieldEditor />
         return (
           <div
             className="inline-block w-full min-w-[300px]"
