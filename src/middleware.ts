@@ -1,25 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { fetchDomainByKey } from "@/entities/domain/api";
-import { isDev, isPopulatedArray, isTruthy } from "@/shared/libs";
+import { isDev } from "@/shared/libs";
 
 const SUBDOMAIN_DEPTH = isDev ? 2 : 3;
+
+/**
+ * Determines which domain key to use:
+ * 1. If FIXED_DOMAIN_KEY is set, use that.
+ * 2. Otherwise, extract the first subdomain when the host has the expected depth.
+ */
+function resolveDomainKey(host?: string): string | undefined {
+  const fixed = process.env.FIXED_DOMAIN_KEY;
+  if (fixed) return fixed;
+
+  if (!host) return;
+  const parts = host.split(".");
+  return parts.length === SUBDOMAIN_DEPTH ? parts[0] : undefined;
+}
 
 // NOTE: Middleware Function
 export async function middleware(req: NextRequest) {
   const response = NextResponse.next();
   const host = req.headers.get("host");
+  const domainKey = resolveDomainKey(host || undefined);
 
-  if (isTruthy(host)) {
-    const subdomains = host.split(".");
-    if (
-      isPopulatedArray<string>(subdomains) &&
-      subdomains.length === SUBDOMAIN_DEPTH
-    ) {
-      const domainConfig = await fetchDomainByKey(subdomains[0]);
-      if (domainConfig) {
-        response.headers.set("X-Domain-Config", JSON.stringify(domainConfig));
-      }
+  if (domainKey) {
+    const domainConfig = await fetchDomainByKey(domainKey);
+    if (domainConfig) {
+      response.headers.set("X-Domain-Config", JSON.stringify(domainConfig));
     }
   }
 
