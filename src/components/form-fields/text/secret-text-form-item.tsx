@@ -41,6 +41,7 @@ export const SecretTextFormItem = ({
           value={fieldValue ?? ""}
           onChange={onChange}
           type={type === "password" ? (showSecret ? "text" : "password") : type}
+          className="pr-15"
           {...props}
         />
         <Button
