@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
 import { TwinsAPI } from "@/shared/api";
@@ -272,13 +272,34 @@ export async function verifyEmailAction(
 /**
  * Throws a 404 if the current user lacks any of the given permission IDs.
  */
+// export async function requirePermissionsOr404(permissionIds: string[]) {
+//   for (const permission of permissionIds) {
+//     const allowed = await isAuthUserGranted({
+//       permission,
+//     });
+//     if (!allowed) {
+//       notFound();
+//     }
+//   }
+// }
+
 export async function requirePermissionsOr404(permissionIds: string[]) {
-  for (const permission of permissionIds) {
-    const allowed = await isAuthUserGranted({
-      permission,
-    });
-    if (!allowed) {
-      notFound();
+  try {
+    for (const permission of permissionIds) {
+      const allowed = await isAuthUserGranted({ permission });
+
+      if (!allowed) {
+        notFound();
+      }
     }
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      (error.message === "UNAUTHORIZED" ||
+        error.message === "Missing authToken in cookies")
+    ) {
+      redirect("/");
+    }
+    throw error;
   }
 }

@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { fetchWT001Face } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
@@ -14,7 +16,20 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
 
   const result = await safe(() => fetchWT001Face(widget.widgetFaceId, twinId));
 
+  // if (!result.ok) {
+  //   return (
+  //     <StatusAlert variant="error" message="Widget WT001 failed to load." />
+  //   );
+  // }
+
   if (!result.ok) {
+    if (
+      result.error instanceof Error &&
+      result.error.message === "UNAUTHORIZED"
+    ) {
+      redirect("/");
+    }
+
     return (
       <StatusAlert variant="error" message="Widget WT001 failed to load." />
     );
