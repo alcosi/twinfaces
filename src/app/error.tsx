@@ -27,8 +27,9 @@ export default function Error({
             Something went wrong!
           </p>
           <p className="text-muted-foreground mt-2 text-sm">
-            Sorry, we couldn{UNICODE_SYMBOLS.apostrophe}t find this person you
-            {UNICODE_SYMBOLS.apostrophe}re looking for.
+            Oops! Sorry, we couldn{UNICODE_SYMBOLS.apostrophe}t load the data.
+            <br />
+            Try refreshing the page or come back a bit later.
           </p>
         </div>
 
