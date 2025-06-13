@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,7 +18,6 @@ import {
   useLinkSearch,
 } from "@/entities/link";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PlatformArea } from "@/shared/config";
@@ -124,12 +122,7 @@ export function LinksScreen() {
   const router = useRouter();
   const { searchLinks } = useLinkSearch();
   const { buildFilterFields, mapFiltersToPayload } = useLinkFilters();
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { createLink } = useCreateLink();
-
-  useEffect(() => {
-    setBreadcrumbs([{ label: "Links", href: `/${PlatformArea.core}/links` }]);
-  }, [setBreadcrumbs]);
 
   const linkForm = useForm<z.infer<typeof LINK_SCHEMA>>({
     resolver: zodResolver(LINK_SCHEMA),

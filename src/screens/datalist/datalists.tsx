@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -15,9 +15,7 @@ import {
   useDatalistFilters,
   useDatalistSearchV1,
 } from "@/entities/datalist";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import {
   CrudDataTable,
@@ -89,15 +87,8 @@ const colDefs: Record<
 export const DatalistsScreen = () => {
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } = useDatalistFilters();
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { searchDatalist } = useDatalistSearchV1();
   const { createDatalist } = useDatalistCreate();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Datalists", href: `/${PlatformArea.core}/datalists` },
-    ]);
-  }, []);
 
   async function fetchDataLists(
     pagination: PaginationState,

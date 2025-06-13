@@ -14,14 +14,14 @@ export function ProductsScreen() {
   const [selectedSize, setSelectedSize] = useState(products[0]?.sizes[1]);
 
   return (
-    <div className="min-h-screen flex justify-center items-center dark:bg-background">
+    <div className="dark:bg-background flex min-h-screen items-center justify-center">
       <div className="w-full max-w-7xl px-4">
         {products.map((product, index) => (
           <div
             key={index}
             className="flex flex-col lg:flex-row lg:gap-8 lg:px-8"
           >
-            <div className="lg:w-2/3 max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:pt-16 lg:pb-24">
+            <div className="max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:w-2/3 lg:pt-16 lg:pb-24">
               <ProductName name={product.name} />
 
               <div className="mt-4 lg:mt-0">

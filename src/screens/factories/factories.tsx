@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -15,10 +14,8 @@ import {
   useFactoryFilters,
   useFactorySearch,
 } from "@/entities/factory";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -103,14 +100,7 @@ const colDefs: Record<
 export function Factories() {
   const { searchFactories } = useFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { createFactory } = useCreateFactory();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Factories", href: `/${PlatformArea.core}/factories` },
-    ]);
-  }, []);
 
   const factoryForm = useForm<z.infer<typeof FACTORY_SCHEMA>>({
     resolver: zodResolver(FACTORY_SCHEMA),

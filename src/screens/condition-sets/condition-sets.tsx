@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 import {
@@ -9,9 +8,7 @@ import {
   useFactoryConditionSetFilters,
   useFactoryConditionSetSearch,
 } from "@/entities/factory-condition-set";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { UserResourceLink } from "@/features/user/ui";
-import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -99,15 +96,8 @@ const colDefs: Record<
 
 export function ConditionSetsScreen() {
   const { searchFactoryConditionSet } = useFactoryConditionSetSearch();
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryConditionSetFilters();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Condition Sets", href: `/${PlatformArea.core}/condition-sets` },
-    ]);
-  }, [setBreadcrumbs]);
 
   async function fetchFactoryConditionSet(
     pagination: PaginationState,
