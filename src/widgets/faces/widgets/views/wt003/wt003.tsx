@@ -1,12 +1,14 @@
 import { fetchWT003Face } from "@/entities/face";
-import { safe } from "@/shared/libs";
+import { safeWithRedirect } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
 import { WT003Alert } from "./wt003-alert";
 
 export async function WT003({ widget, twinId }: WidgetFaceProps) {
-  const result = await safe(() => fetchWT003Face(widget.widgetFaceId, twinId));
+  const result = await safeWithRedirect(() =>
+    fetchWT003Face(widget.widgetFaceId, twinId)
+  );
 
   if (!result.ok) {
     return (

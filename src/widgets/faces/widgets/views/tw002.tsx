@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-accordion";
 
 import { fetchTW002Face } from "@/entities/face";
-import { safe } from "@/shared/libs";
+import { safeWithRedirect } from "@/shared/libs";
 
 import { StatusAlert } from "../../components";
 import { TWidgetFaceProps } from "../types";
@@ -14,7 +14,9 @@ import { TWidgetFaceProps } from "../types";
 export async function TW002(props: TWidgetFaceProps) {
   const { twinId, face, widget } = props;
 
-  const result = await safe(() => fetchTW002Face(widget.widgetFaceId, twinId));
+  const result = await safeWithRedirect(() =>
+    fetchTW002Face(widget.widgetFaceId, twinId)
+  );
 
   if (!result.ok) {
     return (

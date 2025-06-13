@@ -2,12 +2,11 @@ import { fetchTW004Face } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
-import { cn, safe } from "@/shared/libs";
+import { cn, safeWithRedirect } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
 import { buildFieldEditorProps } from "./utils";
-import { redirect } from "next/navigation";
 
 export async function TW004(props: TWidgetFaceProps) {
   const { twinId, widget, className } = props;
@@ -16,27 +15,15 @@ export async function TW004(props: TWidgetFaceProps) {
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const twidgetResult = await safe(() =>
+  const twidgetResult = await safeWithRedirect(() =>
     fetchTW004Face(widget.widgetFaceId, twinId)
   );
-  // if (!twidgetResult.ok) {
-  //   return (
-  //     <StatusAlert variant="error" message="Widget TW004 failed to load." />
-  //   );
-  // }
-
   if (!twidgetResult.ok) {
-    if (
-      twidgetResult.error instanceof Error &&
-      twidgetResult.error.message === "UNAUTHORIZED"
-    ) {
-      redirect("/");
-    }
-
     return (
       <StatusAlert variant="error" message="Widget TW004 failed to load." />
     );
   }
+
   const twidget = twidgetResult.data;
 
   const { twin, relatedObjects, field } = await buildFieldEditorProps(

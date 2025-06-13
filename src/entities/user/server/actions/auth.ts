@@ -1,11 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
 import { TwinsAPI } from "@/shared/api";
-import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
+import { isPopulatedArray, isUndefined, safeWithRedirect } from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
@@ -23,7 +23,7 @@ import {
 } from "../types";
 
 export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
-  const result = await safe(() =>
+  const result = await safeWithRedirect(() =>
     TwinsAPI.POST("/auth/config/v1", {
       params: {
         header: {

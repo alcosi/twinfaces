@@ -1,6 +1,6 @@
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { cn, safe } from "@/shared/libs";
+import { cn, safeWithRedirect } from "@/shared/libs";
 import { MediaType, SlotSlider } from "@/shared/ui";
 
 import { StatusAlert } from "../../components";
@@ -16,7 +16,7 @@ export async function TW001(props: TWidgetFaceProps) {
     showTwin2AttachmentMode: "DETAILED",
   } as const;
 
-  const twidgetResult = await safe(() =>
+  const twidgetResult = await safeWithRedirect(() =>
     fetchTW001Face(widget.widgetFaceId, twinId)
   );
   if (!twidgetResult.ok) {
@@ -26,7 +26,7 @@ export async function TW001(props: TWidgetFaceProps) {
   }
   const twidget = twidgetResult.data;
 
-  const twinResult = await safe(() =>
+  const twinResult = await safeWithRedirect(() =>
     fetchTwinById(twidget.pointedTwinId!, { header, query })
   );
   if (!twinResult.ok) {

@@ -1,9 +1,7 @@
-import { redirect } from "next/navigation";
-
 import { fetchWT001Face } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
-import { safe } from "@/shared/libs";
+import { safeWithRedirect } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
@@ -14,22 +12,11 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const result = await safe(() => fetchWT001Face(widget.widgetFaceId, twinId));
-
-  // if (!result.ok) {
-  //   return (
-  //     <StatusAlert variant="error" message="Widget WT001 failed to load." />
-  //   );
-  // }
+  const result = await safeWithRedirect(() =>
+    fetchWT001Face(widget.widgetFaceId, twinId)
+  );
 
   if (!result.ok) {
-    if (
-      result.error instanceof Error &&
-      result.error.message === "UNAUTHORIZED"
-    ) {
-      redirect("/");
-    }
-
     return (
       <StatusAlert variant="error" message="Widget WT001 failed to load." />
     );

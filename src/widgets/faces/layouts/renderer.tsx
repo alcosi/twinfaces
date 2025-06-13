@@ -1,5 +1,5 @@
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
-import { safe } from "@/shared/libs";
+import { safeWithRedirect } from "@/shared/libs";
 
 import { StatusAlert } from "../components";
 import { PGFaceProps } from "./types";
@@ -11,7 +11,7 @@ const LAYOUT_MAP = {
 } as const;
 
 export async function LayoutRenderer(props: PGFaceProps) {
-  const result = await safe(() =>
+  const result = await safeWithRedirect(() =>
     fetchFaceById<Face_DETAILED>(props.pageFaceId, {
       query: { showFaceMode: "DETAILED" },
     })

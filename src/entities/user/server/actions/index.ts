@@ -1,8 +1,6 @@
 import { getAuthHeaders } from "@/entities/face";
 import { TwinsAPI } from "@/shared/api";
 import { isFound, isUndefined } from "@/shared/libs";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export * from "./auth";
 

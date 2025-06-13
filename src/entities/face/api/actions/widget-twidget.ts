@@ -20,37 +20,6 @@ type FetchFaceOptions = {
   query: Record<string, any>;
 };
 
-// async function fetchFaceWidget<T>({
-//   twinId,
-//   faceId,
-//   endpoint,
-//   query,
-// }: FetchFaceOptions): Promise<T> {
-//   const headers = await getAuthHeaders();
-
-//   const { data } = await TwinsAPI.GET(endpoint, {
-//     params: {
-//       path: { faceId },
-//       header: headers,
-//       query: {
-//         twinId,
-//         lazyRelation: false,
-//         showFaceMode: "DETAILED",
-//         ...query,
-//       },
-//     },
-//   });
-
-
-//   if (isUndefined(data?.widget)) {
-//     const message = `[${endpoint}] Widget not found for faceId=${faceId}, twinId=${twinId}`;
-//     console.warn(message);
-//     throw new Error(message);
-//   }
-
-//   return data.widget as T;
-// }
-
 async function fetchFaceWidget<T>({
   twinId,
   faceId,
@@ -59,35 +28,26 @@ async function fetchFaceWidget<T>({
 }: FetchFaceOptions): Promise<T> {
   const headers = await getAuthHeaders();
 
-  try {
-    const { data } = await TwinsAPI.GET(endpoint, {
-      params: {
-        path: { faceId },
-        header: headers,
-        query: {
-          twinId,
-          lazyRelation: false,
-          showFaceMode: "DETAILED",
-          ...query,
-        },
+  const { data } = await TwinsAPI.GET(endpoint, {
+    params: {
+      path: { faceId },
+      header: headers,
+      query: {
+        twinId,
+        lazyRelation: false,
+        showFaceMode: "DETAILED",
+        ...query,
       },
-    });
+    },
+  });
 
-    if (isUndefined(data?.widget)) {
-      const message = `[${endpoint}] Widget not found for faceId=${faceId}, twinId=${twinId}`;
-      console.warn(message);
-      throw new Error(message);
-    }
-
-    return data.widget as T;
-
-  } catch (err) {
-    if (err instanceof Error && err.message === "UNAUTHORIZED") {
-      console.log("Caught UNAUTHORIZED in fetchFaceWidget — you can handle it here");
-      throw err;
-    }
-    throw err;
+  if (isUndefined(data?.widget)) {
+    const message = `[${endpoint}] Widget not found for faceId=${faceId}, twinId=${twinId}`;
+    console.warn(message);
+    throw new Error(message);
   }
+
+  return data.widget as T;
 }
 
 export async function fetchWT001Face(

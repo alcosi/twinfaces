@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { getAuthHeaders } from "@/entities/face";
 import { Twin_DETAILED, fetchTwinById } from "@/entities/twin/server";
-import { safe } from "@/shared/libs";
+import { safeWithRedirect } from "@/shared/libs";
 import { StatusAlert } from "@/widgets/faces/components";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
@@ -20,7 +20,7 @@ export default async function Page({ params }: Props) {
     showTwin2TwinClassMode: "DETAILED",
     showTwinClassPage2FaceMode: "DETAILED",
   } as const;
-  const result = await safe(() =>
+  const result = await safeWithRedirect(() =>
     fetchTwinById<Twin_DETAILED>(params.twinId, { header, query })
   );
 

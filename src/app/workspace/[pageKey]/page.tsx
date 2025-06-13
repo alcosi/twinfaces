@@ -1,6 +1,6 @@
 import { fetchSidebarFace } from "@/entities/face";
 import { UnderConstructionScreen as UnderConstruction } from "@/screens/under-construction";
-import { isUndefined, safe } from "@/shared/libs";
+import { isUndefined, safeWithRedirect } from "@/shared/libs";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
 type Props = {
@@ -18,7 +18,7 @@ export default async function Page({ params: { pageKey } }: Props) {
 }
 
 async function resolvePageFaceId(pageKey: string): Promise<string | undefined> {
-  const result = await safe(fetchSidebarFace);
+  const result = await safeWithRedirect(fetchSidebarFace);
   if (!result.ok) return;
 
   const page = result.data.userAreaMenuItems?.find(
