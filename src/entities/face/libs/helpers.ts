@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies, headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 import { RemoteConfig } from "@/shared/config";
 import { isFalsy, isUndefined } from "@/shared/libs";
@@ -54,10 +53,6 @@ async function getAuthTokenFromCookies(): Promise<string> {
   const cookieStore = await cookies();
 
   const token = cookieStore.get("authToken")?.value;
-  if (!token) {
-    redirect("/");
-  }
-
   if (isUndefined(token)) {
     throw new Error("Missing authToken in cookies");
   }
