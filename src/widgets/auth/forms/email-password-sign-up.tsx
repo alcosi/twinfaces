@@ -72,6 +72,8 @@ export function EmailPasswordSignUpForm({
           err instanceof Error ? err.message : "An unexpected error occurred."
         );
         onError?.();
+        singUpForm.resetField("password");
+        singUpForm.resetField("confirmPassword");
       }
     });
   }
