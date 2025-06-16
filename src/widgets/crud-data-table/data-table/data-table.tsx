@@ -18,6 +18,7 @@ import {
   useState,
 } from "react";
 
+import { TableSkeleton } from "@/features/ui/skeletons";
 import { PaginationV1 } from "@/shared/api";
 import {
   cn,
@@ -26,7 +27,6 @@ import {
   isPopulatedArray,
 } from "@/shared/libs";
 
-import { TableSkeleton } from "../../skeletons";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableHandle, DataTableProps, DataTableRow } from "./types";
 import { DataTableGrid, DataTableList } from "./views";
