@@ -25,8 +25,8 @@ import {
   isEmptyArray,
   isPopulatedArray,
 } from "@/shared/libs";
-import { LoadingOverlay } from "@/shared/ui/loading";
 
+import { TableSkeleton } from "../../skeletons";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableHandle, DataTableProps, DataTableRow } from "./types";
 import { DataTableGrid, DataTableList } from "./views";
@@ -135,29 +135,34 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   return (
     <>
-      <div
-        className={cn(
-          "relative mb-2",
-          layoutMode === "grid" && "border-border rounded-md border"
-        )}
-      >
-        {isEmptyArray(table.getRowModel().rows) ? (
-          <div className="text-muted-foreground rounded-md p-4 text-center">
-            No results.
+      {loading ? (
+        <TableSkeleton withHeader={false} />
+      ) : (
+        <>
+          <div
+            className={cn(
+              "relative mb-2",
+              layoutMode === "grid" && "border-border rounded-md border"
+            )}
+          >
+            {isEmptyArray(table.getRowModel().rows) ? (
+              <div className="text-muted-foreground rounded-md p-4 text-center">
+                No results.
+              </div>
+            ) : layoutMode === "grid" ? (
+              <DataTableGrid table={table} onRowClick={onRowClick} />
+            ) : (
+              <DataTableList table={table} onRowClick={onRowClick} />
+            )}
           </div>
-        ) : layoutMode === "grid" ? (
-          <DataTableGrid table={table} onRowClick={onRowClick} />
-        ) : (
-          <DataTableList table={table} onRowClick={onRowClick} />
-        )}
-        {loading && <LoadingOverlay />}
-      </div>
-      {!disablePagination && (
-        <DataTablePagination
-          table={table}
-          pageSizes={pageSizes}
-          pageState={pagination.api}
-        />
+          {!disablePagination && (
+            <DataTablePagination
+              table={table}
+              pageSizes={pageSizes}
+              pageState={pagination.api}
+            />
+          )}
+        </>
       )}
     </>
   );
