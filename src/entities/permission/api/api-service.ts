@@ -4,8 +4,8 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   CreatePermissionRequestBody,
-  GrantSpaceRolePermissionPayload,
   GrantAssigneePropagationPermissionPayload,
+  GrantSpaceRolePermissionPayload,
   GrantTwinRolePermissionPayload,
   GrantUserGroupPermissionPayload,
   GrantUserPermissionPayload,
