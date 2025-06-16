@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -16,13 +16,11 @@ import {
   useTwinClassFilters,
   useTwinClassSearchV1,
 } from "@/entities/twin-class";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
@@ -244,13 +242,6 @@ export function TwinClasses() {
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinClasses } = useTwinClassSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
-  const { setBreadcrumbs } = useBreadcrumbs();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Classes", href: `/${PlatformArea.core}/twinclass` },
-    ]);
-  }, []);
 
   async function fetchTwinClasses(
     pagination: PaginationState,

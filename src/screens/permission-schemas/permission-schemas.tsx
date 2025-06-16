@@ -1,5 +1,5 @@
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { toast } from "sonner";
 
 import {
@@ -7,10 +7,8 @@ import {
   usePermissionSchemaFilters,
   usePermissionSchemaSearchV1,
 } from "@/entities/permission-schema";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
@@ -87,16 +85,9 @@ const colDefs: Record<
 
 export function PermissionSchemasScreen() {
   const tableRef = useRef<DataTableHandle>(null);
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissionSchemas } = usePermissionSchemaSearchV1();
   const { buildFilterFields, mapFiltersToPayload } =
     usePermissionSchemaFilters();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Schemas", href: `/${PlatformArea.core}/permission-schemas` },
-    ]);
-  }, [setBreadcrumbs]);
 
   async function fetchPermissionSchemas(
     pagination: PaginationState,

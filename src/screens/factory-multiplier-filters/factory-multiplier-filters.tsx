@@ -2,7 +2,6 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";
@@ -12,13 +11,11 @@ import {
   useFactoryMultiplierFilterSearch,
 } from "@/entities/factory-multiplier-filter";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
 import { FactoryMultiplierResourceLink } from "@/features/factory-multiplier/ui";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -119,18 +116,8 @@ const colDefs: Record<
 
 export function FactoryMultiplierFiltersScreen() {
   const { searchFactoryMultiplierFilters } = useFactoryMultiplierFilterSearch();
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryMultiplierFilterFilters();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      {
-        label: "Multiplier filters",
-        href: `/${PlatformArea.core}/multiplier-filters`,
-      },
-    ]);
-  }, [setBreadcrumbs]);
 
   async function fetchFactoryMultiplierFilter(
     pagination: PaginationState,

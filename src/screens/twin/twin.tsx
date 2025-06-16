@@ -1,10 +1,8 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { TwinContext } from "@/features/twin";
-import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinsTable } from "@/widgets/tables";
 
@@ -52,7 +50,6 @@ const DEFAULT_TABS = [
 
 export function TwinScreen() {
   const { twin, twinId } = useContext(TwinContext);
-  const { setBreadcrumbs } = useBreadcrumbs();
 
   const tabs: Tab[] = [
     ...DEFAULT_TABS,
@@ -64,16 +61,6 @@ export function TwinScreen() {
       ),
     })) ?? []),
   ];
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Twins", href: `/${PlatformArea.core}/twins` },
-      {
-        label: twin?.name!,
-        href: `/${PlatformArea.core}/twins/${twinId}`,
-      },
-    ]);
-  }, [twinId, twin?.name]);
 
   return <TabsLayout tabs={tabs} />;
 }

@@ -2,7 +2,6 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 import {
@@ -11,7 +10,6 @@ import {
   useFactoryEraserSearch,
 } from "@/entities/factory-eraser";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
@@ -118,11 +116,6 @@ const colDefs: Record<
 export function FactoryErasers() {
   const { searchFactoryErasers } = useFactoryEraserSearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryEraserFilters();
-  const { setBreadcrumbs } = useBreadcrumbs();
-
-  useEffect(() => {
-    setBreadcrumbs([{ label: "Erasers", href: "/workspace/erasers" }]);
-  }, []);
 
   async function fetchErasers(
     pagination: PaginationState,

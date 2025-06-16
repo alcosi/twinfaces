@@ -1,5 +1,5 @@
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { toast } from "sonner";
 
 import {
@@ -7,10 +7,8 @@ import {
   useUserGroupSearchV1,
   useUserGroupsFilters,
 } from "@/entities/user-group";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
 import { PagedResponse } from "@/shared/api";
-import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
@@ -81,15 +79,8 @@ const colDefs: Record<
 
 export function UserGroups() {
   const tableRef = useRef<DataTableHandle>(null);
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { searchUserGroups } = useUserGroupSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = useUserGroupsFilters();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Groups", href: `/${PlatformArea.core}/user-groups` },
-    ]);
-  }, []);
 
   async function fetchUserGroups(
     pagination: PaginationState,
