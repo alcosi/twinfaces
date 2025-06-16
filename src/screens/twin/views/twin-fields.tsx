@@ -2,22 +2,14 @@ import { ColumnDef } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 
-import { AutoFormValueType } from "@/components/auto-field";
-
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
-import {
-  TwinFieldUI,
-  useFetchFields,
-  useUpsertField,
-} from "@/entities/twinField";
-import {
-  InPlaceEdit,
-  InPlaceEditContextProvider,
-} from "@/features/inPlaceEdit";
+import { TwinFieldUI, useFetchFields } from "@/entities/twinField";
+import { InPlaceEditContextProvider } from "@/features/inPlaceEdit";
 import { TwinContext } from "@/features/twin";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
+import { TwinFieldEditor } from "@/features/twin/ui";
 import { PagedResponse } from "@/shared/api";
-import { isObject, isPopulatedString, isTruthy } from "@/shared/libs";
+import { isObject, isTruthy } from "@/shared/libs";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import {
   renderTwinFieldPreview,
@@ -28,7 +20,6 @@ export function TwinFields() {
   const { twinId } = useContext(TwinContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { fetchFieldsByTwinId } = useFetchFields();
-  const { upsertTwinField } = useUpsertField();
 
   const columns: ColumnDef<TwinFieldUI>[] = [
     {
@@ -50,41 +41,34 @@ export function TwinFields() {
       accessorKey: "value",
       header: "Value",
       cell: ({ row: { original } }) => {
-        // TODO: replace with <TwinFieldEditor />
         return (
           <div
             className="inline-block w-full min-w-[300px]"
             onClick={(e) => e.stopPropagation()}
           >
-            <InPlaceEdit
-              id={original.key}
-              value={
-                isObject(original.value) && isTruthy(original.value.id)
-                  ? original.value.id
-                  : original.value
-              }
-              valueInfo={{
-                type: AutoFormValueType.twinField,
+            <TwinFieldEditor
+              id={original.id}
+              twinId={twinId}
+              twin={original}
+              field={{
+                id: original.id,
+                key: original.key,
+                value:
+                  isObject(original.value) && isTruthy(original.value.id)
+                    ? String(original.value.id)
+                    : String(original.value),
                 descriptor: original.descriptor,
-                twinId,
               }}
               schema={resolveTwinFieldSchema(original)}
-              renderPreview={(_) =>
+              onSuccess={tableRef.current?.refresh}
+              editable
+              className="hover:bg-transparent"
+              renderFieldPreview={() =>
                 renderTwinFieldPreview({
                   twinField: original,
                   allowNavigation: true,
                 })
               }
-              onSubmit={(fieldValue) =>
-                upsertTwinField({
-                  twinId,
-                  fieldKey: original.key,
-                  fieldValue: isPopulatedString(fieldValue)
-                    ? fieldValue
-                    : fieldValue.id!,
-                }).then(tableRef.current?.refresh)
-              }
-              className="hover:bg-transparent"
             />
           </div>
         );

@@ -47,6 +47,7 @@ export type TwinFieldEditorProps = {
   className?: string;
   mode?: "admin";
   editable?: boolean;
+  renderFieldPreview?: () => ReactNode;
 };
 
 export function TwinFieldEditor({
@@ -61,6 +62,7 @@ export function TwinFieldEditor({
   className,
   mode,
   editable = false,
+  renderFieldPreview,
 }: TwinFieldEditorProps) {
   const { updateTwin } = useTwinUpdate();
   const router = useRouter();
@@ -105,7 +107,7 @@ export function TwinFieldEditor({
       descriptor: field.descriptor,
       twinId,
     },
-    renderPreview: renderPreview,
+    renderPreview: renderFieldPreview ?? renderPreview,
     schema: schema ?? z.string().min(1),
     onSubmit: handleOnSubmit,
     className: cn(className, staticFieldClassName),
@@ -135,7 +137,7 @@ function renderDynamicFieldPreview(
 ): ReactNode {
   const fieldType = field.descriptor?.fieldType;
 
-  if (field.descriptor?.fieldType === "urlV1") {
+  if (fieldType === "urlV1") {
     return (
       <AnchorWithCopy href={field.value} target="_blank">
         {field.value}
