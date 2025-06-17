@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { clientCookies } from "@/shared/libs";
-import { Button } from "@/shared/ui";
+import { Button, Separator } from "@/shared/ui";
 
 export function ErrorsAndExceptionsTab() {
   const simulate500 = () => {
@@ -16,7 +16,7 @@ export function ErrorsAndExceptionsTab() {
 
   return (
     <div className="flex flex-col items-start space-y-4 py-6">
-      <p>Click a button to simulate an error:</p>
+      <h3 className="font-bold">Client-side errors:</h3>
 
       <Link href={`/non-existent-path-${Date.now()}`} passHref>
         <Button variant="outline">Simulate 404</Button>
@@ -29,6 +29,14 @@ export function ErrorsAndExceptionsTab() {
       <Button variant="outline" onClick={simulateAuthCorruption}>
         Simulate auth-token corruption
       </Button>
+
+      <Separator />
+
+      <h3 className="font-bold">Server-side errors:</h3>
+
+      {/* TODO1: create button which runs server function on next.js and throw notFound exception */}
+
+      {/* TODO2: create button which runs server function on next.js and throw some 500 eroro */}
     </div>
   );
 }
