@@ -79,7 +79,6 @@ export class ImageNode extends DecoratorNode<React.JSX.Element> {
   }
 
   decorate(): React.JSX.Element {
-    // eslint-disable-next-line @next/next/no-img-element
     return <img src={this.__src} alt={this.__alt} className="max-w-full" />;
   }
 }
