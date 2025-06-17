@@ -71,3 +71,12 @@ async function getUserIdFromCookies(): Promise<string> {
 
   return userId;
 }
+
+export async function getMiddlewareErrorFromCookies(): Promise<
+  string | undefined
+> {
+  const cookieStore = await cookies();
+  const errorMessage = cookieStore.get("middlewareError")?.value;
+
+  return errorMessage;
+}

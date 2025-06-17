@@ -2,9 +2,10 @@ import { env } from "next-runtime-env";
 import { NextRequest, NextResponse } from "next/server";
 
 import { fetchDomainByKey } from "@/entities/domain/api";
-import { isDev, isTruthy, safe } from "@/shared/libs";
+import { isDev, isFalsy, isTruthy, safe } from "@/shared/libs";
 
 const SUBDOMAIN_DEPTH = isDev ? 2 : 3;
+const RESPONSE_STATUSES_TO_SHOW_ERROR = [404, 500];
 
 /**
  * Determines which domain key to use:
@@ -22,7 +23,9 @@ function resolveDomainKey(host?: string): string | undefined {
 
 // NOTE: Middleware Function
 export async function middleware(req: NextRequest) {
-  const response = NextResponse.next();
+  const response = NextResponse.next() as NextResponse & {
+    error?: unknown;
+  };
   const host = req.headers.get("host");
   const domainKey = resolveDomainKey(host || undefined);
 
@@ -31,6 +34,23 @@ export async function middleware(req: NextRequest) {
 
     if (result.ok && isTruthy(result.data)) {
       response.headers.set("X-Domain-Config", JSON.stringify(result.data));
+    }
+  }
+
+  const shouldShowMiddlewareError =
+    !response.ok && RESPONSE_STATUSES_TO_SHOW_ERROR.includes(response.status);
+
+  if (isDev) {
+    const error = response.error;
+
+    if (shouldShowMiddlewareError && isTruthy(error)) {
+      response.cookies.set("middlewareError", JSON.stringify(error));
+    }
+    if (shouldShowMiddlewareError && isFalsy(error)) {
+      response.cookies.set(
+        "middlewareError",
+        `Unexpected API error occurred at ${new Date().toISOString()}`
+      );
     }
   }
 

@@ -52,6 +52,7 @@ export function useAuthUser(): UseAuthUser {
     clientCookies.remove("authToken");
     clientCookies.remove("domainId");
     clientCookies.remove("userId");
+    clientCookies.remove("middlewareError");
   }, [setStoredValue]);
 
   return {
