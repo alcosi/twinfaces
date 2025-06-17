@@ -29,5 +29,8 @@ export type GrantUserGroupPermissionPayload =
 export type GrantTwinRolePermissionPayload =
   components["schemas"]["PermissionGrantTwinRoleCreateRqV1"];
 
+export type GrantSpaceRolePermissionPayload =
+  components["schemas"]["PermissionGrantSpaceRoleCreateRqV1"];
+
 export type GrantAssigneePropagationPermissionPayload =
   components["schemas"]["PermissionGrantAssigneePropagationCreateRqV1"];

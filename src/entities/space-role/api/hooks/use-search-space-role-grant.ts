@@ -2,10 +2,10 @@ import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
 import {
-  PermissionGrantSpaceRoleFilter,
+  PermissionGrantSpaceRoleFilters,
   PermissionGrantSpaceRole_DETAILED,
   hydratePermissionGrantSpaceRoleFromMap,
-} from "@/entities/spaceRole";
+} from "@/entities/space-role";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export const usePermissionSpaceRoleSearchV1 = () => {
@@ -17,26 +17,27 @@ export const usePermissionSpaceRoleSearchV1 = () => {
       filters = {},
     }: {
       pagination?: PaginationState;
-      filters?: PermissionGrantSpaceRoleFilter;
+      filters?: PermissionGrantSpaceRoleFilters;
     }): Promise<PagedResponse<PermissionGrantSpaceRole_DETAILED>> => {
       try {
-        const { data, error } = await api.spaceRole.search({
-          pagination,
-          filters,
-        });
+        const { data, error } =
+          await api.spaceRole.searchPermissionGranSpaceRole({
+            pagination,
+            filters,
+          });
 
         if (error) {
           throw new Error(
             "Failed to fetch permission space role due to API error"
           );
         }
-        const SpaceRoles =
+        const PermissionGrantSpaceRoles =
           data.permissionGrantSpaceRoles?.map((dto) =>
             hydratePermissionGrantSpaceRoleFromMap(dto, data.relatedObjects)
           ) ?? [];
 
         return {
-          data: SpaceRoles,
+          data: PermissionGrantSpaceRoles,
           pagination: data.pagination ?? {},
         };
       } catch (error) {

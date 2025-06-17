@@ -1,6 +1,10 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
-import { PermissionGrantSpaceRoleFilter } from "@/entities/spaceRole";
+
+import {
+  PermissionGrantSpaceRoleFilters,
+  SpaceRoleFilters,
+} from "@/entities/space-role";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createPermissionSpaceRoleApi(settings: ApiSettings) {
   async function search({
@@ -8,7 +12,33 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
     filters,
   }: {
     pagination: PaginationState;
-    filters: PermissionGrantSpaceRoleFilter;
+    filters: SpaceRoleFilters;
+  }) {
+    return settings.client.POST(`/private/space_role/search/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showSpaceRoleMode: "DETAILED",
+          showSpaceRole2TwinClassMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+        },
+      },
+      body: {
+        ...filters,
+      },
+    });
+  }
+
+  async function searchPermissionGranSpaceRole({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: PermissionGrantSpaceRoleFilters;
   }) {
     return settings.client.POST(
       "/private/permission_grant/space_role/search/v1",
@@ -39,6 +69,7 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
 
   return {
     search,
+    searchPermissionGranSpaceRole,
   };
 }
 

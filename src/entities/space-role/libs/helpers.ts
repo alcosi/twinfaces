@@ -1,8 +1,9 @@
-import { RelatedObjects } from "@/shared/api";
 import {
   PermissionGrantSpaceRole,
   PermissionGrantSpaceRole_DETAILED,
-} from "@/entities/spaceRole";
+  SpaceRole,
+} from "@/entities/space-role";
+import { RelatedObjects } from "@/shared/api";
 
 export const hydratePermissionGrantSpaceRoleFromMap = (
   dto: PermissionGrantSpaceRole,
@@ -24,6 +25,19 @@ export const hydratePermissionGrantSpaceRoleFromMap = (
 
   if (dto.grantedByUserId && relatedObjects?.userMap) {
     hydrated.grantedByUser = relatedObjects.userMap[dto.grantedByUserId]!;
+  }
+
+  return hydrated;
+};
+
+export const hydrateSpaceRoleFromMap = (
+  dto: SpaceRole,
+  relatedObjects?: RelatedObjects
+): SpaceRole => {
+  const hydrated: SpaceRole = Object.assign({}, dto) as SpaceRole;
+
+  if (dto.twinClassId && relatedObjects?.twinClassMap) {
+    hydrated.twinClass = relatedObjects.twinClassMap[dto.twinClassId];
   }
 
   return hydrated;

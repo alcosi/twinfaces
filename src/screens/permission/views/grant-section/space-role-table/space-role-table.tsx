@@ -1,11 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
+import {
+  PERMISSION_GRANT_SPACE_ROLE_SCHEMA,
+  useCreatePermissionGrantSpaceRole,
+} from "@/entities/permission";
 import {
   PermissionGrantSpaceRole_DETAILED,
   usePermissionSpaceRoleSearchV1,
-} from "@/entities/spaceRole";
+} from "@/entities/space-role";
 import { PermissionContext } from "@/features/permission";
 import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
 import { SpaceRoleResourceLink } from "@/features/space-role/ui";
@@ -14,6 +21,8 @@ import { PagedResponse } from "@/shared/api";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable } from "@/widgets/crud-data-table";
+
+import { SpaceRoleTableFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -80,8 +89,21 @@ const colDefs: Record<
 };
 
 export function SpaceRoleTable() {
-  const { permission } = useContext(PermissionContext);
+  const { permission, permissionId } = useContext(PermissionContext);
   const { searchSpaceRoleGrant } = usePermissionSpaceRoleSearchV1();
+  const { createPermissionGrantSpaceRole } =
+    useCreatePermissionGrantSpaceRole();
+
+  const spaceRoleForm = useForm<
+    z.infer<typeof PERMISSION_GRANT_SPACE_ROLE_SCHEMA>
+  >({
+    resolver: zodResolver(PERMISSION_GRANT_SPACE_ROLE_SCHEMA),
+    defaultValues: {
+      permissionId: permissionId || "",
+      permissionSchemaId: "",
+      spaceRoleId: "",
+    },
+  });
 
   async function fetchData(
     pagination: PaginationState
@@ -100,6 +122,17 @@ export function SpaceRoleTable() {
       return { data: [], pagination: {} };
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof PERMISSION_GRANT_SPACE_ROLE_SCHEMA>
+  ) => {
+    const { ...body } = formValues;
+
+    await createPermissionGrantSpaceRole({
+      body: { permissionGrantSpaceRole: body },
+    });
+    toast.success("Space role permission is granted successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -121,6 +154,11 @@ export function SpaceRoleTable() {
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
+      dialogForm={spaceRoleForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <SpaceRoleTableFormFields control={spaceRoleForm.control} />
+      )}
     />
   );
 }

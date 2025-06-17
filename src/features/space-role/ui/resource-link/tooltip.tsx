@@ -1,6 +1,6 @@
 import { VenetianMask } from "lucide-react";
 
-import { SpaceRole } from "@/entities/spaceRole";
+import { SpaceRole } from "@/entities/space-role";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
