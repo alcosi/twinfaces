@@ -61,7 +61,10 @@ export function TwinFields() {
               }}
               schema={resolveTwinFieldSchema(original)}
               onSuccess={tableRef.current?.refresh}
+              // TODO: :bug: when editable is false, we display UUID on preview-mode
+              // instead of `resource-link`
               editable
+              // disabled
               className="hover:bg-transparent"
               renderFieldPreview={() =>
                 renderTwinFieldPreview({

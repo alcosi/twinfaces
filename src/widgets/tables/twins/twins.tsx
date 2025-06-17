@@ -426,6 +426,8 @@ function extractTwinFieldColumnsAndFilters({
               return twinField.value;
             }
 
+            // TODO: replace with
+            // return <TwinFieldEditor editable={false} />
             return renderTwinFieldPreview({
               twinField,
               allowNavigation: resourceNavigationEnabled,

@@ -47,7 +47,10 @@ export type TwinFieldEditorProps = {
   className?: string;
   mode?: "admin";
   editable?: boolean;
+  // TODO: remove passing this prop to the component
   renderFieldPreview?: () => ReactNode;
+  // TODO: add `disabled` prop for managing various states (e.g. allowNavigation: true/false)
+  // ✅ TODO: add `editable`
 };
 
 export function TwinFieldEditor({
