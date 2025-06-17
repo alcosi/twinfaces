@@ -36,5 +36,5 @@ jobs:
     - name: Run eslint on changed files
       uses: tj-actions/eslint-changed-files@v25
       with:
-        config_path: "./.eslintrc-github.json"
+        config_path: "./.eslint.config.js"
         level: "warning"
