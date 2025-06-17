@@ -18,6 +18,7 @@ import {
   useState,
 } from "react";
 
+import { TableSkeleton } from "@/features/ui/skeletons";
 import { PaginationV1 } from "@/shared/api";
 import {
   cn,
@@ -25,7 +26,6 @@ import {
   isEmptyArray,
   isPopulatedArray,
 } from "@/shared/libs";
-import { LoadingOverlay } from "@/shared/ui/loading";
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableHandle, DataTableProps, DataTableRow } from "./types";
@@ -133,6 +133,10 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     fetchData();
   }, [pagination.tanstask]);
 
+  if (loading) {
+    return <TableSkeleton withHeader={false} />;
+  }
+
   return (
     <>
       <div
@@ -150,7 +154,6 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
         ) : (
           <DataTableList table={table} onRowClick={onRowClick} />
         )}
-        {loading && <LoadingOverlay />}
       </div>
       {!disablePagination && (
         <DataTablePagination

@@ -1,4 +1,4 @@
-import { FormSkeleton } from "@/widgets/skeletons";
+import { FormSkeleton } from "@/features/ui/skeletons";
 
 export default function Loading() {
   return (
