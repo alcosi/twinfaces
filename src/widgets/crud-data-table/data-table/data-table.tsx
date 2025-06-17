@@ -133,36 +133,34 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     fetchData();
   }, [pagination.tanstask]);
 
+  if (loading) {
+    return <TableSkeleton withHeader={false} />;
+  }
+
   return (
     <>
-      {loading ? (
-        <TableSkeleton withHeader={false} />
-      ) : (
-        <>
-          <div
-            className={cn(
-              "relative mb-2",
-              layoutMode === "grid" && "border-border rounded-md border"
-            )}
-          >
-            {isEmptyArray(table.getRowModel().rows) ? (
-              <div className="text-muted-foreground rounded-md p-4 text-center">
-                No results.
-              </div>
-            ) : layoutMode === "grid" ? (
-              <DataTableGrid table={table} onRowClick={onRowClick} />
-            ) : (
-              <DataTableList table={table} onRowClick={onRowClick} />
-            )}
+      <div
+        className={cn(
+          "relative mb-2",
+          layoutMode === "grid" && "border-border rounded-md border"
+        )}
+      >
+        {isEmptyArray(table.getRowModel().rows) ? (
+          <div className="text-muted-foreground rounded-md p-4 text-center">
+            No results.
           </div>
-          {!disablePagination && (
-            <DataTablePagination
-              table={table}
-              pageSizes={pageSizes}
-              pageState={pagination.api}
-            />
-          )}
-        </>
+        ) : layoutMode === "grid" ? (
+          <DataTableGrid table={table} onRowClick={onRowClick} />
+        ) : (
+          <DataTableList table={table} onRowClick={onRowClick} />
+        )}
+      </div>
+      {!disablePagination && (
+        <DataTablePagination
+          table={table}
+          pageSizes={pageSizes}
+          pageState={pagination.api}
+        />
       )}
     </>
   );
