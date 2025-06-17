@@ -1,5 +1,5 @@
-import { AppProgressBar } from "@/widgets/progress-bar";
+import { NavigationProgressBar } from "@/features/ui/navigation-progress-bar";
 
 export default function Loading() {
-  return <AppProgressBar />;
+  return <NavigationProgressBar />;
 }

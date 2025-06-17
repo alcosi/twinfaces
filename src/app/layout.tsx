@@ -6,7 +6,6 @@ import { getDomainFromHeaders } from "@/entities/face";
 import { getProductFlavorConfig } from "@/shared/config";
 import { cn } from "@/shared/libs";
 import { PublicLayoutProviders } from "@/widgets/layout";
-import { AppProgressBar } from "@/widgets/progress-bar";
 
 import "../styles/globals.css";
 
@@ -45,8 +44,6 @@ export default async function RootLayout({
           fontSans.className
         )}
       >
-        <AppProgressBar />
-
         <PublicLayoutProviders config={config}>
           {children}
         </PublicLayoutProviders>
