@@ -1,14 +1,14 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Progress } from "@/shared/ui";
 
 export function AppProgressBar() {
   const pathname = usePathname();
-  const [progress, setProgress] = useState(0);
-  const [hidden, setHidden] = useState(true);
+  const [progress, setProgress] = useState<number>(0);
+  const [hidden, setHidden] = useState<boolean>(true);
 
   useEffect(() => {
     setProgress(60);
