@@ -6,7 +6,6 @@ import { toast } from "sonner";
 
 import { FaceWT001 } from "@/entities/face";
 import {
-  STATIC_TWIN_FIELD_IDS,
   STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP,
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   StaticTwinFieldId,

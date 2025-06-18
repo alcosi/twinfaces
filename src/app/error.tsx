@@ -16,6 +16,9 @@ export default function Error({
   useEffect(() => {
     // Log the error to an error reporting service
     console.error(error);
+
+    // Persist this error’s stack and timestamp in localStorage
+    recordClientError(error);
   }, [error]);
 
   return (
@@ -34,6 +37,7 @@ export default function Error({
         </div>
 
         <div className="space-x-4">
+          {/* TODO: FIX: clicking on this button does not trigger `logout()` function */}
           <Link href="/" className="">
             <Button>Go back home</Button>
           </Link>
@@ -57,4 +61,42 @@ export default function Error({
       </span>
     </div>
   );
+}
+
+type StoredError = {
+  message: string;
+  stack: string;
+};
+
+/**
+ * Appends an error to the "errors" record in localStorage,
+ * keyed by timestamp "YYYY-MM-DD hh:mm:ss".
+ */
+function recordClientError(err: Error) {
+  try {
+    const storageKey = "errors";
+
+    // Load existing record (or start with empty)
+    const existing = localStorage.getItem(storageKey);
+    const errorsRecord: Record<string, StoredError> = existing
+      ? JSON.parse(existing)
+      : {};
+
+    // Format timestamp "YYYY-MM-DD hh:mm:ss"
+    const now = new Date();
+    const timestamp = now
+      .toISOString() // "2025-06-18T14:23:30.123Z"
+      .replace("T", " ") // "2025-06-18 14:23:30.123Z"
+      .split(".")[0]!; // "2025-06-18 14:23:30"
+
+    // Append new error
+    errorsRecord[timestamp] = {
+      message: err.message,
+      stack: err.stack ?? "",
+    };
+
+    localStorage.setItem(storageKey, JSON.stringify(errorsRecord));
+  } catch (storageError) {
+    console.warn("Failed to save error record", storageError);
+  }
 }

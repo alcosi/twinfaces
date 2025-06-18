@@ -5,6 +5,7 @@ import { Tab, TabsLayout } from "@/widgets/layout";
 import { ProductsScreen } from "./components/product-screen";
 import { ActionDialogsTab } from "./tabs/action-dialogs";
 import { EditorsTab } from "./tabs/editors";
+import { ErrorsAndExceptionsTab } from "./tabs/errors-n-exceptions";
 import { IconsTab } from "./tabs/icons";
 import { InputFieldsTab } from "./tabs/input-fields";
 import { ResourceLinksTab } from "./tabs/resource-links";
@@ -46,6 +47,11 @@ export default function DesignSystemPage() {
       key: "editors",
       label: "Editors",
       content: <EditorsTab />,
+    },
+    {
+      key: "errors",
+      label: "Errors & Exceptions",
+      content: <ErrorsAndExceptionsTab />,
     },
   ];
 
