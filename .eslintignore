@@ -1,6 +1,0 @@
-node_modules/
-.next/
-public
-
-# Auto-generated
-src/lib/api/generated/schema.d.ts
