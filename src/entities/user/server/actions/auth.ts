@@ -5,7 +5,12 @@ import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
 import { TwinsAPI } from "@/shared/api";
-import { isPopulatedArray, isUndefined, safeWithRedirect } from "@/shared/libs";
+import {
+  isPopulatedArray,
+  isUndefined,
+  safe,
+  safeWithRedirect,
+} from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
@@ -23,15 +28,17 @@ import {
 } from "../types";
 
 export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
-  const result = await safeWithRedirect(() =>
-    TwinsAPI.POST("/auth/config/v1", {
-      params: {
-        header: {
-          DomainId: domainId,
-          Channel: "WEB",
+  const result = await safe(
+    safeWithRedirect(() =>
+      TwinsAPI.POST("/auth/config/v1", {
+        params: {
+          header: {
+            DomainId: domainId,
+            Channel: "WEB",
+          },
         },
-      },
-    })
+      })
+    )
   );
 
   if (!result.ok) {
