@@ -1,17 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useEffect, useState, useTransition } from "react";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import z from "zod";
 
-import { TextFormField } from "@/components/form-fields";
+import { SecretTextFormField, TextFormField } from "@/components/form-fields";
 
 import {
   EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA,
   signUpAuthAction,
 } from "@/entities/user/server";
 import { isUndefined } from "@/shared/libs";
-import { Button } from "@/shared/ui";
+import {
+  Button,
+  PasswordStrengthIndicator,
+  ShowPasswordStrength,
+  checkPasswordStrength,
+} from "@/shared/ui";
 
 export function EmailPasswordSignUpForm({
   toggleMode,
@@ -26,6 +31,7 @@ export function EmailPasswordSignUpForm({
   const domainId = searchParams.get("domainId") ?? undefined;
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
+  const [strength, setStrength] = useState<PasswordStrengthIndicator>(0);
 
   const singUpForm = useForm<
     z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
@@ -40,6 +46,17 @@ export function EmailPasswordSignUpForm({
       confirmPassword: "",
     },
   });
+
+  const passwordWatched = useWatch({
+    control: singUpForm.control,
+    name: "password",
+  });
+
+  useEffect(() => {
+    setStrength(
+      checkPasswordStrength(passwordWatched) as PasswordStrengthIndicator
+    );
+  }, [passwordWatched]);
 
   function onSignUpSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
@@ -108,7 +125,7 @@ export function EmailPasswordSignUpForm({
           placeholder="Enter your last name"
           required
         />
-        <TextFormField
+        <SecretTextFormField
           control={singUpForm.control}
           name="password"
           type="password"
@@ -116,7 +133,8 @@ export function EmailPasswordSignUpForm({
           placeholder="Create a password"
           required
         />
-        <TextFormField
+        {passwordWatched && <ShowPasswordStrength strength={strength} />}
+        <SecretTextFormField
           control={singUpForm.control}
           name="confirmPassword"
           type="password"
