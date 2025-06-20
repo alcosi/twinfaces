@@ -24,7 +24,6 @@ export * from "./render-on-client";
 export * from "./resource-link";
 export * from "./separator";
 export * from "./sheet";
-export * from "./show-password-strength";
 export * from "./sidebar";
 export * from "./skeleton";
 export * from "./sliders";

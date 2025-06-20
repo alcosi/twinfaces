@@ -10,13 +10,12 @@ import {
   EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA,
   signUpAuthAction,
 } from "@/entities/user/server";
-import { isUndefined } from "@/shared/libs";
 import {
-  Button,
-  PasswordStrengthIndicator,
-  ShowPasswordStrength,
+  PasswordStrengthIndicatorType,
   checkPasswordStrength,
-} from "@/shared/ui";
+  isUndefined,
+} from "@/shared/libs";
+import { Button, StepsProgressBar } from "@/shared/ui";
 
 export function EmailPasswordSignUpForm({
   toggleMode,
@@ -31,7 +30,8 @@ export function EmailPasswordSignUpForm({
   const domainId = searchParams.get("domainId") ?? undefined;
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
-  const [strength, setStrength] = useState<PasswordStrengthIndicator>(0);
+  const [strength, setStrength] =
+    useState<PasswordStrengthIndicatorType>("very-weak");
 
   const singUpForm = useForm<
     z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
@@ -54,7 +54,7 @@ export function EmailPasswordSignUpForm({
 
   useEffect(() => {
     setStrength(
-      checkPasswordStrength(passwordWatched) as PasswordStrengthIndicator
+      checkPasswordStrength(passwordWatched) as PasswordStrengthIndicatorType
     );
   }, [passwordWatched]);
 
@@ -133,7 +133,14 @@ export function EmailPasswordSignUpForm({
           placeholder="Create a password"
           required
         />
-        {passwordWatched && <ShowPasswordStrength strength={strength} />}
+        {passwordWatched && (
+          <StepsProgressBar
+            steps={["very-weak", "weak", "medium", "strong"]}
+            current={strength}
+            variant="password-strength"
+            title="password strength:"
+          />
+        )}
         <SecretTextFormField
           control={singUpForm.control}
           name="confirmPassword"
