@@ -5,11 +5,9 @@ import { paths } from "@/shared/api/generated/schema";
 
 const unauthorizedMiddleware: Middleware = {
   async onResponse({ response }) {
-    if ([401].includes(response.status)) {
-      if (typeof window === "undefined") {
-        throw new Error("UNAUTHORIZED");
-      } else {
-        window.location.href = "/";
+    if (response.status === 401) {
+      if (typeof window !== "undefined") {
+        window.location.href = "/?reason=session_expired";
       }
     }
 

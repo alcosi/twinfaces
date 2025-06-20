@@ -8,7 +8,8 @@ import {
 } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
-import { safeWithRedirect } from "@/shared/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { safe } from "@/shared/libs";
 import { RenderOnClient, SidebarProvider } from "@/shared/ui";
 
 import { SidebarLayoutContent } from "./content";
@@ -47,7 +48,9 @@ export async function SidebarLayout({ children }: Props) {
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const faceResult = await safeWithRedirect(fetchSidebarFace);
+  const faceResult = await safe(
+    withRedirectOnUnauthorized(() => fetchSidebarFace())
+  );
   let sidebarFace: FaceNB001 | undefined = faceResult.ok
     ? faceResult.data
     : undefined;

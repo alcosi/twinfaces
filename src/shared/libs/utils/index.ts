@@ -12,7 +12,6 @@ export * from "./local-storage";
 export * from "./mapping";
 export * from "./map-pattern-to-input-type";
 export * from "./safe";
-export * from "./safe-with-redirect";
 export * from "./string";
 export * from "./uuid";
 

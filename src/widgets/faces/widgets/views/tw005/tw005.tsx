@@ -1,6 +1,7 @@
 import { fetchTW005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { cn, safeWithRedirect } from "@/shared/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -14,8 +15,10 @@ export async function TW005(props: TWidgetFaceProps) {
     showTwin2TransitionMode: "DETAILED",
   } as const;
 
-  const faceResult = await safeWithRedirect(() =>
-    fetchTW005Face(widget.widgetFaceId, twinId)
+  const faceResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchTW005Face(widget.widgetFaceId, twinId)
+    )
   );
 
   if (!faceResult.ok) {
@@ -26,8 +29,10 @@ export async function TW005(props: TWidgetFaceProps) {
 
   const { id, pointedTwinId = "", buttons = [] } = faceResult.data;
 
-  const twinResult = await safeWithRedirect(() =>
-    fetchTwinById(pointedTwinId, { header, query })
+  const twinResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchTwinById(pointedTwinId, { header, query })
+    )
   );
 
   if (!twinResult.ok) {
