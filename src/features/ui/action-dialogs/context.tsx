@@ -19,7 +19,7 @@ export type ActionDialogProps = {
   id: string;
   type: "alert" | "confirm";
   title: string;
-  message?: string;
+  message?: ReactNode;
   successButtonText?: string;
   cancelButtonText?: string;
   onSuccess?: () => Promise<void>;

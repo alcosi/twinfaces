@@ -11,7 +11,7 @@ import {
   EMAIL_VERIFICATION_FORM_SCHEMA,
   verifyEmailAction,
 } from "@/entities/user/server";
-import { isPopulatedString, isUndefined } from "@/shared/libs";
+import { capitalize, isPopulatedString, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailVerificationForm({
@@ -43,30 +43,40 @@ export function EmailVerificationForm({
   function onConfirmSubmit(
     values: z.infer<typeof EMAIL_VERIFICATION_FORM_SCHEMA>
   ) {
+    setVerificationError("");
+
+    const domainId = values.domainId;
     if (isUndefined(domainId)) {
-      throw new Error("Domain ID is required");
+      setVerificationError("Domain ID is required");
+      return;
     }
 
     const formData = new FormData();
-    formData.set("domainId", values.domainId);
+    formData.set("domainId", domainId);
     formData.set("verificationToken", values.verificationToken);
 
     startVerifyTransition(async () => {
-      try {
-        const response = await verifyEmailAction(null, formData);
+      const result = await verifyEmailAction(null, formData);
 
-        if (response.status !== 0) {
-          throw new Error("Email verification has filed!");
-        }
-
-        onSuccess?.();
-      } catch (err) {
+      if (!result.ok) {
         setVerificationError(
-          err instanceof Error ? err.message : "An unexpected error occurred."
+          result.error.statusDetails || "Email verification failed"
         );
         onError?.();
         emailVerificationForm.reset();
+        return;
       }
+
+      const { status } = result.value;
+
+      if (status !== 0) {
+        setVerificationError("Email verification failed");
+        onError?.();
+        emailVerificationForm.reset();
+        return;
+      }
+
+      onSuccess?.();
     });
   }
 
@@ -97,6 +107,7 @@ export function EmailVerificationForm({
             type="text"
             name="verificationToken"
             label="Verification token"
+            customError={verificationError}
             placeholder="Enter your verification token from email"
             required
           />
@@ -112,7 +123,9 @@ export function EmailVerificationForm({
           </Button>
 
           {isPopulatedString(verificationError) && (
-            <p className="text-error text-center">{verificationError}</p>
+            <p className="text-error text-center">
+              {capitalize(verificationError)}
+            </p>
           )}
 
           <Button

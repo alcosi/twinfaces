@@ -40,7 +40,9 @@ export const EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA = z.object({
 
 export const EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA =
   EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.extend({
-    confirmPassword: z.string(),
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" }),
   }).refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
     message: "Passwords must match",

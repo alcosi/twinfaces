@@ -11,6 +11,10 @@ const inputVariants = cva(
         default: "h-10",
         sm: "h-8",
       },
+      hasError: {
+        true: "border-destructive focus-visible:ring-destructive",
+        false: "border-input",
+      },
     },
     defaultVariants: {
       fieldSize: "default",
@@ -20,14 +24,16 @@ const inputVariants = cva(
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>,
-    VariantProps<typeof inputVariants> {}
+    VariantProps<typeof inputVariants> {
+  hasError?: boolean;
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, fieldSize, ...props }, ref) => {
+  ({ className, type, fieldSize, hasError, ...props }, ref) => {
     return (
       <input
         type={type}
-        className={cn(inputVariants({ fieldSize, className }))}
+        className={cn(inputVariants({ fieldSize, hasError, className }))}
         ref={ref}
         {...props}
       />

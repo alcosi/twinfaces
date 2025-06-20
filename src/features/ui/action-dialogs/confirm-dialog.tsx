@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 import {
   Button,
@@ -14,7 +14,7 @@ import {
 
 type ConfirmDialogProps = {
   title: string;
-  message: string;
+  message: ReactNode;
   confirmButtonText: string;
   cancelButtonText: string;
   onConfirm: () => Promise<void>;
@@ -70,9 +70,13 @@ export function ConfirmDialog({
           </DialogHeader>
         )}
 
-        <DialogDescription className="p-6 text-balance">
-          {message}
-        </DialogDescription>
+        {typeof message === "string" ? (
+          <DialogDescription className="p-6 text-balance">
+            {message}
+          </DialogDescription>
+        ) : (
+          message
+        )}
 
         <DialogFooter className="p-4 sm:justify-end">
           <Button

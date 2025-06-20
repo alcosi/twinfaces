@@ -15,6 +15,7 @@ export * from "./platform";
 export * from "./safe";
 export * from "./string";
 export * from "./uuid";
+export * from "./errors";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

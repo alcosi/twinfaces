@@ -14,6 +14,7 @@ export function TextFormItem({
   suggestions,
   inputId,
   inForm,
+  hasError,
   ...props
 }: TextFormFieldProps &
   FormItemProps &
@@ -42,6 +43,7 @@ export function TextFormItem({
         list={suggestionsId}
         value={fieldValue ?? ""}
         onChange={onChange}
+        hasError={hasError}
         {...props}
       />
       {suggestionsId && currentSuggestions && (

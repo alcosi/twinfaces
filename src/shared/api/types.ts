@@ -18,3 +18,9 @@ export type SearchParams<TFilters> = {
 };
 
 export type DataTimeRangeV1 = components["schemas"]["DataTimeRangeV1"];
+
+export type Result<T = void, E = any> =
+  | { ok: true; value: T }
+  | { ok: false; error: E };
+
+export type ParsedError = { statusCode: number; statusDetails: string };

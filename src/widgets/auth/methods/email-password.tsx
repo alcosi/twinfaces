@@ -49,9 +49,13 @@ export function EmailPasswordAuthWidget() {
     userCredentials.set("username", credentials.email!);
     userCredentials.set("password", credentials.password!);
 
-    const { authData } = await loginAuthAction(null, userCredentials);
-    const authToken = authData?.auth_token;
+    const result = await loginAuthAction(null, userCredentials);
 
+    if (!result.ok) {
+      throw new Error(`Login failed: ${result.error}`);
+    }
+
+    const authToken = result.value.authData?.auth_token;
     if (isUndefined(authToken)) {
       throw new Error("Login failed: no auth token returned");
     }

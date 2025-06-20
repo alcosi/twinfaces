@@ -13,8 +13,8 @@ import {
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
-import { isUndefined } from "@/shared/libs";
-import { Button } from "@/shared/ui";
+import { capitalize, isUndefined } from "@/shared/libs";
+import { Button, DialogDescription } from "@/shared/ui";
 
 export function EmailPasswordSignInForm({
   toggleMode,
@@ -42,52 +42,62 @@ export function EmailPasswordSignInForm({
 
   function onForgotPasswordClick() {
     alert({
-      title: "Forgot your password?",
-      message:
-        "No worries! To change your password, please contact your administrator at contact@onshelves.eu — they'll be happy to help you reset it and provide a new one.",
+      title: "Forgot Password",
+      message: ForgotPasswordAlertContent(),
     });
   }
 
   function onSignInSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>
   ) {
+    setAuthError(null);
+
+    const domainId = values.domainId;
     if (isUndefined(domainId)) {
-      throw new Error("Domain ID is required");
+      setAuthError("Domain ID is required");
+      return;
     }
 
     const formData = new FormData();
-    formData.set("domainId", values.domainId);
+    formData.set("domainId", domainId);
     formData.set("username", values.username);
     formData.set("password", values.password);
 
     startAuthTransition(async () => {
-      try {
-        const { authData } = await loginAuthAction(null, formData);
-        const authToken = authData?.auth_token;
+      const result = await loginAuthAction(null, formData);
 
-        if (isUndefined(authToken)) {
-          throw new Error("Login failed. Please check your credentials");
-        }
-
-        const domainUser = await getAuthenticatedUser({ domainId, authToken });
-
-        if (isUndefined(domainUser)) {
-          throw new Error("Failed to fetch domain user data");
-        }
-
-        setAuthUser({
-          domainUser: domainUser,
-          authToken: authToken,
-          domainId,
-        });
-        router.push(`/profile`);
-      } catch (err) {
-        setAuthError(
-          err instanceof Error ? err.message : "An unexpected error occurred."
-        );
+      if (!result.ok) {
+        setAuthError(result.error.statusDetails);
         onError?.();
         signInForm.resetField("password");
+        return;
       }
+
+      const authToken = result.value?.authData?.auth_token;
+
+      if (isUndefined(authToken)) {
+        setAuthError("Login failed. Please check your credentials");
+        onError?.();
+        signInForm.resetField("password");
+        return;
+      }
+
+      const domainUser = await getAuthenticatedUser({ domainId, authToken });
+
+      if (isUndefined(domainUser)) {
+        setAuthError("Failed to fetch domain user data");
+        onError?.();
+        signInForm.resetField("password");
+        return;
+      }
+
+      setAuthUser({
+        domainUser,
+        authToken,
+        domainId,
+      });
+
+      router.push(`/profile`);
     });
   }
 
@@ -107,9 +117,9 @@ export function EmailPasswordSignInForm({
         />
         <TextFormField
           control={signInForm.control}
-          type="email"
           name="username"
           label="Email"
+          customError={authError}
           placeholder="Enter your email"
           required
         />
@@ -118,6 +128,7 @@ export function EmailPasswordSignInForm({
           type="password"
           name="password"
           label="Password"
+          customError={authError}
           placeholder="Enter your password"
           required
         />
@@ -132,7 +143,9 @@ export function EmailPasswordSignInForm({
           Login
         </Button>
 
-        {authError && <p className="text-error text-center">{authError}</p>}
+        {authError && (
+          <p className="text-error text-center">{capitalize(authError)}</p>
+        )}
 
         <div className="flex flex-col justify-between text-sm">
           <Button
@@ -158,5 +171,46 @@ export function EmailPasswordSignInForm({
         </div>
       </form>
     </FormProvider>
+  );
+}
+
+function ForgotPasswordAlertContent() {
+  const email = "contact@onshelves.eu";
+
+  const blocks = [
+    {
+      title: "Nie pamiętasz hasła?",
+      text: "Nie martw się! Aby zmienić hasło, skontaktuj się z administratorem",
+      afterLink: "— z przyjemnością pomoże Ci je zresetować i udostępni nowe.",
+    },
+    {
+      title: "Forgot your password?",
+      text: "No worries! To change your password, please contact your administrator at",
+      afterLink:
+        "— they'll be happy to help you reset it and provide a new one.",
+    },
+  ];
+
+  return (
+    <div className="space-y-4 p-6 text-balance" id="forgot-password">
+      {blocks.map(({ title, text, afterLink }, i) => (
+        <div key={i}>
+          <DialogDescription className="font-bold text-black">
+            {title}
+          </DialogDescription>
+          <DialogDescription className="text-muted-foreground text-sm">
+            {text}&nbsp;
+            <a
+              href={`mailto:${email}`}
+              className="text-blue-500 underline hover:text-blue-600"
+              target="_blank"
+            >
+              {email}
+            </a>
+            &nbsp;{afterLink}
+          </DialogDescription>
+        </div>
+      ))}
+    </div>
   );
 }

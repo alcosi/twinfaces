@@ -4,8 +4,13 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { TwinsAPI } from "@/shared/api";
-import { isPopulatedArray, isUndefined } from "@/shared/libs";
+import { ParsedError, Result, Results, TwinsAPI } from "@/shared/api";
+import {
+  isPopulatedArray,
+  isUndefined,
+  parseUnknownError,
+  safe,
+} from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
@@ -152,14 +157,15 @@ export async function stubLoginFormAction(_: unknown, formData: FormData) {
 export async function loginAuthAction(
   _: unknown,
   formData: FormData
-): Promise<AuthLoginRs> {
-  const { domainId, username, password } = EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
-    domainId: formData.get("domainId"),
-    username: formData.get("username"),
-    password: formData.get("password"),
-  });
-
+): Promise<Result<AuthLoginRs, ParsedError>> {
   try {
+    const { domainId, username, password } =
+      EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
+        domainId: formData.get("domainId"),
+        username: formData.get("username"),
+        password: formData.get("password"),
+      });
+
     const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
       body: { username, password },
       params: { header: { DomainId: domainId, Channel: "WEB" } },
@@ -168,24 +174,23 @@ export async function loginAuthAction(
     if (error) {
       console.error("Login error response:", error);
       const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
-      throw new Error(message);
+      return Results.error({
+        statusCode: error.status ?? 0,
+        statusDetails: message,
+      });
     }
 
-    return data;
+    return Results.ok(data);
   } catch (err) {
     console.error("Login request failed:", err);
-    const message =
-      err instanceof Error
-        ? err.message
-        : "An unknown error occurred during login";
-    throw new Error(message);
+    return Results.error(parseUnknownError(err));
   }
 }
 
 export async function signUpAuthAction(
   _: unknown,
   formData: FormData
-): Promise<AuthSignupByEmailRs> {
+): Promise<Result<AuthSignupByEmailRs, ParsedError>> {
   const { domainId, firstName, lastName, email, password } =
     EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.parse({
       domainId: formData.get("domainId"),
@@ -207,24 +212,23 @@ export async function signUpAuthAction(
     if (error) {
       console.error("Register error response:", error);
       const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
-      throw new Error(message);
+      return Results.error({
+        statusCode: error.status ?? 0,
+        statusDetails: message,
+      });
     }
 
-    return data;
+    return Results.ok(data);
   } catch (err) {
     console.error("Register request failed:", err);
-    const message =
-      err instanceof Error
-        ? err.message
-        : "An unknown error occured during register";
-    throw new Error(message);
+    return Results.error(parseUnknownError(err));
   }
 }
 
 export async function verifyEmailAction(
   _: unknown,
   formData: FormData
-): Promise<AuthSignUpVerificationByEmailRs> {
+): Promise<Result<AuthSignUpVerificationByEmailRs, ParsedError>> {
   const { domainId, verificationToken } = EMAIL_VERIFICATION_FORM_SCHEMA.parse({
     domainId: formData.get("domainId"),
     verificationToken: formData.get("verificationToken"),
@@ -249,17 +253,16 @@ export async function verifyEmailAction(
     if (error) {
       console.error("Confirm error response:", error);
       const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
-      throw new Error(message);
+      return Results.error({
+        statusCode: error.status ?? 0,
+        statusDetails: message,
+      });
     }
 
-    return data;
+    return Results.ok(data);
   } catch (err) {
     console.error("Confirm request failed:", err);
-    const message =
-      err instanceof Error
-        ? err.message
-        : "An unknown error occured during confirm";
-    throw new Error(message);
+    return Results.error(parseUnknownError(err));
   }
 }
 
