@@ -11,11 +11,18 @@ import {
   signUpAuthAction,
 } from "@/entities/user/server";
 import {
-  PasswordStrengthIndicatorType,
+  PasswordStrengthLevel,
   checkPasswordStrength,
   isUndefined,
 } from "@/shared/libs";
 import { Button, StepsProgressBar } from "@/shared/ui";
+
+const strengthColorMap: Record<PasswordStrengthLevel, string> = {
+  0: "bg-red-500",
+  1: "bg-orange-500",
+  2: "bg-yellow-500",
+  3: "bg-green-500",
+};
 
 export function EmailPasswordSignUpForm({
   toggleMode,
@@ -30,8 +37,7 @@ export function EmailPasswordSignUpForm({
   const domainId = searchParams.get("domainId") ?? undefined;
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
-  const [strength, setStrength] =
-    useState<PasswordStrengthIndicatorType>("very-weak");
+  const [strengthLevel, setStrengthLevel] = useState<PasswordStrengthLevel>(0);
 
   const singUpForm = useForm<
     z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
@@ -53,9 +59,7 @@ export function EmailPasswordSignUpForm({
   });
 
   useEffect(() => {
-    setStrength(
-      checkPasswordStrength(passwordWatched) as PasswordStrengthIndicatorType
-    );
+    setStrengthLevel(checkPasswordStrength(passwordWatched));
   }, [passwordWatched]);
 
   function onSignUpSubmit(
@@ -135,10 +139,10 @@ export function EmailPasswordSignUpForm({
         />
         {passwordWatched && (
           <StepsProgressBar
-            steps={["very-weak", "weak", "medium", "strong"]}
-            current={strength}
-            variant="password-strength"
-            title="password strength:"
+            steps={["0", "1", "2", "3"]}
+            current={strengthLevel.toString()}
+            activeColor={strengthColorMap[strengthLevel]}
+            inactiveColor="bg-transparent"
           />
         )}
         <SecretTextFormField

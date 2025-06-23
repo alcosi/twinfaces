@@ -32,36 +32,38 @@ type StepsProgressBarProps<T extends string> = {
   steps: T[];
   current: T;
   containerClassName?: string | string[];
-  variant?: "default" | "password-strength";
-  title?: string;
+  activeColor?: string;
+  inactiveColor?: string;
 };
 
 export function StepsProgressBar<T extends string>({
   steps,
   current,
   containerClassName,
-  variant = "default",
-  title,
+  activeColor = "bg-primary",
+  inactiveColor = "bg-muted",
 }: StepsProgressBarProps<T>) {
+  const currentIndex = steps.indexOf(current);
+
   return (
-    <div className={`flex items-center ${containerClassName ?? ""}`}>
-      {title && <div className="mr-4 text-xs">{title}</div>}
+    <div
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={steps.length - 1}
+      aria-valuenow={currentIndex}
+      className={`flex items-center ${containerClassName ?? ""}`}
+    >
       <div className="flex flex-grow gap-4">
-        {steps.map((step) => {
-          let color = "bg-muted";
-
-          if (variant === "password-strength") {
-            if (steps.indexOf(step) <= steps.indexOf(current)) {
-              if (current === "very-weak") color = "bg-red-500";
-              else if (current === "weak") color = "bg-orange-500";
-              else if (current === "medium") color = "bg-yellow-500";
-              else if (current === "strong") color = "bg-green-500";
-            }
-          } else {
-            if (step === current) color = "bg-primary";
-          }
-
-          return <div key={step} className={cn("h-2 w-full rounded", color)} />;
+        {steps.map((step, stepIndex) => {
+          return (
+            <div
+              key={step}
+              className={cn(
+                "bg-muted h-2 w-full rounded",
+                stepIndex <= currentIndex ? activeColor : inactiveColor
+              )}
+            />
+          );
         })}
       </div>
     </div>
