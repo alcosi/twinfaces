@@ -45,7 +45,7 @@ export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatusV2> {
     return (
       <div className="flex gap-2">
         <div className="flex grow">
-          <Square className="w-4 h-4" fill={squareColor} stroke={squareColor} />
+          <Square className="h-4 w-4" fill={squareColor} stroke={squareColor} />
         </div>
         <span className="truncate">
           {isPopulatedString(status.name) ? status.name : status.key}
