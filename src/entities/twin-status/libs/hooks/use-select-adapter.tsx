@@ -10,7 +10,6 @@ import {
 import {
   TwinStatusFilters,
   TwinStatusV2,
-  filterDuplicateStatuses,
   useFetchTwinStatusById,
   useTwinStatusSearchV1,
 } from "../../api";
@@ -32,7 +31,7 @@ export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatusV2> {
           ...filters,
         },
       });
-      return filterDuplicateStatuses(response.data);
+      return response.data;
     } catch (error) {
       console.error("Error fetching search items:", error);
       return [];

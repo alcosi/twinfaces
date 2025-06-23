@@ -15,6 +15,7 @@ import {
   isPopulatedArray,
   isTruthy,
   isUndefined,
+  reduceToObject,
   toArray,
   toArrayOfString,
   wrapWithPercent,
@@ -59,6 +60,13 @@ export function useTwinFilters({
         label: "Status",
         multi: true,
         ...sAdapter,
+        getItems: async (search: string) =>
+          sAdapter.getItems(search, {
+            twinClassIdMap: reduceToObject({
+              list: toArray(baseTwinClassId),
+              defaultValue: true,
+            }),
+          }),
       },
       twinNameLikeList: {
         type: AutoFormValueType.tag,
