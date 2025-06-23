@@ -1,4 +1,9 @@
-import { PropsWithChildren } from "react";
+import {
+  PropsWithChildren,
+  ReactElement,
+  cloneElement,
+  isValidElement,
+} from "react";
 
 import { cn } from "../libs";
 
@@ -17,7 +22,7 @@ function Column({
   className,
   children,
 }: PropsWithChildren<{ className?: string | string[] }>) {
-  return <div className={cn("flex flex-col", className)}>{children}</div>;
+  return <div className={cn("grid grid-cols-1", className)}>{children}</div>;
 }
 
 function Item({
