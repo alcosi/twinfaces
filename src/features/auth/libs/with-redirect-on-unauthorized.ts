@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { isUnauthorizedError } from "@/shared/api";
-import { safe } from "@/shared/libs";
+import { EXPIRED_SESSION_TAG } from "@/shared/api";
+import { isUnauthorizedError, safe } from "@/shared/libs";
 
 export function withRedirectOnUnauthorized<T>(
   fn: () => Promise<T>
@@ -13,9 +13,7 @@ export function withRedirectOnUnauthorized<T>(
       const error = result.error;
 
       if (isUnauthorizedError(error)) {
-        if (typeof window === "undefined") throw error;
-
-        redirect("/?reason=session_expired");
+        redirect(`/?reason=${EXPIRED_SESSION_TAG}`);
       }
 
       throw error;

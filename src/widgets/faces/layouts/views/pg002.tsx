@@ -1,5 +1,5 @@
 import { fetchPG002Face } from "@/entities/face";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isNumber, isPopulatedArray, safe } from "@/shared/libs";
 
 import { Tab, TabsLayout } from "../../../layout";

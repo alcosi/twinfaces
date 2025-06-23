@@ -1,5 +1,5 @@
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { safe } from "@/shared/libs";
 
 import { StatusAlert } from "../components";

@@ -1,7 +1,7 @@
 import { fetchTW004Face } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
 import { cn, safe } from "@/shared/libs";
 

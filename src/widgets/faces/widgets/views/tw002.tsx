@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-accordion";
 
 import { fetchTW002Face } from "@/entities/face";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../components";

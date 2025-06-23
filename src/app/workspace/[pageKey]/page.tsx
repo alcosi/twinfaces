@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { fetchSidebarFace } from "@/entities/face";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isUndefined, safe } from "@/shared/libs";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 

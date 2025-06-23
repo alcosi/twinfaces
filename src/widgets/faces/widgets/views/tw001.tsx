@@ -1,6 +1,6 @@
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { cn, safe } from "@/shared/libs";
 import { MediaType, SlotSlider } from "@/shared/ui";
 

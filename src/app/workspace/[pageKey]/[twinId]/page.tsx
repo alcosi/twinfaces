@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { getAuthHeaders } from "@/entities/face";
 import { Twin_DETAILED, fetchTwinById } from "@/entities/twin/server";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { safe } from "@/shared/libs";
 import { StatusAlert } from "@/widgets/faces/components";
 import { LayoutRenderer } from "@/widgets/faces/layouts";

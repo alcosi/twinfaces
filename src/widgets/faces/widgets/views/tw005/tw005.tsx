@@ -1,6 +1,6 @@
 import { fetchTW005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";

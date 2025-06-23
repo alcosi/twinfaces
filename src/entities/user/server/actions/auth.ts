@@ -7,7 +7,7 @@ import { isAuthUserGranted } from "@/entities/user/server";
 import { TwinsAPI } from "@/shared/api";
 import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 
-import { withRedirectOnUnauthorized } from "../../../../features/auth/libs";
+import { withRedirectOnUnauthorized } from "../../../../features/auth";
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
 import {

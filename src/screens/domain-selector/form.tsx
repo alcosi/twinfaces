@@ -11,6 +11,7 @@ import { ComboboxFormField } from "@/components/form-fields";
 
 import { DOMAIN_ID_SCHEMA, DomainPublicView } from "@/entities/domain";
 import { useAuthUser } from "@/features/auth";
+import { EXPIRED_SESSION_TAG } from "@/shared/api";
 import { ProductFlavorConfigContext } from "@/shared/config";
 import { Button } from "@/shared/ui";
 
@@ -55,7 +56,7 @@ export function DomainSelectForm({ domains }: Props) {
         {config.key ?? config.productName}
       </h2>
 
-      {reason === "session_expired" && (
+      {reason === EXPIRED_SESSION_TAG && (
         <div className="text-destructive">
           Your session has expired. Please log in again.
         </div>

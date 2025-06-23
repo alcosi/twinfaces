@@ -3,12 +3,14 @@ import createClient, { Middleware } from "openapi-fetch";
 
 import { paths } from "@/shared/api/generated/schema";
 
+import { isBrowserRuntime, isUnauthorizedError } from "../libs";
+
+export const EXPIRED_SESSION_TAG = "session_expired";
+
 const unauthorizedMiddleware: Middleware = {
   async onResponse({ response }) {
-    if (response.status === 401) {
-      if (typeof window !== "undefined") {
-        window.location.href = "/?reason=session_expired";
-      }
+    if (isUnauthorizedError(response) && isBrowserRuntime()) {
+      window.location.href = `/?reason=${EXPIRED_SESSION_TAG}`;
     }
 
     return response;

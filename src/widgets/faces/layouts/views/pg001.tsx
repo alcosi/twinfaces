@@ -1,5 +1,5 @@
 import { fetchPG001Face } from "@/entities/face";
-import { withRedirectOnUnauthorized } from "@/features/auth/libs";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isPopulatedArray, safe } from "@/shared/libs";
 
 import { StatusAlert, WidgetsContainer } from "../../components";

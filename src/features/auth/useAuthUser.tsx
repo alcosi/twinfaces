@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
 
 import { DomainUser_DETAILED } from "@/entities/user";
