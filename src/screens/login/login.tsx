@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 
 import { AuthMethodPassword, fetchAuthConfig } from "@/entities/user/server";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { ThemeToggle } from "@/features/ui/theme-toggle";
-import { isMultiElementArray, isPopulatedArray } from "@/shared/libs";
+import { isMultiElementArray, isPopulatedArray, safe } from "@/shared/libs";
 import {
   Accordion,
   AccordionContent,
@@ -23,7 +24,15 @@ const AUTH_METHOD_TO_FORM_MAP = {
 };
 
 export async function LoginScreen({ domainId }: { domainId: string }) {
-  const authConfig = await fetchAuthConfig(domainId);
+  const result = await safe(
+    withRedirectOnUnauthorized(() => fetchAuthConfig(domainId))
+  );
+
+  if (!result.ok) {
+    notFound();
+  }
+
+  const authConfig = result.data;
 
   if (!isPopulatedArray<AuthMethodPassword>(authConfig.authMethods)) {
     notFound();
