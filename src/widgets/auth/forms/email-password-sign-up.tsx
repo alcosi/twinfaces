@@ -137,6 +137,7 @@ export function EmailPasswordSignUpForm({
           placeholder="Create a password"
           required
         />
+        {/* // TODO: move this into `SecretTextFormField`  */}
         {passwordWatched && (
           <StepsProgressBar
             steps={["0", "1", "2", "3"]}

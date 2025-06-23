@@ -13,11 +13,13 @@ export function SecretTextFormField<T extends FieldValues>({
   name,
   control,
   idPrefix,
+  // TODO: use this prop
+  // showStrengthIndicator = false,
   ...props
 }: SecretTextFormFieldProps<T>) {
   const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
 
-  return (
+  const FormFieldComponent = (
     <FormField
       control={control}
       name={name}
@@ -34,4 +36,21 @@ export function SecretTextFormField<T extends FieldValues>({
       )}
     />
   );
+
+  return FormFieldComponent;
+
+  // NOTE: DRAFT version
+  // return showStrengthIndicator ? (
+  //   <div>
+  //     <FormField />
+  //     <StepsProgressBar
+  //       steps={["very-weak", "weak", "medium", "strong"]}
+  //       current={strength}
+  //       activeColor={activeColor}
+  //       inactiveColor={inactiveColor}
+  //     />
+  //   </div>
+  // ) : (
+  //   FormField
+  // );
 }
