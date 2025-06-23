@@ -1,4 +1,5 @@
 import { fetchPG001Face } from "@/entities/face";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isPopulatedArray, safe } from "@/shared/libs";
 
 import { StatusAlert, WidgetsContainer } from "../../components";
@@ -6,7 +7,9 @@ import { Widget } from "../../widgets/types";
 import { PGFaceProps } from "../types";
 
 export async function PG001({ pageFaceId, twinId }: PGFaceProps) {
-  const pageResult = await safe(() => fetchPG001Face(pageFaceId, twinId));
+  const pageResult = await safe(
+    withRedirectOnUnauthorized(() => fetchPG001Face(pageFaceId, twinId))
+  );
 
   if (!pageResult.ok) {
     return (

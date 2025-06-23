@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isPopulatedString, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../components";
@@ -26,10 +27,12 @@ type Props = {
 };
 
 export async function WidgetRenderer({ twinId, widget, className }: Props) {
-  const faceResult = await safe(() =>
-    fetchFaceById<Face_DETAILED>(widget.widgetFaceId!, {
-      query: { showFaceMode: "DETAILED" },
-    })
+  const faceResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchFaceById<Face_DETAILED>(widget.widgetFaceId!, {
+        query: { showFaceMode: "DETAILED" },
+      })
+    )
   );
 
   if (!faceResult.ok) {

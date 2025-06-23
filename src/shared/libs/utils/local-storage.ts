@@ -1,5 +1,7 @@
+import { isServerRuntime } from "./platform";
+
 export function readLocalStorage<T>(key: string, fallback: T): T {
-  if (typeof window === "undefined") return fallback;
+  if (isServerRuntime()) return fallback;
 
   try {
     const item = window.localStorage.getItem(key);

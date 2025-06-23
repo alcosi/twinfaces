@@ -1,6 +1,7 @@
 import { fetchTW004Face } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
 import { cn, safe } from "@/shared/libs";
 
@@ -15,14 +16,17 @@ export async function TW004(props: TWidgetFaceProps) {
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const twidgetResult = await safe(() =>
-    fetchTW004Face(widget.widgetFaceId, twinId)
+  const twidgetResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchTW004Face(widget.widgetFaceId, twinId)
+    )
   );
   if (!twidgetResult.ok) {
     return (
       <StatusAlert variant="error" message="Widget TW004 failed to load." />
     );
   }
+
   const twidget = twidgetResult.data;
 
   const { twin, relatedObjects, field } = await buildFieldEditorProps(

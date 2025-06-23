@@ -1,6 +1,7 @@
 import { fetchWT001Face } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
+import { withRedirectOnUnauthorized } from "@/features/auth";
 import { safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
@@ -12,7 +13,11 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const result = await safe(() => fetchWT001Face(widget.widgetFaceId, twinId));
+  const result = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchWT001Face(widget.widgetFaceId, twinId)
+    )
+  );
 
   if (!result.ok) {
     return (

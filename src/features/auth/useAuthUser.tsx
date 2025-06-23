@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
 
 import { DomainUser_DETAILED } from "@/entities/user";
@@ -30,9 +32,9 @@ export function useAuthUser(): UseAuthUser {
   const setAuthUser = useCallback(
     (user: AuthUser | null) => {
       setStoredValue(user);
-      clientCookies.set("authToken", `${user?.authToken}`);
-      clientCookies.set("domainId", `${user?.domainId}`);
-      clientCookies.set("userId", `${user?.domainUser?.userId}`);
+      clientCookies.set("authToken", `${user?.authToken}`, { path: "/" });
+      clientCookies.set("domainId", `${user?.domainId}`, { path: "/" });
+      clientCookies.set("userId", `${user?.domainUser?.userId}`, { path: "/" });
     },
     [setStoredValue]
   );

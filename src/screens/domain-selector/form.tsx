@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import { ComboboxFormField } from "@/components/form-fields";
 
 import { DOMAIN_ID_SCHEMA, DomainPublicView } from "@/entities/domain";
 import { useAuthUser } from "@/features/auth";
+import { EXPIRED_SESSION_TAG } from "@/shared/api";
 import { ProductFlavorConfigContext } from "@/shared/config";
 import { Button } from "@/shared/ui";
 
@@ -23,6 +24,8 @@ const Schema = z.object({
 });
 
 export function DomainSelectForm({ domains }: Props) {
+  const searchParams = useSearchParams();
+  const reason = searchParams.get("reason");
   const router = useRouter();
   const { logout } = useAuthUser();
   const config = useContext(ProductFlavorConfigContext);
@@ -52,6 +55,12 @@ export function DomainSelectForm({ domains }: Props) {
       <h2 className="text-primary my-4 text-center text-2xl font-bold">
         {config.key ?? config.productName}
       </h2>
+
+      {reason === EXPIRED_SESSION_TAG && (
+        <div className="text-destructive">
+          Your session has expired. Please log in again.
+        </div>
+      )}
 
       <FormProvider {...form}>
         <form

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
 import { TwinsAPI } from "@/shared/api";
-import { isPopulatedArray, isUndefined, safe } from "@/shared/libs";
+import { isPopulatedArray, isUndefined } from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
@@ -23,30 +23,24 @@ import {
 } from "../types";
 
 export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
-  const result = await safe(() =>
-    TwinsAPI.POST("/auth/config/v1", {
-      params: {
-        header: {
-          DomainId: domainId,
-          Channel: "WEB",
-        },
+  const result = await TwinsAPI.POST("/auth/config/v1", {
+    params: {
+      header: {
+        DomainId: domainId,
+        Channel: "WEB",
       },
-    })
-  );
+    },
+  });
 
-  if (!result.ok) {
-    notFound();
+  if (result.error) {
+    throw result.error;
   }
 
-  if (result.data.error) {
-    throw new Error(result.data.error.msg);
-  }
-
-  if (isUndefined(result.data.data.config)) {
+  if (isUndefined(result.data.config)) {
     throw new Error("Config is not returned");
   }
 
-  return result.data.data.config;
+  return result.data.config;
 }
 
 async function stubLogin({
