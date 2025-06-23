@@ -119,7 +119,7 @@ export function AppSidebar({ face, mode = "user" }: Props) {
                     ) : (
                       <Globe className="h-4 w-4" />
                     )}
-                    {currentDomain?.key ?? "Select Domain"}
+                    {currentDomain?.name ?? "Select Domain"}
                     <ChevronsUpDown className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>

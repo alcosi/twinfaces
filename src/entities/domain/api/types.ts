@@ -4,7 +4,10 @@ import { RequireFields } from "@/shared/libs";
 export type TwinClassOwnerType = components["schemas"]["TwinClassOwnerTypeV1"];
 
 export type DomainView = components["schemas"]["DomainViewV1"];
-export type DomainView_SHORT = RequireFields<DomainView, "id" | "key">;
+//TODO remove name?: string; by updating schema
+export type DomainView_SHORT = RequireFields<DomainView, "id" | "key"> & {
+  name?: string;
+};
 export type DomainView_DETAILED = RequireFields<
   DomainView_SHORT,
   | "businessAccountTemplateTwinId"

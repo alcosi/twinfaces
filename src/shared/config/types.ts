@@ -1,6 +1,9 @@
 import { components } from "@/shared/api/generated/schema";
 
-export type RemoteConfig = components["schemas"]["DomainViewPublicV1"];
+//TODO remove name?: string; by updating schema
+export type RemoteConfig = components["schemas"]["DomainViewPublicV1"] & {
+  name?: string;
+};
 
 export type ThemeConfig = {
   defaultTheme: "light" | "dark" | "system";
