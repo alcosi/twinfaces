@@ -20,3 +20,22 @@
 .ContentEditable__root table td {
   border-color: var(--color-border);
 }
+
+.markdown table {
+  @apply !w-full;
+  @apply !table-fixed;
+  @apply !border-collapse;
+  @apply !border-amber-400;
+}
+
+.markdown td {
+  @apply !wrap-break-word;
+  @apply !p-2;
+  @apply !align-top;
+}
+
+.markdown img {
+  @apply !max-w-["100%"];
+  @apply !h-auto;
+  @apply !block;
+}
