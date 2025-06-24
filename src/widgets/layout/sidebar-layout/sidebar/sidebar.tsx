@@ -144,7 +144,7 @@ export function AppSidebar({ face, mode = "user" }: Props) {
                         ) : (
                           <Globe className="h-4 w-4" />
                         )}
-                        <span>{domain.key}</span>
+                        <span>{domain.name}</span>
                       </DropdownMenuItem>
                     ))}
                     <DropdownMenuSeparator />
