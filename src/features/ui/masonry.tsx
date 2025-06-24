@@ -15,8 +15,7 @@ export function MasonryLayout({
     return <div className={className}>{children}</div>;
   }
 
-  const { colCount, layoutClassNames, restClassNames } =
-    analyzeClassName(className);
+  const { colCount, layoutClassNames } = analyzeClassName(className);
 
   const columns: ReactNode[][] = Array.from({ length: colCount }, () => []);
 
@@ -35,7 +34,11 @@ export function MasonryLayout({
     const targetColumn = columns[distributedColIndex];
     if (!targetColumn) return;
 
-    const item = <Masonry.Item key={index}>{child}</Masonry.Item>;
+    const item = (
+      <Masonry.Item key={index} className={childClassName}>
+        {child}
+      </Masonry.Item>
+    );
 
     if (isNumber(rowIndex) && rowIndex < targetColumn.length) {
       targetColumn.splice(rowIndex, 0, item);
