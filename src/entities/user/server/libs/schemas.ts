@@ -31,7 +31,11 @@ export const EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA = z.object({
   email: z.string().email(),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters long" }),
+    .min(8, { message: "Password must be at least 8 characters long" })
+    .max(128, { message: "Password must not be longer than 128 characters." })
+    .refine((val) => !/\s/.test(val), {
+      message: "Password must not contain spaces",
+    }),
 });
 
 export const EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA =

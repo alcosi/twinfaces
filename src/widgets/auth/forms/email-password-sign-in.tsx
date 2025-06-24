@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import z from "zod";
 
-import { TextFormField } from "@/components/form-fields";
+import { SecretTextFormField, TextFormField } from "@/components/form-fields";
 
 import {
   EMAIL_PASSWORD_SIGN_IN_SCHEMA,
@@ -113,7 +113,7 @@ export function EmailPasswordSignInForm({
           placeholder="Enter your email"
           required
         />
-        <TextFormField
+        <SecretTextFormField
           control={signInForm.control}
           type="password"
           name="password"

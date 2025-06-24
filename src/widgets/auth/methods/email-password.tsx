@@ -107,16 +107,9 @@ export function EmailPasswordAuthWidget() {
       }
       back={
         <div className="flex h-full flex-col justify-between rounded-lg p-8">
-          <div>
-            <DomainLogo
-              iconLight={config.iconLight ?? config.favicon}
-              iconDark={config.iconDark ?? config.favicon}
-            />
-
-            <h2 className="text-primary my-4 text-center text-2xl font-bold">
-              {step === "sign-up" ? "Create Account" : "Confirm Your Email"}
-            </h2>
-          </div>
+          <h2 className="text-primary my-4 text-center text-2xl font-bold">
+            {step === "sign-up" ? "Create Account" : "Confirm Your Email"}
+          </h2>
 
           {step === "sign-up" ? (
             <EmailPasswordSignUpForm
@@ -142,7 +135,7 @@ export function EmailPasswordAuthWidget() {
           )}
 
           <StepsProgressBar
-            steps={["register", "confirm"]}
+            steps={["sign-up", "email-verification"]}
             current={step}
             containerClassName="flex justify-center pb-4"
           />
