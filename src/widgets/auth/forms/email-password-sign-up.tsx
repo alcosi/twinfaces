@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { useState, useTransition } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import z from "zod";
 
 import { SecretTextFormField, TextFormField } from "@/components/form-fields";
@@ -10,19 +10,8 @@ import {
   EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA,
   signUpAuthAction,
 } from "@/entities/user/server";
-import {
-  PasswordStrengthLevel,
-  checkPasswordStrength,
-  isUndefined,
-} from "@/shared/libs";
-import { Button, StepsProgressBar } from "@/shared/ui";
-
-const strengthColorMap: Record<PasswordStrengthLevel, string> = {
-  0: "bg-red-500",
-  1: "bg-orange-500",
-  2: "bg-yellow-500",
-  3: "bg-green-500",
-};
+import { isUndefined } from "@/shared/libs";
+import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignUpForm({
   toggleMode,
@@ -37,7 +26,6 @@ export function EmailPasswordSignUpForm({
   const domainId = searchParams.get("domainId") ?? undefined;
   const [isAuthenticating, startAuthTransition] = useTransition();
   const [authError, setAuthError] = useState<string | null>(null);
-  const [strengthLevel, setStrengthLevel] = useState<PasswordStrengthLevel>(0);
 
   const singUpForm = useForm<
     z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
@@ -52,15 +40,6 @@ export function EmailPasswordSignUpForm({
       confirmPassword: "",
     },
   });
-
-  const passwordWatched = useWatch({
-    control: singUpForm.control,
-    name: "password",
-  });
-
-  useEffect(() => {
-    setStrengthLevel(checkPasswordStrength(passwordWatched));
-  }, [passwordWatched]);
 
   function onSignUpSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
@@ -136,16 +115,8 @@ export function EmailPasswordSignUpForm({
           label="Password"
           placeholder="Create a password"
           required
+          showStrengthIndicator
         />
-        {/* // TODO: move this into `SecretTextFormField`  */}
-        {passwordWatched && (
-          <StepsProgressBar
-            steps={["0", "1", "2", "3"]}
-            current={strengthLevel.toString()}
-            activeColor={strengthColorMap[strengthLevel]}
-            inactiveColor="bg-transparent"
-          />
-        )}
         <SecretTextFormField
           control={singUpForm.control}
           name="confirmPassword"
