@@ -25,7 +25,6 @@
   @apply !w-full;
   @apply !table-fixed;
   @apply !border-collapse;
-  @apply !border-amber-400;
 }
 
 .markdown td {
