@@ -24,7 +24,11 @@ function Item({
   className,
   children,
 }: PropsWithChildren<{ className?: string | string[] }>) {
-  return <div className={cn(className)}>{children}</div>;
+  return (
+    <div className={cn("markdown", "break-inside-avoid", className)}>
+      {children}
+    </div>
+  );
 }
 
 export const Masonry = {

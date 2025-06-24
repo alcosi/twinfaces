@@ -22,17 +22,17 @@ export const MarkdownPreview = ({ source }: MarkdownPreviewProps) => {
   return (
     <div
       data-color-mode={resolvedTheme}
-      className="flex w-full flex-row flex-nowrap justify-between gap-1"
+      className="relative w-full"
       onClick={handleClick}
     >
+      <MarkdownIcon className="absolute -end-3 -top-6 h-5 w-5" />
+
       <MDEditor.Markdown
         source={source}
         style={{
           background: "var(--background)",
         }}
       />
-
-      <MarkdownIcon className="my-0.75 min-h-5 min-w-5 flex-shrink" />
     </div>
   );
 };
