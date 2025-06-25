@@ -25,7 +25,7 @@ export const MarkdownPreview = ({ source }: MarkdownPreviewProps) => {
       className="relative w-full"
       onClick={handleClick}
     >
-      <MarkdownIcon className="absolute inset-y-1.5 end-2 h-5 w-5" />
+      <MarkdownIcon className="absolute -end-3 -top-6 h-5 w-5" />
 
       <MDEditor.Markdown
         source={source}
