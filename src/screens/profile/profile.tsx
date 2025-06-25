@@ -19,10 +19,14 @@ export function ProfileScreen() {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Impedit
-            eius autem natus reprehenderit obcaecati, quidem ipsa cupiditate
-            temporibus repellat fugiat veritatis enim, tempora quod deserunt
-            laudantium earum nemo minima corrupti?
+            Welcome to On Shelves – Your Central Hub for Managing Sales on
+            Amazon and Allegro Take full control of your online sales with our
+            smart platform that brings together the most essential features of
+            Amazon and Allegro in one place. Our marketplace aggregator enables
+            intuitive offer management, content optimization tailored to each
+            platform’s requirements, and synchronization of optimization results
+            across sales channels. Everything works smoothly and clearly – just
+            like a well-organized shelf.
           </p>
         </CardContent>
       </Card>

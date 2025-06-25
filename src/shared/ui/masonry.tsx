@@ -25,7 +25,7 @@ function Item({
   children,
 }: PropsWithChildren<{ className?: string | string[] }>) {
   return (
-    <div className={cn("markdown", "break-inside-avoid", className)}>
+    <div className={cn("min-w-0 break-inside-avoid", className)}>
       {children}
     </div>
   );
