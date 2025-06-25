@@ -10,8 +10,8 @@ export function MaskedValue({ value }: { value: string }) {
   const [visible, setVisible] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-1 items-center justify-between">
-      <span>
+    <div className="flex max-w-full flex-1 items-center justify-between">
+      <span className="overflow-hidden whitespace-nowrap">
         {visible ? value : UNICODE_SYMBOLS.bullet.repeat(value.length)}
       </span>
       <Button
