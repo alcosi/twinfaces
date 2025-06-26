@@ -44,6 +44,8 @@ type CrudDataTableProps<
       filters: { search?: string; filters: { [key: string]: any } }
     ) => Promise<PagedResponse<TData>>;
     getRowId: (row: TData) => string;
+    modalHeaderLabel?: string;
+    modalButtonLabel?: string;
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -161,6 +163,8 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         renderFormFields={renderFormFields}
         onCreateSubmit={onCreateSubmit}
         onSubmitSuccess={() => tableRef.current?.refresh()}
+        modalHeaderLabel={props.modalHeaderLabel}
+        modalButtonLabel={props.modalButtonLabel}
       />
     </div>
   );

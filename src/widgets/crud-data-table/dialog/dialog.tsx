@@ -9,6 +9,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
+import { isEmptyString } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -37,6 +38,8 @@ type DialogProps = {
   // TODO: fix `any`
   onUpdateSubmit?: (id: string, values: any) => Promise<void>;
   onSubmitSuccess?: () => void;
+  modalHeaderLabel?: string;
+  modalButtonLabel?: string;
 };
 
 export const CrudDataTableDialog = forwardRef(Component);
@@ -48,6 +51,8 @@ function Component(
     onCreateSubmit,
     onUpdateSubmit,
     onSubmitSuccess,
+    modalHeaderLabel,
+    modalButtonLabel,
   }: DialogProps,
   ref: ForwardedRef<CrudDataTableDialogRef>
 ) {
@@ -95,24 +100,32 @@ function Component(
 
   return dialogForm ? (
     <Dialog open={dialogState.open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="max-h-[100%] sm:max-h-[80%] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{dialogState.rowId ? "Edit" : "Create"}</DialogTitle>
+          <DialogTitle>
+            {dialogState.rowId
+              ? "Edit"
+              : modalHeaderLabel && !isEmptyString(modalHeaderLabel)
+                ? modalHeaderLabel
+                : "Create"}
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...dialogForm}>
           <form onSubmit={dialogForm.handleSubmit(handleFormSubmit)}>
-            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
+            <div className="max-h-[60vh] space-y-8 overflow-y-auto px-8 py-6">
               {renderFormFields && renderFormFields()}
             </div>
 
-            <DialogFooter className="sm:justify-end bg-background p-6 rounded-b-md">
+            <DialogFooter className="bg-background rounded-b-md p-6 sm:justify-end">
               <Button
                 type="submit"
                 loading={dialogForm.formState.isSubmitting}
                 disabled={!dialogForm.formState.isDirty}
               >
-                Save
+                {modalButtonLabel && !isEmptyString(modalButtonLabel)
+                  ? modalButtonLabel
+                  : "Save"}
               </Button>
             </DialogFooter>
           </form>

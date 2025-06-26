@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { FaceWT001 } from "@/entities/face";
+import { FaceTC001ViewRs, FaceWT001 } from "@/entities/face";
 import {
   STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP,
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
@@ -46,6 +46,7 @@ import {
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
+import { TCForm } from "../../faces/widgets/views/tc";
 import { TwinFormFields } from "./form-fields";
 
 type Props = {
@@ -57,6 +58,7 @@ type Props = {
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
   // === end ===
+  modalCreateData?: FaceTC001ViewRs;
 };
 
 export function TwinsTable({
@@ -66,6 +68,7 @@ export function TwinsTable({
   targetHeadTwinId,
   showCreateButton = true,
   resourceNavigationEnabled = true,
+  modalCreateData,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -335,7 +338,18 @@ export function TwinsTable({
   });
 
   async function handleOnCreateSubmit(formValues: TwinFormValues) {
-    const body: TwinCreateRq = { ...formValues };
+    // TODO there may be unnecessary filtering if backends do not send static fields that do not relate to dynamic fields
+    const filteredFields = Object.fromEntries(
+      Object.entries(formValues.fields ?? {}).filter(
+        ([key]) => !key.startsWith("base_")
+      )
+    );
+
+    const body: TwinCreateRq = {
+      ...formValues,
+      fields: filteredFields,
+    };
+
     await createTwin({ body });
     toast.success(`Twin ${body.name} is created successfully!`);
   }
@@ -359,12 +373,18 @@ export function TwinsTable({
       defaultVisibleColumns={defaultVisibleColumns}
       dialogForm={form}
       onCreateSubmit={showCreateButton ? handleOnCreateSubmit : undefined}
-      renderFormFields={() => (
-        <TwinFormFields
-          control={form.control}
-          baseTwinClassId={baseTwinClassId}
-        />
-      )}
+      renderFormFields={() =>
+        modalCreateData ? (
+          <TCForm control={form.control} modalCreateData={modalCreateData} />
+        ) : (
+          <TwinFormFields
+            control={form.control}
+            baseTwinClassId={baseTwinClassId}
+          />
+        )
+      }
+      modalHeaderLabel={modalCreateData?.faceTwinCreate?.header}
+      modalButtonLabel={modalCreateData?.faceTwinCreate?.saveButtonLabel}
     />
   );
 }

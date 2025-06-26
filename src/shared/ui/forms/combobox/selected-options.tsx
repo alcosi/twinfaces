@@ -1,8 +1,10 @@
 "use client";
 
-import { isPopulatedArray, SelectAdapter } from "@/shared/libs";
-import { Badge } from "@/shared/ui/badge";
 import { XCircle } from "lucide-react";
+
+import { SelectAdapter, isPopulatedArray } from "@/shared/libs";
+import { Badge } from "@/shared/ui/badge";
+
 import { ComboboxProps } from "./types";
 
 const MAX_COUNT = 3;
@@ -38,13 +40,13 @@ export const SelectedOptions = <T,>({
   }
 
   return multi ? (
-    <div className="flex flex-wrap items-center w-full">
+    <div className="flex w-full flex-wrap items-center">
       {selected.slice(0, MAX_COUNT).map((item, index) => (
         <Badge
           key={getItemKey(item)}
-          className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
+          className="text-foreground border-foreground/10 hover:bg-card m-1 bg-transparent transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110"
         >
-          <span className="truncate max-w-[130px] mr-2">
+          <span className="mr-2 max-w-[130px] truncate">
             {renderItem(item)}
           </span>
           <XCircle
@@ -58,8 +60,8 @@ export const SelectedOptions = <T,>({
       ))}
 
       {selected.length > MAX_COUNT && (
-        <Badge className="truncate max-w-80 mr-2 bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 flex items-center">
-          <span className="truncate max-w-[100px] mr-2">{`+ ${selected.length - MAX_COUNT} more`}</span>
+        <Badge className="text-foreground border-foreground/10 hover:bg-card m-1 mr-2 flex max-w-80 items-center truncate bg-transparent transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
+          <span className="mr-2 max-w-[100px] truncate">{`+ ${selected.length - MAX_COUNT} more`}</span>
           <XCircle
             className="h-4 w-4 cursor-pointer"
             onClick={(event) => {
@@ -73,7 +75,7 @@ export const SelectedOptions = <T,>({
   ) : (
     <>
       {isPopulatedArray<T>(selected) ? (
-        <span className="truncate max-w-80">{renderItem(selected[0]!)}</span>
+        <span className="max-w-70 truncate">{renderItem(selected[0]!)}</span>
       ) : (
         <span className="opacity-50">{selectPlaceholder}</span>
       )}

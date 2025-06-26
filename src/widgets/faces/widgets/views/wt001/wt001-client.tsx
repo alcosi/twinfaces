@@ -1,6 +1,6 @@
 "use client";
 
-import { FaceWT001 } from "@/entities/face";
+import { FaceTC, FaceWT001 } from "@/entities/face";
 
 import { TwinsTable } from "../../../../tables";
 
@@ -10,12 +10,14 @@ export function WT001Client({
   enabledColumns,
   showCreateButton,
   isAdmin,
+  modalCreateData,
 }: {
   title?: string;
   baseTwinClassId?: string;
   enabledColumns?: FaceWT001["columns"];
   showCreateButton?: boolean;
   isAdmin: boolean;
+  modalCreateData?: FaceTC;
 }) {
   return (
     <TwinsTable
@@ -24,6 +26,7 @@ export function WT001Client({
       enabledColumns={enabledColumns}
       showCreateButton={showCreateButton}
       resourceNavigationEnabled={isAdmin}
+      modalCreateData={modalCreateData}
     />
   );
 }
