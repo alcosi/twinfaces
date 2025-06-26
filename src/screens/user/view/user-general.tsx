@@ -4,6 +4,7 @@ import { z } from "zod";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { useUpdateUser } from "@/entities/user";
+import { useAuthUser } from "@/features/auth";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
@@ -16,6 +17,7 @@ import { Avatar, GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
 export function UserGeneral() {
   const { user, refresh } = useContext(UserContext);
   const { updateUser } = useUpdateUser();
+  const { authUser, updateUser: updateAuthUser } = useAuthUser();
 
   const nameSettings: InPlaceEditProps<string | undefined> = {
     id: "fullName",
@@ -34,7 +36,19 @@ export function UserGeneral() {
         body: {
           fullName: value,
         },
-      }).then(refresh);
+      })
+        .then(refresh)
+        .then(() => {
+          updateAuthUser({
+            domainUser: {
+              ...authUser!.domainUser!,
+              user: {
+                ...authUser!.domainUser!.user,
+                fullName: value,
+              },
+            },
+          });
+        });
     },
   };
 

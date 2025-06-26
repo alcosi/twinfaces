@@ -17,6 +17,9 @@ import { SidebarTrigger } from "@/shared/ui/sidebar";
 export function SidebarLayoutHeader() {
   const breadcrumbs = useRouteCrumbs();
 
+  const visibleBreadcrumbs =
+    breadcrumbs[0]?.label === "profile" ? breadcrumbs : breadcrumbs.slice(1);
+
   return (
     <header className="border-border bg-background sticky top-0 z-10 flex h-16 items-center justify-between border-b px-4 md:px-6">
       <div className="flex items-center">
@@ -29,7 +32,7 @@ export function SidebarLayoutHeader() {
                 <House className="h-4 w-4" />
               </Link>
             </BreadcrumbItem>
-            {breadcrumbs?.slice(1).map((item, index, array) => (
+            {visibleBreadcrumbs.map((item, index, array) => (
               <React.Fragment key={index}>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
