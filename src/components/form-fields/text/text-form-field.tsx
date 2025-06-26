@@ -10,7 +10,7 @@ export function TextFormField<T extends FieldValues>({
   name,
   control,
   idPrefix,
-  customError,
+  error,
   ...props
 }: FormFieldProps<T> & TextFormFieldProps & Omit<InputProps, "onChange">) {
   const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
@@ -24,7 +24,7 @@ export function TextFormField<T extends FieldValues>({
             autoFocus={props.autoFocus}
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
-            hasError={isTruthy(fieldState.error || customError)}
+            hasError={isTruthy(fieldState.error || error)}
             inputId={inputId}
             inForm={true}
             {...props}

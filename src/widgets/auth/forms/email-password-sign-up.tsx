@@ -62,22 +62,18 @@ export function EmailPasswordSignUpForm({
     startAuthTransition(async () => {
       const result = await signUpAuthAction(null, formData);
 
-      if (!result.ok) {
+      if (result.msg === "error" && result.status && result.statusDetails) {
         if (
-          result.error.statusCode ===
-          ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
+          result.status === ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
         ) {
           singUpForm.setError("email", {
             type: "manual",
-            message: capitalize(
-              result.error.statusDetails || "Registration failed"
-            ),
+            message: capitalize(result.statusDetails || "Registration failed"),
           });
         }
         onError?.();
         if (
-          result.error.statusCode !==
-          ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
+          result.status !== ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
         ) {
           singUpForm.resetField("password");
           singUpForm.resetField("confirmPassword");
@@ -85,9 +81,7 @@ export function EmailPasswordSignUpForm({
         return;
       }
 
-      const { status } = result.data;
-
-      if (status !== 0) {
+      if (result?.status !== 0) {
         setAuthError("Registration failed");
         onError?.();
         singUpForm.resetField("password");

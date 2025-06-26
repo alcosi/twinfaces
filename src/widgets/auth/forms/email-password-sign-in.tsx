@@ -66,14 +66,14 @@ export function EmailPasswordSignInForm({
     startAuthTransition(async () => {
       const result = await loginAuthAction(null, formData);
 
-      if (!result.ok) {
-        setAuthError(result.error.statusDetails);
+      if (result.msg === "error" && result.statusDetails) {
+        setAuthError(result.statusDetails);
         onError?.();
         signInForm.resetField("password");
         return;
       }
 
-      const authToken = result.data?.authData?.auth_token;
+      const authToken = result.authData?.auth_token;
 
       if (isUndefined(authToken)) {
         setAuthError("Login failed. Please check your credentials");
@@ -119,7 +119,7 @@ export function EmailPasswordSignInForm({
           control={signInForm.control}
           name="username"
           label="Email"
-          customError={authError}
+          error={authError}
           placeholder="Enter your email"
           required
         />
@@ -128,7 +128,7 @@ export function EmailPasswordSignInForm({
           type="password"
           name="password"
           label="Password"
-          customError={authError}
+          error={authError}
           placeholder="Enter your password"
           required
         />

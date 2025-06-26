@@ -2,12 +2,9 @@ import { isUndefined } from "../libs";
 import { Result } from "./types";
 
 export abstract class Results {
-  static ok(): Result<void, never>;
-  static ok<T>(value: T): Result<T, never>;
-
-  static ok<T>(data?: T): Result<T | void, never> {
+  static ok<T>(data?: T): Result<T, never> {
     if (isUndefined(data)) {
-      return { ok: true } as Result<void, never>;
+      return { ok: true } as Result<T, never>;
     } else {
       return { ok: true, data } as Result<T, never>;
     }

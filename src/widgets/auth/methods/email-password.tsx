@@ -51,11 +51,11 @@ export function EmailPasswordAuthWidget() {
 
     const result = await loginAuthAction(null, userCredentials);
 
-    if (!result.ok) {
-      throw new Error(`Login failed: ${result.error}`);
+    if (result.msg === "error" && result.statusDetails) {
+      throw new Error(`Login failed: ${result.statusDetails}`);
     }
 
-    const authToken = result.value.authData?.auth_token;
+    const authToken = result.authData?.auth_token;
     if (isUndefined(authToken)) {
       throw new Error("Login failed: no auth token returned");
     }

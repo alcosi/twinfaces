@@ -4,12 +4,11 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { ParsedError, Result, Results, TwinsAPI } from "@/shared/api";
+import { TwinsAPI } from "@/shared/api";
 import {
   isPopulatedArray,
   isUndefined,
   parseUnknownError,
-  safe,
 } from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
@@ -157,7 +156,7 @@ export async function stubLoginFormAction(_: unknown, formData: FormData) {
 export async function loginAuthAction(
   _: unknown,
   formData: FormData
-): Promise<Result<AuthLoginRs, ParsedError>> {
+): Promise<AuthLoginRs> {
   try {
     const { domainId, username, password } =
       EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
@@ -166,34 +165,26 @@ export async function loginAuthAction(
         password: formData.get("password"),
       });
 
-    const result = await safe(() =>
-      TwinsAPI.POST("/auth/login/v1", {
-        body: { username, password },
-        params: { header: { DomainId: domainId, Channel: "WEB" } },
-      })
-    );
+    const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
+      body: { username, password },
+      params: { header: { DomainId: domainId, Channel: "WEB" } },
+    });
 
-    if (!result.ok && result.error) {
-      const { error } = result;
-      console.error("Login error response:", error);
-      const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
-      return Results.error({
-        statusCode: error.status ?? 0,
-        statusDetails: message,
-      });
+    if (error) {
+      return parseUnknownError(error);
     }
 
-    return Results.ok(data);
+    return data;
   } catch (err) {
     console.error("Login request failed:", err);
-    return Results.error(parseUnknownError(err));
+    return parseUnknownError(err);
   }
 }
 
 export async function signUpAuthAction(
   _: unknown,
   formData: FormData
-): Promise<Result<AuthSignupByEmailRs, ParsedError>> {
+): Promise<AuthSignupByEmailRs> {
   const { domainId, firstName, lastName, email, password } =
     EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.parse({
       domainId: formData.get("domainId"),
@@ -213,25 +204,20 @@ export async function signUpAuthAction(
     );
 
     if (error) {
-      console.error("Register error response:", error);
-      const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
-      return Results.error({
-        statusCode: error.status ?? 0,
-        statusDetails: message,
-      });
+      return parseUnknownError(error);
     }
 
-    return Results.ok(data);
+    return data;
   } catch (err) {
     console.error("Register request failed:", err);
-    return Results.error(parseUnknownError(err));
+    return parseUnknownError(err);
   }
 }
 
 export async function verifyEmailAction(
   _: unknown,
   formData: FormData
-): Promise<Result<AuthSignUpVerificationByEmailRs, ParsedError>> {
+): Promise<AuthSignUpVerificationByEmailRs> {
   const { domainId, verificationToken } = EMAIL_VERIFICATION_FORM_SCHEMA.parse({
     domainId: formData.get("domainId"),
     verificationToken: formData.get("verificationToken"),
@@ -254,18 +240,13 @@ export async function verifyEmailAction(
     );
 
     if (error) {
-      console.error("Confirm error response:", error);
-      const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
-      return Results.error({
-        statusCode: error.status ?? 0,
-        statusDetails: message,
-      });
+      return parseUnknownError(error);
     }
 
-    return Results.ok(data);
+    return data;
   } catch (err) {
     console.error("Confirm request failed:", err);
-    return Results.error(parseUnknownError(err));
+    return parseUnknownError(err);
   }
 }
 

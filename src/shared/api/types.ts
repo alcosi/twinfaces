@@ -19,9 +19,12 @@ export type SearchParams<TFilters> = {
 
 export type DataTimeRangeV1 = components["schemas"]["DataTimeRangeV1"];
 
-export type Result<T, E = unknown> =
+export type Result<T, E = ParsedError> =
   | { ok: true; data: T }
   | { ok: false; error: E };
 
-// Todo: remove
-export type ParsedError = { statusCode: number; statusDetails: string };
+export type ParsedError = {
+  status: number;
+  msg: string;
+  statusDetails: string;
+};

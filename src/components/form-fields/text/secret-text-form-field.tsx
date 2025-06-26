@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { FieldValues, useWatch } from "react-hook-form";
 
-import { PasswordStrengthLevel, checkPasswordStrength } from "@/shared/libs";
+import {
+  PasswordStrengthLevel,
+  checkPasswordStrength,
+  isTruthy,
+} from "@/shared/libs";
 import { FormField, InputProps, StepsProgressBar } from "@/shared/ui";
 
 import { FormFieldProps, TextFormFieldProps } from "../types";
@@ -24,6 +28,7 @@ export function SecretTextFormField<T extends FieldValues>({
   name,
   control,
   idPrefix,
+  error,
   showStrengthIndicator = false,
   ...props
 }: SecretTextFormFieldProps<T>) {
@@ -44,12 +49,13 @@ export function SecretTextFormField<T extends FieldValues>({
       <FormField
         control={control}
         name={name}
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <SecretTextFormItem
             type="password"
             autoFocus={props.autoFocus}
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
+            hasError={isTruthy(fieldState.error || error)}
             inputId={inputId}
             inForm={true}
             {...props}

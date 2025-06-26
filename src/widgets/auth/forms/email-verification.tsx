@@ -58,18 +58,16 @@ export function EmailVerificationForm({
     startVerifyTransition(async () => {
       const result = await verifyEmailAction(null, formData);
 
-      if (!result.ok) {
+      if (result.msg === "error" && result.statusDetails) {
         setVerificationError(
-          result.error.statusDetails || "Email verification failed"
+          result.statusDetails || "Email verification failed"
         );
         onError?.();
         emailVerificationForm.reset();
         return;
       }
 
-      const { status } = result.data;
-
-      if (status !== 0) {
+      if (result?.status !== 0) {
         setVerificationError("Email verification failed");
         onError?.();
         emailVerificationForm.reset();
@@ -107,7 +105,7 @@ export function EmailVerificationForm({
             type="text"
             name="verificationToken"
             label="Verification token"
-            customError={verificationError}
+            error={verificationError}
             placeholder="Enter your verification token from email"
             required
           />
