@@ -31,16 +31,20 @@ export type FacePG002 = components["schemas"]["FacePG002v1"];
 export type FacePG002Widget = components["schemas"]["FacePG002WidgetV1"];
 
 export type FaceWT001 = components["schemas"]["FaceWT001v1"];
+export type FaceWT002 = components["schemas"]["FaceWT002v1"];
 export type FaceWT003 = components["schemas"]["FaceWT003DTOv1"];
 export type FaceTW001 = components["schemas"]["FaceTW001v1"];
 export type FaceTW002 = components["schemas"]["FaceTW002v1"];
 export type FaceTW004 = components["schemas"]["FaceTW004v1"];
 export type FaceTW005 = components["schemas"]["FaceWT005v1"];
-
-export type FaceTW005Button = components["schemas"]["FaceTW005ButtonV1"];
 export type FaceTC001 = components["schemas"]["FaceTC001v1"];
 
+export type FaceWT002Button = components["schemas"]["FaceWT002ButtonV1"];
+
+export type FaceTW005Button = components["schemas"]["FaceTW005ButtonV1"];
+
 export type FaceWT001ViewRs = components["schemas"]["FaceWT001ViewRsV1"];
+export type FaceWT002ViewRs = components["schemas"]["FaceWT002ViewRsV1"];
 export type FaceWT003ViewRs = components["schemas"]["FaceWT003ViewRsV1"];
 export type FaceTW001ViewRs = components["schemas"]["FaceTW001ViewRsV1"];
 export type FaceTW002ViewRs = components["schemas"]["FaceTW002ViewRsV1"];
