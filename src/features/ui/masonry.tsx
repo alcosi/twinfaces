@@ -34,11 +34,7 @@ export function MasonryLayout({
     const targetColumn = columns[distributedColIndex];
     if (!targetColumn) return;
 
-    const item = (
-      <Masonry.Item key={index} className={childClassName}>
-        {child}
-      </Masonry.Item>
-    );
+    const item = <Masonry.Item key={index}>{child}</Masonry.Item>;
 
     if (isNumber(rowIndex) && rowIndex < targetColumn.length) {
       targetColumn.splice(rowIndex, 0, item);
