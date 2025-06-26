@@ -195,14 +195,14 @@ function ForgotPasswordAlertContent() {
     <div className="space-y-4 p-6 text-balance" id="forgot-password">
       {blocks.map(({ title, text, afterLink }, i) => (
         <div key={i}>
-          <DialogDescription className="font-bold text-black">
+          <DialogDescription className="font-bold text-[var(--color-primary)]">
             {title}
           </DialogDescription>
           <DialogDescription className="text-muted-foreground text-sm">
             {text}&nbsp;
             <a
               href={`mailto:${email}`}
-              className="text-blue-500 underline hover:text-blue-600"
+              className="text-[var(--color-info)] underline hover:text-[var(--color-brand-600)]"
               target="_blank"
             >
               {email}
