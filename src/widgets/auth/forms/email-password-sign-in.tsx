@@ -73,7 +73,7 @@ export function EmailPasswordSignInForm({
         return;
       }
 
-      const authToken = result.value?.authData?.auth_token;
+      const authToken = result.data?.authData?.auth_token;
 
       if (isUndefined(authToken)) {
         setAuthError("Login failed. Please check your credentials");

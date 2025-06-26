@@ -5,11 +5,11 @@ export abstract class Results {
   static ok(): Result<void, never>;
   static ok<T>(value: T): Result<T, never>;
 
-  static ok<T>(value?: T): Result<T | void, never> {
-    if (isUndefined(value)) {
+  static ok<T>(data?: T): Result<T | void, never> {
+    if (isUndefined(data)) {
       return { ok: true } as Result<void, never>;
     } else {
-      return { ok: true, value } as Result<T, never>;
+      return { ok: true, data } as Result<T, never>;
     }
   }
 

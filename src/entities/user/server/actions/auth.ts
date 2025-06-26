@@ -166,12 +166,15 @@ export async function loginAuthAction(
         password: formData.get("password"),
       });
 
-    const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
-      body: { username, password },
-      params: { header: { DomainId: domainId, Channel: "WEB" } },
-    });
+    const result = await safe(() =>
+      TwinsAPI.POST("/auth/login/v1", {
+        body: { username, password },
+        params: { header: { DomainId: domainId, Channel: "WEB" } },
+      })
+    );
 
-    if (error) {
+    if (!result.ok && result.error) {
+      const { error } = result;
       console.error("Login error response:", error);
       const message = error.statusDetails ?? `${error.status}: ${error.msg}`;
       return Results.error({

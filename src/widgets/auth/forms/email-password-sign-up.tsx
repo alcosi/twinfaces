@@ -85,7 +85,7 @@ export function EmailPasswordSignUpForm({
         return;
       }
 
-      const { status } = result.value;
+      const { status } = result.data;
 
       if (status !== 0) {
         setAuthError("Registration failed");

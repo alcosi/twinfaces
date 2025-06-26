@@ -1,0 +1,2 @@
+// Move ../constants.ts into this folder
+// Spread constants into separete files according the responsibility it holds

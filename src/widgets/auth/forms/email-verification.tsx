@@ -67,7 +67,7 @@ export function EmailVerificationForm({
         return;
       }
 
-      const { status } = result.value;
+      const { status } = result.data;
 
       if (status !== 0) {
         setVerificationError("Email verification failed");
