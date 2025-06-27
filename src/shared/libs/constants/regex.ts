@@ -8,6 +8,8 @@ export const REGEX_PATTERNS = {
   URL_REGEX:
     /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9()@:%_+.~#?&/=]*$/,
 
+  SECRET_FIELD_REGEX: /^\S*$/,
+
   /**
    * Extracts path segments (before any '?'):
    * - `[^/?]+`  one or more chars except `/` or `?`

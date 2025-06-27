@@ -60,7 +60,8 @@ export type TwinFilterKeys =
   | "headTwinIdList"
   | "createdByUserIdList"
   | "assignerUserIdList"
-  | "fields";
+  | "fields"
+  | "createdAt";
 
 export type TwinFilters = Partial<
   Pick<components["schemas"]["TwinSearchRqV1"], TwinFilterKeys>

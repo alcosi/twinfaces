@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { CheckboxFormItem, SwitchFormItem } from "@/components/form-fields";
 
 import { User } from "@/entities/user";
@@ -9,7 +11,7 @@ import {
   isPopulatedString,
   mapPatternToInputType,
 } from "@/shared/libs";
-import { AnchorWithCopy, MaskedValue, Switch } from "@/shared/ui";
+import { AnchorWithCopy, MaskedValue } from "@/shared/ui";
 
 import { DatalistOptionResourceLink } from "../../../../features/datalist-option/ui";
 import { MarkdownPreview } from "../../../../features/markdown";
@@ -90,6 +92,24 @@ export function InheritedFieldPreview({
       const data = relatedObjects?.userMap?.[value] as User | undefined;
       return (
         data && <UserResourceLink data={data} withTooltip disabled={disabled} />
+      );
+    }
+
+    case "attachmentFieldV1": {
+      const url = value as string | undefined;
+
+      if (!url) return null;
+
+      return (
+        <div className="flex flex-wrap gap-2">
+          <Image
+            src={url}
+            alt="Attachment"
+            width={48}
+            height={48}
+            className="rounded border object-cover"
+          />
+        </div>
       );
     }
 

@@ -84,6 +84,7 @@ export function TwinsTable({
   const { buildFilterFields, mapFiltersToPayload } = useTwinFilters({
     baseTwinClassId,
     twinClassFields,
+    enabledColumns,
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
@@ -335,11 +336,7 @@ export function TwinsTable({
 
   const form = useForm<TwinFormValues>({
     resolver: zodResolver(TWIN_SCHEMA),
-    defaultValues: {
-      classId: "",
-      name: "",
-      description: "",
-    },
+    defaultValues: { classId: "", name: "", description: "" },
   });
 
   async function handleOnCreateSubmit(formValues: TwinFormValues) {
@@ -364,11 +361,24 @@ export function TwinsTable({
     toast.success("Transition is performed successfully");
   }
 
+  const orderedColumns = isPopulatedArray(enabledColumns)
+    ? enabledColumns.reduce<ColumnDef<Twin_DETAILED>[]>((acc, col) => {
+        const fieldId = col.twinClassFieldId;
+        const def = fieldId ? columnMap[fieldId] : undefined;
+        if (def) acc.push(def);
+        return acc;
+      }, [])
+    : [];
+
   return (
     <CrudDataTable
       ref={tableRef}
       title={title}
-      columns={Object.values(columnMap)}
+      columns={
+        isPopulatedArray(enabledColumns)
+          ? orderedColumns
+          : Object.values(columnMap)
+      }
       getRowId={(row) => row.id}
       fetcher={(pagination, filters) => fetchTwins({ pagination, filters })}
       filters={{
@@ -410,11 +420,15 @@ function extractTwinFieldColumnsAndFilters({
     columnEntries: [string, ColumnDef<Twin_DETAILED>][];
   }>(
     ({ supportedFields, columnEntries }, field) => {
-      const isEnabled = enabledColumns.some(
+      const column = enabledColumns.find(
         (col) => col.twinClassFieldId === field.id
       );
 
-      if (!isEnabled || isUndefined(field.id) || isUndefined(field.key)) {
+      if (
+        isUndefined(column) ||
+        isUndefined(field.id) ||
+        isUndefined(field.key)
+      ) {
         return { supportedFields, columnEntries };
       }
 
@@ -423,7 +437,7 @@ function extractTwinFieldColumnsAndFilters({
         {
           id: field.key,
           accessorFn: (row) => row.fields?.[field.key!] ?? null,
-          header: field.name,
+          header: column.label ?? field.name,
           cell: ({ row: { original } }) => {
             const twinField = original.fields?.[field.key!] as TwinFieldUI;
 
