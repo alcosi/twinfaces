@@ -54,12 +54,16 @@ export function isArray<T>(arr: unknown): arr is T[] {
 // ──────────────────────────────────────────────────────────────────────────────
 //
 
+export function isString(str: unknown): str is string {
+  return typeof str === "string";
+}
+
 export function isEmptyString(str: unknown): str is string {
-  return typeof str === "string" && str.trim().length === 0;
+  return isString(str) && str.trim().length === 0;
 }
 
 export function isPopulatedString(str: unknown): str is string {
-  return typeof str === "string" && str.trim().length > 0;
+  return isString(str) && str.trim().length > 0;
 }
 
 //

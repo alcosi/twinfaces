@@ -50,8 +50,8 @@ export function TwinClassContextProvider({
       });
 
       setTwinClass(response);
-    } catch {
-      toast.error("Failed to fetch twin class");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : String(e));
     }
   }
 

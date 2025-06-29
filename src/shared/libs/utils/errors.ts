@@ -1,6 +1,6 @@
-import { ParsedError } from "@/shared/api";
+import { ApiErrorResponse } from "@/shared/api";
 
-export function parseUnknownError(err: unknown): ParsedError {
+export function parseUnknownError(err: unknown): ApiErrorResponse {
   if (
     typeof err === "object" &&
     err !== null &&

@@ -1,14 +1,11 @@
-import { ParsedError, Result } from "@/shared/api";
-import { parseUnknownError } from "@/shared/libs";
+import { Result } from "@/shared/api";
 
-export async function safe<T>(
-  fn: () => Promise<T>
-): Promise<Result<T, ParsedError>> {
+export async function safe<T>(fn: () => Promise<T>): Promise<Result<T>> {
   try {
     const data = await fn();
     return { ok: true, data };
   } catch (error) {
     console.warn("[safe] Caught error:", error);
-    return { ok: false, error: parseUnknownError(error) };
+    return { ok: false, error };
   }
 }

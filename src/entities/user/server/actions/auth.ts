@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
+// import { FetchResponse } from "openapi-fetch";
+
 import { isAuthUserGranted } from "@/entities/user/server";
 import { TwinsAPI } from "@/shared/api";
 import {
@@ -165,10 +167,14 @@ export async function loginAuthAction(
         password: formData.get("password"),
       });
 
-    const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
+    // NOTE: FetchResponse type at node_modules/openapi-fetch/dist/index.d.mts
+    //
+    const res = await TwinsAPI.POST("/auth/login/v1", {
       body: { username, password },
       params: { header: { DomainId: domainId, Channel: "WEB" } },
     });
+    const { data, error, response } = res;
+    // console.log("foobar LOGIN", res, { data, error, response });
 
     if (error) {
       return parseUnknownError(error);
