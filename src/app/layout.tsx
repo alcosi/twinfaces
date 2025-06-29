@@ -2,10 +2,7 @@ import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
 
-import {
-  getDomainFromHeaders,
-  getMiddlewareErrorFromCookies,
-} from "@/entities/face";
+import { getDomainFromHeaders } from "@/entities/face";
 import { getProductFlavorConfig } from "@/shared/config";
 import { cn } from "@/shared/libs";
 import { PublicLayoutProviders } from "@/widgets/layout";
@@ -25,7 +22,6 @@ export default async function RootLayout({
 }>) {
   const remoteConfig = await getDomainFromHeaders();
   const config = getProductFlavorConfig(remoteConfig);
-  const errorMessage = await getMiddlewareErrorFromCookies();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -41,13 +37,6 @@ export default async function RootLayout({
           type="image/svg+xml"
           href={config.iconLight ?? config.favicon}
         />
-        {errorMessage && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `console.error("${decodeURIComponent(errorMessage)}");`,
-            }}
-          />
-        )}
       </head>
       <body
         className={cn(
