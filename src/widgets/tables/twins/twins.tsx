@@ -30,17 +30,23 @@ import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { TwinResourceLink, TwinStatusActions } from "@/features/twin/ui";
+import {
+  TwinFieldEditor,
+  TwinResourceLink,
+  TwinStatusActions,
+} from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
+import { RelatedObjects } from "@/shared/api";
 import {
   formatIntlDate,
   isEmptyString,
+  isObject,
   isPopulatedArray,
+  isTruthy,
   isUndefined,
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
-import { renderTwinFieldPreview } from "../../../widgets/form-fields";
 import {
   CrudDataTable,
   DataTableHandle,
@@ -81,7 +87,7 @@ export function TwinsTable({
     twinClassFields,
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
-  const { searchTwins } = useTwinSearchV3();
+  const { searchTwins, relatedObjects } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -136,7 +142,7 @@ export function TwinsTable({
           {original.status && (
             <TwinStatusActions
               twin={original}
-              allowNavigation={resourceNavigationEnabled}
+              allowNavigation={!resourceNavigationEnabled}
               onTransitionSuccess={handleOnTransitionPerformSuccess}
             />
           )}
@@ -290,6 +296,7 @@ export function TwinsTable({
           fields,
           enabledColumns,
           resourceNavigationEnabled,
+          relatedObjects,
         });
 
       setTwinClassFields(supportedFields);
@@ -298,7 +305,7 @@ export function TwinsTable({
         ...Object.fromEntries(columnEntries),
       }));
     });
-  }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
+  }, [baseTwinClassId, enabledColumns, fetchTwinClassById, relatedObjects]);
 
   async function fetchTwins({
     pagination,
@@ -392,10 +399,12 @@ function extractTwinFieldColumnsAndFilters({
   fields,
   enabledColumns,
   resourceNavigationEnabled,
+  relatedObjects,
 }: {
   fields: TwinClassField[];
   enabledColumns: NonNullable<FaceWT001["columns"]>;
   resourceNavigationEnabled: boolean;
+  relatedObjects?: RelatedObjects;
 }): {
   supportedFields: TwinClassField[];
   columnEntries: [string, ColumnDef<Twin_DETAILED>][];
@@ -426,12 +435,26 @@ function extractTwinFieldColumnsAndFilters({
               return twinField.value;
             }
 
-            // TODO: replace with
-            // return <TwinFieldEditor editable={false} />
-            return renderTwinFieldPreview({
-              twinField,
-              allowNavigation: resourceNavigationEnabled,
-            });
+            return (
+              <TwinFieldEditor
+                id={twinField.id}
+                field={{
+                  id: twinField.id,
+                  key: twinField.key,
+                  value:
+                    isObject(twinField.value) && isTruthy(twinField.value.id)
+                      ? (twinField.value.id as string)
+                      : (twinField.value as string),
+                  name: twinField.name,
+                  descriptor: twinField.descriptor,
+                }}
+                twinId={original.id}
+                twin={original}
+                relatedObjects={relatedObjects}
+                editable={false}
+                mode={resourceNavigationEnabled ? "admin" : undefined}
+              />
+            );
           },
         },
       ]);

@@ -15,6 +15,7 @@ import {
 } from "@/entities/twin";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
+import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 import {
   cn,
@@ -24,7 +25,10 @@ import {
 } from "@/shared/libs";
 import { AnchorWithCopy, MaskedValue } from "@/shared/ui";
 
+import { DatalistOptionResourceLink } from "../../../../features/datalist-option/ui";
 import { MarkdownPreview } from "../../../../features/markdown";
+import { TwinResourceLink } from "../../../../features/twin/ui";
+import { UserResourceLink } from "../../../../features/user/ui";
 import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
 import { STATIC_FIELD_MAP } from "./constants";
 
@@ -32,6 +36,7 @@ type FieldProps = {
   id: string;
   key: StaticTwinFieldKey | string;
   value: string;
+  name?: string;
   descriptor: TwinClassField["descriptor"];
 };
 
@@ -47,10 +52,6 @@ export type TwinFieldEditorProps = {
   className?: string;
   mode?: "admin";
   editable?: boolean;
-  // TODO: remove passing this prop to the component
-  renderFieldPreview?: () => ReactNode;
-  // TODO: add `disabled` prop for managing various states (e.g. allowNavigation: true/false)
-  // ✅ TODO: add `editable`
 };
 
 export function TwinFieldEditor({
@@ -65,7 +66,6 @@ export function TwinFieldEditor({
   className,
   mode,
   editable = false,
-  renderFieldPreview,
 }: TwinFieldEditorProps) {
   const { updateTwin } = useTwinUpdate();
   const router = useRouter();
@@ -82,7 +82,7 @@ export function TwinFieldEditor({
       return staticFieldRenderPreview(hydratedTwin, mode);
     }
 
-    return renderDynamicFieldPreview(field, relatedObjects);
+    return renderDynamicFieldPreview(field, relatedObjects, mode);
   }
 
   async function handleOnSubmit(value: string) {
@@ -110,7 +110,7 @@ export function TwinFieldEditor({
       descriptor: field.descriptor,
       twinId,
     },
-    renderPreview: renderFieldPreview ?? renderPreview,
+    renderPreview: renderPreview,
     schema: schema ?? z.string().min(1),
     onSubmit: handleOnSubmit,
     className: cn(className, staticFieldClassName),
@@ -136,10 +136,10 @@ export function TwinFieldEditor({
 
 function renderDynamicFieldPreview(
   field: FieldProps,
-  relatedObjects?: RelatedObjects
+  relatedObjects?: RelatedObjects,
+  mode?: "admin"
 ): ReactNode {
   const fieldType = field.descriptor?.fieldType;
-
   if (fieldType === "urlV1") {
     return (
       <AnchorWithCopy href={field.value} target="_blank">
@@ -154,7 +154,8 @@ function renderDynamicFieldPreview(
 
   if (
     fieldType === "textV1" &&
-    field.descriptor?.editorType === "MARKDOWN_BASIC"
+    (field.descriptor?.editorType === "MARKDOWN_BASIC" ||
+      field.descriptor?.editorType === "MARKDOWN_GITHUB")
   ) {
     return <MarkdownPreview source={field.value} />;
   }
@@ -168,9 +169,52 @@ function renderDynamicFieldPreview(
       : "";
   }
 
-  return (
-    <p>
-      {relatedObjects?.dataListsOptionMap?.[field.value]?.name ?? field.value}
-    </p>
-  );
+  if (
+    fieldType === "selectListV1" ||
+    fieldType === "selectLongV1" ||
+    fieldType === "selectSharedInHeadV1"
+  ) {
+    const datalistOptionData =
+      relatedObjects?.dataListsOptionMap?.[field.value];
+
+    return (
+      datalistOptionData && (
+        <DatalistOptionResourceLink
+          data={datalistOptionData}
+          withTooltip
+          disabled={mode !== "admin"}
+        />
+      )
+    );
+  }
+
+  if (fieldType === "selectLinkV1" || fieldType === "selectLinkLongV1") {
+    const twinData = relatedObjects?.twinMap?.[field.value];
+
+    return (
+      twinData && (
+        <TwinResourceLink
+          data={twinData}
+          withTooltip
+          disabled={mode !== "admin"}
+        />
+      )
+    );
+  }
+
+  if (fieldType === "selectUserV1" || fieldType === "selectUserLongV1") {
+    const userData = relatedObjects?.userMap?.[field.value];
+
+    return (
+      field.value && (
+        <UserResourceLink
+          data={userData as User}
+          withTooltip
+          disabled={mode !== "admin"}
+        />
+      )
+    );
+  }
+
+  return <p>{field.value}</p>;
 }

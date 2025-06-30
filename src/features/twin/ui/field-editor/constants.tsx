@@ -38,7 +38,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
       key: "ownerUserId",
       renderPreview: (twin, mode) => {
         return twin.ownerUser ? (
-          <UserResourceLink data={twin.ownerUser} disabled={mode === "admin"} />
+          <UserResourceLink data={twin.ownerUser} disabled={mode !== "admin"} />
         ) : (
           twin.ownerUserId
         );
@@ -51,7 +51,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
         return twin.assignerUser ? (
           <UserResourceLink
             data={twin.assignerUser}
-            disabled={mode === "admin"}
+            disabled={mode !== "admin"}
           />
         ) : (
           twin.assignerUserId
@@ -64,7 +64,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
         return twin.authorUser ? (
           <UserResourceLink
             data={twin.authorUser}
-            disabled={mode === "admin"}
+            disabled={mode !== "admin"}
           />
         ) : (
           twin.authorUserId
@@ -76,7 +76,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
       descriptor: FieldDescriptorSelectSharedInHeadV1,
       renderPreview: (twin, mode) => {
         return twin.headTwin ? (
-          <TwinResourceLink data={twin.headTwin} disabled={mode === "admin"} />
+          <TwinResourceLink data={twin.headTwin} disabled={mode !== "admin"} />
         ) : (
           twin.headTwinId
         );
@@ -88,7 +88,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
         return twin.status ? (
           <TwinStatusActions
             twin={twin as Twin_DETAILED}
-            allowNavigation={mode === "admin"}
+            allowNavigation={mode !== "admin"}
           />
         ) : (
           twin.statusId
@@ -116,7 +116,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
         return twin.twinClass ? (
           <TwinClassResourceLink
             data={twin.twinClass as TwinClass_DETAILED}
-            disabled={mode === "admin"}
+            disabled={mode !== "admin"}
           />
         ) : (
           twin.twinClassId

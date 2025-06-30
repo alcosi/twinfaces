@@ -11,16 +11,12 @@ import { TwinFieldEditor } from "@/features/twin/ui";
 import { PagedResponse } from "@/shared/api";
 import { isObject, isTruthy } from "@/shared/libs";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
-import {
-  renderTwinFieldPreview,
-  resolveTwinFieldSchema,
-} from "@/widgets/form-fields";
+import { resolveTwinFieldSchema } from "@/widgets/form-fields";
 
 export function TwinFields() {
   const { twinId } = useContext(TwinContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const { fetchFieldsByTwinId } = useFetchFields();
-
+  const { fetchFieldsByTwinId, relatedObjects } = useFetchFields();
   const columns: ColumnDef<TwinFieldUI>[] = [
     {
       id: "key",
@@ -57,21 +53,15 @@ export function TwinFields() {
                   isObject(original.value) && isTruthy(original.value.id)
                     ? String(original.value.id)
                     : String(original.value),
+                name: original.name,
                 descriptor: original.descriptor,
               }}
               schema={resolveTwinFieldSchema(original)}
               onSuccess={tableRef.current?.refresh}
-              // TODO: :bug: when editable is false, we display UUID on preview-mode
-              // instead of `resource-link`
               editable
-              // disabled
               className="hover:bg-transparent"
-              renderFieldPreview={() =>
-                renderTwinFieldPreview({
-                  twinField: original,
-                  allowNavigation: true,
-                })
-              }
+              relatedObjects={relatedObjects}
+              mode="admin"
             />
           </div>
         );

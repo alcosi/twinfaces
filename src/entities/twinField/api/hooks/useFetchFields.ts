@@ -1,13 +1,14 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import { TwinFieldUI } from "@/entities/twinField";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinFieldFromMap } from "../../libs";
 
 export const useFetchFields = () => {
   const api = useContext(PrivateApiContext);
+  const [relatedObjects, setRelatedObjects] = useState<RelatedObjects>();
 
   const fetchFieldsByTwinId = useCallback(
     async ({
@@ -33,7 +34,7 @@ export const useFetchFields = () => {
           relatedObjects: data.relatedObjects,
         })
       );
-
+      setRelatedObjects(data.relatedObjects);
       const extendedTwinFields = twinFields.map((field) => ({
         ...field,
         twinClassId: data.twin?.twinClassId,
@@ -44,5 +45,5 @@ export const useFetchFields = () => {
     [api]
   );
 
-  return { fetchFieldsByTwinId };
+  return { fetchFieldsByTwinId, relatedObjects };
 };

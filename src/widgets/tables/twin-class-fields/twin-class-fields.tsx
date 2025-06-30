@@ -233,9 +233,7 @@ export function TwinClassFieldsTable({
       getRowId={(row) => row.id}
       fetcher={fetchFields}
       onRowClick={(row) =>
-        router.push(
-          `/${PlatformArea.core}/twinclass/${row.twinClassId}/twinField/${row.id}`
-        )
+        router.push(`/${PlatformArea.core}/fields/${row.id}`)
       }
       filters={{
         filtersInfo: buildFilterFields(),

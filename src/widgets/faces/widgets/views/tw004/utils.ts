@@ -34,6 +34,8 @@ export async function buildFieldEditorProps(
           showTwinField2DataListOptionMode: "DETAILED",
           showTwinTag2DataListOptionMode: "DETAILED",
           showTwin2TransitionMode: "DETAILED",
+          showTwinByLinkMode: "GREEN",
+          showTwin2TwinLinkMode: "SHORT",
         },
       },
     });
