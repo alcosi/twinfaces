@@ -305,3 +305,5 @@ export const ERROR_CODE_LIST: Record<number, string> = {
   12711: "too many verification attempts",
   12712: "email is already registered",
 };
+
+export const ERROR_RESPONSE_MESSAGE_VALUE = "error";
