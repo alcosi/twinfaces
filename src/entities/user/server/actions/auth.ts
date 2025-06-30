@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { TwinsAPI, toError } from "@/shared/api";
+import { TwinsAPI } from "@/shared/api";
 import { isPopulatedArray, isUndefined } from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
