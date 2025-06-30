@@ -6,6 +6,7 @@ export function isApiErrorResponse(value: unknown): value is ApiErrorResponse {
     isObject<Partial<ApiErrorResponse>>(value) &&
     isNumber(value.status) &&
     isString(value.msg) &&
+    value.msg === "error" &&
     isString(value.statusDetails)
   );
 }
