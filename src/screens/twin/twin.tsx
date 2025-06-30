@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 
 import { TwinContext } from "@/features/twin";
 import { Tab, TabsLayout } from "@/widgets/layout";
@@ -51,16 +51,18 @@ const DEFAULT_TABS = [
 export function TwinScreen() {
   const { twin, twinId } = useContext(TwinContext);
 
-  const tabs: Tab[] = [
-    ...DEFAULT_TABS,
-    ...(twin.subordinates?.map((tab) => ({
-      key: tab.id,
-      label: tab.name,
-      content: (
-        <TwinsTable baseTwinClassId={tab.id} targetHeadTwinId={twinId} />
-      ),
-    })) ?? []),
-  ];
+  const tabs: Tab[] = useMemo(() => {
+    return [
+      ...DEFAULT_TABS,
+      ...(twin.subordinates?.map((tab) => ({
+        key: tab.id,
+        label: tab.name,
+        content: (
+          <TwinsTable baseTwinClassId={tab.id} targetHeadTwinId={twinId} />
+        ),
+      })) ?? []),
+    ];
+  }, [twinId]);
 
   return <TabsLayout tabs={tabs} />;
 }

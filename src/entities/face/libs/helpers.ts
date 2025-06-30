@@ -2,8 +2,11 @@
 
 import { cookies, headers } from "next/headers";
 
+// import { getAuthenticatedUser } from "@/entities/user/server";
 import { RemoteConfig } from "@/shared/config";
 import { isFalsy, isUndefined } from "@/shared/libs";
+
+// import { AuthUser } from "../../../features/auth";
 
 export async function getDomainFromHeaders(): Promise<
   RemoteConfig | undefined
@@ -71,3 +74,16 @@ async function getUserIdFromCookies(): Promise<string> {
 
   return userId;
 }
+
+// export async function getFullAuthUser(): Promise<AuthUser> {
+//   const authToken = await getAuthTokenFromCookies();
+//   const domainId = await getDomainIdFromCookies();
+
+//   const domainUser = await getAuthenticatedUser({ authToken, domainId });
+
+//   return {
+//     domainUser,
+//     authToken,
+//     domainId,
+//   };
+// }

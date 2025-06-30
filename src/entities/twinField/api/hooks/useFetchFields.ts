@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
 import { TwinFieldUI } from "@/entities/twinField";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
@@ -9,38 +9,49 @@ import { hydrateTwinFieldFromMap } from "../../libs";
 export const useFetchFields = () => {
   const api = useContext(PrivateApiContext);
 
-  const fetchFieldsByTwinId = useCallback(
-    async ({
-      twinId,
-    }: {
-      twinId: string;
-    }): Promise<
-      PagedResponse<TwinFieldUI & { twinClassId: string | undefined }>
-    > => {
-      const { data, error } = await api.twin.getFieldsById({ twinId });
+  useEffect(() => {
+    console.log("🔁 PrivateApiContext value changed:", api);
+  }, [api]);
 
-      if (error) {
-        throw new Error("Failed to fetch twin due to API error");
-      }
+  useEffect(() => {
+    console.log("✅✅✅ useFetchFields mounted");
+    return () => console.log("❌❌❌ useFetchFields unmounted");
+  });
 
-      if (isUndefined(data.twin)) {
-        throw new Error("Invalid response data while fetching twin");
-      }
+  const fetchFieldsByTwinId = useMemo(
+    () =>
+      async ({
+        twinId,
+      }: {
+        twinId: string;
+      }): Promise<
+        PagedResponse<TwinFieldUI & { twinClassId: string | undefined }>
+      > => {
+        console.log("useFetchFields fetchFieldsByTwinId called!!!!!!!!!");
+        const { data, error } = await api.twin.getFieldsById({ twinId });
 
-      const twinFields = Object.entries(data?.twin?.fields ?? []).map((dto) =>
-        hydrateTwinFieldFromMap({
-          dto,
-          relatedObjects: data.relatedObjects,
-        })
-      );
+        if (error) {
+          throw new Error("Failed to fetch twin due to API error");
+        }
 
-      const extendedTwinFields = twinFields.map((field) => ({
-        ...field,
-        twinClassId: data.twin?.twinClassId,
-      }));
+        if (isUndefined(data.twin)) {
+          throw new Error("Invalid response data while fetching twin");
+        }
 
-      return { data: extendedTwinFields, pagination: {} };
-    },
+        const twinFields = Object.entries(data?.twin?.fields ?? []).map((dto) =>
+          hydrateTwinFieldFromMap({
+            dto,
+            relatedObjects: data.relatedObjects,
+          })
+        );
+
+        const extendedTwinFields = twinFields.map((field) => ({
+          ...field,
+          twinClassId: data.twin?.twinClassId,
+        }));
+
+        return { data: extendedTwinFields, pagination: {} };
+      },
     [api]
   );
 

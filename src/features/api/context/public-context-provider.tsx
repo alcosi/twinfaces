@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { UserApi, createUserApi } from "@/entities/user";
 import { ApiSettings, PublicApiContext, TwinsAPI } from "@/shared/api";
@@ -16,21 +16,42 @@ export function PublicApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser } = useAuthUser();
+  const { authUser, isLoading } = useAuthUser();
 
-  const settings: ApiSettings = {
-    authToken: authUser?.authToken ?? "",
-    domain: authUser?.domainId ?? "",
-    channel: "WEB",
-    client: TwinsAPI,
-  };
+  const shouldRender = authUser && !isLoading;
+
+  useEffect(() => {
+    console.log("✅------------PublicApiContextProvider mounted");
+    console.log("------------authUser", authUser);
+
+    return () => {
+      console.log("❌------------PublicApiContextProvider unmounted");
+    };
+  });
+
+  const settings: ApiSettings = useMemo(
+    () => ({
+      authToken: authUser?.authToken ?? "",
+      domain: authUser?.domainId ?? "",
+      channel: "WEB",
+      client: TwinsAPI,
+    }),
+    [authUser?.authToken, authUser?.domainId]
+  );
+
+  const value = useMemo(
+    () => ({
+      user: createUserApi(settings),
+    }),
+    [settings]
+  );
+
+  if (!shouldRender) {
+    return null;
+  }
 
   return (
-    <PublicApiContext.Provider
-      value={{
-        user: createUserApi(settings),
-      }}
-    >
+    <PublicApiContext.Provider value={value}>
       {children}
     </PublicApiContext.Provider>
   );

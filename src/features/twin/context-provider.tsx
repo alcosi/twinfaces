@@ -31,10 +31,10 @@ export function TwinContextProvider({
     useTwinClassSearchV1();
 
   useEffect(() => {
-    refresh();
-  }, []);
+    refreshTwin();
+  }, [twin?.id]);
 
-  async function refresh() {
+  async function refreshTwin() {
     try {
       const twin = await fetchTwinById(twinId);
 
@@ -64,7 +64,7 @@ export function TwinContextProvider({
       value={{
         twinId,
         twin,
-        refresh,
+        refresh: refreshTwin,
       }}
     >
       {twinLoading || twinClassLoading ? <LoadingOverlay /> : children}

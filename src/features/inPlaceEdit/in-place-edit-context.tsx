@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { ReactNode, createContext, useState } from "react";
 
 interface InPlaceEditContextProps {
   current: string | null;
@@ -16,6 +16,9 @@ export function InPlaceEditContextProvider({
   children: ReactNode;
 }) {
   const [current, setCurrent] = useState<string | null>(null);
+  // useEffect(() => {
+  //   console.log("InPlaceEditContextProvider", current);
+  // }, [current, setCurrent, clearCurrent]);
 
   function clearCurrent() {
     setCurrent(null);

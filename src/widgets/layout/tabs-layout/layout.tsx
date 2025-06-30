@@ -17,18 +17,23 @@ type Props = {
 };
 
 export function TabsLayout({ tabs }: Props) {
-  const [activeTab, setActiveTab] = useState(tabs[0]?.key);
+  const [activeTab, setActiveTab] = useState<string>();
 
   useEffect(() => {
     const hashKey = window.location.hash.slice(1);
-    if (tabs.findIndex((tab) => tab.key === hashKey) > -1) {
-      setActiveTab(hashKey);
-    }
+    const isValid = tabs.some((tab) => tab.key === hashKey);
+    setActiveTab(isValid ? hashKey : tabs[0]?.key);
   }, [tabs]);
+
+  // useEffect(() => {
+  //   console.log("----------TabsLayout useEffect called");
+  // });
 
   function handleOnValueChange(value: string) {
     setActiveTab(value);
   }
+
+  if (!activeTab) return null;
 
   return (
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
