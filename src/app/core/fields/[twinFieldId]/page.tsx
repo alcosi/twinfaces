@@ -8,6 +8,13 @@ type Props = {
 };
 
 export default function Page({ params: { twinFieldId } }: Props) {
+  // TODO:
+  // call `fetchTwinFieldById` to fetch `twinField` by `twinFieldId`
+  // and ->
+  // return (
+  //   <TwinClassFieldScreen twinFieldId={twinFieldId} twinField={twinField} />
+  // );
+
   return (
     <TwinFieldContextProvider twinFieldId={twinFieldId}>
       <TwinClassFieldScreen />
