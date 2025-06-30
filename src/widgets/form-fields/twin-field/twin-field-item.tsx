@@ -1,9 +1,8 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 
 import {
   ColorPickerFormItem,
   ComboboxFormItem,
-  DatetimeFormItem,
   FormItemProps,
   SecretTextFormItem,
   TextFormItem,
@@ -50,6 +49,14 @@ export function TwinFieldFormItem({
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     return onChange?.(event.target.value);
+  }
+
+  function handleOnDateChange(
+    event: ChangeEvent<HTMLInputElement>,
+    pattern?: string
+  ) {
+    const newValue = formatDate(new Date(event.target.value), pattern);
+    return onChange?.(newValue);
   }
 
   function handleMarkdownChange(event: { target: { markdown: string } }) {
@@ -106,7 +113,11 @@ export function TwinFieldFormItem({
       case TwinFieldType.dateScrollV1: {
         const type = mapPatternToInputType(descriptor.pattern!);
         return (
-          <DatetimeFormItem {...props} onChange={onChange} inputType={type} />
+          <TextFormItem
+            {...props}
+            onChange={(event) => handleOnDateChange(event, descriptor.pattern)}
+            type={type}
+          />
         );
       }
       case TwinFieldType.immutableV1:
@@ -223,4 +234,24 @@ export function TwinFieldFormItem({
   }
 
   return renderByType();
+}
+
+// NOTE: formatDate currently handles only the ISO-like pattern "yyyy-MM-dd'T'HH:mm:ss" and otherwise falls back to date.toDateString().
+//
+// TODO: Evaluate replacing this with
+// Intl.DateTimeFormat or a lightweight library (date-fns, Day.js, Luxon)
+// to gain locale/time-zone support, better formatting options, and potentially smaller bundle size.
+function formatDate(date: Date, pattern?: string): string {
+  if (pattern === "yyyy-MM-dd'T'HH:mm:ss") {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
+  return date.toDateString();
 }
