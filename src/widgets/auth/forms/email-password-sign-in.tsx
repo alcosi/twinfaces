@@ -13,6 +13,7 @@ import {
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
+import { isApiErrorResponse } from "@/shared/api/utils";
 import { capitalize, isUndefined } from "@/shared/libs";
 import { Button, DialogDescription } from "@/shared/ui";
 
@@ -66,7 +67,7 @@ export function EmailPasswordSignInForm({
     startAuthTransition(async () => {
       const result = await loginAuthAction(null, formData);
 
-      if (result.msg === "error" && result.statusDetails) {
+      if (isApiErrorResponse(result)) {
         setAuthError(result.statusDetails);
         onError?.();
         signInForm.resetField("password");

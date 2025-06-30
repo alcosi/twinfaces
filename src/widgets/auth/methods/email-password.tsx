@@ -7,6 +7,7 @@ import { getAuthenticatedUser, loginAuthAction } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { FlipCard } from "@/features/ui/flip-card";
+import { isApiErrorResponse } from "@/shared/api/utils";
 import { ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined, sleep } from "@/shared/libs";
 import { StepsProgressBar } from "@/shared/ui";
@@ -51,7 +52,7 @@ export function EmailPasswordAuthWidget() {
 
     const result = await loginAuthAction(null, userCredentials);
 
-    if (result.msg === "error" && result.statusDetails) {
+    if (isApiErrorResponse(result)) {
       throw new Error(`Login failed: ${result.statusDetails}`);
     }
 

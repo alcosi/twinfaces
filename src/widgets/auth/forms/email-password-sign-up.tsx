@@ -10,6 +10,7 @@ import {
   EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA,
   signUpAuthAction,
 } from "@/entities/user/server";
+import { isApiErrorResponse } from "@/shared/api/utils";
 import { ERROR_CODE_MAP, capitalize, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
@@ -62,7 +63,7 @@ export function EmailPasswordSignUpForm({
     startAuthTransition(async () => {
       const result = await signUpAuthAction(null, formData);
 
-      if (result.msg === "error" && result.status && result.statusDetails) {
+      if (isApiErrorResponse(result)) {
         if (
           result.status === ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
         ) {

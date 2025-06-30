@@ -1,45 +1,34 @@
 import { ApiErrorResponse } from "@/shared/api";
+import { isApiErrorResponse } from "@/shared/api/utils";
 
-export function parseUnknownError(err: unknown): ApiErrorResponse {
-  if (
-    typeof err === "object" &&
-    err !== null &&
-    "status" in err &&
-    "msg" in err &&
-    "statusDetails" in err
-  ) {
-    const e = err as Record<string, unknown>;
+import { isNumber, isObject, isString } from "../types";
 
-    if (
-      typeof e.status === "number" &&
-      typeof e.msg === "string" &&
-      typeof e.statusDetails === "string"
-    ) {
-      return {
-        status: e.status,
-        msg: e.msg,
-        statusDetails: e.statusDetails,
-      };
+export function parseUnknownError(error: unknown): ApiErrorResponse {
+  const isErrorInstance = error instanceof Error;
+
+  if (isErrorInstance && isApiErrorResponse(error.cause)) {
+    return error.cause;
+  }
+
+  const fallback: ApiErrorResponse = {
+    status: 0,
+    msg: "error",
+    statusDetails: "An unknown error occurred",
+  };
+
+  if (isErrorInstance) {
+    fallback.statusDetails = error.message;
+  } else if (isObject(error)) {
+    const e = error as Record<string, unknown>;
+
+    if (isString(e.message)) {
+      fallback.statusDetails = e.message;
+    }
+
+    if (isNumber(e.status)) {
+      fallback.status = e.status;
     }
   }
 
-  let status = 0;
-  let msg = "error";
-  let statusDetails = "An unknown error occurred";
-
-  if (err instanceof Error) {
-    statusDetails = err.message;
-  } else if (typeof err === "object" && err !== null) {
-    const e = err as Record<string, unknown>;
-
-    if (typeof e.message === "string") {
-      statusDetails = e.message;
-    }
-
-    if (typeof e.status === "number") {
-      status = e.status;
-    }
-  }
-
-  return { status, msg, statusDetails };
+  return fallback;
 }

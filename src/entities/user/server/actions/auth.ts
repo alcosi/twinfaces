@@ -3,8 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
-// import { FetchResponse } from "openapi-fetch";
-
 import { isAuthUserGranted } from "@/entities/user/server";
 import { TwinsAPI } from "@/shared/api";
 import {
@@ -167,22 +165,18 @@ export async function loginAuthAction(
         password: formData.get("password"),
       });
 
-    // NOTE: FetchResponse type at node_modules/openapi-fetch/dist/index.d.mts
-    //
-    const res = await TwinsAPI.POST("/auth/login/v1", {
+    const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
       body: { username, password },
       params: { header: { DomainId: domainId, Channel: "WEB" } },
     });
-    const { data, error, response } = res;
-    // console.log("foobar LOGIN", res, { data, error, response });
 
     if (error) {
-      return parseUnknownError(error);
+      return error;
     }
 
     return data;
   } catch (err) {
-    console.error("Login request failed:", err);
+    console.error("Login request failed: ", err);
     return parseUnknownError(err);
   }
 }
@@ -191,16 +185,16 @@ export async function signUpAuthAction(
   _: unknown,
   formData: FormData
 ): Promise<AuthSignupByEmailRs> {
-  const { domainId, firstName, lastName, email, password } =
-    EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.parse({
-      domainId: formData.get("domainId"),
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
-
   try {
+    const { domainId, firstName, lastName, email, password } =
+      EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.parse({
+        domainId: formData.get("domainId"),
+        firstName: formData.get("firstName"),
+        lastName: formData.get("lastName"),
+        email: formData.get("email"),
+        password: formData.get("password"),
+      });
+
     const { data, error } = await TwinsAPI.POST(
       "/auth/signup_by_email/initiate/v1",
       {
@@ -210,12 +204,12 @@ export async function signUpAuthAction(
     );
 
     if (error) {
-      return parseUnknownError(error);
+      return error;
     }
 
     return data;
   } catch (err) {
-    console.error("Register request failed:", err);
+    console.error("Register request failed: ", err);
     return parseUnknownError(err);
   }
 }
@@ -246,12 +240,12 @@ export async function verifyEmailAction(
     );
 
     if (error) {
-      return parseUnknownError(error);
+      return error;
     }
 
     return data;
   } catch (err) {
-    console.error("Confirm request failed:", err);
+    console.error("Confirm request failed: ", err);
     return parseUnknownError(err);
   }
 }

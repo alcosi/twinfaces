@@ -11,6 +11,7 @@ import {
   EMAIL_VERIFICATION_FORM_SCHEMA,
   verifyEmailAction,
 } from "@/entities/user/server";
+import { isApiErrorResponse } from "@/shared/api/utils";
 import { capitalize, isPopulatedString, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
@@ -58,7 +59,7 @@ export function EmailVerificationForm({
     startVerifyTransition(async () => {
       const result = await verifyEmailAction(null, formData);
 
-      if (result.msg === "error" && result.statusDetails) {
+      if (isApiErrorResponse(result)) {
         setVerificationError(
           result.statusDetails || "Email verification failed"
         );
