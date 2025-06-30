@@ -4,12 +4,8 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { TwinsAPI } from "@/shared/api";
-import {
-  isPopulatedArray,
-  isUndefined,
-  parseUnknownError,
-} from "@/shared/libs";
+import { TwinsAPI, toError } from "@/shared/api";
+import { isPopulatedArray, isUndefined } from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
@@ -171,13 +167,22 @@ export async function loginAuthAction(
     });
 
     if (error) {
+      console.error("ACTION Login request failed TRY !!!!!!!!!: ", error);
       return error;
     }
 
     return data;
   } catch (err) {
-    console.error("Login request failed: ", err);
-    return parseUnknownError(err);
+    if (err instanceof Error && err.cause) {
+      console.log("ACTION ERROR CAUSE loginAuthAction CATCH: >>>", err.cause);
+      console.log("ACTION request failed loginAuthAction CATCH: ", err);
+      // return {
+      //   msg: err.cause.msg,
+      //   status: err.cause.status,
+      //   statusDetails: err.cause.statusDetails,
+      // };
+    }
+    throw err;
   }
 }
 
@@ -204,13 +209,22 @@ export async function signUpAuthAction(
     );
 
     if (error) {
-      return error;
+      console.error("ACTION Register request failed TRY !!!!!!!!!: ", error);
+      throw error;
     }
 
     return data;
   } catch (err) {
-    console.error("Register request failed: ", err);
-    return parseUnknownError(err);
+    if (err instanceof Error && err.cause) {
+      console.log("ACTION ERROR CAUSE signUpAuthAction CATCH: >>>", err.cause);
+      console.log("ACTION request failed signUpAuthAction CATCH: ", err);
+      // return {
+      //   msg: err.cause.msg,
+      //   status: err.cause.status,
+      //   statusDetails: err.cause.statusDetails,
+      // };
+    }
+    throw err;
   }
 }
 
@@ -240,13 +254,17 @@ export async function verifyEmailAction(
     );
 
     if (error) {
+      console.error("Confirm request failed TRY !!!!!!!!!: ", error);
       return error;
     }
 
     return data;
   } catch (err) {
-    console.error("Confirm request failed: ", err);
-    return parseUnknownError(err);
+    if (err instanceof Error && err.cause) {
+      console.log("ACTION ERROR CAUSE verifyEmailAction CATCH: >>>", err.cause);
+      console.log("ACTION request failed verifyEmailAction CATCH: ", err);
+    }
+    throw err;
   }
 }
 

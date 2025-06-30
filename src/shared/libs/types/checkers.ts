@@ -99,6 +99,10 @@ export function isUnauthorizedError(error: unknown): boolean {
   return error instanceof Response && error.status === 401;
 }
 
+export function isErrorInstance(error: unknown): error is Error {
+  return error instanceof Error;
+}
+
 //
 // ──────────────────────────────────────────────────────────────────────────────
 //   SECTION: React-Specific Guards

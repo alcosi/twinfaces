@@ -7,10 +7,15 @@ import z from "zod";
 import { SecretTextFormField, TextFormField } from "@/components/form-fields";
 
 import {
+  AuthSignupByEmailRs,
   EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA,
   signUpAuthAction,
 } from "@/entities/user/server";
-import { isApiErrorResponse } from "@/shared/api/utils";
+import {
+  getError,
+  // getErrorMessage,
+  isApiErrorResponse,
+} from "@/shared/api/utils";
 import { ERROR_CODE_MAP, capitalize, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
@@ -61,25 +66,49 @@ export function EmailPasswordSignUpForm({
     formData.set("password", values.password);
 
     startAuthTransition(async () => {
-      const result = await signUpAuthAction(null, formData);
+      let result: AuthSignupByEmailRs | undefined = undefined;
 
-      if (isApiErrorResponse(result)) {
-        if (
-          result.status === ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
-        ) {
-          singUpForm.setError("email", {
-            type: "manual",
-            message: capitalize(result.statusDetails || "Registration failed"),
-          });
+      try {
+        result = await signUpAuthAction(null, formData);
+        console.log("result", result);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log("Register request failed CATCH: ", error);
+          console.log("ERROR CAUSE >>>", error.cause);
         }
-        onError?.();
-        if (
-          result.status !== ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
-        ) {
-          singUpForm.resetField("password");
-          singUpForm.resetField("confirmPassword");
+        // const errResult = getErrorMessage({
+        //   error,
+        //   fallback: "Registration failed. Please check your credentials",
+        // });
+        // console.log("errResult: ", errResult);
+
+        const errResult = getError({ error });
+
+        if (isApiErrorResponse(errResult)) {
+          if (
+            errResult.status ===
+            ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
+          ) {
+            singUpForm.setError("email", {
+              type: "manual",
+              message: capitalize(
+                errResult.statusDetails || "Registration failed"
+              ),
+            });
+          }
+
+          onError?.();
+
+          if (
+            errResult.status !==
+            ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
+          ) {
+            singUpForm.resetField("password");
+            singUpForm.resetField("confirmPassword");
+          }
+
+          return;
         }
-        return;
       }
 
       if (result?.status !== 0) {

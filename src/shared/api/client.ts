@@ -12,7 +12,7 @@ export const EXPIRED_SESSION_TAG = "session_expired";
  * Coerces an arbitrary value into a real JS Error.
  *
  * 1) If it matches our API’s { status, msg, statusDetails } shape,
- *    build an Error with message = “msg: statusDetails” and attach `.status`.
+ *    build an Error with message = “msg: statusDetails” and attach `cause`: { status, msg, statusDetails }.
  * 2) If it’s already an Error instance, return it unchanged.
  * 3) Otherwise (strings, numbers, plain objects, etc.), stringify it.
  */

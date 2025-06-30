@@ -7,13 +7,14 @@ import z from "zod";
 import { SecretTextFormField, TextFormField } from "@/components/form-fields";
 
 import {
+  AuthLoginRs,
   EMAIL_PASSWORD_SIGN_IN_SCHEMA,
   getAuthenticatedUser,
   loginAuthAction,
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
-import { isApiErrorResponse } from "@/shared/api/utils";
+import { getErrorMessage } from "@/shared/api/utils";
 import { capitalize, isUndefined } from "@/shared/libs";
 import { Button, DialogDescription } from "@/shared/ui";
 
@@ -65,16 +66,29 @@ export function EmailPasswordSignInForm({
     formData.set("password", values.password);
 
     startAuthTransition(async () => {
-      const result = await loginAuthAction(null, formData);
+      let result: AuthLoginRs;
 
-      if (isApiErrorResponse(result)) {
-        setAuthError(result.statusDetails);
+      try {
+        result = await loginAuthAction(null, formData);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log("Login request failed CATCH: ", error);
+          console.log("ERROR CAUSE >>>", error.cause);
+        }
+
+        const errResult = getErrorMessage({
+          error,
+          fallback: "Login failed. Please check your credentials",
+        });
+
+        console.log("errResult", errResult);
+        setAuthError(errResult);
         onError?.();
         signInForm.resetField("password");
         return;
       }
 
-      const authToken = result.authData?.auth_token;
+      const authToken = result?.authData?.auth_token;
 
       if (isUndefined(authToken)) {
         setAuthError("Login failed. Please check your credentials");
