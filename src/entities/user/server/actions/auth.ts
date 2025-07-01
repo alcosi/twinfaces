@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { TwinsAPI } from "@/shared/api";
+import { ApiErrorResponse, TwinsAPI } from "@/shared/api";
 import { isPopulatedArray, isUndefined } from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
@@ -176,11 +176,7 @@ export async function loginAuthAction(
     if (err instanceof Error && err.cause) {
       console.log("ACTION ERROR CAUSE loginAuthAction CATCH: >>>", err.cause);
       console.log("ACTION request failed loginAuthAction CATCH: ", err);
-      // return {
-      //   msg: err.cause.msg,
-      //   status: err.cause.status,
-      //   statusDetails: err.cause.statusDetails,
-      // };
+      return err.cause;
     }
     throw err;
   }

@@ -72,6 +72,8 @@ export function EmailPasswordSignUpForm({
         result = await signUpAuthAction(null, formData);
         console.log("result", result);
       } catch (error) {
+        console.log("FOOBAR error", error);
+
         if (error instanceof Error) {
           console.log("Register request failed CATCH: ", error);
           console.log("ERROR CAUSE >>>", error.cause);
