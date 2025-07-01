@@ -41,7 +41,7 @@ export async function WidgetRenderer({ twinId, widget, className }: Props) {
         key={widget.widgetFaceId}
         variant="error"
         title="Widget failed to load"
-        message={faceResult.error.statusDetails}
+        message={(faceResult.error as Error)?.message}
       />
     );
   }
