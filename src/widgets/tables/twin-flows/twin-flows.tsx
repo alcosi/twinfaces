@@ -1,41 +1,48 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { TwinClassContext } from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
   TWIN_FLOW_SCHEMA,
   TwinFlow,
   TwinFlowCreateRq,
-  TwinFlowResourceLink,
   TwinFlow_DETAILED,
   useCreateTwinFlow,
   useTwinFlowFilters,
   useTwinFlowSearchV1,
 } from "@/entities/twin-flow";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { UserResourceLink } from "@/entities/user";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
 import { PlatformArea } from "@/shared/config";
-import { reduceToObject, toArray } from "@/shared/libs";
+import {
+  formatIntlDate,
+  isFalsy,
+  isTruthy,
+  reduceToObject,
+  toArray,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
+
 import {
   CrudDataTable,
   DataTableHandle,
   FiltersState,
-} from "@/widgets/crud-data-table";
-
+} from "../../crud-data-table";
 import { TwinClassTwinFlowFormFields } from "./form-fields";
 
 const columnsMap: Record<
   Extract<
     keyof TwinFlow,
     | "id"
+    | "twinClassId"
     | "name"
     | "description"
     | "initialStatusId"
@@ -49,11 +56,25 @@ const columnsMap: Record<
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.row.original.id} />,
   },
+  twinClassId: {
+    id: "twinClassId",
+    accessorKey: "twinClassId",
+    header: "Class",
+    cell: ({ row: { original } }) =>
+      original.twinClass && (
+        <div className="inline-flex max-w-48">
+          <TwinClassResourceLink
+            data={original.twinClass as TwinClass_DETAILED}
+            withTooltip
+          />
+        </div>
+      ),
+  },
   name: {
     accessorKey: "name",
     header: "Name",
     cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
+      <div className="inline-flex max-w-48">
         <TwinFlowResourceLink data={original} withTooltip />
       </div>
     ),
@@ -67,7 +88,7 @@ const columnsMap: Record<
     header: "Initial status",
     cell: ({ row: { original } }) =>
       original.initialStatus && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassStatusResourceLink
             data={original.initialStatus}
             twinClassId={original.twinClassId!}
@@ -81,7 +102,7 @@ const columnsMap: Record<
     header: "Created by",
     cell: ({ row: { original } }) =>
       original.createdByUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink data={original.createdByUser} withTooltip />
         </div>
       ),
@@ -92,15 +113,25 @@ const columnsMap: Record<
     header: "Created at",
     cell: ({ row: { original } }) =>
       original.createdAt &&
-      formatToTwinfaceDate(original.createdAt, "datetime"),
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 };
 
-export function TwinClassTwinFlows() {
-  const { twinClassId } = useContext(TwinClassContext);
+export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
   const { searchTwinFlows } = useTwinFlowSearchV1();
   const { createTwinFlow } = useCreateTwinFlow();
-  const { buildFilterFields, mapFiltersToPayload } = useTwinFlowFilters();
+  const { buildFilterFields, mapFiltersToPayload } = useTwinFlowFilters({
+    twinClassId,
+    enabledFilters: isTruthy(twinClassId)
+      ? [
+          "idList",
+          "nameI18nLikeList",
+          "descriptionI18nLikeList",
+          "initialStatusIdList",
+          "createdByUserIdList",
+        ]
+      : undefined,
+  });
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
 
@@ -151,7 +182,7 @@ export function TwinClassTwinFlows() {
     };
 
     await createTwinFlow({
-      twinClassId: twinClassId,
+      twinClassId: twinClassId || formValues.twinClassId!,
       body: requestBody,
     });
     toast.success("Twin flow created successfully!");
@@ -162,6 +193,7 @@ export function TwinClassTwinFlows() {
       ref={tableRef}
       columns={[
         columnsMap.id,
+        ...(isFalsy(twinClassId) ? [columnsMap.twinClassId] : []),
         columnsMap.name,
         columnsMap.description,
         columnsMap.initialStatusId,
@@ -181,6 +213,7 @@ export function TwinClassTwinFlows() {
       }}
       defaultVisibleColumns={[
         columnsMap.id,
+        ...(isFalsy(twinClassId) ? [columnsMap.twinClassId] : []),
         columnsMap.name,
         columnsMap.description,
         columnsMap.initialStatusId,

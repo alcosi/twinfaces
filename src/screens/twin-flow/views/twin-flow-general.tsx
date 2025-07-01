@@ -4,28 +4,31 @@ import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  TwinClassResourceLink,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinFlowUpdateRq, useUpdateTwinFlow } from "@/entities/twin-flow";
 import {
-  TwinClassStatusResourceLink,
   TwinStatusV2,
   useTwinStatusSelectAdapter,
 } from "@/entities/twin-status";
-import { UserResourceLink } from "@/entities/user";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinFlowContext } from "@/features/twin-flow";
-import { formatToTwinfaceDate, reduceToObject, toArray } from "@/shared/libs";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { UserResourceLink } from "@/features/user/ui";
+import {
+  formatIntlDate,
+  isPopulatedString,
+  reduceToObject,
+  toArray,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
-export function TwinflowGeneral() {
+export function TwinFlowGeneral() {
   const { twinFlow, refresh } = useContext(TwinFlowContext);
   const { updateTwinFlow } = useUpdateTwinFlow();
   const twinStatusAdapter = useTwinStatusSelectAdapter();
@@ -45,7 +48,7 @@ export function TwinflowGeneral() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -62,7 +65,7 @@ export function TwinflowGeneral() {
     value: twinFlow.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",
@@ -161,7 +164,10 @@ export function TwinflowGeneral() {
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(twinFlow.createdAt!)}</TableCell>
+            <TableCell>
+              {isPopulatedString(twinFlow.createdAt) &&
+                formatIntlDate(twinFlow.createdAt, "datetime-local")}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
