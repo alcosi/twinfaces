@@ -8,20 +8,6 @@ import { isApiErrorResponse } from "./utils";
 
 export const EXPIRED_SESSION_TAG = "session_expired";
 
-// class MyError extends Error {
-//   constructor(message) {
-//     super(message);
-//     this.name = "MyError";
-//   }
-// }
-// function MyError(message, options) {
-//   this.name = "MyError";
-//   this.message = message;
-//   this.stack = new Error().stack;
-//   this.options = options;
-// }
-// MyError.prototype = new Error();
-
 /**
  * Coerces an arbitrary value into a real JS Error.
  *

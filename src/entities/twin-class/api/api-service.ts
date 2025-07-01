@@ -74,8 +74,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     return settings.client.GET(`/private/twin_class/{twinClassId}/v1`, {
       params: {
         header: getApiDomainHeaders(settings),
-        // path: { twinClassId: id },
-        path: { twinClassId: "ebb10ffd-cc76-4e67-9e34-bbc7a7d5e3fd" },
+        path: { twinClassId: id },
         query: query,
       },
     });

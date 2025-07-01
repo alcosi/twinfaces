@@ -14,8 +14,13 @@ import {
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
-import { getErrorMessage } from "@/shared/api/utils";
-import { capitalize, isUndefined } from "@/shared/libs";
+import { isApiErrorResponse } from "@/shared/api/utils";
+// import { getErrorMessage } from "@/shared/api/utils";
+import {
+  ERROR_RESPONSE_MESSAGE_VALUE,
+  capitalize,
+  isUndefined,
+} from "@/shared/libs";
 import { Button, DialogDescription } from "@/shared/ui";
 
 export function EmailPasswordSignInForm({
@@ -66,29 +71,21 @@ export function EmailPasswordSignInForm({
     formData.set("password", values.password);
 
     startAuthTransition(async () => {
-      let result: AuthLoginRs;
+      const result = await loginAuthAction(null, formData);
 
-      try {
-        result = await loginAuthAction(null, formData);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log("Login request failed CATCH: ", error);
-          console.log("ERROR CAUSE >>>", error.cause);
-        }
-
-        const errResult = getErrorMessage({
-          error,
-          fallback: "Login failed. Please check your credentials",
-        });
-
-        console.log("errResult", errResult);
-        setAuthError(errResult);
+      if (
+        isApiErrorResponse(result) &&
+        result.msg === ERROR_RESPONSE_MESSAGE_VALUE
+      ) {
+        setAuthError(
+          result.statusDetails || "Login failed. Please check your credentials"
+        );
         onError?.();
         signInForm.resetField("password");
         return;
       }
 
-      const authToken = result?.authData?.auth_token;
+      const authToken = (result as AuthLoginRs)?.authData?.auth_token;
 
       if (isUndefined(authToken)) {
         setAuthError("Login failed. Please check your credentials");
