@@ -15,7 +15,6 @@ import {
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { isApiErrorResponse } from "@/shared/api/utils";
-// import { getErrorMessage } from "@/shared/api/utils";
 import {
   ERROR_RESPONSE_MESSAGE_VALUE,
   capitalize,
