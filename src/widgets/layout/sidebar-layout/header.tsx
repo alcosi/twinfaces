@@ -16,9 +16,21 @@ import { SidebarTrigger } from "@/shared/ui/sidebar";
 
 export function SidebarLayoutHeader() {
   const breadcrumbs = useRouteCrumbs();
+  const rootLabel = breadcrumbs[0]?.label.toLowerCase();
 
-  const visibleBreadcrumbs =
-    breadcrumbs[0]?.label === "profile" ? breadcrumbs : breadcrumbs.slice(1);
+  let visibleBreadcrumbs;
+
+  switch (rootLabel) {
+    case "profile": {
+      visibleBreadcrumbs = breadcrumbs;
+      break;
+    }
+
+    default: {
+      visibleBreadcrumbs = breadcrumbs.slice(1);
+      break;
+    }
+  }
 
   return (
     <header className="border-border bg-background sticky top-0 z-10 flex h-16 items-center justify-between border-b px-4 md:px-6">

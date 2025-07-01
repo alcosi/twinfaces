@@ -10,7 +10,7 @@ import { useUpdateUser } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
 import { UserContext } from "@/features/user";
-import { cn, formatIntlDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function ProfileScreen() {
@@ -40,11 +40,13 @@ export function ProfileScreen() {
       })
         .then(refresh)
         .then(() => {
+          if (!authUser?.domainUser) return;
+
           updateAuthUser({
             domainUser: {
-              ...authUser!.domainUser!,
+              ...authUser.domainUser,
               user: {
-                ...authUser!.domainUser!.user,
+                ...authUser.domainUser.user,
                 fullName: value,
               },
             },
@@ -56,10 +58,6 @@ export function ProfileScreen() {
     },
     shouldFocusOnStart: isEditing,
   };
-
-  function handelOpen() {
-    setIsEditing(true);
-  }
 
   return (
     <>
@@ -75,13 +73,12 @@ export function ProfileScreen() {
               </div>
 
               <Button
-                onClick={handelOpen}
+                onClick={() => setIsEditing(true)}
                 size="iconS6"
                 variant="ghost"
-                className={cn(
-                  "ml-2 flex items-center",
-                  "-translate-x-1 transform opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-                )}
+                className={
+                  "ml-2 flex -translate-x-1 transform items-center opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+                }
               >
                 <Pencil className="h-4 w-4" />
               </Button>

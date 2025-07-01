@@ -39,11 +39,13 @@ export function UserGeneral() {
       })
         .then(refresh)
         .then(() => {
+          if (!authUser?.domainUser) return;
+
           updateAuthUser({
             domainUser: {
-              ...authUser!.domainUser!,
+              ...authUser.domainUser,
               user: {
-                ...authUser!.domainUser!.user,
+                ...authUser.domainUser.user,
                 fullName: value,
               },
             },
