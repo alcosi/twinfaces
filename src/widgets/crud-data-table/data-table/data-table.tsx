@@ -18,7 +18,6 @@ import {
   useState,
 } from "react";
 
-import useTraceUpdate from "@/entities/twin/api/hooks/useTraceUpdate";
 import { TableSkeleton } from "@/features/ui/skeletons";
 import { PaginationV1 } from "@/shared/api";
 import {
@@ -26,6 +25,7 @@ import {
   fixedForwardRef,
   isEmptyArray,
   isPopulatedArray,
+  useTraceUpdate,
 } from "@/shared/libs";
 
 import { DataTablePagination } from "./data-table-pagination";

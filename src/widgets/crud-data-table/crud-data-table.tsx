@@ -13,9 +13,13 @@ import {
 } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-import useTraceUpdate from "@/entities/twin/api/hooks/useTraceUpdate";
 import { PagedResponse } from "@/shared/api";
-import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import {
+  cn,
+  fixedForwardRef,
+  isPopulatedArray,
+  useTraceUpdate,
+} from "@/shared/libs";
 
 import {
   DataTable,

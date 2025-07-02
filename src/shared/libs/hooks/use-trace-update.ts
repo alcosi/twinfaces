@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function useTraceUpdate({
+export function useTraceUpdate({
   props,
   componentName = "Component",
 }: {
