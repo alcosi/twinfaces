@@ -125,13 +125,10 @@ export function PrivateApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser, isLoading } = useAuthUser();
-
-  const shouldRender = authUser && !isLoading;
+  const { authUser } = useAuthUser();
 
   useEffect(() => {
     console.log("✅✅++++++++++++PrivateApiContextProvider mounted");
-    console.log("++++++++++++authUser", authUser);
 
     return () => {
       console.log("❌❌++++++++++++PrivateApiContextProvider unmounted");
@@ -149,8 +146,6 @@ export function PrivateApiContextProvider({
   );
 
   const value = useMemo(() => {
-    if (!settings) return {} as PrivateApiContextProps;
-
     return {
       attachment: createAttachmentApi(settings),
       domain: createDomainApi(settings),
@@ -185,10 +180,6 @@ export function PrivateApiContextProvider({
       tier: createTierApi(settings),
     };
   }, [settings]);
-
-  if (!shouldRender) {
-    return <LoadingOverlay />;
-  }
 
   return (
     <PrivateApiContext.Provider value={value}>

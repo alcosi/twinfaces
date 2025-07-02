@@ -16,13 +16,10 @@ export function PublicApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser, isLoading } = useAuthUser();
-
-  const shouldRender = authUser && !isLoading;
+  const { authUser } = useAuthUser();
 
   useEffect(() => {
     console.log("✅------------PublicApiContextProvider mounted");
-    console.log("------------authUser", authUser);
 
     return () => {
       console.log("❌------------PublicApiContextProvider unmounted");
@@ -45,10 +42,6 @@ export function PublicApiContextProvider({
     }),
     [settings]
   );
-
-  if (!shouldRender) {
-    return null;
-  }
 
   return (
     <PublicApiContext.Provider value={value}>
