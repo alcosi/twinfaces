@@ -4,7 +4,6 @@ import React, { useEffect, useMemo } from "react";
 
 import { UserApi, createUserApi } from "@/entities/user";
 import { ApiSettings, PublicApiContext, TwinsAPI } from "@/shared/api";
-import { useTraceUpdate } from "@/shared/libs";
 
 import { useAuthUser } from "../../auth";
 
@@ -18,6 +17,13 @@ export function PublicApiContextProvider({
   children: React.ReactNode;
 }) {
   const { authUser } = useAuthUser();
+
+  useEffect(() => {
+    console.log(
+      "🔄 ------------PublicApiContextProvider authUser changed",
+      authUser
+    );
+  }, [authUser]);
 
   useEffect(() => {
     console.log("✅------------PublicApiContextProvider mounted");
@@ -43,15 +49,6 @@ export function PublicApiContextProvider({
     }),
     [settings]
   );
-
-  useTraceUpdate({
-    props: {
-      children,
-      value,
-      settings,
-    },
-    componentName: "PublicApiContextProvider",
-  });
 
   return (
     <PublicApiContext.Provider value={value}>

@@ -13,7 +13,6 @@ type AuthUser = {
 
 type UseAuthUser = {
   authUser: AuthUser | null;
-  isLoading: boolean;
   setAuthUser: (user: AuthUser | null) => void;
   updateUser: (updatedFields: Partial<AuthUser>) => void;
   logout: () => void;
@@ -25,20 +24,17 @@ export function useAuthUser(): UseAuthUser {
     null
   );
   const [authUser, setAuthUserState] = useState<AuthUser | null>(storedValue);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setAuthUserState((prev) =>
       isDeepEqual(prev, storedValue) ? prev : storedValue
     );
-    setIsLoading(false);
   }, [storedValue]);
 
   const memoizedAuthUser = useMemo(() => authUser, [JSON.stringify(authUser)]);
 
   const setAuthUser = useCallback(
     (user: AuthUser | null) => {
-      setIsLoading(true);
       setStoredValue(user);
       clientCookies.set("authToken", `${user?.authToken}`, { path: "/" });
       clientCookies.set("domainId", `${user?.domainId}`, { path: "/" });
@@ -51,7 +47,6 @@ export function useAuthUser(): UseAuthUser {
     (updatedFields: Partial<AuthUser>) => {
       if (authUser) {
         const updatedUser = { ...authUser, ...updatedFields };
-        setIsLoading(true);
         setStoredValue(updatedUser);
       }
     },
@@ -66,7 +61,6 @@ export function useAuthUser(): UseAuthUser {
   }, [setStoredValue]);
 
   return {
-    isLoading,
     authUser: memoizedAuthUser,
     setAuthUser,
     updateUser,
