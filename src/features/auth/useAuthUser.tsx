@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { DomainUser_DETAILED } from "@/entities/user";
-import { clientCookies, useLocalStorage } from "@/shared/libs";
+import { clientCookies, isDeepEqual, useLocalStorage } from "@/shared/libs";
 
 type AuthUser = {
   domainUser?: DomainUser_DETAILED;
@@ -28,9 +28,13 @@ export function useAuthUser(): UseAuthUser {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setAuthUserState(storedValue);
+    setAuthUserState((prev) =>
+      isDeepEqual(prev, storedValue) ? prev : storedValue
+    );
     setIsLoading(false);
   }, [storedValue]);
+
+  const memoizedAuthUser = useMemo(() => authUser, [JSON.stringify(authUser)]);
 
   const setAuthUser = useCallback(
     (user: AuthUser | null) => {
@@ -63,7 +67,7 @@ export function useAuthUser(): UseAuthUser {
 
   return {
     isLoading,
-    authUser,
+    authUser: memoizedAuthUser,
     setAuthUser,
     updateUser,
     logout,

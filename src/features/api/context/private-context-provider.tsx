@@ -82,6 +82,7 @@ import {
 import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
 import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
+import { useTraceUpdate } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 
 import { useAuthUser } from "../../auth";
@@ -180,6 +181,15 @@ export function PrivateApiContextProvider({
       tier: createTierApi(settings),
     };
   }, [settings]);
+
+  useTraceUpdate({
+    props: {
+      children,
+      value,
+      settings,
+    },
+    componentName: "PrivateApiContextProvider",
+  });
 
   return (
     <PrivateApiContext.Provider value={value}>
