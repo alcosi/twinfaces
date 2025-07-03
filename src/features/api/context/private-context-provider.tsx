@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import {
   PermissionAssigneePropagationApi,
@@ -83,9 +83,9 @@ import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
 import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
 
-// import { LoadingOverlay } from "@/shared/ui";
+import { useAuthCookies } from "./use-auth-cookies";
 
-import { useAuthUser } from "../../auth";
+// import { LoadingOverlay } from "@/shared/ui";
 
 export interface PrivateApiContextProps {
   attachment: AttachmentApi;
@@ -126,14 +126,15 @@ export function PrivateApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser } = useAuthUser();
+  const { authToken, domainId, isReady } = useAuthCookies();
 
   useEffect(() => {
     console.log(
-      "🔄 ++++++++++++PrivateApiContextProvider authUser changed",
-      authUser
+      "🔄 PrivateApiContextProvider authUser changed",
+      authToken,
+      domainId
     );
-  }, [authUser]);
+  }, [authToken, domainId]);
 
   useEffect(() => {
     console.log("✅✅++++++++++++PrivateApiContextProvider mounted");
@@ -143,64 +144,57 @@ export function PrivateApiContextProvider({
     };
   });
 
-  const apiRef = useRef<ReturnType<typeof createApi> | null>(null);
-
   const settings: ApiSettings = useMemo(
     () => ({
-      authToken: authUser?.authToken ?? "",
-      domain: authUser?.domainId ?? "",
+      authToken: authToken ?? "",
+      domain: domainId ?? "",
       channel: "WEB",
       client: TwinsAPI,
     }),
-    [authUser?.authToken, authUser?.domainId]
+    [authToken, domainId]
   );
 
-  const createApi = (settings: ApiSettings) => ({
-    attachment: createAttachmentApi(settings),
-    domain: createDomainApi(settings),
-    twinFlowSchema: createTwinFlowSchemaApi(settings),
-    twinClassField: createTwinClassFieldApi(settings),
-    twinClass: createTwinClassApi(settings),
-    twinStatus: createTwinStatusApi(settings),
-    twinFlow: createTwinFlowApi(settings),
-    twinFlowTransition: createTwinFlowTransitionApi(settings),
-    featurer: createFeaturerApi(settings),
-    twin: createTwinApi(settings),
-    permission: createPermissionApi(settings),
-    permissionGroup: createPermissionGroupApi(settings),
-    permissionSchema: createPermissionSchemaApi(settings),
-    user: createUserApi(settings),
-    userGroup: createUserGroupApi(settings),
-    datalist: createDatalistApi(settings),
-    comment: createCommentApi(settings),
-    twinRole: createPermissionTwinRoleApi(settings),
-    assigneePropagation: createPermissionAssigneePropagationApi(settings),
-    factory: createFactoryApi(settings),
-    factoryPipeline: createFactoryPipelineApi(settings),
-    factoryBranch: createFactoryBranchApi(settings),
-    factoryConditionSet: createFactoryConditionSetApi(settings),
-    factoryMultiplier: createFactoryMultiplierApi(settings),
-    factoryMultiplierFilter: createFactoryMultiplierFilterApi(settings),
-    factoryEraser: createFactoryEraserApi(settings),
-    pipelineStep: createPipelineStepApi(settings),
-    spaceRole: createPermissionSpaceRoleApi(settings),
-    datalistOption: createDatalistOptionApi(settings),
-    link: createLinkApi(settings),
-    tier: createTierApi(settings),
-  });
+  const value = useMemo(
+    () => ({
+      attachment: createAttachmentApi(settings),
+      domain: createDomainApi(settings),
+      twinFlowSchema: createTwinFlowSchemaApi(settings),
+      twinClassField: createTwinClassFieldApi(settings),
+      twinClass: createTwinClassApi(settings),
+      twinStatus: createTwinStatusApi(settings),
+      twinFlow: createTwinFlowApi(settings),
+      twinFlowTransition: createTwinFlowTransitionApi(settings),
+      featurer: createFeaturerApi(settings),
+      twin: createTwinApi(settings),
+      permission: createPermissionApi(settings),
+      permissionGroup: createPermissionGroupApi(settings),
+      permissionSchema: createPermissionSchemaApi(settings),
+      user: createUserApi(settings),
+      userGroup: createUserGroupApi(settings),
+      datalist: createDatalistApi(settings),
+      comment: createCommentApi(settings),
+      twinRole: createPermissionTwinRoleApi(settings),
+      assigneePropagation: createPermissionAssigneePropagationApi(settings),
+      factory: createFactoryApi(settings),
+      factoryPipeline: createFactoryPipelineApi(settings),
+      factoryBranch: createFactoryBranchApi(settings),
+      factoryConditionSet: createFactoryConditionSetApi(settings),
+      factoryMultiplier: createFactoryMultiplierApi(settings),
+      factoryMultiplierFilter: createFactoryMultiplierFilterApi(settings),
+      factoryEraser: createFactoryEraserApi(settings),
+      pipelineStep: createPipelineStepApi(settings),
+      spaceRole: createPermissionSpaceRoleApi(settings),
+      datalistOption: createDatalistOptionApi(settings),
+      link: createLinkApi(settings),
+      tier: createTierApi(settings),
+    }),
+    [settings]
+  );
 
-  // if (!authUser?.authToken || !authUser?.domainId) {
-  //   return <LoadingOverlay />;
-  // }
-
-  if (!apiRef.current && authUser?.authToken && authUser?.domainId) {
-    apiRef.current = createApi(settings);
-  }
+  if (!isReady) return null;
 
   return (
-    <PrivateApiContext.Provider
-      value={apiRef.current ?? ({} as PrivateApiContextProps)}
-    >
+    <PrivateApiContext.Provider value={value}>
       {children}
     </PrivateApiContext.Provider>
   );

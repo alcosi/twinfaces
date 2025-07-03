@@ -1,4 +1,4 @@
-import { isPopulatedString } from "@/shared/libs";
+import { isPopulatedString, isServerRuntime } from "@/shared/libs";
 
 type CookieOptions = {
   path?: string;
@@ -33,6 +33,10 @@ function set(name: string, value: string, options?: CookieOptions) {
 }
 
 function get(name: string): string | undefined {
+  if (isServerRuntime()) {
+    return undefined;
+  }
+
   const cookies = document.cookie
     .split("; ")
     .map((c) => c.split("="))

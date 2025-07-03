@@ -1,12 +1,11 @@
 "use client";
 
-import { User } from "lucide-react";
-
-import { useAuthUser } from "@/features/auth";
+// import { User } from "lucide-react";
+import { useAuthUserStore } from "@/shared/store";
 import { Card, CardContent, CardHeader } from "@/shared/ui";
 
 export function ProfileScreen() {
-  const { authUser } = useAuthUser();
+  const authUser = useAuthUserStore((state) => state.authUser);
 
   return (
     <div className="mt-16 flex h-full justify-center">
@@ -14,7 +13,7 @@ export function ProfileScreen() {
         {/* <User className="text-brand-500 h-16 w-16" /> */}
         <CardHeader>
           <h2 className="text-xl font-semibold">
-            {authUser?.domainUser?.user.fullName}
+            {authUser?.domainUser?.user?.fullName}
           </h2>
         </CardHeader>
         <CardContent>

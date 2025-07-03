@@ -5,7 +5,7 @@ import React, { useEffect, useMemo } from "react";
 import { UserApi, createUserApi } from "@/entities/user";
 import { ApiSettings, PublicApiContext, TwinsAPI } from "@/shared/api";
 
-import { useAuthUser } from "../../auth";
+import { useAuthCookies } from "./use-auth-cookies";
 
 export interface PublicApiContextProps {
   user: UserApi;
@@ -16,14 +16,15 @@ export function PublicApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser } = useAuthUser();
+  const { authToken, domainId, isReady } = useAuthCookies();
 
   useEffect(() => {
     console.log(
-      "🔄 ------------PublicApiContextProvider authUser changed",
-      authUser
+      "🔄 PublicApiContextProvider authUser changed",
+      authToken,
+      domainId
     );
-  }, [authUser]);
+  }, [authToken, domainId]);
 
   useEffect(() => {
     console.log("✅------------PublicApiContextProvider mounted");
@@ -35,12 +36,12 @@ export function PublicApiContextProvider({
 
   const settings: ApiSettings = useMemo(
     () => ({
-      authToken: authUser?.authToken ?? "",
-      domain: authUser?.domainId ?? "",
+      authToken: authToken ?? "",
+      domain: domainId ?? "",
       channel: "WEB",
       client: TwinsAPI,
     }),
-    [authUser?.authToken, authUser?.domainId]
+    [authToken, domainId]
   );
 
   const value = useMemo(
@@ -49,6 +50,8 @@ export function PublicApiContextProvider({
     }),
     [settings]
   );
+
+  if (!isReady) return null;
 
   return (
     <PublicApiContext.Provider value={value}>

@@ -4,11 +4,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 import { getAuthenticatedUser, loginAuthAction } from "@/entities/user/server";
-import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { FlipCard } from "@/features/ui/flip-card";
 import { ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined, sleep } from "@/shared/libs";
+import { useAuthUserStore } from "@/shared/store";
 import { StepsProgressBar } from "@/shared/ui";
 
 import { EmailPasswordSignInForm } from "../forms/email-password-sign-in";
@@ -17,7 +17,8 @@ import { EmailVerificationForm } from "../forms/email-verification";
 
 export function EmailPasswordAuthWidget() {
   const config = useContext(ProductFlavorConfigContext);
-  const { logout } = useAuthUser();
+  const setAuthUser = useAuthUserStore((state) => state.setAuthUser);
+  const logout = useAuthUserStore((state) => state.logout);
 
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const [credentials, setCredentials] = useState<{
@@ -25,7 +26,6 @@ export function EmailPasswordAuthWidget() {
     password?: string;
   }>({});
   const router = useRouter();
-  const { setAuthUser } = useAuthUser();
   const searchParams = useSearchParams();
   const domainId = searchParams.get("domainId") ?? undefined;
   const [step, setStep] = useState<"sign-up" | "email-verification">("sign-up");
