@@ -1,4 +1,4 @@
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { ColumnDef } from "@tanstack/table-core";
 import { memo, useCallback, useContext, useMemo, useRef } from "react";
 import { toast } from "sonner";
 

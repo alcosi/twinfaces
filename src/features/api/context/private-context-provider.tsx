@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 
 import {
   PermissionAssigneePropagationApi,
@@ -82,7 +82,8 @@ import {
 import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
 import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
-import { LoadingOverlay } from "@/shared/ui";
+
+// import { LoadingOverlay } from "@/shared/ui";
 
 import { useAuthUser } from "../../auth";
 
@@ -142,6 +143,8 @@ export function PrivateApiContextProvider({
     };
   });
 
+  const apiRef = useRef<ReturnType<typeof createApi> | null>(null);
+
   const settings: ApiSettings = useMemo(
     () => ({
       authToken: authUser?.authToken ?? "",
@@ -152,45 +155,53 @@ export function PrivateApiContextProvider({
     [authUser?.authToken, authUser?.domainId]
   );
 
-  const value = useMemo(() => {
-    return {
-      attachment: createAttachmentApi(settings),
-      domain: createDomainApi(settings),
-      twinFlowSchema: createTwinFlowSchemaApi(settings),
-      twinClassField: createTwinClassFieldApi(settings),
-      twinClass: createTwinClassApi(settings),
-      twinStatus: createTwinStatusApi(settings),
-      twinFlow: createTwinFlowApi(settings),
-      twinFlowTransition: createTwinFlowTransitionApi(settings),
-      featurer: createFeaturerApi(settings),
-      twin: createTwinApi(settings),
-      permission: createPermissionApi(settings),
-      permissionGroup: createPermissionGroupApi(settings),
-      permissionSchema: createPermissionSchemaApi(settings),
-      user: createUserApi(settings),
-      userGroup: createUserGroupApi(settings),
-      datalist: createDatalistApi(settings),
-      comment: createCommentApi(settings),
-      twinRole: createPermissionTwinRoleApi(settings),
-      assigneePropagation: createPermissionAssigneePropagationApi(settings),
-      factory: createFactoryApi(settings),
-      factoryPipeline: createFactoryPipelineApi(settings),
-      factoryBranch: createFactoryBranchApi(settings),
-      factoryConditionSet: createFactoryConditionSetApi(settings),
-      factoryMultiplier: createFactoryMultiplierApi(settings),
-      factoryMultiplierFilter: createFactoryMultiplierFilterApi(settings),
-      factoryEraser: createFactoryEraserApi(settings),
-      pipelineStep: createPipelineStepApi(settings),
-      spaceRole: createPermissionSpaceRoleApi(settings),
-      datalistOption: createDatalistOptionApi(settings),
-      link: createLinkApi(settings),
-      tier: createTierApi(settings),
-    };
-  }, [settings]);
+  const createApi = (settings: ApiSettings) => ({
+    attachment: createAttachmentApi(settings),
+    domain: createDomainApi(settings),
+    twinFlowSchema: createTwinFlowSchemaApi(settings),
+    twinClassField: createTwinClassFieldApi(settings),
+    twinClass: createTwinClassApi(settings),
+    twinStatus: createTwinStatusApi(settings),
+    twinFlow: createTwinFlowApi(settings),
+    twinFlowTransition: createTwinFlowTransitionApi(settings),
+    featurer: createFeaturerApi(settings),
+    twin: createTwinApi(settings),
+    permission: createPermissionApi(settings),
+    permissionGroup: createPermissionGroupApi(settings),
+    permissionSchema: createPermissionSchemaApi(settings),
+    user: createUserApi(settings),
+    userGroup: createUserGroupApi(settings),
+    datalist: createDatalistApi(settings),
+    comment: createCommentApi(settings),
+    twinRole: createPermissionTwinRoleApi(settings),
+    assigneePropagation: createPermissionAssigneePropagationApi(settings),
+    factory: createFactoryApi(settings),
+    factoryPipeline: createFactoryPipelineApi(settings),
+    factoryBranch: createFactoryBranchApi(settings),
+    factoryConditionSet: createFactoryConditionSetApi(settings),
+    factoryMultiplier: createFactoryMultiplierApi(settings),
+    factoryMultiplierFilter: createFactoryMultiplierFilterApi(settings),
+    factoryEraser: createFactoryEraserApi(settings),
+    pipelineStep: createPipelineStepApi(settings),
+    spaceRole: createPermissionSpaceRoleApi(settings),
+    datalistOption: createDatalistOptionApi(settings),
+    link: createLinkApi(settings),
+    tier: createTierApi(settings),
+  });
+
+  // if (!authUser?.authToken || !authUser?.domainId) {
+  //   return <LoadingOverlay />;
+  // }
+
+  if (!apiRef.current && authUser?.authToken && authUser?.domainId) {
+    apiRef.current = createApi(settings);
+  }
 
   return (
-    <PrivateApiContext.Provider value={value}>
-      {settings ? children : <LoadingOverlay />}
+    <PrivateApiContext.Provider
+      value={apiRef.current ?? ({} as PrivateApiContextProps)}
+    >
+      {children}
     </PrivateApiContext.Provider>
   );
 }

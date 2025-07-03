@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect } from "react";
 
 import { DomainUser_DETAILED } from "@/entities/user";
 import { clientCookies, isDeepEqual, useLocalStorage } from "@/shared/libs";
@@ -23,37 +23,39 @@ export function useAuthUser(): UseAuthUser {
     "auth-user",
     null
   );
-  const [authUser, setAuthUserState] = useState<AuthUser | null>(storedValue);
 
   useEffect(() => {
-    setAuthUserState((prev) =>
-      isDeepEqual(prev, storedValue) ? prev : storedValue
-    );
+    console.log("🔥🔥🔥 storedValue changed", storedValue);
   }, [storedValue]);
-
-  const memoizedAuthUser = useMemo(() => authUser, [JSON.stringify(authUser)]);
 
   const setAuthUser = useCallback(
     (user: AuthUser | null) => {
-      setStoredValue(user);
-      clientCookies.set("authToken", `${user?.authToken}`, { path: "/" });
-      clientCookies.set("domainId", `${user?.domainId}`, { path: "/" });
-      clientCookies.set("userId", `${user?.domainUser?.userId}`, { path: "/" });
+      if (!user || isDeepEqual(storedValue, user)) return;
+      console.log("🔥🔥🔥 setAuthUser", user);
+      setStoredValue((prev) => (isDeepEqual(prev, user) ? prev : user));
+
+      clientCookies.set("authToken", `${user?.authToken ?? ""}`, { path: "/" });
+      clientCookies.set("domainId", `${user?.domainId ?? ""}`, { path: "/" });
+      clientCookies.set("userId", `${user?.domainUser?.userId ?? ""}`, {
+        path: "/",
+      });
     },
-    [setStoredValue]
+    [setStoredValue, storedValue]
   );
 
   const updateUser = useCallback(
     (updatedFields: Partial<AuthUser>) => {
-      if (authUser) {
-        const updatedUser = { ...authUser, ...updatedFields };
+      console.log("🔥🔥🔥 updateUser", updatedFields);
+      if (storedValue) {
+        const updatedUser = { ...storedValue, ...updatedFields };
         setStoredValue(updatedUser);
       }
     },
-    [authUser, setStoredValue]
+    [storedValue, setStoredValue]
   );
 
   const logout = useCallback(() => {
+    console.log("🔥🔥🔥 logout");
     setStoredValue(null);
     clientCookies.remove("authToken");
     clientCookies.remove("domainId");
@@ -61,7 +63,7 @@ export function useAuthUser(): UseAuthUser {
   }, [setStoredValue]);
 
   return {
-    authUser: memoizedAuthUser,
+    authUser: storedValue,
     setAuthUser,
     updateUser,
     logout,

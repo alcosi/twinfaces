@@ -5,7 +5,8 @@ import React from "react";
 import { getDomainFromHeaders } from "@/entities/face";
 import { getProductFlavorConfig } from "@/shared/config";
 import { cn } from "@/shared/libs";
-import { PublicLayoutProviders } from "@/widgets/layout";
+
+// import { PublicLayoutProviders } from "@/widgets/layout";
 
 import "../styles/globals.css";
 
@@ -44,9 +45,9 @@ export default async function RootLayout({
           fontSans.className
         )}
       >
-        <PublicLayoutProviders config={config}>
-          {children}
-        </PublicLayoutProviders>
+        {/* <PublicLayoutProviders config={config}> */}
+        {children}
+        {/* </PublicLayoutProviders> */}
       </body>
     </html>
   );
