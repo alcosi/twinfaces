@@ -39,6 +39,7 @@ type Props = {
 export function AppSidebar({ face, mode = "user" }: Props) {
   const { data } = useDomains();
   const domainId = clientCookies.get("domainId");
+  // NOTE: get user from API and update authUser in store
   const updateUser = useAuthUserStore((state) => state.updateUser);
   const logout = useAuthUserStore((state) => state.logout);
 

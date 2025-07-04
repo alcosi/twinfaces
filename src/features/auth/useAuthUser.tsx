@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 import { DomainUser_DETAILED } from "@/entities/user";
 import { clientCookies, isDeepEqual, useLocalStorage } from "@/shared/libs";
@@ -24,14 +24,10 @@ export function useAuthUser(): UseAuthUser {
     null
   );
 
-  useEffect(() => {
-    console.log("🔥🔥🔥 storedValue changed", storedValue);
-  }, [storedValue]);
-
   const setAuthUser = useCallback(
     (user: AuthUser | null) => {
       if (!user || isDeepEqual(storedValue, user)) return;
-      console.log("🔥🔥🔥 setAuthUser", user);
+
       setStoredValue((prev) => (isDeepEqual(prev, user) ? prev : user));
 
       clientCookies.set("authToken", `${user?.authToken ?? ""}`, { path: "/" });
@@ -45,7 +41,6 @@ export function useAuthUser(): UseAuthUser {
 
   const updateUser = useCallback(
     (updatedFields: Partial<AuthUser>) => {
-      console.log("🔥🔥🔥 updateUser", updatedFields);
       if (storedValue) {
         const updatedUser = { ...storedValue, ...updatedFields };
         setStoredValue(updatedUser);
@@ -55,7 +50,6 @@ export function useAuthUser(): UseAuthUser {
   );
 
   const logout = useCallback(() => {
-    console.log("🔥🔥🔥 logout");
     setStoredValue(null);
     clientCookies.remove("authToken");
     clientCookies.remove("domainId");

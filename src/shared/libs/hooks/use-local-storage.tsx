@@ -14,11 +14,9 @@ export function useLocalStorage<T>(
   const prevValueRef = useRef<T>(storedValue);
 
   const setValue = (value: T | ((val: T) => T)) => {
-    console.log("🔥🔥 setValue called", value);
     const valueToStore = value instanceof Function ? value(storedValue) : value;
 
     if (!isDeepEqual(prevValueRef.current, valueToStore)) {
-      console.log("🔥🔥 setValue changing", valueToStore);
       prevValueRef.current = valueToStore;
       setStoredValue(valueToStore);
       writeLocalStorage(key, valueToStore);

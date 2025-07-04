@@ -46,8 +46,8 @@ type CrudDataTableProps<
     renderFormFields?: () => ReactNode;
     // === Overridden ===
     fetcher: (
-      pagination?: PaginationState,
-      filters?: { search?: string; filters: { [key: string]: any } }
+      pagination: PaginationState,
+      filters: { search?: string; filters: { [key: string]: any } }
     ) => Promise<PagedResponse<TData>>;
     getRowId: (row: TData) => string;
   };

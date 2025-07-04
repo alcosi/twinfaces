@@ -16,7 +16,7 @@ export function PublicApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authToken, domainId, isReady } = useAuthCookies();
+  const { authToken, domainId } = useAuthCookies();
 
   useEffect(() => {
     console.log(
@@ -50,8 +50,6 @@ export function PublicApiContextProvider({
     }),
     [settings]
   );
-
-  if (!isReady) return null;
 
   return (
     <PublicApiContext.Provider value={value}>

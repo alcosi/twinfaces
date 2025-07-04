@@ -16,9 +16,6 @@ export function InPlaceEditContextProvider({
   children: ReactNode;
 }) {
   const [current, setCurrent] = useState<string | null>(null);
-  // useEffect(() => {
-  //   console.log("InPlaceEditContextProvider", current);
-  // }, [current, setCurrent, clearCurrent]);
 
   function clearCurrent() {
     setCurrent(null);

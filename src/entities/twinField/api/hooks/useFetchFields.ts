@@ -10,7 +10,10 @@ export const useFetchFields = () => {
   const api = useContext(PrivateApiContext);
 
   useEffect(() => {
-    console.log("🔁 PrivateApiContext value changed (useFetchFields):", api);
+    console.log(
+      "🔁🔁🔁 PrivateApiContext value changed (useFetchFields):",
+      api
+    );
   }, [api]);
 
   useEffect(() => {

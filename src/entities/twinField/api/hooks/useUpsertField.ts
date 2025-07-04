@@ -9,12 +9,12 @@ export const useUpsertField = () => {
   const api = useContext(PrivateApiContext);
 
   useEffect(() => {
-    console.log("🔁 PrivateApiContext value changed (useUpsertField):", api);
+    console.log("🔁🔁 PrivateApiContext value changed (useUpsertField):", api);
   }, [api]);
 
   useEffect(() => {
-    console.log("✅✅✅ useUpsertField mounted");
-    return () => console.log("❌❌❌ useUpsertField unmounted");
+    console.log("✅✅ useUpsertField mounted");
+    return () => console.log("❌❌ useUpsertField unmounted");
   });
 
   const upsertTwinField = useCallback(

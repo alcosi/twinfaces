@@ -25,10 +25,6 @@ export function TabsLayout({ tabs }: Props) {
     setActiveTab(isValid ? hashKey : tabs[0]?.key);
   }, [tabs]);
 
-  // useEffect(() => {
-  //   console.log("----------TabsLayout useEffect called");
-  // });
-
   function handleOnValueChange(value: string) {
     setActiveTab(value);
   }
