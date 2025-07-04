@@ -33,16 +33,7 @@ jobs:
     - name: Run typescript tests
       run: npm run test:ts
     
-    - name: Get changed files
-      id: changed
-      run: |
-        git fetch origin ${{ github.base_ref }}
-        CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx')
-        echo "CHANGED_FILES<<EOF" >> $GITHUB_OUTPUT
-        echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-
-    - name: Lint changed files with ESLint
-      if: steps.changed.outputs.CHANGED_FILES != ''
-      run: |
-        echo "${{ steps.changed.outputs.CHANGED_FILES }}" | xargs --no-run-if-empty npx eslint
+    - name: Run eslint on changed files
+      uses: tj-actions/eslint-changed-files@v25
+      with:
+        level: "warning"
