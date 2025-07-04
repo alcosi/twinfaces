@@ -31,10 +31,20 @@ export function TwinContextProvider({
     useTwinClassSearchV1();
 
   useEffect(() => {
-    refreshTwin();
-  }, [twin?.id]);
+    console.log(
+      "🥊 TwinContextProvider mounted value changed (twinId): ",
+      twinId
+    );
+    return () => {
+      console.log("🥊 🥊 TwinContextProvider unmounted");
+    };
+  });
 
-  async function refreshTwin() {
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  async function refresh() {
     try {
       const twin = await fetchTwinById(twinId);
 
@@ -64,7 +74,7 @@ export function TwinContextProvider({
       value={{
         twinId,
         twin,
-        refresh: refreshTwin,
+        refresh,
       }}
     >
       {twinLoading || twinClassLoading ? <LoadingOverlay /> : children}

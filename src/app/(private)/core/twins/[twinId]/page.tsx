@@ -8,6 +8,7 @@ type Props = {
 };
 
 export default function Page({ params: { twinId } }: Props) {
+  console.log("Page twins/[twinId] rendered", twinId);
   return (
     <TwinContextProvider twinId={twinId}>
       <TwinScreen />

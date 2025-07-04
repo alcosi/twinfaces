@@ -98,6 +98,12 @@ const TwinFieldsComponent = () => {
     PagedResponse<TwinFieldUI>
   > => {
     console.log("TwinFieldsComponent fetchFields called!!!!!!!!!!!!!!!!!");
+
+    if (!twinId) {
+      console.warn("fetchFields: twinId is undefined, skipping fetch.");
+      return { data: [], pagination: {} };
+    }
+
     try {
       return await fetchFieldsByTwinId({ twinId });
     } catch (e) {
