@@ -130,7 +130,7 @@ export function PrivateApiContextProvider({
 
   useEffect(() => {
     console.log(
-      "🔄 PrivateApiContextProvider authUser changed",
+      "🔄🔄 PrivateApiContextProvider authUser changed",
       authToken,
       domainId
     );
