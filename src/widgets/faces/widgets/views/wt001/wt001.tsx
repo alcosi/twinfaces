@@ -1,5 +1,5 @@
 import {
-  FaceTC,
+  FaceTC001ViewRs as FaceTC,
   FaceWT001,
   fetchTC001Face,
   fetchWT001Face,
@@ -7,7 +7,8 @@ import {
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { isFalsy, safe } from "@/shared/libs";
+import { RelatedObjects } from "@/shared/api";
+import { isTruthy, isUndefined, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
@@ -37,39 +38,40 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
     );
   }
 
-  const { label, twinClassId, columns, showCreateButton, modalFaceId } =
-    wtResult.data.widget as FaceWT001;
-  const faceMap = wtResult.data.relatedObjects?.faceMap ?? {};
+  const {
+    widget: { label, twinClassId, columns, showCreateButton, modalFaceId },
+    relatedObjects,
+  } = wtResult.data as {
+    widget: FaceWT001;
+    relatedObjects?: RelatedObjects;
+  };
 
-  let modalCreateData = null;
+  let modalCreateData: FaceTC | undefined = undefined;
 
-  if (isFalsy(modalFaceId)) return;
+  if (isTruthy(modalFaceId)) {
+    const modalFace = relatedObjects?.faceMap?.[modalFaceId];
 
-  const modalFace = faceMap[modalFaceId];
+    const fetcher = componentToFetcherMap[`${modalFace?.component}`];
 
-  if (!modalFace?.component) {
-    console.error(`Face not found in faceMap for modalFaceId: ${modalFaceId}`);
-    return;
-  }
+    if (isUndefined(fetcher)) {
+      console.error(`No fetcher mapped for component: ${modalFace?.component}`);
+      return;
+    }
 
-  const fetcher = componentToFetcherMap[modalFace.component];
-
-  if (!fetcher) {
-    console.error(`No fetcher mapped for component: ${modalFace.component}`);
-    return;
-  }
-
-  const result = await safe(() => fetcher(modalFaceId, twinId!));
-
-  if (!result.ok) {
-    console.error(
-      `Failed to load modal face data for component ${modalFace.component}:`,
-      result.error
+    const modalFaceResult = await safe(
+      withRedirectOnUnauthorized(() => fetcher(modalFaceId, twinId!))
     );
-    return;
-  }
 
-  modalCreateData = result.data;
+    if (!modalFaceResult.ok) {
+      console.error(
+        `Failed to load modal face data for component ${modalFace?.component}:`,
+        modalFaceResult.error
+      );
+      return;
+    }
+
+    modalCreateData = modalFaceResult.data;
+  }
 
   const sortedEnabledColumns = Array.isArray(columns)
     ? [...columns].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
@@ -82,7 +84,7 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
       enabledColumns={sortedEnabledColumns}
       showCreateButton={showCreateButton}
       isAdmin={isAdmin}
-      modalCreateData={modalCreateData!}
+      modalCreateData={modalCreateData}
     />
   );
 }

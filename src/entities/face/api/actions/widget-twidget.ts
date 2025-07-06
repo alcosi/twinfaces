@@ -25,7 +25,7 @@ type FetchFaceOptions<T> = {
     | "/private/face/tw004/{faceId}/v1"
     | "/private/face/tw005/{faceId}/v1"
     | "/private/face/tc001/{faceId}/v1";
-  query: Record<string, any>;
+  query: Record<string, string>;
   extract: (data: any) => T | undefined;
 };
 

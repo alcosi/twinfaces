@@ -9,7 +9,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
-import { isEmptyString } from "@/shared/libs";
+import { isEmptyString, isPopulatedString } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -34,12 +34,12 @@ type DialogProps = {
   dialogForm?: UseFormReturn<any>;
   renderFormFields?: () => ReactNode;
   // TODO: fix `any`
-  onCreateSubmit?: (values: any) => Promise<void>;
+  onCreateSubmit?: (values: unknown) => Promise<void>;
   // TODO: fix `any`
-  onUpdateSubmit?: (id: string, values: any) => Promise<void>;
+  onUpdateSubmit?: (id: string, values: unknown) => Promise<void>;
   onSubmitSuccess?: () => void;
-  modalHeaderLabel?: string;
-  modalButtonLabel?: string;
+  title?: string;
+  submitButtonLabel?: string;
 };
 
 export const CrudDataTableDialog = forwardRef(Component);
@@ -51,8 +51,8 @@ function Component(
     onCreateSubmit,
     onUpdateSubmit,
     onSubmitSuccess,
-    modalHeaderLabel,
-    modalButtonLabel,
+    title,
+    submitButtonLabel,
   }: DialogProps,
   ref: ForwardedRef<CrudDataTableDialogRef>
 ) {
@@ -98,16 +98,14 @@ function Component(
     }
   }
 
+  const fallbackTitle = dialogState.rowId ? "Edit" : "Create";
+
   return dialogForm ? (
     <Dialog open={dialogState.open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-h-[100%] sm:max-h-[80%] sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {dialogState.rowId
-              ? "Edit"
-              : modalHeaderLabel && !isEmptyString(modalHeaderLabel)
-                ? modalHeaderLabel
-                : "Create"}
+            {isPopulatedString(title) ? title : fallbackTitle}
           </DialogTitle>
         </DialogHeader>
 
@@ -123,8 +121,8 @@ function Component(
                 loading={dialogForm.formState.isSubmitting}
                 disabled={!dialogForm.formState.isDirty}
               >
-                {modalButtonLabel && !isEmptyString(modalButtonLabel)
-                  ? modalButtonLabel
+                {submitButtonLabel && !isEmptyString(submitButtonLabel)
+                  ? submitButtonLabel
                   : "Save"}
               </Button>
             </DialogFooter>

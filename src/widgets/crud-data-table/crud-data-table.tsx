@@ -1,5 +1,10 @@
 "use client";
 
+// TODO: Refactor CrudDataTableHeader to Decouple Modal from Create Action
+// Jira: https://alcosi.atlassian.net/browse/TWINFACES-593
+// This component currently forces the use of a modal for the "create" flow.
+// It should be refactored to allow consumers to define custom create behavior
+// (e.g., opening a modal, navigating to a page, showing a drawer, etc.).
 import { PaginationState } from "@tanstack/table-core";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -44,8 +49,8 @@ type CrudDataTableProps<
       filters: { search?: string; filters: { [key: string]: any } }
     ) => Promise<PagedResponse<TData>>;
     getRowId: (row: TData) => string;
-    modalHeaderLabel?: string;
-    modalButtonLabel?: string;
+    modalTitle?: string;
+    submitButtonLabel?: string;
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -163,8 +168,8 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         renderFormFields={renderFormFields}
         onCreateSubmit={onCreateSubmit}
         onSubmitSuccess={() => tableRef.current?.refresh()}
-        modalHeaderLabel={props.modalHeaderLabel}
-        modalButtonLabel={props.modalButtonLabel}
+        title={props.modalTitle}
+        submitButtonLabel={props.submitButtonLabel}
       />
     </div>
   );

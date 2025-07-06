@@ -40,8 +40,6 @@ export type FaceTW005 = components["schemas"]["FaceWT005v1"];
 export type FaceTW005Button = components["schemas"]["FaceTW005ButtonV1"];
 
 export type FaceTC001 = components["schemas"]["FaceTC001v1"];
-// NOTE for expansion when TC2...TC(N) appears
-export type FaceTC = FaceTC001ViewRs;
 
 export type FaceTC001ViewRs = components["schemas"]["FaceTC001ViewRsV1"];
 export type FaceWT001ViewRs = components["schemas"]["FaceWT001ViewRsV1"];

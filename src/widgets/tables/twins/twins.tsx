@@ -383,8 +383,8 @@ export function TwinsTable({
           />
         )
       }
-      modalHeaderLabel={modalCreateData?.faceTwinCreate?.header}
-      modalButtonLabel={modalCreateData?.faceTwinCreate?.saveButtonLabel}
+      modalTitle={modalCreateData?.faceTwinCreate?.header}
+      submitButtonLabel={modalCreateData?.faceTwinCreate?.saveButtonLabel}
     />
   );
 }

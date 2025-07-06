@@ -6,7 +6,7 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 
-import { FaceTC } from "@/entities/face";
+import { FaceTC001ViewRs as FaceTC } from "@/entities/face";
 import { StaticTwinFieldId, TwinFormValues } from "@/entities/twin";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
