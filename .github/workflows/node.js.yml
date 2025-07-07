@@ -39,7 +39,6 @@ jobs:
       uses: tj-actions/eslint-changed-files@v25
       with:
         fail_on_error: true
-        reporter: github-pr-review
         level: warning
         file_extensions: |
           **/*.ts
