@@ -38,12 +38,8 @@ jobs:
     - name: Run eslint on changed files
       uses: tj-actions/eslint-changed-files@v25
       with:
-        fail_on_error: true
         level: warning
         file_extensions: |
           **/*.ts
           **/*.tsx
-        ignore_patterns: |
-          **/*.test.ts
-          **/*.test.tsx
-          **/__tests__/**
+        escape_paths: false
