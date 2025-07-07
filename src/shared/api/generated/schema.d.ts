@@ -8828,6 +8828,8 @@ export interface components {
             iconDark?: string;
             /** @description Icon light uri. Might be relative */
             iconLight?: string;
+            /** @description domain name */
+            name?: string;
             /**
              * @description type [basic/b2b]
              * @example basic
@@ -9226,6 +9228,8 @@ export interface components {
             iconDark?: string;
             /** @description Icon light uri. Might be relative */
             iconLight?: string;
+            /** @description domain name */
+            name?: string;
         };
         DataListOptionSearchRqV1: {
             /** @description id list */

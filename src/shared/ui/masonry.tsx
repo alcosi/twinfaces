@@ -17,14 +17,22 @@ function Column({
   className,
   children,
 }: PropsWithChildren<{ className?: string | string[] }>) {
-  return <div className={cn("grid grid-cols-1", className)}>{children}</div>;
+  return (
+    <div className={cn("grid auto-rows-min grid-cols-1", className)}>
+      {children}
+    </div>
+  );
 }
 
 function Item({
   className,
   children,
 }: PropsWithChildren<{ className?: string | string[] }>) {
-  return <div className={cn("break-inside-avoid", className)}>{children}</div>;
+  return (
+    <div className={cn("min-w-0 break-inside-avoid", className)}>
+      {children}
+    </div>
+  );
 }
 
 export const Masonry = {

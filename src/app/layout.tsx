@@ -27,7 +27,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <PublicEnvScript />
-        <title>{config.key ?? config.productName}</title>
+        <title>{config.name ?? config.productName}</title>
         <meta
           name="description"
           content={config.description ?? config.productName}

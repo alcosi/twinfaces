@@ -29,7 +29,6 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
           twin.description && <MarkdownPreview source={twin.description} />
         );
       },
-      className: "px-0",
     },
     "00000000-0000-0000-0011-000000000005": {
       key: "externalId",
