@@ -5,6 +5,7 @@ import Link from "next/link";
 import React from "react";
 
 import { ThemeToggle } from "@/features/ui/theme-toggle";
+import { PlatformArea } from "@/shared/config";
 import { cn, useRouteCrumbs } from "@/shared/libs";
 import {
   Breadcrumb,
@@ -16,21 +17,12 @@ import { SidebarTrigger } from "@/shared/ui/sidebar";
 
 export function SidebarLayoutHeader() {
   const breadcrumbs = useRouteCrumbs();
-  const rootLabel = breadcrumbs[0]?.label.toLowerCase();
 
-  let visibleBreadcrumbs;
-
-  switch (rootLabel) {
-    case "profile": {
-      visibleBreadcrumbs = breadcrumbs;
-      break;
-    }
-
-    default: {
-      visibleBreadcrumbs = breadcrumbs.slice(1);
-      break;
-    }
-  }
+  const displayBreadcrumbs =
+    breadcrumbs[0]?.label.toLowerCase() === PlatformArea.core ||
+    breadcrumbs[0]?.label.toLowerCase() === PlatformArea.workspace
+      ? breadcrumbs.slice(1)
+      : breadcrumbs;
 
   return (
     <header className="border-border bg-background sticky top-0 z-10 flex h-16 items-center justify-between border-b px-4 md:px-6">
@@ -44,7 +36,7 @@ export function SidebarLayoutHeader() {
                 <House className="h-4 w-4" />
               </Link>
             </BreadcrumbItem>
-            {visibleBreadcrumbs.map((item, index, array) => (
+            {displayBreadcrumbs.map((item, index, array) => (
               <React.Fragment key={index}>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>

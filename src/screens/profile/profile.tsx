@@ -1,7 +1,6 @@
 "use client";
 
-import { CalendarDays, Mail, Pencil, User } from "lucide-react";
-import { useContext, useState } from "react";
+import { CalendarDays, Mail, User } from "lucide-react";
 import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
@@ -9,19 +8,15 @@ import { AutoFormValueType } from "@/components/auto-field";
 import { useUpdateUser } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
-import { UserContext } from "@/features/user";
 import { formatIntlDate } from "@/shared/libs";
-import { Button } from "@/shared/ui";
 
 export function ProfileScreen() {
   const { authUser, updateUser: updateAuthUser } = useAuthUser();
-  const { user, refresh } = useContext(UserContext);
   const { updateUser } = useUpdateUser();
-  const [isEditing, setIsEditing] = useState(false);
 
   const nameSettings: InPlaceEditProps<string | undefined> = {
     id: "fullName",
-    value: user.user?.fullName,
+    value: authUser?.domainUser?.user.fullName,
     valueInfo: {
       type: AutoFormValueType.string,
       input_props: {
@@ -31,32 +26,25 @@ export function ProfileScreen() {
     },
     schema: z.string().min(3),
     onSubmit: async (value) => {
-      setIsEditing(false);
       return updateUser({
-        userId: user.userId!,
+        userId: authUser?.authToken!,
         body: {
           fullName: value,
         },
-      })
-        .then(refresh)
-        .then(() => {
-          if (!authUser?.domainUser) return;
+      }).then(() => {
+        if (!authUser?.domainUser) return;
 
-          updateAuthUser({
-            domainUser: {
-              ...authUser.domainUser,
-              user: {
-                ...authUser.domainUser.user,
-                fullName: value,
-              },
+        updateAuthUser({
+          domainUser: {
+            ...authUser.domainUser,
+            user: {
+              ...authUser.domainUser.user,
+              fullName: value,
             },
-          });
+          },
         });
+      });
     },
-    onCancelEditing: () => {
-      setIsEditing(false);
-    },
-    shouldFocusOnStart: isEditing,
   };
 
   return (
@@ -66,36 +54,21 @@ export function ProfileScreen() {
           <User className="text-brand-500 h-20 w-20" />
         </div>
         <div className="w-full flex-1">
-          {!isEditing ? (
-            <div className="group flex items-center">
-              <div className="text-2xl font-semibold break-all">
-                Hello, {user.user?.fullName}!
-              </div>
-
-              <Button
-                onClick={() => setIsEditing(true)}
-                size="iconS6"
-                variant="ghost"
-                className={
-                  "ml-2 flex -translate-x-1 transform items-center opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-                }
-              >
-                <Pencil className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
-            <InPlaceEdit {...nameSettings} className="w-full" />
-          )}
+          <div className="flex items-center">
+            <span className="mr-4 text-2xl font-semibold">Hello,</span>
+            <InPlaceEdit {...nameSettings} className="w-full break-all" />
+          </div>
           <div className="text-muted-foreground flex items-center gap-1 text-lg font-semibold">
             <Mail className="h-5 w-5" />
-            {user.user?.email}
+            {authUser?.domainUser?.user.email}
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-2 text-sm">
         <CalendarDays className="h-4 w-4" />
-        Together with us since {formatIntlDate(user.createdAt!, "date")}
+        Together with us since{" "}
+        {formatIntlDate(authUser?.domainUser?.createdAt!, "date")}
       </div>
 
       <div className="py-6">

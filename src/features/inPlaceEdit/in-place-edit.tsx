@@ -22,8 +22,6 @@ export interface InPlaceEditProps<T = unknown> {
   renderPreview?: (value: T) => ReactNode;
   valueInfo: AutoFormValueInfo;
   onSubmit: (value: T) => Promise<void>;
-  onCancelEditing?: () => void;
-  shouldFocusOnStart?: boolean;
   schema?: z.ZodType<any, any>;
   className?: string;
 }
@@ -34,8 +32,6 @@ export function InPlaceEdit<T>({
   renderPreview,
   valueInfo,
   onSubmit,
-  onCancelEditing,
-  shouldFocusOnStart,
   schema,
   className,
 }: InPlaceEditProps<T>) {
@@ -48,10 +44,6 @@ export function InPlaceEdit<T>({
     },
     resolver: schema ? zodResolver(z.object({ value: schema })) : undefined,
   });
-
-  useEffect(() => {
-    shouldFocusOnStart && handleEdit();
-  }, [shouldFocusOnStart]);
 
   useEffect(() => {
     if (context && context.current !== id) {
@@ -96,7 +88,6 @@ export function InPlaceEdit<T>({
   function handleCancel() {
     setIsEdited(false);
     form.reset(undefined, { keepDefaultValues: true });
-    onCancelEditing?.();
   }
 
   if (isFalsy(isEdited)) {
