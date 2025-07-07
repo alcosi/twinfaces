@@ -13,15 +13,16 @@ import {
   STUB_AUTH_FORM_SCHEMA,
   stubLoginFormAction,
 } from "@/entities/user/server";
-import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { ProductFlavorConfigContext } from "@/shared/config";
+import { useAuthUserStore } from "@/shared/store";
 import { Button, Card } from "@/shared/ui";
 
 export function StubAuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setAuthUser, logout } = useAuthUser();
+  const setAuthUser = useAuthUserStore((state) => state.setAuthUser);
+  const logout = useAuthUserStore((state) => state.logout);
   const config = useContext(ProductFlavorConfigContext);
   const [authUser, formAction] = useFormState(stubLoginFormAction, null);
   const [isPending, startTransition] = useTransition();

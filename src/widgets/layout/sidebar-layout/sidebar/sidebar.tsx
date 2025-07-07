@@ -6,10 +6,10 @@ import { useState } from "react";
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
 import { FaceNB001 } from "@/entities/face";
-import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";
-import { isUndefined } from "@/shared/libs";
+import { clientCookies, isUndefined } from "@/shared/libs";
+import { useAuthUserStore } from "@/shared/store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,8 +38,12 @@ type Props = {
 
 export function AppSidebar({ face, mode = "user" }: Props) {
   const { data } = useDomains();
-  const { authUser, updateUser, logout } = useAuthUser();
-  const currentDomain = data?.find((i) => i.id === authUser?.domainId);
+  const domainId = clientCookies.get("domainId");
+  // NOTE: get user from API and update authUser in store
+  const updateUser = useAuthUserStore((state) => state.updateUser);
+  const logout = useAuthUserStore((state) => state.logout);
+
+  const currentDomain = data?.find((i) => i.id === domainId);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -165,7 +169,7 @@ export function AppSidebar({ face, mode = "user" }: Props) {
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
                     <User2 />
-                    {authUser?.domainUser?.user.fullName}
+                    {/* {authUser?.domainUser?.user?.fullName} */}
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>

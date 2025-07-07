@@ -25,6 +25,7 @@ import {
   fixedForwardRef,
   isEmptyArray,
   isPopulatedArray,
+  useTraceUpdate,
 } from "@/shared/libs";
 
 import { DataTablePagination } from "./data-table-pagination";
@@ -84,10 +85,17 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
       const nextState = isFunction(updater)
         ? updater(pagination.tanstask)
         : updater;
-      setPagination({
-        api: pagination.api,
-        tanstask: nextState,
-      });
+
+      // Only update state if pagination has truly changed
+      if (
+        nextState.pageIndex !== pagination.tanstask.pageIndex ||
+        nextState.pageSize !== pagination.tanstask.pageSize
+      ) {
+        setPagination({
+          api: pagination.api,
+          tanstask: nextState,
+        });
+      }
     },
     // NOTE: Options for ExpandableRows
     getSubRows: (row) => row.subRows || [],
@@ -127,11 +135,26 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   useEffect(() => {
     table.toggleAllRowsExpanded();
-  }, [table.toggleAllRowsExpanded]);
+  }, []);
 
   useEffect(() => {
+    console.log("DataTable fetchData called+++++++++++++++");
     fetchData();
-  }, [pagination.tanstask]);
+  }, [pagination.tanstask.pageIndex, pagination.tanstask.pageSize]);
+
+  useTraceUpdate({
+    props: {
+      columns,
+      getRowId,
+      fetcher,
+      disablePagination,
+      pageSizes,
+      onFetchError,
+      onRowClick,
+      layoutMode,
+    },
+    componentName: "DataTable",
+  });
 
   if (loading) {
     return <TableSkeleton withHeader={false} />;

@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
 import { DomainUser_DETAILED } from "@/entities/user";
-import { clientCookies, useLocalStorage } from "@/shared/libs";
+import { clientCookies, isDeepEqual, useLocalStorage } from "@/shared/libs";
 
 type AuthUser = {
   domainUser?: DomainUser_DETAILED;
@@ -23,30 +23,30 @@ export function useAuthUser(): UseAuthUser {
     "auth-user",
     null
   );
-  const [authUser, setAuthUserState] = useState<AuthUser | null>(storedValue);
-
-  useEffect(() => {
-    setAuthUserState(storedValue);
-  }, [storedValue]);
 
   const setAuthUser = useCallback(
     (user: AuthUser | null) => {
-      setStoredValue(user);
-      clientCookies.set("authToken", `${user?.authToken}`, { path: "/" });
-      clientCookies.set("domainId", `${user?.domainId}`, { path: "/" });
-      clientCookies.set("userId", `${user?.domainUser?.userId}`, { path: "/" });
+      if (!user || isDeepEqual(storedValue, user)) return;
+
+      setStoredValue((prev) => (isDeepEqual(prev, user) ? prev : user));
+
+      clientCookies.set("authToken", `${user?.authToken ?? ""}`, { path: "/" });
+      clientCookies.set("domainId", `${user?.domainId ?? ""}`, { path: "/" });
+      clientCookies.set("userId", `${user?.domainUser?.userId ?? ""}`, {
+        path: "/",
+      });
     },
-    [setStoredValue]
+    [setStoredValue, storedValue]
   );
 
   const updateUser = useCallback(
     (updatedFields: Partial<AuthUser>) => {
-      if (authUser) {
-        const updatedUser = { ...authUser, ...updatedFields };
+      if (storedValue) {
+        const updatedUser = { ...storedValue, ...updatedFields };
         setStoredValue(updatedUser);
       }
     },
-    [authUser, setStoredValue]
+    [storedValue, setStoredValue]
   );
 
   const logout = useCallback(() => {
@@ -57,7 +57,7 @@ export function useAuthUser(): UseAuthUser {
   }, [setStoredValue]);
 
   return {
-    authUser,
+    authUser: storedValue,
     setAuthUser,
     updateUser,
     logout,

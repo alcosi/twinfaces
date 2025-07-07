@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 
-import { readLocalStorage, writeLocalStorage } from "../utils";
+import { isDeepEqual, readLocalStorage, writeLocalStorage } from "../utils";
 
 export function useLocalStorage<T>(
   key: string,
@@ -11,17 +11,16 @@ export function useLocalStorage<T>(
   const [storedValue, setStoredValue] = useState<T>(() =>
     readLocalStorage(key, initialValue)
   );
-
-  useEffect(() => {
-    const value = readLocalStorage(key, initialValue);
-    setStoredValue(value);
-  }, [key]);
+  const prevValueRef = useRef<T>(storedValue);
 
   const setValue = (value: T | ((val: T) => T)) => {
     const valueToStore = value instanceof Function ? value(storedValue) : value;
 
-    setStoredValue(valueToStore);
-    writeLocalStorage(key, valueToStore);
+    if (!isDeepEqual(prevValueRef.current, valueToStore)) {
+      prevValueRef.current = valueToStore;
+      setStoredValue(valueToStore);
+      writeLocalStorage(key, valueToStore);
+    }
   };
 
   return [storedValue, setValue];

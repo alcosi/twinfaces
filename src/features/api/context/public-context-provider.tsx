@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { UserApi, createUserApi } from "@/entities/user";
 import { ApiSettings, PublicApiContext, TwinsAPI } from "@/shared/api";
 
-import { useAuthUser } from "../../auth";
+import { useAuthCookies } from "./use-auth-cookies";
 
 export interface PublicApiContextProps {
   user: UserApi;
@@ -16,21 +16,43 @@ export function PublicApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser } = useAuthUser();
+  const { authToken, domainId } = useAuthCookies();
 
-  const settings: ApiSettings = {
-    authToken: authUser?.authToken ?? "",
-    domain: authUser?.domainId ?? "",
-    channel: "WEB",
-    client: TwinsAPI,
-  };
+  useEffect(() => {
+    console.log(
+      "🔄 PublicApiContextProvider authUser changed",
+      authToken,
+      domainId
+    );
+  }, [authToken, domainId]);
+
+  useEffect(() => {
+    console.log("✅------------PublicApiContextProvider mounted");
+
+    return () => {
+      console.log("❌------------PublicApiContextProvider unmounted");
+    };
+  });
+
+  const settings: ApiSettings = useMemo(
+    () => ({
+      authToken: authToken ?? "",
+      domain: domainId ?? "",
+      channel: "WEB",
+      client: TwinsAPI,
+    }),
+    [authToken, domainId]
+  );
+
+  const value = useMemo(
+    () => ({
+      user: createUserApi(settings),
+    }),
+    [settings]
+  );
 
   return (
-    <PublicApiContext.Provider
-      value={{
-        user: createUserApi(settings),
-      }}
-    >
+    <PublicApiContext.Provider value={value}>
       {children}
     </PublicApiContext.Provider>
   );

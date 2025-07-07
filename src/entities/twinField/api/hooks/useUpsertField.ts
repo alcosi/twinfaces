@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
@@ -7,6 +7,15 @@ import { TwinField } from "../types";
 
 export const useUpsertField = () => {
   const api = useContext(PrivateApiContext);
+
+  useEffect(() => {
+    console.log("🔁🔁 PrivateApiContext value changed (useUpsertField):", api);
+  }, [api]);
+
+  useEffect(() => {
+    console.log("✅✅ useUpsertField mounted");
+    return () => console.log("❌❌ useUpsertField unmounted");
+  });
 
   const upsertTwinField = useCallback(
     async (args: {

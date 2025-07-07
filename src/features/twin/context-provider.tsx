@@ -31,6 +31,16 @@ export function TwinContextProvider({
     useTwinClassSearchV1();
 
   useEffect(() => {
+    console.log(
+      "🥊 TwinContextProvider mounted value changed (twinId): ",
+      twinId
+    );
+    return () => {
+      console.log("🥊 🥊 TwinContextProvider unmounted");
+    };
+  });
+
+  useEffect(() => {
     refresh();
   }, []);
 

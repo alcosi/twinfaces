@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   ForwardedRef,
   ReactNode,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -13,7 +14,12 @@ import {
 import { UseFormReturn } from "react-hook-form";
 
 import { PagedResponse } from "@/shared/api";
-import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import {
+  cn,
+  fixedForwardRef,
+  isPopulatedArray,
+  useTraceUpdate,
+} from "@/shared/libs";
 
 import {
   DataTable,
@@ -69,30 +75,48 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   );
   const tableRef = useRef<DataTableHandle>(null);
   const dialogRef = useRef<CrudDataTableDialogRef>(null);
+  const didMount = useRef(false);
 
   useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
   useEffect(() => {
-    tableRef.current?.refresh();
-  }, [viewSettings]);
-
-  const fetchWrapper = async (pagination: PaginationState) => {
-    try {
-      const response = await fetcher(pagination, {
-        search: viewSettings.query,
-        filters: viewSettings.filters,
-      });
-
-      if (viewSettings.groupByKey) {
-        response.data = groupDataByKey(response.data, viewSettings.groupByKey);
-      }
-
-      return response;
-    } catch (error) {
-      console.error("Error in fetchWrapper:", error);
-      throw error;
+    if (didMount.current) {
+      tableRef.current?.refresh();
+    } else {
+      didMount.current = true;
     }
-  };
+  }, [
+    viewSettings.query,
+    viewSettings.filters,
+    viewSettings.groupByKey,
+    viewSettings.orderKeys,
+    viewSettings.visibleKeys,
+    viewSettings.layoutMode,
+  ]);
+
+  const fetchWrapper = useCallback(
+    async (pagination: PaginationState) => {
+      try {
+        const response = await fetcher(pagination, {
+          search: viewSettings.query,
+          filters: viewSettings.filters,
+        });
+
+        if (viewSettings.groupByKey) {
+          response.data = groupDataByKey(
+            response.data,
+            viewSettings.groupByKey
+          );
+        }
+
+        return response;
+      } catch (error) {
+        console.error("Error in fetchWrapper:", error);
+        throw error;
+      }
+    },
+    [fetcher, viewSettings.query, viewSettings.filters, viewSettings.groupByKey]
+  );
 
   const visibleColumns = useMemo(() => {
     if (isPopulatedArray(props.defaultVisibleColumns)) {
@@ -119,16 +143,29 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     ? () => dialogRef.current?.open()
     : undefined;
 
-  function handleOnRowClick(row: TData) {
-    if (onRowClick) {
-      return onRowClick(row);
-    }
+  const handleOnRowClick = useCallback(
+    (row: TData) => {
+      if (onRowClick) return onRowClick(row);
 
-    const rowId = props.getRowId(row);
-    const basePath = pathname.replace(/\/$/, "");
+      const rowId = props.getRowId(row);
+      const basePath = pathname.replace(/\/$/, "");
+      router.push(`${basePath}/${rowId}`);
+    },
+    [onRowClick, pathname, props.getRowId]
+  );
 
-    router.push(`${basePath}/${rowId}`);
-  }
+  useTraceUpdate({
+    props: {
+      className,
+      fetcher,
+      dialogForm,
+      onCreateSubmit,
+      renderFormFields,
+      onRowClick,
+      ...props,
+    },
+    componentName: "CrudDataTable",
+  });
 
   return (
     <div className={cn("flex-1 py-4", className)}>

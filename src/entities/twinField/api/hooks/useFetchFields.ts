@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 import { TwinFieldUI } from "@/entities/twinField";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
@@ -9,6 +9,18 @@ import { hydrateTwinFieldFromMap } from "../../libs";
 export const useFetchFields = () => {
   const api = useContext(PrivateApiContext);
 
+  useEffect(() => {
+    console.log(
+      "🔁🔁🔁 PrivateApiContext value changed (useFetchFields):",
+      api
+    );
+  }, [api]);
+
+  useEffect(() => {
+    console.log("✅✅✅ useFetchFields mounted");
+    return () => console.log("❌❌❌ useFetchFields unmounted");
+  });
+
   const fetchFieldsByTwinId = useCallback(
     async ({
       twinId,
@@ -17,6 +29,7 @@ export const useFetchFields = () => {
     }): Promise<
       PagedResponse<TwinFieldUI & { twinClassId: string | undefined }>
     > => {
+      console.log("useFetchFields fetchFieldsByTwinId called!!!!!!!!!");
       const { data, error } = await api.twin.getFieldsById({ twinId });
 
       if (error) {

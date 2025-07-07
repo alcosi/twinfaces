@@ -11,9 +11,9 @@ import {
   getAuthenticatedUser,
   loginAuthAction,
 } from "@/entities/user/server";
-import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { isUndefined } from "@/shared/libs";
+import { useAuthUserStore } from "@/shared/store";
 import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignInForm({
@@ -24,7 +24,7 @@ export function EmailPasswordSignInForm({
   onError?: () => void;
 }) {
   const router = useRouter();
-  const { setAuthUser } = useAuthUser();
+  const setAuthUser = useAuthUserStore((state) => state.setAuthUser);
   const { alert } = useActionDialogs();
   const searchParams = useSearchParams();
   const [isAuthenticating, startAuthTransition] = useTransition();
