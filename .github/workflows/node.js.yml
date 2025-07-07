@@ -18,6 +18,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
@@ -40,9 +42,9 @@ jobs:
         reporter: github-pr-review
         level: warning
         file_extensions: |
-            '**/*.ts'
-            '**/*.tsx'
+          **/*.ts
+          **/*.tsx
         ignore_patterns: |
-          '**/*.test.ts'
-          '**/*.test.tsx'
-          '**/__tests__/**'
+          **/*.test.ts
+          **/*.test.tsx
+          **/__tests__/**
