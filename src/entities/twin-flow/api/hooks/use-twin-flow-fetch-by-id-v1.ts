@@ -20,11 +20,11 @@ export const useTwinFlowFetchByIdV1 = () => {
         });
 
         if (error) {
-          throw new Error("Failed to fetch twin flows due to API error");
+          throw new Error("Failed to fetch twin flow due to API error");
         }
 
         if (isUndefined(data.twinflow)) {
-          throw new Error("Invalid response data while fetching twin flows");
+          throw new Error("Invalid response data while fetching twin flow");
         }
 
         const twinflow = hydrateTwinFlowFromMap(

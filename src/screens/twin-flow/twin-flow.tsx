@@ -11,20 +11,18 @@ import { TwinFlowGeneral } from "./views";
 export function TwinFlowScreen() {
   const { twinFlow } = useContext(TwinFlowContext);
 
-  const tabs: Tab[] = twinFlow
-    ? [
-        {
-          key: "general",
-          label: "General",
-          content: <TwinFlowGeneral />,
-        },
-        {
-          key: "transitions",
-          label: "Transitions",
-          content: <TwinFlowTransitionsTable twinflow={twinFlow} />,
-        },
-      ]
-    : [];
+  const tabs: Tab[] = [
+    {
+      key: "general",
+      label: "General",
+      content: <TwinFlowGeneral />,
+    },
+    {
+      key: "transitions",
+      label: "Transitions",
+      content: <TwinFlowTransitionsTable twinflow={twinFlow} />,
+    },
+  ];
 
   return <TabsLayout tabs={tabs} />;
 }

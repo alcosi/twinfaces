@@ -73,11 +73,6 @@ const columnsMap: Record<
   name: {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="inline-flex max-w-48">
-        <TwinFlowResourceLink data={original} withTooltip />
-      </div>
-    ),
   },
   description: {
     accessorKey: "description",
@@ -204,9 +199,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
       fetcher={fetchTwinflows}
       pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
-        router.push(
-          `/${PlatformArea.core}/twinclass/${row.twinClassId}/twinflow/${row.id}`
-        )
+        router.push(`/${PlatformArea.core}/twinflows/${row.id}`)
       }
       filters={{
         filtersInfo: buildFilterFields(),

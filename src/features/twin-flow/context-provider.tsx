@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { toast } from "sonner";
 
 import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twin-flow";
 import { isUndefined } from "@/shared/libs";
@@ -39,7 +38,7 @@ export function TwinFlowContextProvider({
         setTwinFlow(response);
       }
     } catch (e) {
-      toast.error("Failed to fetch twin flow");
+      console.error("Failed to fetch twin flow:", e);
     }
   }
 
