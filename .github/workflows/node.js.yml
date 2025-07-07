@@ -36,4 +36,13 @@ jobs:
     - name: Run eslint on changed files
       uses: tj-actions/eslint-changed-files@v25
       with:
-        level: "warning"
+        fail_on_error: true
+        reporter: github-pr-review
+        level: warning
+        file_extensions: |
+            '**/*.ts'
+            '**/*.tsx'
+        ignore_patterns: |
+          '**/*.test.ts'
+          '**/*.test.tsx'
+          '**/__tests__/**'
