@@ -14,8 +14,9 @@ export function mergeUniqueStrings(
 }
 
 export function capitalize(value: string): string {
-  if (!isPopulatedString(value)) return "";
-  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+  return value.replace(/(^\w{1})|(\s+\w{1})/g, (letter) =>
+    letter.toUpperCase()
+  );
 }
 
 export function slugify(input?: string): string {

@@ -1,6 +1,6 @@
-export async function safe<T>(
-  fn: () => Promise<T>
-): Promise<{ ok: true; data: T } | { ok: false; error: unknown }> {
+import { Result } from "@/shared/api";
+
+export async function safe<T>(fn: () => Promise<T>): Promise<Result<T>> {
   try {
     const data = await fn();
     return { ok: true, data };

@@ -41,7 +41,7 @@ export const useFetchTwinClassById = () => {
 
         return hydrateTwinClassFromMap(data.twinClass, data.relatedObjects);
       } catch (error) {
-        throw new Error(`Failed to find twin class with ID ${id}`);
+        throw error;
       } finally {
         setLoading(false);
       }

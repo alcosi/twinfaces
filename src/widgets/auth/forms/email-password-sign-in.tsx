@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -13,7 +13,8 @@ import {
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
-import { isUndefined } from "@/shared/libs";
+import { isApiErrorResponse } from "@/shared/api/utils";
+import { capitalize, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignInForm({
@@ -28,7 +29,6 @@ export function EmailPasswordSignInForm({
   const { alert } = useActionDialogs();
   const searchParams = useSearchParams();
   const [isAuthenticating, startAuthTransition] = useTransition();
-  const [authError, setAuthError] = useState<string | null>(null);
   const domainId = searchParams.get("domainId") ?? undefined;
 
   const signInForm = useForm<z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>>({
@@ -42,53 +42,68 @@ export function EmailPasswordSignInForm({
 
   function onForgotPasswordClick() {
     alert({
-      title: "Forgot your password?",
-      message:
-        "No worries! To change your password, please contact your administrator at contact@onshelves.eu — they'll be happy to help you reset it and provide a new one.",
+      title: "Nie pamiętasz hasła? / Forgot Password?",
+      body: ForgotPasswordAlertContent(),
     });
   }
 
   function onSignInSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>
   ) {
+    // setAuthError(null);
+    signInForm.setError("root", {});
+
+    const domainId = values.domainId;
     if (isUndefined(domainId)) {
-      throw new Error("Domain ID is required");
+      signInForm.setError("root", { message: "Domain ID is required" });
+      return;
     }
 
     const formData = new FormData();
-    formData.set("domainId", values.domainId);
+    formData.set("domainId", domainId);
     formData.set("username", values.username);
     formData.set("password", values.password);
 
     startAuthTransition(async () => {
-      try {
-        const { authData } = await loginAuthAction(null, formData);
-        const authToken = authData?.auth_token;
+      const result = await loginAuthAction(null, formData);
 
+      if (!result.ok && isApiErrorResponse(result.error)) {
+        const { statusDetails } = result.error;
+        return handleAuthError(
+          statusDetails ?? "Login failed. Please check your credentials"
+        );
+      }
+
+      if (result.ok) {
+        const authToken = result.data.authData?.auth_token;
         if (isUndefined(authToken)) {
-          throw new Error("Login failed. Please check your credentials");
+          return handleAuthError("Login failed: no auth token returned");
         }
 
-        const domainUser = await getAuthenticatedUser({ domainId, authToken });
+        const domainUser = await getAuthenticatedUser({
+          domainId,
+          authToken,
+        });
 
         if (isUndefined(domainUser)) {
-          throw new Error("Failed to fetch domain user data");
+          return handleAuthError("Failed to load domain user");
         }
 
         setAuthUser({
-          domainUser: domainUser,
-          authToken: authToken,
+          domainUser,
+          authToken,
           domainId,
         });
+
         router.push(`/profile`);
-      } catch (err) {
-        setAuthError(
-          err instanceof Error ? err.message : "An unexpected error occurred."
-        );
-        onError?.();
-        signInForm.resetField("password");
       }
     });
+  }
+
+  function handleAuthError(message: string) {
+    signInForm.setError("root", { message });
+    signInForm.resetField("password");
+    onError?.();
   }
 
   return (
@@ -107,7 +122,6 @@ export function EmailPasswordSignInForm({
         />
         <TextFormField
           control={signInForm.control}
-          type="email"
           name="username"
           label="Email"
           placeholder="Enter your email"
@@ -132,7 +146,11 @@ export function EmailPasswordSignInForm({
           Login
         </Button>
 
-        {authError && <p className="text-error text-center">{authError}</p>}
+        {signInForm.formState.errors.root?.message && (
+          <p className="text-error text-center">
+            {capitalize(signInForm.formState.errors.root.message)}
+          </p>
+        )}
 
         <div className="flex flex-col justify-between text-sm">
           <Button
@@ -158,5 +176,40 @@ export function EmailPasswordSignInForm({
         </div>
       </form>
     </FormProvider>
+  );
+}
+
+function ForgotPasswordAlertContent() {
+  const email = "contact@onshelves.eu";
+
+  return (
+    <div className="space-y-4 p-6 text-balance" id="forgot-password">
+      <p className="text-primary font-bold">Nie pamiętasz hasła?</p>
+      <p className="text-muted-foreground text-sm">
+        Nie martw się! Aby zmienić hasło, skontaktuj się z administratorem&nbsp;
+        <a
+          href={`mailto:${email}`}
+          className="hover:text-brand-600 text-info underline"
+          target="_blank"
+        >
+          {email}
+        </a>
+        &nbsp;— z przyjemnością pomoże Ci je zresetować i udostępni nowe.
+      </p>
+
+      <p className="text-primary font-bold">Forgot your password?</p>
+      <p className="text-muted-foreground text-sm">
+        No worries! To change your password, please contact your administrator
+        at&nbsp;
+        <a
+          href={`mailto:${email}`}
+          className="hover:text-brand-600 text-info underline"
+          target="_blank"
+        >
+          {email}
+        </a>
+        &nbsp;— they'll be happy to help you reset it and provide a new one.
+      </p>
+    </div>
   );
 }

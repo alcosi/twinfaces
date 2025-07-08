@@ -6,9 +6,10 @@
   "scripts": {
     "prepare": "husky",
     "dev": "next dev",
-    "inspect": "NODE_OPTIONS='--inspect' next dev",
+    "dev:inspect": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
+    "start:inspect": "NODE_OPTIONS='--inspect' next start",
     "lint": "eslint . --quiet",
     "format": "prettier --write .",
     "test:ts": "tsc --noEmit",

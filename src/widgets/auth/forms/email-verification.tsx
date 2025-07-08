@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -11,7 +11,8 @@ import {
   EMAIL_VERIFICATION_FORM_SCHEMA,
   verifyEmailAction,
 } from "@/entities/user/server";
-import { isPopulatedString, isUndefined } from "@/shared/libs";
+import { isApiErrorResponse } from "@/shared/api/utils";
+import { capitalize, isPopulatedString, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailVerificationForm({
@@ -26,7 +27,6 @@ export function EmailVerificationForm({
   onError?: () => void;
 }) {
   const [isVerifying, startVerifyTransition] = useTransition();
-  const [verificationError, setVerificationError] = useState<string>("");
   const searchParams = useSearchParams();
   const domainId = searchParams.get("domainId") ?? undefined;
 
@@ -43,30 +43,35 @@ export function EmailVerificationForm({
   function onConfirmSubmit(
     values: z.infer<typeof EMAIL_VERIFICATION_FORM_SCHEMA>
   ) {
+    emailVerificationForm.setError("root", {});
+
+    const domainId = values.domainId;
     if (isUndefined(domainId)) {
-      throw new Error("Domain ID is required");
+      emailVerificationForm.setError("root", {
+        message: "Domain ID is required",
+      });
+      return;
     }
 
     const formData = new FormData();
-    formData.set("domainId", values.domainId);
+    formData.set("domainId", domainId);
     formData.set("verificationToken", values.verificationToken);
 
     startVerifyTransition(async () => {
-      try {
-        const response = await verifyEmailAction(null, formData);
+      const result = await verifyEmailAction(null, formData);
 
-        if (response.status !== 0) {
-          throw new Error("Email verification has filed!");
-        }
+      if (!result.ok && isApiErrorResponse(result.error)) {
+        const { statusDetails } = result.error;
 
-        onSuccess?.();
-      } catch (err) {
-        setVerificationError(
-          err instanceof Error ? err.message : "An unexpected error occurred."
-        );
+        emailVerificationForm.setError("root", {
+          message: statusDetails || "Email verification failed",
+        });
         onError?.();
         emailVerificationForm.reset();
+        return;
       }
+
+      onSuccess?.();
     });
   }
 
@@ -111,8 +116,12 @@ export function EmailVerificationForm({
             Confirm
           </Button>
 
-          {isPopulatedString(verificationError) && (
-            <p className="text-error text-center">{verificationError}</p>
+          {isPopulatedString(
+            emailVerificationForm.formState.errors.root?.message
+          ) && (
+            <p className="text-error text-center">
+              {capitalize(emailVerificationForm.formState.errors.root.message)}
+            </p>
           )}
 
           <Button

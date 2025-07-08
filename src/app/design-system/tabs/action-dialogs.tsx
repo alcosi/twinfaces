@@ -13,12 +13,12 @@ export function ActionDialogsTab() {
   }
 
   return (
-    <div className="p-4 flex flex-col gap-4 max-w-sm">
+    <div className="flex max-w-sm flex-col gap-4 p-4">
       <Button
         onClick={() =>
           confirm({
             title: "Confirm Dialog",
-            message: "Are you sure you want to do this?",
+            body: "Are you sure you want to do this?",
           })
         }
       >
@@ -31,7 +31,7 @@ export function ActionDialogsTab() {
             onSuccess: onConfirmDialogSuccessAsync,
             onCancel: onConfirmDialogCancelAsync,
             title: "Confirm Dialog",
-            message: "Are you sure you want to do this?",
+            body: "Are you sure you want to do this?",
           })
         }
       >
@@ -44,11 +44,11 @@ export function ActionDialogsTab() {
             onSuccess: async () => {
               confirm({
                 title: "Nested Confirm Dialog",
-                message: "Are you sure?",
+                body: "Are you sure?",
               });
             },
             title: "Double Confirm",
-            message: "Are you sure you want to do this?",
+            body: "Are you sure you want to do this?",
           })
         }
       >

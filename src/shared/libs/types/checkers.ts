@@ -54,12 +54,16 @@ export function isArray<T>(arr: unknown): arr is T[] {
 // ──────────────────────────────────────────────────────────────────────────────
 //
 
+export function isString(str: unknown): str is string {
+  return typeof str === "string";
+}
+
 export function isEmptyString(str: unknown): str is string {
-  return typeof str === "string" && str.trim().length === 0;
+  return isString(str) && str.trim().length === 0;
 }
 
 export function isPopulatedString(str: unknown): str is string {
-  return typeof str === "string" && str.trim().length > 0;
+  return isString(str) && str.trim().length > 0;
 }
 
 //
@@ -93,6 +97,10 @@ export function isMultiElementArray<T>(arr: unknown): arr is [T, T, ...T[]] {
 export function isUnauthorizedError(error: unknown): boolean {
   // TODO: Replace with a custom `UnauthorizedError` class for more robust handling.
   return error instanceof Response && error.status === 401;
+}
+
+export function isErrorInstance(error: unknown): error is Error {
+  return error instanceof Error;
 }
 
 //

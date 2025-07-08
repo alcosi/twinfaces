@@ -10,7 +10,8 @@ import {
   EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA,
   signUpAuthAction,
 } from "@/entities/user/server";
-import { isUndefined } from "@/shared/libs";
+import { isApiErrorResponse } from "@/shared/api/utils";
+import { ERROR_CODE_MAP, capitalize, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignUpForm({
@@ -44,37 +45,55 @@ export function EmailPasswordSignUpForm({
   function onSignUpSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_UP_FORM_SCHEMA>
   ) {
+    setAuthError(null);
+
+    const domainId = values.domainId;
     if (isUndefined(domainId)) {
-      throw new Error("Domain ID is required");
+      setAuthError("Domain ID is required");
+      return;
     }
 
     const formData = new FormData();
-    formData.set("domainId", values.domainId);
+    formData.set("domainId", domainId);
     formData.set("firstName", values.firstName);
     formData.set("lastName", values.lastName);
     formData.set("email", values.email);
     formData.set("password", values.password);
 
     startAuthTransition(async () => {
-      try {
-        const response = await signUpAuthAction(null, formData);
+      const result = await signUpAuthAction(null, formData);
 
-        if (response.status !== 0) {
-          throw new Error("Registration failed");
+      // NOTE: Handle signup errors:
+      if (!result.ok && isApiErrorResponse(result.error)) {
+        const { status, statusDetails } = result.error;
+
+        if (status === ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED) {
+          singUpForm.setError("email", {
+            type: "manual",
+            message: capitalize(statusDetails || "Registration failed"),
+          });
         }
 
-        onSuccess?.({
-          email: values.email,
-          password: values.password,
-        });
-      } catch (err) {
-        setAuthError(
-          err instanceof Error ? err.message : "An unexpected error occurred."
-        );
         onError?.();
-        singUpForm.resetField("password");
-        singUpForm.resetField("confirmPassword");
+
+        if (status !== ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED) {
+          singUpForm.resetField("password");
+          singUpForm.resetField("confirmPassword");
+        }
+
+        if (status !== 0) {
+          setAuthError("Registration failed");
+          onError?.();
+          singUpForm.resetField("password");
+          singUpForm.resetField("confirmPassword");
+          return;
+        }
       }
+
+      onSuccess?.({
+        email: values.email,
+        password: values.password,
+      });
     });
   }
 
@@ -87,7 +106,6 @@ export function EmailPasswordSignUpForm({
         <TextFormField
           control={singUpForm.control}
           name="email"
-          type="email"
           label="Email"
           placeholder="Enter your email"
           required
@@ -136,7 +154,9 @@ export function EmailPasswordSignUpForm({
           Continue
         </Button>
 
-        {authError && <p className="text-error text-center">{authError}</p>}
+        {authError && (
+          <p className="text-error text-center">{capitalize(authError)}</p>
+        )}
 
         <span className="text-muted-foreground text-center text-sm">
           Already have an account?

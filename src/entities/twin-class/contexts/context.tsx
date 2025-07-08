@@ -2,7 +2,7 @@ import { PropsWithChildren, createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { TwinClass, useFetchTwinClassById } from "@/entities/twin-class";
-import { isUndefined } from "@/shared/libs";
+import { isErrorInstance, isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 interface TwinClassContextProps {
@@ -50,8 +50,8 @@ export function TwinClassContextProvider({
       });
 
       setTwinClass(response);
-    } catch {
-      toast.error("Failed to fetch twin class");
+    } catch (e) {
+      toast.error(isErrorInstance(e) ? e.message : String(e));
     }
   }
 

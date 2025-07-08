@@ -1,5 +1,6 @@
 import { FieldValues } from "react-hook-form";
 
+import { isTruthy } from "@/shared/libs";
 import { FormField, InputProps } from "@/shared/ui";
 
 import { FormFieldProps, TextFormFieldProps } from "../types";
@@ -16,12 +17,15 @@ export function TextFormField<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => {
+      render={({ field, fieldState, formState }) => {
         return (
           <TextFormItem
             autoFocus={props.autoFocus}
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
+            invalid={
+              isTruthy(fieldState.error) || isTruthy(formState.errors.root)
+            }
             inputId={inputId}
             inForm={true}
             {...props}

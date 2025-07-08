@@ -7,6 +7,7 @@ import { getAuthenticatedUser, loginAuthAction } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { FlipCard } from "@/features/ui/flip-card";
+import { isApiErrorResponse } from "@/shared/api/utils";
 import { ProductFlavorConfigContext } from "@/shared/config";
 import { cn, isUndefined, sleep } from "@/shared/libs";
 import { StepsProgressBar } from "@/shared/ui";
@@ -49,29 +50,35 @@ export function EmailPasswordAuthWidget() {
     userCredentials.set("username", credentials.email!);
     userCredentials.set("password", credentials.password!);
 
-    const { authData } = await loginAuthAction(null, userCredentials);
-    const authToken = authData?.auth_token;
+    const result = await loginAuthAction(null, userCredentials);
 
-    if (isUndefined(authToken)) {
-      throw new Error("Login failed: no auth token returned");
+    if (!result.ok && isApiErrorResponse(result)) {
+      throw new Error(`Login failed: ${result.statusDetails}`);
     }
 
-    const domainUser = await getAuthenticatedUser({
-      domainId,
-      authToken,
-    });
+    if (result.ok) {
+      const authToken = result.data.authData?.auth_token;
+      if (isUndefined(authToken)) {
+        throw new Error("Login failed: no auth token returned");
+      }
 
-    if (isUndefined(domainUser)) {
-      throw new Error("Failed to load domain user");
+      const domainUser = await getAuthenticatedUser({
+        domainId,
+        authToken,
+      });
+
+      if (isUndefined(domainUser)) {
+        throw new Error("Failed to load domain user");
+      }
+
+      setAuthUser({
+        domainUser: domainUser,
+        authToken: authToken,
+        domainId,
+      });
+
+      router.push("/profile");
     }
-
-    setAuthUser({
-      domainUser: domainUser,
-      authToken: authToken,
-      domainId,
-    });
-
-    router.push("/profile");
   }
 
   function handleSignUp(credentials: { email?: string; password?: string }) {

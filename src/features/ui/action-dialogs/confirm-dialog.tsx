@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
+import { isPopulatedString } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -14,7 +15,7 @@ import {
 
 type ConfirmDialogProps = {
   title: string;
-  message: string;
+  body: ReactNode;
   confirmButtonText: string;
   cancelButtonText: string;
   onConfirm: () => Promise<void>;
@@ -23,7 +24,7 @@ type ConfirmDialogProps = {
 
 export function ConfirmDialog({
   title,
-  message,
+  body,
   confirmButtonText,
   cancelButtonText,
   onConfirm,
@@ -70,9 +71,13 @@ export function ConfirmDialog({
           </DialogHeader>
         )}
 
-        <DialogDescription className="p-6 text-balance">
-          {message}
-        </DialogDescription>
+        {isPopulatedString(body) ? (
+          <DialogDescription className="p-6 text-balance">
+            {body}
+          </DialogDescription>
+        ) : (
+          body
+        )}
 
         <DialogFooter className="p-4 sm:justify-end">
           <Button
