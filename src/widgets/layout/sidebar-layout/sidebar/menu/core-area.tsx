@@ -11,7 +11,7 @@ import {
   useSidebar,
 } from "@/shared/ui";
 
-import { SIDEBAR_GROUPS } from "../constants";
+import { useSidebarGroups } from "../constants";
 import { CollapsedMenu } from "./collapsed-menu";
 import { isItemActive } from "./helpers";
 import { MenuItem } from "./menu-item";
@@ -20,11 +20,12 @@ import { Group } from "./types";
 export function CoreAreaSidebarMenu() {
   const { open } = useSidebar();
   const pathname = usePathname() || "";
+  const SIDEBAR_GROUPS = useSidebarGroups();
 
   return (
     <SidebarMenu className={cn(!open && "p-2")}>
       {open ? (
-        <AccordionMenu pathname={pathname} />
+        <AccordionMenu pathname={pathname} sidebarGroups={SIDEBAR_GROUPS} />
       ) : (
         <CollapsedMenu
           items={Object.values(SIDEBAR_GROUPS).flatMap((group) =>
@@ -54,11 +55,17 @@ export function CoreAreaSidebarMenu() {
   );
 }
 
-function AccordionMenu({ pathname }: { pathname: string }) {
+function AccordionMenu({
+  pathname,
+  sidebarGroups,
+}: {
+  pathname: string;
+  sidebarGroups: Record<string, Group>;
+}) {
   const activeGroup =
-    Object.values(SIDEBAR_GROUPS).find((group) =>
+    Object.values(sidebarGroups).find((group) =>
       group.items.some((item) => isItemActive(item.url, pathname))
-    ) ?? SIDEBAR_GROUPS.class;
+    ) ?? sidebarGroups.class;
 
   return (
     <Accordion
@@ -67,7 +74,7 @@ function AccordionMenu({ pathname }: { pathname: string }) {
       className="w-full p-2"
       defaultValue={activeGroup?.title.toLowerCase()}
     >
-      {Object.values(SIDEBAR_GROUPS).map((group) => (
+      {Object.values(sidebarGroups).map((group) => (
         <AccordionGroup key={group.title} {...group} />
       ))}
     </Accordion>
@@ -80,7 +87,7 @@ function AccordionGroup({ title, items }: Group) {
       <AccordionTrigger className="py-0 text-sm hover:no-underline">
         <SidebarGroupLabel>{title}</SidebarGroupLabel>
       </AccordionTrigger>
-      <AccordionContent className="ml-2 list-none border-l border-border py-0 pl-2">
+      <AccordionContent className="border-border ml-2 list-none border-l py-0 pl-2">
         {items.map((item) => (
           <MenuItem
             key={item.url}

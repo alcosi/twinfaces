@@ -4,6 +4,8 @@ import { House } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
+import { LanguageToggle } from "@/components/lang-toggle";
+
 import { ThemeToggle } from "@/features/ui/theme-toggle";
 import { cn, useRouteCrumbs } from "@/shared/libs";
 import {
@@ -49,7 +51,7 @@ export function SidebarLayoutHeader() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-
+      {/* <LanguageToggle/> */}
       <ThemeToggle />
     </header>
   );
