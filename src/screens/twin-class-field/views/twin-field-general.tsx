@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -9,6 +9,7 @@ import { FeaturerTypes, useFeaturerSelectAdapter } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   TwinClassFieldUpdateRq,
+  TwinClassFieldV2_DETAILED,
   useFieldUpdate,
 } from "@/entities/twin-class-field";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
@@ -18,13 +19,19 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { PermissionResourceLink } from "@/features/permission/ui";
-import { TwinFieldContext } from "@/features/twin-class-field";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
-export function TwinFieldGeneral() {
-  const { twinField, twinFieldId, refresh } = useContext(TwinFieldContext);
+export function TwinFieldGeneral({
+  twinFieldId,
+  twinField,
+  refresh,
+}: {
+  twinFieldId: string;
+  twinField: TwinClassFieldV2_DETAILED;
+  refresh: () => Promise<void>;
+}) {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);

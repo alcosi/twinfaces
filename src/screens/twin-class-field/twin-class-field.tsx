@@ -1,24 +1,32 @@
 "use client";
 
-import { useContext } from "react";
-
-import { TwinFieldContext } from "@/features/twin-class-field";
+import { TwinClassFieldV2_DETAILED } from "@/entities/twin-class-field";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { TwinFieldGeneral } from "./views";
 
-export function TwinClassFieldScreen() {
-  const { twinField } = useContext(TwinFieldContext);
-
-  const tabs: Tab[] = twinField
-    ? [
-        {
-          key: "general",
-          label: "General",
-          content: <TwinFieldGeneral />,
-        },
-      ]
-    : [];
+export function TwinClassFieldScreen({
+  twinFieldId,
+  twinField,
+  refresh,
+}: {
+  twinFieldId: string;
+  twinField: TwinClassFieldV2_DETAILED;
+  refresh: () => Promise<void>;
+}) {
+  const tabs: Tab[] = [
+    {
+      key: "general",
+      label: "General",
+      content: (
+        <TwinFieldGeneral
+          twinFieldId={twinFieldId}
+          twinField={twinField}
+          refresh={refresh}
+        />
+      ),
+    },
+  ];
 
   return <TabsLayout tabs={tabs} />;
 }

@@ -24,6 +24,7 @@ import {
   mapPatternToInputType,
 } from "@/shared/libs";
 import { AnchorWithCopy, MaskedValue } from "@/shared/ui";
+import { Switch } from "@/shared/ui/switch";
 
 import { DatalistOptionResourceLink } from "../../../../features/datalist-option/ui";
 import { MarkdownPreview } from "../../../../features/markdown";
@@ -82,7 +83,12 @@ export function TwinFieldEditor({
       return staticFieldRenderPreview(hydratedTwin, mode);
     }
 
-    return renderDynamicFieldPreview(field, relatedObjects, mode);
+    return renderDynamicFieldPreview(
+      field,
+      relatedObjects,
+      mode,
+      handleOnSubmit
+    );
   }
 
   async function handleOnSubmit(value: string) {
@@ -116,6 +122,11 @@ export function TwinFieldEditor({
     className: cn(className, staticFieldClassName),
   };
 
+  const shouldRenderPreview =
+    !editable ||
+    !field.descriptor ||
+    field.descriptor.fieldType === "booleanV1";
+
   return (
     <div>
       {label &&
@@ -125,11 +136,7 @@ export function TwinFieldEditor({
           label
         ))}
 
-      {editable && field.descriptor ? (
-        <InPlaceEdit {...editProps} />
-      ) : (
-        renderPreview()
-      )}
+      {shouldRenderPreview ? renderPreview() : <InPlaceEdit {...editProps} />}
     </div>
   );
 }
@@ -137,7 +144,8 @@ export function TwinFieldEditor({
 function renderDynamicFieldPreview(
   field: FieldProps,
   relatedObjects?: RelatedObjects,
-  mode?: "admin"
+  mode?: "admin",
+  handleOnSubmit?: (value: string) => void
 ): ReactNode {
   const fieldType = field.descriptor?.fieldType;
   if (fieldType === "urlV1") {
@@ -213,6 +221,17 @@ function renderDynamicFieldPreview(
           disabled={mode !== "admin"}
         />
       )
+    );
+  }
+
+  if (fieldType === "booleanV1") {
+    const checked = field.value === "true";
+
+    return (
+      <Switch
+        checked={checked}
+        onCheckedChange={(val) => handleOnSubmit && handleOnSubmit(String(val))}
+      />
     );
   }
 
