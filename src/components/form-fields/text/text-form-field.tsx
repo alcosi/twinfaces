@@ -24,7 +24,7 @@ export function TextFormField<T extends FieldValues>({
             autoFocus={props.autoFocus}
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
-            hasError={isTruthy(fieldState.error || error)}
+            invalid={isTruthy(fieldState.error || error)}
             inputId={inputId}
             inForm={true}
             {...props}
