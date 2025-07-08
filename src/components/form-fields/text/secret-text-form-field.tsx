@@ -28,7 +28,6 @@ export function SecretTextFormField<T extends FieldValues>({
   name,
   control,
   idPrefix,
-  error,
   showStrengthIndicator = false,
   ...props
 }: SecretTextFormFieldProps<T>) {
@@ -49,13 +48,15 @@ export function SecretTextFormField<T extends FieldValues>({
       <FormField
         control={control}
         name={name}
-        render={({ field, fieldState }) => (
+        render={({ field, fieldState, formState }) => (
           <SecretTextFormItem
             type="password"
             autoFocus={props.autoFocus}
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
-            invalid={isTruthy(fieldState.error || error)}
+            invalid={
+              isTruthy(fieldState.error) || isTruthy(formState.errors.root)
+            }
             inputId={inputId}
             inForm={true}
             {...props}

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -29,7 +29,6 @@ export function EmailPasswordSignInForm({
   const { alert } = useActionDialogs();
   const searchParams = useSearchParams();
   const [isAuthenticating, startAuthTransition] = useTransition();
-  const [authError, setAuthError] = useState<string | null>(null);
   const domainId = searchParams.get("domainId") ?? undefined;
 
   const signInForm = useForm<z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>>({
@@ -51,11 +50,12 @@ export function EmailPasswordSignInForm({
   function onSignInSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>
   ) {
-    setAuthError(null);
+    // setAuthError(null);
+    signInForm.setError("root", {});
 
     const domainId = values.domainId;
     if (isUndefined(domainId)) {
-      setAuthError("Domain ID is required");
+      signInForm.setError("root", { message: "Domain ID is required" });
       return;
     }
 
@@ -101,9 +101,9 @@ export function EmailPasswordSignInForm({
   }
 
   function handleAuthError(message: string) {
-    setAuthError(message);
-    onError?.();
+    signInForm.setError("root", { message });
     signInForm.resetField("password");
+    onError?.();
   }
 
   return (
@@ -124,7 +124,6 @@ export function EmailPasswordSignInForm({
           control={signInForm.control}
           name="username"
           label="Email"
-          error={authError}
           placeholder="Enter your email"
           required
         />
@@ -133,7 +132,6 @@ export function EmailPasswordSignInForm({
           type="password"
           name="password"
           label="Password"
-          error={authError}
           placeholder="Enter your password"
           required
         />
@@ -148,8 +146,10 @@ export function EmailPasswordSignInForm({
           Login
         </Button>
 
-        {authError && (
-          <p className="text-error text-center">{capitalize(authError)}</p>
+        {signInForm.formState.errors.root?.message && (
+          <p className="text-error text-center">
+            {capitalize(signInForm.formState.errors.root.message)}
+          </p>
         )}
 
         <div className="flex flex-col justify-between text-sm">

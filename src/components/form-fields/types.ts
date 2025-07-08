@@ -19,5 +19,4 @@ export interface FormFieldProps<T extends FieldValues>
 
 export interface TextFormFieldProps {
   suggestions?: string[];
-  error?: string | null;
 }
