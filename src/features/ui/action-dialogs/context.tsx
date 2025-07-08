@@ -19,7 +19,7 @@ export type ActionDialogProps = {
   id: string;
   type: "alert" | "confirm";
   title: string;
-  message?: ReactNode;
+  body?: ReactNode;
   successButtonText?: string;
   cancelButtonText?: string;
   onSuccess?: () => Promise<void>;
@@ -77,7 +77,7 @@ export function ActionDialogsProvider({ children }: { children: ReactNode }) {
             {dialog.type === "alert" && (
               <AlertDialog
                 title={dialog.title}
-                message={dialog.message}
+                body={dialog.body}
                 confirmButtonText={dialog.successButtonText ?? "OK"}
                 onConfirm={dialog.onSuccess}
               />
@@ -86,7 +86,7 @@ export function ActionDialogsProvider({ children }: { children: ReactNode }) {
             {dialog.type === "confirm" && (
               <ConfirmDialog
                 title={dialog.title}
-                message={dialog.message}
+                body={dialog.body}
                 confirmButtonText={dialog.successButtonText}
                 cancelButtonText={dialog.cancelButtonText}
                 onConfirm={dialog.onSuccess}

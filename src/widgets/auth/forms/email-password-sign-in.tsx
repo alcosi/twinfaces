@@ -7,7 +7,6 @@ import z from "zod";
 import { SecretTextFormField, TextFormField } from "@/components/form-fields";
 
 import {
-  AuthLoginRs,
   EMAIL_PASSWORD_SIGN_IN_SCHEMA,
   getAuthenticatedUser,
   loginAuthAction,
@@ -15,12 +14,8 @@ import {
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { isApiErrorResponse } from "@/shared/api/utils";
-import {
-  ERROR_RESPONSE_MESSAGE_VALUE,
-  capitalize,
-  isUndefined,
-} from "@/shared/libs";
-import { Button, DialogDescription } from "@/shared/ui";
+import { capitalize, isUndefined } from "@/shared/libs";
+import { Button } from "@/shared/ui";
 
 export function EmailPasswordSignInForm({
   toggleMode,
@@ -48,8 +43,8 @@ export function EmailPasswordSignInForm({
 
   function onForgotPasswordClick() {
     alert({
-      title: "Forgot Password",
-      message: ForgotPasswordAlertContent(),
+      title: "Nie pamiętasz hasła? / Forgot Password?",
+      body: ForgotPasswordAlertContent(),
     });
   }
 
@@ -72,34 +67,20 @@ export function EmailPasswordSignInForm({
     startAuthTransition(async () => {
       const result = await loginAuthAction(null, formData);
 
-      if (
-        isApiErrorResponse(result) &&
-        result.msg === ERROR_RESPONSE_MESSAGE_VALUE
-      ) {
-        setAuthError(
-          result.statusDetails || "Login failed. Please check your credentials"
-        );
-        onError?.();
-        signInForm.resetField("password");
-        return;
+      const authToken = result.authData?.auth_token;
+      if (isApiErrorResponse(result) || isUndefined(authToken)) {
+        const msg =
+          result.statusDetails ?? "Login failed. Please check your credentials";
+
+        return handleAuthError(msg);
       }
 
-      const authToken = (result as AuthLoginRs)?.authData?.auth_token;
-
-      if (isUndefined(authToken)) {
-        setAuthError("Login failed. Please check your credentials");
-        onError?.();
-        signInForm.resetField("password");
-        return;
-      }
-
-      const domainUser = await getAuthenticatedUser({ domainId, authToken });
-
+      const domainUser = await getAuthenticatedUser({
+        domainId,
+        authToken,
+      });
       if (isUndefined(domainUser)) {
-        setAuthError("Failed to fetch domain user data");
-        onError?.();
-        signInForm.resetField("password");
-        return;
+        return handleAuthError("Failed to fetch domain user data");
       }
 
       setAuthUser({
@@ -110,6 +91,12 @@ export function EmailPasswordSignInForm({
 
       router.push(`/profile`);
     });
+  }
+
+  function handleAuthError(message: string) {
+    setAuthError(message);
+    onError?.();
+    signInForm.resetField("password");
   }
 
   return (
@@ -188,40 +175,34 @@ export function EmailPasswordSignInForm({
 function ForgotPasswordAlertContent() {
   const email = "contact@onshelves.eu";
 
-  const blocks = [
-    {
-      title: "Nie pamiętasz hasła?",
-      text: "Nie martw się! Aby zmienić hasło, skontaktuj się z administratorem",
-      afterLink: "— z przyjemnością pomoże Ci je zresetować i udostępni nowe.",
-    },
-    {
-      title: "Forgot your password?",
-      text: "No worries! To change your password, please contact your administrator at",
-      afterLink:
-        "— they'll be happy to help you reset it and provide a new one.",
-    },
-  ];
-
   return (
     <div className="space-y-4 p-6 text-balance" id="forgot-password">
-      {blocks.map(({ title, text, afterLink }, i) => (
-        <div key={i}>
-          <DialogDescription className="font-bold text-[var(--color-primary)]">
-            {title}
-          </DialogDescription>
-          <DialogDescription className="text-muted-foreground text-sm">
-            {text}&nbsp;
-            <a
-              href={`mailto:${email}`}
-              className="text-[var(--color-info)] underline hover:text-[var(--color-brand-600)]"
-              target="_blank"
-            >
-              {email}
-            </a>
-            &nbsp;{afterLink}
-          </DialogDescription>
-        </div>
-      ))}
+      <p className="text-primary font-bold">Nie pamiętasz hasła?</p>
+      <p className="text-muted-foreground text-sm">
+        Nie martw się! Aby zmienić hasło, skontaktuj się z administratorem&nbsp;
+        <a
+          href={`mailto:${email}`}
+          className="hover:text-brand-600 text-info underline"
+          target="_blank"
+        >
+          {email}
+        </a>
+        &nbsp;— z przyjemnością pomoże Ci je zresetować i udostępni nowe.
+      </p>
+
+      <p className="text-primary font-bold">Forgot your password?</p>
+      <p className="text-muted-foreground text-sm">
+        No worries! To change your password, please contact your administrator
+        at&nbsp;
+        <a
+          href={`mailto:${email}`}
+          className="hover:text-brand-600 text-info underline"
+          target="_blank"
+        >
+          {email}
+        </a>
+        &nbsp;— they'll be happy to help you reset it and provide a new one.
+      </p>
     </div>
   );
 }

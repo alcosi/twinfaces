@@ -2,6 +2,7 @@
 
 import { ReactNode, useState } from "react";
 
+import { isPopulatedString } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -14,14 +15,14 @@ import {
 
 type Props = {
   title: string;
-  message?: ReactNode;
+  body?: ReactNode;
   confirmButtonText?: string;
   onConfirm?: () => void;
 };
 
 export function AlertDialog({
   title,
-  message,
+  body,
   confirmButtonText = "OK",
   onConfirm,
 }: Partial<Props>) {
@@ -41,12 +42,12 @@ export function AlertDialog({
           </DialogHeader>
         )}
 
-        {message && typeof message === "string" ? (
+        {isPopulatedString(body) ? (
           <DialogDescription className="p-6 text-balance">
-            {message}
+            {body}
           </DialogDescription>
         ) : (
-          message
+          body
         )}
 
         <DialogFooter className="p-4 sm:justify-end">

@@ -1,5 +1,5 @@
-//Error code mapping generated according to backend code (need to be updated manually if changes are made in backend)
-//https://github.com/alcosi/twins/blob/193ae2ee05f85fbed3c50f029d0276112ef93723/core/src/main/java/org/twins/core/exception/ErrorCodeTwins.java#L11
+// NOTE: Error code mapping generated according to backend code (need to be updated manually if changes are made in backend)
+// https://github.com/alcosi/twins/blob/193ae2ee05f85fbed3c50f029d0276112ef93723/core/src/main/java/org/twins/core/exception/ErrorCodeTwins.java#L11
 export const ERROR_CODE_MAP: Record<string, number> = {
   UUID_UNKNOWN: 10000,
   UUID_ALREADY_EXIST: 10001,

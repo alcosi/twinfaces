@@ -243,7 +243,7 @@ export function TwinClassGeneral() {
 
     confirm({
       title: `${status} Abstract Mode`,
-      message: `Are you sure you want to ${action} abstract mode for this class?`,
+      body: `Are you sure you want to ${action} abstract mode for this class?`,
       onSuccess: () => {
         return update({
           abstractClass: !twinClass.abstractClass,

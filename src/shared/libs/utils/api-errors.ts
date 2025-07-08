@@ -1,6 +1,8 @@
 import { ApiErrorResponse } from "@/shared/api";
 import { isApiErrorResponse } from "@/shared/api/utils";
 
+import { isErrorInstance } from "../types";
+
 /**
  * Prints an error to the console and returns the error if: `error instanceof Error && isApiErrorResponse(error.cause)`.
  *
@@ -15,7 +17,7 @@ export function printAndReturnApiErrorResponse({
   error: unknown;
   requestName: string;
 }): ApiErrorResponse | undefined {
-  if (error instanceof Error && isApiErrorResponse(error.cause)) {
+  if (isErrorInstance(error) && isApiErrorResponse(error.cause)) {
     console.error(`
          ${requestName} request failed:
          ${error};
@@ -34,5 +36,19 @@ export function printAndReturnApiErrorResponse({
       ${error}
     `);
 
-  return;
+  return undefined;
+}
+
+export function unwrapErrorInfo(error: unknown): ApiErrorResponse | string {
+  console.log("foobar unwrapOrRethrow", error);
+  if (!isErrorInstance(error)) {
+    return `Unrecognized error: ${JSON.stringify(error)}`;
+  }
+
+  if (isApiErrorResponse(error.cause)) {
+    console.log("foobar unwrapOrRethrow#1", error);
+    return error.cause;
+  }
+
+  return error.message;
 }

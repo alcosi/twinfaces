@@ -158,36 +158,22 @@ export async function loginAuthAction(
   _: unknown,
   formData: FormData
 ): Promise<AuthLoginRs> {
-  try {
-    const { domainId, username, password } =
-      EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
-        domainId: formData.get("domainId"),
-        username: formData.get("username"),
-        password: formData.get("password"),
-      });
+  const { domainId, username, password } = EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
+    domainId: formData.get("domainId"),
+    username: formData.get("username"),
+    password: formData.get("password"),
+  });
 
-    const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
-      body: { username, password },
-      params: { header: { DomainId: domainId, Channel: "WEB" } },
-    });
+  const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
+    body: { username, password },
+    params: { header: { DomainId: domainId, Channel: "WEB" } },
+  });
 
-    if (error) {
-      return error;
-    }
-
-    return data;
-  } catch (error) {
-    const response = printAndReturnApiErrorResponse({
-      error,
-      requestName: "Login",
-    });
-
-    if (isApiErrorResponse(response)) {
-      return response;
-    } else {
-      throw error;
-    }
+  if (error) {
+    return error;
   }
+
+  return data;
 }
 
 export async function signUpAuthAction(
