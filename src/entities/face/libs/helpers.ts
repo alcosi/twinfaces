@@ -8,7 +8,7 @@ import { isFalsy, isUndefined } from "@/shared/libs";
 export async function getDomainFromHeaders(): Promise<
   RemoteConfig | undefined
 > {
-  const domainConfig = headers().get("X-Domain-Config");
+  const domainConfig = (await headers()).get("X-Domain-Config");
 
   if (isFalsy(domainConfig)) return undefined;
 
