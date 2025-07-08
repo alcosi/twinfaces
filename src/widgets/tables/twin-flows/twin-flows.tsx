@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -17,7 +17,6 @@ import {
   useTwinFlowSearchV1,
 } from "@/entities/twin-flow";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
@@ -33,6 +32,7 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
   CrudDataTable,
+  DEFAULT_PAGE_SIZES,
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
@@ -162,7 +162,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
     }
   }
 
-  const handleOnCreateSubmit = async (
+  const handleCreateSubmit = async (
     formValues: z.infer<typeof TWIN_FLOW_SCHEMA>
   ) => {
     const { name, description, initialStatus } = formValues;
@@ -183,6 +183,8 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
     toast.success("Twin flow created successfully!");
   };
 
+  const pageSizes = useMemo(() => DEFAULT_PAGE_SIZES, []);
+
   return (
     <CrudDataTable
       ref={tableRef}
@@ -197,7 +199,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchTwinflows}
-      pageSizes={[10, 20, 50]}
+      pageSizes={pageSizes}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/twinflows/${row.id}`)
       }
@@ -214,7 +216,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
         columnsMap.createdAt,
       ]}
       dialogForm={dialogForm}
-      onCreateSubmit={handleOnCreateSubmit}
+      onCreateSubmit={handleCreateSubmit}
       renderFormFields={() => (
         <TwinClassTwinFlowFormFields control={dialogForm.control} />
       )}

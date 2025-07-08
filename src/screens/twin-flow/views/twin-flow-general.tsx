@@ -165,8 +165,9 @@ export function TwinFlowGeneral() {
           <TableRow>
             <TableCell>Created at</TableCell>
             <TableCell>
-              {isPopulatedString(twinFlow.createdAt) &&
-                formatIntlDate(twinFlow.createdAt, "datetime-local")}
+              {isPopulatedString(twinFlow.createdAt)
+                ? formatIntlDate(twinFlow.createdAt, "datetime-local")
+                : null}
             </TableCell>
           </TableRow>
         </TableBody>

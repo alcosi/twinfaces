@@ -5,3 +5,4 @@ export type {
   DataTableRow,
 } from "./data-table";
 export * from "./types";
+export * from "./constans";
