@@ -1,20 +1,25 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, use } from "react";
 
 import { TwinFlowTransitionContextProvider } from "@/features/twin-flow-transition";
 
 type TwinFlowTransitionLayoutProps = {
-  params: {
+  params: Promise<{
     transitionId: string;
-  };
+  }>;
   children: ReactNode;
 };
 
-export default function TwinFlowTransitionLayout({
-  params: { transitionId },
-  children,
-}: TwinFlowTransitionLayoutProps) {
+export default function TwinFlowTransitionLayout(
+  props: TwinFlowTransitionLayoutProps
+) {
+  const params = use(props.params);
+
+  const { transitionId } = params;
+
+  const { children } = props;
+
   return (
     <TwinFlowTransitionContextProvider transitionId={transitionId}>
       {children}

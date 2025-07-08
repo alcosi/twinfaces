@@ -2,8 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useContext, useEffect, useTransition } from "react";
-import { useFormState } from "react-dom";
+import { useActionState, useContext, useEffect, useTransition } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -23,7 +22,7 @@ export function StubAuthForm() {
   const searchParams = useSearchParams();
   const { setAuthUser, logout } = useAuthUser();
   const config = useContext(ProductFlavorConfigContext);
-  const [authUser, formAction] = useFormState(stubLoginFormAction, null);
+  const [authUser, formAction] = useActionState(stubLoginFormAction, null);
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof STUB_AUTH_FORM_SCHEMA>>({

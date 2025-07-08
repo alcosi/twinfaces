@@ -1,20 +1,25 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, use } from "react";
 
 import { FactoryPipelineContextProvider } from "@/features/factory-pipeline";
 
 type FactoryPipelineLayoutProps = {
-  params: {
+  params: Promise<{
     pipelineId: string;
-  };
+  }>;
   children: ReactNode;
 };
 
-export default function FactoryPipelineLayout({
-  params: { pipelineId },
-  children,
-}: FactoryPipelineLayoutProps) {
+export default function FactoryPipelineLayout(
+  props: FactoryPipelineLayoutProps
+) {
+  const params = use(props.params);
+
+  const { pipelineId } = params;
+
+  const { children } = props;
+
   return (
     <FactoryPipelineContextProvider pipelineId={pipelineId}>
       {children}

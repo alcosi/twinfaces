@@ -8,13 +8,14 @@ import { StatusAlert } from "@/widgets/faces/components";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
 type Props = {
-  params: {
+  params: Promise<{
     pageKey: string;
     twinId: string;
-  };
+  }>;
 };
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const header = await getAuthHeaders();
   const query = {
     showTwinMode: "DETAILED",

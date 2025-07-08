@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twin-flow";
@@ -11,14 +11,16 @@ import { TwinFlowTransitionsTable } from "@/widgets/tables";
 import { TwinflowGeneral } from "./twinflow-general";
 
 type TwinflowPageProps = {
-  params: {
+  params: Promise<{
     twinflowId: string;
-  };
+  }>;
 };
 
-export default function TwinflowPage({
-  params: { twinflowId },
-}: TwinflowPageProps) {
+export default function TwinflowPage(props: TwinflowPageProps) {
+  const params = use(props.params);
+
+  const { twinflowId } = params;
+
   const [twinflow, setTwinflow] = useState<TwinFlow | undefined>(undefined);
   const { fetchTwinFlowById, loading } = useTwinFlowFetchByIdV1();
 

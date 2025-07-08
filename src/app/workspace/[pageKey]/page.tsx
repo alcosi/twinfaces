@@ -6,12 +6,16 @@ import { isUndefined, safe } from "@/shared/libs";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
 type Props = {
-  params: {
+  params: Promise<{
     pageKey: string;
-  };
+  }>;
 };
 
-export default async function Page({ params: { pageKey } }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
+
+  const { pageKey } = params;
+
   const pageFaceId = await resolvePageFaceId(pageKey);
 
   if (isUndefined(pageFaceId)) return notFound();

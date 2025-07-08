@@ -1,19 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
+
 import { PermissionSchemaContextProvider } from "@/features/permission-schema";
 
 interface PermissionSchemaLayoutProps {
-  params: {
+  params: Promise<{
     schemaId: string;
-  };
+  }>;
   children: React.ReactNode;
 }
 
-export default function DatalistLayout({
-  params: { schemaId },
-  children,
-}: PermissionSchemaLayoutProps) {
+export default function DatalistLayout(props: PermissionSchemaLayoutProps) {
+  const params = use(props.params);
+
+  const { schemaId } = params;
+
+  const { children } = props;
+
   return (
     <PermissionSchemaContextProvider schemaId={schemaId}>
       {children}
