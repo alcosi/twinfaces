@@ -28,7 +28,7 @@ export function CheckboxFormItem({
   }
 
   return (
-    <div className="flex flex-row items-start space-x-3 space-y-0">
+    <div className="flex flex-row items-start space-y-0 space-x-3">
       <Checkbox
         checked={
           hasIndeterminate && fieldValue === undefined

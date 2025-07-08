@@ -52,7 +52,7 @@ export function SidebarAreaSwitcher({
         </>
       ) : (
         <SlideView
-          className="w-10 h-7"
+          className="h-7 w-10"
           activeIndex={area === PlatformArea.workspace ? 0 : 1}
         >
           <TabsTrigger

@@ -5,7 +5,7 @@ import { Caption } from "@/shared/ui";
 
 export function VideoSlide({ src, title }: { src: string; title?: string }) {
   return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-secondary">
+    <div className="bg-secondary relative aspect-square w-full overflow-hidden rounded-lg">
       <video
         controls
         className="h-full w-full rounded-lg object-cover"

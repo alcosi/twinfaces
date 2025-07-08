@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, useState } from "react";
+
 import { QuickViewContext } from "./context";
 
 export const QuickViewProvider = ({ children }: { children: ReactNode }) => {
@@ -22,14 +23,14 @@ export const QuickViewProvider = ({ children }: { children: ReactNode }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 bg-foreground/80 dark:bg-foreground/20 flex items-center justify-center z-40"
+            className="bg-foreground/80 dark:bg-foreground/20 fixed inset-0 z-40 flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeQuickView}
           >
             <motion.div
-              className="bg-background p-6 rounded-lg shadow-lg relative w-[85%] h-[90%]"
+              className="bg-background relative h-[90%] w-[85%] rounded-lg p-6 shadow-lg"
               initial={{ y: 100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 100, opacity: 0 }}

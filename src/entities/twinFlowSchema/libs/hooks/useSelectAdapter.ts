@@ -1,5 +1,6 @@
 import { TwinFlowSchema_DETAILED } from "@/entities/twinFlowSchema";
 import { SelectAdapter } from "@/shared/libs";
+
 import { useTwinFlowSchemaSearchV1 } from "../../api/hooks";
 
 export function useTwinFlowSchemaSelectAdapter(): SelectAdapter<TwinFlowSchema_DETAILED> {

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import { PermissionSchemaContextProvider } from "@/features/permission-schema";
 
 interface PermissionSchemaLayoutProps {

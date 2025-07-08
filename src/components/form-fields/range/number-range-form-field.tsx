@@ -17,7 +17,7 @@ export function NumberRangeFormField<T extends FieldValues>({
   ...props
 }: Props<T>) {
   return (
-    <div className="grid grid-rows-[auto_1fr] grid-cols-2 gap-2">
+    <div className="grid grid-cols-2 grid-rows-[auto_1fr] gap-2">
       {label && (
         <div className="col-span-2">
           <FormItemLabel>{label}</FormItemLabel>

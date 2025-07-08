@@ -88,12 +88,12 @@ export const TagBox = fixedForwardRef(function Component<T>(
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-1 rounded-md bg-background mt-2",
+        "bg-background mt-2 flex flex-wrap items-center gap-1 rounded-md",
         className
       )}
     >
       {validationError && (
-        <p className="text-destructive text-xs italic mt-1">
+        <p className="text-destructive mt-1 text-xs italic">
           {validationError}
         </p>
       )}
@@ -107,9 +107,9 @@ export const TagBox = fixedForwardRef(function Component<T>(
       {Array.from(tags).map((tag, _) => (
         <Badge
           key={String(tag)}
-          className="bg-transparent text-foreground border-foreground/10 hover:bg-card m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
+          className="text-foreground border-foreground/10 hover:bg-card m-1 bg-transparent transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110"
         >
-          <span className="truncate max-w-[130px] mr-2">{String(tag)}</span>
+          <span className="mr-2 max-w-[130px] truncate">{String(tag)}</span>
           <XCircle
             className="h-4 w-4 cursor-pointer"
             onClick={(event) => {

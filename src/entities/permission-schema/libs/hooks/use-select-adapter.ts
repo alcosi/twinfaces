@@ -1,4 +1,5 @@
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+
 import { PermissionSchema, usePermissionSchemaSearchV1 } from "../../api";
 
 export function usePermissionSchemaSelectAdapter(): SelectAdapter<PermissionSchema> {

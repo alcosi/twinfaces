@@ -23,7 +23,7 @@ export function MenuItem({
 
   function renderIcon() {
     if (Icon) {
-      return <Icon className="w-4 h-4" />;
+      return <Icon className="h-4 w-4" />;
     }
 
     if (iconSource) {
@@ -38,7 +38,7 @@ export function MenuItem({
       );
     }
 
-    return <div className="w-4 h-4 border border-primary rounded-md" />;
+    return <div className="border-primary h-4 w-4 rounded-md border" />;
   }
 
   const menuButtonContent = (
@@ -46,7 +46,7 @@ export function MenuItem({
       asChild
       onClick={url ? () => router.push(url) : undefined}
       className={cn(
-        "border border-transparent rounded-md",
+        "rounded-md border border-transparent",
         isActive && "border-link-enabled text-primary font-bold",
         buttonClassName
       )}
@@ -62,7 +62,7 @@ export function MenuItem({
     <SidebarMenuItem
       title={label}
       className={cn(
-        "list-none w-full",
+        "w-full list-none",
         url && "cursor-pointer",
         hidden && "hidden",
         className

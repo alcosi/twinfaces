@@ -1,6 +1,10 @@
+import deepmerge from "deepmerge";
+import { getLocale, getMessages } from "next-intl/server";
 import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
+
+import { LocaleProvider } from "@/components/locale-provider";
 
 import { getDomainFromHeaders } from "@/entities/face";
 import { getProductFlavorConfig } from "@/shared/config";
@@ -22,6 +26,10 @@ export default async function RootLayout({
 }>) {
   const remoteConfig = await getDomainFromHeaders();
   const config = getProductFlavorConfig(remoteConfig);
+  const locale = await getLocale();
+  const messages = await getMessages();
+  const fallbackMessages = await import(`../../messages/en.json`);
+  const mergedMessages = deepmerge(fallbackMessages, messages);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -44,9 +52,11 @@ export default async function RootLayout({
           fontSans.className
         )}
       >
-        <PublicLayoutProviders config={config}>
-          {children}
-        </PublicLayoutProviders>
+        <LocaleProvider initialLocale={locale} initialMessages={mergedMessages}>
+          <PublicLayoutProviders config={config}>
+            {children}
+          </PublicLayoutProviders>
+        </LocaleProvider>
       </body>
     </html>
   );

@@ -1,10 +1,11 @@
-import { LoadingOverlay } from "@/shared/ui/loading";
 import React, { createContext, useEffect, useState } from "react";
-import { isUndefined } from "@/shared/libs";
+
 import {
   PermissionSchema,
   useFetchPermissionSchemaById,
 } from "@/entities/permission-schema";
+import { isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui/loading";
 
 interface PermissionSchemaContextProps {
   schemaId: string;

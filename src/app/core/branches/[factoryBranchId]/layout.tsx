@@ -1,7 +1,8 @@
 "use client";
 
-import { FactoryBranchContextProvider } from "@/features/factory-branch";
 import { ReactNode } from "react";
+
+import { FactoryBranchContextProvider } from "@/features/factory-branch";
 
 type FactoryBranchLayoutProps = {
   params: {

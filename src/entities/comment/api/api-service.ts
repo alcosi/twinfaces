@@ -1,5 +1,6 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createCommentApi(settings: ApiSettings) {
   function search() {

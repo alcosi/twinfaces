@@ -1,5 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import { FeaturerFilters } from "./types";
 
 export function createFeaturerApi(settings: ApiSettings) {

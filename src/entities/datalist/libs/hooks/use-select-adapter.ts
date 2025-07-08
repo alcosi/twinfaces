@@ -1,4 +1,5 @@
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+
 import { DataList, useDatalistSearchV1, useFetchDatalistById } from "../../api";
 
 export function useDatalistSelectAdapter(): SelectAdapter<DataList> {

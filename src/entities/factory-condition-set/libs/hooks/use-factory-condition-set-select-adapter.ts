@@ -1,9 +1,10 @@
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   shortenUUID,
   wrapWithPercent,
 } from "@/shared/libs";
+
 import {
   FactoryConditionSet,
   FactoryConditionSetFilters,

@@ -1,9 +1,10 @@
+import { ZodType, z } from "zod";
+
 import {
   FeaturerParamType,
   UUID_SCHEMA,
   UUID_SET_SCHEMA,
 } from "@/entities/featurer";
-import { z, ZodType } from "zod";
 
 export const ParamTypeSchemaMap: Record<FeaturerParamType, ZodType<unknown>> = {
   [FeaturerParamType.BOOLEAN]: z.boolean(),

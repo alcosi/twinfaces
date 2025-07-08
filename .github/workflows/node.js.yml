@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,23 +16,23 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        
-    - run: npm ci
-    
-    - name: Build
-      run: npm run build --if-present
-      
-    - name: Run typescript tests
-      run: npm run test:ts
-    
-    - name: Run eslint on changed files
-      uses: tj-actions/eslint-changed-files@v25
-      with:
-        level: "warning"
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Run typescript tests
+        run: npm run test:ts
+
+      - name: Run eslint on changed files
+        uses: tj-actions/eslint-changed-files@v25
+        with:
+          level: "warning"

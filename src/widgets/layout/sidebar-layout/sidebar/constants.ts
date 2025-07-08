@@ -1,3 +1,5 @@
+import { useTypedTranslations } from "@/i18n/useTypedTranslations.hook";
+
 import {
   Asterisk,
   BriefcaseBusiness,
@@ -34,195 +36,201 @@ import { PlatformArea } from "@/shared/config";
 
 import { Group, GroupKeys } from "./menu";
 
-export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
-  class: {
-    title: "Class",
-    items: [
-      {
-        title: "Classes",
-        url: `/${PlatformArea.core}/twinclass`,
-        icon: TwinClassIcon,
-      },
-      {
-        title: "Fields",
-        url: `/${PlatformArea.core}/fields`,
-        icon: FieldIcon,
-      },
-      {
-        title: "Statuses",
-        url: `/${PlatformArea.core}/statuses`,
-        icon: TwinStatusIcon,
-      },
-      {
-        title: "Links",
-        url: `/${PlatformArea.core}/links`,
-        icon: Link2,
-      },
-    ],
-  },
-  twin: {
-    title: "Twin",
-    items: [
-      {
-        title: "Twins",
-        url: `/${PlatformArea.core}/twins`,
-        icon: TwinIcon,
-      },
-      {
-        title: "Comments",
-        url: `/${PlatformArea.core}/comments`,
-        icon: MessageCircle,
-      },
-      {
-        title: "Attachments",
-        url: `/${PlatformArea.core}/attachments`,
-        icon: Paperclip,
-      },
-    ],
-  },
-  user: {
-    title: "User",
-    items: [
-      {
-        title: "Users",
-        url: `/${PlatformArea.core}/users`,
-        icon: User,
-      },
-      {
-        title: "Groups",
-        url: `/${PlatformArea.core}/user-groups`,
-        icon: UsersRound,
-      },
-    ],
-  },
-  datalist: {
-    title: "Datalist",
-    items: [
-      {
-        title: "Datalists",
-        url: `/${PlatformArea.core}/datalists`,
-        icon: DatalistIcon,
-      },
-      {
-        title: "Options",
-        url: `/${PlatformArea.core}/datalist-options`,
-        icon: Option,
-      },
-      {
-        title: "Subsets",
-        url: `/${PlatformArea.core}/subsets`,
-        icon: Shapes,
-      },
-    ],
-  },
-  permission: {
-    title: "Permission",
-    items: [
-      {
-        title: "Permissions",
-        url: `/${PlatformArea.core}/permissions`,
-        icon: PermissionIcon,
-      },
-      {
-        title: "Permission Groups",
-        url: `/${PlatformArea.core}/permission-groups`,
-        icon: PermissionGroupIcon,
-      },
-      {
-        title: "Schemas",
-        url: `/${PlatformArea.core}/permission-schemas`,
-        icon: PermissionSchemaIcon,
-      },
-    ],
-  },
-  factory: {
-    title: "Factory",
-    items: [
-      {
-        title: "Factories",
-        url: `/${PlatformArea.core}/factories`,
-        icon: Factory,
-      },
-      {
-        title: "Multipliers",
-        url: `/${PlatformArea.core}/multipliers`,
-        icon: Asterisk,
-      },
-      {
-        title: "Multiplier filters",
-        url: `/${PlatformArea.core}/multiplier-filters`,
-        icon: SquareAsterisk,
-      },
-      {
-        title: "Pipelines",
-        url: `/${PlatformArea.core}/pipelines`,
-        icon: FactoryPipelineIcon,
-      },
-      {
-        title: "Pipeline steps",
-        url: `/${PlatformArea.core}/pipeline-steps`,
-        icon: FactoryPipelineStepIcon,
-      },
-      {
-        title: "Branches",
-        url: `/${PlatformArea.core}/branches`,
-        icon: FactoryBranchIcon,
-      },
-      {
-        title: "Erasers",
-        url: `/${PlatformArea.core}/erasers`,
-        icon: Eraser,
-      },
-      {
-        title: "Condition sets",
-        url: `/${PlatformArea.core}/condition-sets`,
-        icon: FactoryConditionSetIcon,
-      },
-    ],
-  },
-  transition: {
-    title: "Transition",
-    items: [
-      {
-        title: "Transitions",
-        url: `/${PlatformArea.core}/transitions`,
-        icon: TwinFlowTransitionIcon,
-      },
-      {
-        title: "Twinflows",
-        url: `/${PlatformArea.core}/twinflows`,
-        icon: TwinFlowIcon,
-      },
-      {
-        title: "Schemas",
-        url: `/${PlatformArea.core}/twinflow-schemas`,
-        icon: SquareActivity,
-      },
-    ],
-  },
-  businessAccount: {
-    title: "Business account",
-    items: [
-      {
-        title: "Business accounts",
-        url: `/${PlatformArea.core}/business-accounts`,
-        icon: BriefcaseBusiness,
-      },
-      {
-        title: "Tiers",
-        url: `/${PlatformArea.core}/tiers`,
-        icon: TierIcon,
-      },
-    ],
-  },
-  misc: {
-    title: "Misc",
-    items: [
-      {
-        title: "Featurers",
-        url: `/${PlatformArea.core}/featurers`,
-        icon: Play,
-      },
-    ],
-  },
-} as const;
+export const useSidebarGroups = () => {
+  const t = useTypedTranslations();
+
+  const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
+    class: {
+      title: t("groups.class"),
+      items: [
+        {
+          title: t("items.classes"),
+          url: `/${PlatformArea.core}/twinclass`,
+          icon: TwinClassIcon,
+        },
+        {
+          title: t("items.fields"),
+          url: `/${PlatformArea.core}/fields`,
+          icon: FieldIcon,
+        },
+        {
+          title: t("items.statuses"),
+          url: `/${PlatformArea.core}/statuses`,
+          icon: TwinStatusIcon,
+        },
+        {
+          title: t("items.links"),
+          url: `/${PlatformArea.core}/links`,
+          icon: Link2,
+        },
+      ],
+    },
+    twin: {
+      title: t("groups.twin"),
+      items: [
+        {
+          title: t("items.twins"),
+          url: `/${PlatformArea.core}/twins`,
+          icon: TwinIcon,
+        },
+        {
+          title: t("items.comments"),
+          url: `/${PlatformArea.core}/comments`,
+          icon: MessageCircle,
+        },
+        {
+          title: t("items.attachments"),
+          url: `/${PlatformArea.core}/attachments`,
+          icon: Paperclip,
+        },
+      ],
+    },
+    user: {
+      title: t("groups.user"),
+      items: [
+        {
+          title: t("items.users"),
+          url: `/${PlatformArea.core}/users`,
+          icon: User,
+        },
+        {
+          title: t("items.groups"),
+          url: `/${PlatformArea.core}/user-groups`,
+          icon: UsersRound,
+        },
+      ],
+    },
+    datalist: {
+      title: t("groups.datalist"),
+      items: [
+        {
+          title: t("items.datalists"),
+          url: `/${PlatformArea.core}/datalists`,
+          icon: DatalistIcon,
+        },
+        {
+          title: t("items.options"),
+          url: `/${PlatformArea.core}/datalist-options`,
+          icon: Option,
+        },
+        {
+          title: t("items.subsets"),
+          url: `/${PlatformArea.core}/subsets`,
+          icon: Shapes,
+        },
+      ],
+    },
+    permission: {
+      title: t("groups.permission"),
+      items: [
+        {
+          title: t("items.permissions"),
+          url: `/${PlatformArea.core}/permissions`,
+          icon: PermissionIcon,
+        },
+        {
+          title: t("items.permissionGroups"),
+          url: `/${PlatformArea.core}/permission-groups`,
+          icon: PermissionGroupIcon,
+        },
+        {
+          title: t("items.schemas"),
+          url: `/${PlatformArea.core}/permission-schemas`,
+          icon: PermissionSchemaIcon,
+        },
+      ],
+    },
+    factory: {
+      title: t("groups.factory"),
+      items: [
+        {
+          title: t("items.factories"),
+          url: `/${PlatformArea.core}/factories`,
+          icon: Factory,
+        },
+        {
+          title: t("items.multipliers"),
+          url: `/${PlatformArea.core}/multipliers`,
+          icon: Asterisk,
+        },
+        {
+          title: t("items.multiplierFilters"),
+          url: `/${PlatformArea.core}/multiplier-filters`,
+          icon: SquareAsterisk,
+        },
+        {
+          title: t("items.pipelines"),
+          url: `/${PlatformArea.core}/pipelines`,
+          icon: FactoryPipelineIcon,
+        },
+        {
+          title: t("items.pipelineSteps"),
+          url: `/${PlatformArea.core}/pipeline-steps`,
+          icon: FactoryPipelineStepIcon,
+        },
+        {
+          title: t("items.branches"),
+          url: `/${PlatformArea.core}/branches`,
+          icon: FactoryBranchIcon,
+        },
+        {
+          title: t("items.erasers"),
+          url: `/${PlatformArea.core}/erasers`,
+          icon: Eraser,
+        },
+        {
+          title: t("items.conditionSets"),
+          url: `/${PlatformArea.core}/condition-sets`,
+          icon: FactoryConditionSetIcon,
+        },
+      ],
+    },
+    transition: {
+      title: t("groups.transition"),
+      items: [
+        {
+          title: t("items.transitions"),
+          url: `/${PlatformArea.core}/transitions`,
+          icon: TwinFlowTransitionIcon,
+        },
+        {
+          title: t("items.twinflows"),
+          url: `/${PlatformArea.core}/twinflows`,
+          icon: TwinFlowIcon,
+        },
+        {
+          title: t("items.twinflowSchemas"),
+          url: `/${PlatformArea.core}/twinflow-schemas`,
+          icon: SquareActivity,
+        },
+      ],
+    },
+    businessAccount: {
+      title: t("groups.businessAccount"),
+      items: [
+        {
+          title: t("items.businessAccounts"),
+          url: `/${PlatformArea.core}/business-accounts`,
+          icon: BriefcaseBusiness,
+        },
+        {
+          title: t("items.tiers"),
+          url: `/${PlatformArea.core}/tiers`,
+          icon: TierIcon,
+        },
+      ],
+    },
+    misc: {
+      title: t("groups.misc"),
+      items: [
+        {
+          title: t("items.featurers"),
+          url: `/${PlatformArea.core}/featurers`,
+          icon: Play,
+        },
+      ],
+    },
+  } as const;
+
+  return SIDEBAR_GROUPS;
+};

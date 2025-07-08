@@ -1,6 +1,8 @@
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryConditionSetFilters } from "./types";
+
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
+import { FactoryConditionSetFilters } from "./types";
 
 export function createFactoryConditionSetApi(settings: ApiSettings) {
   function search({

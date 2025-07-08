@@ -1,8 +1,9 @@
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   wrapWithPercent,
 } from "@/shared/libs";
+
 import {
   DataListOptionFilters,
   DataListOptionV3,

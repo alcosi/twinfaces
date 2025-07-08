@@ -1,9 +1,9 @@
-import { RelatedObjects } from "@/shared/api";
 import {
   PermissionGrantAssigneePropagation,
   PermissionGrantAssigneePropagation_DETAILED,
 } from "@/entities/assigneePropagation";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { RelatedObjects } from "@/shared/api";
 
 export const hydratePermissionGrantAssigneePropagationFromMap = (
   dto: PermissionGrantAssigneePropagation,

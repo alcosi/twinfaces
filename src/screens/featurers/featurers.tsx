@@ -1,5 +1,8 @@
 "use client";
 
+import { PaginationState } from "@tanstack/react-table";
+import { toast } from "sonner";
+
 import {
   Featurer,
   FeaturerTypes,
@@ -8,8 +11,7 @@ import {
 } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/widgets/crud-data-table";
-import { PaginationState } from "@tanstack/react-table";
-import { toast } from "sonner";
+
 import { FeaturerTypeTable } from "./tables";
 
 type FeaturerType = {

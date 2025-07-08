@@ -88,8 +88,8 @@ export function CreateDomainForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="h-full">
-        <section className="h-full px-6 flex flex-col">
-          <header className="h-12 flex items-center justify-between">
+        <section className="flex h-full flex-col px-6">
+          <header className="flex h-12 items-center justify-between">
             <h1 className="font-semibold">Create domain</h1>
             <Button
               className=""
@@ -97,7 +97,7 @@ export function CreateDomainForm() {
               size="icon"
               onClick={closeQuickView}
             >
-              <X className="w-5 h-5" />
+              <X className="h-5 w-5" />
             </Button>
           </header>
           <main className="flex flex-1 items-center justify-center py-10">

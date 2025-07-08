@@ -1,5 +1,6 @@
 import { TwinClassFieldV2_DETAILED } from "@/entities/twin-class-field";
 import { SelectAdapter } from "@/shared/libs";
+
 import { useTwinClassFieldSearchV1 } from "../../api/hooks";
 
 export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassFieldV2_DETAILED> {

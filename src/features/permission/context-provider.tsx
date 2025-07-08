@@ -1,10 +1,11 @@
+import { PropsWithChildren, createContext, useEffect, useState } from "react";
+
 import {
   Permission_DETAILED,
   useFetchPermissionById,
 } from "@/entities/permission";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 type Context = {
   permissionId: string;

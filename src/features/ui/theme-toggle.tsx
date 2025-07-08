@@ -34,7 +34,7 @@ export function ThemeToggle() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-10 min-w-0 p-0 space-y-1">
+      <DropdownMenuContent className="w-10 min-w-0 space-y-1 p-0">
         {THEME_OPTIONS.map(({ key, icon: Icon }) => (
           <DropdownMenuItem
             key={key}

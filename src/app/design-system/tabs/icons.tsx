@@ -19,7 +19,7 @@ import { UiSection } from "../components/ui-section";
 
 export function IconsTab() {
   return (
-    <div className="h-screen overflow-y-auto max-h-98">
+    <div className="h-screen max-h-98 overflow-y-auto">
       <div className="space-y-4 p-4">
         <UiSection title="Icons">
           <UiSection.Item title="Box" value={<BoxIcon />} />

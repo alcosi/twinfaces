@@ -45,7 +45,7 @@ export function FeaturerFormField<T extends FieldValues>({
       />
 
       {isPopulatedArray(featurerParams) && (
-        <fieldset className="px-1.5 py-2.5 rounded-md border border-dashed">
+        <fieldset className="rounded-md border border-dashed px-1.5 py-2.5">
           <legend className="text-sm font-medium italic">Params</legend>
           <div className="space-y-2">
             {featurerParams.map((param) => (

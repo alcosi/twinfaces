@@ -73,7 +73,7 @@ function AccordionMenu({ items }: Props) {
         <AccordionItem
           key={keyPath}
           value={keyPath}
-          className="px-0 border-b-0"
+          className="border-b-0 px-0"
         >
           <AccordionTrigger
             className={cn(
@@ -95,7 +95,7 @@ function AccordionMenu({ items }: Props) {
             <AccordionContent
               className={cn("mt-1 py-1", `ml-${(level + 1) * 2}`)}
             >
-              <div className="border-l border-border ml-2">
+              <div className="border-border ml-2 border-l">
                 {renderItems(item.children!, level, keyPath)}
               </div>
             </AccordionContent>
@@ -106,7 +106,7 @@ function AccordionMenu({ items }: Props) {
   };
 
   return (
-    <Accordion type="multiple" className="w-full p-0 pt-2 space-y-1">
+    <Accordion type="multiple" className="w-full space-y-1 p-0 pt-2">
       {renderItems(items)}
     </Accordion>
   );

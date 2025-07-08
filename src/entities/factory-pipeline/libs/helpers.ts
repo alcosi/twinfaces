@@ -1,10 +1,10 @@
-import { RelatedObjects } from "@/shared/api";
+import { Factory } from "@/entities/factory";
 import {
   FactoryPipeline,
   FactoryPipeline_DETAILED,
 } from "@/entities/factory-pipeline";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { Factory } from "@/entities/factory";
+import { RelatedObjects } from "@/shared/api";
 
 export const hydrateFactoryPipelineFromMap = (
   dto: FactoryPipeline,

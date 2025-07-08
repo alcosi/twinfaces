@@ -1,4 +1,5 @@
 import { useContext } from "react";
+
 import { QuickViewContext } from "./context";
 
 export const useQuickView = () => {

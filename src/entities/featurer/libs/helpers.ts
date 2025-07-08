@@ -1,4 +1,5 @@
 import { RelatedObjects } from "@/shared/api";
+
 import { Featurer, Featurer_DETAILED } from "../api";
 
 export function hydrateFeaturerFromMap(

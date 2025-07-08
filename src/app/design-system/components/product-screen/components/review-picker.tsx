@@ -29,9 +29,7 @@ export const ReviewPicker = ({ reviews }: ReviewProps) => {
         <p className="sr-only">{reviews.average} out of 5 stars</p>
         <a
           href={reviews.href}
-          className="ml-3 text-sm font-medium
-              dark:text-indigo-400 dark:hover:text-indigo-300
-              text-indigo-600 hover:text-indigo-500"
+          className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
         >
           {reviews.totalCount} reviews
         </a>

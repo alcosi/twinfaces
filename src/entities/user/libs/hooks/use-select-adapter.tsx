@@ -1,13 +1,15 @@
+import { UserIcon } from "lucide-react";
+
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   wrapWithPercent,
 } from "@/shared/libs";
 import { Avatar } from "@/shared/ui";
-import { UserIcon } from "lucide-react";
+
 import {
-  DomainUser_DETAILED,
   DomainUserFilters,
+  DomainUser_DETAILED,
   useDomainUserSearchV1,
 } from "../../api";
 

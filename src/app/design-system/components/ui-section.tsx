@@ -14,7 +14,7 @@ export function UiSection({
 }: Props) {
   return (
     <section className="">
-      <h1 className="font-bold mb-3">{title}</h1>
+      <h1 className="mb-3 font-bold">{title}</h1>
       <main className={className}>{children}</main>
     </section>
   );
@@ -28,7 +28,7 @@ UiSection.Item = function Item({
   value: ReactNode;
 }) {
   return (
-    <Card className="py-2 px-4 col-span-2">
+    <Card className="col-span-2 px-4 py-2">
       <h2>{title}</h2>
       <div className="">{value}</div>
     </Card>

@@ -1,4 +1,5 @@
 import { RelatedObjects } from "@/shared/api";
+
 import { PermissionSchema } from "../api";
 
 export const hydratePermissionSchemaFromMap = (

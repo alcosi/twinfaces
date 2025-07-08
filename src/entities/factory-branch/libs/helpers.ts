@@ -1,4 +1,5 @@
 import { RelatedObjects } from "@/shared/api";
+
 import { FactoryBranch, FactoryBranch_DETAILED } from "../api";
 
 export const hydrateFactoryBranchFromMap = (

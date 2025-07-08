@@ -1,13 +1,13 @@
-import { SelectAdapter } from "@/shared/libs";
 import {
-  Link_MANAGED,
   LINK_STRENGTH_ENUM,
   LINK_TYPES_ENUM,
   LinkStrength,
   LinkType,
+  Link_MANAGED,
   useLinkFetchById,
   useLinkSearch,
 } from "@/entities/link";
+import { SelectAdapter } from "@/shared/libs";
 
 export function useLinkTypeSelectAdapter(): SelectAdapter<{
   id: LinkType;

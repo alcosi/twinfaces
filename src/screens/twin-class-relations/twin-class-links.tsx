@@ -67,7 +67,7 @@ export function TwinClassRelations() {
       accessorKey: "name",
       header: "Name",
       cell: ({ row: { original } }) => (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <LinkResourceLink data={original} withTooltip />
         </div>
       ),
@@ -76,7 +76,7 @@ export function TwinClassRelations() {
       accessorKey: "dstTwinClassId",
       header: "Destination Twin Class",
       cell: ({ row: { original } }) => (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.dstTwinClass as TwinClass_DETAILED}
             withTooltip

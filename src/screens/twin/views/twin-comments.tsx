@@ -40,7 +40,9 @@ export function TwinComments() {
 
   return (
     <div className="py-10">
-      {commentsData?.map((item) => <CommentCard item={item} key={item.id} />)}
+      {commentsData?.map((item) => (
+        <CommentCard item={item} key={item.id} />
+      ))}
     </div>
   );
 }

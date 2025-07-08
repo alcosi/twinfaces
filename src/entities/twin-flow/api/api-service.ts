@@ -1,5 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import { TwinFlowCreateRq, TwinFlowFilters, TwinFlowUpdateRq } from "./types";
 
 export function createTwinFlowApi(settings: ApiSettings) {

@@ -13,7 +13,7 @@ export function ActionDialogsTab() {
   }
 
   return (
-    <div className="p-4 flex flex-col gap-4 max-w-sm">
+    <div className="flex max-w-sm flex-col gap-4 p-4">
       <Button
         onClick={() =>
           confirm({

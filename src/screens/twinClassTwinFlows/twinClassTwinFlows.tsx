@@ -50,7 +50,7 @@ const columnsMap: Record<
     accessorKey: "name",
     header: "Name",
     cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
+      <div className="inline-flex max-w-48">
         <TwinFlowResourceLink data={original} withTooltip />
       </div>
     ),
@@ -64,7 +64,7 @@ const columnsMap: Record<
     header: "Initial status",
     cell: ({ row: { original } }) =>
       original.initialStatus && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassStatusResourceLink
             data={original.initialStatus}
             twinClassId={original.twinClassId!}
@@ -78,7 +78,7 @@ const columnsMap: Record<
     header: "Created by",
     cell: ({ row: { original } }) =>
       original.createdByUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink data={original.createdByUser} withTooltip />
         </div>
       ),

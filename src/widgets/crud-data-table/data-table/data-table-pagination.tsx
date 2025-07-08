@@ -54,28 +54,28 @@ export function DataTablePagination<TData>({
   return (
     <div className="flex items-center justify-between px-2">
       {table.options.enableRowSelection && (
-        <div className="flex-1 text-sm text-muted-foreground">
+        <div className="text-muted-foreground flex-1 text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of {total} row(s)
           selected.
         </div>
       )}
 
-      <div className="flex justify-end items-center w-full space-x-6 lg:space-x-8">
+      <div className="flex w-full items-center justify-end space-x-6 lg:space-x-8">
         <div className="flex items-center justify-center space-x-2 text-sm font-medium">
-          <AlignJustify className="w-4 h-4 stroke-muted-foreground" />
+          <AlignJustify className="stroke-muted-foreground h-4 w-4" />
           <span className="text-muted-foreground">
             {state.rangeStart} - {state.rangeEnd} of {total}
           </span>
         </div>
         <div className="flex items-center space-x-2">
-          <Layers3 className="w-4 h-4 stroke-muted-foreground" />
+          <Layers3 className="stroke-muted-foreground h-4 w-4" />
           <Select
             value={`${limit}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-[70px] text-muted-foreground">
+            <SelectTrigger className="text-muted-foreground h-8 w-[70px]">
               <SelectValue placeholder={limit} />
             </SelectTrigger>
             <SelectContent side="top">
@@ -93,7 +93,7 @@ export function DataTablePagination<TData>({
         </div>
 
         <div className="flex items-center space-x-2">
-          <Files className="w-4 h-4 stroke-muted-foreground" />
+          <Files className="stroke-muted-foreground h-4 w-4" />
           <span className="text-muted-foreground">
             {state.pageIndex} of {table.getPageCount()}
           </span>
@@ -105,7 +105,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to first page</span>
-            <ChevronsLeft className="h-4 w-4 stroke-muted-foreground" />
+            <ChevronsLeft className="stroke-muted-foreground h-4 w-4" />
           </Button>
           <Button
             variant="outline"
@@ -114,7 +114,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to previous page</span>
-            <ChevronLeft className="h-4 w-4 stroke-muted-foreground" />
+            <ChevronLeft className="stroke-muted-foreground h-4 w-4" />
           </Button>
           <Button
             variant="outline"
@@ -123,7 +123,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to next page</span>
-            <ChevronRight className="h-4 w-4 stroke-muted-foreground" />
+            <ChevronRight className="stroke-muted-foreground h-4 w-4" />
           </Button>
           <Button
             variant="outline"
@@ -132,7 +132,7 @@ export function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
-            <ChevronsRight className="h-4 w-4 stroke-muted-foreground" />
+            <ChevronsRight className="stroke-muted-foreground h-4 w-4" />
           </Button>
         </div>
       </div>

@@ -1,5 +1,6 @@
-import { cn } from "@/shared/libs";
 import React, { PropsWithChildren } from "react";
+
+import { cn } from "@/shared/libs";
 
 export type IconProps = {
   className?: string;
@@ -18,7 +19,7 @@ export function BaseSvgIcon({
 }: PropsWithChildren<Props>) {
   return (
     <svg
-      className={cn("w-4 h-4 fill-current stroke-current", className)}
+      className={cn("h-4 w-4 fill-current stroke-current", className)}
       viewBox={viewBox}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

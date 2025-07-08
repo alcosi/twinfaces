@@ -36,10 +36,10 @@ export const ProductDescription = ({ product }: ProductDescriptionProps) => {
             <AccordionContent>
               {description && (
                 <div className="mb-6">
-                  <h3 className="mb-4 text-sm font-medium dark:text-gray-300 text-gray-900">
+                  <h3 className="mb-4 text-sm font-medium text-gray-900 dark:text-gray-300">
                     {description.name}
                   </h3>
-                  <p className="text-base dark:text-gray-300 text-gray-900">
+                  <p className="text-base text-gray-900 dark:text-gray-300">
                     {description.text}
                   </p>
                 </div>
@@ -47,10 +47,10 @@ export const ProductDescription = ({ product }: ProductDescriptionProps) => {
 
               {highlights && (
                 <div className="mb-6">
-                  <h3 className="mb-4 text-sm font-medium dark:text-gray-300 text-gray-900">
+                  <h3 className="mb-4 text-sm font-medium text-gray-900 dark:text-gray-300">
                     {highlights.name}
                   </h3>
-                  <ul className="list-disc space-y-2 pl-4 text-sm dark:text-gray-300 text-gray-900">
+                  <ul className="list-disc space-y-2 pl-4 text-sm text-gray-900 dark:text-gray-300">
                     {highlights.text.map((item, index) => (
                       <li key={index}>{item}</li>
                     ))}
@@ -60,10 +60,10 @@ export const ProductDescription = ({ product }: ProductDescriptionProps) => {
 
               {details && (
                 <div>
-                  <h3 className="mb-4 text-sm font-medium dark:text-gray-300 text-gray-900">
+                  <h3 className="mb-4 text-sm font-medium text-gray-900 dark:text-gray-300">
                     {details.name}
                   </h3>
-                  <p className="text-sm dark:text-gray-300 text-gray-900">
+                  <p className="text-sm text-gray-900 dark:text-gray-300">
                     {details.text}
                   </p>
                 </div>

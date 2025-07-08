@@ -1,6 +1,7 @@
 // NOTE: importing from '@/entities/datalist' triggers an excaption
-import { DATALIST_SCHEMA } from "@/entities/datalist/libs/constans";
 import { z } from "zod";
+
+import { DATALIST_SCHEMA } from "@/entities/datalist/libs/constans";
 
 export const DATALIST_OPTION_STATUS_TYPES = [
   "active",

@@ -6,7 +6,7 @@ export const ProductPrice = ({ price }: ProductPriceProps) => {
   return (
     <>
       <h2 className="sr-only">Product information</h2>
-      <p className="text-3xl tracking-tight dark:text-primary">{price}</p>
+      <p className="dark:text-primary text-3xl tracking-tight">{price}</p>
     </>
   );
 };
