@@ -126,7 +126,7 @@ export function InPlaceEdit<T>({
       >
         <AutoField
           info={valueInfo}
-          name={"value"}
+          name="value"
           control={form.control}
           autoFocus
           // TODO auto cancel edit on lost focus/on closed for popups

@@ -28,7 +28,7 @@ export function TwinClassStatusFormFields({
         disabled={isPopulatedString(twinClassId)}
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
+        noItemsText="No classes found"
         {...tcAdapter}
       />
 

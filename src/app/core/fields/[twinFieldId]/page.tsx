@@ -2,12 +2,12 @@ import { fetchTwinClassFieldById } from "@/entities/twin-class-field/server";
 import { TwinClassFieldScreen } from "@/screens/twin-class-field";
 
 type Props = {
-  params: {
-    twinFieldId: string;
-  };
+  params: Promise<{ twinFieldId: string }>;
 };
 
-export default async function Page({ params: { twinFieldId } }: Props) {
+export default async function Page({ params }: Props) {
+  const { twinFieldId } = await params;
+
   const twinField = await fetchTwinClassFieldById(twinFieldId);
 
   return (

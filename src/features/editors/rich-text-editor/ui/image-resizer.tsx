@@ -249,7 +249,7 @@ export function ImageResizer({
         <Button
           className="image-caption-button absolute bottom-1 left-1/2 -translate-x-1/2"
           ref={buttonRef}
-          variant={"outline"}
+          variant="outline"
           onClick={() => {
             setShowCaption(!showCaption);
           }}

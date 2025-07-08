@@ -21,11 +21,11 @@ export function TriggersFormFields({
         label="Order"
         type="number"
       />
-      <CheckboxFormField control={control} name={"active"} label="Active" />
+      <CheckboxFormField control={control} name="active" label="Active" />
       <FeaturerFormField
         typeId={FeaturerTypes.trigger}
         control={control}
-        label={"Featurer"}
+        label="Featurer"
         name="fieldTyperFeaturerId"
         paramsFieldName="fieldTyperFeaturerParams"
       />

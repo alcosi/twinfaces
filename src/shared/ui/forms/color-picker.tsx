@@ -52,7 +52,7 @@ export function ColorPickerInternal(
   return (
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild disabled={disabled} onBlur={onBlur}>
-        <div className={"flex flex-row items-center gap-2"}>
+        <div className="flex flex-row items-center gap-2">
           <Button
             type="button"
             className={cn("flex", className)}

@@ -78,7 +78,7 @@ export function Plugins() {
         <RichTextPlugin
           contentEditable={
             <div ref={onRef} className="max-h-96 overflow-auto">
-              <ContentEditable placeholder={"Start typing ..."} />
+              <ContentEditable placeholder="Start typing ..." />
             </div>
           }
           ErrorBoundary={LexicalErrorBoundary}

@@ -11,7 +11,14 @@ import {
 } from "@/features/inPlaceEdit";
 import { UserContext } from "@/features/user";
 import { formatIntlDate } from "@/shared/libs";
-import { Avatar, GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
+import {
+  Avatar,
+  GuidWithCopy,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/shared/ui";
 
 export function UserGeneral() {
   const { user, refresh } = useContext(UserContext);
@@ -62,47 +69,49 @@ export function UserGeneral() {
   return (
     <InPlaceEditContextProvider>
       <Table className="mt-8">
-        <TableRow>
-          <TableCell>User ID</TableCell>
-          <TableCell>
-            <GuidWithCopy value={user.user?.id} variant="long" />
-          </TableCell>
-        </TableRow>
+        <TableBody>
+          <TableRow>
+            <TableCell>User ID</TableCell>
+            <TableCell>
+              <GuidWithCopy value={user.user?.id} variant="long" />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Name</TableCell>
-          <TableCell>
-            <InPlaceEdit {...nameSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>
+              <InPlaceEdit {...nameSettings} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Locale</TableCell>
-          <TableCell>{user.currentLocale}</TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Locale</TableCell>
+            <TableCell>{user.currentLocale}</TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Email</TableCell>
-          <TableCell>
-            <InPlaceEdit {...emailSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Email</TableCell>
+            <TableCell>
+              <InPlaceEdit {...emailSettings} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Created at</TableCell>
-          <TableCell>
-            {formatIntlDate(user.createdAt!, "datetime-local")}
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Created at</TableCell>
+            <TableCell>
+              {formatIntlDate(user.createdAt!, "datetime-local")}
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Avatar</TableCell>
-          <TableCell>
-            {user.user?.avatar && (
-              <Avatar url={user.user.avatar} alt={"avatar"} size="xlg" />
-            )}
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Avatar</TableCell>
+            <TableCell>
+              {user.user?.avatar && (
+                <Avatar url={user.user.avatar} alt="avatar" size="xlg" />
+              )}
+            </TableCell>
+          </TableRow>
+        </TableBody>
       </Table>
     </InPlaceEditContextProvider>
   );

@@ -65,7 +65,7 @@ export function TwinFlowTransitionFormFields({
 
       <ComboboxFormField
         control={control}
-        name={"factory"}
+        name="factory"
         label="Factory"
         selectPlaceholder="Select Factory"
         searchPlaceholder="Search Factory..."
@@ -75,7 +75,7 @@ export function TwinFlowTransitionFormFields({
 
       <ComboboxFormField
         control={control}
-        name={"srcTwinStatusId"}
+        name="srcTwinStatusId"
         label="From status"
         selectPlaceholder="Select status"
         searchPlaceholder="Search status..."
@@ -94,7 +94,7 @@ export function TwinFlowTransitionFormFields({
 
       <ComboboxFormField
         control={control}
-        name={"dstTwinStatusId"}
+        name="dstTwinStatusId"
         label="To status"
         selectPlaceholder="Select status"
         searchPlaceholder="Search status..."
@@ -114,7 +114,7 @@ export function TwinFlowTransitionFormFields({
 
       <ComboboxFormField
         control={control}
-        name={"permissionId"}
+        name="permissionId"
         label="Permission"
         selectPlaceholder="Select permission"
         searchPlaceholder="Search permission..."

@@ -116,7 +116,7 @@ export function TwinFlowGeneral() {
           <TableRow>
             <TableCell width={300}>ID</TableCell>
             <TableCell>
-              <GuidWithCopy value={twinFlow.id} variant={"long"} />
+              <GuidWithCopy value={twinFlow.id} variant="long" />
             </TableCell>
           </TableRow>
 
