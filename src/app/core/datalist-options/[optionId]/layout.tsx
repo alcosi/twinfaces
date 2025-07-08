@@ -1,20 +1,23 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, use } from "react";
 
 import { DataListOptionContextProvider } from "@/features/datalist-option";
 
 type DataListOptionLayoutProps = {
-  params: {
+  params: Promise<{
     optionId: string;
-  };
+  }>;
   children: ReactNode;
 };
 
-export default function DataListOptionLayout({
-  params: { optionId },
-  children,
-}: DataListOptionLayoutProps) {
+export default function DataListOptionLayout(props: DataListOptionLayoutProps) {
+  const params = use(props.params);
+
+  const { optionId } = params;
+
+  const { children } = props;
+
   return (
     <DataListOptionContextProvider optionId={optionId}>
       {children}

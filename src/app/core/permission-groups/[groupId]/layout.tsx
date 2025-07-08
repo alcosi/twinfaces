@@ -3,13 +3,19 @@ import { ReactNode } from "react";
 import { PermissionGroupContextProvider } from "@/features/permission-group";
 
 type Props = {
-  params: {
+  params: Promise<{
     groupId: string;
-  };
+  }>;
   children: ReactNode;
 };
 
-export default function Layout({ params: { groupId }, children }: Props) {
+export default async function Layout(props: Props) {
+  const params = await props.params;
+
+  const { groupId } = params;
+
+  const { children } = props;
+
   return (
     <PermissionGroupContextProvider groupId={groupId}>
       {children}

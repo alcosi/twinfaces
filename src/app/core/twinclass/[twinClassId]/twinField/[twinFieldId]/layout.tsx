@@ -1,20 +1,23 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, use } from "react";
 
 import { TwinFieldContextProvider } from "@/features/twin-class-field";
 
 type TwinFieldLayoutProps = {
-  params: {
+  params: Promise<{
     twinFieldId: string;
-  };
+  }>;
   children: ReactNode;
 };
 
-export default function TwinFieldLayout({
-  params: { twinFieldId },
-  children,
-}: TwinFieldLayoutProps) {
+export default function TwinFieldLayout(props: TwinFieldLayoutProps) {
+  const params = use(props.params);
+
+  const { twinFieldId } = params;
+
+  const { children } = props;
+
   return (
     <TwinFieldContextProvider twinFieldId={twinFieldId}>
       {children}
