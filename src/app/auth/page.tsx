@@ -1,5 +1,6 @@
 import { LoginScreen } from "@/screens/login";
 
+//NOTE: Successfully tested and Next.js removes caching automatically and no need to revalidate
 export const revalidate = 0;
 
 type Props = {
