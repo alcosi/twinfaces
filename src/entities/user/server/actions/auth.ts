@@ -4,13 +4,8 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { TwinsAPI } from "@/shared/api";
-import { isApiErrorResponse } from "@/shared/api/utils";
-import {
-  isPopulatedArray,
-  isUndefined,
-  printAndReturnApiErrorResponse,
-} from "@/shared/libs";
+import { Result, TwinsAPI } from "@/shared/api";
+import { errorToResult, isPopulatedArray, isUndefined } from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
 import { hydrateDomainUserFromMap } from "../../libs/helpers";
@@ -157,29 +152,34 @@ export async function stubLoginFormAction(_: unknown, formData: FormData) {
 export async function loginAuthAction(
   _: unknown,
   formData: FormData
-): Promise<AuthLoginRs> {
-  const { domainId, username, password } = EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
-    domainId: formData.get("domainId"),
-    username: formData.get("username"),
-    password: formData.get("password"),
-  });
+): Promise<Result<AuthLoginRs>> {
+  try {
+    const { domainId, username, password } =
+      EMAIL_PASSWORD_SIGN_IN_SCHEMA.parse({
+        domainId: formData.get("domainId"),
+        username: formData.get("username"),
+        password: formData.get("password"),
+      });
 
-  const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
-    body: { username, password },
-    params: { header: { DomainId: domainId, Channel: "WEB" } },
-  });
+    const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
+      body: { username, password },
+      params: { header: { DomainId: domainId, Channel: "WEB" } },
+    });
 
-  if (error) {
-    return error;
+    if (error) {
+      return errorToResult(error);
+    }
+
+    return { ok: true, data };
+  } catch (error) {
+    return errorToResult(error);
   }
-
-  return data;
 }
 
 export async function signUpAuthAction(
   _: unknown,
   formData: FormData
-): Promise<AuthSignupByEmailRs> {
+): Promise<Result<AuthSignupByEmailRs>> {
   try {
     const { domainId, firstName, lastName, email, password } =
       EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.parse({
@@ -199,28 +199,19 @@ export async function signUpAuthAction(
     );
 
     if (error) {
-      return error;
+      return errorToResult(error);
     }
 
-    return data;
+    return { ok: true, data };
   } catch (error) {
-    const response = printAndReturnApiErrorResponse({
-      error,
-      requestName: "Signup",
-    });
-
-    if (isApiErrorResponse(response)) {
-      return response;
-    } else {
-      throw error;
-    }
+    return errorToResult(error);
   }
 }
 
 export async function verifyEmailAction(
   _: unknown,
   formData: FormData
-): Promise<AuthSignUpVerificationByEmailRs> {
+): Promise<Result<AuthSignUpVerificationByEmailRs>> {
   const { domainId, verificationToken } = EMAIL_VERIFICATION_FORM_SCHEMA.parse({
     domainId: formData.get("domainId"),
     verificationToken: formData.get("verificationToken"),
@@ -243,21 +234,16 @@ export async function verifyEmailAction(
     );
 
     if (error) {
-      return error;
+      return errorToResult(error);
     }
 
-    return data;
+    if (isUndefined(data)) {
+      return errorToResult(error);
+    }
+
+    return { ok: true, data };
   } catch (error) {
-    const response = printAndReturnApiErrorResponse({
-      error,
-      requestName: "Verify email",
-    });
-
-    if (isApiErrorResponse(response)) {
-      return response;
-    } else {
-      throw error;
-    }
+    return errorToResult(error);
   }
 }
 

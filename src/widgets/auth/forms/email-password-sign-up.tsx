@@ -63,34 +63,31 @@ export function EmailPasswordSignUpForm({
     startAuthTransition(async () => {
       const result = await signUpAuthAction(null, formData);
 
-      if (isApiErrorResponse(result)) {
-        if (
-          result.status === ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
-        ) {
+      // NOTE: Handle signup errors:
+      if (!result.ok && isApiErrorResponse(result.error)) {
+        const { status, statusDetails } = result.error;
+
+        if (status === ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED) {
           singUpForm.setError("email", {
             type: "manual",
-            message: capitalize(result.statusDetails || "Registration failed"),
+            message: capitalize(statusDetails || "Registration failed"),
           });
         }
 
         onError?.();
 
-        if (
-          result.status !== ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED
-        ) {
+        if (status !== ERROR_CODE_MAP.IDP_SIGNUP_EMAIL_ALREADY_REGISTERED) {
           singUpForm.resetField("password");
           singUpForm.resetField("confirmPassword");
         }
 
-        return;
-      }
-
-      if (result?.status !== 0) {
-        setAuthError("Registration failed");
-        onError?.();
-        singUpForm.resetField("password");
-        singUpForm.resetField("confirmPassword");
-        return;
+        if (status !== 0) {
+          setAuthError("Registration failed");
+          onError?.();
+          singUpForm.resetField("password");
+          singUpForm.resetField("confirmPassword");
+          return;
+        }
       }
 
       onSuccess?.({

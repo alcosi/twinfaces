@@ -59,17 +59,10 @@ export function EmailVerificationForm({
     startVerifyTransition(async () => {
       const result = await verifyEmailAction(null, formData);
 
-      if (isApiErrorResponse(result)) {
-        setVerificationError(
-          result.statusDetails || "Email verification failed"
-        );
-        onError?.();
-        emailVerificationForm.reset();
-        return;
-      }
+      if (!result.ok && isApiErrorResponse(result.error)) {
+        const { statusDetails } = result.error;
 
-      if (result?.status !== 0) {
-        setVerificationError("Email verification failed");
+        setVerificationError(statusDetails || "Email verification failed");
         onError?.();
         emailVerificationForm.reset();
         return;

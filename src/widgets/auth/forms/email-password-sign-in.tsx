@@ -67,29 +67,36 @@ export function EmailPasswordSignInForm({
     startAuthTransition(async () => {
       const result = await loginAuthAction(null, formData);
 
-      const authToken = result.authData?.auth_token;
-      if (isApiErrorResponse(result) || isUndefined(authToken)) {
-        const msg =
-          result.statusDetails ?? "Login failed. Please check your credentials";
-
-        return handleAuthError(msg);
+      if (!result.ok && isApiErrorResponse(result.error)) {
+        const { statusDetails } = result.error;
+        return handleAuthError(
+          statusDetails ?? "Login failed. Please check your credentials"
+        );
       }
 
-      const domainUser = await getAuthenticatedUser({
-        domainId,
-        authToken,
-      });
-      if (isUndefined(domainUser)) {
-        return handleAuthError("Failed to fetch domain user data");
+      if (result.ok) {
+        const authToken = result.data.authData?.auth_token;
+        if (isUndefined(authToken)) {
+          return handleAuthError("Login failed: no auth token returned");
+        }
+
+        const domainUser = await getAuthenticatedUser({
+          domainId,
+          authToken,
+        });
+
+        if (isUndefined(domainUser)) {
+          return handleAuthError("Failed to load domain user");
+        }
+
+        setAuthUser({
+          domainUser,
+          authToken,
+          domainId,
+        });
+
+        router.push(`/profile`);
       }
-
-      setAuthUser({
-        domainUser,
-        authToken,
-        domainId,
-      });
-
-      router.push(`/profile`);
     });
   }
 

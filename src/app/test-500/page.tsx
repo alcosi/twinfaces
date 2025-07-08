@@ -1,6 +1,6 @@
 import { loginAuthAction } from "@/entities/user/server";
 import { Error500 } from "@/screens/error-500";
-import { unwrapErrorInfo } from "@/shared/libs";
+import { errorToResult } from "@/shared/libs";
 
 export default async function Page() {
   const formData = new FormData();
@@ -9,10 +9,16 @@ export default async function Page() {
   formData.set("password", "some-fake-invalid-password");
 
   try {
-    await loginAuthAction(null, formData);
+    // Variant #1
+    const result = await loginAuthAction(null, formData);
+    if (!result.ok) {
+      throw result.error;
+    }
+
+    // Variant #2
     // throw new Error("This is artificial error! For testing purposes");
   } catch (error) {
-    const result = unwrapErrorInfo(error);
+    const result = errorToResult(error);
 
     return <Error500 error={result} />;
   }

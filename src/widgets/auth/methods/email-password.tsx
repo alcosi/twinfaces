@@ -52,31 +52,33 @@ export function EmailPasswordAuthWidget() {
 
     const result = await loginAuthAction(null, userCredentials);
 
-    if (isApiErrorResponse(result)) {
+    if (!result.ok && isApiErrorResponse(result)) {
       throw new Error(`Login failed: ${result.statusDetails}`);
     }
 
-    const authToken = result.authData?.auth_token;
-    if (isUndefined(authToken)) {
-      throw new Error("Login failed: no auth token returned");
+    if (result.ok) {
+      const authToken = result.data.authData?.auth_token;
+      if (isUndefined(authToken)) {
+        throw new Error("Login failed: no auth token returned");
+      }
+
+      const domainUser = await getAuthenticatedUser({
+        domainId,
+        authToken,
+      });
+
+      if (isUndefined(domainUser)) {
+        throw new Error("Failed to load domain user");
+      }
+
+      setAuthUser({
+        domainUser: domainUser,
+        authToken: authToken,
+        domainId,
+      });
+
+      router.push("/profile");
     }
-
-    const domainUser = await getAuthenticatedUser({
-      domainId,
-      authToken,
-    });
-
-    if (isUndefined(domainUser)) {
-      throw new Error("Failed to load domain user");
-    }
-
-    setAuthUser({
-      domainUser: domainUser,
-      authToken: authToken,
-      domainId,
-    });
-
-    router.push("/profile");
   }
 
   function handleSignUp(credentials: { email?: string; password?: string }) {
