@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { DomainView_SHORT, useDomains } from "@/entities/domain";
 import { FaceNB001 } from "@/entities/face";
+import { DomainUser } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";
@@ -34,9 +35,10 @@ import { CoreAreaSidebarMenu, WorkspaceAreaSidebarMenu } from "./menu";
 type Props = {
   face?: FaceNB001;
   mode?: "user" | "admin";
+  currentAuthUser?: DomainUser;
 };
 
-export function AppSidebar({ face, mode = "user" }: Props) {
+export function AppSidebar({ face, mode = "user", currentAuthUser }: Props) {
   const { data } = useDomains();
   const { authUser, updateUser, logout } = useAuthUser();
   const currentDomain = data?.find((i) => i.id === authUser?.domainId);
@@ -165,7 +167,7 @@ export function AppSidebar({ face, mode = "user" }: Props) {
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
                     <User2 />
-                    {authUser?.domainUser?.user.fullName}
+                    {currentAuthUser?.user?.fullName}
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>

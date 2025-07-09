@@ -7,7 +7,10 @@ import {
   getAuthHeaders,
 } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
-import { isAuthUserGranted } from "@/entities/user/server";
+import {
+  getAuthenticatedUser,
+  isAuthUserGranted,
+} from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { safe } from "@/shared/libs";
 import { RenderOnClient, SidebarProvider } from "@/shared/ui";
@@ -65,10 +68,21 @@ export async function SidebarLayout({ children }: Props) {
     };
   }
 
+  const { DomainId, AuthToken } = await getAuthHeaders();
+
+  const authUser = await getAuthenticatedUser({
+    domainId: DomainId,
+    authToken: AuthToken,
+  });
+
   return (
     <SidebarProvider>
       <RenderOnClient>
-        <AppSidebar face={sidebarFace} mode={isAdmin ? "admin" : undefined} />
+        <AppSidebar
+          face={sidebarFace}
+          mode={isAdmin ? "admin" : undefined}
+          currentAuthUser={authUser}
+        />
         <div className="w-full">
           <SidebarLayoutHeader />
           <SidebarLayoutContent>{children}</SidebarLayoutContent>

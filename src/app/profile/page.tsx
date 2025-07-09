@@ -1,5 +1,5 @@
 import { ProfileScreen } from "@/screens/profile";
 
-export default function Page() {
+export default async function Page() {
   return <ProfileScreen />;
 }
