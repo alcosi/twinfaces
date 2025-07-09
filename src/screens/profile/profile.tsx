@@ -21,20 +21,8 @@ export function ProfileScreen() {
   const { fetchUserByAuthToken, loading } = useFetchUserByAuthToken();
 
   useEffect(() => {
-    refresh();
-  }, [fetchUserByAuthToken]);
-
-  async function refresh() {
-    try {
-      const fetchUser = await fetchUserByAuthToken();
-
-      if (fetchUser) {
-        setUser(fetchUser);
-      }
-    } catch (error) {
-      console.error("Failed to fetch user:", error);
-    }
-  }
+    fetchUserByAuthToken().then(setUser);
+  }, []);
 
   const nameSettings: InPlaceEditProps<string | undefined> = {
     id: "fullName",
@@ -53,7 +41,9 @@ export function ProfileScreen() {
         body: {
           fullName: value,
         },
-      }).then(refresh);
+      })
+        .then(fetchUserByAuthToken)
+        .then(setUser);
     },
   };
 
