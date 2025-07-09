@@ -174,7 +174,6 @@ export function PermissionsTable({
       ]}
       fetcher={fetchPermissions}
       getRowId={(row) => row.id!}
-      pageSizes={[10, 20, 50]}
       disablePagination={isTruthy(userId)}
       {...(isFalsy(userId) && {
         filters: {

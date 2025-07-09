@@ -275,11 +275,8 @@ export function TwinFlowTransitionsTable({
       fetcher={fetchTransitions}
       getRowId={(row) => row.id!}
       onRowClick={(row) =>
-        router.push(
-          `/${PlatformArea.core}/twinclass/${row.twinflow?.twinClassId}/twinflow/${row.twinflowId}/transition/${row.id}`
-        )
+        router.push(`/${PlatformArea.core}/transitions/${row.id}`)
       }
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

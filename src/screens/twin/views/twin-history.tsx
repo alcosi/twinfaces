@@ -119,7 +119,6 @@ export function TwinHistory() {
         ]}
         getRowId={(row) => row.id!}
         fetcher={fetchHistory}
-        pageSizes={[10, 20, 50]}
         defaultVisibleColumns={[
           colDefs.id!,
           colDefs.type!,

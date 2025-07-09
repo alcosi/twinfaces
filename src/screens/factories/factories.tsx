@@ -154,7 +154,6 @@ export function Factories() {
       columns={Object.values(colDefs) as ColumnDef<Factory>[]}
       fetcher={fetchFactories}
       getRowId={(row) => row.id!}
-      pageSizes={[10, 20, 50]}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.key,

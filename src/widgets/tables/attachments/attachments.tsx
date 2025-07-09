@@ -255,7 +255,6 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchAttachments}
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

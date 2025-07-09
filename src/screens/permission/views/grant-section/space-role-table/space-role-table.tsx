@@ -146,7 +146,6 @@ export function SpaceRoleTable() {
       ]}
       fetcher={fetchData}
       getRowId={(row) => row.id!}
-      pageSizes={[10, 20, 50]}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.permissionSchemaId,

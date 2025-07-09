@@ -150,7 +150,6 @@ export function FactoryErasers() {
       ]}
       fetcher={fetchErasers}
       getRowId={(row) => row.id!}
-      pageSizes={[10, 20, 50]}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.factoryId,

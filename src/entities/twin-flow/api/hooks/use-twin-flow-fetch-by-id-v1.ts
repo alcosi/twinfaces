@@ -1,5 +1,6 @@
 import { useCallback, useContext, useState } from "react";
 
+import { hydrateTwinFlowFromMap } from "@/entities/twin-flow";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
@@ -19,14 +20,19 @@ export const useTwinFlowFetchByIdV1 = () => {
         });
 
         if (error) {
-          throw new Error("Failed to fetch twin flows due to API error");
+          throw new Error("Failed to fetch twin flow due to API error");
         }
 
         if (isUndefined(data.twinflow)) {
-          throw new Error("Invalid response data while fetching twin flows");
+          throw new Error("Invalid response data while fetching twin flow");
         }
 
-        return data.twinflow;
+        const twinflow = hydrateTwinFlowFromMap(
+          data.twinflow,
+          data.relatedObjects
+        );
+
+        return twinflow;
       } finally {
         setLoading(false);
       }

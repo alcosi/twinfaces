@@ -1,5 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import { TwinFlowCreateRq, TwinFlowFilters, TwinFlowUpdateRq } from "./types";
 
 export function createTwinFlowApi(settings: ApiSettings) {
@@ -38,14 +40,11 @@ export function createTwinFlowApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         path: { twinflowId: twinFlowId },
         query: {
-          // lazyRelation: false,
+          lazyRelation: false,
           showTwinflowMode: "DETAILED",
-          showTwinflow2TransitionMode: "DETAILED",
-          showTransition2StatusMode: "SHORT",
           showTwinflowInitStatus2StatusMode: "DETAILED",
-          showTransition2PermissionMode: "DETAILED",
-          showTransition2UserMode: "SHORT",
           showTwinflow2TwinClassMode: "DETAILED",
+          showTwinflow2UserMode: "DETAILED",
         },
       },
     });
@@ -70,11 +69,17 @@ export function createTwinFlowApi(settings: ApiSettings) {
     );
   }
 
-  function update({ id, body }: { id: string; body: TwinFlowUpdateRq }) {
+  function update({
+    twinflowId,
+    body,
+  }: {
+    twinflowId: string;
+    body: TwinFlowUpdateRq;
+  }) {
     return settings.client.PUT("/private/twinflow/{twinflowId}/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { twinflowId: id },
+        path: { twinflowId },
       },
       body,
     });

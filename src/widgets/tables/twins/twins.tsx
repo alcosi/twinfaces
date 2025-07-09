@@ -352,7 +352,6 @@ export function TwinsTable({
       columns={Object.values(columnMap)}
       getRowId={(row) => row.id}
       fetcher={(pagination, filters) => fetchTwins({ pagination, filters })}
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(enabledFilters),
       }}

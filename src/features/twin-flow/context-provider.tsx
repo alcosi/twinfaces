@@ -1,64 +1,52 @@
-import { PropsWithChildren, createContext, useEffect, useState } from "react";
+"use client";
 
-import { TwinFlow, useTwinFlowSearchV1 } from "@/entities/twin-flow";
-import { reduceToObject, toArray } from "@/shared/libs";
+import { ReactNode, createContext, useEffect, useState } from "react";
+
+import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twin-flow";
+import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 type TwinFlowContextType = {
-  twinClassId: string;
-  twinFlow?: TwinFlow;
+  twinFlowId: string;
+  twinFlow: TwinFlow;
+  refresh: () => Promise<void>;
 };
-
-export type TwinFlowLayoutProps = PropsWithChildren<{
-  params: Pick<TwinFlowContextType, "twinClassId">;
-}>;
 
 export const TwinFlowContext = createContext<TwinFlowContextType>(
   {} as TwinFlowContextType
 );
 
 export function TwinFlowContextProvider({
-  params: { twinClassId },
+  twinFlowId,
   children,
-}: TwinFlowLayoutProps) {
-  const { searchTwinFlows } = useTwinFlowSearchV1();
-  const [loading, setLoading] = useState<boolean>(false);
+}: {
+  twinFlowId: string;
+  children: ReactNode;
+}) {
+  const { fetchTwinFlowById, loading } = useTwinFlowFetchByIdV1();
   const [twinFlow, setTwinFlow] = useState<TwinFlow | undefined>(undefined);
 
   useEffect(() => {
-    fetchData();
-  }, [twinClassId]);
+    refresh();
+  }, [twinFlowId]);
 
-  async function fetchData() {
-    setLoading(true);
+  async function refresh() {
     try {
-      // TODO: replace searchTwinFlows with useTwinFlowFetchByIdV1
-      const response = await searchTwinFlows({
-        pagination: {
-          pageIndex: 0,
-          pageSize: 1,
-        },
-        filters: {
-          twinClassIdMap: reduceToObject({
-            list: toArray(twinClassId),
-            defaultValue: true,
-          }),
-        },
-      });
-      const twinFlows = response.data ?? [];
-      setTwinFlow(twinFlows[0]);
+      const response = await fetchTwinFlowById(twinFlowId);
+
+      if (response) {
+        setTwinFlow(response);
+      }
     } catch (e) {
-      console.error("Failed to fetch twin flows", e);
-      throw e;
-    } finally {
-      setLoading(false);
+      console.error("Failed to fetch twin flow:", e);
     }
   }
 
+  if (isUndefined(twinFlow) || loading) return <LoadingOverlay />;
+
   return (
-    <TwinFlowContext.Provider value={{ twinClassId, twinFlow }}>
-      {loading && <LoadingOverlay />}
-      {!loading && children}
+    <TwinFlowContext.Provider value={{ twinFlowId, twinFlow, refresh }}>
+      {children}
     </TwinFlowContext.Provider>
   );
 }

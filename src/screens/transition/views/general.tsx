@@ -144,6 +144,13 @@ export function TwinflowTransitionGeneral() {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select status...",
       ...twinStatusAdapter,
+      getItems: async (search: string) =>
+        twinStatusAdapter.getItems(search, {
+          twinClassIdMap: reduceToObject({
+            list: toArray(transition.srcTwinStatus?.twinClassId!),
+            defaultValue: true,
+          }),
+        }),
     },
     renderPreview: transition.dstTwinStatus
       ? (_) => (

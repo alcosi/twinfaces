@@ -248,7 +248,6 @@ export function TwinClassStatusesTable({
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      pageSizes={[10, 20, 50]}
       defaultVisibleColumns={[
         colDefs.logo,
         colDefs.id,

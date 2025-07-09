@@ -15,6 +15,7 @@ import { UseFormReturn } from "react-hook-form";
 import { PagedResponse } from "@/shared/api";
 import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 
+import { DEFAULT_PAGE_SIZES } from "./constans";
 import {
   DataTable,
   DataTableHandle,
@@ -56,6 +57,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onCreateSubmit,
     renderFormFields,
     onRowClick,
+    pageSizes = DEFAULT_PAGE_SIZES,
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -151,6 +153,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         {...props}
         columns={visibleColumns}
         fetcher={fetchWrapper}
+        pageSizes={pageSizes}
         onRowClick={handleOnRowClick}
         layoutMode={viewSettings.layoutMode}
       />

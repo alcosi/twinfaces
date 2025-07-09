@@ -125,7 +125,6 @@ export function PermissionGroupsTable({
       ]}
       fetcher={fetchData}
       getRowId={(row) => row.id!}
-      pageSizes={[10, 20, 50]}
       {...(isFalsy(userId) && {
         filters: {
           filtersInfo: buildFilterFields(),

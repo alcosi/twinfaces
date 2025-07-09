@@ -67,7 +67,7 @@ export function TwinClassRelations() {
       accessorKey: "name",
       header: "Name",
       cell: ({ row: { original } }) => (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <LinkResourceLink data={original} withTooltip />
         </div>
       ),
@@ -76,7 +76,7 @@ export function TwinClassRelations() {
       accessorKey: "dstTwinClassId",
       header: "Destination Twin Class",
       cell: ({ row: { original } }) => (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.dstTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -210,7 +210,6 @@ export function TwinClassRelations() {
         }
         getRowId={(row) => row.id!}
         disablePagination={true}
-        pageSizes={[10, 20, 50]}
         defaultVisibleColumns={[
           columnsMap.id,
           columnsMap.name,
@@ -241,7 +240,6 @@ export function TwinClassRelations() {
         }
         getRowId={(row) => row.id!}
         disablePagination={true}
-        pageSizes={[10, 20, 50]}
         defaultVisibleColumns={[
           columnsMap.id,
           columnsMap.name,
