@@ -148,7 +148,6 @@ export const DatalistsScreen = () => {
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchDataLists}
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

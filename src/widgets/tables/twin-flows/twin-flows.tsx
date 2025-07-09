@@ -32,7 +32,6 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
   CrudDataTable,
-  DEFAULT_PAGE_SIZES,
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
@@ -183,8 +182,6 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
     toast.success("Twin flow created successfully!");
   };
 
-  const pageSizes = useMemo(() => DEFAULT_PAGE_SIZES, []);
-
   return (
     <CrudDataTable
       ref={tableRef}
@@ -199,7 +196,6 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchTwinflows}
-      pageSizes={pageSizes}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/twinflows/${row.id}`)
       }

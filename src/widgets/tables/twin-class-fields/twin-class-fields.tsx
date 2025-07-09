@@ -232,7 +232,6 @@ export function TwinClassFieldsTable({
       ]}
       getRowId={(row) => row.id}
       fetcher={fetchFields}
-      pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
         router.push(
           `/${PlatformArea.core}/twinclass/${row.twinClassId}/twinField/${row.id}`

@@ -117,7 +117,6 @@ export function UsersTable() {
       ]}
       fetcher={fetchUsers}
       getRowId={(row) => row.userId}
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

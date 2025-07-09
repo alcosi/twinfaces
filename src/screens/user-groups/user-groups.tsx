@@ -114,7 +114,6 @@ export function UserGroups() {
       ]}
       fetcher={fetchUserGroups}
       getRowId={(row) => row.id}
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

@@ -204,7 +204,6 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       columns={columns}
       fetcher={fetchDatalistOptions}
       getRowId={(row) => row.id!}
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

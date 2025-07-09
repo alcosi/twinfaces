@@ -277,7 +277,6 @@ export function TwinFlowTransitionsTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/transitions/${row.id}`)
       }
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

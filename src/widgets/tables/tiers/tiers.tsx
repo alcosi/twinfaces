@@ -189,7 +189,6 @@ export function TiersTable() {
       fetcher={fetchTiers}
       getRowId={(row) => row.id!}
       onRowClick={(row) => router.push(`/${PlatformArea.core}/tiers/${row.id}`)}
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}
