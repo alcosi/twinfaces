@@ -29,10 +29,23 @@ export async function TW004(props: TWidgetFaceProps) {
 
   const twidget = twidgetResult.data;
 
-  const { twin, relatedObjects, field } = await buildFieldEditorProps(
+  const result = await buildFieldEditorProps(
     twidget.pointedTwinId!,
     twidget.twinClassFieldId!
   );
+
+  if (!result.ok) {
+    return (
+      <StatusAlert
+        variant="error"
+        title={twidget.name}
+        message={`Face with id ${twidget.id} failed to load`}
+        className="mt-4"
+      />
+    );
+  }
+
+  const { twin, relatedObjects, field } = result.data;
 
   return (
     <div
