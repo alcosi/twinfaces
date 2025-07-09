@@ -33,9 +33,7 @@ type DialogState = {
 type DialogProps = {
   dialogForm?: UseFormReturn<any>;
   renderFormFields?: () => ReactNode;
-  // TODO: fix `any`
   onCreateSubmit?: (values: unknown) => Promise<void>;
-  // TODO: fix `any`
   onUpdateSubmit?: (id: string, values: unknown) => Promise<void>;
   onSubmitSuccess?: () => void;
   title?: string;
@@ -121,7 +119,7 @@ function Component(
                 loading={dialogForm.formState.isSubmitting}
                 disabled={!dialogForm.formState.isDirty}
               >
-                {submitButtonLabel && !isEmptyString(submitButtonLabel)
+                {isPopulatedString(submitButtonLabel)
                   ? submitButtonLabel
                   : "Save"}
               </Button>
