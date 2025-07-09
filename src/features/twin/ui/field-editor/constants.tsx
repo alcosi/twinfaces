@@ -5,8 +5,8 @@ import {
   FieldDescriptorSelectUserV1,
   FieldDescriptorText,
 } from "@/entities/twin/libs/constants";
-import { Twin_DETAILED } from "@/entities/twin/server";
-import { formatIntlDate } from "@/shared/libs";
+import { Twin, Twin_DETAILED } from "@/entities/twin/server";
+import { HAS_ADMIN_ACCESS, formatIntlDate } from "@/shared/libs";
 
 import { TwinResourceLink } from "../../../../features/twin/ui";
 import { UserResourceLink } from "../../../../features/user/ui";
@@ -38,7 +38,10 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
       key: "ownerUserId",
       renderPreview: (twin, mode) => {
         return twin.ownerUser ? (
-          <UserResourceLink data={twin.ownerUser} disabled={mode !== "admin"} />
+          <UserResourceLink
+            data={twin.ownerUser}
+            disabled={mode !== HAS_ADMIN_ACCESS}
+          />
         ) : (
           twin.ownerUserId
         );
@@ -51,7 +54,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
         return twin.assignerUser ? (
           <UserResourceLink
             data={twin.assignerUser}
-            disabled={mode !== "admin"}
+            disabled={mode !== HAS_ADMIN_ACCESS}
           />
         ) : (
           twin.assignerUserId
@@ -64,7 +67,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
         return twin.authorUser ? (
           <UserResourceLink
             data={twin.authorUser}
-            disabled={mode !== "admin"}
+            disabled={mode !== HAS_ADMIN_ACCESS}
           />
         ) : (
           twin.authorUserId
@@ -76,7 +79,10 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
       descriptor: FieldDescriptorSelectSharedInHeadV1,
       renderPreview: (twin, mode) => {
         return twin.headTwin ? (
-          <TwinResourceLink data={twin.headTwin} disabled={mode !== "admin"} />
+          <TwinResourceLink
+            data={twin.headTwin as Twin}
+            disabled={mode !== HAS_ADMIN_ACCESS}
+          />
         ) : (
           twin.headTwinId
         );
@@ -88,7 +94,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
         return twin.status ? (
           <TwinStatusActions
             twin={twin as Twin_DETAILED}
-            allowNavigation={mode !== "admin"}
+            allowNavigation={mode !== HAS_ADMIN_ACCESS}
           />
         ) : (
           twin.statusId
@@ -116,7 +122,7 @@ export const STATIC_FIELD_MAP: Record<StaticTwinFieldId, StaticTwinFieldMeta> =
         return twin.twinClass ? (
           <TwinClassResourceLink
             data={twin.twinClass as TwinClass_DETAILED}
-            disabled={mode !== "admin"}
+            disabled={mode !== HAS_ADMIN_ACCESS}
           />
         ) : (
           twin.twinClassId

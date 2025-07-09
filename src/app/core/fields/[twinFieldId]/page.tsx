@@ -35,7 +35,7 @@ export default function Page({ params: { twinFieldId } }: Props) {
         setTwinField(response);
       }
     } catch {
-      toast.error("Failed to fetch twin field:");
+      toast.error("Failed to fetch twin field");
     }
   }
 

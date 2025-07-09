@@ -15,7 +15,7 @@ import {
   TwinClass_DETAILED,
   useTagsByTwinClassIdSelectAdapter,
 } from "@/entities/twin-class";
-import { TwinUpdateRq } from "@/entities/twin/server";
+import { Twin, TwinUpdateRq } from "@/entities/twin/server";
 import { useUserSelectAdapter } from "@/entities/user";
 import "@/features/datalist-option/ui";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
@@ -247,7 +247,7 @@ export function TwinGeneral() {
             <TableCell>
               {twin.headTwin && (
                 <div className="inline-flex max-w-48">
-                  <TwinResourceLink data={twin.headTwin} withTooltip />
+                  <TwinResourceLink data={twin.headTwin as Twin} withTooltip />
                 </div>
               )}
             </TableCell>
