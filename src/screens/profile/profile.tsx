@@ -27,7 +27,7 @@ export function ProfileScreen() {
     schema: z.string().min(3),
     onSubmit: async (value) => {
       return updateUser({
-        userId: authUser?.authToken!,
+        userId: authUser?.domainUser?.userId!,
         body: {
           fullName: value,
         },
