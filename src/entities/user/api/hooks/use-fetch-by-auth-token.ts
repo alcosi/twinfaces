@@ -6,7 +6,6 @@ import { isUndefined } from "@/shared/libs";
 import { hydrateDomainUserFromMap } from "../../libs";
 import { DomainUser } from "../types";
 
-// TODO: use this hook in /profile page
 export const useFetchUserByAuthToken = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);

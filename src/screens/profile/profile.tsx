@@ -1,25 +1,44 @@
 "use client";
 
 import { CalendarDays, Mail, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { useUpdateUser } from "@/entities/user";
-import { useAuthUser } from "@/features/auth";
+import {
+  DomainUser,
+  useFetchUserByAuthToken,
+  useUpdateUser,
+} from "@/entities/user";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
-import { formatIntlDate } from "@/shared/libs";
+import { formatIntlDate, isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui";
 
 export function ProfileScreen() {
-  const { authUser, updateUser: updateAuthUser } = useAuthUser();
   const { updateUser } = useUpdateUser();
+  const [user, setUser] = useState<DomainUser | undefined>(undefined);
+  const { fetchUserByAuthToken, loading } = useFetchUserByAuthToken();
 
-  // TODO
-  // const currentAuthUser = use `useFetchUserByAuthToken` to fetch user-data for /profile page
+  useEffect(() => {
+    refresh();
+  }, [fetchUserByAuthToken]);
+
+  async function refresh() {
+    try {
+      const fetchUser = await fetchUserByAuthToken();
+
+      if (fetchUser) {
+        setUser(fetchUser);
+      }
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+    }
+  }
 
   const nameSettings: InPlaceEditProps<string | undefined> = {
     id: "fullName",
-    value: "", // user currenAuthUser
+    value: user?.user?.fullName,
     valueInfo: {
       type: AutoFormValueType.string,
       input_props: {
@@ -30,25 +49,15 @@ export function ProfileScreen() {
     schema: z.string().min(3),
     onSubmit: async (value) => {
       return updateUser({
-        userId: authUser?.domainUser?.userId!,
+        userId: user?.user?.id!,
         body: {
           fullName: value,
         },
-      }).then(() => {
-        if (!authUser?.domainUser) return;
-
-        updateAuthUser({
-          domainUser: {
-            ...authUser.domainUser,
-            user: {
-              ...authUser.domainUser.user,
-              fullName: value,
-            },
-          },
-        });
-      });
+      }).then(refresh);
     },
   };
+
+  if (isUndefined(user) || loading) return <LoadingOverlay />;
 
   return (
     <>
@@ -63,15 +72,14 @@ export function ProfileScreen() {
           </div>
           <div className="text-muted-foreground flex items-center gap-1 text-lg font-semibold">
             <Mail className="h-5 w-5" />
-            {authUser?.domainUser?.user.email}
+            {user?.user?.email}
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-2 text-sm">
         <CalendarDays className="h-4 w-4" />
-        Together with us since{" "}
-        {formatIntlDate(authUser?.domainUser?.createdAt!, "date")}
+        Together with us since {formatIntlDate(user?.createdAt!, "date")}
       </div>
 
       <div className="py-6">
