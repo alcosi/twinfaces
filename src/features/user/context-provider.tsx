@@ -28,6 +28,8 @@ export function UserContextProvider({
   }, [userId]);
 
   const [user, setUser] = useState<DomainUser | undefined>(undefined);
+  // TODO: Fix the bug 🐞 fetching user by auth token is invalid here
+  // User should be fetched via userId
   const { fetchUserByAuthToken, loading } = useFetchUserByAuthToken();
 
   async function refresh() {
