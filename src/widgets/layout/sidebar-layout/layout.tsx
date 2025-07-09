@@ -65,6 +65,8 @@ export async function SidebarLayout({ children }: Props) {
     };
   }
 
+  // todo: call getByAuthToken to fetch currentAuthUser here and pass it to <AppSidebar />
+
   return (
     <SidebarProvider>
       <RenderOnClient>

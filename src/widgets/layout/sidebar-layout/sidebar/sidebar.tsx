@@ -165,6 +165,7 @@ export function AppSidebar({ face, mode = "user" }: Props) {
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton>
                     <User2 />
+                    {/* TODO: pass currentAuthUser to this component and render it  */}
                     {authUser?.domainUser?.user.fullName}
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>

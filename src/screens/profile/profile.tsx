@@ -14,9 +14,12 @@ export function ProfileScreen() {
   const { authUser, updateUser: updateAuthUser } = useAuthUser();
   const { updateUser } = useUpdateUser();
 
+  // TODO
+  // const currentAuthUser = use `useFetchUserByAuthToken` to fetch user-data for /profile page
+
   const nameSettings: InPlaceEditProps<string | undefined> = {
     id: "fullName",
-    value: authUser?.domainUser?.user.fullName,
+    value: "", // user currenAuthUser
     valueInfo: {
       type: AutoFormValueType.string,
       input_props: {

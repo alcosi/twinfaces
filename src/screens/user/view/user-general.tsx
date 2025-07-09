@@ -36,26 +36,7 @@ export function UserGeneral() {
         body: {
           fullName: value,
         },
-      })
-        .then(refresh)
-        .then(() => {
-          if (
-            !authUser?.domainUser ||
-            authUser.domainUser.user.id !== user.userId
-          ) {
-            return;
-          }
-
-          updateAuthUser({
-            domainUser: {
-              ...authUser.domainUser,
-              user: {
-                ...authUser.domainUser.user,
-                fullName: value,
-              },
-            },
-          });
-        });
+      }).then(refresh);
     },
   };
 
