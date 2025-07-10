@@ -40,7 +40,7 @@ export type Twin_DETAILED = RequireFields<
 
 export type TwinCreateRq = RequireFields<
   components["schemas"]["TwinCreateRqV2"],
-  "classId" | "name"
+  "classId" | "name" | "assignerUserId"
 >;
 export type TwinCreateRsV1 = components["schemas"]["TwinCreateRsV1"];
 export type TwinUpdateRq = components["schemas"]["TwinUpdateRqV1"];
