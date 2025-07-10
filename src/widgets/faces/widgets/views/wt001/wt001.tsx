@@ -35,8 +35,9 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
     relatedObjects?: RelatedObjects;
   };
 
+  const modalFace = relatedObjects?.faceMap?.[modalFaceId!];
   const modalCreateData = isTruthy(modalFaceId)
-    ? await fetchModalCreateData(modalFaceId, twinId!, relatedObjects)
+    ? await fetchModalCreateData(modalFace!, twinId!)
     : undefined;
 
   const sortedEnabledColumns = Array.isArray(columns)
