@@ -22,7 +22,7 @@ Let’s say we’re creating `WT007`.
 
 #### 2. **Create the Component**
 
-📁 Path: `src/widgets/views/wt007/wt007.tsx`
+📁 Path: `src/widgets/faces/widgets/views/wt007/wt007.tsx`
 
 ```tsx
 import { fetchWT007Face } from "@/entities/face";
@@ -60,7 +60,7 @@ export async function WT007({ widget, twinId }: WidgetFaceProps) {
 
 #### 3. **Export It**
 
-📁 Path: `src/widgets/views/wt007/index.ts`
+📁 Path: `src/widgets/faces/widgets/views/wt007/index.ts`
 
 ```ts
 export * from "./wt007";
@@ -70,7 +70,7 @@ export * from "./wt007";
 
 #### 4. **Register the Widget**
 
-📁 Path: `src/widgets/renderer.tsx`
+📁 Path: `src/widgets/face/widgets/renderer.tsx`
 
 ```ts
 import { WT007 } from "./views";

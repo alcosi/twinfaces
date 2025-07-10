@@ -75,6 +75,7 @@ All widgets live under `widgets/views/` and are grouped by type:
 | `TW004`   | `tw004.tsx`   | Editable twin field                     |
 | `TW005`   | `tw005.tsx`   | Transition buttons for twin             |
 | `WT001`   | `wt001.tsx`   | Table of twins                          |
+| `WT002`   | `wt002.tsx`   | Twin create button                      |
 | `WT003`   | `wt003.tsx`   | Static alert block                      |
 | `TC001`   | `tc-form.tsx` | Twin creation form (used in modals)     |
 
