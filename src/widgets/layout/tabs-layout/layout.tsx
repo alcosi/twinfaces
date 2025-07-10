@@ -21,12 +21,32 @@ export function TabsLayout({ tabs }: Props) {
 
   useEffect(() => {
     const hashKey = window.location.hash.slice(1);
-    if (tabs.findIndex((tab) => tab.key === hashKey) > -1) {
+
+    if (!hashKey && tabs.length > 0) {
+      const firstTabKey = tabs[0]?.key;
+
+      window.history.replaceState(null, "", `#${firstTabKey}`);
+      setActiveTab(firstTabKey);
+    } else if (tabs.find((tab) => tab.key === hashKey)) {
       setActiveTab(hashKey);
     }
   }, [tabs]);
 
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hashKey = window.location.hash.slice(1);
+
+      if (tabs.find((tab) => tab.key === hashKey)) {
+        setActiveTab(hashKey);
+      }
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, [tabs]);
+
   function handleOnValueChange(value: string) {
+    window.history.pushState(null, "", `#${value}`);
     setActiveTab(value);
   }
 

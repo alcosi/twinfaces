@@ -30,7 +30,7 @@ export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
 
   const tabsItems: Tab[] =
     orderedTabs.map((tab) => ({
-      key: tab.title!.toLowerCase(),
+      key: normalizeTabKey(tab.title!),
       label: tab.title ?? "N/A",
       content: isPopulatedArray<Widget>(tab.widgets) ? (
         <WidgetsContainer
@@ -43,4 +43,8 @@ export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
     })) ?? [];
 
   return isPopulatedArray(tabs) ? <TabsLayout tabs={tabsItems} /> : null;
+}
+
+function normalizeTabKey(title: string) {
+  return title.toLowerCase().replace(/\s+/g, "_");
 }
