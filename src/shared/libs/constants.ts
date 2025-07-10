@@ -83,5 +83,3 @@ export const POSITION_MAP: Record<
   "bottom-right": "bottom-0 right-0",
   "bottom-left": "bottom-0 left-0",
 };
-
-export const HAS_ADMIN_ACCESS = "admin";

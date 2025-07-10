@@ -18,7 +18,6 @@ import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 import {
-  HAS_ADMIN_ACCESS,
   cn,
   formatIntlDate,
   isPopulatedString,
@@ -52,7 +51,7 @@ export type TwinFieldEditorProps = {
   relatedObjects?: RelatedObjects;
   onSuccess?: () => void;
   className?: string;
-  mode?: typeof HAS_ADMIN_ACCESS;
+  mode?: "admin";
   editable?: boolean;
 };
 
@@ -145,7 +144,7 @@ export function TwinFieldEditor({
 function renderDynamicFieldPreview(
   field: FieldProps,
   relatedObjects?: RelatedObjects,
-  mode?: typeof HAS_ADMIN_ACCESS,
+  mode?: "admin",
   handleSubmit?: (value: string) => void
 ): ReactNode {
   const fieldType = field.descriptor?.fieldType;
@@ -191,7 +190,7 @@ function renderDynamicFieldPreview(
         <DatalistOptionResourceLink
           data={datalistOptionData}
           withTooltip
-          disabled={mode !== HAS_ADMIN_ACCESS}
+          disabled={mode !== "admin"}
         />
       )
     );
@@ -205,7 +204,7 @@ function renderDynamicFieldPreview(
         <TwinResourceLink
           data={twinData}
           withTooltip
-          disabled={mode !== HAS_ADMIN_ACCESS}
+          disabled={mode !== "admin"}
         />
       )
     );
@@ -219,7 +218,7 @@ function renderDynamicFieldPreview(
         <UserResourceLink
           data={userData as User}
           withTooltip
-          disabled={mode !== HAS_ADMIN_ACCESS}
+          disabled={mode !== "admin"}
         />
       )
     );
