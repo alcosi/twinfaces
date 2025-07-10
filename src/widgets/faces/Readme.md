@@ -8,7 +8,7 @@ This module powers the **face-based widget rendering system** used in TwinFaces.
 
 ```
 
-src/
+src/face/
 ├── widgets/
 │ ├── views/ # Individual widget implementations (e.g. TW001, WT001, etc.)
 │ ├── renderer.tsx # Resolves face.component and renders the corresponding widget
@@ -23,6 +23,7 @@ src/
 │ ├── renderer.tsx # Dynamically resolves layout components
 │ ├── types.ts # Layout props (e.g. PGFaceProps)
 │ └── index.ts # Public re-exports
+
 
 ```
 

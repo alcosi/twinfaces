@@ -90,9 +90,9 @@ const WIDGETS: Record<string, FC<WidgetFaceProps>> = {
 
 If you need custom face fetching logic:
 
-- Add a function `fetchWT007Face` to `entities/face/fetchers.ts`
+- Add a function `fetchWT007Face` to `entities/face/api/actions/widget-twidget.ts`
 - Update backend DTO to support FaceWT007
-- Add typings in `entities/face/types.ts`
+- Add typings in `entities/face/api/types.ts`
 
 ---
 
