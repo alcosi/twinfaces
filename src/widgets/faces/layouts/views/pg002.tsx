@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { fetchPG002Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isNumber, isPopulatedArray, safe } from "@/shared/libs";
@@ -42,5 +44,11 @@ export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
       ) : null,
     })) ?? [];
 
-  return isPopulatedArray(tabs) ? <TabsLayout tabs={tabsItems} /> : null;
+  // TODO: Please create a PG002Skeleton component that mimics the layout of PG002 while its data is loading
+  // and update the fallback of the <Suspense> above to use <PG001Skeleton /> instead of the temporary placeholder
+  return isPopulatedArray(tabs) ? (
+    <Suspense fallback={<div>PG002 loading...</div>}>
+      <TabsLayout tabs={tabsItems} />
+    </Suspense>
+  ) : null;
 }

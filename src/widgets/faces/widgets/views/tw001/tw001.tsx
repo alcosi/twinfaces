@@ -4,8 +4,8 @@ import { withRedirectOnUnauthorized } from "@/features/auth";
 import { cn, safe } from "@/shared/libs";
 import { MediaType, SlotSlider } from "@/shared/ui";
 
-import { StatusAlert } from "../../components";
-import { TWidgetFaceProps } from "../types";
+import { StatusAlert } from "../../../components";
+import { TWidgetFaceProps } from "../../types";
 
 export async function TW001(props: TWidgetFaceProps) {
   const { twinId, widget, className } = props;
