@@ -1,5 +1,5 @@
-import { TableSkeleton } from "@/features/ui/skeletons";
+import { LoadingScreen } from "@/screens/loading";
 
 export default function Loading() {
-  return <TableSkeleton />;
+  return <LoadingScreen />;
 }

@@ -4,7 +4,7 @@ import {
   FEATURER_ID_EXTRACTOR,
   FEATURER_PARAMS_VALUE,
 } from "@/entities/featurer";
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs/constants";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const FACTORY_MULTIPLIER_SCHEMA = z.object({
   factoryId: z

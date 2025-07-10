@@ -1,15 +1,11 @@
-"use client";
+import { Suspense } from "react";
 
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-
-import {
-  TwinClassFieldV2_DETAILED,
-  useFetchTwinClassFieldById,
-} from "@/entities/twin-class-field";
+import { getAuthHeaders } from "@/entities/face";
+import { hydrateTwinClassFieldFromMap } from "@/entities/twin-class-field/libs/helpers";
+import { LoadingScreen } from "@/screens/loading";
 import { TwinClassFieldScreen } from "@/screens/twin-class-field";
+import { TwinsAPI } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-import { LoadingOverlay } from "@/shared/ui";
 
 type Props = {
   params: {
@@ -17,35 +13,46 @@ type Props = {
   };
 };
 
-export default function Page({ params: { twinFieldId } }: Props) {
-  const { fetchTwinClassFieldById, loading } = useFetchTwinClassFieldById();
-  const [twinField, setTwinField] = useState<
-    TwinClassFieldV2_DETAILED | undefined
-  >(undefined);
-
-  useEffect(() => {
-    fetchData();
-  }, [twinFieldId]);
-
-  async function fetchData() {
-    try {
-      const response = await fetchTwinClassFieldById(twinFieldId);
-
-      if (response) {
-        setTwinField(response);
-      }
-    } catch {
-      toast.error("Failed to fetch twin field");
-    }
-  }
-
-  if (isUndefined(twinField) || loading) return <LoadingOverlay />;
+export default async function Page({ params: { twinFieldId } }: Props) {
+  const twinField = await fetchTwinClassFieldById(twinFieldId);
 
   return (
-    <TwinClassFieldScreen
-      twinFieldId={twinFieldId}
-      twinField={twinField}
-      refresh={fetchData}
-    />
+    <Suspense fallback={<LoadingScreen />}>
+      <TwinClassFieldScreen twinFieldId={twinFieldId} twinField={twinField} />
+    </Suspense>
   );
+}
+
+async function fetchTwinClassFieldById(id: string) {
+  const header = await getAuthHeaders();
+
+  const { data, error } = await TwinsAPI.GET(
+    "/private/twin_class_field/{twinClassFieldId}/v1",
+    {
+      params: {
+        header,
+        path: { twinClassFieldId: id },
+        query: {
+          lazyRelation: false,
+          showTwinClassFieldMode: "MANAGED",
+          showTwinClass2PermissionMode: "DETAILED",
+          showTwinClassField2TwinClassMode: "DETAILED",
+          showTwinClassField2FeaturerMode: "DETAILED",
+          showTwinClassField2PermissionMode: "DETAILED",
+        },
+      },
+    }
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  if (isUndefined(data?.field)) {
+    throw new Error("Response does not have twin-class-field data", error);
+  }
+
+  const field = hydrateTwinClassFieldFromMap(data.field, data.relatedObjects);
+
+  return field;
 }

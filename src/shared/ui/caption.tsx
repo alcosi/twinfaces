@@ -1,6 +1,6 @@
 "use client";
 
-import { POSITION_MAP } from "../libs/constants";
+import { POSITION_MAP } from "../libs";
 
 type Props = {
   text: string;

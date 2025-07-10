@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -26,16 +29,15 @@ import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 export function TwinFieldGeneral({
   twinFieldId,
   twinField,
-  refresh,
 }: {
   twinFieldId: string;
   twinField: TwinClassFieldV2_DETAILED;
-  refresh: () => Promise<void>;
 }) {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
   const { updateField } = useFieldUpdate();
+  const router = useRouter();
 
   const permissionAdapter = usePermissionSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(13);
@@ -47,7 +49,7 @@ export function TwinFieldGeneral({
         body: newField,
       });
 
-      refresh();
+      router.refresh();
     } catch (e) {
       toast.error("not updated twin field");
     }

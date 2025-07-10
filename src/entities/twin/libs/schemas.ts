@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs/constants";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 import { transformToTwinTags } from "./helpers";
 

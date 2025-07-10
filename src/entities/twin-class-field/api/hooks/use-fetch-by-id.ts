@@ -5,7 +5,7 @@ import {
   hydrateTwinClassFieldFromMap,
 } from "@/entities/twin-class-field";
 import { PrivateApiContext } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
+import { isUndefined } from "@/shared/libs/types";
 
 export const useFetchTwinClassFieldById = () => {
   const api = useContext(PrivateApiContext);

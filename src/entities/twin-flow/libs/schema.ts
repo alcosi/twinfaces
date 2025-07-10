@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs/constants";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const TWIN_FLOW_SCHEMA = z.object({
   twinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),
