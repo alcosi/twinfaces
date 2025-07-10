@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 import { TWIN_ROLE_SCHEMA } from "@/entities/twin-role";
-import { FIRST_ID_EXTRACTOR, FIRST_USER_ID_EXTRACTOR } from "@/shared/libs";
+import {
+  FIRST_ID_EXTRACTOR,
+  FIRST_USER_ID_EXTRACTOR,
+} from "@/shared/libs/constants";
 
 export const PERMISSION_SCHEMA = z.object({
   groupId: z

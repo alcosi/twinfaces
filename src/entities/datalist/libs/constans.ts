@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { REGEX_PATTERNS } from "@/shared/libs";
+
+import { REGEX_PATTERNS } from "@/shared/libs/constants";
 
 export const DATALIST_SCHEMA = z.object({
   key: z

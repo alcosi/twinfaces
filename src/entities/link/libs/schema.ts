@@ -1,5 +1,8 @@
-import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
 import { z } from "zod";
+
+import { isPopulatedArray } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs/constants";
+
 import { LINK_STRENGTH_SCHEMA, LINK_TYPES_SCHEMA } from "./constants";
 import {
   LinkStrength,

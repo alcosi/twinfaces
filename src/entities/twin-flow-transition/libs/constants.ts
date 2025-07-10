@@ -1,10 +1,7 @@
 import { z } from "zod";
 
-import {
-  FIRST_ID_EXTRACTOR,
-  isPopulatedArray,
-  isPopulatedString,
-} from "@/shared/libs";
+import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs/constants";
 
 export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
   twinflow: z

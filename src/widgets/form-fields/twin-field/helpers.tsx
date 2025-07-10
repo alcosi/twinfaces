@@ -1,7 +1,7 @@
 import { ZodType, z } from "zod";
 
 import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
-import { REGEX_PATTERNS } from "@/shared/libs";
+import { REGEX_PATTERNS } from "@/shared/libs/constants";
 
 export function resolveTwinFieldSchema(
   twinField: TwinFieldUI

@@ -1,6 +1,6 @@
 "use client";
 
-import { POSITION_MAP } from "../libs";
+import { POSITION_MAP } from "../libs/constants";
 
 type Props = {
   text: string;
@@ -12,7 +12,7 @@ export function Caption({ text, position = "bottom-left" }: Props) {
 
   return (
     <div
-      className={`absolute ${positionClass} m-2 rounded-md bg-primary p-1 text-center text-xs text-secondary`}
+      className={`absolute ${positionClass} bg-primary text-secondary m-2 rounded-md p-1 text-center text-xs`}
     >
       {text}
     </div>

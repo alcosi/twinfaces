@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { UNICODE_SYMBOLS } from "@/shared/libs";
+import { UNICODE_SYMBOLS } from "@/shared/libs/constants";
 import { Button, Separator } from "@/shared/ui";
 
 type Props = {

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs/constants";
 
 export const TWIN_CLASS_STATUS_SCHEMA = z.object({
   twinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs/constants";
 
 export const FACTORY_PIPELINE_SCHEMA = z.object({
   factoryId: z

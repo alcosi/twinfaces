@@ -4,11 +4,8 @@ import {
   FEATURER_ID_EXTRACTOR,
   FEATURER_PARAMS_VALUE,
 } from "@/entities/featurer";
-import {
-  FIRST_ID_EXTRACTOR,
-  REGEX_PATTERNS,
-  isPopulatedArray,
-} from "@/shared/libs";
+import { isPopulatedArray } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs/constants";
 
 import { TwinClass } from "../api";
 

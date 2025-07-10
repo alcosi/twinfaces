@@ -4,7 +4,7 @@ import {
   FEATURER_ID_EXTRACTOR,
   FEATURER_PARAMS_VALUE,
 } from "@/entities/featurer";
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs/constants";
 
 export const PIPELINE_STEP_SCHEMA = z.object({
   factoryPipelineId: z
