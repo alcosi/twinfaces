@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 
-import { cn } from "@/shared/libs";
+import { cn, isPopulatedString } from "@/shared/libs";
 
 export type Tab = {
   key: string;
@@ -17,14 +17,25 @@ type Props = {
 };
 
 export function TabsLayout({ tabs }: Props) {
-  const [activeTab, setActiveTab] = useState(tabs[0]?.key);
+  const hashKey = window.location.hash.slice(1);
+  const defaultActiveTab = isPopulatedString(hashKey) ? hashKey : tabs[0]?.key;
+
+  const [activeTab, setActiveTab] = useState(defaultActiveTab);
 
   useEffect(() => {
-    const hashKey = window.location.hash.slice(1);
-    if (tabs.findIndex((tab) => tab.key === hashKey) > -1) {
-      setActiveTab(hashKey);
-    }
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
   }, [tabs]);
+
+  function handleHashChange() {
+    const hashKey = window.location.hash.slice(1);
+
+    if (tabs.find((tab) => tab.key === hashKey)) {
+      setActiveTab(hashKey);
+    } else {
+      setActiveTab(defaultActiveTab);
+    }
+  }
 
   function handleOnValueChange(value: string) {
     setActiveTab(value);
