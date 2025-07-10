@@ -22,12 +22,12 @@ export async function TW001(props: TWidgetFaceProps) {
       fetchTW001Face(widget.widgetFaceId, twinId)
     )
   );
-  if (!twidgetResult.ok) {
+  if (!twidgetResult.ok || !twidgetResult.data.widget) {
     return (
       <StatusAlert variant="error" message="Widget TW001 failed to load." />
     );
   }
-  const twidget = twidgetResult.data;
+  const twidget = twidgetResult.data.widget;
 
   const twinResult = await safe(
     withRedirectOnUnauthorized(() =>

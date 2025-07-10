@@ -13,11 +13,11 @@ export async function WT003({ widget, twinId }: WidgetFaceProps) {
     )
   );
 
-  if (!result.ok) {
+  if (!result.ok || !result.data.widget) {
     return (
       <StatusAlert variant="error" message="Widget WT003 failed to load." />
     );
   }
 
-  return <WT003Alert data={result.data} />;
+  return <WT003Alert data={result.data.widget} />;
 }

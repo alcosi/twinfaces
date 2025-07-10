@@ -21,13 +21,13 @@ export async function TW005(props: TWidgetFaceProps) {
     )
   );
 
-  if (!faceResult.ok) {
+  if (!faceResult.ok || !faceResult.data.widget) {
     return (
       <StatusAlert variant="error" message="Widget TW005 failed to load." />
     );
   }
 
-  const { id, pointedTwinId = "", buttons = [] } = faceResult.data;
+  const { id, pointedTwinId = "", buttons = [] } = faceResult.data.widget;
 
   const twinResult = await safe(
     withRedirectOnUnauthorized(() =>
