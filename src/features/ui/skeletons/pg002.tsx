@@ -8,7 +8,7 @@ export function PG002Skeleton() {
         <Skeleton className="h-5 w-20" />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="flex flex-col items-start space-y-4">
           <Skeleton className="h-[480px] w-[480px] rounded-md" />
 
@@ -51,7 +51,7 @@ export function PG002Skeleton() {
             <Skeleton className="h-4 w-[95%]" />
           </div>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

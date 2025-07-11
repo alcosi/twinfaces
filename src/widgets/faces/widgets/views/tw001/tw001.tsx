@@ -1,8 +1,11 @@
+import { Suspense } from "react";
+
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { cn, safe } from "@/shared/libs";
 import { MediaType, SlotSlider } from "@/shared/ui";
+import { SlotSliderPlaceholder } from "@/shared/ui/sliders/slot-slider/components/slot-slider-placeholder";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -57,13 +60,16 @@ export async function TW001(props: TWidgetFaceProps) {
   );
 
   return (
-    <div
-      data-face-id={twidget.id}
-      className={cn("h-auto w-full max-w-[480px] object-contain", className)}
-    >
-      {twidget.label && <p>{twidget.label}</p>}
-      <SlotSlider items={typedMedia} />
-    </div>
+    // NOTE fallback doesn't work here either, all fallbacks need to be done in the WidgetsContainer component
+    <Suspense fallback={<SlotSliderPlaceholder />}>
+      <div
+        data-face-id={twidget.id}
+        className={cn("h-auto w-full max-w-[480px] object-contain", className)}
+      >
+        {twidget.label && <p>{twidget.label}</p>}
+        <SlotSlider items={typedMedia} />
+      </div>
+    </Suspense>
   );
 }
 
