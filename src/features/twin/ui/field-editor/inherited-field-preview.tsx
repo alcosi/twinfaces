@@ -44,15 +44,17 @@ export function InheritedFieldPreview({
 
     case "textV1":
       if (
-        descriptor.editorType === "MARKDOWN_BASIC" ||
-        descriptor.editorType === "MARKDOWN_GITHUB"
+        descriptor &&
+        ["MARKDOWN_BASIC", "MARKDOWN_GITHUB"].includes(
+          `${descriptor.editorType}`
+        )
       ) {
         return <MarkdownPreview source={value} />;
       }
       break;
 
     case "dateScrollV1": {
-      const format = isPopulatedString(descriptor.pattern)
+      const format = isPopulatedString(descriptor?.pattern)
         ? mapPatternToInputType(descriptor.pattern)
         : "text";
       return isPopulatedString(value) ? formatIntlDate(value, format) : null;

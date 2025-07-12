@@ -135,23 +135,6 @@ export const Fake = {
       >,
       value: "",
     },
-    numericV1: {
-      id: "f1608946-ccba-4ab2-a2c9-bbe96b2ad759",
-      key: "quantity",
-      name: "Quantity",
-      description: "",
-      required: false,
-      descriptor: {
-        fieldType: "numericV1",
-        min: 0,
-        max: 100,
-        step: 1,
-        thousandSeparator: ",",
-        decimalSeparator: ".",
-        decimalPlaces: 1,
-      } as NonNullable<TwinClassField["descriptor"]>,
-      value: 0,
-    },
     numericFieldV1: {
       id: "f1608946-ccba-4ab2-a2c9-bbe96b2ad759",
       key: "quantity",
@@ -203,17 +186,6 @@ export const Fake = {
         TwinClassField["descriptor"]
       >,
       value: "Some immutable value",
-    },
-    attachmentV1: {
-      id: "foobar",
-      key: "key",
-      name: "Key",
-      description: "",
-      required: false,
-      descriptor: { fieldType: "attachmentV1" } as NonNullable<
-        TwinClassField["descriptor"]
-      >,
-      value: "",
     },
     attachmentFieldV1: {
       id: "foobar",
