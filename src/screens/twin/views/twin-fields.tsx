@@ -16,7 +16,7 @@ import { resolveTwinFieldSchema } from "@/widgets/form-fields";
 export function TwinFields() {
   const { twinId } = useContext(TwinContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const { fetchFieldsByTwinId, relatedObjects } = useFetchFields();
+  const { fetchFieldsByTwinId } = useFetchFields();
   const columns: ColumnDef<TwinFieldUI>[] = [
     {
       id: "key",
@@ -60,7 +60,6 @@ export function TwinFields() {
               schema={resolveTwinFieldSchema(original)}
               onSuccess={tableRef.current?.refresh}
               editable
-              relatedObjects={relatedObjects}
             />
           </div>
         );

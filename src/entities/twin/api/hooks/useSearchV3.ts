@@ -1,16 +1,15 @@
 import { PaginationState } from "@tanstack/react-table";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext } from "react";
 
 import {
   TwinFilters,
   Twin_DETAILED,
   hydrateTwinFromMap,
 } from "@/entities/twin/server";
-import { PagedResponse, PrivateApiContext, RelatedObjects } from "@/shared/api";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export const useTwinSearchV3 = () => {
   const api = useContext(PrivateApiContext);
-  const [relatedObjects, setRelatedObjects] = useState<RelatedObjects>();
 
   const searchTwins = useCallback(
     async ({
@@ -29,19 +28,18 @@ export const useTwinSearchV3 = () => {
         if (error) {
           throw new Error("Failed to fetch twins due to API error");
         }
-        setRelatedObjects(data.relatedObjects);
         const twinList =
           data?.twinList?.map((dto) =>
             hydrateTwinFromMap<Twin_DETAILED>(dto, data.relatedObjects)
           ) ?? [];
 
         return { data: twinList, pagination: data.pagination ?? {} };
-      } catch (error) {
+      } catch {
         throw new Error("An error occurred while fetching twins");
       }
     },
     [api]
   );
 
-  return { searchTwins, relatedObjects };
+  return { searchTwins };
 };

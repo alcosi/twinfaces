@@ -36,7 +36,6 @@ import {
   TwinStatusActions,
 } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { RelatedObjects } from "@/shared/api";
 import {
   formatIntlDate,
   isEmptyString,
