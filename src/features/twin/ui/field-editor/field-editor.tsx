@@ -148,6 +148,7 @@ function renderDynamicFieldPreview(
   handleSubmit?: (value: string) => void
 ): ReactNode {
   const fieldType = field.descriptor?.fieldType;
+
   if (fieldType === "urlV1") {
     return (
       <AnchorWithCopy href={field.value} target="_blank">

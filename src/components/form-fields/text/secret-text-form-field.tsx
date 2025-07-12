@@ -12,10 +12,10 @@ import { FormFieldProps, TextFormFieldProps } from "../types";
 import { SecretTextFormItem } from "./secret-text-form-item";
 
 const strengthColorMap: Record<PasswordStrengthLevel, string> = {
-  0: "bg-red-500",
-  1: "bg-orange-500",
-  2: "bg-yellow-500",
-  3: "bg-green-500",
+  0: "bg-error",
+  1: "bg-warn",
+  2: "bg-warn-bg",
+  3: "bg-success",
 };
 
 type SecretTextFormFieldProps<T extends FieldValues> = FormFieldProps<T> &
