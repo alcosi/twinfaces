@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from "react";
 
 import {
+  AttachmentImageFormItem,
   ColorPickerFormItem,
   ComboboxFormItem,
   FormItemProps,
@@ -122,10 +123,6 @@ export function TwinFieldFormItem({
       }
       case TwinFieldType.immutableV1:
         return <TextFormItem disabled {...props} />;
-      case TwinFieldType.attachmentFieldV1:
-        return (
-          <TextFormItem type="file" onChange={handleInputChange} {...props} />
-        );
       case TwinFieldType.selectLinkV1:
       case TwinFieldType.selectSharedInHeadV1:
         return (
@@ -219,6 +216,14 @@ export function TwinFieldFormItem({
             renderItem={userAdapter.renderItem}
             onSelect={handleOnUserSelect}
             {...props}
+          />
+        );
+      case TwinFieldType.attachmentFieldV1:
+        return (
+          <AttachmentImageFormItem
+            {...props}
+            fieldValue={props.fieldValue}
+            onChange={onChange}
           />
         );
       default:

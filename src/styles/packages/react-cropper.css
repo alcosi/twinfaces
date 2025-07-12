@@ -1,0 +1,10 @@
+@import "cropperjs/dist/cropper.css";
+
+.circle-cropper .cropper-crop-box,
+.circle-cropper .cropper-view-box {
+  border-radius: 50%;
+}
+
+.circle-cropper .cropper-view-box {
+  box-shadow: 0 0 0 1px #39f;
+}

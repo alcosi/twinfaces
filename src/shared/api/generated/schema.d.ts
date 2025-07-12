@@ -4635,6 +4635,186 @@ export interface components {
              */
             name?: string;
         };
+        AttachmentV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 553ef9bc-3b48-430d-90d3-bdee516c3d87
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description twin id
+             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+             */
+            twinId?: string;
+            /**
+             * @description External storage link
+             * @example https://test.filestorage.by/JFUjEFWksfqwf
+             */
+            storageLink?: string;
+            /**
+             * @description External storage links map by key
+             * @example {
+             *       "origin": "https://test.filestorage.by/JFUjEFWksfqwf"
+             *     }
+             */
+            modifications?: {
+                [key: string]: string;
+            };
+            /**
+             * @description External id
+             * @example JD999weqw9f
+             */
+            externalId?: string;
+            /**
+             * @description Title
+             * @example cert.pdf
+             */
+            title?: string;
+            /**
+             * @description Description
+             * @example cert.pdf
+             */
+            description?: string;
+            /**
+             * Format: int64
+             * @description File size in bytes
+             * @example 123456
+             */
+            size?: number;
+            /**
+             * Format: uuid
+             * @description view permission id
+             */
+            viewPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description author id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            authorUserId?: string;
+            /**
+             * Format: uuid
+             * @description comment id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            commentId?: string;
+            /**
+             * Format: uuid
+             * @description twin class field id
+             * @example 2fe95272-afcb-40ee-a6a8-87c5da4d5b8d
+             */
+            twinClassFieldId?: string;
+            /**
+             * Format: uuid
+             * @description twinflow transition id
+             * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+             */
+            twinflowTransitionId?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /** @description attachment action list */
+            attachmentActions?: ("VIEW" | "EDIT" | "DELETE")[];
+        };
+        AttachmentsCountV1: {
+            /**
+             * Format: int32
+             * @description Total number of attachments
+             * @example 20
+             */
+            all?: number;
+            /**
+             * Format: int32
+             * @description Number of attachments direct for a twin
+             * @example 12
+             */
+            direct?: number;
+            /**
+             * Format: int32
+             * @description Number of attachments for transition only
+             * @example 3
+             */
+            fromTransitions?: number;
+            /**
+             * Format: int32
+             * @description Number of attachments for comment only
+             * @example 4
+             */
+            fromComments?: number;
+            /**
+             * Format: int32
+             * @description Number of attachments for twin class field only
+             * @example 1
+             */
+            fromFields?: number;
+        };
+        BusinessAccountV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            id?: string;
+            /**
+             * @description name
+             * @example Business account name
+             */
+            name?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+        };
+        CommentV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+            text?: string;
+            /**
+             * Format: uuid
+             * @description author id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            authorUserId?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description changed at
+             * @example 2023-09-13T09:32:08
+             */
+            changedAt?: string;
+            /** @description attachment ids */
+            attachmentIds?: string[];
+            /** @description comment actions */
+            commentActions?: ("EDIT" | "DELETE" | "PIN" | "UNPIN" | "VOTE" | "REACT" | "HIDE" | "UNHIDE")[];
+        };
+        DataListAttributeV1: {
+            /**
+             * @description key
+             * @example color
+             */
+            key?: string;
+            /**
+             * @description name
+             * @example Some name
+             */
+            name?: string;
+        };
         DataListOptionV1: {
             /**
              * Format: uuid

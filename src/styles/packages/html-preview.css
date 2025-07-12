@@ -1,0 +1,11 @@
+.html-preview ul {
+  @apply my-2 list-inside list-disc pl-4;
+}
+
+.html-preview ol {
+  @apply my-2 list-inside list-decimal pl-4;
+}
+
+.html-preview li {
+  @apply mb-1;
+}
