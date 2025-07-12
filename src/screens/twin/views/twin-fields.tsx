@@ -43,6 +43,7 @@ export function TwinFields() {
             onClick={(e) => e.stopPropagation()}
           >
             <TwinFieldEditor
+              className="hover:bg-transparent"
               id={original.id}
               twinId={twinId}
               twin={original}
@@ -59,9 +60,7 @@ export function TwinFields() {
               schema={resolveTwinFieldSchema(original)}
               onSuccess={tableRef.current?.refresh}
               editable
-              className="hover:bg-transparent"
               relatedObjects={relatedObjects}
-              mode="admin"
             />
           </div>
         );

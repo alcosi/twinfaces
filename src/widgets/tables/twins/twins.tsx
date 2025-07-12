@@ -87,7 +87,7 @@ export function TwinsTable({
     twinClassFields,
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
-  const { searchTwins, relatedObjects } = useTwinSearchV3();
+  const { searchTwins } = useTwinSearchV3();
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -296,7 +296,6 @@ export function TwinsTable({
           fields,
           enabledColumns,
           resourceNavigationEnabled,
-          relatedObjects,
         });
 
       setTwinClassFields(supportedFields);
@@ -305,7 +304,7 @@ export function TwinsTable({
         ...Object.fromEntries(columnEntries),
       }));
     });
-  }, [baseTwinClassId, enabledColumns, fetchTwinClassById, relatedObjects]);
+  }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
 
   async function fetchTwins({
     pagination,
@@ -399,12 +398,10 @@ function extractTwinFieldColumnsAndFilters({
   fields,
   enabledColumns,
   resourceNavigationEnabled,
-  relatedObjects,
 }: {
   fields: TwinClassField[];
   enabledColumns: NonNullable<FaceWT001["columns"]>;
   resourceNavigationEnabled: boolean;
-  relatedObjects?: RelatedObjects;
 }): {
   supportedFields: TwinClassField[];
   columnEntries: [string, ColumnDef<Twin_DETAILED>][];
@@ -450,9 +447,8 @@ function extractTwinFieldColumnsAndFilters({
                 }}
                 twinId={original.id}
                 twin={original}
-                relatedObjects={relatedObjects}
                 editable={false}
-                mode={resourceNavigationEnabled ? "admin" : undefined}
+                disabled={!resourceNavigationEnabled}
               />
             );
           },

@@ -32,7 +32,7 @@ export type TwinFieldEditorProps = {
   relatedObjects?: RelatedObjects;
   onSuccess?: () => void;
   className?: string;
-  mode?: "admin";
+  disabled?: boolean;
   editable?: boolean;
 };
 
@@ -46,7 +46,7 @@ export function TwinFieldEditor({
   relatedObjects,
   onSuccess,
   className,
-  mode,
+  disabled,
   editable = false,
 }: TwinFieldEditorProps) {
   const { updateTwin } = useTwinUpdate();
@@ -66,16 +66,14 @@ export function TwinFieldEditor({
 
   function renderPreview() {
     if (selfFieldRenderPreview) {
-      return selfFieldRenderPreview(hydratedTwin, {
-        disabled: mode !== "admin",
-      });
+      return selfFieldRenderPreview(hydratedTwin, { disabled });
     }
 
     return (
       <InheritedFieldPreview
         field={field}
         relatedObjects={relatedObjects}
-        disabled={mode !== "admin"}
+        disabled={disabled}
         onChange={handleOnSubmit}
       />
     );
