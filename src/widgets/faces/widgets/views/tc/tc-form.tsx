@@ -7,7 +7,7 @@ import {
 } from "@/components/form-fields";
 
 import { FaceTC001ViewRs as FaceTC } from "@/entities/face";
-import { StaticTwinFieldId, TwinFormValues } from "@/entities/twin";
+import { TwinFormValues, TwinSelfFieldId } from "@/entities/twin";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
@@ -21,7 +21,7 @@ type Field = {
   twinClassField?: TwinClassField;
 };
 
-type StaticFieldComponentProps = {
+type TwinSelfFieldComponentProps = {
   control: Control<TwinFormValues>;
   name: Path<TwinFormValues>;
   label: string;
@@ -53,8 +53,8 @@ export function TCForm({
   const { hasHeadClass, twinClassAdapter, userAdapter, headAdapter } =
     useTwinClassFields(control, modalCreateData.faceTwinCreate?.twinClassId);
 
-  const staticFields: Partial<
-    Record<StaticTwinFieldId, (props: StaticFieldComponentProps) => JSX.Element>
+  const selfFields: Partial<
+    Record<TwinSelfFieldId, (props: TwinSelfFieldComponentProps) => JSX.Element>
   > = {
     "00000000-0000-0000-0011-000000000007": ({ control, name, label }) => (
       <ComboboxFormField
@@ -121,7 +121,7 @@ export function TCForm({
         }
 
         const StaticFieldComponent =
-          staticFields[field.twinClassFieldId as StaticTwinFieldId];
+          selfFields[field.twinClassFieldId as TwinSelfFieldId];
         if (!StaticFieldComponent) return null;
 
         const nameMap: Record<string, Path<TwinFormValues>> = {
@@ -142,7 +142,7 @@ export function TCForm({
 
       {hydratedFields.map((field) => {
         const isStaticField =
-          staticFields[field.twinClassFieldId as StaticTwinFieldId] ||
+          selfFields[field.twinClassFieldId as TwinSelfFieldId] ||
           field.twinClassFieldId === classFieldId ||
           field.twinClassFieldId === headFieldId;
 

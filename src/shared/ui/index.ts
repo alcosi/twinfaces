@@ -28,6 +28,7 @@ export * from "./sidebar";
 export * from "./skeleton";
 export * from "./sliders";
 export * from "./sonner";
+export * from "./switch";
 export * from "./table";
 export * from "./tabs";
 export * from "./theme-image";

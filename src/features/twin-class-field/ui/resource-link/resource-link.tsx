@@ -17,7 +17,7 @@ export const TwinClassFieldResourceLink = ({
   disabled,
   withTooltip,
 }: Props) => {
-  const link = `/${PlatformArea.core}/twinclass/${data.twinClassId}/twinField/${data.id}`;
+  const link = `/${PlatformArea.core}/fields/${data.id}`;
 
   return (
     <ResourceLink

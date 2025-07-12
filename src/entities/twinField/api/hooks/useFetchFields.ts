@@ -33,7 +33,6 @@ export const useFetchFields = () => {
           relatedObjects: data.relatedObjects,
         })
       );
-
       const extendedTwinFields = twinFields.map((field) => ({
         ...field,
         twinClassId: data.twin?.twinClassId,

@@ -26,6 +26,8 @@ export const hydrateTwinFieldFromMap = ({
     case TwinFieldType.selectSharedInHeadV1:
     case TwinFieldType.selectUserV1:
     case TwinFieldType.selectUserLongV1:
+    case TwinFieldType.selectLinkV1:
+    case TwinFieldType.selectLinkLongV1:
       twinFieldKeyValue.value =
         relatedObjects?.dataListsOptionMap?.[value] ?? value;
       break;

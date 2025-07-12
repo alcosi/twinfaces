@@ -6,7 +6,6 @@ export const TWIN_FIELD_TYPES = [
   "urlV1",
 
   // TWINFACES-434
-  "numericV1",
   "numericFieldV1",
   // TWINFACES-437
 
@@ -20,7 +19,6 @@ export const TWIN_FIELD_TYPES = [
 
   // TWINFACES-
   "attachmentFieldV1",
-  "attachmentV1",
 
   // TWINFACES-439
   "selectLinkV1",

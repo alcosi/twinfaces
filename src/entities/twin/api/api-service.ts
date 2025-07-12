@@ -33,6 +33,8 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinAliasMode: "C",
           showTwinFieldCollectionMode: "ALL_FIELDS",
           showTwin2TransitionMode: "DETAILED",
+          showTwinByLinkMode: "GREEN",
+          showTwin2TwinLinkMode: "SHORT",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
@@ -88,6 +90,9 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinClass2LinkMode: "DETAILED",
           showTwinField2UserMode: "DETAILED",
           showTwinClassMode: "DETAILED",
+          showTwin2UserMode: "DETAILED",
+          showTwinByLinkMode: "GREEN",
+          showTwin2TwinLinkMode: "SHORT",
         },
       },
     });

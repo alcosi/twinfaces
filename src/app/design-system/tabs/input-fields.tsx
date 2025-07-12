@@ -30,7 +30,6 @@ const TWIN_FIELDS_FORM_SCHEMA = z.object({
   textV1: z.string(),
   urlV1: z.string().url(),
   immutableV1: z.string(),
-  numericV1: z.number(),
   numericFieldV1: z.number(),
   // Select
   selectLinkV1: z.any(),
@@ -61,7 +60,6 @@ export function InputFieldsTab() {
       textV1: Fake.FieldInputs.textV1.value,
       urlV1: Fake.FieldInputs.urlV1.value,
       immutableV1: Fake.FieldInputs.immutableV1.value,
-      numericV1: Fake.FieldInputs.numericV1.value,
       numericFieldV1: Fake.FieldInputs.numericFieldV1.value,
     },
     resolver: zodResolver(TWIN_FIELDS_FORM_SCHEMA),
@@ -121,14 +119,6 @@ export function InputFieldsTab() {
                 title="Number fields"
                 value={
                   <div className="my-4 space-y-4">
-                    <TwinFieldFormField
-                      control={twinFieldsForm.control}
-                      descriptor={Fake.FieldInputs.numericV1.descriptor}
-                      name={TwinFieldType.numericV1}
-                      label={TwinFieldType.numericV1}
-                      twinClassId={mockTwinClassId}
-                    />
-
                     <TwinFieldFormField
                       control={twinFieldsForm.control}
                       descriptor={Fake.FieldInputs.numericFieldV1.descriptor}
@@ -207,13 +197,6 @@ export function InputFieldsTab() {
                     <TwinFieldFormField
                       control={form.control}
                       descriptor={Fake.FieldInputs.attachmentFieldV1.descriptor}
-                      name={TwinFieldType.attachmentFieldV1}
-                      label={TwinFieldType.attachmentFieldV1}
-                      twinClassId={mockTwinClassId}
-                    />
-                    <TwinFieldFormField
-                      control={form.control}
-                      descriptor={Fake.FieldInputs.attachmentV1.descriptor}
                       name={TwinFieldType.attachmentFieldV1}
                       label={TwinFieldType.attachmentFieldV1}
                       twinClassId={mockTwinClassId}

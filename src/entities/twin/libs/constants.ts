@@ -3,13 +3,13 @@ import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
 import { TwinFilterKeys } from "../server";
 import {
   SearchableTwinFieldType,
-  StaticTwinFieldId,
-  StaticTwinFieldKey,
   TwinFieldFilterInput,
   TwinFieldSearchDate,
   TwinFieldSearchList,
   TwinFieldSearchNumeric,
   TwinFieldSearchText,
+  TwinSelfFieldId,
+  TwinSelfFieldKey,
 } from "./types";
 
 export const TwinTouchIds = ["WATCHED", "STARRED", "REVIEWED"] as const;
@@ -22,7 +22,7 @@ export const TwinBasicFields = [
 ] as const;
 
 // === Twin fields ===
-export const STATIC_TWIN_FIELD_KEYS = [
+export const TWIN_SELF_FIELD_KEYS = [
   "name",
   "description",
   "externalId",
@@ -38,7 +38,7 @@ export const STATIC_TWIN_FIELD_KEYS = [
   "tags",
   "markers",
 ] as const;
-export const STATIC_TWIN_FIELD_IDS = [
+export const TWIN_SELF_FIELD_IDS = [
   "00000000-0000-0000-0011-000000000003",
   "00000000-0000-0000-0011-000000000004",
   "00000000-0000-0000-0011-000000000005",
@@ -56,8 +56,8 @@ export const STATIC_TWIN_FIELD_IDS = [
 ] as const;
 
 export const STATIC_TWIN_FIELD_KEY_TO_ID_MAP: Record<
-  StaticTwinFieldKey,
-  StaticTwinFieldId
+  TwinSelfFieldKey,
+  TwinSelfFieldId
 > = {
   name: "00000000-0000-0000-0011-000000000003",
   description: "00000000-0000-0000-0011-000000000004",
@@ -76,7 +76,7 @@ export const STATIC_TWIN_FIELD_KEY_TO_ID_MAP: Record<
 } as const;
 
 export const STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP: Partial<
-  Record<StaticTwinFieldId, TwinFilterKeys>
+  Record<TwinSelfFieldId, TwinFilterKeys>
 > = {
   "00000000-0000-0000-0011-000000000012": "twinIdList",
   "00000000-0000-0000-0011-000000000013": "twinClassIdList",

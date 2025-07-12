@@ -1,5 +1,6 @@
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 import { z } from "zod";
+
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const FACTORY_BRANCH_SCHEMA = z.object({
   factoryId: z

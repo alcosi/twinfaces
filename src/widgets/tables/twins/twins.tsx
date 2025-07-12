@@ -8,10 +8,10 @@ import { FaceTC001ViewRs, FaceWT001 } from "@/entities/face";
 import {
   STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP,
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
-  StaticTwinFieldId,
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
   TwinFormValues,
+  TwinSelfFieldId,
   useCreateTwin,
   useTwinFilters,
   useTwinSearchV3,
@@ -30,17 +30,22 @@ import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { TwinResourceLink, TwinStatusActions } from "@/features/twin/ui";
+import {
+  TwinFieldEditor,
+  TwinResourceLink,
+  TwinStatusActions,
+} from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import {
   formatIntlDate,
   isEmptyString,
+  isObject,
   isPopulatedArray,
+  isTruthy,
   isUndefined,
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
-import { renderTwinFieldPreview } from "../../../widgets/form-fields";
 import {
   CrudDataTable,
   DataTableHandle,
@@ -86,7 +91,7 @@ export function TwinsTable({
 
   const enabledFilters = isPopulatedArray(enabledColumns)
     ? enabledColumns.reduce((acc: TwinFilterKeys[], col) => {
-        const fieldId = col.twinClassFieldId as StaticTwinFieldId;
+        const fieldId = col.twinClassFieldId as TwinSelfFieldId;
         const key = STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP[fieldId];
 
         if (!isUndefined(key)) acc.push(key);
@@ -136,7 +141,7 @@ export function TwinsTable({
           {original.status && (
             <TwinStatusActions
               twin={original}
-              allowNavigation={resourceNavigationEnabled}
+              allowNavigation={!resourceNavigationEnabled}
               onTransitionSuccess={handleOnTransitionPerformSuccess}
             />
           )}
@@ -426,10 +431,25 @@ function extractTwinFieldColumnsAndFilters({
               return twinField.value;
             }
 
-            return renderTwinFieldPreview({
-              twinField,
-              allowNavigation: resourceNavigationEnabled,
-            });
+            return (
+              <TwinFieldEditor
+                id={twinField.id}
+                field={{
+                  id: twinField.id,
+                  key: twinField.key,
+                  value:
+                    isObject(twinField.value) && isTruthy(twinField.value.id)
+                      ? (twinField.value.id as string)
+                      : (twinField.value as string),
+                  name: twinField.name,
+                  descriptor: twinField.descriptor,
+                }}
+                twinId={original.id}
+                twin={original}
+                editable={false}
+                disabled={!resourceNavigationEnabled}
+              />
+            );
           },
         },
       ]);

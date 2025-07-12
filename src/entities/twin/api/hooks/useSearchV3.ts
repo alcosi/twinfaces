@@ -28,14 +28,13 @@ export const useTwinSearchV3 = () => {
         if (error) {
           throw new Error("Failed to fetch twins due to API error");
         }
-
         const twinList =
           data?.twinList?.map((dto) =>
             hydrateTwinFromMap<Twin_DETAILED>(dto, data.relatedObjects)
           ) ?? [];
 
         return { data: twinList, pagination: data.pagination ?? {} };
-      } catch (error) {
+      } catch {
         throw new Error("An error occurred while fetching twins");
       }
     },

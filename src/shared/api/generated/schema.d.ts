@@ -4364,983 +4364,6 @@ export interface components {
              */
             twinClassId?: string;
         };
-        DataListOptionV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example 7de977d4-df6d-4250-9cb2-088363d139a1
-             */
-            id?: string;
-            /**
-             * @description name
-             * @example Bharat
-             */
-            name?: string;
-            /**
-             * @description icon
-             * @example Icon path
-             */
-            icon?: string;
-            /**
-             * @description status
-             * @example active
-             * @enum {string}
-             */
-            status?: "active" | "disabled" | "hidden";
-            /** @description map attributes (key : value) */
-            attributes?: {
-                [key: string]: string;
-            };
-            /**
-             * @description background color
-             * @example #ff00ff
-             */
-            backgroundColor?: string;
-            /**
-             * @description font color
-             * @example #ff00ff
-             */
-            fontColor?: string;
-            /** @description external id [optional] */
-            externalId?: string;
-        };
-        RelatedObjectsV1: {
-            /**
-             * @description related statuses map
-             * @example {twin map}
-             */
-            twinMap?: {
-                [key: string]: components["schemas"]["TwinV2"];
-            };
-            /**
-             * @description related statuses map
-             * @example {twin status map}
-             */
-            statusMap?: {
-                [key: string]: components["schemas"]["TwinStatusV1"];
-            };
-            /**
-             * @description related users map
-             * @example {user map}
-             */
-            userMap?: {
-                [key: string]: components["schemas"]["UserV1"];
-            };
-            /**
-             * @description related users group map
-             * @example {user group map}
-             */
-            userGroupMap?: {
-                [key: string]: components["schemas"]["UserGroupV1"];
-            };
-            /**
-             * @description related twinClass map
-             * @example {twin class map}
-             */
-            twinClassMap?: {
-                [key: string]: components["schemas"]["TwinClassV1"];
-            };
-            /**
-             * @description related transitionsMap map
-             * @example {twin transition map}
-             */
-            transitionsMap?: {
-                [key: string]: components["schemas"]["TwinflowTransitionBaseV1"];
-            };
-            /**
-             * @description related datalist map
-             * @example {datalist map}
-             */
-            dataListsMap?: {
-                [key: string]: components["schemas"]["DataListV1"];
-            };
-            /**
-             * @description related datalistOption map
-             * @example {datalistOption map}
-             */
-            dataListsOptionMap?: {
-                [key: string]: components["schemas"]["DataListOptionV1"];
-            };
-            /**
-             * @description related space role map
-             * @example {space role map}
-             */
-            spaceRoleMap?: {
-                [key: string]: components["schemas"]["SpaceRoleV1"];
-            };
-            /**
-             * @description related business account map
-             * @example {business account map}
-             */
-            businessAccountMap?: {
-                [key: string]: components["schemas"]["BusinessAccountV1"];
-            };
-            /**
-             * @description related permission group map
-             * @example {permission group map}
-             */
-            permissionGroupMap?: {
-                [key: string]: components["schemas"]["PermissionGroupV1"];
-            };
-            /**
-             * @description related permission map
-             * @example {permission map}
-             */
-            permissionMap?: {
-                [key: string]: components["schemas"]["PermissionV1"];
-            };
-            /**
-             * @description related permission schema map
-             * @example {permission schema map}
-             */
-            permissionSchemaMap?: {
-                [key: string]: components["schemas"]["PermissionSchemaV2"];
-            };
-            /**
-             * @description related twinflow map
-             * @example {twinflow map}
-             */
-            twinflowMap?: {
-                [key: string]: components["schemas"]["TwinflowBaseV1"];
-            };
-            /**
-             * @description related factory map
-             * @example {factory map}
-             */
-            factoryMap?: {
-                [key: string]: components["schemas"]["FactoryV1"];
-            };
-            /**
-             * @description related factory pipeline map
-             * @example {factory pipeline map}
-             */
-            factoryPipelineMap?: {
-                [key: string]: components["schemas"]["FactoryPipelineV1"];
-            };
-            /**
-             * @description related twinclass schema map
-             * @example {twin class schema map}
-             */
-            twinClassSchemaMap?: {
-                [key: string]: components["schemas"]["TwinClassSchemaV1"];
-            };
-            /**
-             * @description related comment map
-             * @example {comment map}
-             */
-            commentMap?: {
-                [key: string]: components["schemas"]["CommentV1"];
-            };
-            /**
-             * @description related featurer map
-             * @example {featurer map}
-             */
-            featurerMap?: {
-                [key: string]: components["schemas"]["FeaturerV1"];
-            };
-            /**
-             * @description related face map
-             * @example {face map}
-             */
-            faceMap?: {
-                [key: string]: components["schemas"]["FaceV1"];
-            };
-            /**
-             * @description related i18n map
-             * @example {face map}
-             */
-            i18nMap?: {
-                [key: string]: components["schemas"]["I18nV1"];
-            };
-            /**
-             * @description related class field map
-             * @example {class field map}
-             */
-            twinClassFieldMap?: {
-                [key: string]: components["schemas"]["TwinClassFieldV1"];
-            };
-        };
-        TwinBaseV2: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
-             */
-            id?: string;
-            /**
-             * @description externalId
-             * @example 934599502DFFAE
-             */
-            externalId?: string;
-            /**
-             * Format: uuid
-             * @description headTwinId
-             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-             */
-            headTwinId?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /**
-             * @description name
-             * @example Oak
-             */
-            name?: string;
-            /**
-             * @description description
-             * @example The biggest tree
-             */
-            description?: string;
-            /**
-             * Format: uuid
-             * @description statusId
-             */
-            statusId?: string;
-            /**
-             * Format: uuid
-             * @description class
-             */
-            twinClassId?: string;
-            /**
-             * Format: uuid
-             * @description current assigner
-             */
-            assignerUserId?: string;
-            /**
-             * Format: uuid
-             * @description author
-             */
-            authorUserId?: string;
-            /**
-             * Format: uuid
-             * @description owner business account id
-             * @example 9a3f6075-f175-41cd-a804-934201ec969c
-             */
-            ownerBusinessAccountId?: string;
-            /**
-             * Format: uuid
-             * @description owner user id
-             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            ownerUserId?: string;
-            /** @description status */
-            status?: components["schemas"]["TwinStatusV1"];
-            /** @description class */
-            twinClass?: components["schemas"]["TwinClassV1"];
-            /** @description current assigner */
-            assignerUser?: components["schemas"]["UserV1"];
-            /** @description author */
-            authorUser?: components["schemas"]["UserV1"];
-            /** @description headTwin */
-            headTwin?: components["schemas"]["TwinBaseV2"];
-            /** @description aliases */
-            aliases?: string[];
-        };
-        TwinClassFieldDescriptorAttachmentV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * Format: int32
-             * @description Min count of files to upload
-             * @example 1
-             */
-            minCount?: number;
-            /**
-             * Format: int32
-             * @description Max count of files to upload
-             * @example 1
-             */
-            maxCount?: number;
-            /**
-             * @description Allowed extensions
-             * @example [
-             *       "jpg",
-             *       "jpeg",
-             *       "png"
-             *     ]
-             */
-            extensions?: string;
-            /**
-             * @description Filename must match this regexp
-             * @example .*
-             */
-            filenameRegExp?: string;
-            /**
-             * Format: int32
-             * @description Filesize limit(per file)
-             * @example 8
-             */
-            fileSizeMbLimit?: number;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "attachmentFieldV1";
-        };
-        TwinClassFieldDescriptorBooleanV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Checkbox type
-             * @example TOGGLE
-             * @enum {string}
-             */
-            checkboxType?: "STANDARD" | "TOGGLE" | "CUSTOM";
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "booleanV1";
-        };
-        TwinClassFieldDescriptorColorHexV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "colorHexV1";
-        };
-        /** @description One of values */
-        TwinClassFieldDescriptorDTO: {
-            fieldType: string;
-        };
-        TwinClassFieldDescriptorDateScrollV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /** @description Date pattern (default: yyyy-MM-ddTHH:mm:ss) */
-            pattern?: string;
-            /**
-             * Format: date-time
-             * @description [option] Acceptable minimum date value
-             */
-            beforeDate?: string;
-            /**
-             * Format: date-time
-             * @description [option] Acceptable maximum date value
-             */
-            afterDate?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "dateScrollV1";
-        };
-        TwinClassFieldDescriptorI18nV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "i18nV1";
-        };
-        TwinClassFieldDescriptorImmutableV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "immutableV1";
-        };
-        TwinClassFieldDescriptorLinkLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Multiple choice support
-             * @example true
-             */
-            multiple?: boolean;
-            /**
-             * Format: uuid
-             * @description Link id for grabbing valid dst twins
-             */
-            linkId?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "selectLinkLongV1";
-        };
-        TwinClassFieldDescriptorLinkV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Multiple choice support
-             * @example true
-             */
-            multiple?: boolean;
-            /** @description Valid options */
-            dstTwins?: components["schemas"]["TwinBaseV2"][];
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "selectLinkV1";
-        };
-        TwinClassFieldDescriptorListLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Can custom option be entered
-             * @example false
-             */
-            supportCustom?: boolean;
-            /**
-             * @description Multiple choice support
-             * @example true
-             */
-            multiple?: boolean;
-            /**
-             * Format: uuid
-             * @description Data list id for grabbing valid options
-             */
-            dataListId?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "selectLongV1";
-        };
-        TwinClassFieldDescriptorListSharedInHeadV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Multiple choice support
-             * @example true
-             */
-            multiple?: boolean;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "selectSharedInHeadV1";
-        };
-        TwinClassFieldDescriptorListV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Can custom option be entered
-             * @example false
-             */
-            supportCustom?: boolean;
-            /**
-             * @description Multiple choice support
-             * @example true
-             */
-            multiple?: boolean;
-            /** @description Valid options */
-            options?: components["schemas"]["DataListOptionV1"][];
-            /** @description Valid option id list */
-            optionIdList?: string[];
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "selectListV1";
-        };
-        TwinClassFieldDescriptorNumericV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * Format: double
-             * @description Min possible value
-             * @example 1
-             */
-            min?: number;
-            /**
-             * Format: double
-             * @description Max possible value
-             * @example 10
-             */
-            max?: number;
-            /**
-             * Format: double
-             * @description Step of value change
-             * @example 1
-             */
-            step?: number;
-            /**
-             * @description Thousand separator. Must not be equal to decimal separator.
-             * @example ,
-             */
-            thousandSeparator?: string;
-            /**
-             * @description Decimal separator. Must not be equal to thousand separator.
-             * @example .
-             */
-            decimalSeparator?: string;
-            /**
-             * Format: int32
-             * @description Number of decimal places.
-             * @example 0
-             */
-            decimalPlaces?: number;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "numericFieldV1";
-        };
-        TwinClassFieldDescriptorSecretV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Some validation regexp
-             * @example .*
-             */
-            regExp?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "secretV1";
-        };
-        TwinClassFieldDescriptorTextV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Some validation regexp
-             * @example .*
-             */
-            regExp?: string;
-            /**
-             * @description Type of editor
-             * @example PLAIN
-             * @enum {string}
-             */
-            editorType?: "PLAIN" | "MARKDOWN_GITHUB" | "MARKDOWN_BASIC" | "HTML";
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "textV1";
-        };
-        TwinClassFieldDescriptorUrlV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "urlV1";
-        };
-        TwinClassFieldDescriptorUserLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Multiple choice support
-             * @example true
-             */
-            multiple?: boolean;
-            /**
-             * Format: uuid
-             * @description User filter list id for grabbing valid users
-             */
-            userFilterId?: string;
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "selectUserLongV1";
-        };
-        TwinClassFieldDescriptorUserV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
-            fieldType?: string;
-            /**
-             * @description Multiple choice support
-             * @example true
-             */
-            multiple?: boolean;
-            /** @description Valid users */
-            users?: components["schemas"]["UserV1"][];
-            /** @description Valid users id list */
-            userIdList?: string[];
-        } & {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            fieldType: "selectUserV1";
-        };
-        TwinClassFieldRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description results - twin class fields list */
-            field?: components["schemas"]["TwinClassFieldV2"];
-        };
-        TwinClassFieldV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example 2fe95272-afcb-40ee-a6a8-87c5da4d5b8d
-             */
-            id?: string;
-            /**
-             * @description key
-             * @example serialNumber
-             */
-            key?: string;
-            /**
-             * @description name
-             * @example Serial number
-             */
-            name?: string;
-            /**
-             * @description required
-             * @example true
-             */
-            required?: boolean;
-            /** @description description */
-            description?: string;
-            /** @description field descriptor */
-            descriptor?: components["schemas"]["TwinClassFieldDescriptorDTO"];
-            /**
-             * Format: uuid
-             * @description twin class id
-             */
-            twinClassId?: string;
-            /**
-             * Format: uuid
-             * @description name i18n id
-             */
-            nameI18nId?: string;
-            /**
-             * Format: uuid
-             * @description description i18n id
-             */
-            descriptionI18nId?: string;
-            /**
-             * Format: int32
-             * @description field typer featurer id
-             */
-            fieldTyperFeaturerId?: number;
-            /** @description field typer params */
-            fieldTyperParams?: {
-                [key: string]: string;
-            };
-            /**
-             * Format: uuid
-             * @description view permission id
-             */
-            viewPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description edit permission id
-             */
-            editPermissionId?: string;
-            /** @description external id */
-            externalId?: string;
-        };
-        TwinClassV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            id?: string;
-            /**
-             * @description key
-             * @example PROJECT
-             */
-            key?: string;
-            /**
-             * @description name
-             * @example Project
-             */
-            name?: string;
-            /**
-             * @description description
-             * @example Projects business objects
-             */
-            description?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /**
-             * @description logo
-             * @example http://twins.org/t/class/project.png
-             */
-            logo?: string;
-            /** @description if class is abstract no twin of it can be created. Some child class must be used */
-            abstractClass?: boolean;
-            /**
-             * Format: uuid
-             * @description head class id or empty if class is not linked to any head
-             * @example c2854a55-1dfe-41cd-bb36-f71eeaf16f81
-             */
-            headClassId?: string;
-            /**
-             * Format: uuid
-             * @description some markers for twins. Are domain level and not editable by user
-             */
-            markersDataListId?: string;
-            /**
-             * Format: uuid
-             * @description some tags for twins. Can be business account level and editable by user
-             */
-            tagsDataListId?: string;
-            /**
-             * @description twin class owner type
-             * @enum {string}
-             */
-            ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
-            /**
-             * Format: uuid
-             * @description extends class id or empty if class is not linked to any classes
-             */
-            extendsClassId?: string;
-            /** @description if true, take the twinflow scheme in space */
-            twinflowSchemaSpace?: boolean;
-            twinClassSchemaSpace?: boolean;
-            /** @description if true, take the permission scheme in space */
-            permissionSchemaSpace?: boolean;
-            aliasSpace?: boolean;
-            /**
-             * Format: int32
-             * @description head hunter featurer id
-             */
-            headHunterFeaturerId?: number;
-            /** @description head hunter featurer params */
-            headHunterParams?: {
-                [key: string]: string;
-            };
-            /**
-             * Format: uuid
-             * @description view permission id
-             */
-            viewPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description create permission id
-             */
-            createPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description edit permission id
-             */
-            editPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description delete permission id
-             */
-            deletePermissionId?: string;
-            /**
-             * Format: uuid
-             * @description uuid of name in I18n table
-             */
-            nameI18nId?: string;
-            /**
-             * Format: uuid
-             * @description uuid of description in I18n table
-             */
-            descriptionI18nId?: string;
-            /**
-             * Format: uuid
-             * @description twin display page pointer
-             */
-            pageFaceId?: string;
-            /** @description assignee required */
-            assigneeRequired?: boolean;
-            /** @description external id */
-            externalId?: string;
-            /** @description Class fields list */
-            fields?: components["schemas"]["TwinClassFieldV1"][];
-            /** @description Class fields id list */
-            fieldIds?: string[];
-            /** @description List of status id. Will be filled only in lazyRelations mode is false */
-            statusList?: string[];
-            /** @description List of marker id. Will be filled only in lazyRelations mode is false */
-            markerList?: string[];
-            /** @description List of tag id. Will be filled only in lazyRelations mode is false */
-            tagList?: string[];
-            forwardLinkMap?: {
-                [key: string]: components["schemas"]["LinkV1"];
-            };
-            backwardLinkMap?: {
-                [key: string]: components["schemas"]["LinkV1"];
-            };
-            /** @description Map of statuses. Will be filled only if lazyRelations mode is true */
-            statusMap?: {
-                [key: string]: components["schemas"]["TwinStatusV1"];
-            };
-            /** @description Map of markers. Will be filled only if lazyRelations mode is true */
-            markerMap?: {
-                [key: string]: components["schemas"]["DataListOptionV1"];
-            };
-            /** @description Map of tags. Will be filled only if lazyRelations mode is true */
-            tagMap?: {
-                [key: string]: components["schemas"]["DataListOptionV1"];
-            };
-            /** @description head class */
-            headClass?: components["schemas"]["TwinClassBaseV1"];
-            /** @description extends class */
-            extendsClass?: components["schemas"]["TwinClassBaseV1"];
-            /** @description view permission */
-            viewPermission?: components["schemas"]["PermissionV1"];
-            /** @description create permission */
-            createPermission?: components["schemas"]["PermissionV1"];
-            /** @description edit permission */
-            editPermission?: components["schemas"]["PermissionV1"];
-            /** @description delete permission */
-            deletePermission?: components["schemas"]["PermissionV1"];
-            /** @description head hunter featurer */
-            headHunterFeaturer?: components["schemas"]["FeaturerV1"];
-        };
-        TwinV2: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
-             */
-            id?: string;
-            /**
-             * @description externalId
-             * @example 934599502DFFAE
-             */
-            externalId?: string;
-            /**
-             * Format: uuid
-             * @description headTwinId
-             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-             */
-            headTwinId?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /**
-             * @description name
-             * @example Oak
-             */
-            name?: string;
-            /**
-             * @description description
-             * @example The biggest tree
-             */
-            description?: string;
-            /**
-             * Format: uuid
-             * @description statusId
-             */
-            statusId?: string;
-            /**
-             * Format: uuid
-             * @description class
-             */
-            twinClassId?: string;
-            /**
-             * Format: uuid
-             * @description current assigner
-             */
-            assignerUserId?: string;
-            /**
-             * Format: uuid
-             * @description author
-             */
-            authorUserId?: string;
-            /**
-             * Format: uuid
-             * @description owner business account id
-             * @example 9a3f6075-f175-41cd-a804-934201ec969c
-             */
-            ownerBusinessAccountId?: string;
-            /**
-             * Format: uuid
-             * @description owner user id
-             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            ownerUserId?: string;
-            /** @description status */
-            status?: components["schemas"]["TwinStatusV1"];
-            /** @description class */
-            twinClass?: components["schemas"]["TwinClassV1"];
-            /** @description current assigner */
-            assignerUser?: components["schemas"]["UserV1"];
-            /** @description author */
-            authorUser?: components["schemas"]["UserV1"];
-            /** @description headTwin */
-            headTwin?: components["schemas"]["TwinBaseV2"];
-            /** @description aliases */
-            aliases?: string[];
-            /** @description Attachments */
-            attachments?: components["schemas"]["AttachmentV1"][];
-            /** @description Attachments count */
-            attachmentsCount?: components["schemas"]["AttachmentsCountV1"];
-            /** @description Links */
-            links?: components["schemas"]["TwinLinkListV1"];
-            /** @description TransitionId list. Will be filled only in lazyRelations mode is false */
-            transitionsIdList?: string[];
-            /** @description Transition list. Will be filled only if lazyRelations mode is true */
-            transitions?: components["schemas"]["TwinTransitionViewV1"][];
-            /** @description MarkerId list. Will be filled only in lazyRelations mode is false */
-            markerIdList?: string[];
-            /** @description Marker list. Will be filled only if lazyRelations mode is true */
-            markers?: components["schemas"]["DataListOptionV1"][];
-            /** @description TagId list. Will be filled only in lazyRelations mode is false */
-            tagIdList?: string[];
-            /** @description Tag list. Will be filled only if lazyRelations mode is true */
-            tags?: components["schemas"]["DataListOptionV1"][];
-            /** @description Suitable actions list */
-            actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "HISTORY_VIEW")[];
-            /** @description Twins of which classes are possible to create as children for given twin */
-            creatableChildTwinClassIds?: string[];
-            /** @description Twins of which classes are possible to create as children for given twin */
-            creatableChildTwinClasses?: components["schemas"]["TwinClassV1"][];
-            /** @description fields */
-            fields?: {
-                [key: string]: string;
-            };
-        };
-        UserV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            id?: string;
-            /**
-             * @description fullName
-             * @example John Doe
-             */
-            fullName?: string;
-            /**
-             * @description email
-             * @example some@email.com
-             */
-            email?: string;
-            /**
-             * @description avatar url
-             * @example http://twins.org/a/avatar/carkikrefmkawfwfwg.png
-             */
-            avatar?: string;
-            /** @description an ids of user groups */
-            userGroupIds?: string[];
-        };
         AttachmentV1: {
             /**
              * Format: uuid
@@ -5520,6 +4543,46 @@ export interface components {
              * @example Some name
              */
             name?: string;
+        };
+        DataListOptionV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 7de977d4-df6d-4250-9cb2-088363d139a1
+             */
+            id?: string;
+            /**
+             * @description name
+             * @example Bharat
+             */
+            name?: string;
+            /**
+             * @description icon
+             * @example Icon path
+             */
+            icon?: string;
+            /**
+             * @description status
+             * @example active
+             * @enum {string}
+             */
+            status?: "active" | "disabled" | "hidden";
+            /** @description map attributes (key : value) */
+            attributes?: {
+                [key: string]: string;
+            };
+            /**
+             * @description background color
+             * @example #ff00ff
+             */
+            backgroundColor?: string;
+            /**
+             * @description font color
+             * @example #ff00ff
+             */
+            fontColor?: string;
+            /** @description external id [optional] */
+            externalId?: string;
         };
         DataListV1: {
             /**
@@ -5827,7 +4890,7 @@ export interface components {
              * @description key
              * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
-            dstTwinClass?: components["schemas"]["TwinClassV1"];
+            dstTwinClass?: unknown;
             /**
              * @description name
              * @example Serial number
@@ -5936,6 +4999,162 @@ export interface components {
              */
             groupId?: string;
         };
+        RelatedObjectsV1: {
+            /**
+             * @description related statuses map
+             * @example {twin map}
+             */
+            twinMap?: {
+                [key: string]: components["schemas"]["TwinV2"];
+            };
+            /**
+             * @description related statuses map
+             * @example {twin status map}
+             */
+            statusMap?: {
+                [key: string]: components["schemas"]["TwinStatusV1"];
+            };
+            /**
+             * @description related users map
+             * @example {user map}
+             */
+            userMap?: {
+                [key: string]: components["schemas"]["UserV1"];
+            };
+            /**
+             * @description related users group map
+             * @example {user group map}
+             */
+            userGroupMap?: {
+                [key: string]: components["schemas"]["UserGroupV1"];
+            };
+            /**
+             * @description related twinClass map
+             * @example {twin class map}
+             */
+            twinClassMap?: {
+                [key: string]: components["schemas"]["TwinClassV1"];
+            };
+            /**
+             * @description related transitionsMap map
+             * @example {twin transition map}
+             */
+            transitionsMap?: {
+                [key: string]: components["schemas"]["TwinflowTransitionBaseV1"];
+            };
+            /**
+             * @description related datalist map
+             * @example {datalist map}
+             */
+            dataListsMap?: {
+                [key: string]: components["schemas"]["DataListV1"];
+            };
+            /**
+             * @description related datalistOption map
+             * @example {datalistOption map}
+             */
+            dataListsOptionMap?: {
+                [key: string]: components["schemas"]["DataListOptionV1"];
+            };
+            /**
+             * @description related space role map
+             * @example {space role map}
+             */
+            spaceRoleMap?: {
+                [key: string]: components["schemas"]["SpaceRoleV1"];
+            };
+            /**
+             * @description related business account map
+             * @example {business account map}
+             */
+            businessAccountMap?: {
+                [key: string]: components["schemas"]["BusinessAccountV1"];
+            };
+            /**
+             * @description related permission group map
+             * @example {permission group map}
+             */
+            permissionGroupMap?: {
+                [key: string]: components["schemas"]["PermissionGroupV1"];
+            };
+            /**
+             * @description related permission map
+             * @example {permission map}
+             */
+            permissionMap?: {
+                [key: string]: components["schemas"]["PermissionV1"];
+            };
+            /**
+             * @description related permission schema map
+             * @example {permission schema map}
+             */
+            permissionSchemaMap?: {
+                [key: string]: components["schemas"]["PermissionSchemaV2"];
+            };
+            /**
+             * @description related twinflow map
+             * @example {twinflow map}
+             */
+            twinflowMap?: {
+                [key: string]: components["schemas"]["TwinflowBaseV1"];
+            };
+            /**
+             * @description related factory map
+             * @example {factory map}
+             */
+            factoryMap?: {
+                [key: string]: components["schemas"]["FactoryV1"];
+            };
+            /**
+             * @description related factory pipeline map
+             * @example {factory pipeline map}
+             */
+            factoryPipelineMap?: {
+                [key: string]: components["schemas"]["FactoryPipelineV1"];
+            };
+            /**
+             * @description related twinclass schema map
+             * @example {twin class schema map}
+             */
+            twinClassSchemaMap?: {
+                [key: string]: components["schemas"]["TwinClassSchemaV1"];
+            };
+            /**
+             * @description related comment map
+             * @example {comment map}
+             */
+            commentMap?: {
+                [key: string]: components["schemas"]["CommentV1"];
+            };
+            /**
+             * @description related featurer map
+             * @example {featurer map}
+             */
+            featurerMap?: {
+                [key: string]: components["schemas"]["FeaturerV1"];
+            };
+            /**
+             * @description related face map
+             * @example {face map}
+             */
+            faceMap?: {
+                [key: string]: components["schemas"]["FaceV1"];
+            };
+            /**
+             * @description related i18n map
+             * @example {face map}
+             */
+            i18nMap?: {
+                [key: string]: components["schemas"]["I18nV1"];
+            };
+            /**
+             * @description related class field map
+             * @example {class field map}
+             */
+            twinClassFieldMap?: {
+                [key: string]: components["schemas"]["TwinClassFieldV1"];
+            };
+        };
         SpaceRoleV1: {
             /**
              * Format: uuid
@@ -5971,6 +5190,476 @@ export interface components {
              */
             businessAccountId?: string;
         };
+        TwinBaseV2: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+             */
+            id?: string;
+            /**
+             * @description externalId
+             * @example 934599502DFFAE
+             */
+            externalId?: string;
+            /**
+             * Format: uuid
+             * @description headTwinId
+             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+             */
+            headTwinId?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * @description name
+             * @example Oak
+             */
+            name?: string;
+            /**
+             * @description description
+             * @example The biggest tree
+             */
+            description?: string;
+            /**
+             * Format: uuid
+             * @description statusId
+             */
+            statusId?: string;
+            /**
+             * Format: uuid
+             * @description class
+             */
+            twinClassId?: string;
+            /**
+             * Format: uuid
+             * @description current assigner
+             */
+            assignerUserId?: string;
+            /**
+             * Format: uuid
+             * @description author
+             */
+            authorUserId?: string;
+            /**
+             * Format: uuid
+             * @description owner business account id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            ownerBusinessAccountId?: string;
+            /**
+             * Format: uuid
+             * @description owner user id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            ownerUserId?: string;
+            /** @description status */
+            status?: components["schemas"]["TwinStatusV1"];
+            /** @description class */
+            twinClass?: unknown;
+            /** @description current assigner */
+            assignerUser?: components["schemas"]["UserV1"];
+            /** @description author */
+            authorUser?: components["schemas"]["UserV1"];
+            /** @description headTwin */
+            headTwin?: unknown;
+            /** @description aliases */
+            aliases?: string[];
+        };
+        TwinClassFieldDescriptorAttachmentV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * Format: int32
+             * @description Min count of files to upload
+             * @example 1
+             */
+            minCount?: number;
+            /**
+             * Format: int32
+             * @description Max count of files to upload
+             * @example 1
+             */
+            maxCount?: number;
+            /**
+             * @description Allowed extensions
+             * @example [
+             *       "jpg",
+             *       "jpeg",
+             *       "png"
+             *     ]
+             */
+            extensions?: string;
+            /**
+             * @description Filename must match this regexp
+             * @example .*
+             */
+            filenameRegExp?: string;
+            /**
+             * Format: int32
+             * @description Filesize limit(per file)
+             * @example 8
+             */
+            fileSizeMbLimit?: number;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "attachmentFieldV1";
+        };
+        TwinClassFieldDescriptorBooleanV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Checkbox type
+             * @example TOGGLE
+             * @enum {string}
+             */
+            checkboxType?: "STANDARD" | "TOGGLE" | "CUSTOM";
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "booleanV1";
+        };
+        TwinClassFieldDescriptorColorHexV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "colorHexV1";
+        };
+        /** @description One of values */
+        TwinClassFieldDescriptorDTO: {
+            fieldType: string;
+        };
+        TwinClassFieldDescriptorDateScrollV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /** @description Date pattern (default: yyyy-MM-ddTHH:mm:ss) */
+            pattern?: string;
+            /**
+             * Format: date-time
+             * @description [option] Acceptable minimum date value
+             */
+            beforeDate?: string;
+            /**
+             * Format: date-time
+             * @description [option] Acceptable maximum date value
+             */
+            afterDate?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "dateScrollV1";
+        };
+        TwinClassFieldDescriptorI18nV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "i18nV1";
+        };
+        TwinClassFieldDescriptorImmutableV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "immutableV1";
+        };
+        TwinClassFieldDescriptorLinkLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Multiple choice support
+             * @example true
+             */
+            multiple?: boolean;
+            /**
+             * Format: uuid
+             * @description Link id for grabbing valid dst twins
+             */
+            linkId?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "selectLinkLongV1";
+        };
+        TwinClassFieldDescriptorLinkV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Multiple choice support
+             * @example true
+             */
+            multiple?: boolean;
+            /** @description Valid options */
+            dstTwins?: components["schemas"]["TwinBaseV2"][];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "selectLinkV1";
+        };
+        TwinClassFieldDescriptorListLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Can custom option be entered
+             * @example false
+             */
+            supportCustom?: boolean;
+            /**
+             * @description Multiple choice support
+             * @example true
+             */
+            multiple?: boolean;
+            /**
+             * Format: uuid
+             * @description Data list id for grabbing valid options
+             */
+            dataListId?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "selectLongV1";
+        };
+        TwinClassFieldDescriptorListSharedInHeadV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Multiple choice support
+             * @example true
+             */
+            multiple?: boolean;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "selectSharedInHeadV1";
+        };
+        TwinClassFieldDescriptorListV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Can custom option be entered
+             * @example false
+             */
+            supportCustom?: boolean;
+            /**
+             * @description Multiple choice support
+             * @example true
+             */
+            multiple?: boolean;
+            /** @description Valid options */
+            options?: components["schemas"]["DataListOptionV1"][];
+            /** @description Valid option id list */
+            optionIdList?: string[];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "selectListV1";
+        };
+        TwinClassFieldDescriptorNumericV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * Format: double
+             * @description Min possible value
+             * @example 1
+             */
+            min?: number;
+            /**
+             * Format: double
+             * @description Max possible value
+             * @example 10
+             */
+            max?: number;
+            /**
+             * Format: double
+             * @description Step of value change
+             * @example 1
+             */
+            step?: number;
+            /**
+             * @description Thousand separator. Must not be equal to decimal separator.
+             * @example ,
+             */
+            thousandSeparator?: string;
+            /**
+             * @description Decimal separator. Must not be equal to thousand separator.
+             * @example .
+             */
+            decimalSeparator?: string;
+            /**
+             * Format: int32
+             * @description Number of decimal places.
+             * @example 0
+             */
+            decimalPlaces?: number;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "numericFieldV1";
+        };
+        TwinClassFieldDescriptorSecretV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Some validation regexp
+             * @example .*
+             */
+            regExp?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "secretV1";
+        };
+        TwinClassFieldDescriptorTextV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Some validation regexp
+             * @example .*
+             */
+            regExp?: string;
+            /**
+             * @description Type of editor
+             * @example PLAIN
+             * @enum {string}
+             */
+            editorType?: "PLAIN" | "MARKDOWN_GITHUB" | "MARKDOWN_BASIC" | "HTML";
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "textV1";
+        };
+        TwinClassFieldDescriptorUrlV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "urlV1";
+        };
+        TwinClassFieldDescriptorUserLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Multiple choice support
+             * @example true
+             */
+            multiple?: boolean;
+            /**
+             * Format: uuid
+             * @description User filter list id for grabbing valid users
+             */
+            userFilterId?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "selectUserLongV1";
+        };
+        TwinClassFieldDescriptorUserV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description Multiple choice support
+             * @example true
+             */
+            multiple?: boolean;
+            /** @description Valid users */
+            users?: components["schemas"]["UserV1"][];
+            /** @description Valid users id list */
+            userIdList?: string[];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "selectUserV1";
+        };
+        TwinClassFieldRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - twin class fields list */
+            field?: components["schemas"]["TwinClassFieldV2"];
+        };
+        TwinClassFieldV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 2fe95272-afcb-40ee-a6a8-87c5da4d5b8d
+             */
+            id?: string;
+            /**
+             * @description key
+             * @example serialNumber
+             */
+            key?: string;
+            /**
+             * @description name
+             * @example Serial number
+             */
+            name?: string;
+            /**
+             * @description required
+             * @example true
+             */
+            required?: boolean;
+            /** @description description */
+            description?: string;
+            /** @description field descriptor */
+            descriptor?: components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorBooleanV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"];
+            /**
+             * Format: uuid
+             * @description twin class id
+             */
+            twinClassId?: string;
+            /**
+             * Format: uuid
+             * @description name i18n id
+             */
+            nameI18nId?: string;
+            /**
+             * Format: uuid
+             * @description description i18n id
+             */
+            descriptionI18nId?: string;
+            /**
+             * Format: int32
+             * @description field typer featurer id
+             */
+            fieldTyperFeaturerId?: number;
+            /** @description field typer params */
+            fieldTyperParams?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: uuid
+             * @description view permission id
+             */
+            viewPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description edit permission id
+             */
+            editPermissionId?: string;
+            /** @description external id */
+            externalId?: string;
+        };
         TwinClassFieldV2: {
             /**
              * Format: uuid
@@ -5996,7 +5685,7 @@ export interface components {
             /** @description description */
             description?: string;
             /** @description field descriptor */
-            descriptor?: components["schemas"]["TwinClassFieldDescriptorDTO"];
+            descriptor?: components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorBooleanV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"];
             /**
              * Format: uuid
              * @description twin class id
@@ -6062,6 +5751,164 @@ export interface components {
              * @description createdByUserId
              */
             createdByUserId?: string;
+        };
+        TwinClassV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            id?: string;
+            /**
+             * @description key
+             * @example PROJECT
+             */
+            key?: string;
+            /**
+             * @description name
+             * @example Project
+             */
+            name?: string;
+            /**
+             * @description description
+             * @example Projects business objects
+             */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * @description logo
+             * @example http://twins.org/t/class/project.png
+             */
+            logo?: string;
+            /** @description if class is abstract no twin of it can be created. Some child class must be used */
+            abstractClass?: boolean;
+            /**
+             * Format: uuid
+             * @description head class id or empty if class is not linked to any head
+             * @example c2854a55-1dfe-41cd-bb36-f71eeaf16f81
+             */
+            headClassId?: string;
+            /**
+             * Format: uuid
+             * @description some markers for twins. Are domain level and not editable by user
+             */
+            markersDataListId?: string;
+            /**
+             * Format: uuid
+             * @description some tags for twins. Can be business account level and editable by user
+             */
+            tagsDataListId?: string;
+            /**
+             * @description twin class owner type
+             * @enum {string}
+             */
+            ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
+            /**
+             * Format: uuid
+             * @description extends class id or empty if class is not linked to any classes
+             */
+            extendsClassId?: string;
+            /** @description if true, take the twinflow scheme in space */
+            twinflowSchemaSpace?: boolean;
+            twinClassSchemaSpace?: boolean;
+            /** @description if true, take the permission scheme in space */
+            permissionSchemaSpace?: boolean;
+            aliasSpace?: boolean;
+            /**
+             * Format: int32
+             * @description head hunter featurer id
+             */
+            headHunterFeaturerId?: number;
+            /** @description head hunter featurer params */
+            headHunterParams?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: uuid
+             * @description view permission id
+             */
+            viewPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description create permission id
+             */
+            createPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description edit permission id
+             */
+            editPermissionId?: string;
+            /**
+             * Format: uuid
+             * @description delete permission id
+             */
+            deletePermissionId?: string;
+            /**
+             * Format: uuid
+             * @description uuid of name in I18n table
+             */
+            nameI18nId?: string;
+            /**
+             * Format: uuid
+             * @description uuid of description in I18n table
+             */
+            descriptionI18nId?: string;
+            /**
+             * Format: uuid
+             * @description twin display page pointer
+             */
+            pageFaceId?: string;
+            /** @description assignee required */
+            assigneeRequired?: boolean;
+            /** @description external id */
+            externalId?: string;
+            /** @description Class fields list */
+            fields?: components["schemas"]["TwinClassFieldV1"][];
+            /** @description Class fields id list */
+            fieldIds?: string[];
+            /** @description List of status id. Will be filled only in lazyRelations mode is false */
+            statusList?: string[];
+            /** @description List of marker id. Will be filled only in lazyRelations mode is false */
+            markerList?: string[];
+            /** @description List of tag id. Will be filled only in lazyRelations mode is false */
+            tagList?: string[];
+            forwardLinkMap?: {
+                [key: string]: components["schemas"]["LinkV1"];
+            };
+            backwardLinkMap?: {
+                [key: string]: components["schemas"]["LinkV1"];
+            };
+            /** @description Map of statuses. Will be filled only if lazyRelations mode is true */
+            statusMap?: {
+                [key: string]: components["schemas"]["TwinStatusV1"];
+            };
+            /** @description Map of markers. Will be filled only if lazyRelations mode is true */
+            markerMap?: {
+                [key: string]: components["schemas"]["DataListOptionV1"];
+            };
+            /** @description Map of tags. Will be filled only if lazyRelations mode is true */
+            tagMap?: {
+                [key: string]: components["schemas"]["DataListOptionV1"];
+            };
+            /** @description head class */
+            headClass?: components["schemas"]["TwinClassBaseV1"];
+            /** @description extends class */
+            extendsClass?: components["schemas"]["TwinClassBaseV1"];
+            /** @description view permission */
+            viewPermission?: components["schemas"]["PermissionV1"];
+            /** @description create permission */
+            createPermission?: components["schemas"]["PermissionV1"];
+            /** @description edit permission */
+            editPermission?: components["schemas"]["PermissionV1"];
+            /** @description delete permission */
+            deletePermission?: components["schemas"]["PermissionV1"];
+            /** @description head hunter featurer */
+            headHunterFeaturer?: components["schemas"]["FeaturerV1"];
         };
         TwinLinkListV1: {
             /** @description forward links from current twin to other twins */
@@ -6143,6 +5990,113 @@ export interface components {
             allowAttachments?: boolean;
             allowLinks?: boolean;
         };
+        TwinV2: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+             */
+            id?: string;
+            /**
+             * @description externalId
+             * @example 934599502DFFAE
+             */
+            externalId?: string;
+            /**
+             * Format: uuid
+             * @description headTwinId
+             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+             */
+            headTwinId?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * @description name
+             * @example Oak
+             */
+            name?: string;
+            /**
+             * @description description
+             * @example The biggest tree
+             */
+            description?: string;
+            /**
+             * Format: uuid
+             * @description statusId
+             */
+            statusId?: string;
+            /**
+             * Format: uuid
+             * @description class
+             */
+            twinClassId?: string;
+            /**
+             * Format: uuid
+             * @description current assigner
+             */
+            assignerUserId?: string;
+            /**
+             * Format: uuid
+             * @description author
+             */
+            authorUserId?: string;
+            /**
+             * Format: uuid
+             * @description owner business account id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            ownerBusinessAccountId?: string;
+            /**
+             * Format: uuid
+             * @description owner user id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            ownerUserId?: string;
+            /** @description status */
+            status?: components["schemas"]["TwinStatusV1"];
+            /** @description class */
+            twinClass?: components["schemas"]["TwinClassV1"];
+            /** @description current assigner */
+            assignerUser?: components["schemas"]["UserV1"];
+            /** @description author */
+            authorUser?: components["schemas"]["UserV1"];
+            /** @description headTwin */
+            headTwin?: components["schemas"]["TwinBaseV2"];
+            /** @description aliases */
+            aliases?: string[];
+            /** @description Attachments */
+            attachments?: components["schemas"]["AttachmentV1"][];
+            /** @description Attachments count */
+            attachmentsCount?: components["schemas"]["AttachmentsCountV1"];
+            /** @description Links */
+            links?: components["schemas"]["TwinLinkListV1"];
+            /** @description TransitionId list. Will be filled only in lazyRelations mode is false */
+            transitionsIdList?: string[];
+            /** @description Transition list. Will be filled only if lazyRelations mode is true */
+            transitions?: components["schemas"]["TwinTransitionViewV1"][];
+            /** @description MarkerId list. Will be filled only in lazyRelations mode is false */
+            markerIdList?: string[];
+            /** @description Marker list. Will be filled only if lazyRelations mode is true */
+            markers?: components["schemas"]["DataListOptionV1"][];
+            /** @description TagId list. Will be filled only in lazyRelations mode is false */
+            tagIdList?: string[];
+            /** @description Tag list. Will be filled only if lazyRelations mode is true */
+            tags?: components["schemas"]["DataListOptionV1"][];
+            /** @description Suitable actions list */
+            actions?: ("EDIT" | "DELETE" | "MOVE" | "COMMENT" | "WATCH" | "TIME_TRACK" | "ATTACHMENT_ADD" | "HISTORY_VIEW")[];
+            /** @description Twins of which classes are possible to create as children for given twin */
+            creatableChildTwinClassIds?: string[];
+            /** @description Twins of which classes are possible to create as children for given twin */
+            creatableChildTwinClasses?: components["schemas"]["TwinClassV1"][];
+            /** @description fields */
+            fields?: {
+                [key: string]: string;
+            };
+        };
         TwinflowTransitionBaseV1: {
             /**
              * Format: uuid
@@ -6203,6 +6157,31 @@ export interface components {
              * @enum {string}
              */
             type?: "domainScopeDomainManage" | "domainScopeBusinessAccountManage" | "businessAccountScopeBusinessAccountManage" | "domainAndBusinessAccountScopeBusinessAccountManage" | "systemScopeDomainManage";
+        };
+        UserV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            id?: string;
+            /**
+             * @description fullName
+             * @example John Doe
+             */
+            fullName?: string;
+            /**
+             * @description email
+             * @example some@email.com
+             */
+            email?: string;
+            /**
+             * @description avatar url
+             * @example http://twins.org/a/avatar/carkikrefmkawfwfwg.png
+             */
+            avatar?: string;
+            /** @description an ids of user groups */
+            userGroupIds?: string[];
         };
         TwinClassFieldUpdateRqV2: {
             /** @description twin class field list */
@@ -7802,28 +7781,6 @@ export interface components {
              */
             description?: string;
         };
-        FactoryPipelineRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description results - factory pipeline */
-            factoryPipeline?: components["schemas"]["FactoryPipelineV2"];
-        };
         FactoryConditionSetV1: {
             /**
              * Format: uuid
@@ -7889,6 +7846,28 @@ export interface components {
              * @example 3
              */
             inFactoryEraserUsagesCount?: number;
+        };
+        FactoryPipelineRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - factory pipeline */
+            factoryPipeline?: components["schemas"]["FactoryPipelineV2"];
         };
         FactoryPipelineV2: {
             /**
@@ -9614,6 +9593,20 @@ export interface components {
              */
             locale?: string;
         };
+        DataTimeRangeV1: {
+            /**
+             * Format: date-time
+             * @description data time form
+             * @example 2023-09-13T09:32:08
+             */
+            from?: string;
+            /**
+             * Format: date-time
+             * @description data time to
+             * @example 2023-09-13T09:32:08
+             */
+            to?: string;
+        };
         SpaceSearchV1: {
             /**
              * Format: uuid
@@ -9627,7 +9620,6 @@ export interface components {
             roleId?: string;
         };
         TwinFieldSearchBooleanV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-            type?: string;
             /** @description include entities with empty or null values to result */
             value?: boolean;
         } & {
@@ -9640,10 +9632,9 @@ export interface components {
         /** @description One of values */
         TwinFieldSearchDTOv1: {
             type: string;
-        };
+        } & (components["schemas"]["TwinFieldSearchTextV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumericV1"] | components["schemas"]["TwinFieldSearchListV1"] | components["schemas"]["TwinFieldSearchIdV1"] | components["schemas"]["TwinFieldSearchBooleanV1"] | components["schemas"]["TwinFieldSearchUserV1"] | components["schemas"]["TwinFieldSearchSpaceRoleUserV1"]);
         /** @description (less & more connected with AND) and after connected to equals with OR and to emty with OR */
         TwinFieldSearchDateV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-            type?: string;
             /**
              * Format: date-time
              * @description Twin field date less then given date
@@ -9669,7 +9660,6 @@ export interface components {
             type: "TwinFieldSearchDateV1";
         };
         TwinFieldSearchIdV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-            type?: string;
             /** @description User id list */
             idList?: string[];
             /** @description User id exclude list */
@@ -9682,7 +9672,6 @@ export interface components {
             type: "TwinFieldSearchIdV1";
         };
         TwinFieldSearchListV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-            type?: string;
             /** @description Include options with given ids. AND join */
             optionsAllOfList?: string[];
             /** @description Include options with given ids. OR join */
@@ -9700,7 +9689,6 @@ export interface components {
         };
         /** @description (less & more connected with AND) and after connected to equals with OR */
         TwinFieldSearchNumericV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-            type?: string;
             /** @description Twin field numeric value less then given */
             lessThen?: string;
             /** @description Twin field numeric value greater then given */
@@ -9714,8 +9702,23 @@ export interface components {
              */
             type: "TwinFieldSearchNumericV1";
         };
+        TwinFieldSearchSpaceRoleUserV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+            /** @description Role id list */
+            roleIdList?: string[];
+            /** @description Role id exclude list */
+            roleIdExcludeList?: string[];
+            /** @description User id list */
+            userIdList?: string[];
+            /** @description User id exclude list */
+            userIdExcludeList?: string[];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "TwinFieldSearchSpaceRoleUserV1";
+        };
         TwinFieldSearchTextV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-            type?: string;
             /** @description Include like given strings. AND join. Add % symbols manual to use LIKE features. */
             valueLikeAllOfList?: string[];
             /** @description Include like given strings. OR join. Add % symbols manual to use LIKE features. */
@@ -9732,7 +9735,6 @@ export interface components {
             type: "TwinFieldSearchTextV1";
         };
         TwinFieldSearchUserV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
-            type?: string;
             /** @description User id list */
             idList?: string[];
             /** @description User id exclude list */
@@ -9840,6 +9842,8 @@ export interface components {
             fields?: {
                 [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
             };
+            /** @description created at */
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
         };
         UserSearchRqV1: {
             /** @description user update */
@@ -10201,30 +10205,6 @@ export interface components {
             /** @description twinflow schema id exclude list */
             twinflowSchemaIdExcludeList?: string[];
         };
-        TwinflowListRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description pagination data */
-            pagination?: components["schemas"]["PaginationV1"];
-            /** @description results - twinflow list */
-            twinflowList?: components["schemas"]["TwinflowBaseV3"][];
-        };
         TransitionValidatorRuleBaseV1: {
             /**
              * Format: uuid
@@ -10378,6 +10358,30 @@ export interface components {
             transitions?: {
                 [key: string]: components["schemas"]["TwinflowTransitionBaseV3"];
             };
+        };
+        TwinflowListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description results - twinflow list */
+            twinflowList?: components["schemas"]["TwinflowBaseV3"][];
         };
         TwinflowTransitionBaseV3: {
             /**
@@ -11276,30 +11280,6 @@ export interface components {
              */
             permissionId?: string;
         };
-        TwinSearchRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description pagination data */
-            pagination?: components["schemas"]["PaginationV1"];
-            /** @description results - transfers list */
-            twinList?: components["schemas"]["TwinV1"][];
-        };
         TwinFieldV1: {
             /** @description On of values */
             value?: components["schemas"]["TwinFieldValueColorHexV1"] | components["schemas"]["TwinFieldValueDataListOptionsV1"] | components["schemas"]["TwinFieldValueDateV1"] | components["schemas"]["TwinFieldValueTextV1"];
@@ -11359,6 +11339,30 @@ export interface components {
              * @enum {string}
              */
             valueType: "textV1";
+        };
+        TwinSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description results - transfers list */
+            twinList?: components["schemas"]["TwinV1"][];
         };
         TwinV1: {
             /**
@@ -11785,6 +11789,8 @@ export interface components {
             fields?: {
                 [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
             };
+            /** @description created at */
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description Head twin sub-search */
             headSearch?: components["schemas"]["TwinSearchV1"];
             /** @description Children twin sub-search */
@@ -11899,6 +11905,8 @@ export interface components {
             fields?: {
                 [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
             };
+            /** @description created at */
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description Head twin sub-search */
             headSearch?: components["schemas"]["TwinSearchV1"];
             /** @description Children twin sub-search */
@@ -11923,20 +11931,6 @@ export interface components {
             searchMap?: {
                 [key: string]: components["schemas"]["TwinSearchRqV1"];
             };
-        };
-        DataTimeRangeV1: {
-            /**
-             * Format: date-time
-             * @description data time form
-             * @example 2023-09-13T09:32:08
-             */
-            from?: string;
-            /**
-             * Format: date-time
-             * @description data time to
-             * @example 2023-09-13T09:32:08
-             */
-            to?: string;
         };
         HistorySearchRqV1: {
             /** @description id list */
@@ -12086,28 +12080,6 @@ export interface components {
             /** @description some extra data to perform transition */
             context?: components["schemas"]["TwinTransitionContextV1"];
         };
-        TwinTransitionPerformRsV2: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description major/minor result */
-            result?: components["schemas"]["TwinTransitionPerformResultMajorRsV1"] | components["schemas"]["TwinTransitionPerformResultMinorRsV1"];
-        };
         /** @description On of values */
         TwinTransitionPerformResultDTO: {
             /** @description discriminator */
@@ -12136,6 +12108,28 @@ export interface components {
              * @enum {string}
              */
             resultType: "userV1";
+        };
+        TwinTransitionPerformRsV2: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description major/minor result */
+            result?: components["schemas"]["TwinTransitionPerformResultMajorRsV1"] | components["schemas"]["TwinTransitionPerformResultMinorRsV1"];
         };
         TwinTransitionPerformRsV1: {
             /**
@@ -14606,30 +14600,6 @@ export interface components {
             /** @description business account id exclude list */
             businessAccountIdExcludeList?: string[];
         };
-        DomainUserSearchRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description pagination data */
-            pagination?: components["schemas"]["PaginationV1"];
-            /** @description user list */
-            users?: components["schemas"]["DomainUserV2"][];
-        };
         BusinessAccountUserV2: {
             /**
              * Format: uuid
@@ -14658,6 +14628,30 @@ export interface components {
             user?: components["schemas"]["UserV1"];
             /** @description business account */
             businessAccount?: components["schemas"]["BusinessAccountV1"];
+        };
+        DomainUserSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description user list */
+            users?: components["schemas"]["DomainUserV2"][];
         };
         DomainUserV2: {
             /**
@@ -14955,6 +14949,18 @@ export interface components {
             /** @description Attachments for validation */
             attachments?: components["schemas"]["AttachmentCudV1"];
         };
+        AttachmentCUDProblemsDTOv1: {
+            /** @description create problems */
+            createProblems?: components["schemas"]["AttachmentFileCreateProblemsDTOv1"][];
+            /** @description update problems */
+            updateProblems?: components["schemas"]["AttachmentFileUpdateProblemsDTOv1"][];
+            /** @description delete problems */
+            deleteProblems?: components["schemas"]["AttachmentFileDeleteProblemsDTOv1"][];
+            /** @description field attachment problems */
+            fieldAttachmentProblems?: components["schemas"]["TwinFieldAttachmentProblemsV1"][];
+            /** @description comment attachment problems */
+            commentAttachmentProblems?: components["schemas"]["TwinCommentAttachmentProblemsV1"][];
+        };
         AttachmentCUDValidateRsV1: {
             /**
              * Format: int32
@@ -14978,18 +14984,6 @@ export interface components {
             cudProblems?: components["schemas"]["AttachmentCUDProblemsDTOv1"];
             /** @description Attachment entities for update and delete operations */
             attachmentsForUD?: components["schemas"]["AttachmentV1"][];
-        };
-        AttachmentCUDProblemsDTOv1: {
-            /** @description create problems */
-            createProblems?: components["schemas"]["AttachmentFileCreateProblemsDTOv1"][];
-            /** @description update problems */
-            updateProblems?: components["schemas"]["AttachmentFileUpdateProblemsDTOv1"][];
-            /** @description delete problems */
-            deleteProblems?: components["schemas"]["AttachmentFileDeleteProblemsDTOv1"][];
-            /** @description field attachment problems */
-            fieldAttachmentProblems?: components["schemas"]["TwinFieldAttachmentProblemsV1"][];
-            /** @description comment attachment problems */
-            commentAttachmentProblems?: components["schemas"]["TwinCommentAttachmentProblemsV1"][];
         };
         AttachmentFileCreateProblemsDTOv1: {
             /** @description Problem message */
@@ -16340,28 +16334,6 @@ export interface components {
             /** @description result - factory */
             factory?: components["schemas"]["FactoryV2"];
         };
-        FaceWT003ViewRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description result - widget details */
-            widget?: components["schemas"]["FaceWT003DTOv1"];
-        };
         FaceWT003DTOv1: {
             /**
              * Format: uuid
@@ -16403,6 +16375,48 @@ export interface components {
             /** @description styles, converted to css classes */
             styleClasses?: string[];
         };
+        FaceWT003ViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description result - widget details */
+            widget?: components["schemas"]["FaceWT003DTOv1"];
+        };
+        FaceWT002ButtonV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /** @description uniq key */
+            key?: string;
+            /** @description label */
+            label?: string;
+            /** @description Icon url. Might be relative */
+            icon?: string;
+            /** @description widget layout */
+            styleClasses?: string[];
+            /**
+             * Format: uuid
+             * @description face modal id
+             */
+            modalFaceId?: string;
+        };
         FaceWT002ViewRsV1: {
             /**
              * Format: int32
@@ -16424,26 +16438,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description result - widget details */
             widget?: components["schemas"]["FaceWT002v1"];
-        };
-        FaceWT002ButtonV1: {
-            /**
-             * Format: uuid
-             * @description id
-             */
-            id?: string;
-            /** @description uniq key */
-            key?: string;
-            /** @description label */
-            label?: string;
-            /** @description Icon url. Might be relative */
-            icon?: string;
-            /** @description widget layout */
-            styleClasses?: string[];
-            /**
-             * Format: uuid
-             * @description face modal id
-             */
-            modalFaceId?: string;
         };
         FaceWT002v1: {
             /**
@@ -16479,6 +16473,27 @@ export interface components {
             /** @description creat twin buttons array */
             buttons?: components["schemas"]["FaceWT002ButtonV1"][];
         };
+        FaceWT001ColumnV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /** @description label */
+            label?: string;
+            /**
+             * Format: uuid
+             * @description twin class field id
+             */
+            twinClassFieldId?: string;
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /** @description show by default */
+            showByDefault?: boolean;
+        };
         FaceWT001ViewRsV1: {
             /**
              * Format: int32
@@ -16500,27 +16515,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description results - widget details */
             widget?: components["schemas"]["FaceWT001v1"];
-        };
-        FaceWT001ColumnV1: {
-            /**
-             * Format: uuid
-             * @description id
-             */
-            id?: string;
-            /** @description label */
-            label?: string;
-            /**
-             * Format: uuid
-             * @description twin class field id
-             */
-            twinClassFieldId?: string;
-            /**
-             * Format: int32
-             * @description order
-             */
-            order?: number;
-            /** @description show by default */
-            showByDefault?: boolean;
         };
         FaceWT001v1: {
             /**
@@ -16576,28 +16570,6 @@ export interface components {
              */
             modalFaceId?: string;
         };
-        FaceWT005ViewRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description results - widget details */
-            widget?: components["schemas"]["FaceWT005v1"];
-        };
         FaceTW005ButtonV1: {
             /**
              * Format: uuid
@@ -16622,6 +16594,28 @@ export interface components {
             styleClasses?: string[];
             /** @description is showing needed when button inactive */
             showWhenInactive?: boolean;
+        };
+        FaceWT005ViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - widget details */
+            widget?: components["schemas"]["FaceWT005v1"];
         };
         FaceWT005v1: {
             /**
@@ -16669,6 +16663,20 @@ export interface components {
             /** @description show given columns from table and filter */
             buttons?: components["schemas"]["FaceTW005ButtonV1"][];
         };
+        /** @description TW004 field config */
+        FaceTW004FieldV1: {
+            /** @description uniq key */
+            key?: string;
+            /** @description some label for field */
+            label?: string;
+            /**
+             * Format: uuid
+             * @description twin field (also basic field constants supported)
+             */
+            twinClassFieldId?: string;
+            /** @description is editable */
+            editable?: boolean;
+        };
         FaceTW004ViewRsV2: {
             /**
              * Format: int32
@@ -16690,20 +16698,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description results - widget details */
             widget?: components["schemas"]["FaceTW004v2"];
-        };
-        /** @description TW004 field config */
-        FaceTW004FieldV1: {
-            /** @description uniq key */
-            key?: string;
-            /** @description some label for field */
-            label?: string;
-            /**
-             * Format: uuid
-             * @description twin field (also basic field constants supported)
-             */
-            twinClassFieldId?: string;
-            /** @description is editable */
-            editable?: boolean;
         };
         /** @description Twin single field view/edit twidget */
         FaceTW004v2: {
@@ -16808,6 +16802,18 @@ export interface components {
             /** @description is editable */
             editable?: boolean;
         };
+        FaceTW002AccordionItemV1: {
+            /**
+             * Format: uuid
+             * @description item id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            id?: string;
+            /** @description locale */
+            locale?: string;
+            /** @description label for header */
+            label?: string;
+        };
         FaceTW002ViewRsV1: {
             /**
              * Format: int32
@@ -16829,18 +16835,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description results - widget details */
             widget?: components["schemas"]["FaceTW002v1"];
-        };
-        FaceTW002AccordionItemV1: {
-            /**
-             * Format: uuid
-             * @description item id
-             * @example 9a3f6075-f175-41cd-a804-934201ec969c
-             */
-            id?: string;
-            /** @description locale */
-            locale?: string;
-            /** @description label for header */
-            label?: string;
         };
         /** @description Twin i18n field accordion widget */
         FaceTW002v1: {
@@ -16951,6 +16945,18 @@ export interface components {
              */
             imagesTwinClassFieldId?: string;
         };
+        /** @description TC001 field config */
+        FaceTC001FieldV1: {
+            /** @description uniq key */
+            key?: string;
+            /** @description some label for field */
+            label?: string;
+            /**
+             * Format: uuid
+             * @description twin field (also basic field constant supported)
+             */
+            twinClassFieldId?: string;
+        };
         FaceTC001ViewRsV1: {
             /**
              * Format: int32
@@ -16972,18 +16978,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description result - face twin create */
             faceTwinCreate?: components["schemas"]["FaceTC001v1"];
-        };
-        /** @description TC001 field config */
-        FaceTC001FieldV1: {
-            /** @description uniq key */
-            key?: string;
-            /** @description some label for field */
-            label?: string;
-            /**
-             * Format: uuid
-             * @description twin field (also basic field constant supported)
-             */
-            twinClassFieldId?: string;
         };
         FaceTC001v1: {
             /**
@@ -17042,6 +17036,23 @@ export interface components {
             /** @description twin fields */
             fields?: components["schemas"]["FaceTC001FieldV1"][];
         };
+        FacePG002TabV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /** @description page title */
+            title?: string;
+            /** @description Icon url. Might be relative */
+            icon?: string;
+            /** @description page layout */
+            styleClasses?: string[];
+            /** @description tab widgets list */
+            widgets?: components["schemas"]["FacePG002WidgetV1"][];
+            /** Format: int32 */
+            order?: number;
+        };
         FacePG002ViewRsV1: {
             /**
              * Format: int32
@@ -17063,23 +17074,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description results - page details */
             page?: components["schemas"]["FacePG002v1"];
-        };
-        FacePG002TabV1: {
-            /**
-             * Format: uuid
-             * @description id
-             */
-            id?: string;
-            /** @description page title */
-            title?: string;
-            /** @description Icon url. Might be relative */
-            icon?: string;
-            /** @description page layout */
-            styleClasses?: string[];
-            /** @description tab widgets list */
-            widgets?: components["schemas"]["FacePG002WidgetV1"][];
-            /** Format: int32 */
-            order?: number;
         };
         FacePG002WidgetV1: {
             /**
@@ -17208,28 +17202,6 @@ export interface components {
             /** @description page widgets list */
             widgets?: components["schemas"]["FacePG001WidgetV1"][];
         };
-        FaceNB001ViewRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description results - navbar details */
-            navbar?: components["schemas"]["FaceNB001v1"];
-        };
         FaceNB001MenuItemV1: {
             /**
              * Format: uuid
@@ -17264,6 +17236,28 @@ export interface components {
             parentFaceMenuItemId?: string;
             /** @description children */
             children?: unknown;
+        };
+        FaceNB001ViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - navbar details */
+            navbar?: components["schemas"]["FaceNB001v1"];
         };
         FaceNB001v1: {
             /**

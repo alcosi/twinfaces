@@ -1,9 +1,9 @@
 import { getAuthHeaders } from "@/entities/face";
-import { StaticTwinFieldId } from "@/entities/twin";
+import { TwinSelfFieldId } from "@/entities/twin";
 import { Twin } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { TwinFieldEditorProps } from "@/features/twin/ui";
-import { STATIC_FIELD_MAP } from "@/features/twin/ui/field-editor/constants";
+import { SELF_FIELD_MAP } from "@/features/twin/ui/field-editor/constants";
 import { RelatedObjects, Result, TwinsAPI } from "@/shared/api";
 import { errorToResult, isTruthy } from "@/shared/libs";
 
@@ -34,6 +34,8 @@ export async function buildFieldEditorProps(
           showTwinField2DataListOptionMode: "DETAILED",
           showTwinTag2DataListOptionMode: "DETAILED",
           showTwin2TransitionMode: "DETAILED",
+          showTwinByLinkMode: "GREEN",
+          showTwin2TwinLinkMode: "SHORT",
         },
       },
     });
@@ -45,11 +47,11 @@ export async function buildFieldEditorProps(
     const twin = data.twin as Twin & { ownerUser?: User };
     const relatedObjects = data.relatedObjects as RelatedObjects;
 
-    // Handle static system fields
-    const staticField = STATIC_FIELD_MAP[fieldId as StaticTwinFieldId];
+    // Handle twin's system fields
+    const selfField = SELF_FIELD_MAP[fieldId as TwinSelfFieldId];
 
-    if (isTruthy(staticField)) {
-      const { key, descriptor } = staticField;
+    if (isTruthy(selfField)) {
+      const { key, descriptor } = selfField;
       const value = (twin[key as keyof Twin] as string) ?? "";
       return {
         ok: true,
@@ -66,7 +68,7 @@ export async function buildFieldEditorProps(
       };
     }
 
-    // Handle dynamic twin class fields
+    // Handle inherited from twin-class twin-fields
     const twinClassField = data.relatedObjects?.twinClassFieldMap?.[fieldId];
     const inheritedKey = twinClassField?.key;
     const value = data.twin.fields?.[inheritedKey!] ?? "";

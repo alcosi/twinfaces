@@ -59,7 +59,7 @@ export async function TW004(props: TWidgetFaceProps) {
         twin={twin}
         relatedObjects={relatedObjects}
         field={field}
-        mode={isAdmin ? "admin" : undefined}
+        disabled={!isAdmin}
         editable={twidget.editable}
       />
     </div>

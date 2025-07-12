@@ -3,7 +3,7 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
-import { UNICODE_SYMBOLS } from "../libs";
+import { UNICODE_SYMBOLS } from "../libs/constants";
 import { Button } from "./button";
 
 export function MaskedValue({ value }: { value: string }) {

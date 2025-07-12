@@ -41,7 +41,7 @@ export function TwinStatusActions({
       <TwinClassStatusResourceLink
         twinClassId={twin.twinClassId!}
         data={twin.status!}
-        disabled={!allowNavigation}
+        disabled={allowNavigation}
       />
       {isPopulatedArray(twin.transitions) && (
         <TransitionPerformer twin={twin} onSuccess={handleSuccess} />
