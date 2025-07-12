@@ -8,38 +8,19 @@ import { ZodType, z } from "zod";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import {
-  STATIC_TWIN_FIELD_KEYS,
-  StaticTwinFieldId,
-  StaticTwinFieldKey,
+  TWIN_SELF_FIELD_KEYS,
+  TwinSelfFieldId,
+  TwinSelfFieldKey,
   useTwinUpdate,
 } from "@/entities/twin";
-import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
-import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
-import {
-  cn,
-  formatIntlDate,
-  isPopulatedString,
-  mapPatternToInputType,
-} from "@/shared/libs";
-import { AnchorWithCopy, MaskedValue } from "@/shared/ui";
-import { Switch } from "@/shared/ui/switch";
+import { cn, isPopulatedString } from "@/shared/libs";
 
-import { DatalistOptionResourceLink } from "../../../../features/datalist-option/ui";
-import { MarkdownPreview } from "../../../../features/markdown";
-import { TwinResourceLink } from "../../../../features/twin/ui";
-import { UserResourceLink } from "../../../../features/user/ui";
-import { InPlaceEdit, InPlaceEditProps } from "../../../inPlaceEdit";
-import { STATIC_FIELD_MAP } from "./constants";
-
-type FieldProps = {
-  id: string;
-  key: StaticTwinFieldKey | string;
-  value: string;
-  name?: string;
-  descriptor: TwinClassField["descriptor"];
-};
+import { InPlaceEdit } from "../../../inPlaceEdit";
+import { SELF_FIELD_MAP } from "./constants";
+import { InheritedFieldPreview } from "./inherited-field-preview";
+import { FieldProps } from "./types";
 
 export type TwinFieldEditorProps = {
   id: string;
@@ -71,29 +52,38 @@ export function TwinFieldEditor({
   const { updateTwin } = useTwinUpdate();
   const router = useRouter();
 
-  const staticFieldRenderPreview =
-    STATIC_FIELD_MAP[field.id as StaticTwinFieldId]?.renderPreview;
+  const selfFieldRenderPreview =
+    SELF_FIELD_MAP[field.id as TwinSelfFieldId]?.renderPreview;
   const staticFieldClassName =
-    STATIC_FIELD_MAP[field.id as StaticTwinFieldId]?.className;
+    SELF_FIELD_MAP[field.id as TwinSelfFieldId]?.className;
 
   const hydratedTwin = hydrateTwinFromMap(twin, relatedObjects);
 
+  const shouldRenderPreview =
+    !editable ||
+    !field.descriptor ||
+    field.descriptor.fieldType === "booleanV1";
+
   function renderPreview() {
-    if (staticFieldRenderPreview) {
-      return staticFieldRenderPreview(hydratedTwin, mode);
+    if (selfFieldRenderPreview) {
+      return selfFieldRenderPreview(hydratedTwin, {
+        disabled: mode !== "admin",
+      });
     }
 
-    return renderDynamicFieldPreview(
-      field,
-      relatedObjects,
-      mode,
-      handleOnSubmit
+    return (
+      <InheritedFieldPreview
+        field={field}
+        relatedObjects={relatedObjects}
+        disabled={mode !== "admin"}
+        onChange={handleOnSubmit}
+      />
     );
   }
 
   async function handleOnSubmit(value: string) {
-    const body: TwinUpdateRq = STATIC_TWIN_FIELD_KEYS.includes(
-      field.key as StaticTwinFieldKey
+    const body: TwinUpdateRq = TWIN_SELF_FIELD_KEYS.includes(
+      field.key as TwinSelfFieldKey
     )
       ? { [field.key]: value }
       : { fields: { [field.key]: value } };
@@ -102,30 +92,10 @@ export function TwinFieldEditor({
       await updateTwin({ id: twinId, body });
       toast.success("Twin was updated successfully!");
       onSuccess?.() || router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Failed to update twin!");
     }
   }
-
-  const editProps: InPlaceEditProps<string> = {
-    id,
-    value: field.value,
-    valueInfo: {
-      type: AutoFormValueType.twinField,
-      label: undefined,
-      descriptor: field.descriptor,
-      twinId,
-    },
-    renderPreview: renderPreview,
-    schema: schema ?? z.string().min(1),
-    onSubmit: handleOnSubmit,
-    className: cn(className, staticFieldClassName),
-  };
-
-  const shouldRenderPreview =
-    !editable ||
-    !field.descriptor ||
-    field.descriptor.fieldType === "booleanV1";
 
   return (
     <div>
@@ -136,105 +106,24 @@ export function TwinFieldEditor({
           label
         ))}
 
-      {shouldRenderPreview ? renderPreview() : <InPlaceEdit {...editProps} />}
+      {shouldRenderPreview ? (
+        renderPreview()
+      ) : (
+        <InPlaceEdit
+          id={id}
+          value={field.value}
+          valueInfo={{
+            type: AutoFormValueType.twinField,
+            label: undefined,
+            descriptor: field.descriptor,
+            twinId,
+          }}
+          renderPreview={renderPreview}
+          schema={schema ?? z.string().min(1)}
+          onSubmit={handleOnSubmit}
+          className={cn(className, staticFieldClassName)}
+        />
+      )}
     </div>
   );
-}
-
-function renderDynamicFieldPreview(
-  field: FieldProps,
-  relatedObjects?: RelatedObjects,
-  mode?: "admin",
-  handleSubmit?: (value: string) => void
-): ReactNode {
-  const fieldType = field.descriptor?.fieldType;
-
-  if (fieldType === "urlV1") {
-    return (
-      <AnchorWithCopy href={field.value} target="_blank">
-        {field.value}
-      </AnchorWithCopy>
-    );
-  }
-
-  if (fieldType === "secretV1") {
-    return <MaskedValue value={field.value} />;
-  }
-
-  if (
-    fieldType === "textV1" &&
-    (field.descriptor?.editorType === "MARKDOWN_BASIC" ||
-      field.descriptor?.editorType === "MARKDOWN_GITHUB")
-  ) {
-    return <MarkdownPreview source={field.value} />;
-  }
-
-  if (fieldType === "dateScrollV1") {
-    const format = isPopulatedString(field.descriptor?.pattern)
-      ? mapPatternToInputType(field.descriptor.pattern)
-      : "text";
-    return isPopulatedString(field.value)
-      ? formatIntlDate(field.value, format)
-      : "";
-  }
-
-  if (
-    fieldType === "selectListV1" ||
-    fieldType === "selectLongV1" ||
-    fieldType === "selectSharedInHeadV1"
-  ) {
-    const datalistOptionData =
-      relatedObjects?.dataListsOptionMap?.[field.value];
-
-    return (
-      datalistOptionData && (
-        <DatalistOptionResourceLink
-          data={datalistOptionData}
-          withTooltip
-          disabled={mode !== "admin"}
-        />
-      )
-    );
-  }
-
-  if (fieldType === "selectLinkV1" || fieldType === "selectLinkLongV1") {
-    const twinData = relatedObjects?.twinMap?.[field.value];
-
-    return (
-      twinData && (
-        <TwinResourceLink
-          data={twinData}
-          withTooltip
-          disabled={mode !== "admin"}
-        />
-      )
-    );
-  }
-
-  if (fieldType === "selectUserV1" || fieldType === "selectUserLongV1") {
-    const userData = relatedObjects?.userMap?.[field.value];
-
-    return (
-      field.value && (
-        <UserResourceLink
-          data={userData as User}
-          withTooltip
-          disabled={mode !== "admin"}
-        />
-      )
-    );
-  }
-
-  if (fieldType === "booleanV1") {
-    const checked = field.value === "true";
-
-    return (
-      <Switch
-        checked={checked}
-        onCheckedChange={(val) => handleSubmit && handleSubmit(String(val))}
-      />
-    );
-  }
-
-  return <p>{field.value}</p>;
 }

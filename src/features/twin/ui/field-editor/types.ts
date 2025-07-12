@@ -4,8 +4,9 @@ import {
   FieldDescriptorSelectSharedInHeadV1,
   FieldDescriptorSelectUserV1,
   FieldDescriptorText,
-  StaticTwinFieldKey,
+  TwinSelfFieldKey,
 } from "@/entities/twin";
+import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin_HYDRATED } from "@/entities/twin/server";
 
 type FieldDescriptor =
@@ -13,9 +14,20 @@ type FieldDescriptor =
   | typeof FieldDescriptorSelectUserV1
   | typeof FieldDescriptorSelectSharedInHeadV1;
 
-export type StaticTwinFieldMeta = {
-  key: StaticTwinFieldKey;
+export type TwinSelfFieldMeta = {
+  key: TwinSelfFieldKey;
   descriptor?: FieldDescriptor;
-  renderPreview?: (twin: Twin_HYDRATED, mode?: "admin") => ReactNode;
+  renderPreview?: (
+    twin: Twin_HYDRATED,
+    options: { disabled?: boolean }
+  ) => ReactNode;
   className?: string;
+};
+
+export type FieldProps = {
+  id: string;
+  key: TwinSelfFieldKey | string;
+  value: string;
+  name?: string;
+  descriptor: TwinClassField["descriptor"];
 };

@@ -8,10 +8,10 @@ import { FaceTC001ViewRs, FaceWT001 } from "@/entities/face";
 import {
   STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP,
   STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
-  StaticTwinFieldId,
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
   TwinFormValues,
+  TwinSelfFieldId,
   useCreateTwin,
   useTwinFilters,
   useTwinSearchV3,
@@ -92,7 +92,7 @@ export function TwinsTable({
 
   const enabledFilters = isPopulatedArray(enabledColumns)
     ? enabledColumns.reduce((acc: TwinFilterKeys[], col) => {
-        const fieldId = col.twinClassFieldId as StaticTwinFieldId;
+        const fieldId = col.twinClassFieldId as TwinSelfFieldId;
         const key = STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP[fieldId];
 
         if (!isUndefined(key)) acc.push(key);
