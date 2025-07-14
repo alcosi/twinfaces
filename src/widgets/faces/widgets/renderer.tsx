@@ -27,6 +27,9 @@ type Props = {
 };
 
 export async function WidgetRenderer({ twinId, widget, className }: Props) {
+  // TODO: Move `fetchFaceById` into each widget component so we can leverage React Suspense
+  // and show per-widget fallback-skeleton instead of blocking the entire renderer.
+  // Task: https://alcosi.atlassian.net/browse/TWINFACES-603
   const faceResult = await safe(
     withRedirectOnUnauthorized(() =>
       fetchFaceById<Face_DETAILED>(widget.widgetFaceId!, {

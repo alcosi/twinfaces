@@ -31,7 +31,6 @@ export async function WidgetsContainer({
       <MasonryLayout className={cn(className)}>
         {mapWidgetsToNodes(widgets, twinId)}
       </MasonryLayout>
-
       {isAdmin && twinId && <ViewAsAdminButton twinId={twinId} />}
     </section>
   );

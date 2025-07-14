@@ -1,5 +1,8 @@
+import { Suspense } from "react";
+
 import { fetchPG001Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
+import { TableSkeleton2 } from "@/features/ui/skeletons";
 import { isPopulatedArray, safe } from "@/shared/libs";
 
 import { StatusAlert, WidgetsContainer } from "../../components";
@@ -23,11 +26,13 @@ export async function PG001({ pageFaceId, twinId }: PGFaceProps) {
   const pageFace = pageResult.data;
 
   return isPopulatedArray<Widget>(pageFace.widgets) ? (
-    <WidgetsContainer
-      faceId={pageFaceId}
-      widgets={pageFace.widgets}
-      twinId={twinId}
-      className={pageFace.styleClasses}
-    />
+    <Suspense fallback={<TableSkeleton2 />}>
+      <WidgetsContainer
+        faceId={pageFaceId}
+        widgets={pageFace.widgets}
+        twinId={twinId}
+        className={pageFace.styleClasses}
+      />
+    </Suspense>
   ) : null;
 }
