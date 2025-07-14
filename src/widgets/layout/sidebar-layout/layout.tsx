@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
 
+import { fetchListDomains, hydrateDomainView } from "@/entities/domain";
 import {
   FaceNB001,
   FaceNB001MenuItem,
@@ -47,6 +48,7 @@ async function filterAccessibleMenuItems(
 
 export async function SidebarLayout({ children }: Props) {
   const { currentUserId } = await getAuthHeaders();
+  const { domains } = await fetchListDomains();
   const isAdmin = await isAuthUserGranted({
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
@@ -82,6 +84,7 @@ export async function SidebarLayout({ children }: Props) {
           face={sidebarFace}
           mode={isAdmin ? "admin" : undefined}
           currentAuthUser={authUser}
+          listDomains={domains?.map((dto) => hydrateDomainView(dto)) ?? []}
         />
         <div className="w-full">
           <SidebarLayoutHeader />
