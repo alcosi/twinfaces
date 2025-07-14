@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { FieldValues, useWatch } from "react-hook-form";
 
-import {
-  PasswordStrengthLevel,
-  checkPasswordStrength,
-  isTruthy,
-} from "@/shared/libs";
+import { PasswordStrengthLevel, checkPasswordStrength } from "@/shared/libs";
 import { FormField, InputProps, StepsProgressBar } from "@/shared/ui";
 
 import { FormFieldProps, TextFormFieldProps } from "../types";
@@ -32,6 +28,7 @@ export function SecretTextFormField<T extends FieldValues>({
   ...props
 }: SecretTextFormFieldProps<T>) {
   const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
+  const isInvalid = control.getFieldState(name).invalid;
   const [strengthLevel, setStrengthLevel] = useState<PasswordStrengthLevel>(0);
 
   const passwordWatched = useWatch({
@@ -48,15 +45,13 @@ export function SecretTextFormField<T extends FieldValues>({
       <FormField
         control={control}
         name={name}
-        render={({ field, fieldState, formState }) => (
+        render={({ field }) => (
           <SecretTextFormItem
             type="password"
             autoFocus={props.autoFocus}
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
-            invalid={
-              isTruthy(fieldState.error) || isTruthy(formState.errors.root)
-            }
+            invalid={isInvalid}
             inputId={inputId}
             inForm={true}
             {...props}
