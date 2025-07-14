@@ -47,9 +47,6 @@ export async function TW004(props: TWidgetFaceProps) {
 
   const { twin, relatedObjects, field } = result.data;
 
-  // NOTE: Not sure yet if we should use it
-  // I was not able to reproduce the loading state for this face-widget
-  // <Suspense fallback={<p>TW004 loading.....</p>}></Suspense>;
   return (
     <div
       data-face-id={twidget.id}

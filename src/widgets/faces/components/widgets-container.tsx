@@ -1,4 +1,4 @@
-import { ReactNode, Suspense, use } from "react";
+import { ReactNode } from "react";
 
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
@@ -27,15 +27,10 @@ export async function WidgetsContainer({
   });
 
   return (
-    <section data-face-id={faceId} className={cn(className)}>
-      {
-        // NOTE Incorrect order of widgets display when fallback is enabled check please @Kerim Berdimyradov
-      }
-      {/* <MasonryLayout className={cn(className)}> */}
-      {/* <Suspense fallback={<p className="bg-red-700">WIDGETS loading.....</p>}> */}
-      {mapWidgetsToNodes(widgets, twinId)}
-      {/* </Suspense> */}
-      {/* </MasonryLayout> */}
+    <section data-face-id={faceId}>
+      <MasonryLayout className={cn(className)}>
+        {mapWidgetsToNodes(widgets, twinId)}
+      </MasonryLayout>
       {isAdmin && twinId && <ViewAsAdminButton twinId={twinId} />}
     </section>
   );
@@ -49,21 +44,12 @@ function mapWidgetsToNodes(
     .filter((w): w is Widget => !!w.id && !!w.widgetFaceId)
     .map((widget) => {
       return (
-        <div key={widget.id} className="min-h-8 bg-gray-100">
-          {
-            // NOTE Incorrect order of widgets display when fallback is enabled check please @Kerim Berdimyradov
-          }
-          {/* <Suspense
-            fallback={<p className="bg-red-700">WIDGETS loading.....</p>}
-          > */}
-          <WidgetRenderer
-            key={widget.id}
-            twinId={twinId}
-            widget={widget}
-            className={cn(widget.styleClasses)}
-          />
-          {/* </Suspense> */}
-        </div>
+        <WidgetRenderer
+          key={widget.id}
+          twinId={twinId}
+          widget={widget}
+          className={cn(widget.styleClasses)}
+        />
       );
     });
 }

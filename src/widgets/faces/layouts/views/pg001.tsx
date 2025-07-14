@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { fetchPG001Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { PG001Skeleton } from "@/features/ui/skeletons/pg001";
+import { TableSkeleton2 } from "@/features/ui/skeletons";
 import { isPopulatedArray, safe } from "@/shared/libs";
 
 import { StatusAlert, WidgetsContainer } from "../../components";
@@ -26,7 +26,7 @@ export async function PG001({ pageFaceId, twinId }: PGFaceProps) {
   const pageFace = pageResult.data;
 
   return isPopulatedArray<Widget>(pageFace.widgets) ? (
-    <Suspense fallback={<PG001Skeleton />}>
+    <Suspense fallback={<TableSkeleton2 />}>
       <WidgetsContainer
         faceId={pageFaceId}
         widgets={pageFace.widgets}

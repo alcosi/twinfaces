@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { fetchPG002Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { PG002Skeleton } from "@/features/ui/skeletons/pg002";
+import { TabSkeleton } from "@/features/ui/skeletons";
 import { isNumber, isPopulatedArray, safe } from "@/shared/libs";
 
 import { Tab, TabsLayout } from "../../../layout";
@@ -46,7 +46,7 @@ export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
     })) ?? [];
 
   return isPopulatedArray(tabs) ? (
-    <Suspense fallback={<PG002Skeleton />}>
+    <Suspense fallback={<TabSkeleton />}>
       <TabsLayout tabs={tabsItems} />
     </Suspense>
   ) : null;
