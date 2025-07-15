@@ -131,3 +131,5 @@ LayoutRenderer → Layout → WidgetsContainer → WidgetRenderer → WT/TW Comp
   - Keep widget logic isolated and reusable.
 
 ---
+
+[How to Add a New Widget to the Faces Driven UI System](add-widget.md)
