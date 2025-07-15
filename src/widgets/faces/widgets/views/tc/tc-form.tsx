@@ -1,20 +1,23 @@
+import { useState } from "react";
 import { Control, Path } from "react-hook-form";
 
 import {
   ComboboxFormField,
+  ComboboxFormItem,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 
-import { FaceTC001ViewRs as FaceTC } from "@/entities/face";
+import { FaceTCComponent, FaceTCViewMap } from "@/entities/face";
 import { TwinFormValues, TwinSelfFieldId } from "@/entities/twin";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
 import { TwinFieldFormField } from "../../../../form-fields";
 import { useTwinClassFields } from "../../../../tables/twins/use-twin-form-fields";
+import { normalizeTwinCreateData } from "./normalize-twin-create-data";
 
-type Field = {
+export type Field = {
   key: string;
   label: string;
   twinClassFieldId: string;
@@ -25,6 +28,11 @@ type TwinSelfFieldComponentProps = {
   control: Control<TwinFormValues>;
   name: Path<TwinFormValues>;
   label: string;
+};
+
+type TCFormProps<K extends FaceTCComponent> = {
+  control: Control<TwinFormValues>;
+  modalCreateData: FaceTCViewMap[K];
 };
 
 export function hydrateFaceTwinCreateFields(
@@ -43,15 +51,23 @@ export function hydrateFaceTwinCreateFields(
   });
 }
 
-export function TCForm({
+export function TCForm<K extends FaceTCComponent>({
   control,
   modalCreateData,
-}: {
-  control: Control<TwinFormValues>;
-  modalCreateData: FaceTC;
-}) {
+}: TCFormProps<K>) {
+  const { faceTwinCreate, relatedObjects } = modalCreateData;
+  const [selectedOptionId, setSelectedOptionId] = useState<string>();
+
+  const { twinClassId, fields, showVariantSelector, variantOptions } =
+    normalizeTwinCreateData(faceTwinCreate!, selectedOptionId);
+
+  const hydratedFields = hydrateFaceTwinCreateFields(
+    (fields as Field[]) ?? [],
+    relatedObjects
+  );
+
   const { hasHeadClass, twinClassAdapter, userAdapter, headAdapter } =
-    useTwinClassFields(control, modalCreateData.faceTwinCreate?.twinClassId);
+    useTwinClassFields(control, twinClassId);
 
   const selfFields: Partial<
     Record<TwinSelfFieldId, (props: TwinSelfFieldComponentProps) => JSX.Element>
@@ -73,13 +89,6 @@ export function TCForm({
     ),
   };
 
-  const { faceTwinCreate, relatedObjects } = modalCreateData;
-
-  const hydratedFields = hydrateFaceTwinCreateFields(
-    (faceTwinCreate?.fields as Field[]) ?? [],
-    relatedObjects
-  );
-
   const classFieldId = "00000000-0000-0000-0011-000000000013";
   const headFieldId = "00000000-0000-0000-0011-000000000009";
   const classField = hydratedFields.find(
@@ -91,75 +100,97 @@ export function TCForm({
 
   return (
     <div className="space-y-8">
-      {classField && (
-        <ComboboxFormField
-          control={control}
-          name="classId"
-          label={classField.label}
-          noItemsText="No data found"
-          {...twinClassAdapter}
+      {showVariantSelector && variantOptions && (
+        <ComboboxFormItem
+          label="Select variant"
+          onSelect={(options) => setSelectedOptionId(options?.[0]?.id)}
+          getItems={() =>
+            Promise.resolve(
+              variantOptions.map((opt) => ({ id: opt.id, label: opt.label }))
+            )
+          }
+          getById={async (id) => {
+            const found = variantOptions.find((opt) => opt.id === id);
+            return found ? { id: found.id, label: found.label } : undefined;
+          }}
+          renderItem={(item) => item.label}
           required
         />
       )}
 
-      {headField && hasHeadClass && (
-        <ComboboxFormField
-          name="headTwinId"
-          control={control}
-          label={headField.label}
-          {...headAdapter}
-          required
-        />
+      {twinClassId && (
+        <>
+          {classField && (
+            <ComboboxFormField
+              control={control}
+              name="classId"
+              label={classField.label}
+              noItemsText="No data found"
+              {...twinClassAdapter}
+              required
+            />
+          )}
+
+          {headField && hasHeadClass && (
+            <ComboboxFormField
+              name="headTwinId"
+              control={control}
+              label={headField.label}
+              {...headAdapter}
+              required
+            />
+          )}
+
+          {hydratedFields.map((field) => {
+            if (
+              field.twinClassFieldId === classFieldId ||
+              field.twinClassFieldId === headFieldId
+            ) {
+              return null;
+            }
+
+            const StaticFieldComponent =
+              selfFields[field.twinClassFieldId as TwinSelfFieldId];
+            if (!StaticFieldComponent) return null;
+
+            const nameMap: Record<string, Path<TwinFormValues>> = {
+              "00000000-0000-0000-0011-000000000003": "name",
+              "00000000-0000-0000-0011-000000000007": "assignerUserId",
+              "00000000-0000-0000-0011-000000000004": "description",
+            };
+
+            return (
+              <StaticFieldComponent
+                key={field.key}
+                control={control}
+                name={nameMap[field.twinClassFieldId] ?? `fields.${field.key}`}
+                label={field.label}
+              />
+            );
+          })}
+
+          {hydratedFields.map((field) => {
+            const isStaticField =
+              selfFields[field.twinClassFieldId as TwinSelfFieldId] ||
+              field.twinClassFieldId === classFieldId ||
+              field.twinClassFieldId === headFieldId;
+
+            if (isStaticField) return null;
+
+            return (
+              <TwinFieldFormField
+                key={field.key}
+                name={`fields.${field.key}`}
+                control={control}
+                label={field.label}
+                descriptor={field.twinClassField?.descriptor}
+                twinClassId={twinClassId!}
+                required={field.twinClassField?.required}
+              />
+            );
+          })}
+        </>
       )}
-
-      {hydratedFields.map((field) => {
-        if (
-          field.twinClassFieldId === classFieldId ||
-          field.twinClassFieldId === headFieldId
-        ) {
-          return null;
-        }
-
-        const StaticFieldComponent =
-          selfFields[field.twinClassFieldId as TwinSelfFieldId];
-        if (!StaticFieldComponent) return null;
-
-        const nameMap: Record<string, Path<TwinFormValues>> = {
-          "00000000-0000-0000-0011-000000000003": "name",
-          "00000000-0000-0000-0011-000000000007": "assignerUserId",
-          "00000000-0000-0000-0011-000000000004": "description",
-        };
-
-        return (
-          <StaticFieldComponent
-            key={field.key}
-            control={control}
-            name={nameMap[field.twinClassFieldId] ?? `fields.${field.key}`}
-            label={field.label}
-          />
-        );
-      })}
-
-      {hydratedFields.map((field) => {
-        const isStaticField =
-          selfFields[field.twinClassFieldId as TwinSelfFieldId] ||
-          field.twinClassFieldId === classFieldId ||
-          field.twinClassFieldId === headFieldId;
-
-        if (isStaticField) return null;
-
-        return (
-          <TwinFieldFormField
-            key={field.key}
-            name={`fields.${field.key}`}
-            control={control}
-            label={field.label}
-            descriptor={field.twinClassField?.descriptor}
-            twinClassId={modalCreateData.faceTwinCreate?.twinClassId!}
-            required={field.twinClassField?.required}
-          />
-        );
-      })}
     </div>
   );
 }

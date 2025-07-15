@@ -1,25 +1,30 @@
 "use server";
 
-import {
-  FaceTC001ViewRs as FaceTC,
-  FaceTC001,
-  fetchTC001Face,
-} from "@/entities/face";
+import { fetchTC001Face, fetchTC002Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isUndefined, safe } from "@/shared/libs";
 
-const componentToFetcherMap: Record<
-  string,
-  (modalFaceId: string, twinId: string) => Promise<FaceTC>
-> = {
+import {
+  FaceTCComponent,
+  FaceTCComponentSchemaMap,
+  FaceTCViewMap,
+} from "../../../../../entities/face/api/types";
+
+const componentToFetcherMap: {
+  [K in FaceTCComponent]: (
+    modalFaceId: string,
+    twinId: string
+  ) => Promise<FaceTCViewMap[K]>;
+} = {
   TC001: fetchTC001Face,
+  TC002: fetchTC002Face,
 };
 
-export async function fetchModalCreateData(
-  modalFace: FaceTC001,
+export async function fetchModalCreateData<K extends FaceTCComponent>(
+  modalFace: FaceTCComponentSchemaMap[K],
   twinId: string
-): Promise<FaceTC | undefined> {
-  const fetcher = componentToFetcherMap[`${modalFace?.component}`];
+): Promise<FaceTCViewMap[K] | undefined> {
+  const fetcher = componentToFetcherMap[`${modalFace?.component}` as K];
 
   if (isUndefined(fetcher)) {
     console.error(`No fetcher mapped for component: ${modalFace?.component}`);
