@@ -39,6 +39,23 @@ export async function fetchCurrentDomain(): Promise<DomainViewRs> {
   return data;
 }
 
+export async function fetchDomainsList() {
+  const { DomainId, AuthToken, Channel } = await getAuthHeaders();
+
+  const { data } = await TwinsAPI.GET("/private/domain/list/v1", {
+    params: {
+      header: { AuthToken, Channel, DomainId },
+      query: {
+        showDomainMode: "DETAILED",
+      },
+    },
+  });
+
+  if (isUndefined(data)) throw new Error("Failed to fetch domains list");
+
+  return data;
+}
+
 export async function fetchDomains(): Promise<DomainPublicView[]> {
   const { data } = await TwinsAPI.POST(`/public/domain/search/v1`, {
     params: {

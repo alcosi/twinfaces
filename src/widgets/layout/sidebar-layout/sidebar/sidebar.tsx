@@ -4,7 +4,7 @@ import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { DomainView_SHORT, useDomains } from "@/entities/domain";
+import { DomainView_SHORT } from "@/entities/domain";
 import { FaceNB001 } from "@/entities/face";
 import { DomainUser } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
@@ -36,12 +36,17 @@ type Props = {
   face?: FaceNB001;
   mode?: "user" | "admin";
   currentAuthUser?: DomainUser;
+  domainsList?: DomainView_SHORT[];
 };
 
-export function AppSidebar({ face, mode = "user", currentAuthUser }: Props) {
-  const { data } = useDomains();
+export function AppSidebar({
+  face,
+  mode = "user",
+  currentAuthUser,
+  domainsList,
+}: Props) {
   const { authUser, updateUser, logout } = useAuthUser();
-  const currentDomain = data?.find((i) => i.id === authUser?.domainId);
+  const currentDomain = domainsList?.find((i) => i.id === authUser?.domainId);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -127,7 +132,7 @@ export function AppSidebar({ face, mode = "user", currentAuthUser }: Props) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-(--radix-popper-anchor-width)">
                   <>
-                    {data?.map((domain) => (
+                    {domainsList?.map((domain) => (
                       <DropdownMenuItem
                         key={domain.id}
                         disabled={domain.id === currentDomain?.id}
