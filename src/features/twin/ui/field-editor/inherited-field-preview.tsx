@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckboxFormItem } from "@/components/form-fields";
+import { CheckboxFormItem, SwitchFormItem } from "@/components/form-fields";
 
 import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
@@ -99,11 +99,10 @@ export function InheritedFieldPreview({
       switch (descriptor?.checkboxType) {
         case "TOGGLE":
           return (
-            <Switch
-              checked={checked}
-              onCheckedChange={(v) => onChange?.(String(v))}
+            <SwitchFormItem
+              fieldValue={checked}
+              onChange={(v) => onChange?.(String(v))}
               disabled={disabled}
-              className="flex flex-row items-start space-y-0 space-x-3"
             />
           );
 

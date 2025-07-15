@@ -3,6 +3,7 @@ export * from "./color-picker";
 export * from "./combobox";
 export { FormItemDescription, FormItemLabel } from "./form-items-common";
 export * from "./range";
+export * from "./switch";
 export * from "./tags";
 export * from "./text";
 export * from "./types";
