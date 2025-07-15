@@ -13,17 +13,21 @@ The **Faces Driven UI System** is the core module for dynamic, face-based widget
 
 ### `src/widgets/faces` Tree View
 
+TODO: mention ...etc
+
 ```
 src/widgets/faces/
 ├── components/
 │   ├── widgets-container.tsx
 │   └── status-alert.tsx
+│   └── // other util components
 ├── layouts/
 │   ├── renderer.tsx
 │   ├── types.ts
 │   └── views/
 │       ├── pg001.tsx
 │       └── pg002.tsx
+│       └── // ...etc
 ├── widgets/
 │   ├── renderer.tsx
 │   ├── types.ts
@@ -35,6 +39,7 @@ src/widgets/faces/
 │       ├── tw005/
 │       ├── wt001/
 │       └── wt003/
+│       └── // ...etc
 
 ```
 
@@ -44,6 +49,7 @@ src/widgets/faces/
 
   - `widgets-container.tsx`: Renders a list of widgets for a given layout.
   - `status-alert.tsx`: Standardized alert component for error/info/success states.
+  - TODO: add info about ...etc component. so contributor knows what kindo of components are allowed here
 
 - **layouts/**
 
@@ -56,16 +62,23 @@ src/widgets/faces/
   - `types.ts`: Type definitions for widget faces.
   - `views/`: Implementations of specific widget types:
     - `tw001.tsx`, `tw002.tsx`: Twin widget implementations.
-    - `tc/`: Twin control widgets (e.g., `tc-form.tsx`).
+      // Fix: TC is not for twin controll
+    - `tc/`: Twin ~~control~~ widgets (e.g., `tc-form.tsx`).
     - `tw004/`, `tw005/`, `wt001/`, `wt003/`: Subfolders for complex widgets, each containing main logic and supporting files (e.g., `tw004.tsx`, `utils.ts`).
 
 ---
 
+// TODO: move this block to begining. After OVerview
 🧠 **Concepts & Terminology**
+
+// TODO: add face, layout, widget, twidget in "core concepts" sub-section
 
 - **Face**: A backend-defined UI entity (layout or widget).
 - **Layout**: A Face that arranges widgets (e.g., pages, tabs).
 - **Widget**: A Face that renders a specific UI element (e.g., table, editor).
+- // TODO: add TWidget concept and why this is subtype for widget
+- // TODO: add UML diagram with relationshipt of face, layout, widget, twidget
+  // TODO: add rendered, type-prefixes in "other concepts" sub-section
 - **Renderer**: A component that resolves a Face and renders the appropriate React component.
 - **Component Type Prefixes**:
   - `PG`: Page Layout (e.g., `PG001`)
@@ -103,6 +116,7 @@ LayoutRenderer → Layout → WidgetsContainer → WidgetRenderer → WT/TW Comp
 
 ---
 
+// TODO: remove this section
 🛠️ **Utilities & Shared Components**
 
 - `safe(fn)`: Wraps async calls, returns `{ ok, data | error }`.
@@ -121,6 +135,7 @@ LayoutRenderer → Layout → WidgetsContainer → WidgetRenderer → WT/TW Comp
 
 ---
 
+// TODO: remove this. This kind of info should be in add-widget.md
 🧑‍💻 **Developer Guidelines**
 
 - Rules and recommendations for creating new widgets:
