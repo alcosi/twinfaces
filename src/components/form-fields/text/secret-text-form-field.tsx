@@ -55,7 +55,7 @@ export function SecretTextFormField<T extends FieldValues>({
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
             invalid={
-              isTruthy(fieldState.error) || isTruthy(formState.errors.root)
+              isTruthy(formState.errors.root?.message) || fieldState.invalid
             }
             inputId={inputId}
             inForm={true}

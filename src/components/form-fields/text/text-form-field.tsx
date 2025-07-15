@@ -13,6 +13,7 @@ export function TextFormField<T extends FieldValues>({
   ...props
 }: FormFieldProps<T> & TextFormFieldProps & Omit<InputProps, "onChange">) {
   const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
+
   return (
     <FormField
       control={control}
@@ -24,7 +25,7 @@ export function TextFormField<T extends FieldValues>({
             fieldValue={field.value}
             onChange={(x) => field.onChange(x)}
             invalid={
-              isTruthy(fieldState.error) || isTruthy(formState.errors.root)
+              isTruthy(formState.errors.root?.message) || fieldState.invalid
             }
             inputId={inputId}
             inForm={true}
