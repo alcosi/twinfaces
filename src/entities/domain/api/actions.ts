@@ -39,7 +39,7 @@ export async function fetchCurrentDomain(): Promise<DomainViewRs> {
   return data;
 }
 
-export async function fetchListDomains() {
+export async function fetchDomainsList() {
   const { DomainId, AuthToken, Channel } = await getAuthHeaders();
 
   const { data } = await TwinsAPI.GET("/private/domain/list/v1", {
@@ -51,7 +51,7 @@ export async function fetchListDomains() {
     },
   });
 
-  if (isUndefined(data)) throw new Error("Failed to fetch list domains");
+  if (isUndefined(data)) throw new Error("Failed to fetch domains list");
 
   return data;
 }

@@ -36,17 +36,17 @@ type Props = {
   face?: FaceNB001;
   mode?: "user" | "admin";
   currentAuthUser?: DomainUser;
-  listDomains?: DomainView_SHORT[];
+  domainsList?: DomainView_SHORT[];
 };
 
 export function AppSidebar({
   face,
   mode = "user",
   currentAuthUser,
-  listDomains,
+  domainsList,
 }: Props) {
   const { authUser, updateUser, logout } = useAuthUser();
-  const currentDomain = listDomains?.find((i) => i.id === authUser?.domainId);
+  const currentDomain = domainsList?.find((i) => i.id === authUser?.domainId);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -132,7 +132,7 @@ export function AppSidebar({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-(--radix-popper-anchor-width)">
                   <>
-                    {listDomains?.map((domain) => (
+                    {domainsList?.map((domain) => (
                       <DropdownMenuItem
                         key={domain.id}
                         disabled={domain.id === currentDomain?.id}
