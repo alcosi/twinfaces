@@ -103,6 +103,7 @@ export function InheritedFieldPreview({
               checked={checked}
               onCheckedChange={(v) => onChange?.(String(v))}
               disabled={disabled}
+              className="flex flex-row items-start space-y-0 space-x-3"
             />
           );
 
