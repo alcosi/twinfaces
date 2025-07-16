@@ -12,7 +12,7 @@ export function resolveTwinFieldSchema(
         .string()
         .regex(REGEX_PATTERNS.URL_REGEX, { message: "Invalid URL format" });
     case TwinFieldType.secretV1:
-      return z.string().regex(REGEX_PATTERNS.SECRET_FIELD_REGEX, {
+      return z.string().regex(REGEX_PATTERNS.NO_WHITESPACE_REGEX, {
         message: "Value must not contain spaces",
       });
     default:
