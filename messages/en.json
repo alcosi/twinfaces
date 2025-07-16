@@ -1,0 +1,45 @@
+{
+  "groups": {
+    "class": "Class",
+    "twin": "Twin",
+    "user": "User",
+    "datalist": "Datalist",
+    "permission": "Permission",
+    "factory": "Factory",
+    "transition": "Transition",
+    "businessAccount": "Business account",
+    "misc": "Misc"
+  },
+
+  "items": {
+    "classes": "Classes",
+    "fields": "Fields",
+    "statuses": "Statuses",
+    "links": "Links",
+    "twins": "Twins",
+    "comments": "Comments",
+    "attachments": "Attachments",
+    "users": "Users",
+    "groups": "Groups",
+    "datalists": "Datalists",
+    "options": "Options",
+    "subsets": "Subsets",
+    "permissions": "Permissions",
+    "permissionGroups": "Permission Groups",
+    "schemas": "Schemas",
+    "factories": "Factories",
+    "multipliers": "Multipliers",
+    "multiplierFilters": "Multiplier filters",
+    "pipelines": "Pipelines",
+    "pipelineSteps": "Pipeline steps",
+    "branches": "Branches",
+    "erasers": "Erasers",
+    "conditionSets": "Condition sets",
+    "transitions": "Transitions",
+    "twinflows": "Twinflows",
+    "twinflowSchemas": "Schemas",
+    "businessAccounts": "Business accounts",
+    "tiers": "Tiers",
+    "featurers": "Featurers"
+  }
+}
