@@ -25,13 +25,13 @@ export const AttachmentImageFormItem = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleCropComplete = (base64Image: string) => {
+  function handleCropComplete(base64Image: string) {
     onChange?.(base64Image);
     setCropModalOpen(false);
     setSelectedFile(null);
-  };
+  }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
 
     e.target.value = "";
@@ -43,7 +43,7 @@ export const AttachmentImageFormItem = ({
       setCropModalOpen(false);
       setSelectedFile(null);
     }
-  };
+  }
 
   return (
     <FormItem className="w-full">
