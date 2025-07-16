@@ -86,6 +86,7 @@ export const STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP: Partial<
   "00000000-0000-0000-0011-000000000009": "headTwinIdList",
   "00000000-0000-0000-0011-000000000008": "createdByUserIdList",
   "00000000-0000-0000-0011-000000000007": "assignerUserIdList",
+  "00000000-0000-0000-0011-000000000011": "createdAt",
 } as const;
 
 export const FieldDescriptorText = {

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import { FaceWT001 } from "@/entities/face";
 import {
   TwinClass_DETAILED,
   useTwinClassSelectAdapter,
@@ -15,22 +16,28 @@ import {
   isPopulatedArray,
   isTruthy,
   isUndefined,
+  keyBy,
   reduceToObject,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
 
-import { TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD } from "../constants";
+import {
+  STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
+  TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
+} from "../constants";
 import { SearchableTwinFieldType } from "../types";
 import { useTwinSelectAdapter } from "./use-select-adapter";
 
 export function useTwinFilters({
   baseTwinClassId,
   twinClassFields,
+  enabledColumns,
 }: {
   baseTwinClassId?: string;
   twinClassFields?: TwinClass_DETAILED["fields"];
+  enabledColumns?: FaceWT001["columns"];
 }): FilterFeature<TwinFilterKeys, TwinFilters> {
   const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
@@ -40,24 +47,44 @@ export function useTwinFilters({
   function buildFilterFields(
     filters?: TwinFilterKeys[]
   ): Partial<Record<TwinFilterKeys, AutoFormValueInfo>> {
+    const columnById = keyBy(
+      enabledColumns ?? [],
+      (col) => col.twinClassFieldId!
+    );
+
     const selfFilters: Partial<Record<TwinFilterKeys, AutoFormValueInfo>> = {
       twinIdList: {
         type: AutoFormValueType.tag,
-        label: "ID",
+        label: columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["id"]]?.label ?? "ID",
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
       },
-      twinClassIdList: isUndefined(baseTwinClassId)
-        ? {
-            type: AutoFormValueType.combobox,
-            label: "Twin Class",
-            multi: true,
-            ...tcAdapter,
+      twinClassIdList: {
+        type: AutoFormValueType.combobox,
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["twinClassId"]]?.label ??
+          "Twin Class",
+        multi: true,
+        ...tcAdapter,
+        getItems: (search: string) => {
+          if (baseTwinClassId) {
+            tcAdapter.getItems(search, {
+              abstractt: "ONLY_NOT",
+              extendsHierarchyChildsForTwinClassSearch: baseTwinClassId
+                ? { idList: [baseTwinClassId], depth: 0 }
+                : undefined,
+            });
           }
-        : undefined,
+
+          return tcAdapter.getItems(search);
+        },
+      },
+
       statusIdList: {
         type: AutoFormValueType.combobox,
-        label: "Status",
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["statusId"]]?.label ??
+          "Status",
         multi: true,
         ...sAdapter,
         getItems: async (search: string) =>
@@ -70,29 +97,45 @@ export function useTwinFilters({
       },
       twinNameLikeList: {
         type: AutoFormValueType.tag,
-        label: "Name",
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["name"]]?.label ?? "Name",
       },
       descriptionLikeList: {
         type: AutoFormValueType.string,
-        label: "Description",
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["description"]]?.label ??
+          "Description",
       },
       headTwinIdList: {
         type: AutoFormValueType.combobox,
-        label: "Head",
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["headTwinId"]]?.label ??
+          "Head",
         multi: true,
         ...tAdapter,
       },
       createdByUserIdList: {
         type: AutoFormValueType.combobox,
-        label: "Author",
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["authorUserId"]]?.label ??
+          "Author",
         multi: true,
         ...uAdapter,
       },
       assignerUserIdList: {
         type: AutoFormValueType.combobox,
-        label: "Assignee",
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["assignerUserId"]]
+            ?.label ?? "Assignee",
         multi: true,
         ...uAdapter,
+      },
+      createdAt: {
+        type: AutoFormValueType.string,
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["createdAt"]]?.label ??
+          "Created at",
+        input_props: { type: "date" },
       },
     } as const;
 
@@ -113,9 +156,13 @@ export function useTwinFilters({
     const inheritedFields =
       twinClassFields?.reduce<Record<string, AutoFormValueInfo>>(
         (acc, field) => {
+          const column = enabledColumns?.find(
+            (col) => col.twinClassFieldId === field.id
+          );
+
           acc[`fields.${field.key}`] = {
             type: AutoFormValueType.twinField,
-            label: field.name,
+            label: column?.label ?? field.name,
             twinClassId: baseTwinClassId!,
             descriptor: field.descriptor,
           };
@@ -125,10 +172,7 @@ export function useTwinFilters({
         {}
       ) ?? {};
 
-    return {
-      ...filteredSelfFilters,
-      ...inheritedFields,
-    };
+    return { ...filteredSelfFilters, ...inheritedFields };
   }
 
   function mapFiltersToPayload(
@@ -163,16 +207,17 @@ export function useTwinFilters({
         "description"
       ).map(wrapWithPercent),
       headTwinIdList: toArrayOfString(toArray(filters.headTwinIdList), "id"),
+      createdAt: {
+        from: filters.createdAt ? `${filters.createdAt}T00:00:00` : "",
+        to: filters.createdAt ? `${filters.createdAt}T23:59:59` : "",
+      },
       fields: fields,
     };
 
     return result;
   }
 
-  return {
-    buildFilterFields,
-    mapFiltersToPayload,
-  };
+  return { buildFilterFields, mapFiltersToPayload };
 }
 
 function mapInheritedFieldFiltersToPayload(

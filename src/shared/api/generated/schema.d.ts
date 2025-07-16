@@ -165,7 +165,10 @@ export interface paths {
          * @deprecated
          */
         get: operations["twinViewV1"];
-        /** Update twin */
+        /**
+         * Update twin
+         * @description Updates a twin using a multipart form. The twin data should be a JSON string in the 'request' form field.
+         */
         put: operations["twinUpdateV1"];
         post?: never;
         /** Delete twin by id */
@@ -1116,8 +1119,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create new twin */
-        post: operations["twinCreateV2"];
+        /**
+         * twinCreateV2
+         * @description Creates a new twin using a standard JSON payload.
+         */
+        post: operations["twinCreateFromMultipart"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1152,6 +1158,23 @@ export interface paths {
         put?: never;
         /** Mark twin list as touched for user */
         post: operations["twinTouchAddListV1 "];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin/sketch/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create twin sketch */
+        post: operations["twinSketchCreateV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1271,6 +1294,23 @@ export interface paths {
         put?: never;
         /** Count twins by frontendId */
         post: operations["twinSearchCountV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin/progress_percent/statistic/{statisticId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns twin statistic data by statistic id */
+        post: operations["twinStatisticCalcV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2550,6 +2590,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/attachment/validate_create/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate attachment create operation */
+        post: operations["attachmentCreateValidateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/attachment/search/v1": {
         parameters: {
             query?: never;
@@ -2834,6 +2891,23 @@ export interface paths {
         };
         /** Returns public data list */
         get: operations["dataListPublicViewV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/attachment/{id}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** File in attachment */
+        get: operations["getAttachmentFile"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3656,6 +3730,23 @@ export interface paths {
         };
         /** Returns TW001 widget config: image gallery */
         get: operations["faceTW001ViewV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/face/tc002/{faceId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns TC002 widget config: twin sketch create buttons widget */
+        get: operations["faceTC002ViewV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4890,7 +4981,7 @@ export interface components {
              * @description key
              * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
-            dstTwinClass?: unknown;
+            dstTwinClass?: components["schemas"]["TwinClassV1"];
             /**
              * @description name
              * @example Serial number
@@ -5259,13 +5350,13 @@ export interface components {
             /** @description status */
             status?: components["schemas"]["TwinStatusV1"];
             /** @description class */
-            twinClass?: unknown;
+            twinClass?: components["schemas"]["TwinClassV1"];
             /** @description current assigner */
             assignerUser?: components["schemas"]["UserV1"];
             /** @description author */
             authorUser?: components["schemas"]["UserV1"];
             /** @description headTwin */
-            headTwin?: unknown;
+            headTwin?: components["schemas"]["TwinBaseV2"];
             /** @description aliases */
             aliases?: string[];
         };
@@ -5307,7 +5398,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "attachmentFieldV1";
+            fieldType: "TwinClassFieldDescriptorAttachmentV1";
         };
         TwinClassFieldDescriptorBooleanV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5321,19 +5412,19 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "booleanV1";
+            fieldType: "TwinClassFieldDescriptorBooleanV1";
         };
         TwinClassFieldDescriptorColorHexV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "colorHexV1";
+            fieldType: "TwinClassFieldDescriptorColorHexV1";
         };
         /** @description One of values */
         TwinClassFieldDescriptorDTO: {
             fieldType: string;
-        };
+        } & (components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorBooleanV1"]);
         TwinClassFieldDescriptorDateScrollV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /** @description Date pattern (default: yyyy-MM-ddTHH:mm:ss) */
             pattern?: string;
@@ -5352,21 +5443,21 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "dateScrollV1";
+            fieldType: "TwinClassFieldDescriptorDateScrollV1";
         };
         TwinClassFieldDescriptorI18nV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "i18nV1";
+            fieldType: "TwinClassFieldDescriptorI18nV1";
         };
         TwinClassFieldDescriptorImmutableV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "immutableV1";
+            fieldType: "TwinClassFieldDescriptorImmutableV1";
         };
         TwinClassFieldDescriptorLinkLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5384,7 +5475,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "selectLinkLongV1";
+            fieldType: "TwinClassFieldDescriptorLinkLongV1";
         };
         TwinClassFieldDescriptorLinkV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5399,7 +5490,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "selectLinkV1";
+            fieldType: "TwinClassFieldDescriptorLinkV1";
         };
         TwinClassFieldDescriptorListLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5422,7 +5513,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "selectLongV1";
+            fieldType: "TwinClassFieldDescriptorListLongV1";
         };
         TwinClassFieldDescriptorListSharedInHeadV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5435,7 +5526,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "selectSharedInHeadV1";
+            fieldType: "TwinClassFieldDescriptorListSharedInHeadV1";
         };
         TwinClassFieldDescriptorListV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5457,7 +5548,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "selectListV1";
+            fieldType: "TwinClassFieldDescriptorListV1";
         };
         TwinClassFieldDescriptorNumericV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5499,7 +5590,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "numericFieldV1";
+            fieldType: "TwinClassFieldDescriptorNumericV1";
         };
         TwinClassFieldDescriptorSecretV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5512,7 +5603,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "secretV1";
+            fieldType: "TwinClassFieldDescriptorSecretV1";
         };
         TwinClassFieldDescriptorTextV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5531,14 +5622,14 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "textV1";
+            fieldType: "TwinClassFieldDescriptorTextV1";
         };
         TwinClassFieldDescriptorUrlV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "urlV1";
+            fieldType: "TwinClassFieldDescriptorUrlV1";
         };
         TwinClassFieldDescriptorUserLongV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5556,7 +5647,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "selectUserLongV1";
+            fieldType: "TwinClassFieldDescriptorUserLongV1";
         };
         TwinClassFieldDescriptorUserV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -5573,7 +5664,7 @@ export interface components {
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            fieldType: "selectUserV1";
+            fieldType: "TwinClassFieldDescriptorUserV1";
         };
         TwinClassFieldRsV1: {
             /**
@@ -5622,7 +5713,7 @@ export interface components {
             /** @description description */
             description?: string;
             /** @description field descriptor */
-            descriptor?: components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorBooleanV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"];
+            descriptor?: components["schemas"]["TwinClassFieldDescriptorDTO"];
             /**
              * Format: uuid
              * @description twin class id
@@ -5685,7 +5776,7 @@ export interface components {
             /** @description description */
             description?: string;
             /** @description field descriptor */
-            descriptor?: components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorBooleanV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"];
+            descriptor?: components["schemas"]["TwinClassFieldDescriptorDTO"];
             /**
              * Format: uuid
              * @description twin class id
@@ -6481,7 +6572,7 @@ export interface components {
              */
             twinId?: string;
             /**
-             * @description External storage link
+             * @description External storage link. Use multipart scheme to send file in the same multipart request. Example : multipart://file[0], where file[0] - multipart filed name
              * @example https://test.filestorage.by/JFUjEFWksfqwf
              */
             storageLink?: string;
@@ -6542,7 +6633,7 @@ export interface components {
              */
             twinId?: string;
             /**
-             * @description External storage link
+             * @description External storage link. Use multipart scheme to send file in the same multipart request. Example : multipart://file[0], where file[0] - multipart filed name
              * @example https://test.filestorage.by/JFUjEFWksfqwf
              */
             storageLink?: string;
@@ -11592,6 +11683,8 @@ export interface components {
             links?: components["schemas"]["TwinLinkAddV1"][];
             /** @description Tags list */
             tags?: components["schemas"]["TwinTagAddV1"];
+            /** @description external id */
+            externalId?: string;
         };
         TwinTagAddV1: {
             /**
@@ -11699,6 +11792,10 @@ export interface components {
             statusDetails?: string;
             /** @description touche twins data */
             touchTwins?: components["schemas"]["TwinTouchV1"][];
+        };
+        TwinBatchCreateRqV1: {
+            /** @description twin list */
+            twins?: components["schemas"]["TwinCreateRqV2"][];
         };
         TwinSearchByAliasRqV1: {
             /** @description Search named params values */
@@ -11932,6 +12029,61 @@ export interface components {
                 [key: string]: components["schemas"]["TwinSearchRqV1"];
             };
         };
+        StatisticCalcRqV1: {
+            /** @description Twin id set */
+            twinIdSet?: string[];
+        };
+        StatisticCalcRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description twin statistic list */
+            statistics?: {
+                [key: string]: components["schemas"]["TwinStatisticProgressPercentV1"];
+            };
+        };
+        TwinStatisticProgressPercentItemV1: {
+            /**
+             * @description label
+             * @example In progress
+             */
+            label?: string;
+            /**
+             * @description key
+             * @example inProgress
+             */
+            key?: string;
+            /**
+             * Format: int32
+             * @description percent
+             * @example 30
+             */
+            percent?: number;
+            /**
+             * @description color
+             * @example #35dd68
+             */
+            colorHex?: string;
+        };
+        TwinStatisticProgressPercentV1: {
+            /** @description Item list */
+            items?: components["schemas"]["TwinStatisticProgressPercentItemV1"][];
+        };
         HistorySearchRqV1: {
             /** @description id list */
             idList?: string[];
@@ -12026,10 +12178,6 @@ export interface components {
         TwinDeleteRqV1: {
             /** @description twin set id list */
             twinIds?: string[];
-        };
-        TwinBatchCreateRqV1: {
-            /** @description twin list */
-            twins?: components["schemas"]["TwinCreateRqV2"][];
         };
         TwinBasicFieldsV1: {
             /**
@@ -14952,14 +15100,14 @@ export interface components {
         AttachmentCUDProblemsDTOv1: {
             /** @description create problems */
             createProblems?: components["schemas"]["AttachmentFileCreateProblemsDTOv1"][];
-            /** @description update problems */
-            updateProblems?: components["schemas"]["AttachmentFileUpdateProblemsDTOv1"][];
-            /** @description delete problems */
-            deleteProblems?: components["schemas"]["AttachmentFileDeleteProblemsDTOv1"][];
             /** @description field attachment problems */
             fieldAttachmentProblems?: components["schemas"]["TwinFieldAttachmentProblemsV1"][];
             /** @description comment attachment problems */
             commentAttachmentProblems?: components["schemas"]["TwinCommentAttachmentProblemsV1"][];
+            /** @description update problems */
+            updateProblems?: components["schemas"]["AttachmentFileUpdateProblemsDTOv1"][];
+            /** @description delete problems */
+            deleteProblems?: components["schemas"]["AttachmentFileDeleteProblemsDTOv1"][];
         };
         AttachmentCUDValidateRsV1: {
             /**
@@ -15045,6 +15193,45 @@ export interface components {
              * @enum {string}
              */
             problem?: "NOT_ALLOWED" | "INAVLID_FILES_SIZE" | "INAVLID_FILES_COUNT";
+        };
+        AttachmentCreateValidateRqV1: {
+            /**
+             * Format: uuid
+             * @description Twin class id
+             */
+            twinClassId?: string;
+            /** @description Attachments for adding */
+            create?: components["schemas"]["AttachmentCreateV1"][];
+        };
+        AttachmentCreateProblemsV1: {
+            /** @description create problems */
+            createProblems?: components["schemas"]["AttachmentFileCreateProblemsDTOv1"][];
+            /** @description field attachment problems */
+            fieldAttachmentProblems?: components["schemas"]["TwinFieldAttachmentProblemsV1"][];
+            /** @description comment attachment problems */
+            commentAttachmentProblems?: components["schemas"]["TwinCommentAttachmentProblemsV1"][];
+        };
+        AttachmentCreateValidateRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description Twin attachment create problems */
+            createProblems?: components["schemas"]["AttachmentCreateProblemsV1"];
         };
         AttachmentSearchRqV1: {
             /** @description id list */
@@ -16676,6 +16863,11 @@ export interface components {
             twinClassFieldId?: string;
             /** @description is editable */
             editable?: boolean;
+            /**
+             * Format: int32
+             * @description integer order
+             */
+            order?: number;
         };
         FaceTW004ViewRsV2: {
             /**
@@ -16732,6 +16924,10 @@ export interface components {
              * @description an id of twin, for which current config is pointed. It can bu useful when we want to display widget witch some head twin data on current twin page.
              */
             pointedTwinId?: string;
+            /** @description widget label */
+            label?: string;
+            /** @description style classes */
+            styleClasses?: string;
             /** @description twin fields */
             fields?: components["schemas"]["FaceTW004FieldV1"][];
         };
@@ -16944,6 +17140,106 @@ export interface components {
              * @description only images from given field [by id] should be taken, if empty - then all twins images
              */
             imagesTwinClassFieldId?: string;
+        };
+        /** @description TC002 field config */
+        FaceTC002FieldV1: {
+            /** @description uniq key */
+            key?: string;
+            /** @description some label for field */
+            label?: string;
+            /**
+             * Format: uuid
+             * @description twin field (also basic field constant supported)
+             */
+            twinClassFieldId?: string;
+        };
+        FaceTC002OptionV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /** @description class selector label */
+            classSelectorLabel?: string;
+            /**
+             * Format: uuid
+             * @description extends hierarchy twin class id
+             */
+            twinClassId?: string;
+            /**
+             * Format: int32
+             * @description hierarchy depth
+             */
+            extendsDepth?: number;
+            /**
+             * Format: uuid
+             * @description head twin id
+             */
+            pointedHeadTwinId?: string;
+            /** @description twin fields */
+            fields?: components["schemas"]["FaceTC002FieldV1"][];
+        };
+        FaceTC002ViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description resilt - face twin create */
+            faceTwinCreate?: components["schemas"]["FaceTC002v1"];
+        };
+        FaceTC002v1: {
+            /**
+             * Format: uuid
+             * @description config id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            id?: string;
+            /**
+             * @description component
+             * @example some domain
+             */
+            component?: string;
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: uuid
+             * @description createdByUserId
+             */
+            createdByUserId?: string;
+            /** @description uniq key */
+            key?: string;
+            /** @description save button label */
+            saveButtonLabel?: string;
+            /** @description header */
+            header?: string;
+            /** @description Header icon url. Might be relative */
+            icon?: string;
+            /** @description Style classes */
+            styleClasses?: string[];
+            /** @description options */
+            options?: components["schemas"]["FaceTC002OptionV1"][];
         };
         /** @description TC001 field config */
         FaceTC001FieldV1: {
@@ -18470,6 +18766,9 @@ export interface operations {
         };
         requestBody: {
             content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["TwinUpdateRqV1"];
+                };
                 "application/json": components["schemas"]["TwinUpdateRqV1"];
             };
         };
@@ -18489,7 +18788,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -22416,6 +22715,9 @@ export interface operations {
         };
         requestBody: {
             content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["AttachmentCreateRqV1"];
+                };
                 "application/json": components["schemas"]["AttachmentCreateRqV1"];
             };
         };
@@ -22435,12 +22737,12 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };
     };
-    twinCreateV2: {
+    twinCreateFromMultipart: {
         parameters: {
             query?: never;
             header: {
@@ -22456,6 +22758,9 @@ export interface operations {
         };
         requestBody: {
             content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["TwinCreateRqV2"];
+                };
                 "application/json": components["schemas"]["TwinCreateRqV2"];
             };
         };
@@ -22475,7 +22780,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -22515,7 +22820,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -22553,6 +22858,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TwinTouchListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinSketchCreateV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinBatchCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin sketch created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
                 };
             };
             /** @description Access is denied */
@@ -23133,6 +23478,51 @@ export interface operations {
             };
         };
     };
+    twinStatisticCalcV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example d74c3adc-c83c-4b55-92ca-cf5705982961 */
+                statisticId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatisticCalcRqV1"];
+            };
+        };
+        responses: {
+            /** @description Statistic data */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StatisticCalcRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     historySearchV1: {
         parameters: {
             query?: {
@@ -23262,6 +23652,9 @@ export interface operations {
         };
         requestBody: {
             content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["TwinBatchCreateRqV1"];
+                };
                 "application/json": components["schemas"]["TwinBatchCreateRqV1"];
             };
         };
@@ -23281,7 +23674,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -27939,6 +28332,52 @@ export interface operations {
             };
         };
     };
+    attachmentCreateValidateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachmentValidateProblemsMode?: "HIDE" | "SHOW";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["AttachmentCreateValidateRqV1"];
+                };
+                "application/json": components["schemas"]["AttachmentCreateValidateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Attachment validation result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentCreateValidateRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
     attachmentSearchV1: {
         parameters: {
             query?: {
@@ -28641,6 +29080,50 @@ export interface operations {
             };
             /** @description Access is denied */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    getAttachmentFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description Attachment Id
+                 * @example 553ef9bc-3b48-430d-90d3-bdee516c3d87
+                 */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description File */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": unknown;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+            /** @description File is not exist */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -31635,6 +32118,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FaceTW001ViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    faceTC002ViewV1: {
+        parameters: {
+            query?: {
+                twinId?: string;
+                lazyRelation?: unknown;
+                showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFaceTC0022TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFaceTC0022TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example 9a3f6075-f175-41cd-a804-934201ec969c */
+                faceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description TC002 face config */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FaceTC002ViewRsV1"];
                 };
             };
             /** @description Access is denied */
