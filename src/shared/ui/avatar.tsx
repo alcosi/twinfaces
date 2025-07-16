@@ -1,8 +1,10 @@
-import { cva, type VariantProps } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 import Image from "next/image";
 import React from "react";
 
-const variants = cva("inline-block rounded-full", {
+import { cn } from "../libs";
+
+const variants = cva("inline-block overflow-hidden", {
   variants: {
     variant: {
       default: "ring-primary",
@@ -26,6 +28,7 @@ const variants = cva("inline-block rounded-full", {
 interface Props extends VariantProps<typeof variants> {
   url: string;
   alt?: string;
+  className?: string;
 }
 
 export const Avatar: React.FC<Props> = ({
@@ -33,11 +36,12 @@ export const Avatar: React.FC<Props> = ({
   size,
   url,
   alt = "Avatar",
+  className,
 }) => {
   return (
     <Image
       src={url}
-      className={variants({ variant, size })}
+      className={cn(variants({ variant, size }), className)}
       alt={alt}
       width={800}
       height={500}

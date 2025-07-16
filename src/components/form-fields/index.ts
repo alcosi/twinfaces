@@ -7,3 +7,4 @@ export * from "./switch";
 export * from "./tags";
 export * from "./text";
 export * from "./types";
+export * from "./file";

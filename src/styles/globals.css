@@ -3,7 +3,9 @@
 
 @import "./face.css";
 
-@import "./components.css";
+@import "./packages/html-preview.css";
+@import "./packages/react-cropper";
+@import "./packages/rich-text-editor.css";
 
 @layer base {
   button:not(:disabled),
