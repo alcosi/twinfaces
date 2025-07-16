@@ -1,13 +1,15 @@
+import { Control, useWatch } from "react-hook-form";
+
 import {
   ColorPickerFormField,
   ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
+
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { TwinClassStatusFormValues } from "@/entities/twin-status";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import { isPopulatedString } from "@/shared/libs";
-import { Control, useWatch } from "react-hook-form";
 
 export function TwinClassStatusFormFields({
   control,

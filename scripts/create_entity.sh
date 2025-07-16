@@ -99,7 +99,6 @@ export * from "./hooks";
 EOL
 
 cat <<EOL >"$BASE_DIR/libs/constants.ts"
-export const ENTITY_COLOR = "#0EA5E9";
 EOL
 
 cat <<EOL >"$BASE_DIR/libs/hooks/index.ts"
@@ -255,7 +254,6 @@ import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import { ${ICON_NAME} } from "lucide-react";
 import { ${ENTITY_NAME_CAPITALIZED}_DETAILED } from "../../api";
-import { ENTITY_COLOR } from "../../libs";
 
 type Props = {
   data: ${ENTITY_NAME_CAPITALIZED}_DETAILED;
@@ -264,7 +262,7 @@ type Props = {
 
 export const ${ENTITY_NAME_CAPITALIZED}ResourceTooltip = ({ data, link }: Props) => {
   return (
-    <ResourceLinkTooltip uuid={data.id} link={link} accentColor={ENTITY_COLOR}>
+    <ResourceLinkTooltip uuid={data.id} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         iconSource={${ICON_NAME}}

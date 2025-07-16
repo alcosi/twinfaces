@@ -1,15 +1,21 @@
-import { Card } from "@/shared/ui";
 import { PropsWithChildren, ReactNode } from "react";
+
+import { Card } from "@/shared/ui";
 
 type Props = {
   title: string;
+  className?: string;
 } & PropsWithChildren;
 
-export function UiSection({ title, children }: Props) {
+export function UiSection({
+  title,
+  className = "grid grid-cols-2 md:grid-cols-4 gap-4",
+  children,
+}: Props) {
   return (
     <section className="">
       <h1 className="font-bold mb-3">{title}</h1>
-      <main className="grid grid-cols-2 md:grid-cols-4 gap-4">{children}</main>
+      <main className={className}>{children}</main>
     </section>
   );
 }

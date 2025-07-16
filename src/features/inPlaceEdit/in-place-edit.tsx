@@ -1,17 +1,20 @@
 "use client";
 
-import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
-import { isFalsy } from "@/shared/libs";
-import { Button } from "@/shared/ui/button";
-import { Form } from "@/shared/ui/form";
-import { LoadingSpinner } from "@/shared/ui/loading";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { InPlaceEditContext } from "./in-place-edit-context";
 import { toast } from "sonner";
+import { z } from "zod";
+
+import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
+
+import { cn, isFalsy } from "@/shared/libs";
+import { Form } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
+import { LoadingSpinner } from "@/shared/ui/loading";
+
+import { InPlaceEditContext } from "./in-place-edit-context";
 
 export interface InPlaceEditProps<T = unknown> {
   id: string;
@@ -20,6 +23,7 @@ export interface InPlaceEditProps<T = unknown> {
   valueInfo: AutoFormValueInfo;
   onSubmit: (value: T) => Promise<void>;
   schema?: z.ZodType<any, any>;
+  className?: string;
 }
 
 export function InPlaceEdit<T>({
@@ -29,6 +33,7 @@ export function InPlaceEdit<T>({
   valueInfo,
   onSubmit,
   schema,
+  className,
 }: InPlaceEditProps<T>) {
   const context = useContext(InPlaceEditContext);
   const [isEdited, setIsEdited] = useState<boolean>(false);
@@ -89,14 +94,21 @@ export function InPlaceEdit<T>({
     return (
       <div
         onClick={handleEdit}
-        className="hover:bg-muted/50 cursor-pointer h-full min-h-8 flex flex-row items-center"
+        className={cn(
+          "border-border rounded-md border border-dashed",
+          // TODO: remove horizontal padding (e.g. px-3)
+          "hover:bg-muted/50 flex min-h-10 cursor-pointer flex-row items-center rounded-md px-3",
+          className
+        )}
       >
         {renderPreview ? (
           renderPreview(value)
         ) : (
           <>
             {(value as ReactNode) || (
-              <div className="italic text-gray-700 font-light">None</div>
+              <div className="text-muted-foreground font-light italic">
+                None
+              </div>
             )}
           </>
         )}
@@ -110,17 +122,17 @@ export function InPlaceEdit<T>({
       <form
         onSubmit={form.handleSubmit(handleConfirm)}
         onAbort={handleCancel}
-        className="max-w-80"
+        className="flex w-full min-w-32 flex-col space-y-1.5"
       >
-        <div className="flex flex-row space-x-2 items-center">
-          <AutoField
-            info={valueInfo}
-            name={"value"}
-            control={form.control}
-            autoFocus
-            // TODO auto cancel edit on lost focus/on closed for popups
-          />
+        <AutoField
+          info={valueInfo}
+          name={"value"}
+          control={form.control}
+          autoFocus
+          // TODO auto cancel edit on lost focus/on closed for popups
+        />
 
+        <div className="flex w-full space-x-1">
           <Button
             type="submit"
             variant="outline"
@@ -134,6 +146,7 @@ export function InPlaceEdit<T>({
             variant="outline"
             size="iconSm"
             onClick={handleCancel}
+            className="shadow-md"
           >
             <X />
           </Button>

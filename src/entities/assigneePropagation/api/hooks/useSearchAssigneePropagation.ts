@@ -1,15 +1,15 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import {
-  hydratePermissionGrantAssigneePropagationFromMap,
-  PermissionGrantAssigneePropagation_DETAILED,
-  PermissionGrantAssigneePropagationFilter,
-} from "@/entities/assigneePropagation";
 
-// TODO: Apply caching-strategy
+import {
+  PermissionGrantAssigneePropagationFilter,
+  PermissionGrantAssigneePropagation_DETAILED,
+  hydratePermissionGrantAssigneePropagationFromMap,
+} from "@/entities/assigneePropagation";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 export const usePermissionGrantAssigneePropagationSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchAssigneePropagationGrant = useCallback(
     async ({

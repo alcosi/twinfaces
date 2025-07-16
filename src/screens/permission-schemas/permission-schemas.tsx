@@ -1,22 +1,21 @@
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRef } from "react";
+import { toast } from "sonner";
+
 import {
   PermissionSchema,
   usePermissionSchemaFilters,
   usePermissionSchemaSearchV1,
 } from "@/entities/permission-schema";
-import { UserResourceLink } from "@/entities/user";
-import { useBreadcrumbs } from "@/features/breadcrumb";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Pick<
@@ -47,6 +46,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 
   createdByUserId: {
@@ -55,7 +60,7 @@ const colDefs: Record<
     header: "Created By",
     cell: ({ row: { original } }) =>
       original.createdByUser && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <UserResourceLink data={original.createdByUser} withTooltip />
         </div>
       ),
@@ -73,23 +78,16 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
 };
 
 export function PermissionSchemasScreen() {
   const tableRef = useRef<DataTableHandle>(null);
-  const router = useRouter();
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { searchPermissionSchemas } = usePermissionSchemaSearchV1();
   const { buildFilterFields, mapFiltersToPayload } =
     usePermissionSchemaFilters();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      { label: "Schemas", href: "/workspace/permission-schemas" },
-    ]);
-  }, [setBreadcrumbs]);
 
   async function fetchPermissionSchemas(
     pagination: PaginationState,
@@ -112,7 +110,6 @@ export function PermissionSchemasScreen() {
   return (
     <CrudDataTable
       title="Permission Schemas"
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={[
         colDefs.id,
@@ -124,10 +121,6 @@ export function PermissionSchemasScreen() {
       ]}
       fetcher={fetchPermissionSchemas}
       getRowId={(row) => row.id!}
-      onRowClick={(row) =>
-        router.push(`/workspace/permission-schemas/${row.id}`)
-      }
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

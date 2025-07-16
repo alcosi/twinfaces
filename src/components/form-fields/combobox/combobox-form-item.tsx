@@ -1,3 +1,5 @@
+import React, { useEffect, useRef } from "react";
+
 import {
   cn,
   isEmptyArray,
@@ -7,9 +9,15 @@ import {
   isPopulatedString,
   isTruthy,
 } from "@/shared/libs";
-import { Combobox, ComboboxHandle, ComboboxProps } from "@/shared/ui/combobox";
-import { FormControl, FormItem, FormMessage } from "@/shared/ui/form";
-import React, { useEffect, useRef } from "react";
+import {
+  Combobox,
+  ComboboxHandle,
+  ComboboxProps,
+  FormControl,
+  FormItem,
+  FormMessage,
+} from "@/shared/ui";
+
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
 
 export function ComboboxFormItem<TFieldModel>({
@@ -32,7 +40,7 @@ export function ComboboxFormItem<TFieldModel>({
 
   useEffect(() => {
     applySelectedValues(fieldValue);
-  }, [fieldValue]);
+  }, [JSON.stringify(fieldValue)]);
 
   async function applySelectedValues(values: TFieldModel[] | string) {
     if (isEmptyString(values)) {
@@ -62,10 +70,10 @@ export function ComboboxFormItem<TFieldModel>({
   }
 
   return (
-    <FormItem>
+    <FormItem className="w-full">
       {label && (
         <FormItemLabel>
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-destructive">*</span>}
         </FormItemLabel>
       )}
       <FormControl>

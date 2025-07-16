@@ -1,15 +1,3 @@
-import { FeaturerResourceLink } from "@/entities/featurer/components";
-import { PermissionResourceLink } from "@/entities/permission";
-import {
-  TwinClassFieldCreateRq,
-  TwinClassFieldV2_DETAILED,
-  useTwinClassFieldFilters,
-  useTwinClassFieldSearchV1,
-} from "@/entities/twin-class-field";
-import { TwinClassResourceLink } from "@/entities/twinClass";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui/guid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
@@ -17,6 +5,21 @@ import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import {
+  TwinClassFieldCreateRq,
+  TwinClassFieldV2_DETAILED,
+  useTwinClassFieldFilters,
+  useTwinClassFieldSearchV1,
+} from "@/entities/twin-class-field";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
+import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
+
 import {
   CrudDataTable,
   DataTableHandle,
@@ -53,7 +56,7 @@ const colDefs: Record<
     header: "Class",
     cell: ({ row: { original } }) =>
       original.twinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink data={original.twinClass} withTooltip />
         </div>
       ),
@@ -72,6 +75,12 @@ const colDefs: Record<
   description: {
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 
   fieldTyperFeaturerId: {
@@ -79,7 +88,7 @@ const colDefs: Record<
     header: "Field typer",
     cell: ({ row: { original } }) =>
       original.fieldTyperFeaturer && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <FeaturerResourceLink
             data={original.fieldTyperFeaturer}
             withTooltip
@@ -93,7 +102,7 @@ const colDefs: Record<
     header: "View permission",
     cell: ({ row: { original } }) =>
       original.viewPermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink data={original.viewPermission} withTooltip />
         </div>
       ),
@@ -104,7 +113,7 @@ const colDefs: Record<
     header: "Edit permission",
     cell: ({ row: { original } }) =>
       original.editPermission && (
-        <div className="max-w-48 column-flex space-y-2">
+        <div className="column-flex max-w-48 space-y-2">
           <PermissionResourceLink data={original.editPermission} withTooltip />
         </div>
       ),
@@ -124,7 +133,7 @@ export function TwinClassFieldsTable({
 }) {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters({
     enabledFilters: isTruthy(twinClassId)
       ? [
@@ -150,9 +159,9 @@ export function TwinClassFieldsTable({
         pagination,
         filters: {
           ..._filters,
-          twinClassIdList: twinClassId
-            ? toArrayOfString(toArray(twinClassId), "id")
-            : _filters.twinClassIdList,
+          twinClassIdMap: twinClassId
+            ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
+            : _filters.twinClassIdMap,
         },
       });
 
@@ -223,11 +232,8 @@ export function TwinClassFieldsTable({
       ]}
       getRowId={(row) => row.id}
       fetcher={fetchFields}
-      pageSizes={[10, 20, 50]}
       onRowClick={(row) =>
-        router.push(
-          `/workspace/twinclass/${row.twinClassId}/twinField/${row.id}`
-        )
+        router.push(`/${PlatformArea.core}/fields/${row.id}`)
       }
       filters={{
         filtersInfo: buildFilterFields(),

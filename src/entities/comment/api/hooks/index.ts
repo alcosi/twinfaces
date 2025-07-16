@@ -1,1 +1,1 @@
-export * from "./useFetchComments";
+export * from "./use-fetch-comments";

@@ -1,45 +1,45 @@
 "use client";
 
-import { TextAreaFormField, TextFormField } from "@/components/form-fields";
-import { DOMAIN_CREATE_SCHEMA } from "@/entities/domain";
-import { ApiContext } from "@/shared/api";
-import { Button } from "@/shared/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/shared/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import { TextAreaFormField, TextFormField } from "@/components/form-fields";
+
+import { DOMAIN_CREATE_SCHEMA } from "@/entities/domain";
+import { PrivateApiContext } from "@/shared/api";
+import {
+  Button,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/ui";
+
 import { useQuickView } from "../../quick-view-overlay";
 
 export function CreateDomainForm() {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
   const { closeQuickView } = useQuickView();
 
   const form = useForm<z.infer<typeof DOMAIN_CREATE_SCHEMA>>({
     resolver: zodResolver(DOMAIN_CREATE_SCHEMA),
     defaultValues: {
+      name: "",
       key: "",
       description: "",
       type: undefined,
       defaultLocale: undefined,
-      iconDark: undefined,
-      iconLight: undefined,
     },
   });
 
@@ -62,19 +62,20 @@ export function CreateDomainForm() {
     //   formData.append("iconLight", formValues.iconLight[0]);
     // }
 
-    const { error } = await api.domain.create({ body: formValues });
+    const { error } = await api.domain.create({
+      body: { domain: { ...formValues } },
+    });
 
     if (error) {
       throw error;
     }
 
     form.reset({
+      name: undefined,
       key: "",
       description: "",
       type: undefined,
       defaultLocale: undefined,
-      iconDark: undefined,
-      iconLight: undefined,
     });
 
     toast.success("Domain created successfully!");
@@ -103,10 +104,12 @@ export function CreateDomainForm() {
             <div className="w-2/3 space-y-6">
               <TextFormField
                 control={form.control}
-                name={"key"}
-                label="Key"
+                name="name"
+                label="Name"
                 autoFocus={true}
               />
+
+              <TextFormField control={form.control} name="key" label="Key" />
 
               <TextAreaFormField
                 control={form.control}

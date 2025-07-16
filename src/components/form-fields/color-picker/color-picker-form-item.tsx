@@ -1,8 +1,9 @@
-import { ColorPicker } from "@/shared/ui/color-picker";
-import { FormControl, FormItem, FormMessage } from "@/shared/ui/form";
 import { Component } from "react";
-import { FormItemProps } from "../types";
+
+import { ColorPicker, FormControl, FormItem, FormMessage } from "@/shared/ui";
+
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { FormItemProps } from "../types";
 
 export class ColorPickerFormItem extends Component<
   FormItemProps & {
@@ -16,7 +17,7 @@ export class ColorPickerFormItem extends Component<
       <FormItem>
         {label && <FormItemLabel inForm={inForm}>{label}</FormItemLabel>}
         <FormControl>
-          <ColorPicker value={fieldValue} onChange={onChange} />
+          <ColorPicker color={fieldValue} onChange={onChange} />
         </FormControl>
         {description && (
           <FormItemDescription inForm={inForm}>

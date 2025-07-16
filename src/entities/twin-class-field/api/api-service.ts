@@ -1,5 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import {
   TwinClassFieldCreateRq,
   TwinClassFieldSearchFilters,
@@ -101,7 +103,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
 
   return {
     search,
-    getFields,
+    // getFields,
     getById,
     create,
     update,

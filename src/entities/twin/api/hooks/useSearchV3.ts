@@ -1,12 +1,15 @@
-import { hydrateTwinFromMap } from "@/entities/twin";
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { Twin_DETAILED, TwinFilters } from "../types";
 
-// TODO: Apply caching-strategy
+import {
+  TwinFilters,
+  Twin_DETAILED,
+  hydrateTwinFromMap,
+} from "@/entities/twin/server";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 export const useTwinSearchV3 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTwins = useCallback(
     async ({
@@ -25,14 +28,13 @@ export const useTwinSearchV3 = () => {
         if (error) {
           throw new Error("Failed to fetch twins due to API error");
         }
-
         const twinList =
           data?.twinList?.map((dto) =>
-            hydrateTwinFromMap(dto, data.relatedObjects)
+            hydrateTwinFromMap<Twin_DETAILED>(dto, data.relatedObjects)
           ) ?? [];
 
         return { data: twinList, pagination: data.pagination ?? {} };
-      } catch (error) {
+      } catch {
         throw new Error("An error occurred while fetching twins");
       }
     },

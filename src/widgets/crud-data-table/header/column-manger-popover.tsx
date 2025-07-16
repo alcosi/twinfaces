@@ -1,7 +1,3 @@
-import { CheckboxFormItem } from "@/components/form-fields";
-import { cn } from "@/shared/libs";
-import { Button } from "@/shared/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -11,6 +7,17 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { EyeIcon, GripVertical } from "lucide-react";
 import { useState } from "react";
+
+import { CheckboxFormItem } from "@/components/form-fields";
+
+import { cn } from "@/shared/libs";
+import { Button } from "@/shared/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverFooter,
+  PopoverTrigger,
+} from "@/shared/ui/popover";
 
 interface Column {
   id: string;
@@ -82,30 +89,31 @@ export function ColumnManagerPopover({
           <EyeIcon />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="space-y-4">
-        <DndContext onDragEnd={handleDragEnd}>
-          {/*<form className="space-y-8">*/}
-          <SortableContext
-            items={columns}
-            strategy={verticalListSortingStrategy}
-          >
-            {columns.map((column) => {
-              return (
-                <DraggableCheckbox
-                  key={column.id}
-                  column={column}
-                  onChange={() => onColumnSwitch(column.id)}
-                />
-              );
-            })}
-          </SortableContext>
+      <PopoverContent className="p-0">
+        <div className="max-h-[60vh] space-y-4 overflow-y-auto p-4 pb-0">
+          <DndContext onDragEnd={handleDragEnd}>
+            <SortableContext
+              items={columns}
+              strategy={verticalListSortingStrategy}
+            >
+              {columns.map((column) => {
+                return (
+                  <DraggableCheckbox
+                    key={column.id}
+                    column={column}
+                    onChange={() => onColumnSwitch(column.id)}
+                  />
+                );
+              })}
+            </SortableContext>
+          </DndContext>
+        </div>
 
-          {/*<div className={"flex flex-row justify-end gap-2"}>*/}
+        <PopoverFooter>
           <Button onClick={() => resetColumns()} type="reset" variant="outline">
             Reset
           </Button>
-        </DndContext>
-        {/*</form>*/}
+        </PopoverFooter>
       </PopoverContent>
     </Popover>
   );

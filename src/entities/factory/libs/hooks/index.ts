@@ -1,4 +1,2 @@
-export * from "./useFactorySearch";
-export * from "./useFetchFactoryById";
-export * from "./useFilters";
-export * from "./useFactorySelectAdapter";
+export * from "./use-filters";
+export * from "./use-factory-select-adapter";

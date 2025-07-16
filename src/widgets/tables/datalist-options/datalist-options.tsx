@@ -1,15 +1,23 @@
 "use client";
 
-import { DataList, DatalistResourceLink } from "@/entities/datalist";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { DataList } from "@/entities/datalist";
 import {
   DATALIST_OPTION_SCHEMA,
   DataListOptionCreateRqDV1,
-  DatalistOptionResourceLink,
   DataListOptionV3,
   useCreateDatalistOption,
   useDatalistOptionFilters,
   useDatalistOptionSearch,
 } from "@/entities/datalist-option";
+import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
+import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PagedResponse } from "@/shared/api";
 import {
   isPopulatedArray,
@@ -19,13 +27,7 @@ import {
   toArrayOfString,
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+
 import {
   CrudDataTable,
   DataTableHandle,
@@ -35,12 +37,11 @@ import { DatalistOptionFormFields } from "./form-fields";
 
 export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   const tableRef = useRef<DataTableHandle>(null);
-  const router = useRouter();
   const { searchDatalistOptions } = useDatalistOptionSearch();
   const { createDatalistOption } = useCreateDatalistOption();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
     enabledFilters: isTruthy(datalist?.id)
-      ? ["idList", "optionI18nLikeList", "statusIdList"]
+      ? ["idList", "optionLikeList", "statusIdList"]
       : undefined,
   });
   const [columns, setColumns] = useState<ColumnDef<DataListOptionV3>[]>([]);
@@ -56,7 +57,9 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
         pagination,
         filters: {
           ..._filters,
-          dataListIdList: toArrayOfString(toArray(datalist?.id), "id"),
+          dataListIdList: datalist
+            ? toArrayOfString(toArray(datalist?.id), "id")
+            : _filters.dataListIdList,
         },
       });
 
@@ -100,7 +103,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
                 header: "Datalist",
                 cell: ({ row }: { row: { original: DataListOptionV3 } }) =>
                   row.original.dataList ? (
-                    <div className="max-w-48 inline-flex">
+                    <div className="inline-flex max-w-48">
                       <DatalistResourceLink
                         data={row.original.dataList}
                         withTooltip
@@ -117,7 +120,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
           header: "Name",
           cell: ({ row: { original } }) =>
             original.dataList ? (
-              <div className="max-w-48 inline-flex">
+              <div className="inline-flex max-w-48">
                 <DatalistOptionResourceLink data={original} withTooltip />
               </div>
             ) : null,
@@ -197,13 +200,10 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   return (
     <CrudDataTable
       title="Options"
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       ref={tableRef}
       columns={columns}
       fetcher={fetchDatalistOptions}
       getRowId={(row) => row.id!}
-      onRowClick={(row) => router.push(`/workspace/datalist-options/${row.id}`)}
-      pageSizes={[10, 20, 50]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

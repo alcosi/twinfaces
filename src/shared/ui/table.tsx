@@ -1,6 +1,12 @@
 import * as React from "react";
 
-import { cn, isUndefined } from "@/shared/libs";
+import {
+  cn,
+  isEmptyArray,
+  isEmptyString,
+  isNull,
+  isUndefined,
+} from "@/shared/libs";
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -43,7 +49,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+      "bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
       className
     )}
     {...props}
@@ -58,7 +64,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b transition-colors data-[state=selected]:bg-muted",
+      "border-border data-[state=selected]:bg-muted border-b transition-colors",
       props.onClick && "hover:bg-muted/50",
       className
     )}
@@ -74,7 +80,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      "text-muted-foreground h-12 px-4 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}
@@ -86,9 +92,15 @@ const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => {
-  if (isUndefined(props.children)) {
-    return <div className="text-gray-700 font-light p-4">None</div>;
-  }
+  const content =
+    isNull(props.children) ||
+    isUndefined(props.children) ||
+    isEmptyArray(props.children) ||
+    isEmptyString(props.children) ? (
+      <div className="text-muted-foreground font-light">None</div>
+    ) : (
+      props.children
+    );
 
   return (
     <td
@@ -98,7 +110,9 @@ const TableCell = React.forwardRef<
         className
       )}
       {...props}
-    />
+    >
+      {content}
+    </td>
   );
 });
 TableCell.displayName = "TableCell";
@@ -109,7 +123,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn("mt-4 text-sm text-muted-foreground", className)}
+    className={cn("text-muted-foreground mt-4 text-sm", className)}
     {...props}
   />
 ));

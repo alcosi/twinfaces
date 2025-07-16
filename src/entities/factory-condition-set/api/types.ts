@@ -1,7 +1,7 @@
 import { components } from "@/shared/api/generated/schema";
 
 export type FactoryConditionSet =
-  components["schemas"]["FactoryConditionSetV1"];
+  components["schemas"]["FactoryConditionSetV2"];
 export type FactoryConditionSet_DETAILED = Required<FactoryConditionSet>;
 
 export type FactoryConditionSetSearchRq =
@@ -9,11 +9,8 @@ export type FactoryConditionSetSearchRq =
 
 export type FactoryConditionSetFilterKeys =
   | "idList"
-  | "idExcludeList"
   | "nameLikeList"
-  | "nameNotLikeList"
-  | "descriptionLikeList"
-  | "descriptionNotLikeList";
+  | "descriptionLikeList";
 
 export type FactoryConditionSetFilters = Partial<
   Pick<FactoryConditionSetSearchRq, FactoryConditionSetFilterKeys>

@@ -1,15 +1,16 @@
+import { Featurer_DETAILED } from "@/entities/featurer";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
-import { TwinClass_DETAILED } from "@/entities/twinClass";
-import { Featurer_DETAILED } from "@/entities/featurer";
 
+// TODO: Unify TwinClassFieldV1 & TwinClassFieldV2
 export type TwinClassField = components["schemas"]["TwinClassFieldV1"];
 export type TwinClassField_DETAILED = RequireFields<
   TwinClassField,
   "id" | "key" | "name" | "twinClassId"
 >;
 
-export type TwinClassFieldSearchFilterKeys = "twinClassIdList" | "keyLikeList";
+export type TwinClassFieldSearchFilterKeys = "twinClassIdMap" | "keyLikeList";
 export type TwinClassFieldSearchFilters = Partial<
   Pick<
     components["schemas"]["TwinClassFieldSearchRqV1"],
@@ -17,13 +18,10 @@ export type TwinClassFieldSearchFilters = Partial<
   >
 >;
 
-export type TwinClassFieldDescriptor =
-  components["schemas"]["TwinClassFieldDescriptorDTO"];
 export type TwinClassFieldCreateRq =
   components["schemas"]["TwinClassFieldCreateRqV1"];
 export type TwinClassFieldUpdateRq =
   components["schemas"]["TwinClassFieldUpdateRqV1"];
-// export type TwinClassFieldUpdateRq = components["schemas"]["TwinClassField"];
 
 export type TwinClassFieldV2 = components["schemas"]["TwinClassFieldV2"];
 export type TwinClassFieldV2_DETAILED = Required<TwinClassFieldV2> & {
@@ -33,7 +31,7 @@ export type TwinClassFieldV2_DETAILED = Required<TwinClassFieldV2> & {
 
 export type TwinClassFieldV2FilterKeys =
   | "idList"
-  | "twinClassIdList"
+  | "twinClassIdMap"
   | "keyLikeList"
   | "nameI18nLikeList"
   | "descriptionI18nLikeList"

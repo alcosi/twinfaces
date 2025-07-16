@@ -1,6 +1,8 @@
-import { UserResourceLink } from "@/entities/user";
+import { useContext } from "react";
+
 import { PermissionSchemaContext } from "@/features/permission-schema";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { UserResourceLink } from "@/features/user/ui";
+import { formatIntlDate } from "@/shared/libs";
 import {
   GuidWithCopy,
   Table,
@@ -8,7 +10,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/ui";
-import { useContext } from "react";
 
 export function PermissionSchemaGeneral() {
   const { schema } = useContext(PermissionSchemaContext);
@@ -54,7 +55,8 @@ export function PermissionSchemaGeneral() {
         <TableRow>
           <TableCell>Created at</TableCell>
           <TableCell>
-            {schema.createdAt && formatToTwinfaceDate(schema.createdAt)}
+            {schema.createdAt &&
+              formatIntlDate(schema.createdAt, "datetime-local")}
           </TableCell>
         </TableRow>
       </TableBody>

@@ -1,21 +1,23 @@
+import { useContext } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { AutoFormValueType } from "@/components/auto-field";
+
 import {
   UpdatePermissionRequestBody,
   usePermissionUpdate,
 } from "@/entities/permission";
-import { usePermissionGroupSelectAdapter } from "@/entities/permissionGroup";
-import { UserGroupResourceLink } from "@/entities/userGroup";
+import { usePermissionGroupSelectAdapter } from "@/entities/permission-group";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { PermissionContext } from "@/features/permission";
+import { UserGroupResourceLink } from "@/features/user-group/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { useContext } from "react";
-import { toast } from "sonner";
-import { z } from "zod";
 
 export function GeneralSection() {
   const { permission, refresh } = useContext(PermissionContext);
@@ -28,7 +30,7 @@ export function GeneralSection() {
         permissionId: permission.id,
         body: newPermission,
       });
-      toast.success("Permission update successfully!");
+      toast.success("Permission was updated successfully!");
       refresh?.();
     } catch (e) {
       toast.error("Failed to update Permission");
@@ -41,7 +43,7 @@ export function GeneralSection() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -75,7 +77,7 @@ export function GeneralSection() {
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -92,7 +94,7 @@ export function GeneralSection() {
     value: permission.description,
     valueInfo: {
       type: AutoFormValueType.string,
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
       label: "",

@@ -1,22 +1,24 @@
-import { Button } from "@/shared/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/ui/dialog";
-import { Form } from "@/shared/ui/form";
 import {
   ForwardedRef,
-  forwardRef,
   ReactNode,
+  forwardRef,
   useImperativeHandle,
   useReducer,
   useRef,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
+
+import { isEmptyString, isPopulatedString } from "@/shared/libs";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Form,
+} from "@/shared/ui";
 
 export type CrudDataTableDialogRef = {
   // TODO: fix `any`
@@ -31,11 +33,11 @@ type DialogState = {
 type DialogProps = {
   dialogForm?: UseFormReturn<any>;
   renderFormFields?: () => ReactNode;
-  // TODO: fix `any`
-  onCreateSubmit?: (values: any) => Promise<void>;
-  // TODO: fix `any`
-  onUpdateSubmit?: (id: string, values: any) => Promise<void>;
+  onCreateSubmit?: (values: unknown) => Promise<void>;
+  onUpdateSubmit?: (id: string, values: unknown) => Promise<void>;
   onSubmitSuccess?: () => void;
+  title?: string;
+  submitButtonLabel?: string;
 };
 
 export const CrudDataTableDialog = forwardRef(Component);
@@ -47,6 +49,8 @@ function Component(
     onCreateSubmit,
     onUpdateSubmit,
     onSubmitSuccess,
+    title,
+    submitButtonLabel,
   }: DialogProps,
   ref: ForwardedRef<CrudDataTableDialogRef>
 ) {
@@ -92,26 +96,32 @@ function Component(
     }
   }
 
+  const fallbackTitle = dialogState.rowId ? "Edit" : "Create";
+
   return dialogForm ? (
     <Dialog open={dialogState.open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
+      <DialogContent className="max-h-[100%] sm:max-h-[80%] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{dialogState.rowId ? "Edit" : "Create"}</DialogTitle>
+          <DialogTitle>
+            {isPopulatedString(title) ? title : fallbackTitle}
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...dialogForm}>
           <form onSubmit={dialogForm.handleSubmit(handleFormSubmit)}>
-            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
+            <div className="max-h-[60vh] space-y-8 overflow-y-auto px-8 py-6">
               {renderFormFields && renderFormFields()}
             </div>
 
-            <DialogFooter className="sm:justify-end bg-background p-6 rounded-b-md">
+            <DialogFooter className="bg-background rounded-b-md p-6 sm:justify-end">
               <Button
                 type="submit"
                 loading={dialogForm.formState.isSubmitting}
                 disabled={!dialogForm.formState.isDirty}
               >
-                Save
+                {isPopulatedString(submitButtonLabel)
+                  ? submitButtonLabel
+                  : "Save"}
               </Button>
             </DialogFooter>
           </form>

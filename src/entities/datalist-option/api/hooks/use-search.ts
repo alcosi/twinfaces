@@ -1,14 +1,15 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { useCallback, useContext } from "react";
 import { PaginationState } from "@tanstack/table-core";
+import { useCallback, useContext } from "react";
+
 import {
   DataListOptionFilters,
   DataListOptionV3,
   hydrateDatalistOptionFromMap,
 } from "@/entities/datalist-option";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export const useDatalistOptionSearch = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchDatalistOptions = useCallback(
     async ({

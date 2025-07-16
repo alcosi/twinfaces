@@ -1,6 +1,6 @@
-import { TagBoxProps } from "@/shared/ui";
-import { ComboboxProps } from "@/shared/ui/combobox";
-import { InputProps } from "@/shared/ui/input";
+import { Control, FieldPath } from "react-hook-form";
+
+import { ComboboxProps, InputProps, TagBoxProps } from "@/shared/ui";
 import {
   FeaturerFieldProps,
   FeaturerFormField,
@@ -8,7 +8,7 @@ import {
   TwinFieldFormItem,
   TwinFieldFormItemProps,
 } from "@/widgets/form-fields";
-import { Control, FieldPath } from "react-hook-form";
+
 import {
   CheckboxFormField,
   CheckboxFormItem,
@@ -16,6 +16,7 @@ import {
   ColorPickerFormItem,
   ComboboxFormField,
   ComboboxFormItem,
+  NumberRangeFormField,
   TagsFormField,
   TagsFormItem,
   TextFormField,
@@ -32,6 +33,7 @@ export enum AutoFormValueType {
   color = "color",
   tag = "tag",
   twinField = "twinField",
+  numberRange = "numberRange",
 }
 
 /* eslint-enable no-unused-vars */
@@ -46,6 +48,7 @@ export type AutoFormValueInfo = AutoFormCommonInfo &
     | AutoFormTwinFieldValueInfo
     | AutoFormFeaturerValueInfo
     | AutoFormColorValueInfo
+    | AutoFormNumberRangeValueInfo
   );
 
 export interface AutoFormCommonInfo {
@@ -56,7 +59,7 @@ export interface AutoFormCommonInfo {
 
 export interface AutoFormTextValueInfo {
   type: AutoFormValueType.string;
-  inputProps?: InputProps;
+  input_props?: InputProps;
 }
 
 export interface AutoFormSimpleValueInfo {
@@ -78,9 +81,9 @@ export interface AutoFormTagValueInfo
   schema?: TagBoxProps<string>["schema"];
 }
 
-export interface AutoFormTwinFieldValueInfo extends TwinFieldFormItemProps {
+export type AutoFormTwinFieldValueInfo = TwinFieldFormItemProps & {
   type: AutoFormValueType.twinField;
-}
+};
 
 export interface AutoFormFeaturerValueInfo extends FeaturerFieldProps {
   type: AutoFormValueType.featurer;
@@ -98,6 +101,12 @@ export interface AutoFormFieldProps {
 
 export interface AutoFormColorValueInfo {
   type: AutoFormValueType.color;
+}
+
+export interface AutoFormNumberRangeValueInfo {
+  type: AutoFormValueType.numberRange;
+  placeholderFrom?: string;
+  placeholderTo?: string;
 }
 
 export function AutoField({
@@ -169,14 +178,38 @@ export function AutoField({
             control={control}
             label={info.label}
             description={info.description}
-            descriptor={info.descriptor}
+            {...info}
           />
         ) : (
           <TwinFieldFormItem
             fieldValue={value}
             label={info.label}
             description={info.description}
-            descriptor={info.descriptor}
+            {...info}
+          />
+        );
+
+      case AutoFormValueType.numberRange:
+        return name && control ? (
+          <NumberRangeFormField name={name} control={control} {...info} />
+        ) : null;
+
+      case AutoFormValueType.string:
+        return name && control ? (
+          <TextFormField
+            {...info}
+            name={name}
+            control={control}
+            autoFocus={autoFocus}
+            {...info.input_props}
+          />
+        ) : (
+          <TextFormItem
+            {...info}
+            value={value}
+            onChange={(e) => setValue(e?.target.value)}
+            autoFocus={autoFocus}
+            {...info.input_props}
           />
         );
 
@@ -187,7 +220,6 @@ export function AutoField({
             name={name}
             control={control}
             autoFocus={autoFocus}
-            {...(info.type == AutoFormValueType.string ? info.inputProps : {})}
           />
         ) : (
           <TextFormItem
@@ -195,7 +227,6 @@ export function AutoField({
             value={value}
             onChange={(e) => setValue(e?.target.value)}
             autoFocus={autoFocus}
-            {...(info.type == AutoFormValueType.string ? info.inputProps : {})}
           />
         );
     }

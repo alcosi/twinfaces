@@ -1,25 +1,34 @@
-import { Button } from "@/shared/ui/button";
-import { isElementType, stopPropagation } from "@/shared/libs";
+import { css } from "@emotion/css";
 import { Copy, Link } from "lucide-react";
 import React, {
-  createElement,
   ElementType,
-  isValidElement,
   PropsWithChildren,
   ReactNode,
+  createElement,
+  isValidElement,
 } from "react";
 import { toast } from "sonner";
+
+import { cn, isElementType, stopPropagation } from "@/shared/libs";
+import { Button } from "@/shared/ui/button";
 
 export type ResourceLinkTooltipProps = PropsWithChildren<{
   uuid: string;
   link?: string;
-  accentColor?: string;
 }>;
+
+const brandGradient = css`
+  background: linear-gradient(
+    to bottom,
+    var(--brand-500) 0px,
+    var(--brand-500) 56px,
+    transparent 56px
+  );
+`;
 
 export function ResourceLinkTooltip({
   uuid,
   link,
-  accentColor = "#3b82f6", // text-blue-500
   children,
 }: ResourceLinkTooltipProps) {
   function handleCopyUUID(e: React.MouseEvent) {
@@ -41,19 +50,16 @@ export function ResourceLinkTooltip({
 
   return (
     <div
-      className="text-xs w-72 py-2 px-4 space-y-1.5"
-      onClick={stopPropagation}
-      style={{
-        background: `linear-gradient(to bottom, ${accentColor} 56px, transparent 56px)`,
-      }}
+      className={cn("w-72 space-y-1.5 px-4 py-2 text-xs", brandGradient)}
+      onClick={(e) => e.stopPropagation()}
     >
       {children}
 
-      <footer className="flex gap-x-2 justify-between">
+      <footer className="flex justify-between gap-x-2">
         <Button
           variant="outline"
           size="xs"
-          className="flex flex-row gap-1 items-center hover:bg-secondary w-full p-0.5"
+          className="hover:bg-secondary flex w-full flex-row items-center gap-1 p-0.5"
           onClick={handleCopyUUID}
         >
           <Copy className="h-3.5 w-3.5" />
@@ -62,7 +68,7 @@ export function ResourceLinkTooltip({
         <Button
           variant="outline"
           size="xs"
-          className="flex flex-row gap-1 items-center hover:bg-secondary w-full p-0.5"
+          className="hover:bg-secondary flex w-full flex-row items-center gap-1 p-0.5"
           onClick={handleCopyLink}
           disabled={!link}
         >
@@ -100,14 +106,14 @@ ResourceLinkTooltip.Header = function Header({
   };
 
   return (
-    <header className="flex text-base h-16 gap-x-4 text-primary-foreground">
-      <div className="h-16 w-16  rounded-full bg-muted text-link-light-active dark:text-link-dark-active flex shrink-0 justify-center items-center">
+    <header className="text-primary-foreground flex h-16 gap-x-4 text-base">
+      <div className="bg-muted text-link-enabled flex h-16 w-16 shrink-0 items-center justify-center rounded-full">
         {renderIcon()}
       </div>
 
-      <div className="flex flex-col justify-end h-12 overflow-hidden">
-        <div className="font-semibold truncate whitespace-nowrap">{title}</div>
-        <div className="text-sm truncate whitespace-nowrap">{subTitle}</div>
+      <div className="flex h-12 flex-col justify-end overflow-hidden">
+        <div className="truncate font-semibold whitespace-nowrap">{title}</div>
+        <div className="truncate text-sm whitespace-nowrap">{subTitle}</div>
       </div>
     </header>
   );
@@ -125,7 +131,7 @@ type ItemProps = PropsWithChildren<{
 
 ResourceLinkTooltip.Item = function Item({ title, children }: ItemProps) {
   return (
-    <div className="flex max-w-48 flex-row gap-2 items-center">
+    <div className="flex max-w-48 flex-row items-center gap-2">
       {title && <strong>{title}:</strong>}
       {children}
     </div>

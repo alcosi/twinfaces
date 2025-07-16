@@ -1,13 +1,14 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { hydrateTwinFlowSchemaFromMap } from "../../libs";
-import { TwinFlowSchema_DETAILED, TwinFlowSchemaFilters } from "../types";
 
-// TODO: Apply caching-strategy
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
+
+import { hydrateTwinFlowSchemaFromMap } from "../../libs";
+import { TwinFlowSchemaFilters, TwinFlowSchema_DETAILED } from "../types";
+
 export const useTwinFlowSchemaSearchV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const searchTwinFlowSchemas = useCallback(
     async ({

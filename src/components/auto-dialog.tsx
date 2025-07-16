@@ -1,19 +1,21 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
-import { Alert } from "@/shared/ui/alert";
-import { Button } from "@/shared/ui/button";
+
 import {
+  Alert,
+  Button,
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/shared/ui/dialog";
-import { Form } from "@/shared/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+  Form,
+} from "@/shared/ui";
 
 export interface AutoEditDialogSettings {
   title: string;
@@ -87,7 +89,10 @@ export function AutoDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeInternal}>
-      <DialogContent className="sm:max-w-md max-h-[100%] sm:max-h-[80%]">
+      <DialogContent
+        className="max-h-[100%] sm:max-h-[80%] sm:max-w-md"
+        aria-describedby={keys.join("-")}
+      >
         <DialogTrigger asChild>Open</DialogTrigger>
         <DialogHeader>
           {settings?.title && <DialogTitle>{settings.title}</DialogTitle>}
@@ -95,14 +100,14 @@ export function AutoDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(internalSubmit)}>
-            <div className="space-y-8 overflow-y-auto max-h-[60vh] px-8 py-6">
+            <div className="max-h-[60vh] space-y-8 overflow-y-auto px-8 py-6">
               {settings?.value &&
                 keys.map((key) => renderField(key, settings.value[key]))}
 
-              {error && <Alert variant="destructive">{error}</Alert>}
+              {error && <Alert variant="error">{error}</Alert>}
             </div>
 
-            <DialogFooter className="sm:justify-end p-6">
+            <DialogFooter className="p-6 sm:justify-end">
               <Button type="submit" loading={form.formState.isSubmitting}>
                 Save
               </Button>

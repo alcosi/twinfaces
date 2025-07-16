@@ -1,5 +1,8 @@
+import { useMemo } from "react";
+
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import { FeaturerParamType } from "@/entities/featurer";
+import { useLinkSelectAdapter } from "@/entities/link";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import {
@@ -7,14 +10,12 @@ import {
   useTwinSelectAdapter,
   useTwinTouchIdSelectAdapter,
 } from "@/entities/twin";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
-import { useLinkSelectAdapter } from "@/entities/twin-class-link";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
-import { useUserGroupSelectAdapter } from "@/entities/userGroup";
-import { createFixedSelectAdapter, SelectAdapter } from "@/shared/libs";
-import { useMemo } from "react";
+import { useUserGroupSelectAdapter } from "@/entities/user-group";
+import { SelectAdapter, createFixedSelectAdapter } from "@/shared/libs";
 
 type FeaturerParamTypesSelectAdapter =
   | ReturnType<

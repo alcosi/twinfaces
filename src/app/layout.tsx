@@ -1,49 +1,52 @@
-import { ThemeProvider } from "@/components/theme-provider";
-import { cn } from "@/shared/libs";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
-import type { Metadata } from "next";
 import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
-import "./globals.css";
+
+import { getDomainFromHeaders } from "@/entities/face";
+import { getProductFlavorConfig } from "@/shared/config";
+import { cn } from "@/shared/libs";
+import { PublicLayoutProviders } from "@/widgets/layout";
+
+import "../styles/globals.css";
 
 const fontSans = Inter({
   subsets: ["latin"],
+  // NOTE: Set by Tailwind's default theme — see docs: https://tailwindcss.com/docs/theme#default-theme-variable-reference
   variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-  title: "Twin Faces",
-  description: "Admin panel for the Twins framework",
-};
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const remoteConfig = await getDomainFromHeaders();
+  const config = getProductFlavorConfig(remoteConfig);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <PublicEnvScript />
-        <link rel="icon" type="image/svg+xml" href={"/favicon.png"} />
+        <title>{config.name ?? config.productName}</title>
+        <meta
+          name="description"
+          content={config.description ?? config.productName}
+        />
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href={config.iconLight ?? config.favicon}
+        />
       </head>
       <body
         className={cn(
-          "min-h-screen fontSans font-sans antialiased overflow-hidden",
-          fontSans.variable
+          "bg-background text-foreground min-h-screen overflow-hidden antialiased",
+          fontSans.className
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TooltipProvider delayDuration={700} skipDelayDuration={0}>
-            {children}
-          </TooltipProvider>
-        </ThemeProvider>
+        <PublicLayoutProviders config={config}>
+          {children}
+        </PublicLayoutProviders>
       </body>
     </html>
   );

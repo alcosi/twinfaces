@@ -1,23 +1,34 @@
+import React, { ChangeEvent } from "react";
+
 import {
   ColorPickerFormItem,
+  ComboboxFormItem,
   FormItemProps,
+  SecretTextFormItem,
   TextFormItem,
 } from "@/components/form-fields";
-import { ComboboxFormItem } from "@/components/form-fields/combobox";
+
 import {
   DataListOptionV3,
   useDatalistOptionSelectAdapter,
 } from "@/entities/datalist-option";
-import { Twin, useTwinSelectAdapter } from "@/entities/twin";
-import { TwinClassFieldDescriptor } from "@/entities/twin-class-field";
-import { TwinFieldType } from "@/entities/twinField";
-import { useUserSelectAdapter } from "@/entities/user";
-import { isPopulatedArray } from "@/shared/libs";
-import React from "react";
+import { useTwinSelectAdapter } from "@/entities/twin";
+import { Twin } from "@/entities/twin/server";
+import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
+import { DomainUser_DETAILED, useUserSelectAdapter } from "@/entities/user";
+import { isPopulatedArray, mapPatternToInputType } from "@/shared/libs";
+
+import {
+  TwinFieldSelectLinkLongFormItem,
+  TwinFieldTextFormItem,
+} from "./components";
 
 export type TwinFieldFormItemProps = {
-  descriptor: TwinClassFieldDescriptor;
-};
+  descriptor?: TwinFieldUI["descriptor"];
+} & (
+  | { twinClassId: string; twinId?: never }
+  | { twinId: string; twinClassId?: never }
+);
 
 type Props = FormItemProps &
   TwinFieldFormItemProps & {
@@ -25,13 +36,31 @@ type Props = FormItemProps &
     onChange?: (value: string) => void;
   };
 
-export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
+export function TwinFieldFormItem({
+  twinId,
+  twinClassId,
+  descriptor,
+  onChange,
+  ...props
+}: Props) {
   const twinAdapter = useTwinSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
   const userAdapter = useUserSelectAdapter();
 
-  function handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     return onChange?.(event.target.value);
+  }
+
+  function handleOnDateChange(
+    event: ChangeEvent<HTMLInputElement>,
+    pattern?: string
+  ) {
+    const newValue = formatDate(new Date(event.target.value), pattern);
+    return onChange?.(newValue);
+  }
+
+  function handleMarkdownChange(event: { target: { markdown: string } }) {
+    onChange?.(event.target.markdown);
   }
 
   function handleOnTwinSelect(twins?: Twin[]) {
@@ -46,34 +75,59 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
     }
   }
 
+  function handleOnUserSelect(users?: DomainUser_DETAILED[]) {
+    if (isPopulatedArray<DomainUser_DETAILED>(users)) {
+      return onChange?.(users[0].userId);
+    }
+  }
+
   function renderByType() {
-    switch (descriptor.fieldType) {
+    switch (descriptor?.fieldType) {
+      case TwinFieldType.secretV1:
+        return (
+          <SecretTextFormItem
+            {...props}
+            type="password"
+            onChange={handleInputChange}
+          />
+        );
       case TwinFieldType.textV1:
-        return <TextFormItem onChange={handleTextChange} {...props} />;
+        return (
+          <TwinFieldTextFormItem
+            descriptor={descriptor}
+            onTextChange={handleInputChange}
+            onMarkdownChange={handleMarkdownChange}
+            {...props}
+          />
+        );
       case TwinFieldType.urlV1:
         return (
-          <TextFormItem type="url" onChange={handleTextChange} {...props} />
+          <TextFormItem type="url" onChange={handleInputChange} {...props} />
         );
-      case TwinFieldType.numericV1:
       case TwinFieldType.numericFieldV1:
         return (
-          <TextFormItem type="number" onChange={handleTextChange} {...props} />
+          <TextFormItem type="number" onChange={handleInputChange} {...props} />
         );
       case TwinFieldType.colorHexV1:
         return <ColorPickerFormItem onChange={onChange} {...props} />;
-      case TwinFieldType.dateScrollV1:
+      case TwinFieldType.dateScrollV1: {
+        const type = mapPatternToInputType(descriptor.pattern!);
         return (
-          <TextFormItem type="date" onChange={handleTextChange} {...props} />
+          <TextFormItem
+            {...props}
+            onChange={(event) => handleOnDateChange(event, descriptor.pattern)}
+            type={type}
+          />
         );
+      }
       case TwinFieldType.immutableV1:
         return <TextFormItem disabled {...props} />;
       case TwinFieldType.attachmentFieldV1:
-      case TwinFieldType.attachmentV1:
         return (
-          <TextFormItem type="file" onChange={handleTextChange} {...props} />
+          <TextFormItem type="file" onChange={handleInputChange} {...props} />
         );
       case TwinFieldType.selectLinkV1:
-      case TwinFieldType.selectLinkLongV1:
+      case TwinFieldType.selectSharedInHeadV1:
         return (
           <ComboboxFormItem
             getById={twinAdapter.getById}
@@ -84,10 +138,28 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
             {...props}
           />
         );
+      case TwinFieldType.selectLinkLongV1:
+        if (twinId) {
+          return (
+            <TwinFieldSelectLinkLongFormItem
+              linkId={descriptor.linkId!}
+              multi={Boolean(descriptor.multiple)}
+              twinId={twinId}
+              {...props}
+            />
+          );
+        } else if (twinClassId) {
+          return (
+            <TwinFieldSelectLinkLongFormItem
+              linkId={descriptor.linkId!}
+              multi={Boolean(descriptor.multiple)}
+              twinClassId={twinClassId}
+              {...props}
+            />
+          );
+        }
+        break;
       case TwinFieldType.selectListV1:
-      case TwinFieldType.selectListLongV1:
-      case TwinFieldType.selectLongV1:
-      case TwinFieldType.selectSharedInHeadV1:
         return (
           <ComboboxFormItem
             getById={optionAdapter.getById}
@@ -102,8 +174,24 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
             {...props}
           />
         );
+      case TwinFieldType.selectLongV1:
+        return (
+          <ComboboxFormItem
+            getById={optionAdapter.getById}
+            getItems={(search) =>
+              optionAdapter.getItems(search, {
+                dataListIdList: descriptor.dataListId
+                  ? [descriptor.dataListId]
+                  : [],
+              })
+            }
+            renderItem={optionAdapter.renderItem}
+            onSelect={handleOnDataListSelect}
+            multi={descriptor.multiple}
+            {...props}
+          />
+        );
       case TwinFieldType.selectUserV1:
-      case TwinFieldType.selectUserLongV1:
         return (
           <ComboboxFormItem
             {...userAdapter}
@@ -114,8 +202,22 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
               })
             }
             renderItem={userAdapter.renderItem}
-            onSelect={handleOnDataListSelect}
-            multi={descriptor.multiple}
+            onSelect={handleOnUserSelect}
+            {...props}
+          />
+        );
+      case TwinFieldType.selectUserLongV1:
+        return (
+          <ComboboxFormItem
+            {...userAdapter}
+            getById={userAdapter.getById}
+            getItems={(search) =>
+              userAdapter.getItems(search, {
+                userIdList: descriptor.userFilterId ?? [],
+              })
+            }
+            renderItem={userAdapter.renderItem}
+            onSelect={handleOnUserSelect}
             {...props}
           />
         );
@@ -132,4 +234,24 @@ export function TwinFieldFormItem({ descriptor, onChange, ...props }: Props) {
   }
 
   return renderByType();
+}
+
+// NOTE: formatDate currently handles only the ISO-like pattern "yyyy-MM-dd'T'HH:mm:ss" and otherwise falls back to date.toDateString().
+//
+// TODO: Evaluate replacing this with
+// Intl.DateTimeFormat or a lightweight library (date-fns, Day.js, Luxon)
+// to gain locale/time-zone support, better formatting options, and potentially smaller bundle size.
+function formatDate(date: Date, pattern?: string): string {
+  if (pattern === "yyyy-MM-dd'T'HH:mm:ss") {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
+  return date.toDateString();
 }

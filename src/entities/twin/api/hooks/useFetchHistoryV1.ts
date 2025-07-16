@@ -1,11 +1,11 @@
-import { ApiContext, PagedResponse } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
-import { Twin } from "../types";
 
-// TODO: Apply caching-strategy
+import { Twin } from "@/entities/twin/server";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
+
 export const useFetchHistoryV1 = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchHistoryByTwinId = useCallback(
     async ({

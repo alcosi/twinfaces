@@ -1,20 +1,26 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import {
+  FACTORY_SCHEMA,
   Factory,
+  FactoryCreateRq,
+  useCreateFactory,
   useFactoryFilters,
   useFactorySearch,
 } from "@/entities/factory";
-import { UserResourceLink } from "@/entities/user";
-import { useBreadcrumbs } from "@/features/breadcrumb";
+import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { formatToTwinfaceDate } from "@/shared/libs";
+import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { toast } from "sonner";
+
+import { FactoryFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Omit<Factory, "createdByUserId">,
@@ -35,6 +41,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
   name: {
     id: "name",
@@ -46,7 +58,8 @@ const colDefs: Record<
     accessorKey: "createdAt",
     header: "Created At",
     cell: ({ row: { original } }) =>
-      original.createdAt && formatToTwinfaceDate(original.createdAt),
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
   },
   createdByUser: {
     id: "createdByUser",
@@ -87,12 +100,16 @@ const colDefs: Record<
 export function Factories() {
   const { searchFactories } = useFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
-  const router = useRouter();
-  const { setBreadcrumbs } = useBreadcrumbs();
+  const { createFactory } = useCreateFactory();
 
-  useEffect(() => {
-    setBreadcrumbs([{ label: "Factories", href: "/workspace/factories" }]);
-  }, []);
+  const factoryForm = useForm<z.infer<typeof FACTORY_SCHEMA>>({
+    resolver: zodResolver(FACTORY_SCHEMA),
+    defaultValues: {
+      key: "",
+      name: "",
+      description: "",
+    },
+  });
 
   async function fetchFactories(
     pagination: PaginationState,
@@ -111,25 +128,48 @@ export function Factories() {
     }
   }
 
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof FACTORY_SCHEMA>
+  ) => {
+    const body: FactoryCreateRq = {
+      nameI18n: {
+        translations: {
+          en: formValues.name,
+        },
+      },
+      descriptionI18n: {
+        translations: {
+          en: formValues.description,
+        },
+      },
+      key: formValues.key,
+    };
+
+    await createFactory(body);
+    toast.success("Factory created successfully!");
+  };
+
   return (
     <CrudDataTable
-      className="mb-10 p-8 lg:flex lg:justify-center flex-col mx-auto"
       columns={Object.values(colDefs) as ColumnDef<Factory>[]}
       fetcher={fetchFactories}
       getRowId={(row) => row.id!}
-      pageSizes={[10, 20, 50]}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.key,
         colDefs.name,
+        colDefs.description,
+        colDefs.createdByUser,
         colDefs.factoryUsagesCount,
       ]}
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      onRowClick={(row) => {
-        router.push(`/workspace/factories/${row.id}`);
-      }}
+      dialogForm={factoryForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <FactoryFormFields control={factoryForm.control} />
+      )}
     />
   );
 }

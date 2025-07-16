@@ -1,16 +1,15 @@
-import {
-  isPopulatedString,
-  SelectAdapter,
-  wrapWithPercent,
-} from "@/shared/libs";
-import {
-  FactoryPipeline_DETAILED,
-  FactoryPipelineFilters,
-  useFactoryPipelineSearch,
-} from "../../api";
-import { useFetchFactoryPipelineById } from "./use-fetch-factory-pipeline-by-id";
+import { SelectAdapter, wrapWithPercent } from "@/shared/libs";
 
-export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline_DETAILED> {
+import {
+  FactoryPipelineFilters,
+  FactoryPipeline_DETAILED,
+  useFactoryPipelineSearch,
+  useFetchFactoryPipelineById,
+} from "../../api";
+
+export function useFactoryPipelineSelectAdapter(
+  factoryId?: string
+): SelectAdapter<FactoryPipeline_DETAILED> {
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
   const { fetchFactoryPipelineById } = useFetchFactoryPipelineById();
 
@@ -25,7 +24,8 @@ export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline
         pageSize: 10,
       },
       filters: {
-        keyLikeList: [wrapWithPercent(search)],
+        descriptionLikeList: [wrapWithPercent(search)],
+        factoryIdList: factoryId ? [factoryId] : [],
         ...filters,
       },
     });
@@ -33,8 +33,11 @@ export function useFactoryPipelineSelectAdapter(): SelectAdapter<FactoryPipeline
     return response.data;
   }
 
-  function renderItem({ factory, inputTwinClass }: FactoryPipeline_DETAILED) {
-    return `${isPopulatedString(factory.name) ? factory.name : "N/A"} | ${inputTwinClass.name}`;
+  function renderItem({ description }: FactoryPipeline_DETAILED) {
+    // Originally, TWINFACES-326 requested displaying: `${factory.name} | ${inputTwinClass.name}`
+    // However, the backend does not support filtering by factory.name or inputTwinClass.name.
+    // TODO: Revisit the ticket with the BE team to explore a solution.
+    return description;
   }
 
   return {

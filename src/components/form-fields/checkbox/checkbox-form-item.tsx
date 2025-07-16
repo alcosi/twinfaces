@@ -1,7 +1,9 @@
-import { Checkbox } from "@/shared/ui/checkbox";
 import { CheckboxProps } from "@radix-ui/react-checkbox";
-import { FormItemProps } from "../types";
+
+import { Checkbox } from "@/shared/ui";
+
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { FormItemProps } from "../types";
 
 export function CheckboxFormItem({
   fieldValue,

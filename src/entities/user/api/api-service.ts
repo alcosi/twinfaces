@@ -1,18 +1,29 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { DomainUserFilters, PermissionGrantUserFilters } from "./types";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
+import {
+  DomainUserFilters,
+  DomainUserViewQuery,
+  PermissionGrantUserFilters,
+  QueryUserPermissionGroupViewV1,
+  QueryUserPermissionViewV1,
+  User,
+} from "./types";
 
 export function createUserApi(settings: ApiSettings) {
   async function searchDomainUsers({
     pagination,
     filters,
+    header,
   }: {
     pagination: PaginationState;
     filters: DomainUserFilters;
+    header?: ReturnType<typeof getApiDomainHeaders>;
   }) {
     return settings.client.POST("/private/domain/user/search/v1", {
       params: {
-        header: getApiDomainHeaders(settings),
+        header: header ?? getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
           showDomainUser2UserMode: "DETAILED",
@@ -56,7 +67,85 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
-  return { searchDomainUsers, searchPermissionGrants };
+  /*
+   * @deprecated Use `getByAuthToken` instead of this unused function
+   */
+  function getById({
+    id,
+    query = {},
+  }: {
+    id: string;
+    query?: DomainUserViewQuery;
+  }) {
+    return settings.client.GET(`/private/domain/user/{userId}/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId: id },
+        query: query,
+      },
+    });
+  }
+
+  function getByAuthToken({ query = {} }: { query?: DomainUserViewQuery }) {
+    return settings.client.GET("/private/domain/user/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: query,
+      },
+    });
+  }
+
+  function update({ id, body }: { id: string; body: User }) {
+    return settings.client.PUT(`/private/user/{userId}/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId: id },
+      },
+      body: body,
+    });
+  }
+
+  function getPermissionsByUserId({
+    userId,
+    query = {},
+  }: {
+    userId: string;
+    query?: QueryUserPermissionViewV1;
+  }) {
+    return settings.client.GET("/private/user/{userId}/permission/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId },
+        query: query,
+      },
+    });
+  }
+
+  function getPermissionGroupsByUserId({
+    userId,
+    query = {},
+  }: {
+    userId: string;
+    query?: QueryUserPermissionGroupViewV1;
+  }) {
+    return settings.client.GET("/private/user/{userId}/permission_group/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { userId },
+        query: query,
+      },
+    });
+  }
+
+  return {
+    searchDomainUsers,
+    searchPermissionGrants,
+    getById,
+    update,
+    getPermissionsByUserId,
+    getPermissionGroupsByUserId,
+    getByAuthToken,
+  };
 }
 
 export type UserApi = ReturnType<typeof createUserApi>;

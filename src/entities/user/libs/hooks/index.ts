@@ -1,2 +1,2 @@
 export * from "./use-filters";
-export * from "./useSelectAdapter";
+export * from "./use-select-adapter";

@@ -1,21 +1,9 @@
-import { ApiContextProvider } from "@/features/api-context-provider";
-import { BreadcrumbProvider } from "@/features/breadcrumb";
-import { QuickViewProvider } from "@/features/quick-view-overlay";
-import { SidebarLayout } from "@/widgets/layout";
 import React from "react";
-import { Toaster } from "sonner";
 
-export default function AuthenticatedLayout({
+import { PrivateLayoutProviders } from "@/widgets/layout";
+
+export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <ApiContextProvider>
-      <BreadcrumbProvider>
-        <QuickViewProvider>
-          <SidebarLayout>{children}</SidebarLayout>
-          <Toaster />
-        </QuickViewProvider>
-      </BreadcrumbProvider>
-    </ApiContextProvider>
-  );
+  return <PrivateLayoutProviders>{children}</PrivateLayoutProviders>;
 }

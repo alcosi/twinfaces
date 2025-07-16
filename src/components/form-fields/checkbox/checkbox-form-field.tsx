@@ -1,6 +1,8 @@
-import { FormField } from "@/shared/ui/form";
 import { CheckboxProps } from "@radix-ui/react-checkbox";
 import { FieldValues } from "react-hook-form";
+
+import { FormField } from "@/shared/ui";
+
 import { FormFieldProps } from "../types";
 import { CheckboxFormItem } from "./checkbox-form-item";
 

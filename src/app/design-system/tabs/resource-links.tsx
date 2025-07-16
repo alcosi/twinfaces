@@ -1,15 +1,16 @@
-import { CommentResourceLink } from "@/entities/comment";
-import { FeaturerResourceLink } from "@/entities/featurer";
-import { TwinResourceLink } from "@/entities/twin";
-import { TwinClassResourceLink } from "@/entities/twinClass";
-import { TwinClassFieldResourceLink } from "@/entities/twin-class-field";
-import { TwinClassLinkResourceLink } from "@/entities/twin-class-link";
-import { TwinFlowResourceLink } from "@/entities/twinFlow";
-import { TwinFlowSchemaResourceLink } from "@/entities/twinFlowSchema";
-import { TwinFlowTransitionResourceLink } from "@/entities/twinFlowTransition";
-import { TwinClassStatusResourceLink } from "@/entities/twin-status";
-import { UserResourceLink } from "@/entities/user";
-import { UserGroupResourceLink } from "@/entities/userGroup";
+import { CommentResourceLink } from "@/features/comment/ui";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
+import { LinkResourceLink } from "@/features/link/ui";
+import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
+import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
+import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { TwinResourceLink } from "@/features/twin/ui";
+import { UserGroupResourceLink } from "@/features/user-group/ui";
+import { UserResourceLink } from "@/features/user/ui";
+
 import { UiSection } from "../components/ui-section";
 import { Fake } from "../seeds";
 
@@ -46,9 +47,7 @@ export function ResourceLinksTab() {
 
           <UiSection.Item
             title="Link"
-            value={
-              <TwinClassLinkResourceLink data={Fake.loremIpsum} withTooltip />
-            }
+            value={<LinkResourceLink data={Fake.loremIpsum} withTooltip />}
           />
         </UiSection>
 

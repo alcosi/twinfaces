@@ -1,11 +1,11 @@
 "use client";
 
-import * as React from "react";
+import { DismissableLayer } from "@radix-ui/react-dismissable-layer";
+import { FocusScope } from "@radix-ui/react-focus-scope";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
+import * as React from "react";
 
 import { cn } from "@/shared/libs";
-import { FocusScope } from "@radix-ui/react-focus-scope";
-import { DismissableLayer } from "@radix-ui/react-dismissable-layer";
 
 const Popover = PopoverPrimitive.Root;
 
@@ -23,7 +23,7 @@ const PopoverContent = React.forwardRef<
           align={align}
           sideOffset={sideOffset}
           className={cn(
-            "z-30 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+            "border-border bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-30 w-72 rounded-md border p-4 shadow-md outline-hidden",
             className
           )}
           {...props}
@@ -34,4 +34,20 @@ const PopoverContent = React.forwardRef<
 ));
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
-export { Popover, PopoverTrigger, PopoverContent };
+const PopoverFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div
+      className={cn(
+        "border-border flex flex-row justify-end gap-2 border-t p-4",
+        className
+      )}
+      {...props}
+    />
+  );
+};
+PopoverFooter.displayName = "PopoverFooter";
+
+export { Popover, PopoverTrigger, PopoverContent, PopoverFooter };

@@ -1,16 +1,24 @@
 import {
+  Twin,
+  TwinFilters,
+  TwinSimpleFilters,
+  Twin_DETAILED,
+} from "@/entities/twin/server";
+import {
+  SelectAdapter,
   createFixedSelectAdapter,
   isPopulatedArray,
   isPopulatedString,
-  SelectAdapter,
+  isUndefined,
   shortenUUID,
   wrapWithPercent,
 } from "@/shared/libs";
-import { Twin, Twin_DETAILED, TwinFilters } from "../../api";
+
 import {
   useFetchValidHeadTwins,
   useTwinFetchByIdV2,
   useTwinSearchV3,
+  useValidTwinsForLink,
 } from "../../api/hooks";
 import { TwinBasicFields, TwinTouchIds } from "../constants";
 import { formatTwinDisplay } from "../helpers";
@@ -88,6 +96,52 @@ export function useTwinHeadSelectAdapter(): SelectAdapter<Twin> {
   return {
     getById,
     getItems: (search, options) => getItems(search, options as any),
+    renderItem,
+  };
+}
+
+export function useValidTwinsForLinkSelectAdapter({
+  twinId,
+  linkId,
+}: {
+  twinId?: string;
+  linkId: string;
+}): SelectAdapter<Twin_DETAILED> {
+  const { fetchTwinById } = useTwinFetchByIdV2();
+  const { fetchValidTwinsForLink } = useValidTwinsForLink();
+
+  async function getById(id: string) {
+    const data = await fetchTwinById(id);
+    return data as Twin_DETAILED;
+  }
+
+  async function getItems(search: string, filters?: TwinSimpleFilters) {
+    if (isUndefined(twinId)) return [];
+
+    const _filters = {
+      ...filters,
+      nameLike: isPopulatedString(search)
+        ? wrapWithPercent(search)
+        : filters?.nameLike,
+    };
+
+    const { data } = await fetchValidTwinsForLink({
+      twinId,
+      linkId,
+      filters: _filters,
+    });
+    return data;
+  }
+
+  function renderItem({ aliases, name, id }: Twin_DETAILED) {
+    const twinName = name ?? id;
+    return aliases?.length ? `${aliases[0]} : ${twinName}` : twinName;
+  }
+
+  return {
+    getById,
+    getItems: (search, options) =>
+      getItems(search, options as TwinSimpleFilters),
     renderItem,
   };
 }

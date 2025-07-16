@@ -1,6 +1,7 @@
-import { FormControl, FormMessage } from "@/shared/ui";
-import { Textarea, TextareaProps } from "@/shared/ui/textarea";
 import { FieldValues } from "react-hook-form";
+
+import { FormControl, FormMessage, Textarea, TextareaProps } from "@/shared/ui";
+
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
 import { FormItemProps } from "../types";
 

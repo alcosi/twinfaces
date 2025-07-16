@@ -1,4 +1,5 @@
-import { TwinClass_DETAILED } from "@/entities/twinClass";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinClassField } from "@/entities/twin-class-field";
 
 const twinClassMap = {
   supplyPortion: {
@@ -117,7 +118,10 @@ export const Fake = {
       name: "Notes",
       description: "",
       required: false,
-      descriptor: { fieldType: "textV1", regExp: ".*" },
+      descriptor: {
+        fieldType: "textV1",
+        regExp: ".*",
+      } as NonNullable<TwinClassField["descriptor"]>,
       value: "",
     },
     urlV1: {
@@ -126,25 +130,10 @@ export const Fake = {
       name: "Domain",
       description: "",
       required: false,
-      descriptor: { fieldType: "urlV1" },
+      descriptor: { fieldType: "urlV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "",
-    },
-    numericV1: {
-      id: "f1608946-ccba-4ab2-a2c9-bbe96b2ad759",
-      key: "quantity",
-      name: "Quantity",
-      description: "",
-      required: false,
-      descriptor: {
-        fieldType: "numericV1",
-        min: 0,
-        max: 100,
-        step: 1,
-        thousandSeparator: ",",
-        decimalSeparator: ".",
-        decimalPlaces: 1,
-      },
-      value: 0,
     },
     numericFieldV1: {
       id: "f1608946-ccba-4ab2-a2c9-bbe96b2ad759",
@@ -160,7 +149,7 @@ export const Fake = {
         thousandSeparator: ",",
         decimalSeparator: ".",
         decimalPlaces: 1,
-      },
+      } as NonNullable<TwinClassField["descriptor"]>,
       value: 0,
     },
 
@@ -170,7 +159,9 @@ export const Fake = {
       name: "Key",
       description: "",
       required: false,
-      descriptor: { fieldType: "colorHexV1" },
+      descriptor: { fieldType: "colorHexV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "#BCFFA5",
     },
     dateScrollV1: {
@@ -179,7 +170,10 @@ export const Fake = {
       name: "Date scroll",
       description: "",
       required: false,
-      descriptor: { fieldType: "dateScrollV1", pattern: undefined },
+      descriptor: {
+        fieldType: "dateScrollV1",
+        pattern: "",
+      } as NonNullable<TwinClassField["descriptor"]>,
       value: undefined,
     },
     immutableV1: {
@@ -188,17 +182,10 @@ export const Fake = {
       name: "Immutable",
       description: "",
       required: false,
-      descriptor: { fieldType: "immutableV1" },
+      descriptor: { fieldType: "immutableV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "Some immutable value",
-    },
-    attachmentV1: {
-      id: "foobar",
-      key: "key",
-      name: "Key",
-      description: "",
-      required: false,
-      descriptor: { fieldType: "attachmentV1" },
-      value: "",
     },
     attachmentFieldV1: {
       id: "foobar",
@@ -206,7 +193,9 @@ export const Fake = {
       name: "Key",
       description: "",
       required: false,
-      descriptor: { fieldType: "attachmentFieldV1" },
+      descriptor: { fieldType: "attachmentFieldV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "",
     },
     selectListV1: {
@@ -220,21 +209,7 @@ export const Fake = {
         multiple: false,
         options: [],
         supportCustom: false,
-      },
-      value: "",
-    },
-    selectListLongV1: {
-      id: "34368bc2-c052-4af9-9f50-4410baad797a",
-      key: "priceCurrency",
-      name: "Price currency",
-      description: "",
-      required: false,
-      descriptor: {
-        fieldType: "selectListLongV1",
-        multiple: false,
-        options: [],
-        supportCustom: false,
-      },
+      } as NonNullable<TwinClassField["descriptor"]>,
       value: "",
     },
     selectLongV1: {
@@ -243,7 +218,9 @@ export const Fake = {
       name: "Key",
       description: "",
       required: false,
-      descriptor: { fieldType: "selectLongV1" },
+      descriptor: { fieldType: "selectLongV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "",
     },
     selectLinkV1: {
@@ -252,7 +229,9 @@ export const Fake = {
       name: "Key",
       description: "",
       required: false,
-      descriptor: { fieldType: "selectLinkV1" },
+      descriptor: { fieldType: "selectLinkV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "",
     },
     selectLinkLongV1: {
@@ -265,7 +244,7 @@ export const Fake = {
         fieldType: "selectLinkLongV1",
         linkId: "6e42ef74-3015-4400-946e-1326bcb4cf48",
         multiple: false,
-      },
+      } as NonNullable<TwinClassField["descriptor"]>,
       value: "",
     },
     selectSharedInHeadV1: {
@@ -274,7 +253,9 @@ export const Fake = {
       name: "Key",
       description: "",
       required: false,
-      descriptor: { fieldType: "selectSharedInHeadV1" },
+      descriptor: { fieldType: "selectSharedInHeadV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "",
     },
     selectUserV1: {
@@ -283,7 +264,9 @@ export const Fake = {
       name: "Key",
       description: "",
       required: false,
-      descriptor: { fieldType: "selectUserV1" },
+      descriptor: { fieldType: "selectUserV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "",
     },
     selectUserLongV1: {
@@ -292,8 +275,35 @@ export const Fake = {
       name: "Key",
       description: "",
       required: false,
-      descriptor: { fieldType: "selectUserLongV1" },
+      descriptor: { fieldType: "selectUserLongV1" } as NonNullable<
+        TwinClassField["descriptor"]
+      >,
       value: "",
     },
   },
 };
+
+export const MOCK_HTML = `
+<table>
+  <tr>
+    <td>
+      <p>Ajfon ten 16 giga</p>
+    </td>
+    <td>
+      <img src="https://a.allegroimg.allegrosandbox.pl/original/110715/127374ac4b1dacacda72c8b003c7">
+    </td>
+  </tr>
+</table>
+
+  <ul>
+    <li>Test 1</li>
+    <li>Test 2</li>
+    <li>Test 3</li>
+  </ul>
+
+  <ol>
+    <li>Test 1</li>
+    <li>Test 2</li>
+    <li>Test 3</li>
+  </ol>
+`;

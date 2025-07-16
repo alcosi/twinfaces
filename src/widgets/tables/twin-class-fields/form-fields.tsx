@@ -1,14 +1,17 @@
+import { Control, useWatch } from "react-hook-form";
+
 import {
   CheckboxFormField,
   ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
+
 import { FeaturerTypes } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
+import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
-import { Control, useWatch } from "react-hook-form";
+
 import { FeaturerFormField } from "../../form-fields";
 import { TwinClassFieldFormValues } from "./types";
 

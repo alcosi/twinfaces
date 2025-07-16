@@ -1,12 +1,13 @@
 "use client";
 
+import { PaginationState } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/table-core";
+import { Check } from "lucide-react";
+
 import { Featurer } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
-import { PaginationState } from "@tanstack/react-table";
-import { ColumnDef } from "@tanstack/table-core";
-import { Check } from "lucide-react";
 
 type Props = {
   title: string;
@@ -35,6 +36,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
   deprecated: {
     id: "deprecated",

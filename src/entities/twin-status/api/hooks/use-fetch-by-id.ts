@@ -1,30 +1,40 @@
-import { useCallback, useContext } from "react";
-import { TwinStatus } from "../../api";
-import { ApiContext } from "@/shared/api";
+import { useCallback, useContext, useState } from "react";
+
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
-// TODO: Apply caching-strategy after discussing with team
+import { TwinStatusV2 } from "../../api";
+
 export const useFetchTwinStatusById = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchTwinStatusById = useCallback(
-    async (id: string): Promise<TwinStatus> => {
-      const { data, error } = await api.twinStatus.getById({
-        twinStatusId: id,
-      });
+    async (id: string): Promise<TwinStatusV2> => {
+      setLoading(true);
+      try {
+        const { data, error } = await api.twinStatus.getById({
+          twinStatusId: id,
+        });
 
-      if (error) {
-        throw new Error("Failed to fetch twin-status due to API error", error);
+        if (error) {
+          throw new Error(
+            "Failed to fetch twin-status due to API error",
+            error
+          );
+        }
+
+        if (isUndefined(data?.twinStatus)) {
+          throw new Error("Response does not have twin-status data", error);
+        }
+
+        return data.twinStatus;
+      } finally {
+        setLoading(false);
       }
-
-      if (isUndefined(data?.twinStatus)) {
-        throw new Error("Response does not have twin-status data", error);
-      }
-
-      return data.twinStatus;
     },
     [api]
   );
 
-  return { fetchTwinStatusById };
+  return { fetchTwinStatusById, loading };
 };

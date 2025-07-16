@@ -1,24 +1,31 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
+import {
+  TwinClass_DETAILED,
+  useTwinClassSelectAdapter,
+} from "@/entities/twin-class";
 import {
   TwinStatusFilterKeys,
   TwinStatusFilters,
 } from "@/entities/twin-status";
-import { useTwinClassSelectAdapter } from "@/entities/twinClass";
 import {
   type FilterFeature,
+  extractEnabledFilters,
   isPopulatedArray,
+  reduceToObject,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { z } from "zod";
 
 export function useStatusFilters({
   enabledFilters,
 }: {
   enabledFilters?: TwinStatusFilterKeys[];
 }): FilterFeature<TwinStatusFilterKeys, TwinStatusFilters> {
-  const tcAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapter();
 
   const allFilters: Record<TwinStatusFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -28,11 +35,11 @@ export function useStatusFilters({
       placeholder: "Enter UUID",
     },
 
-    twinClassIdList: {
+    twinClassIdMap: {
       type: AutoFormValueType.combobox,
       label: "Class",
       multi: true,
-      ...tcAdapter,
+      ...twinClassAdapter,
     },
 
     keyLikeList: {
@@ -55,17 +62,9 @@ export function useStatusFilters({
     TwinStatusFilterKeys,
     AutoFormValueInfo
   > {
-    if (isPopulatedArray(enabledFilters)) {
-      return enabledFilters.reduce(
-        (filters, key) => {
-          filters[key] = allFilters[key];
-          return filters;
-        },
-        {} as Record<TwinStatusFilterKeys, AutoFormValueInfo>
-      );
-    }
-
-    return allFilters;
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(
@@ -73,7 +72,10 @@ export function useStatusFilters({
   ): TwinStatusFilters {
     const result: TwinStatusFilters = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
-      twinClassIdList: toArrayOfString(toArray(filters.twinClassIdList), "id"),
+      twinClassIdMap: reduceToObject({
+        list: toArray(filters.twinClassIdMap) as TwinClass_DETAILED[],
+        defaultValue: true,
+      }),
       keyLikeList: toArrayOfString(toArray(filters.keyLikeList), "key").map(
         wrapWithPercent
       ),

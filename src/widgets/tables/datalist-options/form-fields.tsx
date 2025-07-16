@@ -1,11 +1,11 @@
-import { TextFormField } from "@/components/form-fields";
-import { ComboboxFormField } from "@/components/form-fields/combobox";
-import { DataList, useDatalistSelectAdapter } from "@/entities/datalist";
-import { DATALIST_OPTION_SCHEMA } from "@/entities/datalist-option";
-import { isPopulatedArray, isTruthy } from "@/shared/libs";
-import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
+
+import { ComboboxFormField, TextFormField } from "@/components/form-fields";
+
+import { DataList, useDatalistSelectAdapter } from "@/entities/datalist";
+import { DATALIST_OPTION_SCHEMA } from "@/entities/datalist-option";
+import { isPopulatedArray } from "@/shared/libs";
 
 export function DatalistOptionFormFields({
   control,
@@ -14,7 +14,7 @@ export function DatalistOptionFormFields({
 }) {
   const dlWatched = useWatch({ control, name: "dataList" });
   const dlAdapter = useDatalistSelectAdapter();
-  const disabled = useRef(isTruthy(dlWatched)).current;
+  const disabled = isPopulatedArray(dlWatched);
 
   const datalist: DataList = isPopulatedArray<DataList>(dlWatched)
     ? dlWatched[0]

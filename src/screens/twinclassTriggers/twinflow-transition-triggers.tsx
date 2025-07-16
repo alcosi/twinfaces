@@ -1,20 +1,22 @@
-import {
-  TRIGGER_SCHEMA,
-  TriggersFormValues,
-  TwinFlowTransition,
-  TwinFlowTransitionTrigger,
-  TwinFlowTransitionTriggerUpdate,
-  useTwinFlowTransitionTriggersSearch,
-} from "@/entities/twinFlowTransition";
-import { ApiContext } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import {
+  TRIGGER_SCHEMA,
+  TriggersFormValues,
+  TwinFlowTransitionTrigger,
+  TwinFlowTransitionTriggerUpdate,
+  useTwinFlowTransitionTriggersSearch,
+  useUpdateTwinFlowTransition,
+} from "@/entities/twin-flow-transition";
+import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
+
 import { TriggersFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -53,17 +55,14 @@ const colDefs: Record<
   },
 };
 
-export function TwinflowTransitionTriggers({
-  transition,
-}: {
-  transition: TwinFlowTransition;
-}) {
+export function TwinflowTransitionTriggers() {
+  const { transitionId } = useContext(TwinFlowTransitionContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const api = useContext(ApiContext);
   const { fetchTriggers } = useTwinFlowTransitionTriggersSearch();
+  const { updateTwinFlowTransition } = useUpdateTwinFlowTransition();
 
   async function fetchData() {
-    const response = await fetchTriggers({ transitionId: transition.id! });
+    const response = await fetchTriggers({ transitionId: transitionId });
     return response;
   }
 
@@ -78,11 +77,6 @@ export function TwinflowTransitionTriggers({
   });
 
   async function createTrigger(formValues: TriggersFormValues) {
-    if (!transition.id) {
-      console.error("Create trigger: no transition");
-      return;
-    }
-
     const body: TwinFlowTransitionTriggerUpdate = {
       order: formValues.order,
       triggerFeaturerId: formValues.triggerFeaturerId,
@@ -91,15 +85,12 @@ export function TwinflowTransitionTriggers({
     };
 
     try {
-      const result = await api.twinFlowTransition.update({
-        transitionId: transition.id,
+      await updateTwinFlowTransition({
+        transitionId: transitionId,
         body: {
           triggers: { create: [body] },
         },
       });
-      if (result.error) {
-        throw new Error("Failed to create trigger");
-      }
     } catch (e) {
       toast.error("Failed to create trigger");
       throw e;

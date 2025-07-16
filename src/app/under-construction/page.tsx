@@ -1,7 +1,5 @@
-"use client";
+import { UnderConstructionScreen } from "@/screens/under-construction";
 
-import { UnderConstructionPage as UnderConstruction } from "@/screens/underConstruction";
-
-export default function UnderConstructionPage() {
-  return <UnderConstruction />;
+export default function Page() {
+  return <UnderConstructionScreen />;
 }

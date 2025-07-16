@@ -1,5 +1,6 @@
-import { cn } from "@/shared/libs";
 import React from "react";
+
+import { cn } from "@/shared/libs";
 
 export interface ISVGProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
@@ -28,7 +29,7 @@ export function LoadingSpinner({ size = 24, className, ...props }: ISVGProps) {
 
 export function LoadingOverlay() {
   return (
-    <div className="absolute inset-0 z-30 bg-black/80 flex items-center justify-center">
+    <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/80">
       <LoadingSpinner size={48} className="text-white" />
     </div>
   );

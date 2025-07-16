@@ -1,4 +1,7 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
 import { useDatalistSelectAdapter } from "@/entities/datalist";
 import {
   DATALIST_OPTION_STATUS_TYPES,
@@ -6,14 +9,14 @@ import {
   DataListOptionFilters,
 } from "@/entities/datalist-option";
 import {
-  createFixedSelectAdapter,
   type FilterFeature,
+  createFixedSelectAdapter,
+  extractEnabledFilters,
   isPopulatedArray,
   toArray,
   toArrayOfString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { z } from "zod";
 
 export function useDatalistOptionFilters({
   enabledFilters,
@@ -37,7 +40,7 @@ export function useDatalistOptionFilters({
       ...dAdapter,
     },
 
-    optionI18nLikeList: {
+    optionLikeList: {
       type: AutoFormValueType.tag,
       label: "Name",
     },
@@ -54,17 +57,9 @@ export function useDatalistOptionFilters({
     DataListOptionFilterKeys,
     AutoFormValueInfo
   > {
-    if (isPopulatedArray(enabledFilters)) {
-      return enabledFilters.reduce(
-        (filters, key) => {
-          filters[key] = allFilters[key];
-          return filters;
-        },
-        {} as Record<DataListOptionFilterKeys, AutoFormValueInfo>
-      );
-    }
-
-    return allFilters;
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(
@@ -73,7 +68,7 @@ export function useDatalistOptionFilters({
     const result: DataListOptionFilters = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
       dataListIdList: toArrayOfString(toArray(filters.dataListIdList), "id"),
-      optionI18nLikeList: toArrayOfString(filters.optionI18nLikeList).map(
+      optionLikeList: toArrayOfString(filters.optionLikeList).map(
         wrapWithPercent
       ),
       statusIdList: toArray(

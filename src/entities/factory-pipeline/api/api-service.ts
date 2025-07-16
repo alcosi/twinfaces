@@ -1,6 +1,12 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryPipelineFilters } from "@/entities/factory-pipeline";
+
+import {
+  FactoryPipelineCreateRq,
+  FactoryPipelineFilters,
+  FactoryPipelineUpdateRq,
+  FactoryPipelineViewQuery,
+} from "@/entities/factory-pipeline";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createFactoryPipelineApi(settings: ApiSettings) {
   function search({
@@ -21,7 +27,6 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
           showFactoryPipelineTwinFactory2FactoryMode: "DETAILED",
           showFactoryPipeline2TwinClassMode: "DETAILED",
           showFactoryPipelineOutputTwinStatus2StatusMode: "DETAILED",
-
           showFactoryPipeline2FactoryMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
@@ -33,23 +38,49 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
     });
   }
 
-  function getById({ pipelineId }: { pipelineId: string }) {
+  function getById({
+    id,
+    query = {},
+  }: {
+    id: string;
+    query?: FactoryPipelineViewQuery;
+  }) {
     return settings.client.GET("/private/factory_pipeline/{pipelineId}/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { pipelineId: pipelineId },
-        query: {
-          lazyRelation: false,
-          showFactoryPipeline2FactoryConditionSetMode: "DETAILED",
-          showFactoryPipeline2FactoryMode: "DETAILED",
-          showFactoryPipelineMode: "DETAILED",
-          showFactoryPipelineNextTwinFactory2FactoryMode: "DETAILED",
-        },
+        path: { pipelineId: id },
+        query: query,
       },
     });
   }
 
-  return { search, getById };
+  function update({ id, body }: { id: string; body: FactoryPipelineUpdateRq }) {
+    return settings.client.PUT(
+      "/private/factory_pipeline/{factoryPipelineId}/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { factoryPipelineId: id },
+        },
+        body: body,
+      }
+    );
+  }
+
+  function create({ id, body }: { id: string; body: FactoryPipelineCreateRq }) {
+    return settings.client.POST(
+      `/private/factory/{factoryId}/factory_pipeline/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { factoryId: id },
+        },
+        body: body,
+      }
+    );
+  }
+
+  return { search, getById, update, create };
 }
 
 export type FactoryPipelineApi = ReturnType<typeof createFactoryPipelineApi>;

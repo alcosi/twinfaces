@@ -3,7 +3,7 @@ import {
   PermissionGrantAssigneePropagation,
   PermissionGrantAssigneePropagation_DETAILED,
 } from "@/entities/assigneePropagation";
-import { TwinClass_DETAILED } from "@/entities/twinClass";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 
 export const hydratePermissionGrantAssigneePropagationFromMap = (
   dto: PermissionGrantAssigneePropagation,

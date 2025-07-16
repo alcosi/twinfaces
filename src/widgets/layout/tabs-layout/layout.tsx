@@ -1,9 +1,10 @@
 "use client";
 
-import { cn } from "@/shared/libs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
+
+import { cn, isPopulatedString } from "@/shared/libs";
 
 export type Tab = {
   key: string;
@@ -16,14 +17,25 @@ type Props = {
 };
 
 export function TabsLayout({ tabs }: Props) {
-  const [activeTab, setActiveTab] = useState(tabs[0]?.key);
+  const hashKey = window.location.hash.slice(1);
+  const defaultActiveTab = isPopulatedString(hashKey) ? hashKey : tabs[0]?.key;
+
+  const [activeTab, setActiveTab] = useState(defaultActiveTab);
 
   useEffect(() => {
-    const hashKey = window.location.hash.slice(1);
-    if (tabs.findIndex((tab) => tab.key === hashKey) > -1) {
-      setActiveTab(hashKey);
-    }
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
   }, [tabs]);
+
+  function handleHashChange() {
+    const hashKey = window.location.hash.slice(1);
+
+    if (tabs.find((tab) => tab.key === hashKey)) {
+      setActiveTab(hashKey);
+    } else {
+      setActiveTab(defaultActiveTab);
+    }
+  }
 
   function handleOnValueChange(value: string) {
     setActiveTab(value);
@@ -31,16 +43,16 @@ export function TabsLayout({ tabs }: Props) {
 
   return (
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
-      <nav className="sticky top-0 flex w-full border-b bg-background z-10">
-        <TabsList>
+      <nav className="border-border bg-background sticky top-0 z-10 flex w-full overflow-x-auto border-b">
+        <TabsList className="min-w-max">
           {tabs.map((tab) => (
             <Link href={`#${tab.key}`} key={tab.key}>
               <TabsTrigger
                 value={tab.key}
                 className={cn(
-                  "px-3 py-4 border-b-2 border-transparent transition-colors duration-200",
+                  "border-b-2 border-transparent px-3 py-4 transition-colors duration-200",
                   "hover:border-b-primary hover:bg-secondary",
-                  "data-[state=active]:border-b-link-light-active dark:data-[state=active]:border-b-link-dark-active"
+                  "data-[state=active]:border-b-link-enabled"
                 )}
               >
                 {tab.label}

@@ -1,9 +1,10 @@
-import { ApiContext } from "@/shared/api";
 import { useCallback, useContext } from "react";
-import { TwinCreateRq, TwinCreateRsV1 } from "../types";
+
+import { TwinCreateRq, TwinCreateRsV1 } from "@/entities/twin/server";
+import { PrivateApiContext } from "@/shared/api";
 
 export const useCreateTwin = () => {
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const createTwin = useCallback(
     async ({ body }: { body: TwinCreateRq }): Promise<TwinCreateRsV1> => {

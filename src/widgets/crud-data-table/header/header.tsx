@@ -1,22 +1,27 @@
-import { AutoFormValueInfo } from "@/components/auto-field";
-import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
-import { Separator } from "@/shared/ui/separator";
 import { Plus, RefreshCw, Search } from "lucide-react";
-import React, { ForwardedRef, useCallback, useEffect, useReducer } from "react";
+import React, { ForwardedRef, useCallback, useEffect } from "react";
+
+import { AutoFormValueInfo } from "@/components/auto-field";
+
+import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import { GridIcon, Input, RowsIcon } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
+import { Separator } from "@/shared/ui/separator";
+
 import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";
 import { getColumnKey, safeRefresh } from "../helpers";
+import { useViewSettings } from "../hooks";
 import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersPopover } from "./filters-popover";
 import { GroupByButton } from "./group-by-button";
 
-export type FilterState = {
+export type TableViewState = {
   query: string;
   filters: Record<string, any>;
   visibleKeys: string[];
   orderKeys: string[];
   groupByKey: string | undefined;
+  layoutMode: "grid" | "list";
 };
 
 export type CrudDataTableHeaderProps = {
@@ -30,7 +35,7 @@ export type CrudDataTableHeaderProps = {
   };
   hideRefresh?: boolean;
   onCreateClick?: () => void;
-  onViewSettingsChange?: (data: FilterState) => void;
+  onViewSettingsChange?: (data: TableViewState) => void;
 };
 
 type Props<
@@ -42,17 +47,6 @@ type Props<
   orderedColumns?: DataTableProps<TData, TValue>["columns"];
   groupableColumns?: DataTableProps<TData, TValue>["columns"];
 };
-
-const initialSettings = <TData extends DataTableRow<TData>, TValue>(
-  orderedColumns: Props<TData, TValue>["orderedColumns"],
-  visibleColumns?: Props<TData, TValue>["defaultVisibleColumns"]
-): FilterState => ({
-  query: "",
-  filters: {},
-  visibleKeys: visibleColumns?.map((col) => getColumnKey(col)) ?? [],
-  orderKeys: orderedColumns?.map((col) => getColumnKey(col)) ?? [],
-  groupByKey: undefined,
-});
 
 function CrudDataTableHeaderComponent<
   TData extends DataTableRow<TData>,
@@ -72,17 +66,14 @@ function CrudDataTableHeaderComponent<
   }: Props<TData, TValue>,
   tableRef: ForwardedRef<DataTableHandle>
 ) {
-  const [viewSettings, updateViewSettings] = useReducer(
-    (state: FilterState, updates: Partial<FilterState>) => ({
-      ...state,
-      ...updates,
-    }),
-    initialSettings(orderedColumns, defaultVisibleColumns)
+  const { viewSettings, updateViewSettings } = useViewSettings(
+    defaultVisibleColumns,
+    orderedColumns
   );
 
   const debouncedUpdate = useCallback(
     debounce(
-      (updates: Partial<FilterState>) => updateViewSettings(updates),
+      (updates: Partial<TableViewState>) => updateViewSettings(updates),
       150
     ),
     []
@@ -170,6 +161,19 @@ function CrudDataTableHeaderComponent<
             onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
           />
         )}
+
+        <Button
+          IconComponent={
+            viewSettings.layoutMode === "grid"
+              ? () => <GridIcon className="h-6 w-6" />
+              : () => <RowsIcon className="h-6 w-6" />
+          }
+          onClick={() =>
+            updateViewSettings({
+              layoutMode: viewSettings.layoutMode === "grid" ? "list" : "grid",
+            })
+          }
+        />
 
         {onCreateClick && (
           <>

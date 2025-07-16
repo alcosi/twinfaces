@@ -20,3 +20,17 @@ export type PermissionFilters = Partial<
 >;
 export type QueryPermissionViewV1 =
   operations["permissionViewV1"]["parameters"]["query"];
+
+export type GrantUserPermissionPayload =
+  components["schemas"]["PermissionGrantUserCreateRqV1"];
+export type GrantUserGroupPermissionPayload =
+  components["schemas"]["PermissionGrantUserGroupCreateRqV1"];
+
+export type GrantTwinRolePermissionPayload =
+  components["schemas"]["PermissionGrantTwinRoleCreateRqV1"];
+
+export type GrantSpaceRolePermissionPayload =
+  components["schemas"]["PermissionGrantSpaceRoleCreateRqV1"];
+
+export type GrantAssigneePropagationPermissionPayload =
+  components["schemas"]["PermissionGrantAssigneePropagationCreateRqV1"];

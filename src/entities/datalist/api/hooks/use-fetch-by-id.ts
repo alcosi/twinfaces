@@ -1,12 +1,12 @@
-import { DataList, DataListRqQuery } from "@/entities/datalist";
-import { ApiContext } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext, useState } from "react";
 
-// TODO: Apply caching-strategy after discussing with team
+import { DataList, DataListRqQuery } from "@/entities/datalist";
+import { PrivateApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+
 export const useFetchDatalistById = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchDatalistById = useCallback(
     async ({

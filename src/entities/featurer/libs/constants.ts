@@ -1,8 +1,8 @@
-import { isPopulatedArray } from "@/shared/libs";
 import { z } from "zod";
-import { FeaturerParamType } from "./types";
 
-export const ENTITY_COLOR = "#0EA5E9";
+import { isPopulatedArray } from "@/shared/libs";
+
+import { FeaturerParamType } from "./types";
 
 export const FEATURER_ID_EXTRACTOR = z
   .array(z.object({ id: z.number() }))

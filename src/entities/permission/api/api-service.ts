@@ -1,7 +1,14 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import {
   CreatePermissionRequestBody,
+  GrantAssigneePropagationPermissionPayload,
+  GrantSpaceRolePermissionPayload,
+  GrantTwinRolePermissionPayload,
+  GrantUserGroupPermissionPayload,
+  GrantUserPermissionPayload,
   PermissionFilters,
   QueryPermissionViewV1,
   UpdatePermissionRequestBody,
@@ -74,7 +81,81 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create, update, getById };
+  function grantUserPermission({ body }: { body: GrantUserPermissionPayload }) {
+    return settings.client.POST(`/private/permission_grant/user/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function grantUserGroupPermission({
+    body,
+  }: {
+    body: GrantUserGroupPermissionPayload;
+  }) {
+    return settings.client.POST(`/private/permission_grant/user_group/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function grantTwinRolePermission({
+    body,
+  }: {
+    body: GrantTwinRolePermissionPayload;
+  }) {
+    return settings.client.POST(`/private/permission_grant/twin_role/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function grantSpaceRolePermission({
+    body,
+  }: {
+    body: GrantSpaceRolePermissionPayload;
+  }) {
+    return settings.client.POST(`/private/permission_grant/space_role/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function grantAssigneePropagationPermission({
+    body,
+  }: {
+    body: GrantAssigneePropagationPermissionPayload;
+  }) {
+    return settings.client.POST(
+      `/private/permission_grant/assignee_propagation/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+        },
+        body,
+      }
+    );
+  }
+
+  return {
+    search,
+    create,
+    update,
+    getById,
+    grantUserPermission,
+    grantUserGroupPermission,
+    grantTwinRolePermission,
+    grantSpaceRolePermission,
+    grantAssigneePropagationPermission,
+  };
 }
 
 export type PermissionApi = ReturnType<typeof createPermissionApi>;

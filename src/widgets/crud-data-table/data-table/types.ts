@@ -1,6 +1,7 @@
+import { ColumnDef, PaginationState } from "@tanstack/react-table";
+
 import { PagedResponse } from "@/shared/api";
 import { Identifiable } from "@/shared/libs";
-import { ColumnDef, PaginationState } from "@tanstack/react-table";
 
 export type DataTableHandle = {
   refresh: () => void;
@@ -14,7 +15,7 @@ export interface DataTableRow<TData> extends Object, Identifiable {
   [key: string]: any; // Allow indexing by string
 }
 
-export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
+export type DataTableProps<TData extends DataTableRow<TData>, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   getRowId: (row: TData, index: number) => string;
   fetcher: (pagination: PaginationState) => Promise<PagedResponse<TData>>;
@@ -22,4 +23,5 @@ export interface DataTableProps<TData extends DataTableRow<TData>, TValue> {
   pageSizes?: number[];
   onFetchError?: (e: Error) => void;
   onRowClick?: (row: TData) => void;
-}
+  layoutMode?: "grid" | "list";
+};

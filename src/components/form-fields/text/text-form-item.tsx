@@ -1,5 +1,7 @@
-import { FormMessage } from "@/shared/ui";
-import { Input, InputProps } from "@/shared/ui/input";
+"use client";
+
+import { FormItem, FormMessage, Input, InputProps } from "@/shared/ui";
+
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
 import { FormItemProps, TextFormFieldProps } from "../types";
 
@@ -29,16 +31,16 @@ export function TextFormItem({
   const suggestionsId = inputId ? `${inputId}-suggestions` : undefined;
 
   return (
-    <div>
+    <FormItem className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-destructive">*</span>}
         </FormItemLabel>
       )}
       <Input
         id={inputId}
         list={suggestionsId}
-        value={fieldValue}
+        value={fieldValue ?? ""}
         onChange={onChange}
         {...props}
       />
@@ -54,6 +56,6 @@ export function TextFormItem({
         <FormItemDescription inForm={inForm}>{description}</FormItemDescription>
       )}
       {inForm && <FormMessage />}
-    </div>
+    </FormItem>
   );
 }

@@ -1,19 +1,28 @@
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type TwinClassOwnerType = components["schemas"]["TwinClassOwnerTypeV1"];
-export type DomainView = components["schemas"]["DomainViewRsv1"];
-export type DomainView_SHORT = RequireFields<DomainView, "id" | "key">;
+
+export type DomainView = components["schemas"]["DomainViewV1"];
+export type DomainView_SHORT = RequireFields<DomainView, "id" | "key" | "name">;
 export type DomainView_DETAILED = RequireFields<
   DomainView_SHORT,
   | "businessAccountTemplateTwinId"
   | "createdAt"
   | "defaultLocale"
   | "description"
+  | "navbarFaceId"
   | "permissionSchemaId"
   | "twinClassSchemaId"
   | "twinflowSchemaId"
   | "type"
 >;
 
-export type DomainAddRqV1 = components["schemas"]["DomainCreateRqDTOv1"];
+export type DomainPublicView = components["schemas"]["DomainViewPublicV1"];
+
+export type DomainAddRqV1 = components["schemas"]["DomainCreateRqV1"];
+export type DomainViewQuery =
+  operations["domainViewPublicV1"]["parameters"]["query"];
+
+export type DomainViewRs = components["schemas"]["DomainViewRsv1"];
+export type DomainSearchRs = components["schemas"]["DomainSearchRsV1"];

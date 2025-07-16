@@ -1,55 +1,55 @@
-import {
-  TwinClass_DETAILED,
-  TwinClassResourceLink,
-  useTwinClassSelectAdapter,
-} from "@/entities/twinClass";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
-import { createFixedSelectAdapter, formatToTwinfaceDate } from "@/shared/libs";
+import { useContext } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { AutoFormValueType } from "@/components/auto-field";
+
 import {
   LINK_STRENGTHS,
   LINK_TYPES,
-  TwinClassLink,
+  LinkStrength,
+  LinkType,
   UpdateLinkRequestBody,
   useLinkUpdate,
-} from "@/entities/twin-class-link";
-import { UserResourceLink } from "@/entities/user";
+} from "@/entities/link";
+import {
+  TwinClass_DETAILED,
+  useTwinClassSelectAdapter,
+} from "@/entities/twin-class";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { AutoFormValueType } from "@/components/auto-field";
-import { z } from "zod";
+import { LinkContext } from "@/features/link";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { UserResourceLink } from "@/features/user/ui";
+import { createFixedSelectAdapter, formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
-import { toast } from "sonner";
+import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
-export function GeneralSection({
-  link,
-  onChange,
-}: {
-  link: TwinClassLink;
-  onChange: () => any;
-}) {
-  const tcAdapter = useTwinClassSelectAdapter();
+export function GeneralSection() {
+  const { link, linkId, refresh } = useContext(LinkContext);
+  const twinClassAdapter = useTwinClassSelectAdapter();
   const { updateLink } = useLinkUpdate();
 
   async function update(newLink: UpdateLinkRequestBody) {
-    updateLink({ linkId: link.id!, body: newLink })
+    updateLink({ linkId: linkId, body: newLink })
       .then(() => {
-        onChange?.();
+        refresh?.();
       })
       .catch(() => {
         toast.error("not updated link");
       });
   }
 
-  const fromClassSettings: InPlaceEditProps<any> = {
+  const fromClassSettings: InPlaceEditProps<typeof link.srcTwinClassId> = {
     id: "fromClass",
     value: link.srcTwinClassId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select twin class...",
-      ...tcAdapter,
+      ...twinClassAdapter,
     },
     renderPreview: link.srcTwinClassId
       ? (_) => (
@@ -59,21 +59,22 @@ export function GeneralSection({
         )
       : undefined,
     onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({
         srcTwinClassUpdate: {
-          newId: value[0].id,
+          newId: id,
         },
       });
     },
   };
 
-  const toClassSettings: InPlaceEditProps<any> = {
+  const toClassSettings: InPlaceEditProps<typeof link.dstTwinClassId> = {
     id: "toClass",
     value: link.dstTwinClassId,
     valueInfo: {
       type: AutoFormValueType.combobox,
       selectPlaceholder: "Select twin class...",
-      ...tcAdapter,
+      ...twinClassAdapter,
     },
     renderPreview: link.srcTwinClassId
       ? (_) => (
@@ -83,21 +84,22 @@ export function GeneralSection({
         )
       : undefined,
     onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({
         dstTwinClassUpdate: {
-          newId: value[0].id,
+          newId: id,
         },
       });
     },
   };
 
-  const forwardNameSettings: InPlaceEditProps = {
+  const forwardNameSettings: InPlaceEditProps<typeof link.name> = {
     id: "forwardName",
     value: link.name,
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -105,20 +107,20 @@ export function GeneralSection({
     onSubmit: (value) => {
       return update({
         forwardNameI18n: {
-          translationInCurrentLocale: value as string,
+          translationInCurrentLocale: value,
           translations: {},
         },
       });
     },
   };
 
-  const backwardNameSettings: InPlaceEditProps = {
+  const backwardNameSettings: InPlaceEditProps<typeof link.backwardName> = {
     id: "backwardName",
     value: link.backwardName,
     valueInfo: {
       type: AutoFormValueType.string,
       label: "",
-      inputProps: {
+      input_props: {
         fieldSize: "sm",
       },
     },
@@ -126,14 +128,14 @@ export function GeneralSection({
     onSubmit: (value) => {
       return update({
         backwardNameI18n: {
-          translationInCurrentLocale: value as string,
+          translationInCurrentLocale: value,
           translations: {},
         },
       });
     },
   };
 
-  const typeSettings: InPlaceEditProps<any> = {
+  const typeSettings: InPlaceEditProps<typeof link.type> = {
     id: "type",
     value: link.type,
     valueInfo: {
@@ -141,11 +143,11 @@ export function GeneralSection({
       ...createFixedSelectAdapter(LINK_TYPES),
     },
     onSubmit: async (value) => {
-      return update({ type: value[0] });
+      return update({ type: value?.[0] as LinkType });
     },
   };
 
-  const strengthSettings: InPlaceEditProps<any> = {
+  const strengthSettings: InPlaceEditProps<typeof link.linkStrengthId> = {
     id: "Strength",
     value: link.linkStrengthId,
     valueInfo: {
@@ -153,7 +155,7 @@ export function GeneralSection({
       ...createFixedSelectAdapter(LINK_STRENGTHS),
     },
     onSubmit: async (value) => {
-      return update({ linkStrength: value[0] });
+      return update({ linkStrength: value?.[0] as LinkStrength });
     },
   };
 
@@ -221,7 +223,9 @@ export function GeneralSection({
 
           <TableRow>
             <TableCell>Created at</TableCell>
-            <TableCell>{formatToTwinfaceDate(link.createdAt!)}</TableCell>
+            <TableCell>
+              {formatIntlDate(link.createdAt!, "datetime-local")}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

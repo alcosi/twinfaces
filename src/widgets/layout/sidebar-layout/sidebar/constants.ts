@@ -1,34 +1,38 @@
 import {
-  Activity,
-  ArrowRightLeft,
   Asterisk,
-  BookKey,
-  Braces,
   BriefcaseBusiness,
-  CircleDot,
   Eraser,
   Factory,
-  Fence,
-  Footprints,
-  Key,
-  LayoutTemplate,
-  Leaf,
   Link2,
-  ListTree,
   MessageCircle,
   Option,
   Paperclip,
   Play,
-  Puzzle,
-  Scroll,
   Shapes,
-  Split,
   SquareActivity,
   SquareAsterisk,
   User,
   UsersRound,
 } from "lucide-react";
-import { Group, GroupKeys } from "./group";
+
+import { DatalistIcon } from "@/features/datalist/ui";
+import { FactoryBranchIcon } from "@/features/factory-branch/ui";
+import { FactoryConditionSetIcon } from "@/features/factory-condition-set/ui";
+import { FactoryPipelineStepIcon } from "@/features/factory-pipeline-step/ui";
+import { FactoryPipelineIcon } from "@/features/factory-pipeline/ui";
+import { PermissionGroupIcon } from "@/features/permission-group/ui";
+import { PermissionSchemaIcon } from "@/features/permission-schema/ui";
+import { PermissionIcon } from "@/features/permission/ui";
+import { TierIcon } from "@/features/tier/ui";
+import { FieldIcon } from "@/features/twin-class-field/ui";
+import { TwinClassIcon } from "@/features/twin-class/ui";
+import { TwinFlowTransitionIcon } from "@/features/twin-flow-transition/ui";
+import { TwinFlowIcon } from "@/features/twin-flow/ui";
+import { TwinStatusIcon } from "@/features/twin-status/ui";
+import { TwinIcon } from "@/features/twin/ui";
+import { PlatformArea } from "@/shared/config";
+
+import { Group, GroupKeys } from "./menu";
 
 export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
   class: {
@@ -36,22 +40,22 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Classes",
-        url: "/workspace/twinclass",
-        icon: LayoutTemplate,
+        url: `/${PlatformArea.core}/twinclass`,
+        icon: TwinClassIcon,
       },
       {
         title: "Fields",
-        url: "/workspace/fields",
-        icon: Puzzle,
+        url: `/${PlatformArea.core}/fields`,
+        icon: FieldIcon,
       },
       {
         title: "Statuses",
-        url: "/workspace/statuses",
-        icon: CircleDot,
+        url: `/${PlatformArea.core}/statuses`,
+        icon: TwinStatusIcon,
       },
       {
         title: "Links",
-        url: "/workspace/links",
+        url: `/${PlatformArea.core}/links`,
         icon: Link2,
       },
     ],
@@ -61,17 +65,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Twins",
-        url: "/workspace/twins",
-        icon: Braces,
+        url: `/${PlatformArea.core}/twins`,
+        icon: TwinIcon,
       },
       {
         title: "Comments",
-        url: "/workspace/comments",
+        url: `/${PlatformArea.core}/comments`,
         icon: MessageCircle,
       },
       {
         title: "Attachments",
-        url: "/workspace/attachments",
+        url: `/${PlatformArea.core}/attachments`,
         icon: Paperclip,
       },
     ],
@@ -81,12 +85,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Users",
-        url: "/workspace/users",
+        url: `/${PlatformArea.core}/users`,
         icon: User,
       },
       {
         title: "Groups",
-        url: "/workspace/user-groups",
+        url: `/${PlatformArea.core}/user-groups`,
         icon: UsersRound,
       },
     ],
@@ -96,17 +100,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Datalists",
-        url: "/workspace/datalists",
-        icon: ListTree,
+        url: `/${PlatformArea.core}/datalists`,
+        icon: DatalistIcon,
       },
       {
         title: "Options",
-        url: "/workspace/datalist-options",
+        url: `/${PlatformArea.core}/datalist-options`,
         icon: Option,
       },
       {
         title: "Subsets",
-        url: "/workspace/subsets",
+        url: `/${PlatformArea.core}/subsets`,
         icon: Shapes,
       },
     ],
@@ -116,18 +120,18 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Permissions",
-        url: "/workspace/permissions",
-        icon: Key,
+        url: `/${PlatformArea.core}/permissions`,
+        icon: PermissionIcon,
       },
       {
         title: "Permission Groups",
-        url: "/workspace/permission-group",
-        icon: BookKey,
+        url: `/${PlatformArea.core}/permission-groups`,
+        icon: PermissionGroupIcon,
       },
       {
         title: "Schemas",
-        url: "/workspace/permission-schemas",
-        icon: Scroll,
+        url: `/${PlatformArea.core}/permission-schemas`,
+        icon: PermissionSchemaIcon,
       },
     ],
   },
@@ -136,38 +140,43 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Factories",
-        url: "/workspace/factories",
+        url: `/${PlatformArea.core}/factories`,
         icon: Factory,
       },
       {
         title: "Multipliers",
-        url: "/workspace/multipliers",
+        url: `/${PlatformArea.core}/multipliers`,
         icon: Asterisk,
       },
       {
         title: "Multiplier filters",
-        url: "/workspace/multiplier-filters",
+        url: `/${PlatformArea.core}/multiplier-filters`,
         icon: SquareAsterisk,
       },
       {
         title: "Pipelines",
-        url: "/workspace/pipelines",
-        icon: Fence,
+        url: `/${PlatformArea.core}/pipelines`,
+        icon: FactoryPipelineIcon,
       },
       {
         title: "Pipeline steps",
-        url: "/workspace/pipeline-steps",
-        icon: Footprints,
+        url: `/${PlatformArea.core}/pipeline-steps`,
+        icon: FactoryPipelineStepIcon,
       },
       {
         title: "Branches",
-        url: "/workspace/branches",
-        icon: Split,
+        url: `/${PlatformArea.core}/branches`,
+        icon: FactoryBranchIcon,
       },
       {
         title: "Erasers",
-        url: "/workspace/erasers",
+        url: `/${PlatformArea.core}/erasers`,
         icon: Eraser,
+      },
+      {
+        title: "Condition sets",
+        url: `/${PlatformArea.core}/condition-sets`,
+        icon: FactoryConditionSetIcon,
       },
     ],
   },
@@ -176,17 +185,17 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Transitions",
-        url: "/workspace/transitions",
-        icon: ArrowRightLeft,
+        url: `/${PlatformArea.core}/transitions`,
+        icon: TwinFlowTransitionIcon,
       },
       {
         title: "Twinflows",
-        url: "/workspace/twinflows",
-        icon: Activity,
+        url: `/${PlatformArea.core}/twinflows`,
+        icon: TwinFlowIcon,
       },
       {
         title: "Schemas",
-        url: "/workspace/twinflow-schemas",
+        url: `/${PlatformArea.core}/twinflow-schemas`,
         icon: SquareActivity,
       },
     ],
@@ -196,13 +205,13 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Business accounts",
-        url: "/workspace/business-accounts",
+        url: `/${PlatformArea.core}/business-accounts`,
         icon: BriefcaseBusiness,
       },
       {
         title: "Tiers",
-        url: "/workspace/tiers",
-        icon: Leaf,
+        url: `/${PlatformArea.core}/tiers`,
+        icon: TierIcon,
       },
     ],
   },
@@ -211,7 +220,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
     items: [
       {
         title: "Featurers",
-        url: "/workspace/featurers",
+        url: `/${PlatformArea.core}/featurers`,
         icon: Play,
       },
     ],

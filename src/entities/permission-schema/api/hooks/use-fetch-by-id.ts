@@ -1,16 +1,16 @@
-import {
-  hydratePermissionSchemaFromMap,
-  PermissionSchema,
-  PermissionSchemaRqQuery,
-} from "@/entities/permission-schema";
-import { ApiContext } from "@/shared/api";
-import { isUndefined } from "@/shared/libs";
 import { useCallback, useContext, useState } from "react";
 
-// TODO: Apply caching-strategy after discussing with team
+import {
+  PermissionSchema,
+  PermissionSchemaRqQuery,
+  hydratePermissionSchemaFromMap,
+} from "@/entities/permission-schema";
+import { PrivateApiContext } from "@/shared/api";
+import { isUndefined } from "@/shared/libs";
+
 export const useFetchPermissionSchemaById = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const api = useContext(ApiContext);
+  const api = useContext(PrivateApiContext);
 
   const fetchPermissionSchemaById = useCallback(
     async ({

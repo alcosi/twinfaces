@@ -1,8 +1,9 @@
-import { LoadingOverlay } from "@/shared/ui/loading";
 import React, { createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
+
 import { DataList, useFetchDatalistById } from "@/entities/datalist";
 import { isUndefined } from "@/shared/libs";
+import { LoadingOverlay } from "@/shared/ui/loading";
 
 interface DatalistContextProps {
   datalistId: string;

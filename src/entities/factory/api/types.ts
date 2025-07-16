@@ -1,4 +1,4 @@
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type Factory = components["schemas"]["FactoryV2"];
@@ -15,6 +15,10 @@ export type Factory_DETAILED = RequireFields<
   | "factoryUsagesCount"
 >;
 export type FactorySearchRq = components["schemas"]["FactorySearchRqV1"];
+export type FactoryViewhQuery =
+  operations["factoryViewV1"]["parameters"]["query"];
+export type FactoryUpdateRq = components["schemas"]["FactoryUpdateRqV1"];
+export type FactoryCreateRq = components["schemas"]["FactoryCreateRqV1"];
 
 export type FactoryFilterKeys =
   | "idList"

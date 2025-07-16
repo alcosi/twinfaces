@@ -1,11 +1,13 @@
+import { z } from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
+
 import {
   TwinFlowSchemaFilterKeys,
   TwinFlowSchemaFilters,
   useTwinFlowSchemaSelectAdapter,
 } from "@/entities/twinFlowSchema";
 import { type FilterFeature } from "@/shared/libs";
-import { z } from "zod";
 
 export function useTwinFlowSchemaFilters(): FilterFeature<
   TwinFlowSchemaFilterKeys,

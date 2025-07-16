@@ -1,29 +1,30 @@
-import { ImageWithFallback } from "@/components/image-with-fallback";
-import {
-  TWIN_CLASS_STATUS_SCHEMA,
-  TwinClassStatusFormValues,
-  TwinClassStatusResourceLink,
-  TwinStatus_DETAILED,
-  TwinStatusCreateRq,
-  useStatusFilters,
-  useTwinStatusSearchV1,
-} from "@/entities/twin-status";
-import {
-  TwinClass_DETAILED,
-  TwinClassResourceLink,
-} from "@/entities/twinClass";
-import { ApiContext, PagedResponse } from "@/shared/api";
-import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { ColorTile } from "@/shared/ui";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { TwinClass_DETAILED } from "@/entities/twin-class";
+import {
+  TWIN_CLASS_STATUS_SCHEMA,
+  TwinClassStatusFormValues,
+  TwinStatusCreateRq,
+  TwinStatus_DETAILED,
+  useStatusCreate,
+  useStatusFilters,
+  useTwinStatusSearchV1,
+} from "@/entities/twin-status";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { ImageWithFallback } from "@/features/ui/image-with-fallback";
+import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import { ColorTile } from "@/shared/ui";
+import { GuidWithCopy } from "@/shared/ui/guid";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+
 import {
   CrudDataTable,
   DataTableHandle,
@@ -77,7 +78,7 @@ const colDefs: Record<
     header: "Class",
     cell: ({ row: { original } }) =>
       original.twinClass && (
-        <div className="max-w-48 inline-flex">
+        <div className="inline-flex max-w-48">
           <TwinClassResourceLink
             data={original.twinClass as TwinClass_DETAILED}
             withTooltip
@@ -96,21 +97,18 @@ const colDefs: Record<
     id: "name",
     accessorKey: "name",
     header: "Name",
-    cell: ({ row: { original } }) => (
-      <div className="max-w-48 inline-flex">
-        <TwinClassStatusResourceLink
-          data={original}
-          twinClassId={original.twinClassId!}
-          withTooltip
-        />
-      </div>
-    ),
   },
 
   description: {
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 
   backgroundColor: {
@@ -151,10 +149,10 @@ export function TwinClassStatusesTable({
 }: {
   twinClassId?: string;
 }) {
-  const api = useContext(ApiContext);
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinStatuses } = useTwinStatusSearchV1();
+  const { createStatus } = useStatusCreate();
   const { buildFilterFields, mapFiltersToPayload } = useStatusFilters({
     enabledFilters: isTruthy(twinClassId)
       ? ["idList", "keyLikeList", "nameI18nLikeList", "descriptionI18nLikeList"]
@@ -185,9 +183,9 @@ export function TwinClassStatusesTable({
         pagination,
         filters: {
           ..._filters,
-          twinClassIdList: twinClassId
-            ? toArrayOfString(toArray(twinClassId), "id")
-            : _filters.twinClassIdList,
+          twinClassIdMap: twinClassId
+            ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
+            : _filters.twinClassIdMap,
         },
       });
     } catch (e) {
@@ -217,16 +215,12 @@ export function TwinClassStatusesTable({
       return;
     }
 
-    const { error } = await api.twinStatus.create({
+    await createStatus({
       twinClassId: twinClassId || formValues.twinClassId!,
-      data,
+      body: data,
     });
 
-    if (error) {
-      throw new Error("Failed to create status");
-    }
-
-    toast.success("Link created successfully!");
+    toast.success("Status created successfully!");
     fetchStatuses({ pageIndex: 0, pageSize: 10 }, { filters: {} });
   }
 
@@ -248,13 +242,12 @@ export function TwinClassStatusesTable({
       fetcher={fetchStatuses}
       onRowClick={(row) =>
         router.push(
-          `/workspace/twinclass/${row.twinClassId}/twinStatus/${row.id}`
+          `/${PlatformArea.core}/twinclass/${row.twinClassId}/twinStatus/${row.id}`
         )
       }
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      pageSizes={[10, 20, 50]}
       defaultVisibleColumns={[
         colDefs.logo,
         colDefs.id,

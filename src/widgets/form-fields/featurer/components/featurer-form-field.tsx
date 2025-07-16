@@ -1,8 +1,10 @@
-import { ComboboxFormField } from "@/components/form-fields";
-import { FormFieldProps } from "@/components/form-fields/types";
+import { FieldValues, Path, useFormContext, useWatch } from "react-hook-form";
+
+import { ComboboxFormField, FormFieldProps } from "@/components/form-fields";
+
 import { FeaturerParam, useFeaturerSelectAdapter } from "@/entities/featurer";
 import { isPopulatedArray } from "@/shared/libs";
-import { FieldValues, Path, useFormContext, useWatch } from "react-hook-form";
+
 import { FeaturerFieldProps } from "../types";
 import { FeaturerParamFormField } from "./featurer-param/featurer-param-form";
 

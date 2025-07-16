@@ -1,20 +1,20 @@
-import {
-  isPopulatedString,
-  SelectAdapter,
-  wrapWithPercent,
-} from "@/shared/libs";
 import { Square } from "lucide-react";
 import { useTheme } from "next-themes";
+
 import {
-  TwinStatus,
+  SelectAdapter,
+  isPopulatedString,
+  wrapWithPercent,
+} from "@/shared/libs";
+
+import {
   TwinStatusFilters,
+  TwinStatusV2,
   useFetchTwinStatusById,
   useTwinStatusSearchV1,
 } from "../../api";
 
-export function useTwinStatusSelectAdapter(
-  twinClassId?: string
-): SelectAdapter<TwinStatus> {
+export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatusV2> {
   const { theme } = useTheme();
   const { fetchTwinStatusById } = useFetchTwinStatusById();
   const { searchTwinStatuses } = useTwinStatusSearchV1();
@@ -23,28 +23,29 @@ export function useTwinStatusSelectAdapter(
     return fetchTwinStatusById(id);
   }
 
-  async function getItems(search: string) {
+  async function getItems(search: string, filters?: TwinStatusFilters) {
     try {
-      const filters: TwinStatusFilters = {
-        twinClassIdList: twinClassId ? [twinClassId] : [],
-        keyLikeList: search ? [wrapWithPercent(search)] : [],
-      };
-      const { data } = await searchTwinStatuses({ filters });
-      return data;
+      const response = await searchTwinStatuses({
+        filters: {
+          keyLikeList: search ? [wrapWithPercent(search)] : [],
+          ...filters,
+        },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching search items:", error);
       return [];
     }
   }
 
-  function renderItem(status: TwinStatus) {
+  function renderItem(status: TwinStatusV2) {
     const squareColor =
       status.backgroundColor || (theme === "light" ? "#0c66e4" : "#579dff");
 
     return (
       <div className="flex gap-2">
         <div className="flex grow">
-          <Square className="w-4 h-4" fill={squareColor} stroke={squareColor} />
+          <Square className="h-4 w-4" fill={squareColor} stroke={squareColor} />
         </div>
         <span className="truncate">
           {isPopulatedString(status.name) ? status.name : status.key}
@@ -55,7 +56,8 @@ export function useTwinStatusSelectAdapter(
 
   return {
     getById,
-    getItems,
+    getItems: (search, options) =>
+      getItems(search, options as TwinStatusFilters),
     renderItem,
   };
 }

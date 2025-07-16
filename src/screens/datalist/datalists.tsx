@@ -1,30 +1,29 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import {
-  DataList,
   DATALIST_SCHEMA,
+  DataList,
   DataListCreateRqV1,
-  DatalistResourceLink,
   useDatalistCreate,
   useDatalistFilters,
   useDatalistSearchV1,
 } from "@/entities/datalist";
-import { useBreadcrumbs } from "@/features/breadcrumb";
 import { PagedResponse } from "@/shared/api";
+import { GuidWithCopy } from "@/shared/ui/guid";
 import {
   CrudDataTable,
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
-import { GuidWithCopy } from "@/shared/ui/guid";
-import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
 import { DatalistFormFields } from "./form-fields";
-import { toast } from "sonner";
 
 const colDefs: Record<
   keyof Pick<
@@ -56,6 +55,12 @@ const colDefs: Record<
     id: "description",
     accessorKey: "description",
     header: "Description",
+    cell: ({ row: { original } }) =>
+      original.description && (
+        <div className="text-muted-foreground line-clamp-2 max-w-64">
+          {original.description}
+        </div>
+      ),
   },
 
   createdAt: {
@@ -81,15 +86,9 @@ const colDefs: Record<
 
 export const DatalistsScreen = () => {
   const tableRef = useRef<DataTableHandle>(null);
-  const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistFilters();
-  const { setBreadcrumbs } = useBreadcrumbs();
   const { searchDatalist } = useDatalistSearchV1();
   const { createDatalist } = useDatalistCreate();
-
-  useEffect(() => {
-    setBreadcrumbs([{ label: "Datalists", href: "/workspace/datalists" }]);
-  }, []);
 
   async function fetchDataLists(
     pagination: PaginationState,
@@ -149,8 +148,6 @@ export const DatalistsScreen = () => {
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchDataLists}
-      pageSizes={[10, 20, 50]}
-      onRowClick={(row) => router.push(`/workspace/datalists/${row.id}`)}
       filters={{
         filtersInfo: buildFilterFields(),
       }}
