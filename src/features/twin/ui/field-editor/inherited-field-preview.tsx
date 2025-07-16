@@ -96,26 +96,23 @@ export function InheritedFieldPreview({
     case "booleanV1": {
       const checked = value === "true";
 
-      switch (descriptor?.checkboxType) {
-        case "TOGGLE":
-          return (
-            <SwitchFormItem
-              fieldValue={checked}
-              onChange={(v) => onChange?.(String(v))}
-              disabled={disabled}
-            />
-          );
-
-        case "STANDARD":
-        default:
-          return (
-            <CheckboxFormItem
-              fieldValue={checked}
-              onChange={(v) => onChange?.(String(v))}
-              disabled={disabled}
-            />
-          );
+      if (descriptor?.checkboxType === "TOGGLE") {
+        return (
+          <SwitchFormItem
+            fieldValue={checked}
+            onChange={(v) => onChange?.(String(v))}
+            disabled={disabled}
+          />
+        );
       }
+
+      return (
+        <CheckboxFormItem
+          fieldValue={checked}
+          onChange={(v) => onChange?.(String(v))}
+          disabled={disabled}
+        />
+      );
     }
   }
 
