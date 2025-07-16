@@ -375,7 +375,7 @@ export function TwinsTable({
       ref={tableRef}
       title={title}
       columns={
-        isPopulatedArray(enabledColumns)
+        isPopulatedArray(orderedColumns)
           ? orderedColumns
           : Object.values(columnMap)
       }

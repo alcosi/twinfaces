@@ -98,9 +98,7 @@ export function InheritedFieldPreview({
     case "attachmentFieldV1": {
       const url = value as string | undefined;
 
-      if (!url) return null;
-
-      return (
+      return isPopulatedString(url) ? (
         <div className="flex flex-wrap gap-2">
           <Image
             src={url}
@@ -110,7 +108,7 @@ export function InheritedFieldPreview({
             className="rounded border object-cover"
           />
         </div>
-      );
+      ) : null;
     }
 
     case "booleanV1": {

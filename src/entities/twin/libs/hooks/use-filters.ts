@@ -59,29 +59,27 @@ export function useTwinFilters({
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
       },
-      twinClassIdList: isUndefined(baseTwinClassId)
-        ? {
-            type: AutoFormValueType.combobox,
-            label: "Twin Class",
-            multi: true,
-            ...tcAdapter,
+      twinClassIdList: {
+        type: AutoFormValueType.combobox,
+        label:
+          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["twinClassId"]]?.label ??
+          "Twin Class",
+        multi: true,
+        ...tcAdapter,
+        getItems: (search: string) => {
+          if (baseTwinClassId) {
+            tcAdapter.getItems(search, {
+              abstractt: "ONLY_NOT",
+              extendsHierarchyChildsForTwinClassSearch: baseTwinClassId
+                ? { idList: [baseTwinClassId], depth: 0 }
+                : undefined,
+            });
           }
-        : {
-            type: AutoFormValueType.combobox,
-            label:
-              columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["twinClassId"]]
-                ?.label ?? "Twin Class",
-            multi: true,
-            ...tcAdapter,
-            getItems: (search: string) => {
-              return tcAdapter.getItems(search, {
-                abstractt: "ONLY_NOT",
-                extendsHierarchyChildsForTwinClassSearch: baseTwinClassId
-                  ? { idList: [baseTwinClassId], depth: 0 }
-                  : undefined,
-              });
-            },
-          },
+
+          return tcAdapter.getItems(search);
+        },
+      },
+
       statusIdList: {
         type: AutoFormValueType.combobox,
         label:
