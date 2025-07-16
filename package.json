@@ -64,7 +64,6 @@
     "lexical": "0.31.2",
     "lucide-react": "^0.454.0",
     "motion": "^12.0.8",
-    "nanoid": "^5.1.5",
     "next": "14.2.29",
     "next-runtime-env": "^3.2.2",
     "next-themes": "^0.3.0",
@@ -101,7 +100,6 @@
   },
   "overrides": {
     "@radix-ui/react-dismissable-layer": "^1.0.5",
-    "@radix-ui/react-focus-scope": "^1.0.4",
-    "brace-expansion": "^2.0.2"
+    "@radix-ui/react-focus-scope": "^1.0.4"
   }
 }
