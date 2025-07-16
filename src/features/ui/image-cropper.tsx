@@ -4,7 +4,7 @@ import Image from "next/image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 
-import { Toggle } from "@/shared/ui/toggle";
+import { Toggle } from "@/shared/ui";
 
 export type ImageCropperHandle = {
   getCroppedImage: () => string | undefined;
@@ -65,11 +65,15 @@ export const ImageCropper = forwardRef<
             onPressedChange={(pressed) =>
               setCropperShape(pressed ? "circle" : "rectangle")
             }
+            // TODO: https://alcosi.atlassian.net/browse/TWINFACES-605
+            // fix styling -> !bg-transparent is a code-smell
             className="rounded-full !bg-transparent p-1 transition hover:bg-white/10"
           >
             <div className="rounded-full border border-white p-1">
               <Image
                 src={
+                  // TODO: https://alcosi.atlassian.net/browse/TWINFACES-605
+                  // extract circle-dashed.svg & crop.svg into separate React components
                   cropperShape === "circle"
                     ? "https://www.svgrepo.com/show/532923/circle-dashed.svg"
                     : "https://www.svgrepo.com/show/488893/crop.svg"
