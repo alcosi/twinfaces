@@ -1,5 +1,7 @@
 "use client";
 
+import { CheckboxFormItem, SwitchFormItem } from "@/components/form-fields";
+
 import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 import {
@@ -93,10 +95,21 @@ export function InheritedFieldPreview({
 
     case "booleanV1": {
       const checked = value === "true";
+
+      if (descriptor?.checkboxType === "TOGGLE") {
+        return (
+          <SwitchFormItem
+            fieldValue={checked}
+            onChange={(v) => onChange?.(String(v))}
+            disabled={disabled}
+          />
+        );
+      }
+
       return (
-        <Switch
-          checked={checked}
-          onCheckedChange={(v) => onChange?.(String(v))}
+        <CheckboxFormItem
+          fieldValue={checked}
+          onChange={(v) => onChange?.(String(v))}
           disabled={disabled}
         />
       );
