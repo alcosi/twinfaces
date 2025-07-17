@@ -54,7 +54,9 @@ export function TwinFields() {
                   isObject(original.value) && isTruthy(original.value.id)
                     ? String(original.value.id)
                     : String(original.value),
-                name: original.name,
+                name: isObject(original.value)
+                  ? original.value.name
+                  : original.name,
                 descriptor: original.descriptor,
               }}
               schema={resolveTwinFieldSchema(original)}

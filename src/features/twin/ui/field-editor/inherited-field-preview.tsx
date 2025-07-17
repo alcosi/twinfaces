@@ -32,7 +32,7 @@ export function InheritedFieldPreview({
   disabled = false,
   onChange,
 }: Props) {
-  const { descriptor, value } = field;
+  const { descriptor, value, name } = field;
   const type = descriptor?.fieldType;
 
   switch (type) {
@@ -67,24 +67,30 @@ export function InheritedFieldPreview({
     case "selectListV1":
     case "selectLongV1":
     case "selectSharedInHeadV1": {
-      const data = relatedObjects?.dataListsOptionMap?.[value];
+      const data = relatedObjects?.dataListsOptionMap?.[value] ?? {
+        id: value,
+        name,
+      };
+
       return (
-        data && (
-          <DatalistOptionResourceLink
-            data={data}
-            withTooltip
-            disabled={disabled}
-          />
-        )
+        <DatalistOptionResourceLink
+          data={data}
+          withTooltip
+          disabled={disabled}
+        />
       );
     }
 
     case "selectLinkV1":
     case "selectLinkLongV1": {
-      const data = relatedObjects?.twinMap?.[value];
-      return (
-        data && <TwinResourceLink data={data} withTooltip disabled={disabled} />
-      );
+      if (!value) return null;
+
+      const data = relatedObjects?.twinMap?.[value] ?? {
+        id: value,
+        name,
+      };
+
+      return <TwinResourceLink data={data} withTooltip disabled={disabled} />;
     }
 
     case "selectUserV1":

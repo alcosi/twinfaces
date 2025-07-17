@@ -89,7 +89,7 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2TwinClassMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
           showTwinFieldCollectionMode: "ALL_FIELDS",
-          showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
+          showTwinField2DataListOptionMode: "DETAILED",
           showTwinClass2LinkMode: "DETAILED",
           showTwinField2UserMode: "DETAILED",
           showTwinClassMode: "DETAILED",
