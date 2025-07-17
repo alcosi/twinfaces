@@ -6,6 +6,7 @@ import { isUndefined } from "@/shared/libs";
 import { getAuthHeaders } from "../../libs";
 import {
   FaceTC001ViewRs,
+  FaceTC002ViewRs,
   FaceTW001ViewRs,
   FaceTW002ViewRs,
   FaceTW004ViewRs,
@@ -24,7 +25,8 @@ type FetchFaceOptions = {
     | "/private/face/tw002/{faceId}/v1"
     | "/private/face/tw004/{faceId}/v1"
     | "/private/face/tw005/{faceId}/v1"
-    | "/private/face/tc001/{faceId}/v1";
+    | "/private/face/tc001/{faceId}/v1"
+    | "/private/face/tc002/{faceId}/v1";
   query: Record<string, string>;
 };
 
@@ -157,6 +159,24 @@ export async function fetchTC001Face(
       showFaceTC0012TwinClassMode: "DETAILED",
       showTwinClass2TwinClassFieldMode: "DETAILED",
       showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
+    },
+  });
+}
+
+export async function fetchTC002Face(
+  faceId: string,
+  twinId: string
+): Promise<FaceTC002ViewRs> {
+  return fetchFace<FaceTC002ViewRs>({
+    endpoint: "/private/face/tc002/{faceId}/v1",
+    twinId,
+    faceId,
+    query: {
+      showFaceTC0022TwinClassFieldMode: "DETAILED",
+      showFaceTC0022TwinClassMode: "DETAILED",
+      showTwinClass2TwinClassFieldMode: "DETAILED",
+      showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
+      showTwinClassMode: "DETAILED",
     },
   });
 }
