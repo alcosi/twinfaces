@@ -4,26 +4,22 @@ import { fetchTC001Face, fetchTC002Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isUndefined, safe } from "@/shared/libs";
 
-import {
-  FaceTCComponent,
-  FaceTCComponentSchemaMap,
-  FaceTCViewMap,
-} from "../../../../../entities/face/api/types";
+import { TCSchemaMap, TCViewMap } from "./types";
 
 const componentToFetcherMap: {
-  [K in FaceTCComponent]: (
+  [K in keyof TCViewMap]: (
     modalFaceId: string,
     twinId: string
-  ) => Promise<FaceTCViewMap[K]>;
+  ) => Promise<TCViewMap[K]>;
 } = {
   TC001: fetchTC001Face,
   TC002: fetchTC002Face,
 };
 
-export async function fetchModalCreateData<K extends FaceTCComponent>(
-  modalFace: FaceTCComponentSchemaMap[K],
+export async function fetchModalCreateData<K extends keyof TCViewMap>(
+  modalFace: TCSchemaMap[K],
   twinId: string
-): Promise<FaceTCViewMap[K] | undefined> {
+): Promise<TCViewMap[K] | undefined> {
   const fetcher = componentToFetcherMap[`${modalFace?.component}` as K];
 
   if (isUndefined(fetcher)) {

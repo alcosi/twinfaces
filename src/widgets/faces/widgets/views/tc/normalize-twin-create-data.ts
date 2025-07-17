@@ -1,21 +1,16 @@
-import {
-  FaceTC001,
-  FaceTC002,
-  FaceTCComponent,
-  FaceTCComponentSchemaMap,
-} from "@/entities/face";
+import { FaceTC001, FaceTC002 } from "@/entities/face";
 
-import { Field } from "./tc-form";
+import { TCFormField, TCSchemaMap, TCViewMap } from "./types";
 
 type EffectiveTwinCreateData = {
   twinClassId?: string;
-  fields: Field[];
+  fields: TCFormField[];
   showVariantSelector: boolean;
   variantOptions?: {
     id: string;
     label: string;
     twinClassId: string;
-    fields: Field[];
+    fields: TCFormField[];
   }[];
 };
 
@@ -24,7 +19,7 @@ function isFaceTC002(data: FaceTC001 | FaceTC002): data is FaceTC002 {
 }
 
 export function normalizeTwinCreateData(
-  data: FaceTCComponentSchemaMap[FaceTCComponent],
+  data: TCSchemaMap[keyof TCViewMap],
   selectedOptionId?: string
 ): EffectiveTwinCreateData {
   if (isFaceTC002(data)) {
@@ -32,20 +27,20 @@ export function normalizeTwinCreateData(
     const selected = options?.find((opt) => opt.id === selectedOptionId);
     return {
       twinClassId: selected?.twinClassId,
-      fields: (selected?.fields ?? []) as Field[],
+      fields: (selected?.fields ?? []) as TCFormField[],
       showVariantSelector: true,
       variantOptions: options?.map((opt) => ({
         id: opt.id!,
         label: opt.classSelectorLabel!,
         twinClassId: opt.twinClassId!,
-        fields: opt.fields as Field[],
+        fields: opt.fields as TCFormField[],
       })),
     };
   }
 
   return {
     twinClassId: data?.twinClassId,
-    fields: (data?.fields ?? []) as Field[],
+    fields: (data?.fields ?? []) as TCFormField[],
     showVariantSelector: false,
   };
 }

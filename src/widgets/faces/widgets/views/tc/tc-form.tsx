@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Control, Path } from "react-hook-form";
 
@@ -8,35 +10,27 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 
-import { FaceTCComponent, FaceTCViewMap } from "@/entities/face";
 import { TwinFormValues, TwinSelfFieldId } from "@/entities/twin";
-import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
 import { TwinFieldFormField } from "../../../../form-fields";
 import { useTwinClassFields } from "../../../../tables/twins/use-twin-form-fields";
 import { normalizeTwinCreateData } from "./normalize-twin-create-data";
+import { TCFormField, TCViewMap } from "./types";
 
-export type Field = {
-  key: string;
-  label: string;
-  twinClassFieldId: string;
-  twinClassField?: TwinClassField;
-};
-
-type TwinSelfFieldComponentProps = {
+type TwinSelfFieldProps = {
   control: Control<TwinFormValues>;
   name: Path<TwinFormValues>;
   label: string;
 };
 
-type TCFormProps<K extends FaceTCComponent> = {
+type TCFormProps<K extends keyof TCViewMap> = {
   control: Control<TwinFormValues>;
-  modalCreateData: FaceTCViewMap[K];
+  modalCreateData: TCViewMap[K];
 };
 
-export function hydrateFaceTwinCreateFields(
-  fields: Field[],
+function hydrateFaceTwinCreateFields(
+  fields: TCFormField[],
   relatedObjects?: RelatedObjects
 ) {
   if (!relatedObjects?.twinClassFieldMap) return fields;
@@ -51,7 +45,7 @@ export function hydrateFaceTwinCreateFields(
   });
 }
 
-export function TCForm<K extends FaceTCComponent>({
+export function TCForm<K extends keyof TCViewMap>({
   control,
   modalCreateData,
 }: TCFormProps<K>) {
@@ -62,7 +56,7 @@ export function TCForm<K extends FaceTCComponent>({
     normalizeTwinCreateData(faceTwinCreate!, selectedOptionId);
 
   const hydratedFields = hydrateFaceTwinCreateFields(
-    (fields as Field[]) ?? [],
+    (fields as TCFormField[]) ?? [],
     relatedObjects
   );
 
@@ -70,7 +64,7 @@ export function TCForm<K extends FaceTCComponent>({
     useTwinClassFields(control, twinClassId);
 
   const selfFields: Partial<
-    Record<TwinSelfFieldId, (props: TwinSelfFieldComponentProps) => JSX.Element>
+    Record<TwinSelfFieldId, (props: TwinSelfFieldProps) => JSX.Element>
   > = {
     "00000000-0000-0000-0011-000000000007": ({ control, name, label }) => (
       <ComboboxFormField
