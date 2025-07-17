@@ -22,8 +22,3 @@ export type WidgetFaceProps = {
 };
 
 export type TWidgetFaceProps = RequireFields<WidgetFaceProps, "twinId">;
-
-export type TranslationEntry = {
-  language: string;
-  description: string;
-};

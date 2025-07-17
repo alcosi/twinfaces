@@ -1,6 +1,6 @@
 import { fetchTW002Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
-import { capitalize, cn, isTruthy, safe } from "@/shared/libs";
+import { cn, isPopulatedArray, safe } from "@/shared/libs";
 import {
   Accordion,
   AccordionContent,
@@ -8,9 +8,8 @@ import {
   AccordionTrigger,
 } from "@/shared/ui";
 
-import { AlertError } from "../../components";
-import { widgetGridClasses } from "../../utils";
-import { TWidgetFaceProps, TranslationEntry } from "../types";
+import { StatusAlert } from "../../components";
+import { TWidgetFaceProps } from "../types";
 
 export async function TW002(props: TWidgetFaceProps) {
   const { twinId, widget } = props;
@@ -24,51 +23,41 @@ export async function TW002(props: TWidgetFaceProps) {
   );
 
   if (!twidgetResult.ok) {
-    return <AlertError message="Widget TW002 failed to load." />;
+    return (
+      <StatusAlert variant="error" message="Widget TW002 failed to load." />
+    );
   }
 
   const twinResult = await safe(() =>
-    fetchTwinById(twidgetResult.data?.pointedTwinId!, { header, query })
+    fetchTwinById(twidgetResult.data.widget?.pointedTwinId!, {
+      header,
+      query,
+    })
   );
 
   if (!twinResult.ok) {
-    return <AlertError message="Failed to load twin." />;
+    return (
+      <StatusAlert variant="warn" message="Failed to load twin for TW002" />
+    );
   }
 
-  if (!twinResult.data?.fields?.translation) {
-    return null;
+  if (!isPopulatedArray(twidgetResult.data.widget?.accordionItems)) {
+    return (
+      <StatusAlert
+        variant="warn"
+        message="No accordionItems defined for TW002"
+      />
+    );
   }
-
-  const parseTranslation = JSON.parse(twinResult.data?.fields?.translation);
-
-  const translationData: TranslationEntry[] = Object.entries(
-    parseTranslation
-  ).map(([language, description]) => ({
-    language,
-    description: String(description),
-  }));
 
   return (
-    <>
-      {isTruthy(translationData) && (
-        <Accordion
-          type="single"
-          collapsible
-          className={cn("w-full", widgetGridClasses(widget))}
-          defaultValue={translationData?.[0]?.language ?? ""}
-        >
-          {translationData.map((el, key) => {
-            return (
-              <AccordionItem key={key} value={el.language ?? ""}>
-                <AccordionTrigger>{capitalize(el.language)}</AccordionTrigger>
-                <AccordionContent>
-                  <p>{el.description}</p>
-                </AccordionContent>
-              </AccordionItem>
-            );
-          })}
-        </Accordion>
-      )}
-    </>
+    <Accordion type="single" collapsible className={cn("w-full")}>
+      <AccordionItem key={0} value="0">
+        <AccordionTrigger>Default</AccordionTrigger>
+        <AccordionContent>
+          <p>{JSON.stringify(twidgetResult.data.widget.accordionItems)}(</p>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
