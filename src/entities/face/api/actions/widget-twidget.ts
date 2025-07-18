@@ -22,7 +22,7 @@ type FetchFaceOptions = {
     | "/private/face/wt003/{faceId}/v1"
     | "/private/face/tw001/{faceId}/v1"
     | "/private/face/tw002/{faceId}/v1"
-    | "/private/face/tw004/{faceId}/v1"
+    | "/private/face/tw004/{faceId}/v2"
     | "/private/face/tw005/{faceId}/v1"
     | "/private/face/tc001/{faceId}/v1";
   query: Record<string, string>;
@@ -119,7 +119,7 @@ export async function fetchTW004Face(
   twinId: string
 ): Promise<FaceTW004ViewRs> {
   return fetchFace<FaceTW004ViewRs>({
-    endpoint: "/private/face/tw004/{faceId}/v1",
+    endpoint: "/private/face/tw004/{faceId}/v2",
     twinId,
     faceId,
     query: {

@@ -29,12 +29,29 @@ export async function TW004(props: TWidgetFaceProps) {
 
   const twidget = twidgetResult.data.widget;
 
-  const result = await buildFieldEditorProps(
-    twidget.pointedTwinId!,
-    twidget.twinClassFieldId!
-  );
+  const fields = twidget.fields ?? [];
+  const buildPropsPromises = fields.map(async (field) => {
+    return await buildFieldEditorProps(
+      twidget.pointedTwinId!,
+      field.twinClassFieldId!
+    );
+  });
+  const buildPropsResults = await Promise.all(buildPropsPromises);
 
-  if (!result.ok) {
+  const dataResults = buildPropsResults
+    .filter((res) => res?.ok)
+    .map((res) => {
+      const { twin, relatedObjects, field } = res.data;
+      return { twin, relatedObjects, field };
+    });
+
+  // const result = await buildFieldEditorProps(
+  //   twidget.pointedTwinId!,
+  //   twidget.twinClassFieldId!
+  // );
+
+  // if (!result.ok) {
+  if (dataResults.length === 0) {
     return (
       <StatusAlert
         variant="error"
@@ -45,23 +62,43 @@ export async function TW004(props: TWidgetFaceProps) {
     );
   }
 
-  const { twin, relatedObjects, field } = result.data;
-
   return (
     <div
       data-face-id={twidget.id}
       className={cn(className, widget.styleClasses)}
     >
-      <TwinFieldEditor
-        id={twidget.id!}
-        label={twidget.label || "Unknown"}
-        twinId={twidget.pointedTwinId!}
-        twin={twin}
-        relatedObjects={relatedObjects}
-        field={field}
-        disabled={!isAdmin}
-        editable={twidget.editable}
-      />
+      {fields
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map((el) => {
+          const elementResult = dataResults.find(
+            (element) => element?.field.id === el.twinClassFieldId
+          );
+
+          if (!elementResult) return null;
+
+          return (
+            <TwinFieldEditor
+              id={twidget.id!}
+              label={el.label || "Unknown"}
+              twinId={twidget.pointedTwinId!}
+              twin={elementResult.twin}
+              relatedObjects={elementResult.relatedObjects}
+              field={elementResult.field}
+              disabled={!isAdmin}
+              editable={el.editable}
+            />
+          );
+        })}
+      {/*<TwinFieldEditor*/}
+      {/*  id={twidget.id!}*/}
+      {/*  label={twidget.label || "Unknown"}*/}
+      {/*  twinId={twidget.pointedTwinId!}*/}
+      {/*  twin={twin}*/}
+      {/*  relatedObjects={relatedObjects}*/}
+      {/*  field={field}*/}
+      {/*  disabled={!isAdmin}*/}
+      {/*  editable={twidget.editable}*/}
+      {/*/>*/}
     </div>
   );
 }

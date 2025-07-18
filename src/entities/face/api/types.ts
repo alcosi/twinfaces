@@ -44,6 +44,6 @@ export type FaceWT001ViewRs = components["schemas"]["FaceWT001ViewRsV1"];
 export type FaceWT003ViewRs = components["schemas"]["FaceWT003ViewRsV1"];
 export type FaceTW001ViewRs = components["schemas"]["FaceTW001ViewRsV1"];
 export type FaceTW002ViewRs = components["schemas"]["FaceTW002ViewRsV1"];
-export type FaceTW004ViewRs = components["schemas"]["FaceTW004ViewRsV1"];
+export type FaceTW004ViewRs = components["schemas"]["FaceTW004ViewRsV2"];
 export type FaceTW005ViewRs = components["schemas"]["FaceWT005ViewRsV1"];
 export type FaceTC001ViewRs = components["schemas"]["FaceTC001ViewRsV1"];
