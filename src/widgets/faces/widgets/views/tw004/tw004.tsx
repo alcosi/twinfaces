@@ -58,7 +58,7 @@ export async function TW004(props: TWidgetFaceProps) {
 
   return (
     <div data-face-id={twidget.id} className={cn(className)}>
-      {fields.length > 1 && (
+      {fields.length > 1 && twidget.label && (
         <div className="text-s font-bold">{twidget.label}</div>
       )}
       <div className={cn(className, twidget.styleClasses, "items-end")}>
