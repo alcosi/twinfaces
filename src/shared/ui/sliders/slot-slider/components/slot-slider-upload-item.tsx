@@ -16,8 +16,6 @@ export function SlotSliderUploadItem({ onUploadComplete, twinId }: Props) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const router = useRouter();
 
-  console.log("twinId", twinId);
-
   function handleClick() {
     fileInputRef.current?.click();
   }
