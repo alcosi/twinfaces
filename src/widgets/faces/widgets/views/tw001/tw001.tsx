@@ -62,7 +62,7 @@ export async function TW001(props: TWidgetFaceProps) {
       className={cn("h-auto w-full max-w-[480px] object-contain", className)}
     >
       {twidget.label && <p>{twidget.label}</p>}
-      <SlotSlider items={typedMedia} />
+      <SlotSlider items={typedMedia} twinId={twinId} />
     </div>
   );
 }

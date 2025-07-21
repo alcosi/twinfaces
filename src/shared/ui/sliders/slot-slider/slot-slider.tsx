@@ -20,13 +20,18 @@ import {
 import { SlotSliderItem } from "./components/slot-slider-item";
 import { SlotSliderPlaceholder } from "./components/slot-slider-placeholder";
 import { SlotSliderThumbnail } from "./components/slot-slider-thumbnail";
+import { SlotSliderUploadItem } from "./components/slot-slider-upload-item";
 import { MediaItem } from "./types";
 
 type SlotSliderProps<T> = {
   items: T[];
+  twinId?: string;
 };
 
-export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
+export function SlotSlider<T extends MediaItem>({
+  items,
+  twinId,
+}: SlotSliderProps<T>) {
   const [current, setCurrent] = useState<number>(0);
   const [mainSlider, setMainSlider] = useState<CarouselApi | null>(null);
   const [thumbSlider, setThumbSlider] = useState<CarouselApi | null>(null);
@@ -56,7 +61,7 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
   }, [mainSlider]);
 
   if (isEmptyArray(items)) {
-    return <SlotSliderPlaceholder />;
+    return <SlotSliderPlaceholder twinId={twinId ?? ""} />;
   }
 
   return (
@@ -87,6 +92,13 @@ export function SlotSlider<T extends MediaItem>({ items }: SlotSliderProps<T>) {
               <SlotSliderThumbnail item={item} isActive={current === index} />
             </CarouselItem>
           ))}
+
+          <CarouselItem
+            key="add-button"
+            className="h-20 min-w-24 basis-1/4 cursor-pointer items-center justify-center"
+          >
+            <SlotSliderUploadItem twinId={twinId} />
+          </CarouselItem>
         </CarouselContent>
         <CarouselNext className="static shrink translate-y-0" />
       </Carousel>

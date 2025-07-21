@@ -1,6 +1,8 @@
 import { NoImageIcon } from "@/shared/ui/icons";
 
-export function SlotSliderPlaceholder() {
+import { SlotSliderUploadItem } from "./slot-slider-upload-item";
+
+export function SlotSliderPlaceholder({ twinId }: { twinId: string }) {
   return (
     <>
       <div className="border-border text-muted-foreground mb-2 flex min-h-96 w-full flex-col items-center justify-center rounded-md border border-dashed p-4">
@@ -19,7 +21,7 @@ export function SlotSliderPlaceholder() {
           <NoImageIcon className="h-6 w-6" />
         </div>
         <div className="border-border flex h-20 w-20 items-center justify-center rounded-md border border-dashed">
-          <NoImageIcon className="h-6 w-6" />
+          <SlotSliderUploadItem twinId={twinId} />
         </div>
 
         <div className="border-border flex h-10 w-10 items-center justify-center rounded-full border border-dashed text-center" />
