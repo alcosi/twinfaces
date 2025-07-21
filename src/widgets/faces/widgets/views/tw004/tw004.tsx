@@ -45,12 +45,6 @@ export async function TW004(props: TWidgetFaceProps) {
       return { twin, relatedObjects, field };
     });
 
-  // const result = await buildFieldEditorProps(
-  //   twidget.pointedTwinId!,
-  //   twidget.twinClassFieldId!
-  // );
-
-  // if (!result.ok) {
   if (dataResults.length === 0) {
     return (
       <StatusAlert
@@ -63,42 +57,34 @@ export async function TW004(props: TWidgetFaceProps) {
   }
 
   return (
-    <div
-      data-face-id={twidget.id}
-      className={cn(className, widget.styleClasses)}
-    >
-      {fields
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-        .map((el) => {
-          const elementResult = dataResults.find(
-            (element) => element?.field.id === el.twinClassFieldId
-          );
+    <div data-face-id={twidget.id} className={cn(className)}>
+      {fields.length > 1 && (
+        <div className="text-s font-bold">{twidget.label}</div>
+      )}
+      <div className={cn(className, twidget.styleClasses, "items-end")}>
+        {fields
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+          .map((el) => {
+            const elementResult = dataResults.find(
+              (element) => element?.field.id === el.twinClassFieldId
+            );
 
-          if (!elementResult) return null;
+            if (!elementResult) return null;
 
-          return (
-            <TwinFieldEditor
-              id={twidget.id!}
-              label={el.label || "Unknown"}
-              twinId={twidget.pointedTwinId!}
-              twin={elementResult.twin}
-              relatedObjects={elementResult.relatedObjects}
-              field={elementResult.field}
-              disabled={!isAdmin}
-              editable={el.editable}
-            />
-          );
-        })}
-      {/*<TwinFieldEditor*/}
-      {/*  id={twidget.id!}*/}
-      {/*  label={twidget.label || "Unknown"}*/}
-      {/*  twinId={twidget.pointedTwinId!}*/}
-      {/*  twin={twin}*/}
-      {/*  relatedObjects={relatedObjects}*/}
-      {/*  field={field}*/}
-      {/*  disabled={!isAdmin}*/}
-      {/*  editable={twidget.editable}*/}
-      {/*/>*/}
+            return (
+              <TwinFieldEditor
+                id={twidget.id!}
+                label={el.label || "Unknown"}
+                twinId={twidget.pointedTwinId!}
+                twin={elementResult.twin}
+                relatedObjects={elementResult.relatedObjects}
+                field={elementResult.field}
+                disabled={!isAdmin}
+                editable={el.editable}
+              />
+            );
+          })}
+      </div>
     </div>
   );
 }
