@@ -14,20 +14,21 @@ import {
   useTwinUpdate,
 } from "@/entities/twin";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
+import { TwinFieldUI } from "@/entities/twinField";
 import { RelatedObjects } from "@/shared/api";
 import { cn, isPopulatedString } from "@/shared/libs";
 
 import { InPlaceEdit } from "../../../inPlaceEdit";
 import { SELF_FIELD_MAP } from "./constants";
 import { InheritedFieldPreview } from "./inherited-field-preview";
-import { FieldProps } from "./types";
 
 export type TwinFieldEditorProps = {
   id: string;
   twinId: string;
   twin: Twin;
   label?: ReactNode;
-  field: FieldProps;
+  // field: FieldProps; // TODO: change to TwinFieldUI ???
+  field: TwinFieldUI; // TODO: change to TwinFieldUI ???
   schema?: ZodType;
   relatedObjects?: RelatedObjects;
   onSuccess?: () => void;
@@ -72,7 +73,6 @@ export function TwinFieldEditor({
     return (
       <InheritedFieldPreview
         field={field}
-        relatedObjects={relatedObjects}
         disabled={disabled}
         onChange={handleOnSubmit}
       />

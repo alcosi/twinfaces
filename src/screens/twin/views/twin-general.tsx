@@ -185,6 +185,7 @@ export function TwinGeneral() {
                 id="twin.name"
                 twinId={twin.id}
                 twin={twin}
+                // TODO: ??? @berdimyradov
                 field={{
                   id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP["name"],
                   key: "name",

@@ -24,10 +24,10 @@ export type TwinSelfFieldMeta = {
   className?: string;
 };
 
-export type FieldProps = {
-  id: string;
-  key: TwinSelfFieldKey | string;
-  value: string;
-  name?: string;
-  descriptor: TwinClassField["descriptor"];
-};
+// export type FieldProps = {
+//   id: string;
+//   key: TwinSelfFieldKey | string;
+//   value: string;
+//   name?: string;
+//   descriptor: TwinClassField["descriptor"];
+// };

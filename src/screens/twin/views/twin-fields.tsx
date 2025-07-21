@@ -9,7 +9,7 @@ import { TwinContext } from "@/features/twin";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinFieldEditor } from "@/features/twin/ui";
 import { PagedResponse } from "@/shared/api";
-import { isObject, isTruthy } from "@/shared/libs";
+import { isObject, isPopulatedString } from "@/shared/libs";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { resolveTwinFieldSchema } from "@/widgets/form-fields";
 
@@ -37,6 +37,16 @@ export function TwinFields() {
       accessorKey: "value",
       header: "Value",
       cell: ({ row: { original } }) => {
+        console.log("foobar original", original.name);
+
+        // const value = isPopulatedString(original.value)
+        //   ? original.value
+        //   : original.value.id!;
+
+        // const name = isObject(original.value)
+        //   ? original.value.name
+        //   : original.name;
+
         return (
           <div
             className="inline-block w-full min-w-[300px]"
@@ -47,18 +57,14 @@ export function TwinFields() {
               id={original.id}
               twinId={twinId}
               twin={original}
-              field={{
-                id: original.id,
-                key: original.key,
-                value:
-                  isObject(original.value) && isTruthy(original.value.id)
-                    ? String(original.value.id)
-                    : String(original.value),
-                name: isObject(original.value)
-                  ? original.value.name
-                  : original.name,
-                descriptor: original.descriptor,
-              }}
+              field={original}
+              // field={{
+              //   id: original.id,
+              //   key: original.key,
+              //   value,
+              //   name,
+              //   descriptor: original.descriptor,
+              // }}
               schema={resolveTwinFieldSchema(original)}
               onSuccess={tableRef.current?.refresh}
               editable

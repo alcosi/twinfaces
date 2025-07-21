@@ -4,11 +4,12 @@ import Image from "next/image";
 
 import { CheckboxFormItem, SwitchFormItem } from "@/components/form-fields";
 
-import { User } from "@/entities/user";
-import { RelatedObjects } from "@/shared/api";
+import { TwinFieldUI } from "@/entities/twinField";
 import {
   formatIntlDate,
+  isObject,
   isPopulatedString,
+  isTruthy,
   mapPatternToInputType,
 } from "@/shared/libs";
 import { AnchorWithCopy, MaskedValue } from "@/shared/ui";
@@ -17,18 +18,15 @@ import { DatalistOptionResourceLink } from "../../../../features/datalist-option
 import { MarkdownPreview } from "../../../../features/markdown";
 import { TwinResourceLink } from "../../../../features/twin/ui";
 import { UserResourceLink } from "../../../../features/user/ui";
-import { FieldProps } from "./types";
 
 type Props = {
-  field: FieldProps;
-  relatedObjects?: RelatedObjects;
+  field: TwinFieldUI;
   disabled?: boolean;
   onChange?: (value: string) => void;
 };
 
 export function InheritedFieldPreview({
   field,
-  relatedObjects,
   disabled = false,
   onChange,
 }: Props) {
@@ -37,11 +35,14 @@ export function InheritedFieldPreview({
 
   switch (type) {
     case "urlV1":
-      return (
-        <AnchorWithCopy href={value} target="_blank">
-          {value}
-        </AnchorWithCopy>
-      );
+      // TODO: not-pretty. refactor
+      if (isPopulatedString(value)) {
+        return (
+          <AnchorWithCopy href={value} target="_blank">
+            {value}
+          </AnchorWithCopy>
+        );
+      }
 
     case "secretV1":
       return <MaskedValue value={value} />;
@@ -67,18 +68,16 @@ export function InheritedFieldPreview({
     case "selectListV1":
     case "selectLongV1":
     case "selectSharedInHeadV1": {
-      const data = relatedObjects?.dataListsOptionMap?.[value] ?? {
-        id: value,
-        name,
-      };
-
-      return (
-        <DatalistOptionResourceLink
-          data={data}
-          withTooltip
-          disabled={disabled}
-        />
-      );
+      // NOTE: типо это `DataListOptionV3`
+      if (isObject(value) && isTruthy(value.id)) {
+        return (
+          <DatalistOptionResourceLink
+            data={value}
+            withTooltip
+            disabled={disabled}
+          />
+        );
+      }
     }
 
     case "selectLinkV1":
@@ -91,11 +90,18 @@ export function InheritedFieldPreview({
       };
 
       return <TwinResourceLink data={data} withTooltip disabled={disabled} />;
+
+      //       const data = relatedObjects?.twinMap?.[value];
+
+      // return (
+      //   data && <TwinResourceLink data={data} withTooltip disabled={disabled} />
+      // );
     }
 
     case "selectUserV1":
     case "selectUserLongV1": {
-      const data = relatedObjects?.userMap?.[value] as User | undefined;
+      const data = relatedObjects?.userMap?.[value];
+
       return (
         data && <UserResourceLink data={data} withTooltip disabled={disabled} />
       );
