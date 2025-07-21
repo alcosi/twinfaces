@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -64,6 +65,7 @@ type Props = {
   targetHeadTwinId?: string;
   // === end ===
   modalCreateData?: FaceTC001ViewRs;
+  getRowUrl?: (row: Twin_DETAILED) => string;
 };
 
 export function TwinsTable({
@@ -74,7 +76,9 @@ export function TwinsTable({
   showCreateButton = true,
   resourceNavigationEnabled = true,
   modalCreateData,
+  getRowUrl,
 }: Props) {
+  const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
     TwinClass_DETAILED["fields"]
@@ -387,6 +391,7 @@ export function TwinsTable({
       defaultVisibleColumns={defaultVisibleColumns}
       dialogForm={form}
       onCreateSubmit={showCreateButton ? handleOnCreateSubmit : undefined}
+      onRowClick={getRowUrl && ((row) => router.push(getRowUrl(row)))}
       renderFormFields={() =>
         modalCreateData ? (
           <TCForm control={form.control} modalCreateData={modalCreateData} />

@@ -3,6 +3,7 @@
 import { useContext } from "react";
 
 import { TwinContext } from "@/features/twin";
+import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinsTable } from "@/widgets/tables";
 
@@ -57,7 +58,11 @@ export function TwinScreen() {
       key: tab.id,
       label: tab.name,
       content: (
-        <TwinsTable baseTwinClassId={tab.id} targetHeadTwinId={twinId} />
+        <TwinsTable
+          baseTwinClassId={tab.id}
+          targetHeadTwinId={twinId}
+          getRowUrl={(row) => `/${PlatformArea.core}/twins/${row.id}`}
+        />
       ),
     })) ?? []),
   ];
