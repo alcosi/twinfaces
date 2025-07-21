@@ -61,7 +61,7 @@ export async function TW004(props: TWidgetFaceProps) {
       {fields.length > 1 && twidget.label && (
         <div className="text-s font-bold">{twidget.label}</div>
       )}
-      <div className={cn(className, twidget.styleClasses, "items-end")}>
+      <div className={cn(className, twidget.styleClasses)}>
         {fields
           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
           .map((el) => {
