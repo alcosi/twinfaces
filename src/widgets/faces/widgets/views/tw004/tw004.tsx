@@ -30,31 +30,19 @@ export async function TW004(props: TWidgetFaceProps) {
   const twidget = twidgetResult.data.widget;
 
   const fields = twidget.fields ?? [];
-  const buildPropsPromises = fields.map(async (field) => {
-    return await buildFieldEditorProps(
-      twidget.pointedTwinId!,
-      field.twinClassFieldId!
-    );
-  });
-  const buildPropsResults = await Promise.all(buildPropsPromises);
+
+  const buildPropsResults = await Promise.all(
+    fields.map(async (field) => {
+      return await buildFieldEditorProps(
+        twidget.pointedTwinId!,
+        field.twinClassFieldId!
+      );
+    })
+  );
 
   const dataResults = buildPropsResults
     .filter((res) => res?.ok)
-    .map((res) => {
-      const { twin, relatedObjects, field } = res.data;
-      return { twin, relatedObjects, field };
-    });
-
-  if (dataResults.length === 0) {
-    return (
-      <StatusAlert
-        variant="error"
-        title={twidget.name}
-        message={`Face with id ${twidget.id} failed to load`}
-        className="mt-4"
-      />
-    );
-  }
+    .map((res) => res.data);
 
   return (
     <div data-face-id={twidget.id} className={cn(className)}>
@@ -69,16 +57,26 @@ export async function TW004(props: TWidgetFaceProps) {
               (element) => element?.field.id === el.twinClassFieldId
             );
 
-            if (!elementResult) return null;
+            if (!elementResult)
+              return (
+                <StatusAlert
+                  variant="error"
+                  title={twidget.name}
+                  message={`Face with id ${twidget.id} failed to load`}
+                  className="mt-4"
+                />
+              );
+
+            const { twin, relatedObjects, field } = elementResult;
 
             return (
               <TwinFieldEditor
                 id={twidget.id!}
                 label={el.label || "Unknown"}
                 twinId={twidget.pointedTwinId!}
-                twin={elementResult.twin}
-                relatedObjects={elementResult.relatedObjects}
-                field={elementResult.field}
+                twin={twin}
+                relatedObjects={relatedObjects}
+                field={field}
                 disabled={!isAdmin}
                 editable={el.editable}
               />
