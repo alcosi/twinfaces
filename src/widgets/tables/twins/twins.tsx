@@ -64,6 +64,7 @@ type Props = {
   targetHeadTwinId?: string;
   // === end ===
   modalCreateData?: FaceTC001ViewRs;
+  onRowClick?: (row: Twin_DETAILED) => void;
 };
 
 export function TwinsTable({
@@ -74,6 +75,7 @@ export function TwinsTable({
   showCreateButton = true,
   resourceNavigationEnabled = true,
   modalCreateData,
+  onRowClick,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -387,6 +389,7 @@ export function TwinsTable({
       defaultVisibleColumns={defaultVisibleColumns}
       dialogForm={form}
       onCreateSubmit={showCreateButton ? handleOnCreateSubmit : undefined}
+      onRowClick={onRowClick}
       renderFormFields={() =>
         modalCreateData ? (
           <TCForm control={form.control} modalCreateData={modalCreateData} />

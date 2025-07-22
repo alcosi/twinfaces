@@ -1,8 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
 
+import { Twin_DETAILED } from "@/entities/twin/server";
 import { TwinContext } from "@/features/twin";
+import { PlatformArea } from "@/shared/config";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinsTable } from "@/widgets/tables";
 
@@ -49,7 +52,12 @@ const DEFAULT_TABS = [
 ];
 
 export function TwinScreen() {
+  const router = useRouter();
   const { twin, twinId } = useContext(TwinContext);
+
+  function handleRowClick(row: Twin_DETAILED) {
+    router.push(`/${PlatformArea.core}/twins/${row.id}`);
+  }
 
   const tabs: Tab[] = [
     ...DEFAULT_TABS,
@@ -57,7 +65,11 @@ export function TwinScreen() {
       key: tab.id,
       label: tab.name,
       content: (
-        <TwinsTable baseTwinClassId={tab.id} targetHeadTwinId={twinId} />
+        <TwinsTable
+          baseTwinClassId={tab.id}
+          targetHeadTwinId={twinId}
+          onRowClick={handleRowClick}
+        />
       ),
     })) ?? []),
   ];
