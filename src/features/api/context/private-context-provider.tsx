@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   PermissionAssigneePropagationApi,
@@ -84,7 +84,7 @@ import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
 import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui";
 
-import { useAuthUser } from "../../auth";
+import { AuthUserService } from "@/shared/api/auth-user-service";
 
 export interface PrivateApiContextProps {
   attachment: AttachmentApi;
@@ -125,7 +125,19 @@ export function PrivateApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser } = useAuthUser();
+    const [authUser, setAuthUser] = useState(AuthUserService.get());
+  const [version, setVersion] = useState(0);
+
+useEffect(() => {
+  const unsubscribe = AuthUserService.subscribe(() => {
+    setAuthUser(AuthUserService.get());
+    setVersion(v => v + 1);
+  });
+
+  return () => {
+    unsubscribe();
+  };
+}, []);
 
   const settings: ApiSettings = {
     authToken: authUser?.authToken ?? "",
@@ -171,7 +183,7 @@ export function PrivateApiContextProvider({
     : ({} as PrivateApiContextProps);
 
   return (
-    <PrivateApiContext.Provider value={value}>
+    <PrivateApiContext.Provider key={version} value={value}>
       {settings ? children : <LoadingOverlay />}
     </PrivateApiContext.Provider>
   );

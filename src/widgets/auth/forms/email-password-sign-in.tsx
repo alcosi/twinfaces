@@ -64,6 +64,8 @@ export function EmailPasswordSignInForm({
       try {
         const { authData } = await loginAuthAction(null, formData);
         const authToken = authData?.auth_token;
+        const refreshToken = authData?.refresh_token;
+        const authTokenExpiresAt = authData?.auth_token_expires_at;
 
         if (isUndefined(authToken)) {
           throw new Error("Login failed. Please check your credentials");
@@ -79,6 +81,8 @@ export function EmailPasswordSignInForm({
           domainUser: domainUser,
           authToken: authToken,
           domainId,
+          refreshToken,
+          authTokenExpiresAt,
         });
         router.push(`/profile`);
       } catch (err) {

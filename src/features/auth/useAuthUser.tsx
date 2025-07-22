@@ -7,6 +7,8 @@ type AuthUser = {
   domainUser?: DomainUser_DETAILED;
   authToken: string;
   domainId: string;
+  refreshToken?: string;
+  authTokenExpiresAt?: string;
 };
 
 type UseAuthUser = {
@@ -33,6 +35,8 @@ export function useAuthUser(): UseAuthUser {
       clientCookies.set("authToken", `${user?.authToken}`);
       clientCookies.set("domainId", `${user?.domainId}`);
       clientCookies.set("userId", `${user?.domainUser?.userId}`);
+      clientCookies.set("refreshToken", `${user?.refreshToken}`);
+      clientCookies.set("authTokenExpiresAt", `${user?.authTokenExpiresAt}`);
     },
     [setStoredValue]
   );
@@ -52,6 +56,8 @@ export function useAuthUser(): UseAuthUser {
     clientCookies.remove("authToken");
     clientCookies.remove("domainId");
     clientCookies.remove("userId");
+    clientCookies.remove("refreshToken");
+    clientCookies.remove("authTokenExpiresAt");
   }, [setStoredValue]);
 
   return {

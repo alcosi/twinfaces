@@ -51,6 +51,8 @@ export function EmailPasswordAuthWidget() {
 
     const { authData } = await loginAuthAction(null, userCredentials);
     const authToken = authData?.auth_token;
+    const refreshToken = authData?.refresh_token;
+    const authTokenExpiresAt = authData?.auth_token_expires_at;
 
     if (isUndefined(authToken)) {
       throw new Error("Login failed: no auth token returned");
@@ -69,6 +71,8 @@ export function EmailPasswordAuthWidget() {
       domainUser: domainUser,
       authToken: authToken,
       domainId,
+      refreshToken,
+      authTokenExpiresAt,
     });
 
     router.push("/profile");

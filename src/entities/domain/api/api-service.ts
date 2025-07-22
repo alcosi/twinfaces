@@ -9,6 +9,7 @@ export function createDomainApi(settings: ApiSettings) {
   }
 
   function fetchList({ pagination }: { pagination: PaginationState }) {
+    console.log("getApiDomainHeaders", getApiDomainHeaders(settings))
     return settings.client.GET("/private/domain/list/v1", {
       params: {
         header: getApiDomainHeaders(settings),
