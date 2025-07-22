@@ -28,7 +28,7 @@ export const AttachmentImageFormItem = ({
   function handleCropComplete(base64Image: string) {
     onChange?.(base64Image);
     setCropModalOpen(false);
-    setSelectedFile(null);
+    // setSelectedFile(null);
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -75,6 +75,9 @@ export const AttachmentImageFormItem = ({
             width={48}
             height={48}
             className="h-12 w-12 rounded-sm border object-cover"
+            onClick={() => {
+              setCropModalOpen(true);
+            }}
           />
         )}
       </div>

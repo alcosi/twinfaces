@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 
-import { Toggle } from "@/shared/ui";
+import { CircleIcon, RectangleIcon, Toggle } from "@/shared/ui";
 
 export type ImageCropperHandle = {
   getCroppedImage: () => string | undefined;
@@ -65,24 +64,18 @@ export const ImageCropper = forwardRef<
             onPressedChange={(pressed) =>
               setCropperShape(pressed ? "circle" : "rectangle")
             }
-            // TODO: https://alcosi.atlassian.net/browse/TWINFACES-605
-            // fix styling -> !bg-transparent is a code-smell
+            // The behavior of the toggle when switching to on changes
+            // the color from transparent to the color in the settings,
+            // to eliminate such behavior in this case it is correct
+            // to use important (!bg-transparent)
             className="rounded-full !bg-transparent p-1 transition hover:bg-white/10"
           >
             <div className="rounded-full border border-white p-1">
-              <Image
-                src={
-                  // TODO: https://alcosi.atlassian.net/browse/TWINFACES-605
-                  // extract circle-dashed.svg & crop.svg into separate React components
-                  cropperShape === "circle"
-                    ? "https://www.svgrepo.com/show/532923/circle-dashed.svg"
-                    : "https://www.svgrepo.com/show/488893/crop.svg"
-                }
-                alt="shape"
-                width={24}
-                height={24}
-                className="invert"
-              />
+              {cropperShape === "circle" ? (
+                <CircleIcon width={24} height={24} className="invert" />
+              ) : (
+                <RectangleIcon width={24} height={24} className="invert" />
+              )}
             </div>
           </Toggle>
         </div>
