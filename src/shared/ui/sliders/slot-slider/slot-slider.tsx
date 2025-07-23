@@ -25,12 +25,12 @@ import { MediaItem } from "./types";
 
 type SlotSliderProps<T> = {
   items: T[];
-  twinId?: string;
+  onUploadFile: (file: File) => Promise<void>;
 };
 
 export function SlotSlider<T extends MediaItem>({
   items,
-  twinId,
+  onUploadFile,
 }: SlotSliderProps<T>) {
   const [current, setCurrent] = useState<number>(0);
   const [mainSlider, setMainSlider] = useState<CarouselApi | null>(null);
@@ -63,7 +63,7 @@ export function SlotSlider<T extends MediaItem>({
   if (isEmptyArray(items)) {
     return (
       <SlotSliderPlaceholder>
-        <SlotSliderUploadItem twinId={twinId ?? ""} />
+        <SlotSliderUploadItem onUploadFile={onUploadFile} />
       </SlotSliderPlaceholder>
     );
   }
@@ -101,7 +101,7 @@ export function SlotSlider<T extends MediaItem>({
             key="add-button"
             className="h-20 min-w-24 basis-1/4 cursor-pointer items-center justify-center"
           >
-            <SlotSliderUploadItem twinId={twinId} />
+            <SlotSliderUploadItem onUploadFile={onUploadFile} />
           </CarouselItem>
         </CarouselContent>
         <CarouselNext className="static shrink translate-y-0" />

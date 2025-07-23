@@ -1,20 +1,17 @@
 import { UploadCloudIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
-import { uploadTwinAttachment } from "../../../../../entities/twin/server";
 import { ImageCropModal } from "../../../../../features/ui/image-cropper-modal";
 
 type Props = {
   onUploadComplete?: (file: string) => void;
-  twinId?: string;
+  onUploadFile: (file: File) => Promise<void>;
 };
 
-export function SlotSliderUploadItem({ onUploadComplete, twinId }: Props) {
+export function SlotSliderUploadItem({ onUploadFile }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const router = useRouter();
 
   function handleClick() {
     fileInputRef.current?.click();
@@ -33,16 +30,11 @@ export function SlotSliderUploadItem({ onUploadComplete, twinId }: Props) {
       setImageFile(selected);
       setModalOpen(true);
     } else {
-      uploadTwinAttachment(twinId!, selected)
-        .then(() => {
-          onUploadComplete?.(selected.name);
-          router.refresh();
-        })
-        .catch(console.error);
+      onUploadFile(selected).catch(console.error);
     }
   }
 
-  function handleCropComplete(base64: string) {
+  async function handleCropComplete(base64: string) {
     const blob = base64ToBlob(base64);
     const fileName = imageFile?.name;
     const fileType = imageFile?.type;
@@ -51,12 +43,11 @@ export function SlotSliderUploadItem({ onUploadComplete, twinId }: Props) {
       type: blob.type || fileType,
     });
 
-    uploadTwinAttachment(twinId!, croppedFile)
-      .then(() => {
-        onUploadComplete?.(base64);
-        router.refresh();
-      })
-      .catch(console.error);
+    try {
+      await onUploadFile(croppedFile);
+    } catch (e) {
+      console.error(e);
+    }
 
     setModalOpen(false);
   }
