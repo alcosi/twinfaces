@@ -35,11 +35,6 @@ export function InheritedFieldPreview({
 }: Props) {
   const { descriptor, value } = field;
   const type = descriptor?.fieldType;
-  const fieldValue = isPopulatedString(value)
-    ? value
-    : isObject(value) && isPopulatedString(value.id)
-      ? value.id
-      : "";
 
   switch (type) {
     case "urlV1": {
@@ -163,5 +158,5 @@ export function InheritedFieldPreview({
     }
   }
 
-  return <p>{fieldValue}</p>;
+  return <p>{`${value}`}</p>;
 }
