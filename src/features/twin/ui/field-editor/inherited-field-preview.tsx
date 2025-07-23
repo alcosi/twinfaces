@@ -4,7 +4,10 @@ import Image from "next/image";
 
 import { CheckboxFormItem, SwitchFormItem } from "@/components/form-fields";
 
+import { DataListOptionV3 } from "@/entities/datalist-option";
+import { Twin } from "@/entities/twin/server";
 import { TwinFieldUI } from "@/entities/twinField";
+import { User } from "@/entities/user";
 import {
   formatIntlDate,
   isObject,
@@ -30,12 +33,16 @@ export function InheritedFieldPreview({
   disabled = false,
   onChange,
 }: Props) {
-  const { descriptor, value, name } = field;
+  const { descriptor, value } = field;
   const type = descriptor?.fieldType;
+  const fieldValue = isPopulatedString(value)
+    ? value
+    : isObject(value) && isPopulatedString(value.id)
+      ? value.id
+      : "";
 
   switch (type) {
-    case "urlV1":
-      // TODO: not-pretty. refactor
+    case "urlV1": {
       if (isPopulatedString(value)) {
         return (
           <AnchorWithCopy href={value} target="_blank">
@@ -43,20 +50,29 @@ export function InheritedFieldPreview({
           </AnchorWithCopy>
         );
       }
+      break;
+    }
 
-    case "secretV1":
-      return <MaskedValue value={value} />;
+    case "secretV1": {
+      if (isPopulatedString(value)) {
+        return <MaskedValue value={value} />;
+      }
+      break;
+    }
 
-    case "textV1":
+    case "textV1": {
       if (
         descriptor &&
         ["MARKDOWN_BASIC", "MARKDOWN_GITHUB"].includes(
           `${descriptor.editorType}`
         )
       ) {
-        return <MarkdownPreview source={value} />;
+        if (isPopulatedString(value)) {
+          return <MarkdownPreview source={value} />;
+        }
       }
       break;
+    }
 
     case "dateScrollV1": {
       const format = isPopulatedString(descriptor?.pattern)
@@ -68,43 +84,44 @@ export function InheritedFieldPreview({
     case "selectListV1":
     case "selectLongV1":
     case "selectSharedInHeadV1": {
-      // NOTE: типо это `DataListOptionV3`
       if (isObject(value) && isTruthy(value.id)) {
         return (
           <DatalistOptionResourceLink
-            data={value}
+            data={value as DataListOptionV3}
             withTooltip
             disabled={disabled}
           />
         );
       }
+      break;
     }
 
     case "selectLinkV1":
     case "selectLinkLongV1": {
-      if (!value) return null;
-
-      const data = relatedObjects?.twinMap?.[value] ?? {
-        id: value,
-        name,
-      };
-
-      return <TwinResourceLink data={data} withTooltip disabled={disabled} />;
-
-      //       const data = relatedObjects?.twinMap?.[value];
-
-      // return (
-      //   data && <TwinResourceLink data={data} withTooltip disabled={disabled} />
-      // );
+      if (isObject(value) && isTruthy(value.id)) {
+        return (
+          <TwinResourceLink
+            data={value as Twin}
+            withTooltip
+            disabled={disabled}
+          />
+        );
+      }
+      break;
     }
 
     case "selectUserV1":
     case "selectUserLongV1": {
-      const data = relatedObjects?.userMap?.[value];
-
-      return (
-        data && <UserResourceLink data={data} withTooltip disabled={disabled} />
-      );
+      if (isObject(value) && isTruthy(value.id)) {
+        return (
+          <UserResourceLink
+            data={value as User}
+            withTooltip
+            disabled={disabled}
+          />
+        );
+      }
+      break;
     }
 
     case "attachmentFieldV1": {
@@ -146,5 +163,5 @@ export function InheritedFieldPreview({
     }
   }
 
-  return <p>{value}</p>;
+  return <p>{fieldValue}</p>;
 }

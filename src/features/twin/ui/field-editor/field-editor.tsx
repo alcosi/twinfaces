@@ -27,8 +27,7 @@ export type TwinFieldEditorProps = {
   twinId: string;
   twin: Twin;
   label?: ReactNode;
-  // field: FieldProps; // TODO: change to TwinFieldUI ???
-  field: TwinFieldUI; // TODO: change to TwinFieldUI ???
+  field: TwinFieldUI;
   schema?: ZodType;
   relatedObjects?: RelatedObjects;
   onSuccess?: () => void;
@@ -95,6 +94,10 @@ export function TwinFieldEditor({
     }
   }
 
+  const fieldValue = isPopulatedString(field.value)
+    ? field.value
+    : field.value.id!;
+
   return (
     <div>
       {label &&
@@ -109,7 +112,7 @@ export function TwinFieldEditor({
       ) : (
         <InPlaceEdit
           id={id}
-          value={field.value}
+          value={fieldValue}
           valueInfo={{
             type: AutoFormValueType.twinField,
             label: undefined,

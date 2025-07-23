@@ -75,7 +75,10 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
     >((acc, [key, value]) => {
       const twinClassField = KEY_TO_TWIN_CLASS_FIELD_MAP[key];
       const fieldValue =
-        relatedObjects.dataListsOptionMap?.[value] ?? value ?? "";
+        relatedObjects.dataListsOptionMap?.[value] ??
+        relatedObjects.twinMap?.[value] ??
+        value ??
+        "";
 
       acc[key] = {
         ...twinClassField,

@@ -185,12 +185,14 @@ export function TwinGeneral() {
                 id="twin.name"
                 twinId={twin.id}
                 twin={twin}
-                // TODO: ??? @berdimyradov
                 field={{
                   id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP["name"],
                   key: "name",
                   value: twin.name,
                   descriptor: FieldDescriptorText.PLAIN,
+                  name: twin.name ?? "",
+                  description: twin.description ?? "",
+                  required: false,
                 }}
                 schema={z.string().min(3)}
                 onSuccess={refresh}
@@ -211,6 +213,9 @@ export function TwinGeneral() {
                   key: "description",
                   value: twin.description ?? "",
                   descriptor: FieldDescriptorText.MARKDOWN_GITHUB,
+                  name: twin.description ?? "",
+                  description: twin.description ?? "",
+                  required: false,
                 }}
                 schema={z.string().min(3)}
                 onSuccess={refresh}
