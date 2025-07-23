@@ -9,7 +9,7 @@ import { TWIN_FIELD_TYPES } from "./constants";
 
 export type TwinFieldUI = RequireFields<
   TwinClassField,
-  "id" | "key" | "name" | "description" | "required" | "descriptor"
+  "id" | "key" | "descriptor"
 > & {
   value: string | DataListOptionV3 | Twin | User;
 };

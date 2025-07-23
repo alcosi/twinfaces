@@ -64,9 +64,6 @@ export async function buildFieldEditorProps(
             key,
             value,
             descriptor,
-            name: "",
-            required: false,
-            description: "",
           },
         },
       };

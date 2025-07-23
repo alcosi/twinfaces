@@ -4,6 +4,7 @@ import { TwinClassField } from "@/entities/twin-class-field";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
 import { TwinFieldUI } from "@/entities/twinField";
 import { RelatedObjects } from "@/shared/api";
+import { isPopulatedString } from "@/shared/libs";
 
 import { Twin, Twin_HYDRATED } from "../api";
 
@@ -74,11 +75,33 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
       Record<string, TwinFieldUI>
     >((acc, [key, value]) => {
       const twinClassField = KEY_TO_TWIN_CLASS_FIELD_MAP[key];
-      const fieldValue =
-        relatedObjects.dataListsOptionMap?.[value] ??
-        relatedObjects.twinMap?.[value] ??
-        value ??
-        "";
+
+      // ??? extract to function
+      // TODO: test if dataListsOptionMap & twinMap work without bugs
+      let fieldValue = "";
+
+      if (twinClassField?.descriptor?.fieldType === "textV1") {
+        fieldValue = value;
+      }
+
+      if (
+        twinClassField?.descriptor?.fieldType === "selectListV1" ||
+        twinClassField?.descriptor?.fieldType === "selectLongV1" ||
+        twinClassField?.descriptor?.fieldType === "selectSharedInHeadV1"
+      ) {
+        fieldValue = isPopulatedString(value)
+          ? relatedObjects.dataListsOptionMap?.[value]
+          : " ";
+      }
+
+      if (
+        twinClassField?.descriptor?.fieldType === "selectLinkV1" ||
+        twinClassField?.descriptor?.fieldType === "selectLinkLongV1"
+      ) {
+        fieldValue = isPopulatedString(value)
+          ? relatedObjects.twinMap?.[value]
+          : " ";
+      }
 
       acc[key] = {
         ...twinClassField,

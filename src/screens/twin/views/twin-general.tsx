@@ -190,9 +190,6 @@ export function TwinGeneral() {
                   key: "name",
                   value: twin.name,
                   descriptor: FieldDescriptorText.PLAIN,
-                  name: twin.name ?? "",
-                  description: twin.description ?? "",
-                  required: false,
                 }}
                 schema={z.string().min(3)}
                 onSuccess={refresh}
@@ -213,9 +210,6 @@ export function TwinGeneral() {
                   key: "description",
                   value: twin.description ?? "",
                   descriptor: FieldDescriptorText.MARKDOWN_GITHUB,
-                  name: twin.description ?? "",
-                  description: twin.description ?? "",
-                  required: false,
                 }}
                 schema={z.string().min(3)}
                 onSuccess={refresh}
