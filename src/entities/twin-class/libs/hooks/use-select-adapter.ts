@@ -13,6 +13,7 @@ import {
   TwinClassFilters,
   TwinClass_DETAILED,
   useFetchTwinClassById,
+  useSearchTwinClassesBySearchId,
   useTagSearch,
   useTwinClassSearchV1,
   useValidTwinsForLink,
@@ -46,6 +47,57 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
     getById,
     getItems: (search, options) =>
       getItems(search, options as TwinClassFilters),
+    renderItem,
+  };
+}
+
+export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
+  const { searchTwinClassesBySearchId } = useSearchTwinClassesBySearchId();
+  const { fetchTwinClassById } = useFetchTwinClassById();
+
+  type Options = {
+    search?: string;
+    filters?: TwinClassFilters;
+    params?: Record<string, string>;
+  };
+
+  async function getById(id: string) {
+    return await fetchTwinClassById({
+      id,
+      query: {
+        showTwinClassMode: "DETAILED",
+        showTwin2TwinClassMode: "SHORT",
+      },
+    });
+  }
+
+  async function getItems(
+    searchId: string,
+    options?: {
+      search?: string;
+      filters?: TwinClassFilters;
+      params?: Record<string, string>;
+    }
+  ) {
+    const { search, filters, params } = options || {};
+
+    const response = await searchTwinClassesBySearchId({
+      searchId,
+      search,
+      filters,
+      params,
+    });
+
+    return response.data;
+  }
+
+  function renderItem({ key = "", name }: TwinClass_DETAILED) {
+    return isPopulatedString(name) ? `${name} : ${key}` : key;
+  }
+
+  return {
+    getById,
+    getItems: (searchId, options) => getItems(searchId, options as Options),
     renderItem,
   };
 }

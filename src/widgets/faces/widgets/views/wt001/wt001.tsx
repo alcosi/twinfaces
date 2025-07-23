@@ -10,7 +10,7 @@ import { isTruthy, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
-import { fetchModalCreateData } from "../tc/fetch-modal-create-data";
+import { fetchModalCreateData } from "../tc001/fetch-modal-create-data";
 import { WT001Client } from "./wt001-client";
 
 export async function WT001({ widget, twinId }: WidgetFaceProps) {

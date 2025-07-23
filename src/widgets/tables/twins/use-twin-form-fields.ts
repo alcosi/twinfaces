@@ -4,6 +4,7 @@ import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
 import { TwinFormValues, useTwinHeadSelectAdapter } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
+  useTwinClassBySearchIdSelectAdapter,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import { useUserSelectAdapter } from "@/entities/user";
@@ -11,9 +12,11 @@ import { isArray, isPopulatedArray } from "@/shared/libs";
 
 export function useTwinClassFields(
   control: Control<TwinFormValues>,
-  baseTwinClassId?: string
+  baseTwinClassId?: string,
+  twinClassSearchParams?: { [key: string]: string }
 ) {
   const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassBySearchIdAdapter = useTwinClassBySearchIdSelectAdapter();
   const userAdapter = useUserSelectAdapter();
   const headAdapter = useTwinHeadSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
@@ -41,6 +44,17 @@ export function useTwinClassFields(
             : undefined,
         });
       },
+    },
+    twinClassBySearchIdAdapter: {
+      ...twinClassBySearchIdAdapter,
+      getItems: (search: string) =>
+        baseTwinClassId
+          ? twinClassBySearchIdAdapter.getItems(baseTwinClassId, {
+              search,
+              filters: {},
+              params: twinClassSearchParams,
+            })
+          : Promise.resolve([]),
     },
     fields: selectedTwinClass?.fields ?? [],
     userAdapter,

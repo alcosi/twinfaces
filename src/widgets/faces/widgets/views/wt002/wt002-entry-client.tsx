@@ -20,7 +20,7 @@ import {
   DialogTrigger,
 } from "@/shared/ui";
 
-import { TCForm } from "../tc";
+import { TC001Form } from "../tc001";
 
 type Props = {
   trigger: FaceWT002Button;
@@ -82,7 +82,7 @@ export function WT002EntryClient({ trigger, faceData }: Props) {
               className="flex-1 space-y-6 overflow-y-auto px-8 py-6"
               onSubmit={onSubmit}
             >
-              <TCForm control={form.control} modalCreateData={faceData} />
+              <TC001Form control={form.control} modalCreateData={faceData} />
             </form>
           </FormProvider>
 
