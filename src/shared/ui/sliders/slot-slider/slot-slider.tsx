@@ -20,17 +20,16 @@ import {
 import { SlotSliderItem } from "./components/slot-slider-item";
 import { SlotSliderPlaceholder } from "./components/slot-slider-placeholder";
 import { SlotSliderThumbnail } from "./components/slot-slider-thumbnail";
-import { SlotSliderUploadItem } from "./components/slot-slider-upload-item";
 import { MediaItem } from "./types";
 
 type SlotSliderProps<T> = {
   items: T[];
-  onUploadFile: (file: File) => Promise<void>;
+  renderUploadItem: () => React.ReactNode;
 };
 
 export function SlotSlider<T extends MediaItem>({
   items,
-  onUploadFile,
+  renderUploadItem,
 }: SlotSliderProps<T>) {
   const [current, setCurrent] = useState<number>(0);
   const [mainSlider, setMainSlider] = useState<CarouselApi | null>(null);
@@ -61,11 +60,7 @@ export function SlotSlider<T extends MediaItem>({
   }, [mainSlider]);
 
   if (isEmptyArray(items)) {
-    return (
-      <SlotSliderPlaceholder>
-        <SlotSliderUploadItem onUploadFile={onUploadFile} />
-      </SlotSliderPlaceholder>
-    );
+    return <SlotSliderPlaceholder>{renderUploadItem()}</SlotSliderPlaceholder>;
   }
 
   return (
@@ -101,7 +96,7 @@ export function SlotSlider<T extends MediaItem>({
             key="add-button"
             className="h-20 min-w-24 basis-1/4 cursor-pointer items-center justify-center"
           >
-            <SlotSliderUploadItem onUploadFile={onUploadFile} />
+            {renderUploadItem()}
           </CarouselItem>
         </CarouselContent>
         <CarouselNext className="static shrink translate-y-0" />

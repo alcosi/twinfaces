@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { uploadTwinAttachment } from "@/entities/twin/server";
-import { SlotSlider } from "@/shared/ui";
+import { SlotSliderWithUpload } from "@/features/ui/slot-slider-with-upload";
 import { MediaItem } from "@/shared/ui/sliders/slot-slider/types";
 
 type TW001ClientProps = {
@@ -19,5 +19,5 @@ export function TW001Client({ items, twinId }: TW001ClientProps) {
     router.refresh();
   }
 
-  return <SlotSlider items={items} onUploadFile={handleUploadFile} />;
+  return <SlotSliderWithUpload items={items} onUploadFile={handleUploadFile} />;
 }
