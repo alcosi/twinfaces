@@ -6,7 +6,7 @@ import { cn, safe } from "@/shared/libs";
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
 import { fetchModalCreateData } from "../tc/fetch-modal-create-data";
-import { WT002Client } from "./wt002-client";
+import { WT002EntryClient } from "./wt002-entry-client";
 
 export async function WT002({ widget, twinId }: WidgetFaceProps) {
   const wtResult = await safe(
@@ -28,18 +28,21 @@ export async function WT002({ widget, twinId }: WidgetFaceProps) {
 
   const buttonsWithModalData = await Promise.all(
     (buttons ?? []).map(async (button) => {
-      if (!button.modalFaceId) return { button, modalData: undefined };
+      if (!button.modalFaceId) return { trigger: button, faceData: undefined };
 
       const modalFace = relatedObjects?.faceMap?.[button.modalFaceId];
       const modalData = await fetchModalCreateData(modalFace!, twinId!);
 
-      return { button, modalData };
+      // TODO: modalData is wrong. We gotta use `faceTwinCreate`
+      return { trigger: button, faceData: modalData };
     })
   );
 
   return (
     <div className={cn(widget.styleClasses)}>
-      <WT002Client createButtonsData={buttonsWithModalData} />
+      {buttonsWithModalData.map((props) => (
+        <WT002EntryClient {...props} />
+      ))}
     </div>
   );
 }
