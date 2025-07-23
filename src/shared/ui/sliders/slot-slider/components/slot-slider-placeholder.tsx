@@ -1,8 +1,10 @@
 import { NoImageIcon } from "@/shared/ui/icons";
 
-import { SlotSliderUploadItem } from "./slot-slider-upload-item";
-
-export function SlotSliderPlaceholder({ twinId }: { twinId: string }) {
+export function SlotSliderPlaceholder({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   return (
     <>
       <div className="border-border text-muted-foreground mb-2 flex min-h-96 w-full flex-col items-center justify-center rounded-md border border-dashed p-4">
@@ -21,7 +23,7 @@ export function SlotSliderPlaceholder({ twinId }: { twinId: string }) {
           <NoImageIcon className="h-6 w-6" />
         </div>
         <div className="border-border flex h-20 w-20 items-center justify-center rounded-md border border-dashed">
-          <SlotSliderUploadItem twinId={twinId} />
+          {children}
         </div>
 
         <div className="border-border flex h-10 w-10 items-center justify-center rounded-full border border-dashed text-center" />

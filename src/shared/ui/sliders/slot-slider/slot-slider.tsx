@@ -61,7 +61,11 @@ export function SlotSlider<T extends MediaItem>({
   }, [mainSlider]);
 
   if (isEmptyArray(items)) {
-    return <SlotSliderPlaceholder twinId={twinId ?? ""} />;
+    return (
+      <SlotSliderPlaceholder>
+        <SlotSliderUploadItem twinId={twinId ?? ""} />
+      </SlotSliderPlaceholder>
+    );
   }
 
   return (

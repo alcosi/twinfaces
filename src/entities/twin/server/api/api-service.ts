@@ -3,7 +3,7 @@ import { TwinsAPI } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinFromMap } from "../libs";
-import { TwinViewQuery, Twin_HYDRATED } from "./types";
+import { TwinAttachmentCreateRq, TwinViewQuery, Twin_HYDRATED } from "./types";
 
 export async function fetchTwinById<T extends Twin_HYDRATED>(
   twinId: string,
@@ -70,7 +70,7 @@ export async function uploadTwinAttachment(twinId: string, file: File) {
         header,
         path: { twinId },
       },
-      body: formData as any,
+      body: formData as TwinAttachmentCreateRq,
     }
   );
 
