@@ -336,7 +336,12 @@ export function TwinsTable({
 
   const form = useForm<TwinFormValues>({
     resolver: zodResolver(TWIN_SCHEMA),
-    defaultValues: { classId: "", name: "", description: "" },
+    defaultValues: {
+      classId: "",
+      name: "",
+      description: "",
+      isSketch: modalCreateData?.faceTwinCreate?.sketchMode,
+    },
   });
 
   async function handleOnCreateSubmit(formValues: TwinFormValues) {
@@ -397,7 +402,7 @@ export function TwinsTable({
           />
         )
       }
-      modalTitle={modalCreateData?.faceTwinCreate?.header}
+      modalTitle={modalCreateData?.faceTwinCreate?.headerLabel}
       submitButtonLabel={modalCreateData?.faceTwinCreate?.saveButtonLabel}
     />
   );

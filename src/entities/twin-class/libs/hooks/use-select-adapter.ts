@@ -13,6 +13,7 @@ import {
   TwinClassFilters,
   TwinClass_DETAILED,
   useFetchTwinClassById,
+  useSearchTwinClassesBySearchId,
   useTagSearch,
   useTwinClassSearchV1,
   useValidTwinsForLink,
@@ -46,6 +47,46 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
     getById,
     getItems: (search, options) =>
       getItems(search, options as TwinClassFilters),
+    renderItem,
+  };
+}
+
+export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
+  const { searchTwinClassesBySearchId } = useSearchTwinClassesBySearchId();
+  const { fetchTwinClassById } = useFetchTwinClassById();
+
+  async function getById(id: string) {
+    return await fetchTwinClassById({
+      id,
+      query: {
+        showTwinClassMode: "DETAILED",
+        showTwin2TwinClassMode: "SHORT",
+      },
+    });
+  }
+
+  async function getItems(
+    searchId: string,
+    search?: string,
+    filters?: TwinClassFilters
+  ) {
+    const response = await searchTwinClassesBySearchId({
+      searchId,
+      search,
+      filters,
+    });
+
+    return response.data;
+  }
+
+  function renderItem({ key = "", name }: TwinClass_DETAILED) {
+    return isPopulatedString(name) ? `${name} : ${key}` : key;
+  }
+
+  return {
+    getById,
+    getItems: (searchId, search, filters) =>
+      getItems(searchId, search as string, filters as TwinClassFilters),
     renderItem,
   };
 }

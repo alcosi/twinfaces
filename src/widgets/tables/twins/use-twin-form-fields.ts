@@ -4,6 +4,7 @@ import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
 import { TwinFormValues, useTwinHeadSelectAdapter } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
+  useTwinClassBySearchIdSelectAdapter,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import { useUserSelectAdapter } from "@/entities/user";
@@ -14,6 +15,7 @@ export function useTwinClassFields(
   baseTwinClassId?: string
 ) {
   const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassBySearchIdAdapter = useTwinClassBySearchIdSelectAdapter();
   const userAdapter = useUserSelectAdapter();
   const headAdapter = useTwinHeadSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
@@ -41,6 +43,13 @@ export function useTwinClassFields(
             : undefined,
         });
       },
+    },
+    twinClassBySearchIdAdapter: {
+      ...twinClassBySearchIdAdapter,
+      getItems: (search: string) =>
+        baseTwinClassId
+          ? twinClassBySearchIdAdapter.getItems(baseTwinClassId, search)
+          : Promise.resolve([]),
     },
     fields: selectedTwinClass?.fields ?? [],
     userAdapter,

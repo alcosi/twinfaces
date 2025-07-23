@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/table-core";
 import { TwinSimpleFilters } from "@/entities/twin/server";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { operations } from "@/shared/api/generated/schema";
+import { wrapWithPercent } from "@/shared/libs";
 
 import {
   TagSearchFilters,
@@ -44,6 +45,37 @@ export function createTwinClassApi(settings: ApiSettings) {
         twinClassKeyLikeList: search
           ? ["%" + search + "%"]
           : filters.twinClassKeyLikeList,
+      },
+    });
+  }
+
+  function searchBySearchId({
+    searchId,
+    search,
+    filters,
+  }: {
+    searchId: string;
+    search?: string;
+    filters?: TwinClassFilters;
+  }) {
+    return settings.client.POST("/private/twin_class/search/{searchId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinClassMode: "DETAILED",
+          showTwinClassHead2TwinClassMode: "DETAILED",
+          showTwinClassExtends2TwinClassMode: "DETAILED",
+        },
+        path: { searchId },
+      },
+      body: {
+        narrow: {
+          ...filters,
+          twinClassKeyLikeList: search
+            ? [wrapWithPercent(search)]
+            : filters?.twinClassKeyLikeList,
+        },
       },
     });
   }
@@ -208,6 +240,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     getLinks,
     getValidTwinsForLink,
     searchTags,
+    searchBySearchId,
   };
 }
 
