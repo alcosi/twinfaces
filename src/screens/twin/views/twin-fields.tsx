@@ -9,7 +9,6 @@ import { TwinContext } from "@/features/twin";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinFieldEditor } from "@/features/twin/ui";
 import { PagedResponse } from "@/shared/api";
-import { isObject, isTruthy } from "@/shared/libs";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { resolveTwinFieldSchema } from "@/widgets/form-fields";
 
@@ -47,16 +46,7 @@ export function TwinFields() {
               id={original.id}
               twinId={twinId}
               twin={original}
-              field={{
-                id: original.id,
-                key: original.key,
-                value:
-                  isObject(original.value) && isTruthy(original.value.id)
-                    ? String(original.value.id)
-                    : String(original.value),
-                name: original.name,
-                descriptor: original.descriptor,
-              }}
+              field={original}
               schema={resolveTwinFieldSchema(original)}
               onSuccess={tableRef.current?.refresh}
               editable

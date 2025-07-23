@@ -6,7 +6,6 @@ import {
   FieldDescriptorText,
   TwinSelfFieldKey,
 } from "@/entities/twin";
-import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin_HYDRATED } from "@/entities/twin/server";
 
 type FieldDescriptor =
@@ -22,12 +21,4 @@ export type TwinSelfFieldMeta = {
     options: { disabled?: boolean }
   ) => ReactNode;
   className?: string;
-};
-
-export type FieldProps = {
-  id: string;
-  key: TwinSelfFieldKey | string;
-  value: string;
-  name?: string;
-  descriptor: TwinClassField["descriptor"];
 };

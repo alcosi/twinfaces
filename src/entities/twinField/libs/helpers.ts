@@ -24,12 +24,18 @@ export const hydrateTwinFieldFromMap = ({
     case TwinFieldType.selectListV1:
     case TwinFieldType.selectLongV1:
     case TwinFieldType.selectSharedInHeadV1:
-    case TwinFieldType.selectUserV1:
-    case TwinFieldType.selectUserLongV1:
-    case TwinFieldType.selectLinkV1:
-    case TwinFieldType.selectLinkLongV1:
       twinFieldKeyValue.value =
         relatedObjects?.dataListsOptionMap?.[value] ?? value;
+      break;
+
+    case TwinFieldType.selectUserV1:
+    case TwinFieldType.selectUserLongV1:
+      twinFieldKeyValue.value = relatedObjects?.userMap?.[value] ?? value;
+      break;
+
+    case TwinFieldType.selectLinkV1:
+    case TwinFieldType.selectLinkLongV1:
+      twinFieldKeyValue.value = relatedObjects?.twinMap?.[value] ?? value;
       break;
   }
 

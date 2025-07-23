@@ -1,6 +1,7 @@
 import { getAuthHeaders } from "@/entities/face";
 import { TwinSelfFieldId } from "@/entities/twin";
 import { Twin } from "@/entities/twin/server";
+import { hydrateTwinFieldFromMap } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { TwinFieldEditorProps } from "@/features/twin/ui";
 import { SELF_FIELD_MAP } from "@/features/twin/ui/field-editor/constants";
@@ -79,17 +80,17 @@ export async function buildFieldEditorProps(
       );
     }
 
+    const hydratedField = hydrateTwinFieldFromMap({
+      dto: [inheritedKey, value],
+      relatedObjects: data.relatedObjects,
+    });
+
     return {
       ok: true,
       data: {
         twin,
         relatedObjects,
-        field: {
-          id: fieldId,
-          key: inheritedKey,
-          value,
-          descriptor: twinClassField?.descriptor,
-        },
+        field: hydratedField,
       },
     };
   } catch (error) {

@@ -39,9 +39,7 @@ import { UserResourceLink } from "@/features/user/ui";
 import {
   formatIntlDate,
   isEmptyString,
-  isObject,
   isPopulatedArray,
-  isTruthy,
   isUndefined,
 } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
@@ -440,7 +438,7 @@ function extractTwinFieldColumnsAndFilters({
         {
           id: field.key,
           accessorFn: (row) => row.fields?.[field.key!] ?? null,
-          header: column.label ?? field.name,
+          header: column.label ?? field.key,
           cell: ({ row: { original } }) => {
             const twinField = original.fields?.[field.key!] as TwinFieldUI;
 
@@ -451,16 +449,7 @@ function extractTwinFieldColumnsAndFilters({
             return (
               <TwinFieldEditor
                 id={twinField.id}
-                field={{
-                  id: twinField.id,
-                  key: twinField.key,
-                  value:
-                    isObject(twinField.value) && isTruthy(twinField.value.id)
-                      ? (twinField.value.id as string)
-                      : (twinField.value as string),
-                  name: twinField.name,
-                  descriptor: twinField.descriptor,
-                }}
+                field={twinField}
                 twinId={original.id}
                 twin={original}
                 editable={false}
