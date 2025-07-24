@@ -51,7 +51,7 @@ import {
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
-import { TCForm } from "../../faces/widgets/views/tc";
+import { TC001Form } from "../../faces/widgets/views/tc001";
 import { TwinFormFields } from "./form-fields";
 
 type Props = {
@@ -340,7 +340,7 @@ export function TwinsTable({
       classId: "",
       name: "",
       description: "",
-      isSketch: modalCreateData?.faceTwinCreate?.sketchMode,
+      isSketch: modalCreateData?.faceTwinCreate?.sketchMode || undefined,
     },
   });
 
@@ -384,7 +384,7 @@ export function TwinsTable({
       onCreateSubmit={showCreateButton ? handleOnCreateSubmit : undefined}
       renderFormFields={() =>
         modalCreateData ? (
-          <TCForm control={form.control} modalCreateData={modalCreateData} />
+          <TC001Form control={form.control} modalCreateData={modalCreateData} />
         ) : (
           <TwinFormFields
             control={form.control}

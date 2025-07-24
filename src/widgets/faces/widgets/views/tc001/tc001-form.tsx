@@ -8,7 +8,7 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 
-import { FaceTC001ViewRs as FaceTC } from "@/entities/face";
+import { FaceTC001ViewRs } from "@/entities/face";
 import { TwinFormValues, TwinSelfFieldId } from "@/entities/twin";
 import {
   TwinClassField,
@@ -27,14 +27,13 @@ type TwinSelfFieldComponentProps = {
   required?: boolean;
 };
 
-export function TCForm({
+export function TC001Form({
   control,
   modalCreateData,
 }: {
   control: Control<TwinFormValues>;
-  modalCreateData: FaceTC;
+  modalCreateData: FaceTC001ViewRs;
 }) {
-  console.log("modalCreateData", modalCreateData);
   const { faceTwinCreate } = modalCreateData;
   const { setValue, watch } = useFormContext<TwinFormValues>();
   const { searchTwinClassFieldsBySearchId, loading } =
