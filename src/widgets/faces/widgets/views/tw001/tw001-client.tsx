@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { uploadTwinAttachment } from "@/entities/twin/server";
-import { SlotSliderWithUpload } from "@/features/ui/slot-slider-with-upload";
+import { SlotSliderWithUpload } from "@/features/ui/media-slider";
 import { MediaItem } from "@/shared/ui/sliders/slot-slider/types";
 
 type TW001ClientProps = {

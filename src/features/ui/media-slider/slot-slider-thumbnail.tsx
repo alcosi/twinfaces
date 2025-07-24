@@ -1,8 +1,8 @@
-import { MediaItem } from "../types";
-import { ImageThumbnail } from "../views/image";
-import { PdfThumbnail } from "../views/pdf";
-import { UnknownThumbnail } from "../views/unknown";
-import { VideoThumbnail } from "../views/video";
+import { MediaItem } from "@/shared/ui/sliders/slot-slider/types";
+import { ImageThumbnail } from "@/shared/ui/sliders/slot-slider/views/image";
+import { PdfThumbnail } from "@/shared/ui/sliders/slot-slider/views/pdf";
+import { UnknownThumbnail } from "@/shared/ui/sliders/slot-slider/views/unknown";
+import { VideoThumbnail } from "@/shared/ui/sliders/slot-slider/views/video";
 
 export function SlotSliderThumbnail({
   item,

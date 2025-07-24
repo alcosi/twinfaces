@@ -3,10 +3,13 @@
 import { useRef, useState } from "react";
 
 import { SlotSlider } from "@/shared/ui";
+import { SlotSliderItem } from "@/shared/ui/sliders/slot-slider/components/slot-slider-item";
 import { SlotSliderUploadItem } from "@/shared/ui/sliders/slot-slider/components/slot-slider-upload-item";
 import { MediaItem } from "@/shared/ui/sliders/slot-slider/types";
 
-import { ImageCropModal } from "./image-cropper-modal";
+import { ImageCropModal } from "../image-cropper-modal";
+import { SlotSliderPlaceholder } from "./slot-slider-placeholder";
+import { SlotSliderThumbnail } from "./slot-slider-thumbnail";
 
 type SlotSliderWithUploadProps<T> = {
   items: T[];
@@ -51,7 +54,7 @@ export function SlotSliderWithUpload<T extends MediaItem>({
     setModalOpen(false);
   }
 
-  const renderUploadItem = () => (
+  const uploadSlot = (
     <>
       <input
         ref={fileInputRef}
@@ -69,7 +72,23 @@ export function SlotSliderWithUpload<T extends MediaItem>({
     </>
   );
 
-  return <SlotSlider items={items} renderUploadItem={renderUploadItem} />;
+  const sliderItems = [
+    ...items.map((item) => ({
+      kind: "media" as const,
+      data: item,
+      renderMain: <SlotSliderItem item={item} />,
+      renderThumb: (isActive: boolean) => (
+        <SlotSliderThumbnail item={item} isActive={isActive} />
+      ),
+    })),
+    { kind: "custom" as const, node: uploadSlot },
+    {
+      kind: "placeholder" as const,
+      node: <SlotSliderPlaceholder>{uploadSlot}</SlotSliderPlaceholder>,
+    },
+  ];
+
+  return <SlotSlider items={sliderItems} />;
 }
 
 // === Utils ===

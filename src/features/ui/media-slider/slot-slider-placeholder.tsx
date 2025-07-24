@@ -1,4 +1,4 @@
-import { NoImageIcon } from "@/shared/ui/icons";
+import { NoImageIcon } from "@/shared/ui";
 
 export function SlotSliderPlaceholder({
   children,
