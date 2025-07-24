@@ -67,7 +67,7 @@ export const ImageCropper = forwardRef<
             }
             className="bg-primary data-[state=on]:bg-primary hover:bg-primary/50 hover:data-[state=on]:bg-primary/50 rounded-full"
           >
-            <div className="border-accent rounded-full border p-1">
+            <div className="rounded-full">
               {cropperShape === "circle" ? (
                 <CircleIcon
                   width={24}
