@@ -65,23 +65,21 @@ export const ImageCropper = forwardRef<
             onPressedChange={(pressed) =>
               setCropperShape(pressed ? "circle" : "rectangle")
             }
-            className="rounded-full p-1 transition hover:bg-white/10"
+            className="bg-primary data-[state=on]:bg-primary hover:bg-primary/50 hover:data-[state=on]:bg-primary/50 rounded-full"
           >
-            <div className="rounded-full border border-white p-1">
+            <div className="border-accent rounded-full border p-1">
               {cropperShape === "circle" ? (
                 <CircleIcon
                   width={24}
                   height={24}
-                  stroke="#000000"
                   strokeDasharray="4 4"
-                  className="invert"
+                  className="stroke-accent"
                 />
               ) : (
                 <RectangleIcon
                   width={24}
                   height={24}
-                  stroke="#000000"
-                  className="invert"
+                  className="stroke-accent"
                 />
               )}
             </div>
