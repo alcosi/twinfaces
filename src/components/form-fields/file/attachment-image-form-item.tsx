@@ -28,7 +28,6 @@ export const AttachmentImageFormItem = ({
   function handleCropComplete(base64Image: string) {
     onChange?.(base64Image);
     setCropModalOpen(false);
-    setSelectedFile(null);
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -64,17 +63,16 @@ export const AttachmentImageFormItem = ({
           className="border-input bg-background focus:ring-ring block w-full cursor-pointer rounded-md border px-3 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
         />
 
-        {/*
-          TODO: https://alcosi.atlassian.net/browse/TWINFACES-605
-          when clicking on this image we re-open the ImageCropModal with this fieldValue and allow re-editing
-        */}
         {fieldValue && (
           <Image
             src={fieldValue}
             alt="Preview"
             width={48}
             height={48}
-            className="h-12 w-12 rounded-sm border object-cover"
+            className="h-12 w-12 cursor-pointer rounded-sm border object-cover"
+            onClick={() => {
+              setCropModalOpen(true);
+            }}
           />
         )}
       </div>

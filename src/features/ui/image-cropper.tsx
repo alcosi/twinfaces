@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 
-import { Toggle } from "@/shared/ui";
+import { CircleIcon, RectangleIcon, Toggle } from "@/shared/ui";
 
 export type ImageCropperHandle = {
   getCroppedImage: () => string | undefined;
@@ -62,27 +61,27 @@ export const ImageCropper = forwardRef<
           <Toggle
             aria-label="Toggle shape"
             pressed={cropperShape === "circle"}
+            variant="ghost"
             onPressedChange={(pressed) =>
               setCropperShape(pressed ? "circle" : "rectangle")
             }
-            // TODO: https://alcosi.atlassian.net/browse/TWINFACES-605
-            // fix styling -> !bg-transparent is a code-smell
-            className="rounded-full !bg-transparent p-1 transition hover:bg-white/10"
+            className="bg-primary data-[state=on]:bg-primary hover:bg-primary/50 hover:data-[state=on]:bg-primary/50 rounded-full"
           >
-            <div className="rounded-full border border-white p-1">
-              <Image
-                src={
-                  // TODO: https://alcosi.atlassian.net/browse/TWINFACES-605
-                  // extract circle-dashed.svg & crop.svg into separate React components
-                  cropperShape === "circle"
-                    ? "https://www.svgrepo.com/show/532923/circle-dashed.svg"
-                    : "https://www.svgrepo.com/show/488893/crop.svg"
-                }
-                alt="shape"
-                width={24}
-                height={24}
-                className="invert"
-              />
+            <div className="rounded-full">
+              {cropperShape === "circle" ? (
+                <CircleIcon
+                  width={24}
+                  height={24}
+                  strokeDasharray="4 4"
+                  className="stroke-accent"
+                />
+              ) : (
+                <RectangleIcon
+                  width={24}
+                  height={24}
+                  className="stroke-accent"
+                />
+              )}
             </div>
           </Toggle>
         </div>
