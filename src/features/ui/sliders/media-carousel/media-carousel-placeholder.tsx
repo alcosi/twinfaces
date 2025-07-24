@@ -1,10 +1,6 @@
 import { NoImageIcon } from "@/shared/ui";
 
-export function SlotSliderPlaceholder({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
+export function MediaCarouselPlaceholder() {
   return (
     <>
       <div className="border-border text-muted-foreground mb-2 flex min-h-96 w-full flex-col items-center justify-center rounded-md border border-dashed p-4">
@@ -23,7 +19,7 @@ export function SlotSliderPlaceholder({
           <NoImageIcon className="h-6 w-6" />
         </div>
         <div className="border-border flex h-20 w-20 items-center justify-center rounded-md border border-dashed">
-          {children}
+          <NoImageIcon className="h-6 w-6" />
         </div>
 
         <div className="border-border flex h-10 w-10 items-center justify-center rounded-full border border-dashed text-center" />

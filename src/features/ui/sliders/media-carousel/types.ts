@@ -1,6 +1,6 @@
 export type MediaType = "image" | "video" | "text" | "pdf" | "unknown";
 
-export type MediaItem = {
+export type Media = {
   id: string;
   type: MediaType;
   url: string;

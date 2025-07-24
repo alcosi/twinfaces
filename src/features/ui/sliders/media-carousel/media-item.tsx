@@ -1,14 +1,10 @@
-import { MediaItem } from "../types";
-import { ImageSlide } from "../views/image";
-import { PdfSlide } from "../views/pdf";
-import { UnknownSlide } from "../views/unknown";
-import { VideoSlide } from "../views/video";
+import { Media } from "./types";
+import { ImageSlide } from "./views/image";
+import { PdfSlide } from "./views/pdf";
+import { UnknownSlide } from "./views/unknown";
+import { VideoSlide } from "./views/video";
 
-export function SlotSliderItem({
-  item,
-}: {
-  item: MediaItem & { type: string };
-}) {
+export function MediaItem({ item }: { item: Media & { type: string } }) {
   switch (item.type) {
     case "image":
       return (

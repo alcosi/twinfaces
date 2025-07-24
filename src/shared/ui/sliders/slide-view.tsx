@@ -15,7 +15,7 @@ export function SlideView({ children, activeIndex, className }: Props) {
   const slides = Children.toArray(children);
 
   return (
-    <div className={cn("relative w-full h-full overflow-hidden", className)}>
+    <div className={cn("relative h-full w-full overflow-hidden", className)}>
       {slides.map((child, index) => {
         const offset = (index - activeIndex) * 100;
         const style = css`

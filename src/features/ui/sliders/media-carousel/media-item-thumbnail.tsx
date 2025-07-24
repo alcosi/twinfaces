@@ -1,14 +1,14 @@
-import { MediaItem } from "@/shared/ui/sliders/slot-slider/types";
-import { ImageThumbnail } from "@/shared/ui/sliders/slot-slider/views/image";
-import { PdfThumbnail } from "@/shared/ui/sliders/slot-slider/views/pdf";
-import { UnknownThumbnail } from "@/shared/ui/sliders/slot-slider/views/unknown";
-import { VideoThumbnail } from "@/shared/ui/sliders/slot-slider/views/video";
+import { Media } from "./types";
+import { ImageThumbnail } from "./views/image";
+import { PdfThumbnail } from "./views/pdf";
+import { UnknownThumbnail } from "./views/unknown";
+import { VideoThumbnail } from "./views/video";
 
-export function SlotSliderThumbnail({
+export function MediaItemThumbnail({
   item,
   isActive,
 }: {
-  item: MediaItem & { type: string };
+  item: Media & { type: string };
   isActive?: boolean;
 }) {
   switch (item.type) {

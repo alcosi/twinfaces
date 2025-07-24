@@ -1,8 +1,8 @@
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
+import { MediaType } from "@/features/ui/sliders";
 import { cn, safe } from "@/shared/libs";
-import { MediaType } from "@/shared/ui";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
