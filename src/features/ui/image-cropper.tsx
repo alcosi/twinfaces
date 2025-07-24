@@ -61,7 +61,7 @@ export const ImageCropper = forwardRef<
           <Toggle
             aria-label="Toggle shape"
             pressed={cropperShape === "circle"}
-            variant={"ghost"}
+            variant="ghost"
             onPressedChange={(pressed) =>
               setCropperShape(pressed ? "circle" : "rectangle")
             }
@@ -72,14 +72,15 @@ export const ImageCropper = forwardRef<
                 <CircleIcon
                   width={24}
                   height={24}
-                  stroke={"#000000"}
+                  stroke="#000000"
+                  strokeDasharray="4 4"
                   className="invert"
                 />
               ) : (
                 <RectangleIcon
                   width={24}
                   height={24}
-                  stroke={"#000000"}
+                  stroke="#000000"
                   className="invert"
                 />
               )}
