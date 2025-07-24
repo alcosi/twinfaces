@@ -10,7 +10,9 @@ export function SwitchFormItem({
   onChange,
   label,
   description,
+  required,
   inForm,
+  inputId,
   ...props
 }: FormItemProps & {
   inputId?: string;
@@ -22,20 +24,27 @@ export function SwitchFormItem({
   }
 
   return (
-    <div className="flex flex-row items-start space-y-0 space-x-3">
-      <Switch
-        checked={fieldValue}
-        onCheckedChange={onCheckedChange}
-        {...props}
-      />
-      <div className="space-y-1 leading-none">
-        {label && <FormItemLabel inForm={inForm}>{label}</FormItemLabel>}
-        {description && (
-          <FormItemDescription inForm={inForm}>
-            {description}
-          </FormItemDescription>
-        )}
+    <>
+      {label && (
+        <FormItemLabel inForm={inForm}>
+          {label} {required && <span className="text-destructive">*</span>}
+        </FormItemLabel>
+      )}
+      <div className="flex flex-row items-start space-y-0 space-x-3">
+        <Switch
+          id={inputId}
+          checked={fieldValue}
+          onCheckedChange={onCheckedChange}
+          {...props}
+        />
+        <div className="space-y-1 leading-none">
+          {description && (
+            <FormItemDescription inForm={inForm}>
+              {description}
+            </FormItemDescription>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

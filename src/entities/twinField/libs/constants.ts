@@ -40,4 +40,6 @@ export const TWIN_FIELD_TYPES = [
 
   //TWINFACES-566
   "secretV1",
+
+  "booleanV1",
 ] as const;
