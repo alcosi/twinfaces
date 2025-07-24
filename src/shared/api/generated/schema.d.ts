@@ -1238,23 +1238,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/private/twin/sketch/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create twin sketch */
-        post: operations["twinSketchCreateV1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/private/twin/search_by_alias/{searchAlias}/v1": {
         parameters: {
             query?: never;
@@ -10739,6 +10722,10 @@ export interface components {
             twinClass?: components["schemas"]["TwinClassBaseV1"];
         };
         TwinClassFieldSearchConfiguredRqV1: {
+            /** @description Search named params values */
+            params?: {
+                [key: string]: string;
+            };
             /** @description search narrow */
             narrow?: components["schemas"]["TwinClassFieldSearchV1"];
         };
@@ -11388,6 +11375,10 @@ export interface components {
             depth?: number;
         };
         TwinClassSearchConfiguredRqV1: {
+            /** @description Search named params values */
+            params?: {
+                [key: string]: string;
+            };
             /** @description search narrow */
             narrow?: components["schemas"]["TwinClassSearchV1"];
         };
@@ -12041,10 +12032,6 @@ export interface components {
             /** @description touche twins data */
             touchTwins?: components["schemas"]["TwinTouchV1"][];
         };
-        TwinBatchCreateRqV1: {
-            /** @description twin list */
-            twins?: components["schemas"]["TwinCreateRqV2"][];
-        };
         TwinSearchByAliasRqV1: {
             /** @description Search named params values */
             params?: {
@@ -12426,6 +12413,10 @@ export interface components {
         TwinDeleteRqV1: {
             /** @description twin set id list */
             twinIds?: string[];
+        };
+        TwinBatchCreateRqV1: {
+            /** @description twin list */
+            twins?: components["schemas"]["TwinCreateRqV2"][];
         };
         TwinBasicFieldsV1: {
             /**
@@ -16992,6 +16983,10 @@ export interface components {
              * @description searchId
              */
             searchId?: string;
+            /** @description Search named params values */
+            searchParams?: {
+                [key: string]: string;
+            };
             /**
              * @description show create button
              * @example true
@@ -17409,6 +17404,10 @@ export interface components {
              * @description twin class search id
              */
             twinClassSearchId?: string;
+            /** @description Search named params values */
+            twinClassSearchParams?: {
+                [key: string]: string;
+            };
             /** @description class selector label */
             classSelectorLabel?: string;
             /** @description option name label */
@@ -17423,6 +17422,10 @@ export interface components {
              * @description twin class field search id
              */
             twinClassFieldSearchId?: string;
+            /** @description Search named params values */
+            twinClassFieldsSearchParams?: {
+                [key: string]: string;
+            };
         };
         FaceTC001ViewRsV1: {
             /**
@@ -23313,46 +23316,6 @@ export interface operations {
             };
         };
     };
-    twinSketchCreateV1: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TwinBatchCreateRqV1"];
-            };
-        };
-        responses: {
-            /** @description Twin sketch created */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Response"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
     twinSearchByAliasV1: {
         parameters: {
             query?: {
@@ -24197,6 +24160,9 @@ export interface operations {
         };
         requestBody: {
             content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["TwinTransitionPerformRqV1"];
+                };
                 "application/json": components["schemas"]["TwinTransitionPerformRqV1"];
             };
         };
@@ -24216,7 +24182,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -24395,6 +24361,9 @@ export interface operations {
         };
         requestBody: {
             content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["TwinTransitionPerformBatchRqV1"];
+                };
                 "application/json": components["schemas"]["TwinTransitionPerformBatchRqV1"];
             };
         };
@@ -24414,7 +24383,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -24856,6 +24825,9 @@ export interface operations {
         };
         requestBody: {
             content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["TwinTransitionPerformRqV1"];
+                };
                 "application/json": components["schemas"]["TwinTransitionPerformRqV1"];
             };
         };
@@ -24875,7 +24847,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -25054,6 +25026,9 @@ export interface operations {
         };
         requestBody: {
             content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["TwinTransitionPerformBatchRqV1"];
+                };
                 "application/json": components["schemas"]["TwinTransitionPerformBatchRqV1"];
             };
         };
@@ -25073,7 +25048,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": Record<string, never>;
+                    "application/json": Record<string, never>;
                 };
             };
         };

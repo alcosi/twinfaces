@@ -55,6 +55,11 @@ export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_D
   const { searchTwinClassesBySearchId } = useSearchTwinClassesBySearchId();
   const { fetchTwinClassById } = useFetchTwinClassById();
 
+  type ExtraOptions = {
+    filters?: TwinClassFilters;
+    params?: Record<string, string>;
+  };
+
   async function getById(id: string) {
     return await fetchTwinClassById({
       id,
@@ -68,12 +73,18 @@ export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_D
   async function getItems(
     searchId: string,
     search?: string,
-    filters?: TwinClassFilters
+    extraOptions?: {
+      filters?: TwinClassFilters;
+      params?: Record<string, string>;
+    }
   ) {
+    const { filters, params } = extraOptions || {};
+
     const response = await searchTwinClassesBySearchId({
       searchId,
       search,
       filters,
+      params,
     });
 
     return response.data;
@@ -85,8 +96,8 @@ export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_D
 
   return {
     getById,
-    getItems: (searchId, search, filters) =>
-      getItems(searchId, search as string, filters as TwinClassFilters),
+    getItems: (searchId, search, extraOptions) =>
+      getItems(searchId, search as string, extraOptions as ExtraOptions),
     renderItem,
   };
 }

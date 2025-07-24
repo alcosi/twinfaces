@@ -53,10 +53,12 @@ export function createTwinClassApi(settings: ApiSettings) {
     searchId,
     search,
     filters,
+    params = {},
   }: {
     searchId: string;
     search?: string;
     filters?: TwinClassFilters;
+    params?: Record<string, string>;
   }) {
     return settings.client.POST("/private/twin_class/search/{searchId}/v1", {
       params: {
@@ -76,6 +78,7 @@ export function createTwinClassApi(settings: ApiSettings) {
             ? [wrapWithPercent(search)]
             : filters?.twinClassKeyLikeList,
         },
+        params,
       },
     });
   }

@@ -5,6 +5,12 @@ import { PrivateApiContext } from "@/shared/api";
 import { hydrateTwinClassFieldFromMap } from "../../libs";
 import { TwinClassFieldV2_DETAILED } from "../types";
 
+type SearchTwinClassFieldsArgs = {
+  searchId: string;
+  twinClassId: string;
+  params?: Record<string, string>;
+};
+
 export const useSearchTwinClassFieldsBySearchId = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
@@ -13,16 +19,17 @@ export const useSearchTwinClassFieldsBySearchId = () => {
     async ({
       searchId,
       twinClassId,
-    }: {
-      searchId: string;
-      twinClassId: string;
-    }): Promise<{ data: TwinClassFieldV2_DETAILED[] }> => {
+      params = {},
+    }: SearchTwinClassFieldsArgs): Promise<{
+      data: TwinClassFieldV2_DETAILED[];
+    }> => {
       setLoading(true);
 
       try {
         const { data, error } = await api.twinClassField.searchBySearchId({
           searchId,
           twinClassId,
+          params,
         });
 
         if (error) throw error;

@@ -40,9 +40,11 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
   function searchBySearchId({
     searchId,
     twinClassId,
+    params = {},
   }: {
     searchId: string;
     twinClassId: string;
+    params?: Record<string, string>;
   }) {
     return settings.client.POST(
       "/private/twin_class_fields/search/{searchId}/v1",
@@ -66,6 +68,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
               defaultValue: true,
             }),
           },
+          params,
         },
       }
     );

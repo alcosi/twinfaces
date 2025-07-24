@@ -83,9 +83,9 @@ export function TC001Form({
           const result = await searchTwinClassFieldsBySearchId({
             searchId: selectedOption.twinClassFieldSearchId,
             twinClassId: selectedClass,
+            params: selectedOption.twinClassFieldsSearchParams!,
           });
 
-          console.log("Fetched TwinClassFields:", result);
           setFetchedFields(result?.data ?? []);
         } catch (error) {
           console.error("Error fetching twin class fields", error);
@@ -105,7 +105,8 @@ export function TC001Form({
 
   const { twinClassBySearchIdAdapter, userAdapter } = useTwinClassFields(
     control,
-    selectedOption?.twinClassSearchId
+    selectedOption?.twinClassSearchId,
+    selectedOption?.twinClassSearchParams
   );
 
   const selfFields: Partial<
