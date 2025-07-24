@@ -241,9 +241,7 @@ export function TwinClassStatusesTable({
       getRowId={(row) => row.id!}
       fetcher={fetchStatuses}
       onRowClick={(row) =>
-        router.push(
-          `/${PlatformArea.core}/twinclass/${row.twinClassId}/twinStatus/${row.id}`
-        )
+        router.push(`/${PlatformArea.core}/statuses/${row.id}`)
       }
       filters={{
         filtersInfo: buildFilterFields(),

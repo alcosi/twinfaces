@@ -1,20 +1,20 @@
-"use client";
-
-import { ReactNode } from "react";
-
 import { TwinStatusContextProvider } from "@/features/twin-status";
+import { StatusScreen } from "@/screens/status";
 
 type Props = {
-  params: {
+  params: Promise<{
     twinStatusId: string;
-  };
-  children: ReactNode;
+  }>;
 };
 
-export default function Layout({ params: { twinStatusId }, children }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
+
+  const { twinStatusId } = params;
+
   return (
     <TwinStatusContextProvider twinStatusId={twinStatusId}>
-      {children}
+      <StatusScreen />
     </TwinStatusContextProvider>
   );
 }
