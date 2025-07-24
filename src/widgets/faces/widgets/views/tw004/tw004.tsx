@@ -3,7 +3,7 @@ import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
-import { cn, safe } from "@/shared/libs";
+import { cn, isFalsy, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -31,7 +31,7 @@ export async function TW004(props: TWidgetFaceProps) {
 
   const fields = twidget.fields ?? [];
 
-  const buildPropsResults = await Promise.all(
+  const buildPropsResult = await Promise.all(
     fields.map(async (field) => {
       return await buildFieldEditorProps(
         twidget.pointedTwinId!,
@@ -40,7 +40,7 @@ export async function TW004(props: TWidgetFaceProps) {
     })
   );
 
-  const dataResults = buildPropsResults
+  const dataResult = buildPropsResult
     .filter((res) => res?.ok)
     .map((res) => res.data);
 
@@ -53,11 +53,11 @@ export async function TW004(props: TWidgetFaceProps) {
         {fields
           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
           .map((el) => {
-            const elementResult = dataResults.find(
+            const elementResult = dataResult.find(
               (element) => element?.field.id === el.twinClassFieldId
             );
 
-            if (!elementResult)
+            if (isFalsy(elementResult))
               return (
                 <StatusAlert
                   variant="error"
@@ -72,12 +72,12 @@ export async function TW004(props: TWidgetFaceProps) {
             return (
               <TwinFieldEditor
                 id={twidget.id!}
-                label={el.label || "Unknown"}
+                label={el.label || "N/A"}
                 twinId={twidget.pointedTwinId!}
                 twin={twin}
                 relatedObjects={relatedObjects}
                 field={field}
-                disabled={!isAdmin}
+                disabled={isFalsy(isAdmin)}
                 editable={el.editable}
               />
             );
