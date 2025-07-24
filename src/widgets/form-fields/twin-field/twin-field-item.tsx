@@ -2,10 +2,12 @@ import React, { ChangeEvent } from "react";
 
 import {
   AttachmentImageFormItem,
+  CheckboxFormItem,
   ColorPickerFormItem,
   ComboboxFormItem,
   FormItemProps,
   SecretTextFormItem,
+  SwitchFormItem,
   TextFormItem,
 } from "@/components/form-fields";
 
@@ -216,6 +218,28 @@ export function TwinFieldFormItem({
             onChange={onChange}
           />
         );
+
+      case TwinFieldType.booleanV1:
+        const checked = props.fieldValue === "true";
+
+        if (descriptor?.checkboxType === "TOGGLE") {
+          return (
+            <SwitchFormItem
+              {...props}
+              fieldValue={checked}
+              onChange={(v) => onChange?.(String(v))}
+            />
+          );
+        }
+
+        return (
+          <CheckboxFormItem
+            {...props}
+            fieldValue={checked}
+            onChange={(v) => onChange?.(String(v))}
+          />
+        );
+
       default:
         return (
           <TextFormItem
