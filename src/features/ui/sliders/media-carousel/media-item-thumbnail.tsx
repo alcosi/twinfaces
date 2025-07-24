@@ -1,14 +1,14 @@
-import { MediaItem } from "../types";
-import { ImageThumbnail } from "../views/image";
-import { PdfThumbnail } from "../views/pdf";
-import { UnknownThumbnail } from "../views/unknown";
-import { VideoThumbnail } from "../views/video";
+import { Media } from "./types";
+import { ImageThumbnail } from "./views/image";
+import { PdfThumbnail } from "./views/pdf";
+import { UnknownThumbnail } from "./views/unknown";
+import { VideoThumbnail } from "./views/video";
 
-export function SlotSliderThumbnail({
+export function MediaItemThumbnail({
   item,
   isActive,
 }: {
-  item: MediaItem & { type: string };
+  item: Media & { type: string };
   isActive?: boolean;
 }) {
   switch (item.type) {

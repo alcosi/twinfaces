@@ -1,8 +1,9 @@
+import { getAuthHeaders } from "@/entities/face";
 import { TwinsAPI } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinFromMap } from "../libs";
-import { TwinViewQuery, Twin_HYDRATED } from "./types";
+import { TwinAttachmentCreateRq, TwinViewQuery, Twin_HYDRATED } from "./types";
 
 export async function fetchTwinById<T extends Twin_HYDRATED>(
   twinId: string,
@@ -39,4 +40,43 @@ export async function fetchTwinById<T extends Twin_HYDRATED>(
   }
 
   return data.twin as T;
+}
+
+export async function uploadTwinAttachment(twinId: string, file: File) {
+  const header = await getAuthHeaders();
+
+  const formData = new FormData();
+
+  formData.append("file", file, file.name);
+
+  const payload = {
+    attachments: [
+      {
+        twinId,
+        storageLink: "multipart://file",
+        title: file.name,
+        size: file.size,
+        description: "User uploaded image",
+      },
+    ],
+  };
+
+  formData.append("request", JSON.stringify(payload));
+
+  const { data, error } = await TwinsAPI.POST(
+    "/private/twin/{twinId}/attachment/v1",
+    {
+      params: {
+        header,
+        path: { twinId },
+      },
+      body: formData as TwinAttachmentCreateRq,
+    }
+  );
+
+  if (error) {
+    throw new Error("Upload twin attachment is failed!");
+  }
+
+  return data;
 }

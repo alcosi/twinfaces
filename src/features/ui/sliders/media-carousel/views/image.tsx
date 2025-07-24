@@ -15,7 +15,7 @@ export function ImageSlide({
   caption?: string;
 }) {
   return (
-    <div className="relative flex aspect-square w-full rounded-lg bg-secondary">
+    <div className="bg-secondary relative flex aspect-square w-full rounded-lg">
       <Image
         fill
         src={src}

@@ -29,7 +29,7 @@ export function PdfThumbnail({
   return (
     <div
       className={cn(
-        "flex h-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-transparent bg-secondary px-2 text-xs text-primary",
+        "bg-secondary text-primary flex h-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-transparent px-2 text-xs",
         isActive && "border-brand-500"
       )}
     >

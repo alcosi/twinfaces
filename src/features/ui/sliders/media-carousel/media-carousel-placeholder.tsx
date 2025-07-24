@@ -1,6 +1,6 @@
-import { NoImageIcon } from "@/shared/ui/icons";
+import { NoImageIcon } from "@/shared/ui";
 
-export function SlotSliderPlaceholder() {
+export function MediaCarouselPlaceholder() {
   return (
     <>
       <div className="border-border text-muted-foreground mb-2 flex min-h-96 w-full flex-col items-center justify-center rounded-md border border-dashed p-4">

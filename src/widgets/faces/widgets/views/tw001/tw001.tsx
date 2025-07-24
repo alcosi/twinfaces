@@ -1,11 +1,12 @@
 import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
+import { MediaType } from "@/features/ui/sliders";
 import { cn, safe } from "@/shared/libs";
-import { MediaType, SlotSlider } from "@/shared/ui";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
+import { TW001Client } from "./tw001-client";
 
 export async function TW001(props: TWidgetFaceProps) {
   const { twinId, widget, className } = props;
@@ -62,7 +63,7 @@ export async function TW001(props: TWidgetFaceProps) {
       className={cn("h-auto w-full max-w-[480px] object-contain", className)}
     >
       {twidget.label && <p>{twidget.label}</p>}
-      <SlotSlider items={typedMedia} />
+      <TW001Client items={typedMedia} twinId={twinId} />
     </div>
   );
 }
