@@ -44,44 +44,44 @@ export async function TW004(props: TWidgetFaceProps) {
     .filter((res) => res?.ok)
     .map((res) => res.data);
 
+  const sortedFields = fields.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
   return (
     <div data-face-id={twidget.id} className={cn(className)}>
       {fields.length > 1 && twidget.label && (
         <div className="text-s font-bold">{twidget.label}</div>
       )}
       <div className={cn(className, twidget.styleClasses)}>
-        {fields
-          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-          .map((el) => {
-            const elementResult = dataResult.find(
-              (element) => element?.field.id === el.twinClassFieldId
-            );
+        {sortedFields.map((el) => {
+          const elementResult = dataResult.find(
+            (element) => element?.field.id === el.twinClassFieldId
+          );
 
-            if (isFalsy(elementResult))
-              return (
-                <StatusAlert
-                  variant="error"
-                  title={twidget.name}
-                  message={`Face with id ${twidget.id} failed to load`}
-                  className="mt-4"
-                />
-              );
-
-            const { twin, relatedObjects, field } = elementResult;
-
+          if (isFalsy(elementResult))
             return (
-              <TwinFieldEditor
-                id={twidget.id!}
-                label={el.label || "N/A"}
-                twinId={twidget.pointedTwinId!}
-                twin={twin}
-                relatedObjects={relatedObjects}
-                field={field}
-                disabled={isFalsy(isAdmin)}
-                editable={el.editable}
+              <StatusAlert
+                variant="error"
+                title={twidget.name}
+                message={`Face with id ${twidget.id} failed to load`}
+                className="mt-4"
               />
             );
-          })}
+
+          const { twin, relatedObjects, field } = elementResult;
+
+          return (
+            <TwinFieldEditor
+              id={twidget.id!}
+              label={el.label || "N/A"}
+              twinId={twidget.pointedTwinId!}
+              twin={twin}
+              relatedObjects={relatedObjects}
+              field={field}
+              disabled={isFalsy(isAdmin)}
+              editable={el.editable}
+            />
+          );
+        })}
       </div>
     </div>
   );
