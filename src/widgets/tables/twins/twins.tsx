@@ -345,17 +345,7 @@ export function TwinsTable({
   });
 
   async function handleOnCreateSubmit(formValues: TwinFormValues) {
-    // TODO there may be unnecessary filtering if backends do not send static fields that do not relate to dynamic fields
-    const filteredFields = Object.fromEntries(
-      Object.entries(formValues.fields ?? {}).filter(
-        ([key]) => !key.startsWith("base_")
-      )
-    );
-
-    const body: TwinCreateRq = {
-      ...formValues,
-      fields: filteredFields,
-    };
+    const body: TwinCreateRq = { ...formValues };
 
     await createTwin({ body });
     toast.success(`Twin ${body.name} is created successfully!`);
