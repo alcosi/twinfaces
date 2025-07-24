@@ -4,6 +4,7 @@ import parserTs from "@typescript-eslint/parser";
 import fsdImport from "eslint-plugin-fsd-import";
 import importPlugin from "eslint-plugin-import";
 import prettier from "eslint-plugin-prettier";
+import react from "eslint-plugin-react";
 
 const config = [
   {
@@ -28,11 +29,13 @@ const config = [
     plugins: {
       "@typescript-eslint": tseslint,
       import: importPlugin,
+      react,
     },
     rules: {
       "import/no-cycle": ["error", { maxDepth: 1 }],
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "warn",
+      "react/jsx-curly-brace-presence": "error",
     },
   },
 
