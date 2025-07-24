@@ -61,20 +61,27 @@ export const ImageCropper = forwardRef<
           <Toggle
             aria-label="Toggle shape"
             pressed={cropperShape === "circle"}
+            variant={"ghost"}
             onPressedChange={(pressed) =>
               setCropperShape(pressed ? "circle" : "rectangle")
             }
-            // The behavior of the toggle when switching to on changes
-            // the color from transparent to the color in the settings,
-            // to eliminate such behavior in this case it is correct
-            // to use important (!bg-transparent)
-            className="rounded-full !bg-transparent p-1 transition hover:bg-white/10"
+            className="rounded-full p-1 transition hover:bg-white/10"
           >
             <div className="rounded-full border border-white p-1">
               {cropperShape === "circle" ? (
-                <CircleIcon width={24} height={24} className="invert" />
+                <CircleIcon
+                  width={24}
+                  height={24}
+                  stroke={"#000000"}
+                  className="invert"
+                />
               ) : (
-                <RectangleIcon width={24} height={24} className="invert" />
+                <RectangleIcon
+                  width={24}
+                  height={24}
+                  stroke={"#000000"}
+                  className="invert"
+                />
               )}
             </div>
           </Toggle>

@@ -69,7 +69,7 @@ export const AttachmentImageFormItem = ({
             alt="Preview"
             width={48}
             height={48}
-            className="h-12 w-12 rounded-sm border object-cover"
+            className="h-12 w-12 cursor-pointer rounded-sm border object-cover"
             onClick={() => {
               setCropModalOpen(true);
             }}

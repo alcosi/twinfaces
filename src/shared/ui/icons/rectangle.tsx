@@ -9,10 +9,9 @@ export function RectangleIcon({
   return (
     <BaseSvgIcon className={className} viewBox="0 0 24 24" {...props}>
       <path
-        stroke="#000000"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M9 5H7C5.89543 5 5 5.89543 5 7V9M9 19H7C5.89543 19 5 18.1046 5 17V15M15 5H17C18.1046 5 19 5.89543 19 7V9M15 19H17C18.1046 19 19 18.1046 19 17V15"
       />
     </BaseSvgIcon>
