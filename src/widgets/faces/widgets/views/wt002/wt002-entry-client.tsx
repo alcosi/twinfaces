@@ -53,17 +53,8 @@ export function WT002EntryClient({ trigger, faceData }: Props) {
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
-    // TODO there may be unnecessary filtering if backends do not send static fields that do not relate to dynamic fields
-    const filteredFields = Object.fromEntries(
-      Object.entries(values.fields ?? {}).filter(
-        ([key]) => !key.startsWith("base_")
-      )
-    );
-    console.log("Submit for trigger", trigger.label, values);
-
     const body: TwinCreateRq = {
       ...values,
-      fields: filteredFields,
     };
 
     await createTwin({ body });
@@ -71,7 +62,6 @@ export function WT002EntryClient({ trigger, faceData }: Props) {
     setIsOpen(false);
   });
 
-  console.log("foobar DAT", { trigger, faceData });
   return (
     <Dialog key={trigger.key} open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger key={trigger.key} asChild>
