@@ -136,26 +136,16 @@ export function TwinFieldFormItem({
           />
         );
       case TwinFieldType.selectLinkLongV1:
-        if (twinId) {
-          return (
-            <TwinFieldSelectLinkLongFormItem
-              linkId={descriptor.linkId!}
-              multi={Boolean(descriptor.multiple)}
-              twinId={twinId}
-              {...props}
-            />
-          );
-        } else if (twinClassId) {
-          return (
-            <TwinFieldSelectLinkLongFormItem
-              linkId={descriptor.linkId!}
-              multi={Boolean(descriptor.multiple)}
-              twinClassId={twinClassId}
-              {...props}
-            />
-          );
-        }
-        break;
+        return (
+          <TwinFieldSelectLinkLongFormItem
+            linkId={descriptor.linkId!}
+            multi={Boolean(descriptor.multiple)}
+            twinId={twinId}
+            twinClassId={twinClassId}
+            onChange={onChange}
+            {...props}
+          />
+        );
       case TwinFieldType.selectListV1:
         return (
           <ComboboxFormItem
