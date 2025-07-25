@@ -1,4 +1,5 @@
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { toast } from "sonner";
 
@@ -17,6 +18,7 @@ import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import {
   formatIntlDate,
   isFalsy,
@@ -189,6 +191,7 @@ type Props = {
 };
 
 export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
+  const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } = useAttachmentFilters({
     enabledFilters: isTruthy(baseTwinId)
@@ -255,6 +258,9 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchAttachments}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/attachments/${row.id}`)
+      }
       filters={{
         filtersInfo: buildFilterFields(),
       }}
