@@ -3,7 +3,7 @@ import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
-import { cn, safe } from "@/shared/libs";
+import { cn, isFalsy, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -28,40 +28,60 @@ export async function TW004(props: TWidgetFaceProps) {
   }
 
   const twidget = twidgetResult.data.widget;
+  const { id, name, label, fields = [] } = twidget;
 
-  const result = await buildFieldEditorProps(
-    twidget.pointedTwinId!,
-    twidget.twinClassFieldId!
+  const fieldEditorPropResults = await Promise.all(
+    fields.map(async (field) => {
+      return await buildFieldEditorProps(
+        twidget.pointedTwinId!,
+        field.twinClassFieldId!
+      );
+    })
   );
 
-  if (!result.ok) {
-    return (
-      <StatusAlert
-        variant="error"
-        title={twidget.name}
-        message={`Face with id ${twidget.id} failed to load`}
-        className="mt-4"
-      />
-    );
-  }
+  const dataResult = fieldEditorPropResults
+    .filter((res) => res?.ok)
+    .map((res) => res.data);
 
-  const { twin, relatedObjects, field } = result.data;
+  const sortedFields = fields.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
-    <div
-      data-face-id={twidget.id}
-      className={cn(className, widget.styleClasses)}
-    >
-      <TwinFieldEditor
-        id={twidget.id!}
-        label={twidget.label || "Unknown"}
-        twinId={twidget.pointedTwinId!}
-        twin={twin}
-        relatedObjects={relatedObjects}
-        field={field}
-        disabled={!isAdmin}
-        editable={twidget.editable}
-      />
+    <div data-face-id={id} className={cn(className)}>
+      {fields.length > 1 && label && (
+        <span className="text-sm font-bold">{label}</span>
+      )}
+      <div className={cn(className, twidget.styleClasses)}>
+        {sortedFields.map((el) => {
+          const elementResult = dataResult.find(
+            (element) => element?.field.id === el.twinClassFieldId
+          );
+
+          if (isFalsy(elementResult))
+            return (
+              <StatusAlert
+                variant="error"
+                title={name}
+                message={`Face with id ${id} failed to load`}
+                className="mt-4"
+              />
+            );
+
+          const { twin, relatedObjects, field } = elementResult;
+
+          return (
+            <TwinFieldEditor
+              id={id!}
+              label={el.label || "N/A"}
+              twinId={twidget.pointedTwinId!}
+              twin={twin}
+              relatedObjects={relatedObjects}
+              field={field}
+              disabled={isFalsy(isAdmin)}
+              editable={el.editable}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
