@@ -49,7 +49,7 @@ import {
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
-import { TCForm } from "../../faces/widgets/views/tc";
+import { TC001Form } from "../../faces/widgets/views/tc001";
 import { TwinFormFields } from "./form-fields";
 
 type Props = {
@@ -336,21 +336,16 @@ export function TwinsTable({
 
   const form = useForm<TwinFormValues>({
     resolver: zodResolver(TWIN_SCHEMA),
-    defaultValues: { classId: "", name: "", description: "" },
+    defaultValues: {
+      classId: "",
+      name: "",
+      description: "",
+      isSketch: modalCreateData?.faceTwinCreate?.sketchMode || undefined,
+    },
   });
 
   async function handleOnCreateSubmit(formValues: TwinFormValues) {
-    // TODO there may be unnecessary filtering if backends do not send static fields that do not relate to dynamic fields
-    const filteredFields = Object.fromEntries(
-      Object.entries(formValues.fields ?? {}).filter(
-        ([key]) => !key.startsWith("base_")
-      )
-    );
-
-    const body: TwinCreateRq = {
-      ...formValues,
-      fields: filteredFields,
-    };
+    const body: TwinCreateRq = { ...formValues };
 
     await createTwin({ body });
     toast.success(`Twin ${body.name} is created successfully!`);
@@ -390,7 +385,7 @@ export function TwinsTable({
       onRowClick={onRowClick}
       renderFormFields={() =>
         modalCreateData ? (
-          <TCForm control={form.control} modalCreateData={modalCreateData} />
+          <TC001Form control={form.control} modalCreateData={modalCreateData} />
         ) : (
           <TwinFormFields
             control={form.control}
@@ -398,7 +393,7 @@ export function TwinsTable({
           />
         )
       }
-      modalTitle={modalCreateData?.faceTwinCreate?.header}
+      modalTitle={modalCreateData?.faceTwinCreate?.headerLabel}
       submitButtonLabel={modalCreateData?.faceTwinCreate?.saveButtonLabel}
     />
   );
