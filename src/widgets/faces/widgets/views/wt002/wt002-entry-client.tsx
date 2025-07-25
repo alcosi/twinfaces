@@ -83,12 +83,9 @@ export function WT002EntryClient({ trigger, faceData }: Props) {
       {faceData && (
         <DialogContent showCloseButton className="flex max-h-[70vh] flex-col">
           <DialogHeader className="p-6">
-            {/* Use headerLabel from face. trigger.label is for trigger-button */}
-            {/* @ts-ignore */}
             <DialogTitle>{faceData.faceTwinCreate?.headerLabel}</DialogTitle>
           </DialogHeader>
 
-          {/* TODO: reworkd form input. Currently there are none */}
           <FormProvider {...form}>
             <form
               id={`form-${trigger.id}`}

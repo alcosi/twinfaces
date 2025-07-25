@@ -33,7 +33,6 @@ export async function WT002({ widget, twinId }: WidgetFaceProps) {
       const modalFace = relatedObjects?.faceMap?.[button.modalFaceId];
       const modalData = await fetchModalCreateData(modalFace!, twinId!);
 
-      // TODO: modalData is wrong. We gotta use `faceTwinCreate`
       return { trigger: button, faceData: modalData };
     })
   );
