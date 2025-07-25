@@ -188,14 +188,14 @@ export function TC001Form({
               Promise.resolve(
                 variantOptions.map((opt) => ({
                   id: opt.id,
-                  label: opt.optionLabel || "N/A",
+                  label: opt.label || "N/A",
                 }))
               )
             }
             getById={async (id) => {
               const found = variantOptions.find((opt) => opt.id === id);
               return found
-                ? { id: found.id, label: found.optionLabel || "N/A" }
+                ? { id: found.id, label: found.label || "N/A" }
                 : undefined;
             }}
             renderItem={(item) => item.label}
