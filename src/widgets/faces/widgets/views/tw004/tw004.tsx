@@ -28,10 +28,9 @@ export async function TW004(props: TWidgetFaceProps) {
   }
 
   const twidget = twidgetResult.data.widget;
+  const { id, name, label, fields = [] } = twidget;
 
-  const fields = twidget.fields ?? [];
-
-  const buildPropsResult = await Promise.all(
+  const fieldEditorPropResults = await Promise.all(
     fields.map(async (field) => {
       return await buildFieldEditorProps(
         twidget.pointedTwinId!,
@@ -40,16 +39,16 @@ export async function TW004(props: TWidgetFaceProps) {
     })
   );
 
-  const dataResult = buildPropsResult
+  const dataResult = fieldEditorPropResults
     .filter((res) => res?.ok)
     .map((res) => res.data);
 
   const sortedFields = fields.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
-    <div data-face-id={twidget.id} className={cn(className)}>
-      {fields.length > 1 && twidget.label && (
-        <div className="text-s font-bold">{twidget.label}</div>
+    <div data-face-id={id} className={cn(className)}>
+      {fields.length > 1 && label && (
+        <span className="text-sm font-bold">{label}</span>
       )}
       <div className={cn(className, twidget.styleClasses)}>
         {sortedFields.map((el) => {
@@ -61,8 +60,8 @@ export async function TW004(props: TWidgetFaceProps) {
             return (
               <StatusAlert
                 variant="error"
-                title={twidget.name}
-                message={`Face with id ${twidget.id} failed to load`}
+                title={name}
+                message={`Face with id ${id} failed to load`}
                 className="mt-4"
               />
             );
@@ -71,7 +70,7 @@ export async function TW004(props: TWidgetFaceProps) {
 
           return (
             <TwinFieldEditor
-              id={twidget.id!}
+              id={id!}
               label={el.label || "N/A"}
               twinId={twidget.pointedTwinId!}
               twin={twin}
