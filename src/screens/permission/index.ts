@@ -1,1 +1,1 @@
-export { PermissionPage, type PageProps } from "./permission";
+export * from "./permission";

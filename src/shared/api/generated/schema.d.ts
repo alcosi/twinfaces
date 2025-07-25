@@ -5497,7 +5497,7 @@ export interface components {
         /** @description One of values */
         TwinClassFieldDescriptorDTO: {
             fieldType: string;
-        } & (components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorBooleanV1"]);
+        } & (components["schemas"]["TwinClassFieldDescriptorTextV1"] | components["schemas"]["TwinClassFieldDescriptorSecretV1"] | components["schemas"]["TwinClassFieldDescriptorDateScrollV1"] | components["schemas"]["TwinClassFieldDescriptorColorHexV1"] | components["schemas"]["TwinClassFieldDescriptorUrlV1"] | components["schemas"]["TwinClassFieldDescriptorListV1"] | components["schemas"]["TwinClassFieldDescriptorListLongV1"] | components["schemas"]["TwinClassFieldDescriptorListSharedInHeadV1"] | components["schemas"]["TwinClassFieldDescriptorLinkV1"] | components["schemas"]["TwinClassFieldDescriptorLinkLongV1"] | components["schemas"]["TwinClassFieldDescriptorI18nV1"] | components["schemas"]["TwinClassFieldDescriptorUserV1"] | components["schemas"]["TwinClassFieldDescriptorUserLongV1"] | components["schemas"]["TwinClassFieldDescriptorAttachmentV1"] | components["schemas"]["TwinClassFieldDescriptorNumericV1"] | components["schemas"]["TwinClassFieldDescriptorImmutableV1"] | components["schemas"]["TwinClassFieldDescriptorBooleanV1"] | components["schemas"]["TwinClassFieldDescriptorTwinClassListV1"]);
         TwinClassFieldDescriptorDateScrollV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /** @description Date pattern (default: yyyy-MM-ddTHH:mm:ss) */
             pattern?: string;
@@ -5696,6 +5696,13 @@ export interface components {
              * @enum {string}
              */
             fieldType: "TwinClassFieldDescriptorTextV1";
+        };
+        TwinClassFieldDescriptorTwinClassListV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            fieldType: "TwinClassFieldDescriptorTwinClassListV1";
         };
         TwinClassFieldDescriptorUrlV1: Omit<components["schemas"]["TwinClassFieldDescriptorDTO"], "fieldType"> & {
             /**
@@ -9796,7 +9803,7 @@ export interface components {
         /** @description One of values */
         TwinFieldSearchDTOv1: {
             type: string;
-        } & (components["schemas"]["TwinFieldSearchTextV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumericV1"] | components["schemas"]["TwinFieldSearchListV1"] | components["schemas"]["TwinFieldSearchIdV1"] | components["schemas"]["TwinFieldSearchBooleanV1"] | components["schemas"]["TwinFieldSearchUserV1"] | components["schemas"]["TwinFieldSearchSpaceRoleUserV1"]);
+        } & (components["schemas"]["TwinFieldSearchTextV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumericV1"] | components["schemas"]["TwinFieldSearchListV1"] | components["schemas"]["TwinFieldSearchIdV1"] | components["schemas"]["TwinFieldSearchBooleanV1"] | components["schemas"]["TwinFieldSearchUserV1"] | components["schemas"]["TwinFieldSearchSpaceRoleUserV1"] | components["schemas"]["TwinFieldSearchTwinClassListV1"]);
         /** @description (less & more connected with AND) and after connected to equals with OR and to emty with OR */
         TwinFieldSearchDateV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
             /**
@@ -9897,6 +9904,22 @@ export interface components {
              * @enum {string}
              */
             type: "TwinFieldSearchTextV1";
+        };
+        TwinFieldSearchTwinClassListV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+            /** @description Twin class id include all set */
+            idIncludeAllSet?: string[];
+            /** @description Twin class id exclude all set */
+            idExcludeAllSet?: string[];
+            /** @description Twin class id include any set */
+            idIncludeAnySet?: string[];
+            /** @description Twin class id exclude any set */
+            idExcludeAnySet?: string[];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "TwinFieldSearchTwinClassListV1";
         };
         TwinFieldSearchUserV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
             /** @description User id list */

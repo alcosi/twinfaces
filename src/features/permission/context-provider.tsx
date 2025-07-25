@@ -1,10 +1,11 @@
+import { ReactNode, createContext, useEffect, useState } from "react";
+
 import {
   Permission_DETAILED,
   useFetchPermissionById,
 } from "@/entities/permission";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 type Context = {
   permissionId: string;
@@ -12,16 +13,15 @@ type Context = {
   refresh: () => void;
 };
 
-export type PermissionLayoutProps = PropsWithChildren<{
-  params: Pick<Context, "permissionId">;
-}>;
-
 export const PermissionContext = createContext<Context>({} as Context);
 
 export function PermissionContextProvider({
-  params: { permissionId },
+  permissionId,
   children,
-}: PermissionLayoutProps) {
+}: {
+  permissionId: string;
+  children: ReactNode;
+}) {
   const [permission, setPermission] = useState<Permission_DETAILED | undefined>(
     undefined
   );

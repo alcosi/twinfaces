@@ -14,7 +14,13 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
+import {
+  GuidWithCopy,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/shared/ui";
 
 export function FactoryBranchGeneral() {
   const { factoryBranch, refresh } = useContext(FactoryBranchContext);
@@ -139,56 +145,58 @@ export function FactoryBranchGeneral() {
   return (
     <InPlaceEditContextProvider>
       <Table className="mt-8">
-        <TableRow>
-          <TableCell>ID</TableCell>
-          <TableCell>
-            <GuidWithCopy value={factoryBranch.id} variant="long" />
-          </TableCell>
-        </TableRow>
+        <TableBody>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>
+              <GuidWithCopy value={factoryBranch.id} variant="long" />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Factory</TableCell>
-          <TableCell>
-            {factoryBranch.factory && (
-              <FactoryResourceLink data={factoryBranch.factory} withTooltip />
-            )}
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Factory</TableCell>
+            <TableCell>
+              {factoryBranch.factory && (
+                <FactoryResourceLink data={factoryBranch.factory} withTooltip />
+              )}
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Condition set</TableCell>
-          <TableCell>
-            <InPlaceEdit {...factoryConditionSetSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Condition set</TableCell>
+            <TableCell>
+              <InPlaceEdit {...factoryConditionSetSettings} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Condition invert</TableCell>
-          <TableCell>
-            <InPlaceEdit {...factoryConditionSetInvertSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Condition invert</TableCell>
+            <TableCell>
+              <InPlaceEdit {...factoryConditionSetInvertSettings} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Active</TableCell>
-          <TableCell>
-            <InPlaceEdit {...activeSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Active</TableCell>
+            <TableCell>
+              <InPlaceEdit {...activeSettings} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Next factory</TableCell>
-          <TableCell>
-            <InPlaceEdit {...nextFactorySettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Next factory</TableCell>
+            <TableCell>
+              <InPlaceEdit {...nextFactorySettings} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Description</TableCell>
-          <TableCell>
-            <InPlaceEdit {...descriptionSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Description</TableCell>
+            <TableCell>
+              <InPlaceEdit {...descriptionSettings} />
+            </TableCell>
+          </TableRow>
+        </TableBody>
       </Table>
     </InPlaceEditContextProvider>
   );

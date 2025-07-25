@@ -449,7 +449,7 @@ export function InputFieldsTab() {
                   <FeaturerFormField
                     typeId={FeaturerTypes.headHunter}
                     control={form.control}
-                    label={"Featurer headHunter"}
+                    label="Featurer headHunter"
                     name="headHunterFeaturerId"
                     paramsFieldName="headHunterFeaturerParams"
                   />
@@ -461,7 +461,7 @@ export function InputFieldsTab() {
                   <FeaturerFormField
                     typeId={FeaturerTypes.trigger}
                     control={form.control}
-                    label={"Featurer trigger"}
+                    label="Featurer trigger"
                     name="triggerFeaturerId"
                     paramsFieldName="triggerFeaturerParams"
                   />
@@ -473,7 +473,7 @@ export function InputFieldsTab() {
                   <FeaturerFormField
                     typeId={FeaturerTypes.validator}
                     control={form.control}
-                    label={"Featurer validator"}
+                    label="Featurer validator"
                     name="validatorFeaturerId"
                     paramsFieldName="validatorFeaturerParams"
                   />

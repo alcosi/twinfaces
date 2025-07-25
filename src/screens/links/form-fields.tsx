@@ -32,7 +32,7 @@ export function CreateLinkFormFields({
         disabled={isPopulatedString(srcTwinClassId)}
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
+        noItemsText="No classes found"
         {...tcAdapter}
       />
 
@@ -43,7 +43,7 @@ export function CreateLinkFormFields({
         disabled={isPopulatedString(dstTwinClassId)}
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
+        noItemsText="No classes found"
         {...tcAdapter}
       />
 

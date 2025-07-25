@@ -140,7 +140,7 @@ function DraggableCheckbox({
     <div
       ref={setNodeRef}
       style={style}
-      className={"flex flex-row items-center justify-between"}
+      className="flex flex-row items-center justify-between"
     >
       <CheckboxFormItem
         key={column.id}

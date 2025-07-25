@@ -293,7 +293,7 @@ export function TwinClassGeneral() {
           </TableRow>
 
           <TableRow
-            className={"cursor-pointer"}
+            className="cursor-pointer"
             onClick={() => openWithSettings(classValues.head!)}
           >
             <TableCell>Head</TableCell>
@@ -308,7 +308,7 @@ export function TwinClassGeneral() {
           </TableRow>
 
           <TableRow
-            className={"cursor-pointer"}
+            className="cursor-pointer"
             onClick={() => openWithSettings(classValues.head!)}
           >
             <TableCell>Head hunter</TableCell>

@@ -32,7 +32,7 @@ export function TwinClassTwinFlowFormFields({
         disabled={disabled}
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
+        noItemsText="No classes found"
         {...twinClassAdapter}
       />
 

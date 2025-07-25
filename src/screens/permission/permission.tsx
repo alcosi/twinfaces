@@ -4,12 +4,6 @@ import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { GeneralSection, GrantSection } from "./views";
 
-export type PageProps = {
-  params: {
-    permissionId: string;
-  };
-};
-
 const tabs: Tab[] = [
   {
     key: "general",
@@ -23,6 +17,6 @@ const tabs: Tab[] = [
   },
 ];
 
-export function PermissionPage({ params: { permissionId } }: PageProps) {
+export function PermissionScreen() {
   return <TabsLayout tabs={tabs} />;
 }

@@ -81,7 +81,7 @@ export function TwinClassFormFields({
         label="Head"
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
+        noItemsText="No classes found"
         {...tcAdapter}
       />
 
@@ -101,7 +101,7 @@ export function TwinClassFormFields({
         label="Extends"
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
+        noItemsText="No classes found"
         {...tcAdapter}
       />
 
