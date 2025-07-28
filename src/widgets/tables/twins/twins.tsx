@@ -21,6 +21,7 @@ import {
   useFetchTwinClassById,
 } from "@/entities/twin-class";
 import { TwinClassField } from "@/entities/twin-class-field";
+import { useTwinSearchIdV1 } from "@/entities/twin/api/hooks/useSearchIdV1";
 import {
   TwinCreateRq,
   TwinFilterKeys,
@@ -63,6 +64,7 @@ type Props = {
   // === end ===
   modalCreateData?: FaceTC001ViewRs;
   onRowClick?: (row: Twin_DETAILED) => void;
+  searchId?: string;
 };
 
 export function TwinsTable({
@@ -74,6 +76,7 @@ export function TwinsTable({
   resourceNavigationEnabled = true,
   modalCreateData,
   onRowClick,
+  searchId,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -88,6 +91,7 @@ export function TwinsTable({
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
+  const { searchIdTwins } = useTwinSearchIdV1(searchId ?? "");
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -316,18 +320,23 @@ export function TwinsTable({
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      return await searchTwins({
-        pagination: pagination,
-        filters: {
-          ..._filters,
-          twinClassExtendsHierarchyContainsIdList: baseTwinClassId
-            ? [baseTwinClassId]
-            : _filters.twinClassExtendsHierarchyContainsIdList,
-          headTwinIdList: targetHeadTwinId
-            ? [targetHeadTwinId]
-            : _filters.headTwinIdList,
-        },
-      });
+      return searchId
+        ? await searchIdTwins({
+            pagination: pagination,
+            filters: filters.filters,
+          })
+        : await searchTwins({
+            pagination: pagination,
+            filters: {
+              ..._filters,
+              twinClassExtendsHierarchyContainsIdList: baseTwinClassId
+                ? [baseTwinClassId]
+                : _filters.twinClassExtendsHierarchyContainsIdList,
+              headTwinIdList: targetHeadTwinId
+                ? [targetHeadTwinId]
+                : _filters.headTwinIdList,
+            },
+          });
     } catch (e) {
       toast.error("Failed to fetch twins");
       return { data: [], pagination: {} };

@@ -49,6 +49,53 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
+  function searchId({
+    searchId,
+    pagination,
+    filters,
+  }: {
+    searchId: string;
+    pagination: PaginationState;
+    filters?: {
+      [key: string]: string;
+    };
+  }) {
+    return settings.client.POST("/private/twin/search/{searchId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
+          showTwin2TwinClassMode: "DETAILED",
+          showTwin2UserMode: "DETAILED",
+          showTwin2StatusMode: "DETAILED",
+          showTwinMarker2DataListOptionMode: "DETAILED",
+          showTwinTag2DataListOptionMode: "DETAILED",
+          showTwinByHeadMode: "YELLOW",
+          showTwinAliasMode: "C",
+          showTwinFieldCollectionMode: "ALL_FIELDS",
+          showTwin2TransitionMode: "DETAILED",
+          showTwinByLinkMode: "GREEN",
+          showTwin2TwinLinkMode: "SHORT",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+          showTwinField2DataListOptionMode: "DETAILED",
+          showTwinClass2TwinClassFieldMode: "DETAILED",
+          showAttachment2TwinMode: "DETAILED",
+          showTwin2AttachmentMode: "DETAILED",
+          showTwin2AttachmentCollectionMode: "FROM_FIELDS",
+        },
+        path: { searchId },
+      },
+      body: {
+        narrow: {},
+        params: { ...filters },
+      },
+    });
+  }
+
   function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
     return settings.client.GET("/private/twin/{twinId}/v2", {
       params: {
@@ -189,6 +236,7 @@ export function createTwinApi(settings: ApiSettings) {
 
   return {
     search,
+    searchId,
     // getById,
     create,
     update,

@@ -31,7 +31,14 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
   }
 
   const {
-    widget: { label, twinClassId, columns, showCreateButton, modalFaceId },
+    widget: {
+      label,
+      twinClassId,
+      columns,
+      showCreateButton,
+      modalFaceId,
+      searchId,
+    },
     relatedObjects,
   } = wtResult.data as {
     widget: FaceWT001;
@@ -56,6 +63,7 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
         showCreateButton={showCreateButton}
         isAdmin={isAdmin}
         modalCreateData={modalCreateData}
+        searchId={searchId}
       />
     </Suspense>
   );
