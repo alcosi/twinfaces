@@ -3,7 +3,7 @@ import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
-import { cn, isFalsy, safe } from "@/shared/libs";
+import { cn, isFalsy, isMultiElementArray, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -30,8 +30,12 @@ export async function TW004(props: TWidgetFaceProps) {
   const twidget = twidgetResult.data.widget;
   const { id, name, label, fields = [] } = twidget;
 
-  const fieldEditorPropResults = await Promise.all(
-    fields.map(async (field) => {
+  const sortedFields = fields.toSorted(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0)
+  );
+
+  const fieldEditorPropResults = await Promise.allSettled(
+    sortedFields.map(async (field) => {
       return await buildFieldEditorProps(
         twidget.pointedTwinId!,
         field.twinClassFieldId!
@@ -39,22 +43,18 @@ export async function TW004(props: TWidgetFaceProps) {
     })
   );
 
-  const dataResult = fieldEditorPropResults
-    .filter((res) => res?.ok)
-    .map((res) => res.data);
-
-  const sortedFields = fields.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-
   return (
     <div data-face-id={id} className={cn(className)}>
-      {fields.length > 1 && label && (
-        <span className="text-sm font-bold">{label}</span>
+      {isMultiElementArray(fields) && label && (
+        <span className="text-s font-bold">{label}</span>
       )}
       <div className={cn(className, twidget.styleClasses)}>
-        {sortedFields.map((el) => {
-          const elementResult = dataResult.find(
-            (element) => element?.field.id === el.twinClassFieldId
-          );
+        {sortedFields.map((el, index) => {
+          const elementResult =
+            fieldEditorPropResults[index]?.status === "fulfilled" &&
+            fieldEditorPropResults[index].value.ok
+              ? fieldEditorPropResults[index].value.data
+              : false;
 
           if (isFalsy(elementResult))
             return (
@@ -76,7 +76,7 @@ export async function TW004(props: TWidgetFaceProps) {
               twin={twin}
               relatedObjects={relatedObjects}
               field={field}
-              disabled={isFalsy(isAdmin)}
+              disabled={!isAdmin}
               editable={el.editable}
             />
           );
