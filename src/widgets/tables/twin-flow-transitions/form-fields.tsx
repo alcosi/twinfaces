@@ -11,7 +11,12 @@ import {
   useTransitionAliasSelectAdapter,
 } from "@/entities/twin-flow-transition";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import {
+  isFalsy,
+  isPopulatedArray,
+  reduceToObject,
+  toArray,
+} from "@/shared/libs";
 
 export function TwinFlowTransitionFormFields({
   control,
@@ -19,8 +24,10 @@ export function TwinFlowTransitionFormFields({
   control: Control<TwinFlowTransitionFormValues>;
 }) {
   const twinFlowWatch = useWatch({ control, name: "twinflow" });
-  const isTwinFlowSelected = isTruthy(twinFlowWatch);
-  const isPreselected = useRef(isTwinFlowSelected).current;
+  const isPreselected = useRef(isPopulatedArray(twinFlowWatch)).current;
+
+  const twinClassId = twinFlowWatch[0]?.twinClassId;
+  const disabledStatus = isFalsy(twinClassId);
 
   const twinFlowAdapter = useTwinFlowSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
@@ -80,12 +87,12 @@ export function TwinFlowTransitionFormFields({
         selectPlaceholder="Select status"
         searchPlaceholder="Search status..."
         noItemsText="No status found"
-        disabled={!isTwinFlowSelected}
+        disabled={disabledStatus}
         {...twinStatusAdapter}
         getItems={async (search: string) => {
           return twinStatusAdapter.getItems(search, {
             twinClassIdMap: reduceToObject({
-              list: toArray(twinFlowWatch),
+              list: toArray(twinClassId),
               defaultValue: true,
             }),
           });
@@ -100,12 +107,12 @@ export function TwinFlowTransitionFormFields({
         searchPlaceholder="Search status..."
         noItemsText="No status found"
         required={true}
-        disabled={!isTwinFlowSelected}
+        disabled={disabledStatus}
         {...twinStatusAdapter}
         getItems={async (search: string) => {
           return twinStatusAdapter.getItems(search, {
             twinClassIdMap: reduceToObject({
-              list: toArray(twinFlowWatch),
+              list: toArray(twinClassId),
               defaultValue: true,
             }),
           });
