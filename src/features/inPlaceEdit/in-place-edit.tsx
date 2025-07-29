@@ -95,7 +95,7 @@ export function InPlaceEdit<T>({
       <div
         onClick={handleEdit}
         className={cn(
-          "border-border rounded-md border border-dashed",
+          "border-border overflow-hidden rounded-md border border-dashed",
           // TODO: remove horizontal padding (e.g. px-3)
           "hover:bg-muted/50 flex min-h-10 cursor-pointer flex-row items-center rounded-md px-3",
           className
