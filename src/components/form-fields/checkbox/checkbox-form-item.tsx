@@ -31,7 +31,7 @@ export function CheckboxFormItem({
     <>
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label}{" "}
+          {label}
           {props.required && <span className="text-destructive">*</span>}
         </FormItemLabel>
       )}
