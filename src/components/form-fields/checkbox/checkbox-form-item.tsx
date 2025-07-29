@@ -10,13 +10,11 @@ export function CheckboxFormItem({
   onChange,
   label,
   description,
-  required,
   inForm,
   hasIndeterminate,
   inputId,
   ...props
 }: FormItemProps & {
-  inputId?: string;
   fieldValue?: boolean | "indeterminate";
   onChange?: (value: boolean | "indeterminate") => void;
   hasIndeterminate?: boolean;
@@ -33,7 +31,8 @@ export function CheckboxFormItem({
     <>
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-destructive">*</span>}
+          {label}{" "}
+          {props.required && <span className="text-destructive">*</span>}
         </FormItemLabel>
       )}
       <div className="flex flex-row items-start space-y-0 space-x-3">
