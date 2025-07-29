@@ -1,5 +1,20 @@
-import { PageProps, PermissionPage } from "@/screens/permission";
+import { use } from "react";
 
-export default function Page(props: PageProps) {
-  return <PermissionPage {...props} />;
+import { PermissionContextProvider } from "@/features/permission";
+import { PermissionScreen } from "@/screens/permission";
+
+type Props = {
+  params: Promise<{
+    permissionId: string;
+  }>;
+};
+
+export default function Page({ params }: Props) {
+  const { permissionId } = use(params);
+
+  return (
+    <PermissionContextProvider permissionId={permissionId}>
+      <PermissionScreen />
+    </PermissionContextProvider>
+  );
 }

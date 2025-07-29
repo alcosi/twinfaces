@@ -1,4 +1,3 @@
-import { env } from "next-runtime-env";
 import { NextRequest, NextResponse } from "next/server";
 
 import { fetchDomainByKey } from "@/entities/domain/api";
@@ -12,7 +11,7 @@ const SUBDOMAIN_DEPTH = isDev ? 2 : 3;
  * 2. Otherwise, extract the first subdomain when the host has the expected depth.
  */
 function resolveDomainKey(host?: string): string | undefined {
-  const fixed = env("NEXT_PUBLIC_FIXED_DOMAIN_KEY");
+  const fixed = process.env.NEXT_PUBLIC_FIXED_DOMAIN_KEY;
   if (fixed) return fixed;
 
   if (!host) return;

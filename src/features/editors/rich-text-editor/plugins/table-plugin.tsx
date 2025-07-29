@@ -135,7 +135,7 @@ export function InsertTableDialog({
           <Label htmlFor="rows">Number of rows</Label>
           <Input
             id="rows"
-            placeholder={"# of rows (1-500)"}
+            placeholder="# of rows (1-500)"
             onChange={(e) => setRows(e.target.value)}
             value={rows}
             data-test-id="table-modal-rows"
@@ -146,7 +146,7 @@ export function InsertTableDialog({
           <Label htmlFor="columns">Number of columns</Label>
           <Input
             id="columns"
-            placeholder={"# of columns (1-50)"}
+            placeholder="# of columns (1-50)"
             onChange={(e) => setColumns(e.target.value)}
             value={columns}
             data-test-id="table-modal-columns"

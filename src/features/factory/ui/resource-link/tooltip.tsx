@@ -30,7 +30,7 @@ export function FactoryResourceTooltip({ data, link }: Props) {
         )}
 
         {data.createdAt && (
-          <ResourceLinkTooltip.Item title={"Created At"}>
+          <ResourceLinkTooltip.Item title="Created At">
             {formatIntlDate(data.createdAt, "datetime-local")}
           </ResourceLinkTooltip.Item>
         )}

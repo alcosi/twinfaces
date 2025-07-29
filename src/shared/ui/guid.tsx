@@ -18,7 +18,9 @@ function Guid({ value, disableTooltip, variant = "short" }: GuidProps) {
     <span>{displayValue}</span>
   ) : (
     <Tooltip>
-      <TooltipTrigger asChild>{<span>{displayValue}</span>}</TooltipTrigger>
+      <TooltipTrigger asChild>
+        <span>{displayValue}</span>
+      </TooltipTrigger>
       <TooltipContent>
         <span>{value}</span>
       </TooltipContent>

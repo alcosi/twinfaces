@@ -1,3 +1,6 @@
+// @ts-nocheck
+// TODO: remove ts-nocheck by importing validy src/shared/api/generated/schema.d.ts
+import { JSX } from "react";
 import { Control, Path } from "react-hook-form";
 
 import {

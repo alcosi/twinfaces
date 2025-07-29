@@ -59,7 +59,7 @@ export function TwinClassFieldFormFields({
 
       <ComboboxFormField
         control={control}
-        name={"viewPermissionId"}
+        name="viewPermissionId"
         label="View permission"
         selectPlaceholder="Select view permission"
         searchPlaceholder="Search view permission..."
@@ -69,7 +69,7 @@ export function TwinClassFieldFormFields({
 
       <ComboboxFormField
         control={control}
-        name={"editPermissionId"}
+        name="editPermissionId"
         label="Edit permission"
         selectPlaceholder="Select edit permission"
         searchPlaceholder="Search edit permission..."

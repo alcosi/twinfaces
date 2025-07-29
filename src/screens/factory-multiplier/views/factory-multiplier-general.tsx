@@ -23,7 +23,13 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { GuidWithCopy, Table, TableCell, TableRow } from "@/shared/ui";
+import {
+  GuidWithCopy,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/shared/ui";
 
 export function FactoryMultiplierGeneral() {
   const { factoryMultiplier, refresh } = useContext(FactoryMultiplierContext);
@@ -146,55 +152,59 @@ export function FactoryMultiplierGeneral() {
   return (
     <InPlaceEditContextProvider>
       <Table className="mt-8">
-        <TableRow>
-          <TableCell>ID</TableCell>
-          <TableCell>
-            <GuidWithCopy value={factoryMultiplier.id} variant="long" />
-          </TableCell>
-        </TableRow>
+        <TableBody>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>
+              <GuidWithCopy value={factoryMultiplier.id} variant="long" />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Factory</TableCell>
-          <TableCell>
-            <FactoryResourceLink data={factoryMultiplier.factory} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Factory</TableCell>
+            <TableCell>
+              <FactoryResourceLink data={factoryMultiplier.factory} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Input class</TableCell>
-          <TableCell>
-            <InPlaceEdit {...inputClassSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Input class</TableCell>
+            <TableCell>
+              <InPlaceEdit {...inputClassSettings} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow
-          className="cursor-pointer"
-          onClick={() => openWithSettings(multiplierFeaturerSettings)}
-        >
-          <TableCell>Multiplier</TableCell>
-          <TableCell>
-            {factoryMultiplier.multiplierFeaturer && (
-              <FeaturerResourceLink
-                data={factoryMultiplier.multiplierFeaturer as Featurer_DETAILED}
-                withTooltip
-              />
-            )}
-          </TableCell>
-        </TableRow>
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(multiplierFeaturerSettings)}
+          >
+            <TableCell>Multiplier</TableCell>
+            <TableCell>
+              {factoryMultiplier.multiplierFeaturer && (
+                <FeaturerResourceLink
+                  data={
+                    factoryMultiplier.multiplierFeaturer as Featurer_DETAILED
+                  }
+                  withTooltip
+                />
+              )}
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Active</TableCell>
-          <TableCell>
-            <InPlaceEdit {...activeSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Active</TableCell>
+            <TableCell>
+              <InPlaceEdit {...activeSettings} />
+            </TableCell>
+          </TableRow>
 
-        <TableRow>
-          <TableCell>Descritpion</TableCell>
-          <TableCell>
-            <InPlaceEdit {...descriptionSettings} />
-          </TableCell>
-        </TableRow>
+          <TableRow>
+            <TableCell>Descritpion</TableCell>
+            <TableCell>
+              <InPlaceEdit {...descriptionSettings} />
+            </TableCell>
+          </TableRow>
+        </TableBody>
       </Table>
 
       <AutoDialog

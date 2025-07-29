@@ -166,7 +166,7 @@ export function GeneralSection() {
           <TableRow>
             <TableCell width={300}>ID</TableCell>
             <TableCell>
-              <GuidWithCopy value={link.id} variant={"long"} />
+              <GuidWithCopy value={link.id} variant="long" />
             </TableCell>
           </TableRow>
 

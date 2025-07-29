@@ -1,19 +1,23 @@
 "use client";
 
+import { ReactNode, use } from "react";
+
 import { FactoryContextProvider } from "@/features/factory";
-import { ReactNode } from "react";
 
 type FactoryLayoutProps = {
-  params: {
+  params: Promise<{
     factoryId: string;
-  };
+  }>;
   children: ReactNode;
 };
 
-export default function FactoryLayout({
-  params: { factoryId },
-  children,
-}: FactoryLayoutProps) {
+export default function FactoryLayout(props: FactoryLayoutProps) {
+  const params = use(props.params);
+
+  const { factoryId } = params;
+
+  const { children } = props;
+
   return (
     <FactoryContextProvider factoryId={factoryId}>
       {children}

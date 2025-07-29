@@ -26,7 +26,7 @@ export function CommentCard({ item }: CommentCardProps) {
         <div className="flex items-center justify-between space-x-4">
           <div className="flex items-center space-x-4">
             {item.authorUser?.avatar ? (
-              <Avatar url={item.authorUser?.avatar} alt={"Logo"} size="lg" />
+              <Avatar url={item.authorUser?.avatar} alt="Logo" size="lg" />
             ) : (
               <CircleUserRound className="h-9 w-9" />
             )}
@@ -47,7 +47,7 @@ export function CommentCard({ item }: CommentCardProps) {
                 </Button>
               </PopoverTrigger>
 
-              <PopoverContent className={"w-auto"}>
+              <PopoverContent className="w-auto">
                 <div className="flex flex-col items-start gap-2">
                   {item.commentActions?.map((item, index) => (
                     <button key={index} className="text-black-500 mr-2.5">
@@ -60,7 +60,7 @@ export function CommentCard({ item }: CommentCardProps) {
           )}
         </div>
       </CardHeader>
-      <CardContent className={"break-words"}>{item.text}</CardContent>
+      <CardContent className="break-words">{item.text}</CardContent>
     </Card>
   );
 }

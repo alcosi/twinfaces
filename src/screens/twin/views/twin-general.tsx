@@ -178,7 +178,7 @@ export function TwinGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow className="cursor-pointer">
             <TableCell>Name</TableCell>
             <TableCell>
               <TwinFieldEditor
@@ -227,7 +227,7 @@ export function TwinGeneral() {
           </TableRow>
 
           <TableRow
-            className={"cursor-pointer"}
+            className="cursor-pointer"
             onClick={() =>
               openWithSettings(initialAssignerIdAutoDialogSettings)
             }
@@ -240,7 +240,7 @@ export function TwinGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow className={"cursor-pointer"}>
+          <TableRow className="cursor-pointer">
             <TableCell>Head</TableCell>
             <TableCell>
               {twin.headTwin && (
@@ -269,7 +269,7 @@ export function TwinGeneral() {
           </TableRow>
 
           <TableRow
-            className={"cursor-pointer"}
+            className="cursor-pointer"
             onClick={() => openWithSettings(tagsSettings)}
           >
             <TableCell>Tags</TableCell>

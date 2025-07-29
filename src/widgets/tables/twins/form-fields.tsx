@@ -37,7 +37,7 @@ export function TwinFormFields({
         label="Class"
         selectPlaceholder="Select twin class"
         searchPlaceholder="Search twin class..."
-        noItemsText={"No classes found"}
+        noItemsText="No classes found"
         {...twinClassAdapter}
       />
 
