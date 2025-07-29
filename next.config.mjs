@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
-  env: {
-    NEXT_PUBLIC_TWINS_API_URL: process.env.NEXT_PUBLIC_TWINS_API_URL,
+  experimental: {
+    serverComponentsExternalPackages: ["openapi-fetch"],
   },
   images: {
     remotePatterns: [
