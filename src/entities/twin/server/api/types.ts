@@ -70,3 +70,6 @@ export type TwinFilters = Partial<
 >;
 
 export type TwinSimpleFilters = components["schemas"]["TwinSearchSimpleV1"];
+export type TwinSearchExtendedV1 = Partial<
+  Pick<components["schemas"]["TwinSearchExtendedV1"], TwinFilterKeys>
+>;

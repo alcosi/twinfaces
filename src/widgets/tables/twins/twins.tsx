@@ -65,6 +65,9 @@ type Props = {
   modalCreateData?: FaceTC001ViewRs;
   onRowClick?: (row: Twin_DETAILED) => void;
   searchId?: string;
+  searchParams?: {
+    [key: string]: string;
+  };
 };
 
 export function TwinsTable({
@@ -77,6 +80,7 @@ export function TwinsTable({
   modalCreateData,
   onRowClick,
   searchId,
+  searchParams = {},
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -91,7 +95,7 @@ export function TwinsTable({
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
-  const { searchIdTwins } = useTwinSearchIdV1(searchId ?? "");
+  const { searchIdTwins } = useTwinSearchIdV1(searchId ?? "", searchParams);
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -323,7 +327,15 @@ export function TwinsTable({
       return searchId
         ? await searchIdTwins({
             pagination: pagination,
-            filters: filters.filters,
+            filters: {
+              ..._filters,
+              twinClassExtendsHierarchyContainsIdList: baseTwinClassId
+                ? [baseTwinClassId]
+                : _filters.twinClassExtendsHierarchyContainsIdList,
+              headTwinIdList: targetHeadTwinId
+                ? [targetHeadTwinId]
+                : _filters.headTwinIdList,
+            },
           })
         : await searchTwins({
             pagination: pagination,

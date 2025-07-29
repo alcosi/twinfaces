@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/table-core";
 import {
   TwinCreateRq,
   TwinFilters,
+  TwinSearchExtendedV1,
   TwinSimpleFilters,
   TwinUpdateRq,
   TwinViewQuery,
@@ -51,14 +52,16 @@ export function createTwinApi(settings: ApiSettings) {
 
   function searchId({
     searchId,
+    searchParams,
     pagination,
     filters,
   }: {
     searchId: string;
-    pagination: PaginationState;
-    filters?: {
+    searchParams: {
       [key: string]: string;
     };
+    pagination: PaginationState;
+    filters?: TwinSearchExtendedV1;
   }) {
     return settings.client.POST("/private/twin/search/{searchId}/v1", {
       params: {
@@ -90,8 +93,8 @@ export function createTwinApi(settings: ApiSettings) {
         path: { searchId },
       },
       body: {
-        narrow: {},
-        params: { ...filters },
+        narrow: { ...filters },
+        params: { ...searchParams },
       },
     });
   }

@@ -1,10 +1,19 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { Twin_DETAILED, hydrateTwinFromMap } from "@/entities/twin/server";
+import {
+  TwinSearchExtendedV1,
+  Twin_DETAILED,
+  hydrateTwinFromMap,
+} from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-export const useTwinSearchIdV1 = (searchId: string) => {
+export const useTwinSearchIdV1 = (
+  searchId: string,
+  searchParams: {
+    [key: string]: string;
+  }
+) => {
   const api = useContext(PrivateApiContext);
 
   const searchIdTwins = useCallback(
@@ -13,13 +22,12 @@ export const useTwinSearchIdV1 = (searchId: string) => {
       filters,
     }: {
       pagination?: PaginationState;
-      filters?: {
-        [key: string]: string;
-      };
+      filters?: TwinSearchExtendedV1;
     }): Promise<PagedResponse<Twin_DETAILED>> => {
       try {
         const { data, error } = await api.twin.searchId({
           searchId,
+          searchParams,
           pagination,
           filters,
         });

@@ -38,6 +38,7 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
       showCreateButton,
       modalFaceId,
       searchId,
+      searchParams,
     },
     relatedObjects,
   } = wtResult.data as {
@@ -64,6 +65,7 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
         isAdmin={isAdmin}
         modalCreateData={modalCreateData}
         searchId={searchId}
+        searchParams={searchParams}
       />
     </Suspense>
   );
