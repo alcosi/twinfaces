@@ -8,9 +8,13 @@ import {
 
 export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
   twinflow: z
-    .string()
-    .uuid("Twinflow ID must be a valid UUID ")
-    .or(FIRST_ID_EXTRACTOR),
+    .array(
+      z.object({
+        id: z.string().uuid(),
+        twinClassId: z.string().uuid(),
+      })
+    )
+    .min(1, "Please enter a valid UUID"),
   alias: z
     .array(z.union([z.object({ alias: z.string() }), z.string()]))
     .min(1, "Required")
