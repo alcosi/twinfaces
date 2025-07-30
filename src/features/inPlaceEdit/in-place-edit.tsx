@@ -122,7 +122,7 @@ export function InPlaceEdit<T>({
       <form
         onSubmit={form.handleSubmit(handleConfirm)}
         onAbort={handleCancel}
-        className="flex w-full min-w-full flex-col space-y-1.5"
+        className="flex w-full min-w-32 flex-col space-y-1.5"
       >
         <AutoField
           info={valueInfo}
