@@ -12,9 +12,7 @@ type WT001ClientProps<T extends FaceTC = FaceTC> = {
   isAdmin: boolean;
   modalCreateData?: T;
   searchId?: string;
-  searchParams?: {
-    [key: string]: string;
-  };
+  searchParams?: Record<string, string>;
 };
 
 export function WT001Client<T extends FaceTC = FaceTC>({

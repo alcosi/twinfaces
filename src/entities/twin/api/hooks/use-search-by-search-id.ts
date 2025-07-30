@@ -2,30 +2,29 @@ import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
 import {
-  TwinSearchExtendedV1,
+  TwinFiltersBySearchId,
   Twin_DETAILED,
   hydrateTwinFromMap,
 } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
-export const useTwinSearchIdV1 = (
-  searchId: string,
-  searchParams: {
-    [key: string]: string;
-  }
-) => {
+export const useTwinSearchBySearchId = () => {
   const api = useContext(PrivateApiContext);
 
-  const searchIdTwins = useCallback(
+  const searchTwinBySearchId = useCallback(
     async ({
+      searchId,
+      searchParams,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters,
     }: {
+      searchId: string;
+      searchParams: Record<string, string>;
       pagination?: PaginationState;
-      filters?: TwinSearchExtendedV1;
+      filters?: TwinFiltersBySearchId;
     }): Promise<PagedResponse<Twin_DETAILED>> => {
       try {
-        const { data, error } = await api.twin.searchId({
+        const { data, error } = await api.twin.searchBySearchId({
           searchId,
           searchParams,
           pagination,
@@ -33,7 +32,9 @@ export const useTwinSearchIdV1 = (
         });
 
         if (error) {
-          throw new Error("Failed to fetch twins due to API error");
+          throw new Error(
+            "Failed to fetch twins by search id due to API error"
+          );
         }
         const twinList =
           data?.twinList?.map((dto) =>
@@ -42,11 +43,11 @@ export const useTwinSearchIdV1 = (
 
         return { data: twinList, pagination: data.pagination ?? {} };
       } catch {
-        throw new Error("An error occurred while fetching twins");
+        throw new Error("An error occurred while fetching twins by search Id");
       }
     },
     [api]
   );
 
-  return { searchIdTwins };
+  return { searchTwinBySearchId };
 };

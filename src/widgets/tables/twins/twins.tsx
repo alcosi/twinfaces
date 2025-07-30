@@ -14,6 +14,7 @@ import {
   TwinSelfFieldId,
   useCreateTwin,
   useTwinFilters,
+  useTwinSearchBySearchId,
   useTwinSearchV3,
 } from "@/entities/twin";
 import {
@@ -21,7 +22,6 @@ import {
   useFetchTwinClassById,
 } from "@/entities/twin-class";
 import { TwinClassField } from "@/entities/twin-class-field";
-import { useTwinSearchIdV1 } from "@/entities/twin/api/hooks/useSearchIdV1";
 import {
   TwinCreateRq,
   TwinFilterKeys,
@@ -65,9 +65,7 @@ type Props = {
   modalCreateData?: FaceTC001ViewRs;
   onRowClick?: (row: Twin_DETAILED) => void;
   searchId?: string;
-  searchParams?: {
-    [key: string]: string;
-  };
+  searchParams?: Record<string, string>;
 };
 
 export function TwinsTable({
@@ -95,7 +93,7 @@ export function TwinsTable({
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins } = useTwinSearchV3();
-  const { searchIdTwins } = useTwinSearchIdV1(searchId ?? "", searchParams);
+  const { searchTwinBySearchId } = useTwinSearchBySearchId();
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -322,33 +320,30 @@ export function TwinsTable({
     filters: FiltersState;
   }) {
     const _filters = mapFiltersToPayload(filters.filters);
+    const filtersAll = {
+      ..._filters,
+      twinClassExtendsHierarchyContainsIdList: baseTwinClassId
+        ? [baseTwinClassId]
+        : _filters.twinClassExtendsHierarchyContainsIdList,
+      headTwinIdList: targetHeadTwinId
+        ? [targetHeadTwinId]
+        : _filters.headTwinIdList,
+    };
+
+    const searchFn = searchId
+      ? await searchTwinBySearchId({
+          searchId,
+          searchParams,
+          pagination: pagination,
+          filters: filtersAll,
+        })
+      : await searchTwins({
+          pagination: pagination,
+          filters: filtersAll,
+        });
 
     try {
-      return searchId
-        ? await searchIdTwins({
-            pagination: pagination,
-            filters: {
-              ..._filters,
-              twinClassExtendsHierarchyContainsIdList: baseTwinClassId
-                ? [baseTwinClassId]
-                : _filters.twinClassExtendsHierarchyContainsIdList,
-              headTwinIdList: targetHeadTwinId
-                ? [targetHeadTwinId]
-                : _filters.headTwinIdList,
-            },
-          })
-        : await searchTwins({
-            pagination: pagination,
-            filters: {
-              ..._filters,
-              twinClassExtendsHierarchyContainsIdList: baseTwinClassId
-                ? [baseTwinClassId]
-                : _filters.twinClassExtendsHierarchyContainsIdList,
-              headTwinIdList: targetHeadTwinId
-                ? [targetHeadTwinId]
-                : _filters.headTwinIdList,
-            },
-          });
+      return searchFn;
     } catch (e) {
       toast.error("Failed to fetch twins");
       return { data: [], pagination: {} };
