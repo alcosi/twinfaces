@@ -158,5 +158,5 @@ export function InheritedFieldPreview({
     }
   }
 
-  return <p>{`${value}`}</p>;
+  return <p className="max-w-full overflow-hidden">{`${value}`}</p>;
 }
