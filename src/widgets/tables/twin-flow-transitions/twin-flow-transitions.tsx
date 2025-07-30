@@ -190,7 +190,7 @@ export function TwinFlowTransitionsTable({
   const form = useForm<TwinFlowTransitionFormValues>({
     resolver: zodResolver(TWIN_FLOW_TRANSITION_SCHEMA),
     defaultValues: {
-      twinflow: twinflow?.id ?? "",
+      twinflow: twinflow ? [twinflow] : [],
       name: "",
       description: "",
       srcTwinStatusId: undefined,
@@ -250,7 +250,7 @@ export function TwinFlowTransitionsTable({
     };
 
     await createTwinFlowTransition({
-      twinFlowId: formValues.twinflow,
+      twinFlowId: formValues.twinflow[0]?.id!,
       body,
     });
     toast.success("Transition created successfully!");
