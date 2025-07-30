@@ -72,7 +72,7 @@ export const Combobox = fixedForwardRef(function Combobox<T>(
           role="combobox"
           aria-expanded={isOpen}
           className={cn(
-            "disabled:bg-secondary flex h-auto min-h-10 w-auto min-w-full justify-between truncate",
+            "disabled:bg-secondary flex h-auto min-h-10 w-auto min-w-[120px] justify-between truncate",
             props.buttonClassName
           )}
         >
