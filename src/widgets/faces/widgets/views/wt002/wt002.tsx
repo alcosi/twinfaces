@@ -5,8 +5,8 @@ import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
-import { WT002EntryClient } from "./wt002-entry-client";
 import { fetchModalCreateData } from "../tc001/fetch-modal-create-data";
+import { WT002EntryClient } from "./wt002-entry-client";
 
 export async function WT002({ widget, twinId }: WidgetFaceProps) {
   const wtResult = await safe(
