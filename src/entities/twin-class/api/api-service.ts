@@ -41,9 +41,9 @@ export function createTwinClassApi(settings: ApiSettings) {
       },
       body: {
         ...filters,
-        twinClassKeyLikeList: search
+        nameI18nLikeList: search
           ? ["%" + search + "%"]
-          : filters.twinClassKeyLikeList,
+          : filters.nameI18nLikeList,
       },
     });
   }
