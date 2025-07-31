@@ -3,12 +3,11 @@ import { useCallback, useContext, useState } from "react";
 import { PrivateApiContext } from "@/shared/api";
 
 import { hydrateTwinClassFromMap } from "../../libs";
-import { TwinClassFilters, TwinClass_DETAILED } from "../types";
+import { TwinClassSearchV1Filters, TwinClass_DETAILED } from "../types";
 
 type SearchTwinClassesArgs = {
   searchId: string;
-  search?: string;
-  filters?: TwinClassFilters;
+  narrow: TwinClassSearchV1Filters;
   params?: Record<string, string>;
 };
 
@@ -19,8 +18,7 @@ export const useSearchTwinClassesBySearchId = () => {
   const searchTwinClassesBySearchId = useCallback(
     async ({
       searchId,
-      search,
-      filters = {},
+      narrow,
       params = {},
     }: SearchTwinClassesArgs): Promise<{ data: TwinClass_DETAILED[] }> => {
       setLoading(true);
@@ -28,8 +26,7 @@ export const useSearchTwinClassesBySearchId = () => {
       try {
         const { data, error } = await api.twinClass.searchBySearchId({
           searchId,
-          search,
-          filters,
+          narrow,
           params,
         });
 

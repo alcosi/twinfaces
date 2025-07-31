@@ -1,11 +1,11 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { reduceToObject, toArray } from "@/shared/libs";
 
 import {
   TwinClassFieldCreateRq,
   TwinClassFieldSearchFilters,
+  TwinClassFieldSearchV1Filters,
   TwinClassFieldUpdateRq,
 } from "./types";
 
@@ -39,11 +39,11 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
 
   function searchBySearchId({
     searchId,
-    twinClassId,
+    narrow,
     params = {},
   }: {
     searchId: string;
-    twinClassId: string;
+    narrow: TwinClassFieldSearchV1Filters;
     params?: Record<string, string>;
   }) {
     return settings.client.POST(
@@ -62,12 +62,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
           path: { searchId },
         },
         body: {
-          narrow: {
-            twinClassIdMap: reduceToObject({
-              list: toArray(twinClassId),
-              defaultValue: true,
-            }),
-          },
+          narrow,
           params,
         },
       }

@@ -18,7 +18,12 @@ import {
   TwinClassField,
   useSearchTwinClassFieldsBySearchId,
 } from "@/entities/twin-class-field";
-import { isEmptyArray, isPopulatedArray } from "@/shared/libs";
+import {
+  isEmptyArray,
+  isPopulatedArray,
+  reduceToObject,
+  toArray,
+} from "@/shared/libs";
 
 import { TwinFieldFormField } from "../../../../form-fields";
 
@@ -84,7 +89,12 @@ export function TC001Form({
         try {
           const result = await searchTwinClassFieldsBySearchId({
             searchId: selectedOption.twinClassFieldSearchId,
-            twinClassId: selectedClass,
+            narrow: {
+              twinClassIdMap: reduceToObject({
+                list: toArray(selectedClass),
+                defaultValue: true,
+              }),
+            },
             params: selectedOption.twinClassFieldsSearchParams!,
           });
 

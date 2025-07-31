@@ -3,12 +3,12 @@ import { PaginationState } from "@tanstack/table-core";
 import { TwinSimpleFilters } from "@/entities/twin/server";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { operations } from "@/shared/api/generated/schema";
-import { wrapWithPercent } from "@/shared/libs";
 
 import {
   TagSearchFilters,
   TwinClassCreateRq,
   TwinClassFilters,
+  TwinClassSearchV1Filters,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
   TwinClassValidHeadQuery,
@@ -51,13 +51,11 @@ export function createTwinClassApi(settings: ApiSettings) {
 
   function searchBySearchId({
     searchId,
-    search,
-    filters,
+    narrow,
     params = {},
   }: {
     searchId: string;
-    search?: string;
-    filters?: TwinClassFilters;
+    narrow: TwinClassSearchV1Filters;
     params?: Record<string, string>;
   }) {
     return settings.client.POST("/private/twin_class/search/{searchId}/v1", {
@@ -72,12 +70,7 @@ export function createTwinClassApi(settings: ApiSettings) {
         path: { searchId },
       },
       body: {
-        narrow: {
-          ...filters,
-          twinClassKeyLikeList: search
-            ? [wrapWithPercent(search)]
-            : filters?.twinClassKeyLikeList,
-        },
+        narrow,
         params,
       },
     });

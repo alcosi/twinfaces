@@ -13,7 +13,7 @@ import { isArray, isPopulatedArray } from "@/shared/libs";
 export function useTwinClassFields(
   control: Control<TwinFormValues>,
   baseTwinClassId?: string,
-  twinClassSearchParams?: { [key: string]: string }
+  twinClassSearchParams?: Record<string, string>
 ) {
   const twinClassAdapter = useTwinClassSelectAdapter();
   const twinClassBySearchIdAdapter = useTwinClassBySearchIdSelectAdapter();
@@ -51,7 +51,6 @@ export function useTwinClassFields(
         baseTwinClassId
           ? twinClassBySearchIdAdapter.getItems(baseTwinClassId, {
               search,
-              filters: {},
               params: twinClassSearchParams,
             })
           : Promise.resolve([]),

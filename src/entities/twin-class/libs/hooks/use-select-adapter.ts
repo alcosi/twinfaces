@@ -57,7 +57,6 @@ export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_D
 
   type Options = {
     search?: string;
-    filters?: TwinClassFilters;
     params?: Record<string, string>;
   };
 
@@ -75,16 +74,16 @@ export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_D
     searchId: string,
     options?: {
       search?: string;
-      filters?: TwinClassFilters;
       params?: Record<string, string>;
     }
   ) {
-    const { search, filters, params } = options || {};
+    const { search = "", params } = options || {};
 
     const response = await searchTwinClassesBySearchId({
       searchId,
-      search,
-      filters,
+      narrow: {
+        twinClassKeyLikeList: [wrapWithPercent(search)],
+      },
       params,
     });
 
