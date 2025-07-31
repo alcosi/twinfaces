@@ -8,7 +8,6 @@ import {
   TagSearchFilters,
   TwinClassCreateRq,
   TwinClassFilters,
-  TwinClassSearchV1Filters,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
   TwinClassValidHeadQuery,
@@ -55,7 +54,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     params = {},
   }: {
     searchId: string;
-    narrow: TwinClassSearchV1Filters;
+    narrow: TwinClassFilters;
     params?: Record<string, string>;
   }) {
     return settings.client.POST("/private/twin_class/search/{searchId}/v1", {

@@ -13,14 +13,13 @@ import {
   TwinClassFilters,
   TwinClass_DETAILED,
   useFetchTwinClassById,
-  useSearchTwinClassesBySearchId,
   useTagSearch,
-  useTwinClassSearchV1,
+  useTwinClassSearch,
   useValidTwinsForLink,
 } from "../../api";
 
 export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
-  const { searchTwinClasses } = useTwinClassSearchV1();
+  const { searchTwinClasses } = useTwinClassSearch();
   const { fetchTwinClassById } = useFetchTwinClassById();
 
   async function getById(id: string) {
@@ -52,7 +51,7 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
 }
 
 export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
-  const { searchTwinClassesBySearchId } = useSearchTwinClassesBySearchId();
+  const { searchTwinClasses } = useTwinClassSearch();
   const { fetchTwinClassById } = useFetchTwinClassById();
 
   type Options = {
@@ -79,7 +78,7 @@ export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_D
   ) {
     const { search = "", params } = options || {};
 
-    const response = await searchTwinClassesBySearchId({
+    const response = await searchTwinClasses({
       searchId,
       narrow: {
         twinClassKeyLikeList: [wrapWithPercent(search)],

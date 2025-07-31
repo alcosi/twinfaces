@@ -3,7 +3,7 @@
 import React, { createContext, useEffect, useState } from "react";
 
 import { useTwinFetchByIdV2 } from "@/entities/twin";
-import { useTwinClassSearchV1 } from "@/entities/twin-class";
+import { useTwinClassSearch } from "@/entities/twin-class";
 import { Twin_DETAILED } from "@/entities/twin/server";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
@@ -27,8 +27,7 @@ export function TwinContextProvider({
 }) {
   const [twin, setTwin] = useState<Twin_DETAILED | undefined>(undefined);
   const { fetchTwinById, loading: twinLoading } = useTwinFetchByIdV2();
-  const { searchTwinClasses, loading: twinClassLoading } =
-    useTwinClassSearchV1();
+  const { searchTwinClasses, loading: twinClassLoading } = useTwinClassSearch();
 
   useEffect(() => {
     refresh();
