@@ -330,7 +330,7 @@ export function TwinsTable({
         : _filters.headTwinIdList,
     };
 
-    const searchFn = searchId
+    const searchData = searchId
       ? await searchTwinBySearchId({
           searchId,
           searchParams,
@@ -343,7 +343,7 @@ export function TwinsTable({
         });
 
     try {
-      return searchFn;
+      return searchData;
     } catch (e) {
       toast.error("Failed to fetch twins");
       return { data: [], pagination: {} };
