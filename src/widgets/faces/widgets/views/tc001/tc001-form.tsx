@@ -183,6 +183,41 @@ export function TC001Form({
     "00000000-0000-0000-0011-000000000005": "externalId",
   };
 
+  function buildFieldElements() {
+    return fetchedFields.map((field) => {
+      if (!field.id) return null;
+
+      const SelfComponent = selfFields[field.id as keyof typeof selfFields];
+      if (SelfComponent) {
+        return (
+          <SelfComponent
+            key={field.key}
+            control={control}
+            name={nameMap[field.id]!}
+            label={field.name!}
+            required={field.required}
+          />
+        );
+      }
+
+      return (
+        <TwinFieldFormField
+          key={field.key}
+          name={`fields.${field.key}`}
+          control={control}
+          label={field.name}
+          descriptor={field.descriptor}
+          twinClassId={
+            isPopulatedArray<{ id: string }>(selectedClass)
+              ? selectedClass[0].id
+              : ""
+          }
+          required={field.required}
+        />
+      );
+    });
+  }
+
   return (
     <div className="space-y-8">
       {!faceTwinCreate?.singleOptionSilentMode &&
@@ -223,41 +258,7 @@ export function TC001Form({
         />
       )}
 
-      {fetchedFields?.reduce<JSX.Element[]>((acc, field) => {
-        if (!field.id) return acc;
-
-        const SelfComponent = selfFields[field.id as keyof typeof selfFields];
-
-        if (SelfComponent) {
-          acc.push(
-            <SelfComponent
-              key={field.key}
-              control={control}
-              name={nameMap[field.id]!}
-              label={field.name!}
-              required={field.required}
-            />
-          );
-        } else {
-          acc.push(
-            <TwinFieldFormField
-              key={field.key}
-              name={`fields.${field.key}`}
-              control={control}
-              label={field.name}
-              descriptor={field.descriptor}
-              twinClassId={
-                isPopulatedArray<{ id: string }>(selectedClass)
-                  ? selectedClass[0]?.id
-                  : ""
-              }
-              required={field.required}
-            />
-          );
-        }
-
-        return acc;
-      }, [])}
+      {buildFieldElements()}
     </div>
   );
 }
