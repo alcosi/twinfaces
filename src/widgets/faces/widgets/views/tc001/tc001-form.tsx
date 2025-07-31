@@ -43,7 +43,7 @@ export function TC001Form({
 }) {
   const { faceTwinCreate } = modalCreateData;
   const { setValue, watch } = useFormContext<TwinFormValues>();
-  const { searchTwinClassFields } = useTwinClassFieldSearch();
+  const { searchBySearchId } = useTwinClassFieldSearch();
   const selectedClass = watch("classId");
   const [fetchedFields, setFetchedFields] = useState<TwinClassField[]>([]);
 
@@ -86,7 +86,7 @@ export function TC001Form({
     const fetchTwinClassFields = async () => {
       if (selectedOption?.twinClassFieldSearchId && selectedClass) {
         try {
-          const result = await searchTwinClassFields({
+          const result = await searchBySearchId({
             searchId: selectedOption.twinClassFieldSearchId,
             narrow: {
               twinClassIdMap: reduceToObject({
@@ -108,11 +108,7 @@ export function TC001Form({
     };
 
     fetchTwinClassFields();
-  }, [
-    selectedOption?.twinClassFieldSearchId,
-    selectedClass,
-    searchTwinClassFields,
-  ]);
+  }, [selectedOption?.twinClassFieldSearchId, selectedClass, searchBySearchId]);
 
   const { twinClassBySearchIdAdapter, userAdapter } = useTwinClassFields(
     control,

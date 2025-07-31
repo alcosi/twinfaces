@@ -147,7 +147,7 @@ export function TwinClassFieldsTable({
         ]
       : undefined,
   });
-  const { searchTwinClassFields } = useTwinClassFieldSearch();
+  const { searchByFilters } = useTwinClassFieldSearch();
 
   async function fetchFields(
     pagination: PaginationState,
@@ -155,7 +155,7 @@ export function TwinClassFieldsTable({
   ): Promise<PagedResponse<TwinClassFieldV2_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
     try {
-      const response = await searchTwinClassFields({
+      const response = await searchByFilters({
         pagination,
         filters: {
           ..._filters,

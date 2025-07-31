@@ -1,89 +1,33 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext, useState } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
-import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
+import { PrivateApiContext } from "@/shared/api";
+import { wrapWithPercent } from "@/shared/libs";
 
 import { hydrateTwinClassFieldFromMap } from "../../libs";
 import {
   TwinClassFieldSearchFilters,
-  TwinClassFieldV2_DETAILED,
+  TwinClassFieldSearchRsV1,
 } from "../types";
-
-type SearchBySearchIdArgs = {
-  searchId: string;
-  narrow: TwinClassFieldSearchFilters;
-  params?: Record<string, string>;
-};
-
-type SearchByFiltersArgs = {
-  search?: string;
-  pagination?: PaginationState;
-  filters?: TwinClassFieldSearchFilters;
-};
-
-type SearchTwinClassFieldsArgs = SearchBySearchIdArgs | SearchByFiltersArgs;
 
 export const useTwinClassFieldSearch = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const searchTwinClassFields = useCallback(
-    async (
-      args: SearchTwinClassFieldsArgs
-    ): Promise<{
-      data: TwinClassFieldV2_DETAILED[];
-      pagination?: PagedResponse<TwinClassFieldV2_DETAILED>["pagination"];
-    }> => {
+  const searchBySearchId = useCallback(
+    async (args: {
+      searchId: string;
+      narrow: TwinClassFieldSearchFilters;
+      params?: Record<string, string>;
+    }) => {
       setLoading(true);
 
       try {
-        if ("searchId" in args) {
-          const { searchId, narrow, params = {} } = args;
-
-          const { data, error } = await api.twinClassField.searchBySearchId({
-            searchId,
-            narrow,
-            params,
-          });
-
-          if (error) throw error;
-
-          const twinClassFields =
-            data.fields?.map((dto) =>
-              hydrateTwinClassFieldFromMap(dto, data.relatedObjects)
-            ) ?? [];
-
-          return { data: twinClassFields };
-        }
-
-        const {
-          search,
-          pagination = { pageIndex: 0, pageSize: 10 },
-          filters,
-        } = args;
-
-        const { data, error } = await api.twinClassField.search({
-          pagination,
-          filters: {
-            ...filters,
-            keyLikeList: isPopulatedString(search)
-              ? [wrapWithPercent(search)]
-              : filters?.keyLikeList,
-          },
-        });
+        const { data, error } = await api.twinClassField.searchBySearchId(args);
 
         if (error) throw error;
 
-        const twinClassFields =
-          data.fields?.map((dto) =>
-            hydrateTwinClassFieldFromMap(dto, data.relatedObjects)
-          ) ?? [];
-
-        return { data: twinClassFields, pagination: data.pagination ?? {} };
-      } catch (error) {
-        console.error("Failed to fetch twin class fields:", error);
-        throw new Error("An error occurred while fetching twin class fields");
+        return { data: mapAndHydrate(data), pagination: undefined };
       } finally {
         setLoading(false);
       }
@@ -91,5 +35,46 @@ export const useTwinClassFieldSearch = () => {
     [api]
   );
 
-  return { searchTwinClassFields, loading };
+  const searchByFilters = useCallback(
+    async ({
+      search,
+      pagination = { pageIndex: 0, pageSize: 10 },
+      filters,
+    }: {
+      search?: string;
+      pagination?: PaginationState;
+      filters?: TwinClassFieldSearchFilters;
+    }) => {
+      setLoading(true);
+
+      try {
+        const payload = {
+          ...filters,
+          keyLikeList: search
+            ? [wrapWithPercent(search)]
+            : filters?.keyLikeList,
+        };
+
+        const { data, error } = await api.twinClassField.search({
+          pagination,
+          filters: payload,
+        });
+
+        if (error) throw error;
+
+        return { data: mapAndHydrate(data), pagination: data.pagination };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [api]
+  );
+
+  return { loading, searchBySearchId, searchByFilters };
 };
+
+function mapAndHydrate(res: TwinClassFieldSearchRsV1) {
+  return (res.fields ?? []).map((dto) =>
+    hydrateTwinClassFieldFromMap(dto, res.relatedObjects)
+  );
+}

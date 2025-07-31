@@ -4,7 +4,7 @@ import { SelectAdapter } from "@/shared/libs";
 import { useTwinClassFieldSearch } from "../../api/hooks";
 
 export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassFieldV2_DETAILED> {
-  const { searchTwinClassFields } = useTwinClassFieldSearch();
+  const { searchByFilters } = useTwinClassFieldSearch();
 
   async function getById(id: string) {
     // TODO: Apply valid logic here
@@ -12,7 +12,7 @@ export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassFieldV2
   }
 
   async function getItems(search: string) {
-    const response = await searchTwinClassFields({ search });
+    const response = await searchByFilters({ search });
     return response.data;
   }
 
