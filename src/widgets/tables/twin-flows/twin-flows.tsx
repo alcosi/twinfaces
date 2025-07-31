@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -146,11 +146,11 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
       const response = await searchTwinFlows({
         pagination,
         filters: {
+          ...mapFiltersToPayload(filters.filters),
           twinClassIdMap: reduceToObject({
             list: toArray(twinClassId),
             defaultValue: true,
           }),
-          ...mapFiltersToPayload(filters.filters),
         },
       });
 
