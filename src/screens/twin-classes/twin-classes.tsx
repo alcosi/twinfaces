@@ -240,7 +240,7 @@ const colDefs: Record<
 export function TwinClasses() {
   const api = useContext(PrivateApiContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const { searchTwinClasses } = useTwinClassSearch();
+  const { searchByFilters } = useTwinClassSearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
 
   async function fetchTwinClasses(
@@ -250,7 +250,7 @@ export function TwinClasses() {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      return await searchTwinClasses({
+      return await searchByFilters({
         pagination,
         filters: _filters,
       });

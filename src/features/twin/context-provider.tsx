@@ -27,7 +27,7 @@ export function TwinContextProvider({
 }) {
   const [twin, setTwin] = useState<Twin_DETAILED | undefined>(undefined);
   const { fetchTwinById, loading: twinLoading } = useTwinFetchByIdV2();
-  const { searchTwinClasses, loading: twinClassLoading } = useTwinClassSearch();
+  const { searchByFilters, loading: twinClassLoading } = useTwinClassSearch();
 
   useEffect(() => {
     refresh();
@@ -38,7 +38,7 @@ export function TwinContextProvider({
       const twin = await fetchTwinById(twinId);
 
       if (twin) {
-        const { data } = await searchTwinClasses({
+        const { data } = await searchByFilters({
           filters: {
             headHierarchyChildsForTwinClassSearch: {
               idList: [twin?.twinClassId],
