@@ -1,10 +1,7 @@
-import { Suspense } from "react";
-
 import { FaceWT001, fetchWT001Face } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { TableSkeleton } from "@/features/ui/skeletons";
 import { RelatedObjects } from "@/shared/api";
 import { isTruthy, safe } from "@/shared/libs";
 
@@ -48,15 +45,13 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
     : [];
 
   return (
-    <Suspense fallback={<TableSkeleton />}>
-      <WT001Client
-        title={label}
-        baseTwinClassId={twinClassId}
-        enabledColumns={sortedEnabledColumns}
-        showCreateButton={showCreateButton}
-        isAdmin={isAdmin}
-        modalCreateData={modalCreateData}
-      />
-    </Suspense>
+    <WT001Client
+      title={label}
+      baseTwinClassId={twinClassId}
+      enabledColumns={sortedEnabledColumns}
+      showCreateButton={showCreateButton}
+      isAdmin={isAdmin}
+      modalCreateData={modalCreateData}
+    />
   );
 }

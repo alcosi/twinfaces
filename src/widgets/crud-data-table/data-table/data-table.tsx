@@ -18,7 +18,7 @@ import {
   useState,
 } from "react";
 
-import { TableSkeleton } from "@/features/ui/skeletons";
+import { TableSkeleton2 } from "@/features/ui/skeletons";
 import { PaginationV1 } from "@/shared/api";
 import {
   cn,
@@ -134,7 +134,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }, [pagination.tanstask]);
 
   if (loading) {
-    return <TableSkeleton withHeader={false} />;
+    return <TableSkeleton2 />;
   }
 
   return (
