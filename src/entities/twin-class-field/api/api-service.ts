@@ -5,7 +5,6 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import {
   TwinClassFieldCreateRq,
   TwinClassFieldSearchFilters,
-  TwinClassFieldSearchV1Filters,
   TwinClassFieldUpdateRq,
 } from "./types";
 
@@ -43,7 +42,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     params = {},
   }: {
     searchId: string;
-    narrow: TwinClassFieldSearchV1Filters;
+    narrow: TwinClassFieldSearchFilters;
     params?: Record<string, string>;
   }) {
     return settings.client.POST(

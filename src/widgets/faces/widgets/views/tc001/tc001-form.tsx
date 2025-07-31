@@ -16,7 +16,7 @@ import {
 } from "@/entities/twin";
 import {
   TwinClassField,
-  useSearchTwinClassFieldsBySearchId,
+  useTwinClassFieldSearch,
 } from "@/entities/twin-class-field";
 import {
   isEmptyArray,
@@ -43,8 +43,7 @@ export function TC001Form({
 }) {
   const { faceTwinCreate } = modalCreateData;
   const { setValue, watch } = useFormContext<TwinFormValues>();
-  const { searchTwinClassFieldsBySearchId } =
-    useSearchTwinClassFieldsBySearchId();
+  const { searchTwinClassFields } = useTwinClassFieldSearch();
   const selectedClass = watch("classId");
   const [fetchedFields, setFetchedFields] = useState<TwinClassField[]>([]);
 
@@ -87,7 +86,7 @@ export function TC001Form({
     const fetchTwinClassFields = async () => {
       if (selectedOption?.twinClassFieldSearchId && selectedClass) {
         try {
-          const result = await searchTwinClassFieldsBySearchId({
+          const result = await searchTwinClassFields({
             searchId: selectedOption.twinClassFieldSearchId,
             narrow: {
               twinClassIdMap: reduceToObject({
@@ -112,7 +111,7 @@ export function TC001Form({
   }, [
     selectedOption?.twinClassFieldSearchId,
     selectedClass,
-    searchTwinClassFieldsBySearchId,
+    searchTwinClassFields,
   ]);
 
   const { twinClassBySearchIdAdapter, userAdapter } = useTwinClassFields(

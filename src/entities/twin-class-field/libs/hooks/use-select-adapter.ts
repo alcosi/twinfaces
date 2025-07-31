@@ -1,9 +1,10 @@
 import { TwinClassFieldV2_DETAILED } from "@/entities/twin-class-field";
 import { SelectAdapter } from "@/shared/libs";
-import { useTwinClassFieldSearchV1 } from "../../api/hooks";
+
+import { useTwinClassFieldSearch } from "../../api/hooks";
 
 export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassFieldV2_DETAILED> {
-  const { searchTwinClassFields } = useTwinClassFieldSearchV1();
+  const { searchTwinClassFields } = useTwinClassFieldSearch();
 
   async function getById(id: string) {
     // TODO: Apply valid logic here

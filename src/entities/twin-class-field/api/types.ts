@@ -45,6 +45,3 @@ export type TwinClassFieldV2Filters = Partial<
     TwinClassFieldV2FilterKeys
   >
 >;
-
-export type TwinClassFieldSearchV1Filters =
-  components["schemas"]["TwinClassFieldSearchV1"];
