@@ -9,16 +9,18 @@ import {
 } from "@/components/form-fields";
 
 import { FaceTC001ViewRs } from "@/entities/face";
-import { TwinFormValues, TwinSelfFieldId } from "@/entities/twin";
+import {
+  TwinFormValues,
+  TwinSelfFieldId,
+  useTwinClassFields,
+} from "@/entities/twin";
 import {
   TwinClassField,
   useSearchTwinClassFieldsBySearchId,
 } from "@/entities/twin-class-field";
-import { FormFieldSkeleton } from "@/features/ui/skeletons";
-import { isEmptyArray, isTruthy } from "@/shared/libs";
+import { isEmptyArray, isPopulatedArray } from "@/shared/libs";
 
 import { TwinFieldFormField } from "../../../../form-fields";
-import { useTwinClassFields } from "../../../../tables/twins/use-twin-form-fields";
 
 type TwinSelfFieldComponentProps = {
   control: Control<TwinFormValues>;
@@ -36,7 +38,7 @@ export function TC001Form({
 }) {
   const { faceTwinCreate } = modalCreateData;
   const { setValue, watch } = useFormContext<TwinFormValues>();
-  const { searchTwinClassFieldsBySearchId, loading } =
+  const { searchTwinClassFieldsBySearchId } =
     useSearchTwinClassFieldsBySearchId();
   const selectedClass = watch("classId");
   const [fetchedFields, setFetchedFields] = useState<TwinClassField[]>([]);
@@ -214,18 +216,14 @@ export function TC001Form({
         />
       )}
 
-      {fetchedFields
-        ?.filter(
-          (field) =>
-            !!field.id && selfFields[field.id as keyof typeof selfFields]
-        )
-        .map((field) => {
-          if (!field.id) return null;
-          const Component = selfFields[field.id as keyof typeof selfFields];
-          if (!Component) return null;
+      {fetchedFields?.reduce<JSX.Element[]>((acc, field) => {
+        if (!field.id) return acc;
 
-          return (
-            <Component
+        const SelfComponent = selfFields[field.id as keyof typeof selfFields];
+
+        if (SelfComponent) {
+          acc.push(
+            <SelfComponent
               key={field.key}
               control={control}
               name={nameMap[field.id]!}
@@ -233,32 +231,26 @@ export function TC001Form({
               required={field.required}
             />
           );
-        })}
+        } else {
+          acc.push(
+            <TwinFieldFormField
+              key={field.key}
+              name={`fields.${field.key}`}
+              control={control}
+              label={field.name}
+              descriptor={field.descriptor}
+              twinClassId={
+                isPopulatedArray<{ id: string }>(selectedClass)
+                  ? selectedClass[0]?.id
+                  : ""
+              }
+              required={field.required}
+            />
+          );
+        }
 
-      {isTruthy(loading)
-        ? fetchedFields.map((_, index) => {
-            return <FormFieldSkeleton key={index} />;
-          })
-        : fetchedFields
-            .filter(
-              (field) =>
-                field.id && !selfFields[field.id as keyof typeof selfFields]
-            )
-            .map((field) => (
-              <TwinFieldFormField
-                key={field.key}
-                name={`fields.${field.key}`}
-                control={control}
-                label={field.name}
-                descriptor={field.descriptor}
-                twinClassId={
-                  Array.isArray(selectedClass)
-                    ? selectedClass[0]?.id
-                    : undefined
-                }
-                required={field.required}
-              />
-            ))}
+        return acc;
+      }, [])}
     </div>
   );
 }

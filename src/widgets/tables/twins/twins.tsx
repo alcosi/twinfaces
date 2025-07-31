@@ -340,7 +340,7 @@ export function TwinsTable({
       classId: "",
       name: "",
       description: "",
-      isSketch: modalCreateData?.faceTwinCreate?.sketchMode || undefined,
+      isSketch: modalCreateData?.faceTwinCreate?.sketchMode,
     },
   });
 

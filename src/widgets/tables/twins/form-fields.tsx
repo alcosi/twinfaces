@@ -6,10 +6,9 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 
-import { TwinFormValues } from "@/entities/twin";
+import { TwinFormValues, useTwinClassFields } from "@/entities/twin";
 
 import { TwinFieldFormField } from "../../form-fields";
-import { useTwinClassFields } from "./use-twin-form-fields";
 
 export function TwinFormFields({
   control,
