@@ -26,7 +26,7 @@ export function TwinFormFields({
     headAdapter,
     hasTagDataList,
     optionAdapter,
-  } = useTwinClassFields(control, baseTwinClassId);
+  } = useTwinClassFields(control, { baseTwinClassId });
 
   return (
     <>

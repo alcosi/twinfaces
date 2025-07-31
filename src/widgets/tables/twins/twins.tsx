@@ -49,7 +49,7 @@ import {
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
-import { TC001Form } from "../../faces/widgets/views/tc001";
+import { TC001Form } from "../../faces/widgets/views/index.client";
 import { TwinFormFields } from "./form-fields";
 
 type Props = {

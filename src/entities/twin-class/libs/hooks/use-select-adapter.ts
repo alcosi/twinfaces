@@ -69,14 +69,8 @@ export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_D
     });
   }
 
-  async function getItems(
-    searchId: string,
-    options?: {
-      search?: string;
-      params?: Record<string, string>;
-    }
-  ) {
-    const { search = "", params } = options || {};
+  async function getItems(searchId: string, options?: Options) {
+    const { search = "", params } = options ?? {};
 
     const response = await searchTwinClasses({
       searchId,

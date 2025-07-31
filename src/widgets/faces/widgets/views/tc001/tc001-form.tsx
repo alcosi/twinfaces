@@ -116,8 +116,10 @@ export function TC001Form({
 
   const { twinClassBySearchIdAdapter, userAdapter } = useTwinClassFields(
     control,
-    selectedOption?.twinClassSearchId,
-    selectedOption?.twinClassSearchParams
+    {
+      baseTwinClassId: selectedOption?.twinClassSearchId,
+      twinClassSearchParams: selectedOption?.twinClassSearchParams,
+    }
   );
 
   const selfFields: Partial<

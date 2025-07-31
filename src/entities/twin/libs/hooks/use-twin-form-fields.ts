@@ -10,11 +10,17 @@ import {
 import { useUserSelectAdapter } from "@/entities/user";
 import { isArray, isPopulatedArray } from "@/shared/libs";
 
+type TwinClassFieldsParams = {
+  baseTwinClassId?: string;
+  twinClassSearchParams?: Record<string, string>;
+};
+
 export function useTwinClassFields(
   control: Control<TwinFormValues>,
-  baseTwinClassId?: string,
-  twinClassSearchParams?: Record<string, string>
+  params: TwinClassFieldsParams = {}
 ) {
+  const { baseTwinClassId, twinClassSearchParams } = params;
+
   const twinClassAdapter = useTwinClassSelectAdapter();
   const twinClassBySearchIdAdapter = useTwinClassBySearchIdSelectAdapter();
   const userAdapter = useUserSelectAdapter();
