@@ -4512,6 +4512,25 @@ export interface components {
             assigneeRequired?: boolean;
             /** @description external id */
             externalId?: string;
+            /**
+             * Format: uuid
+             * @description breadcrumbs face id
+             */
+            breadCrumbsFaceId?: string;
+            /**
+             * Format: uuid
+             * @description inherited page face id
+             */
+            inheritedPageFaceId?: string;
+            /**
+             * Format: uuid
+             * @description inherited breadcrumbs face id
+             */
+            inheritedBreadCrumbsFaceId?: string;
+            /** @description assignee required */
+            assigneeRequired?: boolean;
+            /** @description external id */
+            externalId?: string;
         };
         TwinflowBaseV1: {
             /**
@@ -6290,6 +6309,25 @@ export interface components {
              * @description twin display page pointer
              */
             pageFaceId?: string;
+            /**
+             * Format: uuid
+             * @description breadcrumbs face id
+             */
+            breadCrumbsFaceId?: string;
+            /**
+             * Format: uuid
+             * @description inherited page face id
+             */
+            inheritedPageFaceId?: string;
+            /**
+             * Format: uuid
+             * @description inherited breadcrumbs face id
+             */
+            inheritedBreadCrumbsFaceId?: string;
+            /** @description assignee required */
+            assigneeRequired?: boolean;
+            /** @description external id */
+            externalId?: string;
             /**
              * Format: uuid
              * @description breadcrumbs face id

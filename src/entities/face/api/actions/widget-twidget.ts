@@ -5,6 +5,7 @@ import { isUndefined } from "@/shared/libs";
 
 import { getAuthHeaders } from "../../libs";
 import {
+  FaceBC001ViewRs,
   FaceTC001ViewRs,
   FaceTW001ViewRs,
   FaceTW002ViewRs,
@@ -28,7 +29,8 @@ type FetchFaceOptions = {
     | "/private/face/tw004/{faceId}/v2"
     | "/private/face/tw005/{faceId}/v1"
     | "/private/face/tw007/{faceId}/v1"
-    | "/private/face/tc001/{faceId}/v1";
+    | "/private/face/tc001/{faceId}/v1"
+    | "/private/face/bc001/{faceId}/v1";
   query: Record<string, string>;
 };
 
@@ -189,5 +191,17 @@ export async function fetchTC001Face(
       showTwinClass2TwinClassFieldMode: "DETAILED",
       showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
     },
+  });
+}
+
+export async function fetchBC001Face(
+  faceId: string,
+  twinId?: string
+): Promise<FaceBC001ViewRs> {
+  return fetchFace<FaceBC001ViewRs>({
+    faceId,
+    endpoint: "/private/face/bc001/{faceId}/v1",
+    twinId,
+    query: {},
   });
 }

@@ -86,7 +86,6 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
           value: attachment?.storageLink ?? "",
         } as TwinFieldUI;
       }
-
       return acc;
     }, hydrated.fields ?? {});
   }
