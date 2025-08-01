@@ -53,6 +53,7 @@ export async function TW004(props: TWidgetFaceProps) {
 
       return (
         <TwinFieldEditor
+          key={id}
           id={id!}
           label={el.label || "N/A"}
           twinId={twidget.pointedTwinId!}
