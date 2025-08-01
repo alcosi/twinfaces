@@ -1,38 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
-import { Control, Path, useFormContext } from "react-hook-form";
+import { Control, useFormContext } from "react-hook-form";
 
 import { ComboboxFormField, ComboboxFormItem } from "@/components/form-fields";
 
 import { FaceTC001ViewRs } from "@/entities/face";
-import {
-  TwinFormValues,
-  TwinSelfFieldId,
-  useTwinClassFields,
-} from "@/entities/twin";
+import { TwinFormValues, useTwinClassFields } from "@/entities/twin";
 import {
   TwinClassField,
   useTwinClassFieldSearch,
 } from "@/entities/twin-class-field";
 import { reduceToObject, toArray } from "@/shared/libs";
 
-import { TwinSelfFieldRenderer } from "../tc001-form";
-import { buildFieldElements } from "./build-field-elements";
+import { buildFieldElements } from "../utils";
 
 type Props = {
   control: Control<TwinFormValues>;
   payload: FaceTC001ViewRs;
   options: NonNullable<FaceTC001ViewRs["faceTwinCreate"]>["options"];
-  selfFields: Partial<Record<string, TwinSelfFieldRenderer>>;
-  nameMap: Partial<Record<TwinSelfFieldId, Path<TwinFormValues>>>;
 };
 
-export function MultiModeForm({
-  control,
-  payload,
-  options,
-  selfFields,
-  nameMap,
-}: Props) {
+export function MultiModeForm({ control, payload, options }: Props) {
   const { setValue, watch } = useFormContext<TwinFormValues>();
   const { faceTwinCreate } = payload;
   const { searchBySearchId } = useTwinClassFieldSearch();
@@ -74,13 +61,10 @@ export function MultiModeForm({
     fetchFields();
   }, [selectedOption, selectedClass, searchBySearchId]);
 
-  const { twinClassBySearchIdAdapter, userAdapter } = useTwinClassFields(
-    control,
-    {
-      baseTwinClassId: selectedOption?.twinClassSearchId,
-      twinClassSearchParams: selectedOption?.twinClassSearchParams,
-    }
-  );
+  const { twinClassBySearchIdAdapter } = useTwinClassFields(control, {
+    baseTwinClassId: selectedOption?.twinClassSearchId,
+    twinClassSearchParams: selectedOption?.twinClassSearchParams,
+  });
 
   return (
     <div className="space-y-8">
@@ -121,10 +105,7 @@ export function MultiModeForm({
       {buildFieldElements({
         fields: fetchedFields,
         control,
-        selfFields,
-        nameMap,
         selectedClass,
-        userAdapter,
       })}
     </div>
   );
