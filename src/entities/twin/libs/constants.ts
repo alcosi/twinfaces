@@ -1,4 +1,9 @@
-import { toArray, toArrayOfString, wrapWithPercent } from "@/shared/libs";
+import {
+  invertMap,
+  toArray,
+  toArrayOfString,
+  wrapWithPercent,
+} from "@/shared/libs";
 
 import { TwinFilterKeys } from "../server";
 import {
@@ -55,25 +60,29 @@ export const TWIN_SELF_FIELD_IDS = [
   "00000000-0000-0000-0011-000000000016",
 ] as const;
 
-export const STATIC_TWIN_FIELD_KEY_TO_ID_MAP: Record<
+export const TWIN_SELF_FIELD_ID_TO_KEY_MAP: Record<
+  TwinSelfFieldId,
+  TwinSelfFieldKey
+> = {
+  "00000000-0000-0000-0011-000000000003": "name",
+  "00000000-0000-0000-0011-000000000004": "description",
+  "00000000-0000-0000-0011-000000000005": "externalId",
+  "00000000-0000-0000-0011-000000000006": "ownerUserId",
+  "00000000-0000-0000-0011-000000000007": "assignerUserId",
+  "00000000-0000-0000-0011-000000000008": "authorUserId",
+  "00000000-0000-0000-0011-000000000009": "headTwinId",
+  "00000000-0000-0000-0011-000000000010": "statusId",
+  "00000000-0000-0000-0011-000000000011": "createdAt",
+  "00000000-0000-0000-0011-000000000012": "id",
+  "00000000-0000-0000-0011-000000000013": "twinClassId",
+  "00000000-0000-0000-0011-000000000014": "aliases",
+  "00000000-0000-0000-0011-000000000015": "tags",
+  "00000000-0000-0000-0011-000000000016": "markers",
+};
+export const TWIN_SELF_FIELD_KEY_TO_ID_MAP: Record<
   TwinSelfFieldKey,
   TwinSelfFieldId
-> = {
-  name: "00000000-0000-0000-0011-000000000003",
-  description: "00000000-0000-0000-0011-000000000004",
-  externalId: "00000000-0000-0000-0011-000000000005",
-  ownerUserId: "00000000-0000-0000-0011-000000000006",
-  assignerUserId: "00000000-0000-0000-0011-000000000007",
-  authorUserId: "00000000-0000-0000-0011-000000000008",
-  headTwinId: "00000000-0000-0000-0011-000000000009",
-  statusId: "00000000-0000-0000-0011-000000000010",
-  createdAt: "00000000-0000-0000-0011-000000000011",
-  id: "00000000-0000-0000-0011-000000000012",
-  twinClassId: "00000000-0000-0000-0011-000000000013",
-  aliases: "00000000-0000-0000-0011-000000000014",
-  tags: "00000000-0000-0000-0011-000000000015",
-  markers: "00000000-0000-0000-0011-000000000016",
-} as const;
+> = invertMap(TWIN_SELF_FIELD_ID_TO_KEY_MAP);
 
 export const STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP: Partial<
   Record<TwinSelfFieldId, TwinFilterKeys>

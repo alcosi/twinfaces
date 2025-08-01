@@ -7,9 +7,9 @@ import { toast } from "sonner";
 import { FaceTC001ViewRs, FaceWT001 } from "@/entities/face";
 import {
   STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP,
-  STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP,
   TwinFormValues,
   TwinSelfFieldId,
   useCreateTwin,
@@ -102,14 +102,14 @@ export function TwinsTable({
     : undefined;
 
   const staticColDefs: Record<string, ColumnDef<Twin_DETAILED>> = {
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.id]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.id,
       accessorKey: "id",
       header: "ID",
       cell: (data) => <GuidWithCopy value={data.row.original.id} />,
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.twinClassId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.twinClassId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
       accessorKey: "twinClassId",
       header: "Twin class",
       cell: ({ row: { original } }) =>
@@ -123,18 +123,18 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.aliases]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.aliases,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.aliases]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.aliases,
       accessorKey: "aliases",
       header: "Alias",
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.name]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.name,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.name]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.name,
       accessorKey: "name",
       header: "Name",
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.statusId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.statusId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
       accessorKey: "statusId",
       header: "Status",
       cell: ({ row: { original } }) => (
@@ -149,8 +149,8 @@ export function TwinsTable({
         </div>
       ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.description]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.description,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.description]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.description,
       accessorKey: "description",
       header: "Description",
       cell: ({ row: { original } }) =>
@@ -160,8 +160,8 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.authorUserId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.authorUserId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
       accessorKey: "authorUserId",
       header: "Author",
       cell: ({ row: { original } }) =>
@@ -175,8 +175,8 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.assignerUserId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.assignerUserId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
       accessorKey: "assignerUserId",
       header: "Assignee",
       cell: ({ row: { original } }) =>
@@ -190,8 +190,8 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.headTwinId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.headTwinId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId,
       accessorKey: "headTwinId",
       header: "Head",
       cell: ({ row: { original } }) =>
@@ -205,8 +205,8 @@ export function TwinsTable({
           </div>
         ) : null,
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.tags]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.tags,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.tags]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.tags,
       accessorKey: "tags",
       header: "Tags",
       cell: ({ row: { original } }) =>
@@ -222,8 +222,8 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.markers]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.markers,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.markers]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.markers,
       accessorKey: "markers",
       header: "Markers",
       cell: ({ row: { original } }) =>
@@ -240,8 +240,8 @@ export function TwinsTable({
           </div>
         ) : null,
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.createdAt]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.createdAt,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt,
       accessorKey: "createdAt",
       header: "Created at",
       cell: ({ row: { original } }) =>
