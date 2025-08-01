@@ -1,38 +1,32 @@
-import { JSX, useEffect, useMemo, useState } from "react";
-import { Control, Path, useFormContext } from "react-hook-form";
+import { JSX } from "react";
+import { Control, Path } from "react-hook-form";
 
 import {
   ComboboxFormField,
-  ComboboxFormItem,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 
 import { FaceTC001ViewRs } from "@/entities/face";
-import {
-  TwinFormValues,
-  TwinSelfFieldId,
-  useTwinClassFields,
-} from "@/entities/twin";
-import {
-  TwinClassField,
-  useTwinClassFieldSearch,
-} from "@/entities/twin-class-field";
-import {
-  isEmptyArray,
-  isPopulatedArray,
-  reduceToObject,
-  toArray,
-} from "@/shared/libs";
+import { TwinFormValues, TwinSelfFieldId } from "@/entities/twin";
+import { isEmptyArray } from "@/shared/libs";
+import { ComboboxProps } from "@/shared/ui";
 
-import { TwinFieldFormField } from "../../../../form-fields";
+import { MultiModeForm } from "./forms/multi-mode";
+import { SilentModeForm } from "./forms/silent-mode";
 
-type TwinSelfFieldComponentProps = {
+type TwinSelfFieldComponentProps<T = unknown> = {
   control: Control<TwinFormValues>;
   name: Path<TwinFormValues>;
   label: string;
   required?: boolean;
+  adapter?: Partial<ComboboxProps<T>>;
 };
+
+export type TwinSelfFieldRenderer = (
+  props: TwinSelfFieldComponentProps
+) => JSX.Element;
+type SelfFieldsMap = Partial<Record<TwinSelfFieldId, TwinSelfFieldRenderer>>;
 
 export function TC001Form({
   control,
@@ -42,96 +36,25 @@ export function TC001Form({
   modalCreateData: FaceTC001ViewRs;
 }) {
   const { faceTwinCreate } = modalCreateData;
-  const { setValue, watch } = useFormContext<TwinFormValues>();
-  const { searchBySearchId } = useTwinClassFieldSearch();
-  const selectedClass = watch("classId");
-  const [fetchedFields, setFetchedFields] = useState<TwinClassField[]>([]);
 
   const variantOptions = faceTwinCreate?.options || [];
-  const [selectedOptionId, setSelectedOptionId] = useState<string | undefined>(
-    () => {
-      if (
-        faceTwinCreate?.singleOptionSilentMode &&
-        !isEmptyArray(variantOptions)
-      ) {
-        return variantOptions[0]?.id;
-      }
-      return undefined;
-    }
-  );
 
-  const selectedOption = useMemo(
-    () => variantOptions.find((opt) => opt.id === selectedOptionId),
-    [variantOptions, selectedOptionId]
-  );
+  const isSilent =
+    faceTwinCreate?.singleOptionSilentMode && !isEmptyArray(variantOptions);
 
-  useEffect(() => {
-    if (selectedOption?.pointedHeadTwinId) {
-      setValue("headTwinId", selectedOption.pointedHeadTwinId);
-    }
-  }, [selectedOption?.pointedHeadTwinId, setValue]);
-
-  useEffect(() => {
-    if (
-      faceTwinCreate?.singleOptionSilentMode &&
-      !isEmptyArray(variantOptions)
-    ) {
-      const firstOption = variantOptions[0];
-      setSelectedOptionId(firstOption?.id);
-      setValue("classId", "");
-    }
-  }, [faceTwinCreate?.singleOptionSilentMode, variantOptions, setValue]);
-
-  useEffect(() => {
-    const fetchTwinClassFields = async () => {
-      if (selectedOption?.twinClassFieldSearchId && selectedClass) {
-        try {
-          const result = await searchBySearchId({
-            searchId: selectedOption.twinClassFieldSearchId,
-            narrow: {
-              twinClassIdMap: reduceToObject({
-                list: toArray(selectedClass),
-                defaultValue: true,
-              }),
-            },
-            params: selectedOption.twinClassFieldsSearchParams!,
-          });
-
-          setFetchedFields(result?.data ?? []);
-        } catch (error) {
-          console.error("Error fetching twin class fields", error);
-          setFetchedFields([]);
-        }
-      } else {
-        setFetchedFields([]);
-      }
-    };
-
-    fetchTwinClassFields();
-  }, [selectedOption?.twinClassFieldSearchId, selectedClass, searchBySearchId]);
-
-  const { twinClassBySearchIdAdapter, userAdapter } = useTwinClassFields(
-    control,
-    {
-      baseTwinClassId: selectedOption?.twinClassSearchId,
-      twinClassSearchParams: selectedOption?.twinClassSearchParams,
-    }
-  );
-
-  const selfFields: Partial<
-    Record<TwinSelfFieldId, (props: TwinSelfFieldComponentProps) => JSX.Element>
-  > = {
+  const selfFields: SelfFieldsMap = {
     "00000000-0000-0000-0011-000000000007": ({
       control,
       name,
       label,
       required,
+      adapter,
     }) => (
       <ComboboxFormField
         control={control}
         name={name}
         label={label}
-        {...userAdapter}
+        {...(adapter as ComboboxProps<unknown>)}
         required={required}
       />
     ),
@@ -176,89 +99,27 @@ export function TC001Form({
     ),
   };
 
-  const nameMap: Record<string, Path<TwinFormValues>> = {
+  const nameMap: Partial<Record<TwinSelfFieldId, Path<TwinFormValues>>> = {
     "00000000-0000-0000-0011-000000000003": "name",
     "00000000-0000-0000-0011-000000000007": "assignerUserId",
     "00000000-0000-0000-0011-000000000004": "description",
     "00000000-0000-0000-0011-000000000005": "externalId",
   };
 
-  function buildFieldElements() {
-    return fetchedFields.map((field) => {
-      if (!field.id) return null;
-
-      const SelfComponent = selfFields[field.id as keyof typeof selfFields];
-      if (SelfComponent) {
-        return (
-          <SelfComponent
-            key={field.key}
-            control={control}
-            name={nameMap[field.id]!}
-            label={field.name!}
-            required={field.required}
-          />
-        );
-      }
-
-      return (
-        <TwinFieldFormField
-          key={field.key}
-          name={`fields.${field.key}`}
-          control={control}
-          label={field.name}
-          descriptor={field.descriptor}
-          twinClassId={
-            isPopulatedArray<{ id: string }>(selectedClass)
-              ? selectedClass[0].id
-              : ""
-          }
-          required={field.required}
-        />
-      );
-    });
-  }
-
-  return (
-    <div className="space-y-8">
-      {!faceTwinCreate?.singleOptionSilentMode &&
-        !isEmptyArray(variantOptions) && (
-          <ComboboxFormItem
-            label={faceTwinCreate?.optionSelectLabel ?? "Select variant"}
-            onSelect={(options) => {
-              setSelectedOptionId(options?.[0]?.id);
-              setValue("classId", "");
-            }}
-            getItems={() =>
-              Promise.resolve(
-                variantOptions.map((opt) => ({
-                  id: opt.id,
-                  label: opt.label || "N/A",
-                }))
-              )
-            }
-            getById={async (id) => {
-              const found = variantOptions.find((opt) => opt.id === id);
-              return found
-                ? { id: found.id, label: found.label || "N/A" }
-                : undefined;
-            }}
-            renderItem={(item) => item.label}
-            required
-          />
-        )}
-
-      {selectedOption?.twinClassSearchId && (
-        <ComboboxFormField
-          control={control}
-          name="classId"
-          label={selectedOption.classSelectorLabel || "Select class"}
-          noItemsText="No data found"
-          {...twinClassBySearchIdAdapter}
-          required
-        />
-      )}
-
-      {buildFieldElements()}
-    </div>
+  return isSilent ? (
+    <SilentModeForm
+      control={control}
+      firstOption={variantOptions[0]!}
+      selfFields={selfFields}
+      nameMap={nameMap}
+    />
+  ) : (
+    <MultiModeForm
+      control={control}
+      modalCreateData={modalCreateData}
+      options={variantOptions}
+      selfFields={selfFields}
+      nameMap={nameMap}
+    />
   );
 }
