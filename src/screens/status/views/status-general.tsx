@@ -1,3 +1,5 @@
+"use client";
+
 import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
