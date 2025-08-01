@@ -41,7 +41,7 @@ export const Avatar: React.FC<Props> = ({
   return (
     <Image
       src={url}
-      className={cn("rounded-full", variants({ variant, size }), className)}
+      className={cn(variants({ variant, size }), className)}
       alt={alt}
       width={800}
       height={500}
