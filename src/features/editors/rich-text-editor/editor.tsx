@@ -1,6 +1,6 @@
 "use client";
 
-import { $generateNodesFromDOM } from "@lexical/html";
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import {
   InitialConfigType,
   LexicalComposer,
@@ -10,10 +10,11 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import {
   $createParagraphNode,
   $getRoot,
+  $isElementNode,
   EditorState,
   SerializedEditorState,
 } from "lexical";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { TooltipProvider } from "@/shared/ui";
 
@@ -33,16 +34,16 @@ const editorConfig: InitialConfigType = {
 export function Editor({
   editorState,
   editorSerializedState,
+  onHtmlChange,
   onChange,
   onSerializedChange,
   initialHTML = "",
 }: {
   editorState?: EditorState;
   editorSerializedState?: SerializedEditorState;
+  onHtmlChange?: (html: string) => void;
   onChange?: (editorState: EditorState) => void;
   onSerializedChange?: (editorSerializedState: SerializedEditorState) => void;
-
-  // TODO: Re-think solution
   initialHTML?: string;
 }) {
   return (
@@ -60,6 +61,7 @@ export function Editor({
           <Plugins />
 
           <HTMLContentPlugin html={initialHTML} />
+          <HtmlExportPlugin onHtmlChange={onHtmlChange} />
 
           <OnChangePlugin
             ignoreSelectionChange={true}
@@ -76,21 +78,50 @@ export function Editor({
 
 function HTMLContentPlugin({ html }: { html: string }) {
   const [editor] = useLexicalComposerContext();
+  const didInit = useRef(false);
 
   useEffect(() => {
+    if (didInit.current || !html) return;
+    didInit.current = true;
+
     editor.update(() => {
       const parser = new DOMParser();
       const dom = parser.parseFromString(html, "text/html");
       const nodes = $generateNodesFromDOM(editor, dom);
       const root = $getRoot();
       root.clear();
-      if (nodes.length > 0) {
-        nodes.forEach((n) => root.append(n));
+
+      const blockNodes = nodes.filter((node) => $isElementNode(node));
+
+      if (blockNodes.length > 0) {
+        blockNodes.forEach((n) => root.append(n));
       } else {
-        root.append($createParagraphNode());
+        const paragraph = $createParagraphNode();
+        nodes.forEach((node) => paragraph.append(node));
+        root.append(paragraph);
       }
     });
   }, [editor, html]);
 
   return null;
+}
+
+function HtmlExportPlugin({
+  onHtmlChange,
+}: {
+  onHtmlChange?: (html: string) => void;
+}) {
+  const [editor] = useLexicalComposerContext();
+
+  return (
+    <OnChangePlugin
+      ignoreSelectionChange={true}
+      onChange={(editorState) => {
+        editorState.read(() => {
+          const html = $generateHtmlFromNodes(editor, null);
+          onHtmlChange?.(html);
+        });
+      }}
+    />
+  );
 }

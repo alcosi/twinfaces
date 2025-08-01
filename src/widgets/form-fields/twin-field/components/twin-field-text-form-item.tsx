@@ -2,7 +2,7 @@
 
 import { ChangeEvent } from "react";
 
-import { MarkdownEditorFormItem, TextFormItem } from "@/components/form-fields";
+import { RichTextEditorFormItem, TextFormItem } from "@/components/form-fields";
 
 import { TwinClassFieldDescriptorTextV1 } from "@/entities/twinField";
 
@@ -21,7 +21,7 @@ export function TwinFieldTextFormItem({
   switch (descriptor.editorType) {
     case "MARKDOWN_GITHUB":
     case "MARKDOWN_BASIC":
-      return <MarkdownEditorFormItem onChange={onMarkdownChange} {...props} />;
+      return <RichTextEditorFormItem onChange={onMarkdownChange} {...props} />;
 
     case "PLAIN":
     default:
