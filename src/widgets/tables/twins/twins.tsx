@@ -385,7 +385,7 @@ export function TwinsTable({
       onRowClick={onRowClick}
       renderFormFields={() =>
         modalCreateData ? (
-          <TC001Form control={form.control} modalCreateData={modalCreateData} />
+          <TC001Form control={form.control} payload={modalCreateData} />
         ) : (
           <TwinFormFields
             control={form.control}

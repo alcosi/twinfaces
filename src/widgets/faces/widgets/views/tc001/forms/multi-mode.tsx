@@ -20,7 +20,7 @@ import { buildFieldElements } from "./build-field-elements";
 
 type Props = {
   control: Control<TwinFormValues>;
-  modalCreateData: FaceTC001ViewRs;
+  payload: FaceTC001ViewRs;
   options: NonNullable<FaceTC001ViewRs["faceTwinCreate"]>["options"];
   selfFields: Partial<Record<string, TwinSelfFieldRenderer>>;
   nameMap: Partial<Record<TwinSelfFieldId, Path<TwinFormValues>>>;
@@ -28,13 +28,13 @@ type Props = {
 
 export function MultiModeForm({
   control,
-  modalCreateData,
+  payload,
   options,
   selfFields,
   nameMap,
 }: Props) {
   const { setValue, watch } = useFormContext<TwinFormValues>();
-  const { faceTwinCreate } = modalCreateData;
+  const { faceTwinCreate } = payload;
   const { searchBySearchId } = useTwinClassFieldSearch();
   const selectedClass = watch("classId");
   const [selectedOptionId, setSelectedOptionId] = useState<

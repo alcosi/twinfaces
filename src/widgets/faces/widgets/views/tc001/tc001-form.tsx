@@ -30,18 +30,18 @@ type SelfFieldsMap = Partial<Record<TwinSelfFieldId, TwinSelfFieldRenderer>>;
 
 export function TC001Form({
   control,
-  modalCreateData,
+  payload,
 }: {
   control: Control<TwinFormValues>;
-  modalCreateData: FaceTC001ViewRs;
+  payload: FaceTC001ViewRs;
 }) {
-  const { faceTwinCreate } = modalCreateData;
-
+  const { faceTwinCreate } = payload;
   const variantOptions = faceTwinCreate?.options || [];
-
   const isSilent =
     faceTwinCreate?.singleOptionSilentMode && !isEmptyArray(variantOptions);
 
+  // TODO: this `selfFields` can be removed
+  // after TwinFieldFormItem is implemented
   const selfFields: SelfFieldsMap = {
     "00000000-0000-0000-0011-000000000007": ({
       control,
@@ -116,7 +116,7 @@ export function TC001Form({
   ) : (
     <MultiModeForm
       control={control}
-      modalCreateData={modalCreateData}
+      payload={payload}
       options={variantOptions}
       selfFields={selfFields}
       nameMap={nameMap}
