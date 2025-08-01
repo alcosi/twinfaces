@@ -39,7 +39,8 @@ export async function TW005(props: TWidgetFaceProps) {
     return <StatusAlert variant="error" message="Failed to load twin." />;
   }
 
-  const { transitionsIdList = [] } = twinResult.data;
+  const { twin } = twinResult.data;
+  const { transitionsIdList = [] } = twin;
 
   return (
     <div data-face-id={id} className={cn("flex gap-2", widget.styleClasses)}>
