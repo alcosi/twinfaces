@@ -32,7 +32,7 @@ export default async function Page(props: Props) {
     notFound();
   }
 
-  const twin = result.data;
+  const { twin } = result.data;
   if (twin.twinClass?.pageFaceId) {
     return (
       <LayoutRenderer pageFaceId={twin.twinClass.pageFaceId} twinId={twin.id} />

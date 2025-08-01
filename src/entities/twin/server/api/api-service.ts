@@ -1,5 +1,5 @@
 import { getAuthHeaders } from "@/entities/face";
-import { TwinsAPI } from "@/shared/api";
+import { RelatedObjects, TwinsAPI } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinFromMap } from "../libs";
@@ -15,7 +15,7 @@ export async function fetchTwinById<T extends Twin_HYDRATED>(
     };
     query?: TwinViewQuery;
   }
-): Promise<T> {
+): Promise<{ twin: T; relatedObjects: RelatedObjects }> {
   const { data, error } = await TwinsAPI.GET("/private/twin/{twinId}/v2", {
     params: {
       header: options.header,
@@ -35,11 +35,16 @@ export async function fetchTwinById<T extends Twin_HYDRATED>(
     throw new Error("Invalid response data while fetching twin", error);
   }
 
-  if (data.relatedObjects) {
-    return hydrateTwinFromMap<T>(data.twin, data.relatedObjects);
-  }
+  const relatedObjects = data.relatedObjects ?? {};
 
-  return data.twin as T;
+  const hydratedTwin = data.relatedObjects
+    ? hydrateTwinFromMap<T>(data.twin, relatedObjects)
+    : (data.twin as T);
+
+  return {
+    twin: hydratedTwin,
+    relatedObjects,
+  };
 }
 
 export async function uploadTwinAttachment(twinId: string, file: File) {
