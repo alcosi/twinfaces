@@ -14,12 +14,12 @@ import {
   TwinClass_DETAILED,
   useFetchTwinClassById,
   useTagSearch,
-  useTwinClassSearchV1,
+  useTwinClassSearch,
   useValidTwinsForLink,
 } from "../../api";
 
 export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
-  const { searchTwinClasses } = useTwinClassSearchV1();
+  const { searchByFilters } = useTwinClassSearch();
   const { fetchTwinClassById } = useFetchTwinClassById();
 
   async function getById(id: string) {
@@ -33,7 +33,7 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
   }
 
   async function getItems(search: string, filters?: TwinClassFilters) {
-    const response = await searchTwinClasses({ search, filters });
+    const response = await searchByFilters({ search, filters });
 
     return response.data;
   }
@@ -46,6 +46,50 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
     getById,
     getItems: (search, options) =>
       getItems(search, options as TwinClassFilters),
+    renderItem,
+  };
+}
+
+export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
+  const { searchBySearchId } = useTwinClassSearch();
+  const { fetchTwinClassById } = useFetchTwinClassById();
+
+  type Options = {
+    search?: string;
+    params?: Record<string, string>;
+  };
+
+  async function getById(id: string) {
+    return await fetchTwinClassById({
+      id,
+      query: {
+        showTwinClassMode: "DETAILED",
+        showTwin2TwinClassMode: "SHORT",
+      },
+    });
+  }
+
+  async function getItems(searchId: string, options?: Options) {
+    const { search = "", params } = options ?? {};
+
+    const response = await searchBySearchId({
+      searchId,
+      narrow: {
+        twinClassKeyLikeList: [wrapWithPercent(search)],
+      },
+      params,
+    });
+
+    return response.data;
+  }
+
+  function renderItem({ key = "", name }: TwinClass_DETAILED) {
+    return isPopulatedString(name) ? `${name} : ${key}` : key;
+  }
+
+  return {
+    getById,
+    getItems: (searchId, options) => getItems(searchId, options as Options),
     renderItem,
   };
 }

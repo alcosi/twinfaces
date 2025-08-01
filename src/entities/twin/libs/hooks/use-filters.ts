@@ -24,8 +24,8 @@ import {
 } from "@/shared/libs";
 
 import {
-  STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP,
 } from "../constants";
 import { SearchableTwinFieldType } from "../types";
 import { useTwinSelectAdapter } from "./use-select-adapter";
@@ -55,14 +55,14 @@ export function useTwinFilters({
     const selfFilters: Partial<Record<TwinFilterKeys, AutoFormValueInfo>> = {
       twinIdList: {
         type: AutoFormValueType.tag,
-        label: columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["id"]]?.label ?? "ID",
+        label: columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["id"]]?.label ?? "ID",
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
       },
       twinClassIdList: {
         type: AutoFormValueType.combobox,
         label:
-          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["twinClassId"]]?.label ??
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["twinClassId"]]?.label ??
           "Twin Class",
         multi: true,
         ...tcAdapter,
@@ -83,7 +83,7 @@ export function useTwinFilters({
       statusIdList: {
         type: AutoFormValueType.combobox,
         label:
-          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["statusId"]]?.label ??
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["statusId"]]?.label ??
           "Status",
         multi: true,
         ...sAdapter,
@@ -98,18 +98,18 @@ export function useTwinFilters({
       twinNameLikeList: {
         type: AutoFormValueType.tag,
         label:
-          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["name"]]?.label ?? "Name",
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["name"]]?.label ?? "Name",
       },
       descriptionLikeList: {
         type: AutoFormValueType.string,
         label:
-          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["description"]]?.label ??
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["description"]]?.label ??
           "Description",
       },
       headTwinIdList: {
         type: AutoFormValueType.combobox,
         label:
-          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["headTwinId"]]?.label ??
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["headTwinId"]]?.label ??
           "Head",
         multi: true,
         ...tAdapter,
@@ -117,7 +117,7 @@ export function useTwinFilters({
       createdByUserIdList: {
         type: AutoFormValueType.combobox,
         label:
-          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["authorUserId"]]?.label ??
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["authorUserId"]]?.label ??
           "Author",
         multi: true,
         ...uAdapter,
@@ -125,15 +125,15 @@ export function useTwinFilters({
       assignerUserIdList: {
         type: AutoFormValueType.combobox,
         label:
-          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["assignerUserId"]]
-            ?.label ?? "Assignee",
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["assignerUserId"]]?.label ??
+          "Assignee",
         multi: true,
         ...uAdapter,
       },
       createdAt: {
         type: AutoFormValueType.string,
         label:
-          columnById[STATIC_TWIN_FIELD_KEY_TO_ID_MAP["createdAt"]]?.label ??
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["createdAt"]]?.label ??
           "Created at",
         input_props: { type: "date" },
       },

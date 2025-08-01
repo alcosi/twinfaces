@@ -27,3 +27,11 @@ export function reduceToObject<T, V>({
     return acc;
   }, {});
 }
+
+export function invertMap<Key extends string, Value extends string>(
+  map: Record<Key, Value>
+): Record<Value, Key> {
+  return Object.fromEntries(
+    Object.entries(map).map(([k, v]) => [v, k])
+  ) as Record<Value, Key>;
+}
