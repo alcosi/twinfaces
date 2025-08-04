@@ -3,43 +3,45 @@ import { useFormContext } from "react-hook-form";
 import { ComboboxFormField } from "@/components/form-fields";
 
 import { useTwinClassFields } from "@/entities/twin";
-import { isPopulatedArray, isTruthy } from "@/shared/libs";
+import { isPopulatedArray } from "@/shared/libs";
 
-import { Foobar } from "../tc001-form";
+import { Foobar, SelectedOptionProps } from "../tc001-form";
 import { useSyncFormFields } from "../utils";
 
 export function MultiModeForm() {
   const form = useFormContext<Foobar>();
   const selectedOptions = form.watch("optionId");
 
-  const { twinClassBySearchIdAdapter } = useTwinClassFields(form.control, {
-    baseTwinClassId: isPopulatedArray<any>(selectedOptions)
-      ? selectedOptions[0].twinClassSearchId
-      : undefined,
-    twinClassSearchParams: isPopulatedArray<any>(selectedOptions)
-      ? selectedOptions[0].twinClassSearchParams
-      : undefined,
-  });
+  const selectedOption = isPopulatedArray<SelectedOptionProps>(selectedOptions)
+    ? selectedOptions[0]
+    : undefined;
+
+  const { twinClassBySearchIdAdapter } = useTwinClassFields<Foobar>(
+    form.control,
+    {
+      baseTwinClassId: selectedOption?.twinClassSearchId,
+      twinClassSearchParams: selectedOption?.twinClassSearchParams,
+    }
+  );
 
   useSyncFormFields({
     form,
     fromKey: "optionId",
     toKey: "headTwinId",
-    merge: (fromValue, _) => fromValue?.pointedHeadTwinId,
+    merge: (fromValue, _) => fromValue?.[0].pointedHeadTwinId,
   });
 
   return (
     <div className="space-y-8">
-      {isPopulatedArray<any>(selectedOptions) &&
-        isTruthy(selectedOptions[0].twinClassSearchId) && (
-          <ComboboxFormField
-            control={form.control}
-            name="classId"
-            label={selectedOptions[0].classSelectorLabel || "Select class"}
-            {...twinClassBySearchIdAdapter}
-            required
-          />
-        )}
+      {selectedOption?.twinClassSearchId && (
+        <ComboboxFormField
+          control={form.control}
+          name="classId"
+          label={selectedOptions[0].classSelectorLabel || "Select class"}
+          {...twinClassBySearchIdAdapter}
+          required
+        />
+      )}
     </div>
   );
 }

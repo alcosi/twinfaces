@@ -1,4 +1,4 @@
-import { Control, useWatch } from "react-hook-form";
+import { Control, Path, useWatch } from "react-hook-form";
 
 import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
 import { TwinFormValues, useTwinHeadSelectAdapter } from "@/entities/twin";
@@ -15,8 +15,8 @@ type TwinClassFieldsParams = {
   twinClassSearchParams?: Record<string, string>;
 };
 
-export function useTwinClassFields(
-  control: Control<TwinFormValues>,
+export function useTwinClassFields<T extends TwinFormValues>(
+  control: Control<T>,
   params: TwinClassFieldsParams = {}
 ) {
   const { baseTwinClassId, twinClassSearchParams } = params;
@@ -29,8 +29,8 @@ export function useTwinClassFields(
 
   const watchedClassId = useWatch({ control, name: "classId" });
   const twinClasses = isArray(watchedClassId)
-    ? (watchedClassId as TwinClass_DETAILED[])
-    : [];
+    ? watchedClassId[0]
+    : watchedClassId;
   const selectedTwinClass = isPopulatedArray<TwinClass_DETAILED>(twinClasses)
     ? twinClasses[0]
     : null;

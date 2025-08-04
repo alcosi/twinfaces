@@ -22,10 +22,19 @@ import {
   reduceToObject,
   toArray,
 } from "@/shared/libs";
-import { TwinFieldFormField } from "@/widgets/form-fields";
 
+import { TwinFieldFormField } from "../../../../form-fields";
 import { MultiModeForm } from "./forms/multi-mode";
 import { SilentModeForm } from "./forms/silent-mode";
+
+export type SelectedOptionProps = {
+  twinClassSearchId?: string;
+  twinClassSearchParams?: Record<string, string>;
+  classSelectorLabel?: string;
+  pointedHeadTwinId?: string;
+  twinClassFieldSearchId?: string;
+  twinClassFieldsSearchParams?: Record<string, string>;
+};
 
 export type Foobar = TwinFormValues & {
   optionId: any;
@@ -52,15 +61,24 @@ export function TC001Form({
   const { searchBySearchId } = useTwinClassFieldSearch();
   const [fields, setFields] = useState<TwinClassField[]>([]);
 
+  const [init, setInit] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isSilent && !init) {
+      form.setValue("optionId", [variantOptions[0]]);
+      setInit(true);
+    }
+  }, [isSilent, variantOptions, form, init]);
+
   useEffect(() => {
     const fetchFields = async () => {
       if (
-        isPopulatedArray<any>(selectedOptions) &&
+        isPopulatedArray<SelectedOptionProps>(selectedOptions) &&
         isTruthy(selectedOptions[0].twinClassSearchId) &&
         selectedClass
       ) {
         const result = await searchBySearchId({
-          searchId: selectedOptions[0].twinClassFieldSearchId,
+          searchId: selectedOptions[0].twinClassFieldSearchId!,
           narrow: {
             twinClassIdMap: reduceToObject({
               list: toArray(selectedClass),
@@ -84,22 +102,13 @@ export function TC001Form({
           control={form.control}
           name="optionId"
           label="select option"
-          // {...twinClassBySearchIdAdapter}
-
           getItems={async () => variantOptions}
           getById={async (id) => variantOptions.find((o) => o.id === id)}
           renderItem={(item) => item.label}
           required
         />
       </div>
-      {isSilent ? (
-        <SilentModeForm
-          control={form.control}
-          firstOption={variantOptions[0]!}
-        />
-      ) : (
-        <MultiModeForm />
-      )}
+      {isSilent ? <SilentModeForm /> : <MultiModeForm />}
       {fields.map((field) => {
         const selfTwinFieldKey =
           TWIN_SELF_FIELD_ID_TO_KEY_MAP[field.id as TwinSelfFieldId];
