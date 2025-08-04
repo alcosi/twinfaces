@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Control, useFormContext } from "react-hook-form";
+import { Control, useForm, useFormContext } from "react-hook-form";
 
 import { ComboboxFormField } from "@/components/form-fields";
 
@@ -11,7 +11,7 @@ import {
 } from "@/entities/twin-class-field";
 import { reduceToObject, toArray } from "@/shared/libs";
 
-import { buildFieldElements } from "../utils";
+import { buildFieldElements, useSyncFormFields } from "../utils";
 
 type Props = {
   control: Control<TwinFormValues>;
@@ -22,15 +22,24 @@ type Props = {
 };
 
 export function SilentModeForm({ control, firstOption }: Props) {
-  const { setValue, watch } = useFormContext<TwinFormValues>();
-  const selectedClass = watch("classId");
+  const form = useFormContext<TwinFormValues>();
+  const selectedClass = form.watch("classId");
   const { searchBySearchId } = useTwinClassFieldSearch();
   const [fetchedFields, setFetchedFields] = useState<TwinClassField[]>([]);
 
+  console.log("foobar render#", firstOption);
+
+  // useSyncFormFields({
+  //   form,
+  //   fromKey: "classId",
+  //   toKey: "headTwinId",
+  //   merge: (fromValue, toValue) => firstOption.pointedHeadTwinId,
+  // });
+
   useEffect(() => {
-    setValue("headTwinId", firstOption.pointedHeadTwinId);
-    setValue("classId", "");
-  }, [firstOption, setValue]);
+    console.log("foobar useEffect#", firstOption);
+    form.setValue("headTwinId", firstOption.pointedHeadTwinId);
+  }, [firstOption, form.setValue]);
 
   useEffect(() => {
     const fetchFields = async () => {

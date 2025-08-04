@@ -347,7 +347,8 @@ export function TwinsTable({
   async function handleOnCreateSubmit(formValues: TwinFormValues) {
     const body: TwinCreateRq = { ...formValues };
 
-    await createTwin({ body });
+    console.log("foobar formValues", formValues);
+    // await createTwin({ body });
     toast.success(`Twin ${body.name} is created successfully!`);
   }
 

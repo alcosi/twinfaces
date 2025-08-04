@@ -1,112 +1,45 @@
-import { useEffect, useMemo, useState } from "react";
-import { Control, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
-import { ComboboxFormField, ComboboxFormItem } from "@/components/form-fields";
+import { ComboboxFormField } from "@/components/form-fields";
 
-import { FaceTC001ViewRs } from "@/entities/face";
-import { TwinFormValues, useTwinClassFields } from "@/entities/twin";
-import {
-  TwinClassField,
-  useTwinClassFieldSearch,
-} from "@/entities/twin-class-field";
-import { reduceToObject, toArray } from "@/shared/libs";
+import { useTwinClassFields } from "@/entities/twin";
+import { isPopulatedArray, isTruthy } from "@/shared/libs";
 
-import { buildFieldElements } from "../utils";
+import { Foobar } from "../tc001-form";
+import { useSyncFormFields } from "../utils";
 
-type Props = {
-  control: Control<TwinFormValues>;
-  payload: FaceTC001ViewRs;
-  options: NonNullable<FaceTC001ViewRs["faceTwinCreate"]>["options"];
-};
+export function MultiModeForm() {
+  const form = useFormContext<Foobar>();
+  const selectedOptions = form.watch("optionId");
 
-export function MultiModeForm({ control, payload, options }: Props) {
-  const { setValue, watch } = useFormContext<TwinFormValues>();
-  const { faceTwinCreate } = payload;
-  const { searchBySearchId } = useTwinClassFieldSearch();
-  const selectedClass = watch("classId");
-  const [selectedOptionId, setSelectedOptionId] = useState<
-    string | undefined
-  >();
-  const [fetchedFields, setFetchedFields] = useState<TwinClassField[]>([]);
+  const { twinClassBySearchIdAdapter } = useTwinClassFields(form.control, {
+    baseTwinClassId: isPopulatedArray<any>(selectedOptions)
+      ? selectedOptions[0].twinClassSearchId
+      : undefined,
+    twinClassSearchParams: isPopulatedArray<any>(selectedOptions)
+      ? selectedOptions[0].twinClassSearchParams
+      : undefined,
+  });
 
-  const selectedOption = useMemo(
-    () => options?.find((o) => o.id === selectedOptionId),
-    [options, selectedOptionId]
-  );
-
-  useEffect(() => {
-    if (selectedOption?.pointedHeadTwinId) {
-      setValue("headTwinId", selectedOption.pointedHeadTwinId);
-    }
-  }, [selectedOption, setValue]);
-
-  useEffect(() => {
-    const fetchFields = async () => {
-      if (selectedOption?.twinClassFieldSearchId && selectedClass) {
-        const result = await searchBySearchId({
-          searchId: selectedOption.twinClassFieldSearchId,
-          narrow: {
-            twinClassIdMap: reduceToObject({
-              list: toArray(selectedClass),
-              defaultValue: true,
-            }),
-          },
-          params: selectedOption.twinClassFieldsSearchParams!,
-        });
-        setFetchedFields(result?.data ?? []);
-      } else {
-        setFetchedFields([]);
-      }
-    };
-    fetchFields();
-  }, [selectedOption, selectedClass, searchBySearchId]);
-
-  const { twinClassBySearchIdAdapter } = useTwinClassFields(control, {
-    baseTwinClassId: selectedOption?.twinClassSearchId,
-    twinClassSearchParams: selectedOption?.twinClassSearchParams,
+  useSyncFormFields({
+    form,
+    fromKey: "optionId",
+    toKey: "headTwinId",
+    merge: (fromValue, _) => fromValue?.pointedHeadTwinId,
   });
 
   return (
     <div className="space-y-8">
-      <ComboboxFormItem
-        label={faceTwinCreate?.optionSelectLabel ?? "Select variant"}
-        onSelect={(selected) => {
-          setSelectedOptionId(selected?.[0]?.id);
-          setValue("classId", "");
-        }}
-        getItems={() =>
-          Promise.resolve(
-            options?.map((opt) => ({
-              id: opt.id,
-              label: opt.label || "N/A",
-            })) ?? []
-          )
-        }
-        getById={async (id) => {
-          const found = options?.find((opt) => opt.id === id);
-          return found
-            ? { id: found.id, label: found.label || "N/A" }
-            : undefined;
-        }}
-        renderItem={(item) => item.label}
-        required
-      />
-
-      {selectedOption?.twinClassSearchId && (
-        <ComboboxFormField
-          control={control}
-          name="classId"
-          label={selectedOption.classSelectorLabel || "Select class"}
-          {...twinClassBySearchIdAdapter}
-          required
-        />
-      )}
-
-      {buildFieldElements({
-        fields: fetchedFields,
-        control,
-        selectedClass,
-      })}
+      {isPopulatedArray<any>(selectedOptions) &&
+        isTruthy(selectedOptions[0].twinClassSearchId) && (
+          <ComboboxFormField
+            control={form.control}
+            name="classId"
+            label={selectedOptions[0].classSelectorLabel || "Select class"}
+            {...twinClassBySearchIdAdapter}
+            required
+          />
+        )}
     </div>
   );
 }
