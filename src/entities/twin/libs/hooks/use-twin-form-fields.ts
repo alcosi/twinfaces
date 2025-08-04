@@ -1,27 +1,36 @@
-import { Control, useWatch } from "react-hook-form";
+import { Control, Path, useWatch } from "react-hook-form";
 
 import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
 import { TwinFormValues, useTwinHeadSelectAdapter } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
+  useTwinClassBySearchIdSelectAdapter,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import { useUserSelectAdapter } from "@/entities/user";
 import { isArray, isPopulatedArray } from "@/shared/libs";
 
-export function useTwinClassFields(
-  control: Control<TwinFormValues>,
-  baseTwinClassId?: string
+type TwinClassFieldsParams = {
+  baseTwinClassId?: string;
+  twinClassSearchParams?: Record<string, string>;
+};
+
+export function useTwinClassFields<T extends TwinFormValues>(
+  control: Control<T>,
+  params: TwinClassFieldsParams = {}
 ) {
+  const { baseTwinClassId, twinClassSearchParams } = params;
+
   const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassBySearchIdAdapter = useTwinClassBySearchIdSelectAdapter();
   const userAdapter = useUserSelectAdapter();
   const headAdapter = useTwinHeadSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
 
-  const watchedClassId = useWatch({ control, name: "classId" });
+  const watchedClassId = useWatch({ control, name: "classId" as Path<T> });
   const twinClasses = isArray(watchedClassId)
-    ? (watchedClassId as TwinClass_DETAILED[])
-    : [];
+    ? watchedClassId[0]
+    : watchedClassId;
   const selectedTwinClass = isPopulatedArray<TwinClass_DETAILED>(twinClasses)
     ? twinClasses[0]
     : null;
@@ -41,6 +50,16 @@ export function useTwinClassFields(
             : undefined,
         });
       },
+    },
+    twinClassBySearchIdAdapter: {
+      ...twinClassBySearchIdAdapter,
+      getItems: (search: string) =>
+        baseTwinClassId
+          ? twinClassBySearchIdAdapter.getItems(baseTwinClassId, {
+              search,
+              params: twinClassSearchParams,
+            })
+          : Promise.resolve([]),
     },
     fields: selectedTwinClass?.fields ?? [],
     userAdapter,

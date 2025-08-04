@@ -14,7 +14,7 @@ import {
   TwinClassFieldValues,
   TwinClass_DETAILED,
   useTwinClassFilters,
-  useTwinClassSearchV1,
+  useTwinClassSearch,
 } from "@/entities/twin-class";
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
@@ -240,7 +240,7 @@ const colDefs: Record<
 export function TwinClasses() {
   const api = useContext(PrivateApiContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const { searchTwinClasses } = useTwinClassSearchV1();
+  const { searchByFilters } = useTwinClassSearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
 
   async function fetchTwinClasses(
@@ -250,7 +250,7 @@ export function TwinClasses() {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      return await searchTwinClasses({
+      return await searchByFilters({
         pagination,
         filters: _filters,
       });
