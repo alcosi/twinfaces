@@ -10,7 +10,6 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import {
   $createParagraphNode,
   $getRoot,
-  $isElementNode,
   EditorState,
   SerializedEditorState,
 } from "lexical";
@@ -46,6 +45,7 @@ export function Editor({
   onSerializedChange?: (editorSerializedState: SerializedEditorState) => void;
   initialHTML?: string;
 }) {
+  console.log(initialHTML);
   return (
     <div className="bg-background border-border overflow-hidden rounded-lg border shadow">
       <LexicalComposer
@@ -91,14 +91,10 @@ function HTMLContentPlugin({ html }: { html: string }) {
       const root = $getRoot();
       root.clear();
 
-      const blockNodes = nodes.filter((node) => $isElementNode(node));
-
-      if (blockNodes.length > 0) {
-        blockNodes.forEach((n) => root.append(n));
+      if (nodes.length > 0) {
+        nodes.forEach((n) => root.append(n));
       } else {
-        const paragraph = $createParagraphNode();
-        nodes.forEach((node) => paragraph.append(node));
-        root.append(paragraph);
+        root.append($createParagraphNode());
       }
     });
   }, [editor, html]);
