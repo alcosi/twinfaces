@@ -27,7 +27,7 @@ export function useTwinClassFields<T extends TwinFormValues>(
   const headAdapter = useTwinHeadSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
 
-  const watchedClassId = useWatch({ control, name: "classId" });
+  const watchedClassId = useWatch({ control, name: "classId" as Path<T> });
   const twinClasses = isArray(watchedClassId)
     ? watchedClassId[0]
     : watchedClassId;

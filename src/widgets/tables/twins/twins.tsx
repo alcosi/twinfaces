@@ -347,8 +347,7 @@ export function TwinsTable({
   async function handleOnCreateSubmit(formValues: TwinFormValues) {
     const body: TwinCreateRq = { ...formValues };
 
-    console.log("foobar formValues", formValues);
-    // await createTwin({ body });
+    await createTwin({ body });
     toast.success(`Twin ${body.name} is created successfully!`);
   }
 
@@ -386,7 +385,7 @@ export function TwinsTable({
       onRowClick={onRowClick}
       renderFormFields={() =>
         modalCreateData ? (
-          <TC001Form control={form.control} payload={modalCreateData} />
+          <TC001Form payload={modalCreateData} />
         ) : (
           <TwinFormFields
             control={form.control}

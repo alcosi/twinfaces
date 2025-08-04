@@ -82,7 +82,7 @@ export function WT002EntryClient({ trigger, faceData }: Props) {
               className="flex-1 space-y-6 overflow-y-auto px-8 py-6"
               onSubmit={onSubmit}
             >
-              <TC001Form control={form.control} payload={faceData} />
+              <TC001Form payload={faceData} />
             </form>
           </FormProvider>
 

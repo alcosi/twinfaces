@@ -1,6 +1,6 @@
 import { DevTool } from "@hookform/devtools";
 import { useEffect, useState } from "react";
-import { Control, useFormContext } from "react-hook-form";
+import { Path, useFormContext } from "react-hook-form";
 
 import { ComboboxFormField } from "@/components/form-fields";
 
@@ -9,6 +9,7 @@ import {
   TWIN_SELF_FIELD_ID_TO_KEY_MAP,
   TwinFormValues,
   TwinSelfFieldId,
+  useTwinClassFields,
 } from "@/entities/twin";
 import {
   TwinClassField,
@@ -24,10 +25,9 @@ import {
 } from "@/shared/libs";
 
 import { TwinFieldFormField } from "../../../../form-fields";
-import { MultiModeForm } from "./forms/multi-mode";
-import { SilentModeForm } from "./forms/silent-mode";
+import { useSyncFormFields } from "./utils";
 
-export type SelectedOptionProps = {
+type SelectedOptionProps = {
   twinClassSearchId?: string;
   twinClassSearchParams?: Record<string, string>;
   classSelectorLabel?: string;
@@ -36,18 +36,12 @@ export type SelectedOptionProps = {
   twinClassFieldsSearchParams?: Record<string, string>;
 };
 
-export type Foobar = TwinFormValues & {
-  optionId: any;
+type TwinFormValuesByOption = TwinFormValues & {
+  options: SelectedOptionProps[];
 };
 
-export function TC001Form({
-  // control,
-  payload,
-}: {
-  control?: Control<Foobar>;
-  payload: FaceTC001ViewRs;
-}) {
-  const form = useFormContext<Foobar>();
+export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
+  const form = useFormContext<TwinFormValuesByOption>();
 
   const { faceTwinCreate } = payload;
   const variantOptions = faceTwinCreate?.options || [];
@@ -55,17 +49,22 @@ export function TC001Form({
   const isSilent =
     faceTwinCreate?.singleOptionSilentMode && !isEmptyArray(variantOptions);
 
-  const selectedOptions = form.getValues("optionId");
+  const selectedOptions = form.getValues("options");
   const selectedClass = form.getValues("classId");
 
   const { searchBySearchId } = useTwinClassFieldSearch();
   const [fields, setFields] = useState<TwinClassField[]>([]);
 
+  // 👀
   const [init, setInit] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isSilent && !init) {
-      form.setValue("optionId", [variantOptions[0]]);
+    if (
+      isSilent &&
+      isPopulatedArray<SelectedOptionProps>(variantOptions) &&
+      !init
+    ) {
+      form.setValue("options", [variantOptions[0]]);
       setInit(true);
     }
   }, [isSilent, variantOptions, form, init]);
@@ -96,27 +95,29 @@ export function TC001Form({
   }, [selectedOptions, selectedClass, searchBySearchId]);
 
   return (
-    <div>
-      <div className={cn(isSilent && "hidden")}>
+    <div className="space-y-8">
+      <span className={cn(isSilent && "hidden")}>
         <ComboboxFormField
           control={form.control}
-          name="optionId"
+          name="options"
           label="select option"
           getItems={async () => variantOptions}
           getById={async (id) => variantOptions.find((o) => o.id === id)}
           renderItem={(item) => item.label}
           required
         />
-      </div>
-      {isSilent ? <SilentModeForm /> : <MultiModeForm />}
+      </span>
+      <TwinClassSelector />
       {fields.map((field) => {
         const selfTwinFieldKey =
           TWIN_SELF_FIELD_ID_TO_KEY_MAP[field.id as TwinSelfFieldId];
+        const name = (selfTwinFieldKey ??
+          `fields.${field.key}`) as Path<TwinFormValuesByOption>;
 
         return (
           <TwinFieldFormField
             key={field.key}
-            name={selfTwinFieldKey ?? `fields.${field.key}`}
+            name={name}
             control={form.control}
             label={field.name}
             descriptor={field.descriptor}
@@ -131,5 +132,41 @@ export function TC001Form({
       })}
       <DevTool control={form.control} /> {/* set up the dev tool */}
     </div>
+  );
+}
+
+export function TwinClassSelector() {
+  const form = useFormContext<TwinFormValuesByOption>();
+  const selectedOptions = form.watch("options");
+  const selectedOption = isPopulatedArray<SelectedOptionProps>(selectedOptions)
+    ? selectedOptions[0]
+    : undefined;
+
+  const { twinClassBySearchIdAdapter } =
+    useTwinClassFields<TwinFormValuesByOption>(form.control, {
+      baseTwinClassId: selectedOption?.twinClassSearchId,
+      twinClassSearchParams: selectedOption?.twinClassSearchParams,
+    });
+
+  // NOTE: Keep headTwinId in sync with the option's pointedHeadTwinId
+  useSyncFormFields({
+    form,
+    fromKey: "options",
+    toKey: "headTwinId",
+    merge: (fromValue, _) => fromValue?.[0]?.pointedHeadTwinId,
+  });
+
+  if (!selectedOption?.twinClassSearchId) {
+    return null;
+  }
+
+  return (
+    <ComboboxFormField
+      control={form.control}
+      name="classId"
+      label={selectedOption.classSelectorLabel || "Select class"}
+      {...twinClassBySearchIdAdapter}
+      required
+    />
   );
 }
