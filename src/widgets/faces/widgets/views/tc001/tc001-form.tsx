@@ -1,5 +1,4 @@
-import { DevTool } from "@hookform/devtools";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Path, useFormContext } from "react-hook-form";
 
 import { ComboboxFormField } from "@/components/form-fields";
@@ -54,20 +53,16 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
 
   const { searchBySearchId } = useTwinClassFieldSearch();
   const [fields, setFields] = useState<TwinClassField[]>([]);
+  const didSeed = useRef(false);
 
-  // 👀
-  const [init, setInit] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (
-      isSilent &&
-      isPopulatedArray<SelectedOptionProps>(variantOptions) &&
-      !init
-    ) {
-      form.setValue("options", [variantOptions[0]]);
-      setInit(true);
-    }
-  }, [isSilent, variantOptions, form, init]);
+  if (
+    !didSeed.current &&
+    isSilent &&
+    isPopulatedArray<SelectedOptionProps>(variantOptions)
+  ) {
+    form.setValue("options", [variantOptions[0]]);
+    didSeed.current = true;
+  }
 
   useEffect(() => {
     const fetchFields = async () => {
@@ -100,7 +95,7 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
         <ComboboxFormField
           control={form.control}
           name="options"
-          label="select option"
+          label={faceTwinCreate?.optionSelectLabel}
           getItems={async () => variantOptions}
           getById={async (id) => variantOptions.find((o) => o.id === id)}
           renderItem={(item) => item.label}
@@ -130,12 +125,11 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
           />
         );
       })}
-      <DevTool control={form.control} /> {/* set up the dev tool */}
     </div>
   );
 }
 
-export function TwinClassSelector() {
+function TwinClassSelector() {
   const form = useFormContext<TwinFormValuesByOption>();
   const selectedOptions = form.watch("options");
   const selectedOption = isPopulatedArray<SelectedOptionProps>(selectedOptions)
