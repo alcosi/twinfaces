@@ -13,7 +13,7 @@ import {
   EditorState,
   SerializedEditorState,
 } from "lexical";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import { TooltipProvider } from "@/shared/ui";
 
@@ -45,7 +45,6 @@ export function Editor({
   onSerializedChange?: (editorSerializedState: SerializedEditorState) => void;
   initialHTML?: string;
 }) {
-  console.log(initialHTML);
   return (
     <div className="bg-background border-border overflow-hidden rounded-lg border shadow">
       <LexicalComposer
@@ -78,12 +77,8 @@ export function Editor({
 
 function HTMLContentPlugin({ html }: { html: string }) {
   const [editor] = useLexicalComposerContext();
-  const didInit = useRef(false);
 
   useEffect(() => {
-    if (didInit.current || !html) return;
-    didInit.current = true;
-
     editor.update(() => {
       const parser = new DOMParser();
       const dom = parser.parseFromString(html, "text/html");

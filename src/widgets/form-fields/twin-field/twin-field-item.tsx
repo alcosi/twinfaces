@@ -51,6 +51,7 @@ export function TwinFieldFormItem({
   const userAdapter = useUserSelectAdapter();
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    console.log("foobar input-change", event);
     return onChange?.(event.target.value);
   }
 
@@ -60,10 +61,6 @@ export function TwinFieldFormItem({
   ) {
     const newValue = formatDate(new Date(event.target.value), pattern);
     return onChange?.(newValue);
-  }
-
-  function handleMarkdownChange(event: { target: { markdown: string } }) {
-    onChange?.(event.target.markdown);
   }
 
   function handleOnTwinSelect(twins?: Twin[]) {
@@ -98,8 +95,7 @@ export function TwinFieldFormItem({
         return (
           <TwinFieldTextFormItem
             descriptor={descriptor}
-            onTextChange={handleInputChange}
-            onMarkdownChange={handleMarkdownChange}
+            onChange={handleInputChange}
             {...props}
           />
         );
