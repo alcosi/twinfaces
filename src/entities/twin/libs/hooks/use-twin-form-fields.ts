@@ -27,10 +27,13 @@ export function useTwinClassFields<T extends TwinFormValues>(
   const headAdapter = useTwinHeadSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
 
-  const watchedClassId = useWatch({ control, name: "classId" as Path<T> });
+  const watchedClassId = useWatch<T>({
+    control,
+    name: "classId" as Path<T>,
+  }) as TwinClass_DETAILED[];
   const twinClasses = isArray(watchedClassId)
-    ? watchedClassId[0]
-    : watchedClassId;
+    ? (watchedClassId as TwinClass_DETAILED[])
+    : [];
   const selectedTwinClass = isPopulatedArray<TwinClass_DETAILED>(twinClasses)
     ? twinClasses[0]
     : null;
