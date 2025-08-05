@@ -8,6 +8,7 @@ import { clientCookies, useLocalStorage } from "@/shared/libs";
 type AuthUser = {
   domainUser?: DomainUser_DETAILED;
   authToken: string;
+  refreshToken?: string;
   domainId: string;
 };
 
@@ -33,6 +34,7 @@ export function useAuthUser(): UseAuthUser {
     (user: AuthUser | null) => {
       setStoredValue(user);
       clientCookies.set("authToken", `${user?.authToken}`, { path: "/" });
+      clientCookies.set("refreshToken", `${user?.refreshToken}`, { path: "/" });
       clientCookies.set("domainId", `${user?.domainId}`, { path: "/" });
       clientCookies.set("userId", `${user?.domainUser?.userId}`, { path: "/" });
     },
@@ -52,6 +54,7 @@ export function useAuthUser(): UseAuthUser {
   const logout = useCallback(() => {
     setStoredValue(null);
     clientCookies.remove("authToken");
+    clientCookies.remove("refreshToken");
     clientCookies.remove("domainId");
     clientCookies.remove("userId");
   }, [setStoredValue]);

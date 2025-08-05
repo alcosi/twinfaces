@@ -76,6 +76,7 @@ export function EmailPasswordSignInForm({
 
       if (result.ok) {
         const authToken = result.data.authData?.auth_token;
+        const refreshToken = result.data.authData?.refresh_token;
         if (isUndefined(authToken)) {
           return handleAuthError("Login failed: no auth token returned");
         }
@@ -92,6 +93,7 @@ export function EmailPasswordSignInForm({
         setAuthUser({
           domainUser,
           authToken,
+          refreshToken,
           domainId,
         });
 
