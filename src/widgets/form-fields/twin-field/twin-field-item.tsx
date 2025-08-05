@@ -51,7 +51,6 @@ export function TwinFieldFormItem({
   const userAdapter = useUserSelectAdapter();
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    console.log("foobar input-change", event);
     return onChange?.(event.target.value);
   }
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { ChangeEvent } from "react";
+
 import { RichTextEditor } from "@/features/editors";
 import { FormItem, FormMessage } from "@/shared/ui";
 
@@ -8,33 +10,38 @@ import { FormItemProps } from "../types";
 
 type RichTextEditorFormItemProps = FormItemProps & {
   fieldValue: string;
-  onChange?: (event: { target: { markdown: string } }) => void;
-  label?: string;
-  description?: string;
-  required?: boolean;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const RichTextEditorFormItem = ({
+export function RichTextEditorFormItem({
   fieldValue,
   onChange,
   label,
   description,
   required,
   inForm,
-}: RichTextEditorFormItemProps) => {
+}: RichTextEditorFormItemProps) {
+  function handleOnHtmlChange(html: string) {
+    const syntheticEvent = {
+      target: { value: html },
+      currentTarget: { value: html },
+    } as unknown as ChangeEvent<HTMLInputElement>;
+
+    onChange?.(syntheticEvent);
+  }
+
   return (
     <FormItem className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-error-500">*</span>}
         </FormItemLabel>
       )}
 
       <RichTextEditor
+        mode="html"
         initialHTML={fieldValue}
-        onHtmlChange={(html) => {
-          onChange?.({ target: { markdown: html } });
-        }}
+        onHtmlChange={handleOnHtmlChange}
       />
 
       {description && (
@@ -44,4 +51,4 @@ export const RichTextEditorFormItem = ({
       {inForm && <FormMessage />}
     </FormItem>
   );
-};
+}
