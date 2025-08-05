@@ -72,19 +72,23 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
     }, {});
   }
 
-  if (dto.attachments && relatedObjects?.twinClassFieldMap) {
-    hydrated.fields = hydrated.fields ?? {};
+  if (relatedObjects?.twinClassFieldMap) {
+    hydrated.fields = Object.values(relatedObjects.twinClassFieldMap).reduce<
+      Record<string, TwinFieldUI>
+    >((acc, field) => {
+      if (field.descriptor?.fieldType === "attachmentFieldV1") {
+        const attachment = dto.attachments?.find(
+          (att) => att.twinClassFieldId === field.id
+        );
 
-    dto.attachments.forEach((attachment) => {
-      const field =
-        relatedObjects.twinClassFieldMap?.[attachment.twinClassFieldId!];
-      if (field && field.descriptor?.fieldType === "attachmentFieldV1") {
-        hydrated.fields![field.key!] = {
+        acc[field.key!] = {
           ...(field as Required<TwinClassField>),
-          value: attachment.storageLink!,
-        };
+          value: attachment?.storageLink ?? "",
+        } as TwinFieldUI;
       }
-    });
+
+      return acc;
+    }, hydrated.fields ?? {});
   }
 
   return hydrated;
