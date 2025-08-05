@@ -36,6 +36,10 @@ const config = [
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "warn",
       "react/jsx-curly-brace-presence": "error",
+      "react/function-component-definition": [
+        "warn",
+        { namedComponents: "function-declaration" },
+      ],
     },
   },
 

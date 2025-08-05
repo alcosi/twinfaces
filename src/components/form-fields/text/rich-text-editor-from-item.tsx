@@ -1,27 +1,24 @@
 "use client";
 
-import { MarkdownEditor } from "@/features/markdown";
+import { RichTextEditor } from "@/features/editors";
 import { FormItem, FormMessage } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "..";
 import { FormItemProps } from "../types";
 
-type MarkdownEditorFormItemProps = FormItemProps & {
+type RichTextEditorFormItemProps = FormItemProps & {
   fieldValue: string;
-  onChange?: (event: { target: { markdown: string } }) => void;
-  label?: string;
-  description?: string;
-  required?: boolean;
+  onChange?: (value: string) => void;
 };
 
-export function MarkdownEditorFormItem({
+export function RichTextEditorFormItem({
   fieldValue,
   onChange,
   label,
   description,
   required,
   inForm,
-}: MarkdownEditorFormItemProps) {
+}: RichTextEditorFormItemProps) {
   return (
     <FormItem className="w-full">
       {label && (
@@ -30,7 +27,11 @@ export function MarkdownEditorFormItem({
         </FormItemLabel>
       )}
 
-      <MarkdownEditor markdown={fieldValue} onChange={onChange} />
+      <RichTextEditor
+        mode="html"
+        initialHTML={fieldValue}
+        onHtmlChange={onChange}
+      />
 
       {description && (
         <FormItemDescription inForm={inForm}>{description}</FormItemDescription>

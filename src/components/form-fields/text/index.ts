@@ -8,3 +8,5 @@ export * from "./text-form-item";
 
 export * from "./textarea-form-field";
 export * from "./textarea-form-item";
+
+export * from "./rich-text-editor-from-item";
