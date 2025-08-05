@@ -94,7 +94,7 @@ export function TwinFieldFormItem({
         return (
           <TwinFieldTextFormItem
             descriptor={descriptor}
-            onChange={handleInputChange}
+            onChange={onChange}
             {...props}
           />
         );

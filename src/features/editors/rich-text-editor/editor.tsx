@@ -15,7 +15,6 @@ import {
 } from "lexical";
 import { useEffect } from "react";
 
-import { OneOf, isPopulatedString } from "@/shared/libs";
 import { TooltipProvider } from "@/shared/ui";
 
 import { nodes } from "./nodes";
@@ -71,7 +70,7 @@ export function Editor(props: EditorProps) {
 
           {/* === Custom plugins === */}
           {props.mode === "html" && (
-            <HTMLContentPlugin html={props.initialHTML ?? ""} />
+            <HTMLContentPlugin defaultHtml={props.initialHTML ?? ""} />
           )}
 
           <ChangeHandlerPlugin {...props} />
@@ -82,13 +81,14 @@ export function Editor(props: EditorProps) {
   );
 }
 
-function HTMLContentPlugin({ html }: { html: string }) {
+function HTMLContentPlugin({ defaultHtml }: { defaultHtml: string }) {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
+    const parser = new DOMParser();
+
     editor.update(() => {
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(html, "text/html");
+      const dom = parser.parseFromString(defaultHtml, "text/html");
       const nodes = $generateNodesFromDOM(editor, dom);
       const root = $getRoot();
       root.clear();
@@ -99,7 +99,7 @@ function HTMLContentPlugin({ html }: { html: string }) {
         root.append($createParagraphNode());
       }
     });
-  }, [editor, html]);
+  }, [editor]);
 
   return null;
 }

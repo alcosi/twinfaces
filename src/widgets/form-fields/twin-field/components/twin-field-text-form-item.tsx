@@ -1,7 +1,5 @@
 "use client";
 
-import { ChangeEvent } from "react";
-
 import { RichTextEditorFormItem, TextFormItem } from "@/components/form-fields";
 
 import { TwinClassFieldDescriptorTextV1 } from "@/entities/twinField";
@@ -9,7 +7,7 @@ import { TwinClassFieldDescriptorTextV1 } from "@/entities/twinField";
 type TwinFieldTextFormItemProps = {
   fieldValue: string;
   descriptor: TwinClassFieldDescriptorTextV1;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (value: string) => void;
 };
 
 export function TwinFieldTextFormItem({
@@ -24,6 +22,8 @@ export function TwinFieldTextFormItem({
 
     case "PLAIN":
     default:
-      return <TextFormItem onChange={onChange} {...props} />;
+      return (
+        <TextFormItem onChange={(e) => onChange?.(e.target.value)} {...props} />
+      );
   }
 }

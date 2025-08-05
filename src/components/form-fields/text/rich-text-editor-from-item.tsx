@@ -1,7 +1,5 @@
 "use client";
 
-import { ChangeEvent } from "react";
-
 import { RichTextEditor } from "@/features/editors";
 import { FormItem, FormMessage } from "@/shared/ui";
 
@@ -10,7 +8,7 @@ import { FormItemProps } from "../types";
 
 type RichTextEditorFormItemProps = FormItemProps & {
   fieldValue: string;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (value: string) => void;
 };
 
 export function RichTextEditorFormItem({
@@ -21,15 +19,6 @@ export function RichTextEditorFormItem({
   required,
   inForm,
 }: RichTextEditorFormItemProps) {
-  function handleOnHtmlChange(html: string) {
-    const syntheticEvent = {
-      target: { value: html },
-      currentTarget: { value: html },
-    } as unknown as ChangeEvent<HTMLInputElement>;
-
-    onChange?.(syntheticEvent);
-  }
-
   return (
     <FormItem className="w-full">
       {label && (
@@ -41,7 +30,7 @@ export function RichTextEditorFormItem({
       <RichTextEditor
         mode="html"
         initialHTML={fieldValue}
-        onHtmlChange={handleOnHtmlChange}
+        onHtmlChange={onChange}
       />
 
       {description && (
