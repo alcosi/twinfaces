@@ -3,7 +3,7 @@ import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
-import { cn, isMultiElementArray, safe } from "@/shared/libs";
+import { cn, isMultiElementArray } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -16,11 +16,10 @@ export async function TW004(props: TWidgetFaceProps) {
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const twidgetResult = await safe(
-    withRedirectOnUnauthorized(() =>
-      fetchTW004Face(widget.widgetFaceId, twinId)
-    )
-  );
+  const twidgetResult = await withRedirectOnUnauthorized(() =>
+    fetchTW004Face(widget.widgetFaceId, twinId)
+  )();
+
   if (!twidgetResult.ok || !twidgetResult.data.widget) {
     return (
       <StatusAlert variant="error" message="Widget TW004 failed to load." />

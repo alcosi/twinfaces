@@ -1,6 +1,5 @@
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { safe } from "@/shared/libs";
 
 import { StatusAlert } from "../components";
 import { PGFaceProps } from "./types";
@@ -12,13 +11,11 @@ const LAYOUT_MAP = {
 } as const;
 
 export async function LayoutRenderer(props: PGFaceProps) {
-  const result = await safe(
-    withRedirectOnUnauthorized(() =>
-      fetchFaceById<Face_DETAILED>(props.pageFaceId, {
-        query: { showFaceMode: "DETAILED" },
-      })
-    )
-  );
+  const result = await withRedirectOnUnauthorized(() =>
+    fetchFaceById<Face_DETAILED>(props.pageFaceId, {
+      query: { showFaceMode: "DETAILED" },
+    })
+  )();
 
   if (!result.ok) {
     return (

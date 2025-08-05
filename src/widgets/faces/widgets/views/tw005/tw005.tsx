@@ -1,7 +1,7 @@
 import { fetchTW005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { cn, safe } from "@/shared/libs";
+import { cn } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -15,11 +15,9 @@ export async function TW005(props: TWidgetFaceProps) {
     showTwin2TransitionMode: "DETAILED",
   } as const;
 
-  const faceResult = await safe(
-    withRedirectOnUnauthorized(() =>
-      fetchTW005Face(widget.widgetFaceId, twinId)
-    )
-  );
+  const faceResult = await withRedirectOnUnauthorized(() =>
+    fetchTW005Face(widget.widgetFaceId, twinId)
+  )();
 
   if (!faceResult.ok || !faceResult.data.widget) {
     return (
@@ -29,11 +27,9 @@ export async function TW005(props: TWidgetFaceProps) {
 
   const { id, pointedTwinId = "", buttons = [] } = faceResult.data.widget;
 
-  const twinResult = await safe(
-    withRedirectOnUnauthorized(() =>
-      fetchTwinById(pointedTwinId, { header, query })
-    )
-  );
+  const twinResult = await withRedirectOnUnauthorized(() =>
+    fetchTwinById(pointedTwinId, { header, query })
+  )();
 
   if (!twinResult.ok) {
     return <StatusAlert variant="error" message="Failed to load twin." />;

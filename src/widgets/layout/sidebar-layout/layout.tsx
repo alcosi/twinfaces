@@ -13,7 +13,6 @@ import {
   isAuthUserGranted,
 } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { safe } from "@/shared/libs";
 import { RenderOnClient, SidebarProvider } from "@/shared/ui";
 
 import { SidebarLayoutContent } from "./content";
@@ -53,9 +52,10 @@ export async function SidebarLayout({ children }: Props) {
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const faceResult = await safe(
-    withRedirectOnUnauthorized(() => fetchSidebarFace())
-  );
+  const faceResult = await withRedirectOnUnauthorized(() =>
+    fetchSidebarFace()
+  )();
+
   let sidebarFace: FaceNB001 | undefined = faceResult.ok
     ? faceResult.data
     : undefined;

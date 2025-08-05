@@ -450,6 +450,8 @@ function extractTwinFieldColumnsAndFilters({
           cell: ({ row: { original } }) => {
             const twinField = original.fields?.[field.key!] as TwinFieldUI;
 
+            if (isUndefined(twinField)) return "";
+
             if (isEmptyString(twinField.value)) {
               return twinField.value;
             }

@@ -6,7 +6,7 @@ import {
   fetchTC001Face,
 } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { isUndefined, safe } from "@/shared/libs";
+import { isUndefined } from "@/shared/libs";
 
 const componentToFetcherMap: Record<
   string,
@@ -26,9 +26,9 @@ export async function fetchModalCreateData(
     return undefined;
   }
 
-  const modalFaceResult = await safe(
-    withRedirectOnUnauthorized(() => fetcher(modalFace.id!, twinId))
-  );
+  const modalFaceResult = await withRedirectOnUnauthorized(() =>
+    fetcher(modalFace.id!, twinId)
+  )();
 
   if (!modalFaceResult.ok) {
     console.error(

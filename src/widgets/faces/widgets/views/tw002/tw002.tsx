@@ -7,7 +7,6 @@ import {
 
 import { fetchTW002Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -15,11 +14,9 @@ import { TWidgetFaceProps } from "../../types";
 export async function TW002(props: TWidgetFaceProps) {
   const { twinId, face, widget } = props;
 
-  const result = await safe(
-    withRedirectOnUnauthorized(() =>
-      fetchTW002Face(widget.widgetFaceId, twinId)
-    )
-  );
+  const result = await withRedirectOnUnauthorized(() =>
+    fetchTW002Face(widget.widgetFaceId, twinId)
+  )();
 
   if (!result.ok) {
     return (

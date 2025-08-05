@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { fetchPG002Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TabSkeleton } from "@/features/ui/skeletons";
-import { isNumber, isPopulatedArray, safe } from "@/shared/libs";
+import { isNumber, isPopulatedArray } from "@/shared/libs";
 
 import { Tab, TabsLayout } from "../../../layout";
 import { StatusAlert, WidgetsContainer } from "../../components";
@@ -11,9 +11,9 @@ import { Widget } from "../../widgets/types";
 import { PGFaceProps } from "../types";
 
 export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
-  const pageResult = await safe(
-    withRedirectOnUnauthorized(() => fetchPG002Face(pageFaceId, twinId))
-  );
+  const pageResult = await withRedirectOnUnauthorized(() =>
+    fetchPG002Face(pageFaceId, twinId)
+  )();
 
   if (!pageResult.ok) {
     return (
