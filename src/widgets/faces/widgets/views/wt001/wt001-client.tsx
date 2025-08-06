@@ -33,12 +33,17 @@ export function WT001Client<T extends FaceTC = FaceTC>({
     const workspaceIdx = segments.indexOf(PlatformArea.workspace);
     const basePath = workspaceIdx !== -1 ? segments[workspaceIdx + 1] : "";
 
-    const isOnProductsPage =
+    const isOnCurrentProductPage =
       segments.length === 3 &&
       segments[0] === PlatformArea.workspace &&
       basePath === "products";
 
-    if (isOnProductsPage) {
+    const isBrowsePage =
+      segments.length === 2 && segments[0] === PlatformArea.browse;
+
+    if (isOnCurrentProductPage) {
+      router.push(`/${PlatformArea.browse}/${row.id}`);
+    } else if (isBrowsePage) {
       router.push(`/${PlatformArea.browse}/${row.id}`);
     } else {
       router.push(`/${PlatformArea.workspace}/${basePath}/${row.id}`);

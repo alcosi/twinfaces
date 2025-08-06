@@ -4339,15 +4339,25 @@ export interface components {
              * @description twin display page pointer
              */
             pageFaceId?: string;
-            /** @description assignee required */
-            assigneeRequired?: boolean;
-            /** @description external id */
-            externalId?: string;
             /**
              * Format: uuid
              * @description breadcrumbs face id
              */
             breadCrumbsFaceId?: string;
+            /**
+             * Format: uuid
+             * @description inherited page face id
+             */
+            inheritedPageFaceId?: string;
+            /**
+             * Format: uuid
+             * @description inherited breadcrumbs face id
+             */
+            inheritedBreadCrumbsFaceId?: string;
+            /** @description assignee required */
+            assigneeRequired?: boolean;
+            /** @description external id */
+            externalId?: string;
         };
         TwinflowBaseV1: {
             /**
@@ -6066,15 +6076,25 @@ export interface components {
              * @description twin display page pointer
              */
             pageFaceId?: string;
-            /** @description assignee required */
-            assigneeRequired?: boolean;
-            /** @description external id */
-            externalId?: string;
             /**
              * Format: uuid
              * @description breadcrumbs face id
              */
             breadCrumbsFaceId?: string;
+            /**
+             * Format: uuid
+             * @description inherited page face id
+             */
+            inheritedPageFaceId?: string;
+            /**
+             * Format: uuid
+             * @description inherited breadcrumbs face id
+             */
+            inheritedBreadCrumbsFaceId?: string;
+            /** @description assignee required */
+            assigneeRequired?: boolean;
+            /** @description external id */
+            externalId?: string;
             /** @description Class fields list */
             fields?: components["schemas"]["TwinClassFieldV1"][];
             /** @description Class fields id list */
@@ -17854,6 +17874,81 @@ export interface components {
             userAreaIcon?: string;
             /** @description menu items list */
             userAreaMenuItems?: components["schemas"]["FaceNB001MenuItemV1"][];
+        };
+        /** @description BC001 item config */
+        FaceBC001ItemV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /**
+             * Format: uuid
+             * @description twin id
+             */
+            twinId?: string;
+            /** @description label */
+            label?: string;
+            /** @description icon url */
+            iconUrl?: string;
+        };
+        /** @description Breadcrumbs widget dto */
+        FaceBC001V1: {
+            /**
+             * Format: uuid
+             * @description config id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            id?: string;
+            /**
+             * @description component
+             * @example some domain
+             */
+            component?: string;
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: uuid
+             * @description createdByUserId
+             */
+            createdByUserId?: string;
+            /** @description items list */
+            items?: components["schemas"]["FaceBC001ItemV1"][];
+        };
+        FaceBC001ViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - widget details */
+            breadCrumbs?: components["schemas"]["FaceBC001V1"];
         };
         DomainUserViewRsV1: {
             /**
@@ -32988,7 +33083,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["FaceTW001ViewRsV1"];
+                    "application/json": components["schemas"]["FaceBC001ViewRsV1"];
                 };
             };
             /** @description Access is denied */

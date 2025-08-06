@@ -23,17 +23,17 @@ export default async function Page(props: Props) {
     showTwin2FaceMode: "DETAILED",
   } as const;
 
-  const result = await safe(
+  const twinResult = await safe(
     withRedirectOnUnauthorized(() =>
       fetchTwinById<Twin_DETAILED>(params.twinId, { header, query })
     )
   );
 
-  if (!result.ok) {
+  if (!twinResult.ok) {
     notFound();
   }
 
-  const { twin, relatedObjects } = result.data;
+  const { twin } = twinResult.data;
 
   if (twin.pageFaceId) {
     return <LayoutRenderer pageFaceId={twin.pageFaceId} twinId={twin.id} />;

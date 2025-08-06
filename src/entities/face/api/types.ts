@@ -51,3 +51,6 @@ export type FaceTW002ViewRs = components["schemas"]["FaceTW002ViewRsV1"];
 export type FaceTW004ViewRs = components["schemas"]["FaceTW004ViewRsV2"];
 export type FaceTW005ViewRs = components["schemas"]["FaceWT005ViewRsV1"];
 export type FaceTC001ViewRs = components["schemas"]["FaceTC001ViewRsV1"];
+// NOTE error it type BE team need to fix
+export type FaceBC001ViewRs = components["schemas"]["FaceBC001ViewRsV1"];
+export type FaceBC001Item = components["schemas"]["FaceBC001ItemV1"];

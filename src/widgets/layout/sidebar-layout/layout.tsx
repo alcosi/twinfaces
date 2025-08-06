@@ -2,6 +2,7 @@ import { PropsWithChildren } from "react";
 
 import { fetchDomainsList, hydrateDomainView } from "@/entities/domain";
 import {
+  FaceBC001Item,
   FaceNB001,
   FaceNB001MenuItem,
   fetchSidebarFace,
@@ -20,7 +21,10 @@ import { SidebarLayoutContent } from "./content";
 import { SidebarLayoutHeader } from "./header";
 import { AppSidebar } from "./sidebar";
 
-type Props = PropsWithChildren<{}>;
+type SidebarLayoutProps = PropsWithChildren<{
+  breadcrumbs?: FaceBC001Item[];
+  activeTwinId?: string;
+}>;
 
 async function filterAccessibleMenuItems(
   items: FaceNB001MenuItem[],
@@ -46,7 +50,11 @@ async function filterAccessibleMenuItems(
   return result;
 }
 
-export async function SidebarLayout({ children }: Props) {
+export async function SidebarLayout({
+  children,
+  breadcrumbs,
+  activeTwinId,
+}: SidebarLayoutProps) {
   const { currentUserId } = await getAuthHeaders();
   const { domains } = await fetchDomainsList();
   const isAdmin = await isAuthUserGranted({
@@ -87,7 +95,10 @@ export async function SidebarLayout({ children }: Props) {
           domainsList={domains?.map((dto) => hydrateDomainView(dto)) ?? []}
         />
         <div className="w-full">
-          <SidebarLayoutHeader />
+          <SidebarLayoutHeader
+            breadcrumbsData={breadcrumbs}
+            activeTwinId={activeTwinId}
+          />
           <SidebarLayoutContent>{children}</SidebarLayoutContent>
         </div>
       </RenderOnClient>
