@@ -29,11 +29,7 @@ export default async function Page(props: Props) {
   );
 
   if (!result.ok) {
-    if (result.status === 404) {
-      notFound();
-    }
-
-    throw result.error;
+    notFound();
   }
 
   const twin = result.data;
