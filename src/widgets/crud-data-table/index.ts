@@ -1,3 +1,4 @@
+export * from "./constans";
 export * from "./crud-data-table";
 export type {
   DataTableHandle,
@@ -5,4 +6,3 @@ export type {
   DataTableRow,
 } from "./data-table";
 export * from "./types";
-export * from "./constans";
