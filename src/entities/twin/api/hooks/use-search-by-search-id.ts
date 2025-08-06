@@ -25,10 +25,17 @@ export const useTwinSearchBySearchId = () => {
     }): Promise<PagedResponse<Twin_DETAILED>> => {
       try {
         const { data, error } = await api.twin.searchBySearchId({
-          searchId,
-          searchParams,
-          pagination,
-          filters,
+          path: {
+            searchId,
+          },
+          query: {
+            offset: pagination.pageIndex * pagination.pageSize,
+            limit: pagination.pageSize,
+          },
+          body: {
+            params: searchParams,
+            narrow: filters,
+          },
         });
 
         if (error) {

@@ -64,8 +64,10 @@ type Props = {
   // === end ===
   modalCreateData?: FaceTC001ViewRs;
   onRowClick?: (row: Twin_DETAILED) => void;
+  // === start === NOTE: Filtering criteria for retrieving
   searchId?: string;
   searchParams?: Record<string, string>;
+  // === end ===
 };
 
 export function TwinsTable({
@@ -319,15 +321,14 @@ export function TwinsTable({
     pagination?: PaginationState;
     filters: FiltersState;
   }) {
-    const _filters = mapFiltersToPayload(filters.filters);
-    const filtersAll = {
-      ..._filters,
+    const _baseFilters = mapFiltersToPayload(filters.filters);
+    const _override = {
       twinClassExtendsHierarchyContainsIdList: baseTwinClassId
         ? [baseTwinClassId]
-        : _filters.twinClassExtendsHierarchyContainsIdList,
+        : _baseFilters.twinClassExtendsHierarchyContainsIdList,
       headTwinIdList: targetHeadTwinId
         ? [targetHeadTwinId]
-        : _filters.headTwinIdList,
+        : _baseFilters.headTwinIdList,
     };
 
     const searchData = searchId
@@ -335,11 +336,11 @@ export function TwinsTable({
           searchId,
           searchParams,
           pagination: pagination,
-          filters: filtersAll,
+          filters: { ..._baseFilters, ..._override },
         })
       : await searchTwins({
           pagination: pagination,
-          filters: filtersAll,
+          filters: { ..._baseFilters, ..._override },
         });
 
     try {

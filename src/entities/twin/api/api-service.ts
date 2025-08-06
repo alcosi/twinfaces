@@ -1,6 +1,7 @@
 import { PaginationState } from "@tanstack/table-core";
 
 import {
+  HttpPostSpec,
   TwinCreateRq,
   TwinFilters,
   TwinFiltersBySearchId,
@@ -51,20 +52,15 @@ export function createTwinApi(settings: ApiSettings) {
   }
 
   function searchBySearchId({
-    searchId,
-    searchParams,
-    pagination,
-    filters,
-  }: {
-    searchId: string;
-    searchParams: Record<string, string>;
-    pagination: PaginationState;
-    filters?: TwinFiltersBySearchId;
-  }) {
+    path,
+    query,
+    body,
+  }: HttpPostSpec<TwinFiltersBySearchId>) {
     return settings.client.POST("/private/twin/search/{searchId}/v1", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
+          ...query,
           lazyRelation: false,
           showTwinMode: "DETAILED",
           showTwinClassMode: "DETAILED",
@@ -79,8 +75,6 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2TransitionMode: "DETAILED",
           showTwinByLinkMode: "GREEN",
           showTwin2TwinLinkMode: "SHORT",
-          offset: pagination.pageIndex * pagination.pageSize,
-          limit: pagination.pageSize,
           sortAsc: false,
           showTwinField2DataListOptionMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
@@ -88,12 +82,9 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2AttachmentMode: "DETAILED",
           showTwin2AttachmentCollectionMode: "FROM_FIELDS",
         },
-        path: { searchId },
+        path,
       },
-      body: {
-        narrow: { ...filters },
-        params: { ...searchParams },
-      },
+      body,
     });
   }
 

@@ -1,6 +1,7 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
+import { PaginationV1 } from "@/shared/api";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
@@ -70,6 +71,34 @@ export type TwinFilters = Partial<
 >;
 
 export type TwinSimpleFilters = components["schemas"]["TwinSearchSimpleV1"];
+
+export type GenericRequest<Narrow = undefined> = {
+  query?: PaginationV1;
+  body?: RequestPayload<Narrow>;
+};
+
+export type RequestPayload<Narrow = undefined> = {
+  params?: Record<string, string>;
+  narrow?: Narrow;
+};
+
+export type HttpPostSpec<Narrow> = {
+  query?: PaginationV1 & {
+    lazyRelation?: false;
+    sortAsc?: boolean;
+  };
+
+  header?: {
+    DomainId: string;
+    AuthToken: string;
+    Channel: string;
+  };
+
+  path: { searchId: string };
+
+  body: RequestPayload<Narrow>;
+};
+
 export type TwinFiltersBySearchId = Partial<
   Pick<components["schemas"]["TwinSearchExtendedV1"], TwinFilterKeys>
 >;
