@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getAuthHeaders } from "@/entities/face";
 import { Twin_DETAILED, fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { safe } from "@/shared/libs";
+import { isNotFoundError, safe } from "@/shared/libs";
 import { StatusAlert } from "@/widgets/faces/components";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
@@ -30,7 +30,11 @@ export default async function Page(props: Props) {
   );
 
   if (!result.ok) {
-    notFound();
+    if (isNotFoundError(result.error)) {
+      notFound();
+    }
+
+    throw result.error;
   }
 
   const twin = result.data;
