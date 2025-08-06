@@ -13,7 +13,7 @@ export const useTwinFetchByIdV2 = () => {
       setLoading(true);
 
       try {
-        const { twin } = await fetch<Twin_DETAILED>(id, {
+        return await fetch<Twin_DETAILED>(id, {
           header: {
             DomainId: domainId ?? "",
             AuthToken: authToken ?? "",
@@ -32,8 +32,6 @@ export const useTwinFetchByIdV2 = () => {
             showTwin2TransitionMode: "DETAILED",
           },
         });
-
-        return twin;
       } finally {
         setLoading(false);
       }

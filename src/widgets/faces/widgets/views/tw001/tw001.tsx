@@ -38,7 +38,7 @@ export async function TW001(props: TWidgetFaceProps) {
   if (!twinResult.ok) {
     return <StatusAlert message="Failed to load twin." />;
   }
-  const { twin } = twinResult.data;
+  const twin = twinResult.data;
   const allAttachments = twin.attachments ?? [];
   const relevantAttachments = twidget.imagesTwinClassFieldId
     ? allAttachments.filter(
