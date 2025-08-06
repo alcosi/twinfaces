@@ -128,18 +128,6 @@ export function isErrorInstance(error: unknown): error is Error {
   return error instanceof Error;
 }
 
-// function isNotFoundError(error: unknown): boolean {
-//   if (error instanceof Error) {
-//     try {
-//       const parsed = JSON.parse(error.message);
-//       return parsed.status === 404;
-//     } catch {
-//       return false;
-//     }
-//   }
-//   return false;
-// }
-
 //
 // ──────────────────────────────────────────────────────────────────────────────
 //   SECTION: React-Specific Guards
