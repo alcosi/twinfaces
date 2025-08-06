@@ -29,22 +29,27 @@ export default async function Page(props: Props) {
   );
 
   if (!result.ok) {
-    notFound();
+    if (result.status === 404) {
+      notFound();
+    }
+
+    throw result.error;
   }
 
   const { twin } = result.data;
-  if (twin.twinClass?.pageFaceId) {
+
+  if (!twin.twinClass?.pageFaceId) {
     return (
-      <LayoutRenderer pageFaceId={twin.twinClass.pageFaceId} twinId={twin.id} />
+      <StatusAlert
+        variant="warn"
+        title="Page not set up yet"
+        message="We're working on it. Please check back soon!"
+        className="mt-4"
+      />
     );
   }
 
   return (
-    <StatusAlert
-      variant="warn"
-      title="Page not set up yet"
-      message="We're working on it. Please check back soon!"
-      className="mt-4"
-    />
+    <LayoutRenderer pageFaceId={twin.twinClass.pageFaceId} twinId={twin.id} />
   );
 }

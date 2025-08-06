@@ -21,7 +21,7 @@ export type DataTimeRangeV1 = components["schemas"]["DataTimeRangeV1"];
 
 export type Result<T, E = unknown> =
   | { ok: true; data: T }
-  | { ok: false; error: E };
+  | { ok: false; error: E; status?: number };
 
 export type ApiErrorResponse = {
   status: number;

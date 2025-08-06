@@ -30,21 +30,25 @@ export default async function Page(props: Props) {
   );
 
   if (!result.ok) {
-    notFound();
+    if (result.status === 404) {
+      notFound();
+    }
+
+    throw result.error;
   }
 
-  const { twin, relatedObjects } = result.data;
+  const { twin } = result.data;
 
-  if (twin.pageFaceId) {
-    return <LayoutRenderer pageFaceId={twin.pageFaceId} twinId={twin.id} />;
+  if (!twin.pageFaceId) {
+    return (
+      <StatusAlert
+        variant="warn"
+        title="Page not set up yet"
+        message="We're working on it. Please check back soon!"
+        className="mt-4"
+      />
+    );
   }
 
-  return (
-    <StatusAlert
-      variant="warn"
-      title="Page not set up yet"
-      message="We're working on it. Please check back soon!"
-      className="mt-4"
-    />
-  );
+  return <LayoutRenderer pageFaceId={twin.pageFaceId} twinId={twin.id} />;
 }
