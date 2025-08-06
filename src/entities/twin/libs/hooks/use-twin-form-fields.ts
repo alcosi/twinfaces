@@ -8,7 +8,7 @@ import {
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
 import { useUserSelectAdapter } from "@/entities/user";
-import { isArray, isPopulatedArray } from "@/shared/libs";
+import { isPopulatedArray } from "@/shared/libs";
 
 type TwinClassFieldsParams = {
   baseTwinClassId?: string;
@@ -27,13 +27,10 @@ export function useTwinClassFields<T extends TwinFormValues>(
   const headAdapter = useTwinHeadSelectAdapter();
   const optionAdapter = useDatalistOptionSelectAdapter();
 
-  const watchedClassId = useWatch<T>({
-    control,
-    name: "classId" as Path<T>,
-  }) as TwinClass_DETAILED[];
-  const twinClasses = isArray(watchedClassId)
-    ? (watchedClassId as TwinClass_DETAILED[])
-    : [];
+  const watchedClassId = useWatch({ control, name: "classId" as Path<T> });
+  const twinClasses = isPopulatedArray<TwinClass_DETAILED>(watchedClassId)
+    ? watchedClassId[0].id
+    : watchedClassId;
   const selectedTwinClass = isPopulatedArray<TwinClass_DETAILED>(twinClasses)
     ? twinClasses[0]
     : null;
