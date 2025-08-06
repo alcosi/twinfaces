@@ -1,2 +1,2 @@
-export * from "./resource-link";
 export * from "./CommentCard";
+export * from "./resource-link";

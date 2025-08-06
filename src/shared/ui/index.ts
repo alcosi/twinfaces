@@ -32,6 +32,5 @@ export * from "./switch";
 export * from "./table";
 export * from "./tabs";
 export * from "./theme-image";
-export * from "./tooltip";
 export * from "./toggle";
-export * from "./dialog";
+export * from "./tooltip";

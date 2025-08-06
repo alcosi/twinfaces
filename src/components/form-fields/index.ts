@@ -1,10 +1,10 @@
 export * from "./checkbox";
 export * from "./color-picker";
 export * from "./combobox";
+export * from "./file";
 export { FormItemDescription, FormItemLabel } from "./form-items-common";
 export * from "./range";
 export * from "./switch";
 export * from "./tags";
 export * from "./text";
 export * from "./types";
-export * from "./file";
