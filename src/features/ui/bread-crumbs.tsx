@@ -1,11 +1,13 @@
 "use client";
 
 import { House } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
 
 import { FaceBC001Item } from "@/entities/face";
 import { PlatformArea } from "@/shared/config";
+import { isPopulatedString } from "@/shared/libs";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,6 +22,7 @@ type Props = {
 };
 
 export function BreadCrumbs({ items, activeTwinId }: Props) {
+  console.log("items", items);
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -36,16 +39,32 @@ export function BreadCrumbs({ items, activeTwinId }: Props) {
               ? `/${PlatformArea.workspace}/products`
               : `/${PlatformArea.browse}/${item.twinId}`;
 
+          const Icon = isPopulatedString(item.iconUrl)
+            ? () => (
+                <Image
+                  src={item.iconUrl ?? ""}
+                  alt="icon"
+                  width={16}
+                  height={16}
+                  className="mr-2 dark:invert"
+                />
+              )
+            : undefined;
+
           return (
             <Fragment key={item.id}>
               <BreadcrumbItem>
                 {isActive ? (
-                  <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                  <BreadcrumbPage className="flex">
+                    {Icon && <Icon />}
+                    {item.label}
+                  </BreadcrumbPage>
                 ) : (
                   <Link
                     href={href}
-                    className={isActive ? "text-foreground font-semibold" : ""}
+                    className={`flex ${isActive ? "text-foreground font-semibold" : ""}`}
                   >
+                    {Icon && <Icon />}
                     {item.label}
                   </Link>
                 )}
