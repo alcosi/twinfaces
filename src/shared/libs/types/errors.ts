@@ -20,6 +20,12 @@ export class UnauthorizedError extends HttpError {
   }
 }
 
+export class ForbiddenError extends HttpError {
+  constructor(details?: unknown) {
+    super(403, details);
+  }
+}
+
 export class NotFoundError extends HttpError {
   constructor(details?: unknown) {
     super(404, details);
@@ -41,6 +47,10 @@ export function isUnauthorizedError(
   // TODO: Replace with a custom `UnauthorizedError` class for more robust handling.
   return error instanceof UnauthorizedError;
   // return error instanceof Response && error.status === 401;
+}
+
+export function isForbiddenError(error: unknown): error is ForbiddenError {
+  return error instanceof ForbiddenError;
 }
 
 export function isNotFoundError(error: unknown): error is NotFoundError {

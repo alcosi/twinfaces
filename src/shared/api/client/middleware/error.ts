@@ -1,6 +1,12 @@
 import { Middleware } from "openapi-fetch";
 
-import { ERROR_CODE_MAP, NotFoundError } from "@/shared/libs";
+import {
+  ERROR_CODE_MAP,
+  ForbiddenError,
+  HttpError,
+  NotFoundError,
+  UnauthorizedError,
+} from "@/shared/libs";
 
 import { isApiErrorResponse } from "../../utils";
 
@@ -8,15 +14,9 @@ import { isApiErrorResponse } from "../../utils";
 export const errorMiddleware: Middleware = {
   async onResponse({ response }) {
     if (!response.ok) {
-      let payload: unknown;
+      const payload = await response.json();
 
-      try {
-        payload = await response.json();
-      } catch {
-        payload = response.statusText || `HTTP ${response.status}`;
-      }
-
-      throw toError(payload);
+      throw toError({ httpStatus: response.status, payload });
     }
 
     return response;
@@ -24,17 +24,46 @@ export const errorMiddleware: Middleware = {
 };
 
 /**
- * NOTE: Coerces an arbitrary value into a real JS Error.
+ * Normalize any HTTP response payload into a concrete JS Error.
  *
- * 1) If it matches our API’s { status, msg, statusDetails } shape,
- *    build an Error with message = “msg: statusDetails” and attach `cause`: { status, msg, statusDetails }.
- * 2) If it’s already an Error instance, return it unchanged.
- * 3) Otherwise (strings, numbers, plain objects, etc.), stringify it.
+ * Resolution order:
+ * 1. HTTP‐level status codes:
+ *    – 401 → UnauthorizedError
+ *    – 403 → ForbiddenError
+ *    – 404 → NotFoundError
+ * 2. API‐level error shape (has `{ status, msg, statusDetails }`):
+ *    – Certain codes (e.g. UUID_UNKNOWN, USER_UNKNOWN, etc.) → NotFoundError
+ *    – All other API codes → HttpError
+ * 3. If the payload is already an Error instance, return it unchanged.
+ * 4. Fallback: stringify the payload and wrap it in HttpError.
+ *
+ * @param httpStatus HTTP status code from the response
+ * @param payload    Parsed JSON body or raw error payload
  */
-function toError(err: unknown): Error {
-  // 1) API‐shape error
-  if (isApiErrorResponse(err)) {
-    switch (err.status) {
+
+function toError({
+  httpStatus,
+  payload,
+}: {
+  httpStatus: number;
+  payload: unknown;
+}): Error {
+  // 1) HTTP‐level
+  switch (httpStatus) {
+    case 401:
+      return new UnauthorizedError({ httpStatus, payload });
+    case 403:
+      return new ForbiddenError({ httpStatus, payload });
+    case 404:
+      return new NotFoundError({ httpStatus, payload });
+    // add more cases if you have 429/rate-limit, 500, etc.
+  }
+
+  // 2) API‐level
+  if (isApiErrorResponse(payload)) {
+    const apiErrorCode = payload.status;
+
+    switch (apiErrorCode) {
       case ERROR_CODE_MAP.UUID_UNKNOWN:
       case ERROR_CODE_MAP.USER_UNKNOWN:
       case ERROR_CODE_MAP.USER_LOCALE_UNKNOWN:
@@ -50,18 +79,19 @@ function toError(err: unknown): Error {
       case ERROR_CODE_MAP.TWIN_SEARCH_ALIAS_UNKNOWN:
       case ERROR_CODE_MAP.USER_GROUP_UNKNOWN:
       case ERROR_CODE_MAP.BUSINESS_ACCOUNT_UNKNOWN:
-        return new NotFoundError(err);
-      default:
-        return new Error(err.statusDetails, { cause: err });
+        return new NotFoundError(payload);
     }
+
+    return new HttpError(httpStatus, payload);
   }
 
-  // 2) Already a native Error
-  if (err instanceof Error) {
-    return err;
+  // 3) Native `Error`
+  if (payload instanceof Error) {
+    return payload;
   }
 
-  // 3) Fallback: stringify anything else
-  const message = typeof err === "string" ? err : JSON.stringify(err);
-  return new Error(message);
+  // 4) Fallback: stringify anything else
+  const message =
+    typeof payload === "string" ? payload : JSON.stringify(payload);
+  return new HttpError(httpStatus, message);
 }
