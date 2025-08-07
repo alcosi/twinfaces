@@ -80,3 +80,34 @@ export async function uploadTwinAttachment(twinId: string, file: File) {
 
   return data;
 }
+
+export async function changeTwinClassOfCurrentTwin(
+  twinId: string,
+  options: {
+    header: {
+      DomainId: string;
+      AuthToken: string;
+      Channel: "WEB";
+    };
+    payload: {
+      newTwinClassId: string;
+    };
+  }
+) {
+  const { data, error } = await TwinsAPI.PUT(
+    "/private/twin/{twinId}/class_change/v1",
+    {
+      params: {
+        header: options.header,
+        path: { twinId },
+      },
+      body: options.payload,
+    }
+  );
+
+  if (error) {
+    throw new Error("Change twinClass of current twin is failed!");
+  }
+
+  return data;
+}
