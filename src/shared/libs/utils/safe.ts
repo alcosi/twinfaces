@@ -1,6 +1,11 @@
 import { Result } from "@/shared/api";
 
-import { HttpError, NotFoundError } from "../types";
+import {
+  HttpError,
+  NotFoundError,
+  isErrorInstance,
+  isHttpError,
+} from "../types";
 
 export async function safe<T>(fn: () => Promise<T>): Promise<Result<T, Error>> {
   try {
@@ -9,7 +14,7 @@ export async function safe<T>(fn: () => Promise<T>): Promise<Result<T, Error>> {
   } catch (error) {
     console.warn("[safe] Caught error:", error);
 
-    if (error instanceof Error) {
+    if (isHttpError(error)) {
       try {
         const parsed = JSON.parse(error.message);
 
@@ -24,6 +29,9 @@ export async function safe<T>(fn: () => Promise<T>): Promise<Result<T, Error>> {
       }
     }
 
-    return { ok: false, error: new Error("Unknown error") };
+    return {
+      ok: false,
+      error: isErrorInstance(error) ? error : new Error("Unknown Error"),
+    };
   }
 }

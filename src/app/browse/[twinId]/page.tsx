@@ -30,9 +30,7 @@ export default async function Page(props: Props) {
   );
 
   if (!result.ok) {
-    if (isNotFoundError(result.error)) {
-      notFound();
-    }
+    if (isNotFoundError(result.error)) notFound();
 
     throw result.error;
   }

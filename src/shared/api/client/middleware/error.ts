@@ -1,5 +1,7 @@
 import { Middleware } from "openapi-fetch";
 
+import { ERROR_CODE_MAP, NotFoundError } from "@/shared/libs";
+
 import { isApiErrorResponse } from "../../utils";
 
 // NOTE: Error‐normalization middleware
@@ -32,9 +34,26 @@ export const errorMiddleware: Middleware = {
 function toError(err: unknown): Error {
   // 1) API‐shape error
   if (isApiErrorResponse(err)) {
-    const error = new Error(err.statusDetails, { cause: err });
-
-    return error;
+    switch (err.status) {
+      case ERROR_CODE_MAP.UUID_UNKNOWN:
+      case ERROR_CODE_MAP.USER_UNKNOWN:
+      case ERROR_CODE_MAP.USER_LOCALE_UNKNOWN:
+      case ERROR_CODE_MAP.DOMAIN_UNKNOWN:
+      case ERROR_CODE_MAP.DOMAIN_LOCALE_UNKNOWN:
+      case ERROR_CODE_MAP.PERMISSION_ID_UNKNOWN:
+      case ERROR_CODE_MAP.TWIN_CLASS_FIELD_KEY_UNKNOWN:
+      case ERROR_CODE_MAP.TWIN_CLASS_ID_UNKNOWN:
+      case ERROR_CODE_MAP.TWIN_CLASS_KEY_UNKNOWN:
+      case ERROR_CODE_MAP.DATALIST_LIST_UNKNOWN:
+      case ERROR_CODE_MAP.TWIN_ALIAS_UNKNOWN:
+      case ERROR_CODE_MAP.TWIN_BASIC_FIELD_UNKNOWN:
+      case ERROR_CODE_MAP.TWIN_SEARCH_ALIAS_UNKNOWN:
+      case ERROR_CODE_MAP.USER_GROUP_UNKNOWN:
+      case ERROR_CODE_MAP.BUSINESS_ACCOUNT_UNKNOWN:
+        return new NotFoundError(err);
+      default:
+        return new Error(err.statusDetails, { cause: err });
+    }
   }
 
   // 2) Already a native Error
