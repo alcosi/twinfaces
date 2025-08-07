@@ -13,7 +13,6 @@ import {
 } from "@/entities/user/server";
 import { useAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
-import { EXPIRED_SESSION_TAG } from "@/shared/api";
 import { isApiErrorResponse } from "@/shared/api/utils";
 import { capitalize, isUndefined } from "@/shared/libs";
 import { Button } from "@/shared/ui";
@@ -31,7 +30,6 @@ export function EmailPasswordSignInForm({
   const searchParams = useSearchParams();
   const [isAuthenticating, startAuthTransition] = useTransition();
   const domainId = searchParams.get("domainId") ?? undefined;
-  const reason = searchParams.get("reason") ?? undefined;
 
   const signInForm = useForm<z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>>({
     resolver: zodResolver(EMAIL_PASSWORD_SIGN_IN_SCHEMA),
@@ -137,12 +135,6 @@ export function EmailPasswordSignInForm({
           placeholder="Enter your password"
           required
         />
-
-        {reason === EXPIRED_SESSION_TAG && (
-          <div className="text-destructive">
-            Your session has expired. Please log in again.
-          </div>
-        )}
 
         <Button
           type="submit"
