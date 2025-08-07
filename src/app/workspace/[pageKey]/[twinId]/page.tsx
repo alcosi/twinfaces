@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { getAuthHeaders } from "@/entities/face";
 import { Twin_DETAILED, fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { safe } from "@/shared/libs";
 import { StatusAlert } from "@/widgets/faces/components";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
@@ -22,11 +21,9 @@ export default async function Page(props: Props) {
     showTwin2TwinClassMode: "DETAILED",
     showTwinClassPage2FaceMode: "DETAILED",
   } as const;
-  const result = await safe(
-    withRedirectOnUnauthorized(() =>
-      fetchTwinById<Twin_DETAILED>(params.twinId, { header, query })
-    )
-  );
+  const result = await withRedirectOnUnauthorized(() =>
+    fetchTwinById<Twin_DETAILED>(params.twinId, { header, query })
+  )();
 
   if (!result.ok) {
     notFound();
