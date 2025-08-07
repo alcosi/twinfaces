@@ -70,7 +70,6 @@ export async function fetchWT001Face(
     twinId,
     query: {
       showModalFace2FaceMode: "DETAILED",
-      showFaceWT001Column2TwinClassFieldMode: "MANAGED",
     },
   });
 }
