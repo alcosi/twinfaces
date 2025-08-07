@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Path, useFormContext } from "react-hook-form";
+import { Path, useFormContext, useWatch } from "react-hook-form";
 
 import { ComboboxFormField } from "@/components/form-fields";
 
@@ -22,6 +22,7 @@ import {
   reduceToObject,
   toArray,
 } from "@/shared/libs";
+import { Skeleton } from "@/shared/ui";
 
 import { TwinFieldFormField } from "../../../../form-fields";
 import { useSyncFormFields } from "./utils";
@@ -51,9 +52,11 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
   const selectedOptions = form.getValues("options");
   const selectedClass = form.getValues("classId");
 
-  const { searchBySearchId } = useTwinClassFieldSearch();
+  const { searchBySearchId, loading } = useTwinClassFieldSearch();
   const [fields, setFields] = useState<TwinClassField[]>([]);
   const didSeed = useRef(false);
+
+  const skeletonCount = loading && fields.length === 0 ? 4 : fields.length;
 
   if (
     !didSeed.current &&
@@ -103,28 +106,35 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
         />
       </span>
       <TwinClassSelector />
-      {fields.map((field) => {
-        const selfTwinFieldKey =
-          TWIN_SELF_FIELD_ID_TO_KEY_MAP[field.id as TwinSelfFieldId];
-        const name = (selfTwinFieldKey ??
-          `fields.${field.key}`) as Path<TwinFormValuesByOption>;
+      {loading
+        ? [...Array(skeletonCount)].map((_, index) => (
+            <div key={index} className="space-y-2">
+              <Skeleton className="h-5 w-1/3" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ))
+        : fields.map((field) => {
+            const selfTwinFieldKey =
+              TWIN_SELF_FIELD_ID_TO_KEY_MAP[field.id as TwinSelfFieldId];
+            const name = (selfTwinFieldKey ??
+              `fields.${field.key}`) as Path<TwinFormValuesByOption>;
 
-        return (
-          <TwinFieldFormField
-            key={field.key}
-            name={name}
-            control={form.control}
-            label={field.name}
-            descriptor={field.descriptor}
-            twinClassId={
-              isPopulatedArray<{ id: string }>(selectedClass)
-                ? selectedClass[0]?.id
-                : ""
-            }
-            required={field.required}
-          />
-        );
-      })}
+            return (
+              <TwinFieldFormField
+                key={field.key}
+                name={name}
+                control={form.control}
+                label={field.name}
+                descriptor={field.descriptor}
+                twinClassId={
+                  isPopulatedArray<{ id: string }>(selectedClass)
+                    ? selectedClass[0]?.id
+                    : ""
+                }
+                required={field.required}
+              />
+            );
+          })}
     </div>
   );
 }
