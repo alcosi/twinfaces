@@ -3,7 +3,7 @@ import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
-import { cn, safe } from "@/shared/libs";
+import { cn, isMultiElementArray, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -28,40 +28,61 @@ export async function TW004(props: TWidgetFaceProps) {
   }
 
   const twidget = twidgetResult.data.widget;
+  const { id, name, label, fields = [] } = twidget;
 
-  const result = await buildFieldEditorProps(
-    twidget.pointedTwinId!,
-    twidget.twinClassFieldId!
+  const sortedFields = fields.toSorted(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0)
   );
 
-  if (!result.ok) {
-    return (
-      <StatusAlert
-        variant="error"
-        title={twidget.name}
-        message={`Face with id ${twidget.id} failed to load`}
-        className="mt-4"
-      />
-    );
-  }
+  const fieldEditorPropResults = await Promise.allSettled(
+    sortedFields.map(async (field) => {
+      return await buildFieldEditorProps(
+        twidget.pointedTwinId!,
+        field.twinClassFieldId!
+      );
+    })
+  );
 
-  const { twin, relatedObjects, field } = result.data;
+  const renderedFields = sortedFields.map((el, index) => {
+    if (
+      fieldEditorPropResults[index]?.status === "fulfilled" &&
+      fieldEditorPropResults[index].value.ok
+    ) {
+      const { twin, relatedObjects, field } =
+        fieldEditorPropResults[index]?.value.data;
+
+      return (
+        <TwinFieldEditor
+          key={id}
+          id={id!}
+          label={el.label || "N/A"}
+          twinId={twidget.pointedTwinId!}
+          twin={twin}
+          relatedObjects={relatedObjects}
+          field={field}
+          disabled={!isAdmin}
+          editable={el.editable}
+        />
+      );
+    } else
+      return (
+        <StatusAlert
+          variant="error"
+          title={name}
+          message={`Face with id ${id} failed to load`}
+          className="mt-4"
+        />
+      );
+  });
 
   return (
-    <div
-      data-face-id={twidget.id}
-      className={cn(className, widget.styleClasses)}
-    >
-      <TwinFieldEditor
-        id={twidget.id!}
-        label={twidget.label || "Unknown"}
-        twinId={twidget.pointedTwinId!}
-        twin={twin}
-        relatedObjects={relatedObjects}
-        field={field}
-        disabled={!isAdmin}
-        editable={twidget.editable}
-      />
+    <div data-face-id={id} className={cn(className)}>
+      {isMultiElementArray(fields) && label && (
+        <span className="text-base font-bold">{label}</span>
+      )}
+      <div className={cn(className, twidget.styleClasses)}>
+        {renderedFields}
+      </div>
     </div>
   );
 }

@@ -41,7 +41,7 @@ export function TagsFormItem<TField>({
     <div>
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-error-500">*</span>}
         </FormItemLabel>
       )}
       <FormControl>

@@ -12,7 +12,13 @@ export function EditorsTab() {
 
   return (
     <div className="py-6">
-      <RichTextEditor initialHTML={MOCK_HTML} />
+      <RichTextEditor
+        mode="html"
+        initialHTML={MOCK_HTML}
+        onHtmlChange={(html) => {
+          console.log("HTML", html);
+        }}
+      />
 
       <Separator className="my-8" />
 

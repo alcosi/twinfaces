@@ -41,9 +41,36 @@ export function createTwinClassApi(settings: ApiSettings) {
       },
       body: {
         ...filters,
-        twinClassKeyLikeList: search
+        nameI18nLikeList: search
           ? ["%" + search + "%"]
-          : filters.twinClassKeyLikeList,
+          : filters.nameI18nLikeList,
+      },
+    });
+  }
+
+  function searchBySearchId({
+    searchId,
+    narrow,
+    params = {},
+  }: {
+    searchId: string;
+    narrow: TwinClassFilters;
+    params?: Record<string, string>;
+  }) {
+    return settings.client.POST("/private/twin_class/search/{searchId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinClassMode: "DETAILED",
+          showTwinClassHead2TwinClassMode: "DETAILED",
+          showTwinClassExtends2TwinClassMode: "DETAILED",
+        },
+        path: { searchId },
+      },
+      body: {
+        narrow,
+        params,
       },
     });
   }
@@ -208,6 +235,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     getLinks,
     getValidTwinsForLink,
     searchTags,
+    searchBySearchId,
   };
 }
 

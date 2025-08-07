@@ -10,7 +10,7 @@ import {
   TwinClassFieldCreateRq,
   TwinClassFieldV2_DETAILED,
   useTwinClassFieldFilters,
-  useTwinClassFieldSearchV1,
+  useTwinClassFieldSearch,
 } from "@/entities/twin-class-field";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
@@ -147,7 +147,7 @@ export function TwinClassFieldsTable({
         ]
       : undefined,
   });
-  const { searchTwinClassFields } = useTwinClassFieldSearchV1();
+  const { searchByFilters } = useTwinClassFieldSearch();
 
   async function fetchFields(
     pagination: PaginationState,
@@ -155,7 +155,7 @@ export function TwinClassFieldsTable({
   ): Promise<PagedResponse<TwinClassFieldV2_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
     try {
-      const response = await searchTwinClassFields({
+      const response = await searchByFilters({
         pagination,
         filters: {
           ..._filters,

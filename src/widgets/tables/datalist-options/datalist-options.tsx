@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ import {
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import {
   isPopulatedArray,
   isPopulatedString,
@@ -36,6 +38,7 @@ import {
 import { DatalistOptionFormFields } from "./form-fields";
 
 export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
+  const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchDatalistOptions } = useDatalistOptionSearch();
   const { createDatalistOption } = useCreateDatalistOption();
@@ -207,6 +210,9 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/datalist-options/${row.id}`)
+      }
       dialogForm={twinClassesForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

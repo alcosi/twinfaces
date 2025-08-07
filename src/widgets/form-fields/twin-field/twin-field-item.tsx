@@ -2,10 +2,12 @@ import React, { ChangeEvent } from "react";
 
 import {
   AttachmentImageFormItem,
+  CheckboxFormItem,
   ColorPickerFormItem,
   ComboboxFormItem,
   FormItemProps,
   SecretTextFormItem,
+  SwitchFormItem,
   TextFormItem,
 } from "@/components/form-fields";
 
@@ -60,10 +62,6 @@ export function TwinFieldFormItem({
     return onChange?.(newValue);
   }
 
-  function handleMarkdownChange(event: { target: { markdown: string } }) {
-    onChange?.(event.target.markdown);
-  }
-
   function handleOnTwinSelect(twins?: Twin[]) {
     if (isPopulatedArray<Twin>(twins)) {
       return onChange?.(twins[0].id!);
@@ -96,8 +94,7 @@ export function TwinFieldFormItem({
         return (
           <TwinFieldTextFormItem
             descriptor={descriptor}
-            onTextChange={handleInputChange}
-            onMarkdownChange={handleMarkdownChange}
+            onChange={onChange}
             {...props}
           />
         );
@@ -216,6 +213,28 @@ export function TwinFieldFormItem({
             onChange={onChange}
           />
         );
+
+      case TwinFieldType.booleanV1:
+        const checked = props.fieldValue === "true";
+
+        if (descriptor?.checkboxType === "TOGGLE") {
+          return (
+            <SwitchFormItem
+              {...props}
+              fieldValue={checked}
+              onChange={(v) => onChange?.(String(v))}
+            />
+          );
+        }
+
+        return (
+          <CheckboxFormItem
+            {...props}
+            fieldValue={checked}
+            onChange={(v) => onChange?.(String(v))}
+          />
+        );
+
       default:
         return (
           <TextFormItem
