@@ -60,13 +60,11 @@ type Props = {
   // === start === NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
-  // === end ===
-  modalCreateData?: FaceTC001ViewRs;
-  onRowClick?: (row: Twin_DETAILED) => void;
-  // === start === NOTE: Filtering criteria for retrieving
   searchId?: string;
   searchParams?: Record<string, string>;
   // === end ===
+  modalCreateData?: FaceTC001ViewRs;
+  onRowClick?: (row: Twin_DETAILED) => void;
 };
 
 export function TwinsTable({
