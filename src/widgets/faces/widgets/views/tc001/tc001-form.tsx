@@ -49,7 +49,7 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
   const isSilent =
     faceTwinCreate?.singleOptionSilentMode && !isEmptyArray(variantOptions);
 
-  const selectedOptions = useWatch({ control: form.control, name: "options" });
+  const selectedOptions = form.getValues("options");
   const selectedClass = useWatch({ control: form.control, name: "classId" });
 
   const { searchBySearchId, loading } = useTwinClassFieldSearch();
@@ -58,32 +58,31 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
 
   const skeletonCount = loading && fields.length === 0 ? 4 : fields.length;
 
-  useEffect(() => {
-    if (
-      !didSeed.current &&
-      isSilent &&
-      isPopulatedArray<SelectedOptionProps>(variantOptions)
-    ) {
-      form.setValue("options", [variantOptions[0]]);
-      didSeed.current = true;
-    }
-  }, [isSilent, variantOptions, form]);
+  if (
+    !didSeed.current &&
+    isSilent &&
+    isPopulatedArray<SelectedOptionProps>(variantOptions)
+  ) {
+    form.setValue("options", [variantOptions[0]]);
+    didSeed.current = true;
+  }
 
   useEffect(() => {
     const fetchFields = async () => {
-      const selectedOption = selectedOptions?.[0];
-      const classIdIsValid = isPopulatedArray(selectedClass);
-
-      if (selectedOption?.twinClassFieldSearchId && classIdIsValid) {
+      if (
+        isPopulatedArray<SelectedOptionProps>(selectedOptions) &&
+        isTruthy(selectedOptions[0].twinClassSearchId) &&
+        isPopulatedArray(selectedClass)
+      ) {
         const result = await searchBySearchId({
-          searchId: selectedOption.twinClassFieldSearchId,
+          searchId: selectedOptions[0].twinClassFieldSearchId!,
           narrow: {
             twinClassIdMap: reduceToObject({
               list: toArray(selectedClass),
               defaultValue: true,
             }),
           },
-          params: selectedOption.twinClassFieldsSearchParams,
+          params: selectedOptions[0].twinClassFieldsSearchParams,
         });
         setFields(result?.data ?? []);
       } else {
