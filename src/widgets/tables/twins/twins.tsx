@@ -91,7 +91,7 @@ export function TwinsTable({
     enabledColumns,
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
-  const { searchTwins } = useTwinSearch();
+  const { searchTwins, searchTwinBySearchId } = useTwinSearch();
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -327,12 +327,17 @@ export function TwinsTable({
         : _baseFilters.headTwinIdList,
     };
 
-    const searchData = await searchTwins({
-      searchId,
-      searchParams,
-      pagination: pagination,
-      filters: { ..._baseFilters, ..._override },
-    });
+    const searchData = searchId
+      ? await searchTwinBySearchId({
+          searchId,
+          searchParams,
+          pagination: pagination,
+          filters: { ..._baseFilters, ..._override },
+        })
+      : await searchTwins({
+          pagination: pagination,
+          filters: { ..._baseFilters, ..._override },
+        });
 
     try {
       return searchData;
