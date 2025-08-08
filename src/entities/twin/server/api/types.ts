@@ -52,6 +52,7 @@ export type HistoryV1 = components["schemas"]["HistoryV1"];
 export type TwinAttachmentCreateRq =
   components["schemas"]["AttachmentCreateRqV1"];
 
+// ===== Filters =====
 export type TwinFilterKeys =
   | "twinIdList"
   | "twinNameLikeList"
@@ -68,5 +69,8 @@ export type TwinFilterKeys =
 export type TwinFilters = Partial<
   Pick<components["schemas"]["TwinSearchRqV1"], TwinFilterKeys>
 >;
-
 export type TwinSimpleFilters = components["schemas"]["TwinSearchSimpleV1"];
+export type TwinFiltersBySearchId = Partial<
+  Pick<components["schemas"]["TwinSearchExtendedV1"], TwinFilterKeys>
+>;
+// ===== Filters =====

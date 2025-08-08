@@ -3,11 +3,12 @@ import { PaginationState } from "@tanstack/table-core";
 import {
   TwinCreateRq,
   TwinFilters,
+  TwinFiltersBySearchId,
   TwinSimpleFilters,
   TwinUpdateRq,
   TwinViewQuery,
 } from "@/entities/twin/server";
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { ApiSettings, HttpPostSpec, getApiDomainHeaders } from "@/shared/api";
 
 export function createTwinApi(settings: ApiSettings) {
   function search({
@@ -46,6 +47,43 @@ export function createTwinApi(settings: ApiSettings) {
         },
       },
       body: [{ ...filters }],
+    });
+  }
+
+  function searchBySearchId({
+    path,
+    query,
+    body,
+  }: HttpPostSpec<TwinFiltersBySearchId>) {
+    return settings.client.POST("/private/twin/search/{searchId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          ...query,
+          lazyRelation: false,
+          showTwinMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
+          showTwin2TwinClassMode: "DETAILED",
+          showTwin2UserMode: "DETAILED",
+          showTwin2StatusMode: "DETAILED",
+          showTwinMarker2DataListOptionMode: "DETAILED",
+          showTwinTag2DataListOptionMode: "DETAILED",
+          showTwinByHeadMode: "YELLOW",
+          showTwinAliasMode: "C",
+          showTwinFieldCollectionMode: "ALL_FIELDS",
+          showTwin2TransitionMode: "DETAILED",
+          showTwinByLinkMode: "GREEN",
+          showTwin2TwinLinkMode: "SHORT",
+          sortAsc: false,
+          showTwinField2DataListOptionMode: "DETAILED",
+          showTwinClass2TwinClassFieldMode: "DETAILED",
+          showAttachment2TwinMode: "DETAILED",
+          showTwin2AttachmentMode: "DETAILED",
+          showTwin2AttachmentCollectionMode: "FROM_FIELDS",
+        },
+        path,
+      },
+      body,
     });
   }
 
@@ -189,6 +227,7 @@ export function createTwinApi(settings: ApiSettings) {
 
   return {
     search,
+    searchBySearchId,
     // getById,
     create,
     update,

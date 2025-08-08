@@ -15,6 +15,8 @@ type WT001ClientProps<T extends FaceTC = FaceTC> = {
   showCreateButton?: boolean;
   isAdmin: boolean;
   modalCreateData?: T;
+  searchId?: string;
+  searchParams?: Record<string, string>;
 };
 
 export function WT001Client<T extends FaceTC = FaceTC>({
@@ -24,6 +26,8 @@ export function WT001Client<T extends FaceTC = FaceTC>({
   showCreateButton,
   isAdmin,
   modalCreateData,
+  searchId,
+  searchParams,
 }: WT001ClientProps<T>) {
   const router = useRouter();
 
@@ -39,6 +43,8 @@ export function WT001Client<T extends FaceTC = FaceTC>({
       showCreateButton={showCreateButton}
       resourceNavigationEnabled={isAdmin}
       modalCreateData={modalCreateData}
+      searchId={searchId}
+      searchParams={searchParams}
       onRowClick={handleRowClick}
     />
   );
