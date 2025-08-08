@@ -73,6 +73,7 @@ export function TwinFieldEditor({
       <InheritedFieldPreview
         field={field}
         disabled={disabled}
+        editable={editable}
         onChange={handleOnSubmit}
       />
     );

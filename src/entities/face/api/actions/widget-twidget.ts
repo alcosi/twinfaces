@@ -110,7 +110,7 @@ export async function fetchTW001Face(
     twinId,
     faceId,
     query: {
-      showFaceTW0012TwinClassFieldMode: "MANAGED",
+      showFaceTW0012TwinClassFieldMode: "DETAILED",
       showFaceTwidget2TwinMode: "DETAILED",
       showAttachment2TwinMode: "DETAILED",
       showTwin2AttachmentCollectionMode: "ALL",
