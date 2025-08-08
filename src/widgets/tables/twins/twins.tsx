@@ -14,8 +14,7 @@ import {
   TwinSelfFieldId,
   useCreateTwin,
   useTwinFilters,
-  useTwinSearchBySearchId,
-  useTwinSearchV3,
+  useTwinSearch,
 } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
@@ -94,8 +93,7 @@ export function TwinsTable({
     enabledColumns,
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
-  const { searchTwins } = useTwinSearchV3();
-  const { searchTwinBySearchId } = useTwinSearchBySearchId();
+  const { searchTwins } = useTwinSearch();
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -331,17 +329,12 @@ export function TwinsTable({
         : _baseFilters.headTwinIdList,
     };
 
-    const searchData = searchId
-      ? await searchTwinBySearchId({
-          searchId,
-          searchParams,
-          pagination: pagination,
-          filters: { ..._baseFilters, ..._override },
-        })
-      : await searchTwins({
-          pagination: pagination,
-          filters: { ..._baseFilters, ..._override },
-        });
+    const searchData = await searchTwins({
+      searchId,
+      searchParams,
+      pagination: pagination,
+      filters: { ..._baseFilters, ..._override },
+    });
 
     try {
       return searchData;
