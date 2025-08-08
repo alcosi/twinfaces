@@ -1,6 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { FaceTC001ViewRs as FaceTC, FaceWT001 } from "@/entities/face";
+import { Twin_DETAILED } from "@/entities/twin/server";
+import { PlatformArea } from "@/shared/config";
 
 import { TwinsTable } from "../../../../tables";
 
@@ -25,6 +29,12 @@ export function WT001Client<T extends FaceTC = FaceTC>({
   searchId,
   searchParams,
 }: WT001ClientProps<T>) {
+  const router = useRouter();
+
+  function handleRowClick(row: Twin_DETAILED) {
+    router.push(`/${PlatformArea.browse}/${row.id}`);
+  }
+
   return (
     <TwinsTable
       title={title}
@@ -35,6 +45,7 @@ export function WT001Client<T extends FaceTC = FaceTC>({
       modalCreateData={modalCreateData}
       searchId={searchId}
       searchParams={searchParams}
+      onRowClick={handleRowClick}
     />
   );
 }

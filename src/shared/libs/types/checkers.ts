@@ -90,21 +90,6 @@ export function isMultiElementArray<T>(arr: unknown): arr is [T, T, ...T[]] {
 
 //
 // ──────────────────────────────────────────────────────────────────────────────
-//   SECTION: Error & Exception Guards
-// ──────────────────────────────────────────────────────────────────────────────
-//
-
-export function isUnauthorizedError(error: unknown): boolean {
-  // TODO: Replace with a custom `UnauthorizedError` class for more robust handling.
-  return error instanceof Response && error.status === 401;
-}
-
-export function isErrorInstance(error: unknown): error is Error {
-  return error instanceof Error;
-}
-
-//
-// ──────────────────────────────────────────────────────────────────────────────
 //   SECTION: React-Specific Guards
 // ──────────────────────────────────────────────────────────────────────────────
 //
