@@ -1,7 +1,6 @@
 import { PaginationState } from "@tanstack/table-core";
 
 import {
-  HttpPostSpec,
   TwinCreateRq,
   TwinFilters,
   TwinFiltersBySearchId,
@@ -9,7 +8,7 @@ import {
   TwinUpdateRq,
   TwinViewQuery,
 } from "@/entities/twin/server";
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { ApiSettings, HttpPostSpec, getApiDomainHeaders } from "@/shared/api";
 
 export function createTwinApi(settings: ApiSettings) {
   function search({

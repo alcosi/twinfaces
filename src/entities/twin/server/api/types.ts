@@ -1,7 +1,6 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
-import { PaginationV1 } from "@/shared/api";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
@@ -53,6 +52,7 @@ export type HistoryV1 = components["schemas"]["HistoryV1"];
 export type TwinAttachmentCreateRq =
   components["schemas"]["AttachmentCreateRqV1"];
 
+// ===== Filters =====
 export type TwinFilterKeys =
   | "twinIdList"
   | "twinNameLikeList"
@@ -69,36 +69,8 @@ export type TwinFilterKeys =
 export type TwinFilters = Partial<
   Pick<components["schemas"]["TwinSearchRqV1"], TwinFilterKeys>
 >;
-
 export type TwinSimpleFilters = components["schemas"]["TwinSearchSimpleV1"];
-
-export type GenericRequest<Narrow = undefined> = {
-  query?: PaginationV1;
-  body?: RequestPayload<Narrow>;
-};
-
-export type RequestPayload<Narrow = undefined> = {
-  params?: Record<string, string>;
-  narrow?: Narrow;
-};
-
-export type HttpPostSpec<Narrow> = {
-  query?: PaginationV1 & {
-    lazyRelation?: false;
-    sortAsc?: boolean;
-  };
-
-  header?: {
-    DomainId: string;
-    AuthToken: string;
-    Channel: string;
-  };
-
-  path: { searchId: string };
-
-  body: RequestPayload<Narrow>;
-};
-
 export type TwinFiltersBySearchId = Partial<
   Pick<components["schemas"]["TwinSearchExtendedV1"], TwinFilterKeys>
 >;
+// ===== Filters =====
