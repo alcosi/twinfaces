@@ -3334,6 +3334,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/system/memory/all/info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns all memory information */
+        get: operations["memoryAllInfoV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/system/log/substitutions_config/v1": {
         parameters: {
             query?: never;
@@ -3360,6 +3377,57 @@ export interface paths {
         };
         /** Returns application info: versions, etc... */
         get: operations["Application info"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/system/cache/{cacheKey}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns cache info */
+        get: operations["cacheInfoV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/system/cache/{cacheKey}/evict": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Evict cache or specific record */
+        get: operations["cacheEvictV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/system/cache/all/info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get information about all caches */
+        get: operations["allCachesInfoV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -16510,6 +16578,43 @@ export interface components {
             /** @description transition details */
             transition?: components["schemas"]["TwinflowTransitionBaseV3"];
         };
+        MemoryAllInfoRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description List of memory information */
+            memoryInfo?: components["schemas"]["MemoryInfoDTO"][];
+            /** @description List of memory pool information */
+            memoryPoolInfo?: components["schemas"]["MemoryPoolInfoDTO"][];
+        };
+        MemoryInfoDTO: {
+            name?: string;
+            /** Format: int64 */
+            used?: number;
+            /** Format: int64 */
+            committed?: number;
+            /** Format: int64 */
+            max?: number;
+        };
+        MemoryPoolInfoDTO: {
+            name?: string;
+            type?: string;
+            /** Format: int64 */
+            used?: number;
+        };
         CommandRsV1: {
             /**
              * Format: int32
@@ -16551,6 +16656,61 @@ export interface components {
             attributes?: {
                 [key: string]: string;
             };
+        };
+        CacheRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /**
+             * Format: double
+             * @description size in mb
+             */
+            sizeInMb?: number;
+            /**
+             * Format: int64
+             * @description items count
+             */
+            itemsCount?: number;
+        };
+        CacheInfoDTO: {
+            cacheName?: string;
+            /** Format: double */
+            sizeInMb?: number;
+            /** Format: int64 */
+            itemsCount?: number;
+        };
+        CacheInfoRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description List of cache information */
+            caches?: components["schemas"]["CacheInfoDTO"][];
         };
         UserWithinSpaceRolesViewRsV1: {
             /**
@@ -17249,11 +17409,8 @@ export interface components {
             twinClassSearchParams?: {
                 [key: string]: string;
             };
-            /**
-             * Format: uuid
-             * @description target twin id
-             */
-            targetTwinId?: string;
+            /** @description class selector label */
+            classSelectorLabel?: string;
             /** @description label */
             label?: string;
             /** @description icon url */
@@ -31344,6 +31501,42 @@ export interface operations {
             };
         };
     };
+    memoryAllInfoV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description All memory information retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemoryAllInfoRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     makeConfigForSubstitutions: {
         parameters: {
             query?: {
@@ -31405,6 +31598,122 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AppInfoRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    cacheInfoV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example TwinClassRepository.findById */
+                cacheKey: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cache info shared successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CacheRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    cacheEvictV1: {
+        parameters: {
+            query?: {
+                recordKey?: string;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example TwinClassRepository.findById */
+                cacheKey: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cache info shared successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    allCachesInfoV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description All caches info retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CacheInfoRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -32710,6 +33019,57 @@ export interface operations {
         parameters: {
             query: {
                 twinId: string;
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFaceTwidget2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "BLUE" | "BLACK" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinFieldCollectionMode?: "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
