@@ -49,8 +49,8 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
   const isSilent =
     faceTwinCreate?.singleOptionSilentMode && !isEmptyArray(variantOptions);
 
-  const selectedOptions = form.getValues("options");
-  const selectedClass = form.getValues("classId");
+  const selectedOptions = useWatch({ control: form.control, name: "options" });
+  const selectedClass = useWatch({ control: form.control, name: "classId" });
 
   const { searchBySearchId, loading } = useTwinClassFieldSearch();
   const [fields, setFields] = useState<TwinClassField[]>([]);
@@ -58,37 +58,39 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
 
   const skeletonCount = loading && fields.length === 0 ? 4 : fields.length;
 
-  if (
-    !didSeed.current &&
-    isSilent &&
-    isPopulatedArray<SelectedOptionProps>(variantOptions)
-  ) {
-    form.setValue("options", [variantOptions[0]]);
-    didSeed.current = true;
-  }
+  useEffect(() => {
+    if (
+      !didSeed.current &&
+      isSilent &&
+      isPopulatedArray<SelectedOptionProps>(variantOptions)
+    ) {
+      form.setValue("options", [variantOptions[0]]);
+      didSeed.current = true;
+    }
+  }, [isSilent, variantOptions, form]);
 
   useEffect(() => {
     const fetchFields = async () => {
-      if (
-        isPopulatedArray<SelectedOptionProps>(selectedOptions) &&
-        isTruthy(selectedOptions[0].twinClassSearchId) &&
-        selectedClass
-      ) {
+      const selectedOption = selectedOptions?.[0];
+      const classIdIsValid = isPopulatedArray(selectedClass);
+
+      if (selectedOption?.twinClassFieldSearchId && classIdIsValid) {
         const result = await searchBySearchId({
-          searchId: selectedOptions[0].twinClassFieldSearchId!,
+          searchId: selectedOption.twinClassFieldSearchId,
           narrow: {
             twinClassIdMap: reduceToObject({
               list: toArray(selectedClass),
               defaultValue: true,
             }),
           },
-          params: selectedOptions[0].twinClassFieldsSearchParams!,
+          params: selectedOption.twinClassFieldsSearchParams,
         });
         setFields(result?.data ?? []);
       } else {
         setFields([]);
       }
     };
+
     fetchFields();
   }, [selectedOptions, selectedClass, searchBySearchId]);
 
@@ -103,6 +105,11 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
           getById={async (id) => variantOptions.find((o) => o.id === id)}
           renderItem={(item) => item.label}
           required
+          onSelect={() => {
+            form.resetField("classId");
+            form.resetField("fields");
+            setFields([]);
+          }}
         />
       </span>
       <TwinClassSelector />
