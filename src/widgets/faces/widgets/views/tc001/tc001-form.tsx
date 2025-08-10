@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Path, useFormContext } from "react-hook-form";
+import { Path, useFormContext, useWatch } from "react-hook-form";
 
 import { ComboboxFormField } from "@/components/form-fields";
 
@@ -22,6 +22,7 @@ import {
   reduceToObject,
   toArray,
 } from "@/shared/libs";
+import { Skeleton } from "@/shared/ui";
 
 import { TwinFieldFormField } from "../../../../form-fields";
 import { useSyncFormFields } from "./utils";
@@ -49,9 +50,9 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
     faceTwinCreate?.singleOptionSilentMode && !isEmptyArray(variantOptions);
 
   const selectedOptions = form.getValues("options");
-  const selectedClass = form.getValues("classId");
+  const selectedClass = useWatch({ control: form.control, name: "classId" });
 
-  const { searchBySearchId } = useTwinClassFieldSearch();
+  const { searchBySearchId, loading } = useTwinClassFieldSearch();
   const [fields, setFields] = useState<TwinClassField[]>([]);
   const didSeed = useRef(false);
 
@@ -69,7 +70,7 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
       if (
         isPopulatedArray<SelectedOptionProps>(selectedOptions) &&
         isTruthy(selectedOptions[0].twinClassSearchId) &&
-        selectedClass
+        isPopulatedArray(selectedClass)
       ) {
         const result = await searchBySearchId({
           searchId: selectedOptions[0].twinClassFieldSearchId!,
@@ -79,13 +80,15 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
               defaultValue: true,
             }),
           },
-          params: selectedOptions[0].twinClassFieldsSearchParams!,
+          params: selectedOptions[0].twinClassFieldsSearchParams,
         });
+
         setFields(result?.data ?? []);
       } else {
         setFields([]);
       }
     };
+
     fetchFields();
   }, [selectedOptions, selectedClass, searchBySearchId]);
 
@@ -100,31 +103,46 @@ export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
           getById={async (id) => variantOptions.find((o) => o.id === id)}
           renderItem={(item) => item.label}
           required
+          onSelect={() => {
+            form.resetField("classId");
+            form.resetField("fields");
+            setFields([]);
+          }}
         />
       </span>
       <TwinClassSelector />
-      {fields.map((field) => {
-        const selfTwinFieldKey =
-          TWIN_SELF_FIELD_ID_TO_KEY_MAP[field.id as TwinSelfFieldId];
-        const name = (selfTwinFieldKey ??
-          `fields.${field.key}`) as Path<TwinFormValuesByOption>;
 
-        return (
-          <TwinFieldFormField
-            key={field.key}
-            name={name}
-            control={form.control}
-            label={field.name}
-            descriptor={field.descriptor}
-            twinClassId={
-              isPopulatedArray<{ id: string }>(selectedClass)
-                ? selectedClass[0]?.id
-                : ""
-            }
-            required={field.required}
-          />
-        );
-      })}
+      {loading &&
+        Array.from({ length: 4 }, (_, index) => (
+          <div key={index} className="space-y-2">
+            <Skeleton className="h-5 w-1/3" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        ))}
+
+      {!loading &&
+        fields.map((field) => {
+          const selfTwinFieldKey =
+            TWIN_SELF_FIELD_ID_TO_KEY_MAP[field.id as TwinSelfFieldId];
+          const name = (selfTwinFieldKey ??
+            `fields.${field.key}`) as Path<TwinFormValuesByOption>;
+
+          return (
+            <TwinFieldFormField
+              key={field.key}
+              name={name}
+              control={form.control}
+              label={field.name}
+              descriptor={field.descriptor}
+              twinClassId={
+                isPopulatedArray<{ id: string }>(selectedClass)
+                  ? selectedClass[0]?.id
+                  : ""
+              }
+              required={field.required}
+            />
+          );
+        })}
     </div>
   );
 }
