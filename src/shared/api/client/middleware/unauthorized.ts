@@ -14,9 +14,9 @@ export const unauthorizedMiddleware: Middleware = {
       if (isBrowserRuntime()) {
         window.location.href = `/?reason=${EXPIRED_SESSION_TAG}`;
       }
-      if (isServerRuntime()) {
-        redirect(`/?reason=${EXPIRED_SESSION_TAG}`);
-      }
+      // if (isServerRuntime()) {
+      //   redirect(`/?reason=${EXPIRED_SESSION_TAG}`);
+      // }
     }
 
     return response;

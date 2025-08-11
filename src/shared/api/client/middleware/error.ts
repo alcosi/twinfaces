@@ -80,6 +80,8 @@ function toError({
       case ERROR_CODE_MAP.USER_GROUP_UNKNOWN:
       case ERROR_CODE_MAP.BUSINESS_ACCOUNT_UNKNOWN:
         return new NotFoundError(payload);
+      case ERROR_CODE_MAP.IDP_UNAUTHORIZED:
+        return new UnauthorizedError(payload);
     }
 
     return new HttpError(httpStatus, payload);

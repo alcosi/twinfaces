@@ -11,9 +11,13 @@ export function withRedirectOnUnauthorized<T>(
 
     if (!result.ok) {
       const error = result.error;
-      if (error.message.includes("NEXT_REDIRECT")) {
-        redirect(`/?reason=${EXPIRED_SESSION_TAG}`);
-      }
+
+      console.error("FOOBAR error", { error });
+      redirect(`/?reason=${EXPIRED_SESSION_TAG}`);
+
+      // if (error.message.includes("NEXT_REDIRECT")) {
+      //   redirect(`/?reason=${EXPIRED_SESSION_TAG}`);
+      // }
       return { ok: false, error };
     } else {
       return { ok: true, data: result.data };
