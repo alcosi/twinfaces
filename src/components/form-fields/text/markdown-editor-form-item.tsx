@@ -14,19 +14,19 @@ type MarkdownEditorFormItemProps = FormItemProps & {
   required?: boolean;
 };
 
-export const MarkdownEditorFormItem = ({
+export function MarkdownEditorFormItem({
   fieldValue,
   onChange,
   label,
   description,
   required,
   inForm,
-}: MarkdownEditorFormItemProps) => {
+}: MarkdownEditorFormItemProps) {
   return (
     <FormItem className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-error-500">*</span>}
         </FormItemLabel>
       )}
 
@@ -39,4 +39,4 @@ export const MarkdownEditorFormItem = ({
       {inForm && <FormMessage />}
     </FormItem>
   );
-};
+}

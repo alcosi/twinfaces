@@ -17,14 +17,14 @@ import {
 import {
   useFetchValidHeadTwins,
   useTwinFetchByIdV2,
-  useTwinSearchV3,
+  useTwinSearch,
   useValidTwinsForLink,
 } from "../../api/hooks";
 import { TwinBasicFields, TwinTouchIds } from "../constants";
 import { formatTwinDisplay } from "../helpers";
 
 export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
-  const { searchTwins } = useTwinSearchV3();
+  const { searchTwins } = useTwinSearch();
   const { fetchTwinById } = useTwinFetchByIdV2();
 
   async function getById(id: string) {

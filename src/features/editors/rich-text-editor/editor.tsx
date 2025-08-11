@@ -1,6 +1,6 @@
 "use client";
 
-import { $generateNodesFromDOM } from "@lexical/html";
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import {
   InitialConfigType,
   LexicalComposer,
@@ -30,67 +30,110 @@ const editorConfig: InitialConfigType = {
   },
 };
 
-export function Editor({
-  editorState,
-  editorSerializedState,
-  onChange,
-  onSerializedChange,
-  initialHTML = "",
-}: {
+type EditorStateProps = {
+  mode: "state";
   editorState?: EditorState;
-  editorSerializedState?: SerializedEditorState;
-  onChange?: (editorState: EditorState) => void;
-  onSerializedChange?: (editorSerializedState: SerializedEditorState) => void;
+  onChange?: (s: EditorState) => void;
+};
 
-  // TODO: Re-think solution
+type EditorHtmlProps = {
+  mode: "html";
   initialHTML?: string;
-}) {
+  onHtmlChange?: (html: string) => void;
+};
+
+type EditorSerializedProps = {
+  mode: "serialized";
+  editorSerializedState?: SerializedEditorState;
+  onSerializedChange?: (state: SerializedEditorState) => void;
+};
+
+export type EditorProps =
+  | EditorStateProps
+  | EditorHtmlProps
+  | EditorSerializedProps;
+
+export function Editor(props: EditorProps) {
+  const initialConfig: InitialConfigType = {
+    ...editorConfig,
+    // ...(props.editorState ? { editorState: props.editorState } : {}),
+    // ...(props.editorSerializedState
+    //   ? { editorState: JSON.stringify(props.editorSerializedState) }
+    //   : {}),
+  };
+
   return (
     <div className="bg-background border-border overflow-hidden rounded-lg border shadow">
-      <LexicalComposer
-        initialConfig={{
-          ...editorConfig,
-          ...(editorState ? { editorState } : {}),
-          ...(editorSerializedState
-            ? { editorState: JSON.stringify(editorSerializedState) }
-            : {}),
-        }}
-      >
+      <LexicalComposer initialConfig={initialConfig}>
         <TooltipProvider>
           <Plugins />
 
-          <HTMLContentPlugin html={initialHTML} />
+          {/* === Custom plugins === */}
+          {props.mode === "html" && (
+            <HTMLContentPlugin defaultHtml={props.initialHTML ?? ""} />
+          )}
 
-          <OnChangePlugin
-            ignoreSelectionChange={true}
-            onChange={(editorState) => {
-              onChange?.(editorState);
-              onSerializedChange?.(editorState.toJSON());
-            }}
-          />
+          <ChangeHandlerPlugin {...props} />
+          {/* === Custom plugins === */}
         </TooltipProvider>
       </LexicalComposer>
     </div>
   );
 }
 
-function HTMLContentPlugin({ html }: { html: string }) {
+function HTMLContentPlugin({ defaultHtml }: { defaultHtml: string }) {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
+    const parser = new DOMParser();
+
     editor.update(() => {
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(html, "text/html");
+      const dom = parser.parseFromString(defaultHtml, "text/html");
       const nodes = $generateNodesFromDOM(editor, dom);
       const root = $getRoot();
       root.clear();
+
       if (nodes.length > 0) {
         nodes.forEach((n) => root.append(n));
       } else {
         root.append($createParagraphNode());
       }
     });
-  }, [editor, html]);
+  }, [editor]);
 
   return null;
+}
+
+/**
+ * ChangeHandlerPlugin
+ *
+ * On *any* editor change:
+ * 1) calls `onChange(editorState)` if provided
+ * 2) calls `onSerializedChange(editorState.toJSON())` if provided
+ * 3) reads nodes → calls `onHtmlChange(html)` if provided
+ */
+function ChangeHandlerPlugin({
+  onChange,
+  onHtmlChange,
+  onSerializedChange,
+}: {
+  onChange?: (editorState: EditorState) => void;
+  onHtmlChange?: (html: string) => void;
+  onSerializedChange?: (state: SerializedEditorState) => void;
+}) {
+  const [editor] = useLexicalComposerContext();
+
+  return (
+    <OnChangePlugin
+      ignoreSelectionChange={true}
+      onChange={(editorState) => {
+        onChange?.(editorState);
+        onSerializedChange?.(editorState.toJSON());
+        editorState.read(() => {
+          const html = $generateHtmlFromNodes(editor, null);
+          onHtmlChange?.(html);
+        });
+      }}
+    />
+  );
 }

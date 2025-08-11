@@ -36,6 +36,38 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     });
   }
 
+  function searchBySearchId({
+    searchId,
+    narrow,
+    params = {},
+  }: {
+    searchId: string;
+    narrow: TwinClassFieldSearchFilters;
+    params?: Record<string, string>;
+  }) {
+    return settings.client.POST(
+      "/private/twin_class_fields/search/{searchId}/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          query: {
+            lazyRelation: false,
+            showTwinClassFieldMode: "DETAILED",
+            showTwinClassField2TwinClassMode: "DETAILED",
+            showTwinClassField2PermissionMode: "DETAILED",
+            showTwinClassField2FeaturerMode: "DETAILED",
+            showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
+          },
+          path: { searchId },
+        },
+        body: {
+          narrow,
+          params,
+        },
+      }
+    );
+  }
+
   function getFields({ id }: { id: string }) {
     return settings.client.GET(
       `/private/twin_class/{twinClassId}/field/list/v1`,
@@ -107,6 +139,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     getById,
     create,
     update,
+    searchBySearchId,
   };
 }
 

@@ -10,7 +10,7 @@ import { isTruthy, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
-import { fetchModalCreateData } from "../tc/fetch-modal-create-data";
+import { fetchModalCreateData } from "../tc001/fetch-modal-create-data";
 import { WT001Client } from "./wt001-client";
 
 export async function WT001({ widget, twinId }: WidgetFaceProps) {
@@ -31,7 +31,15 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
   }
 
   const {
-    widget: { label, twinClassId, columns, showCreateButton, modalFaceId },
+    widget: {
+      label,
+      twinClassId,
+      columns,
+      showCreateButton,
+      modalFaceId,
+      searchId,
+      searchParams,
+    },
     relatedObjects,
   } = wtResult.data as {
     widget: FaceWT001;
@@ -56,6 +64,8 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
         showCreateButton={showCreateButton}
         isAdmin={isAdmin}
         modalCreateData={modalCreateData}
+        searchId={searchId}
+        searchParams={searchParams}
       />
     </Suspense>
   );

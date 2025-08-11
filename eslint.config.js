@@ -3,6 +3,7 @@ import tseslint from "@typescript-eslint/eslint-plugin";
 import parserTs from "@typescript-eslint/parser";
 import fsdImport from "eslint-plugin-fsd-import";
 import importPlugin from "eslint-plugin-import";
+import perfectionist from "eslint-plugin-perfectionist";
 import prettier from "eslint-plugin-prettier";
 import react from "eslint-plugin-react";
 
@@ -36,6 +37,10 @@ const config = [
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "warn",
       "react/jsx-curly-brace-presence": "error",
+      "react/function-component-definition": [
+        "warn",
+        { namedComponents: "function-declaration" },
+      ],
     },
   },
 
@@ -80,6 +85,23 @@ const config = [
       parserOptions: {
         project: "./tsconfig.json",
       },
+    },
+  },
+
+  {
+    name: "Perfectionist Rules",
+    files: ["**/*.{js,ts,jsx,tsx}"],
+    plugins: {
+      perfectionist,
+    },
+    rules: {
+      "perfectionist/sort-exports": [
+        "error",
+        {
+          type: "natural",
+          order: "asc",
+        },
+      ],
     },
   },
 ];

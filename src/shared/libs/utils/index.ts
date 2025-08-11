@@ -3,6 +3,7 @@ import { ReactNode, Ref, RefAttributes, forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 export * from "./adapter";
+export * from "./api-errors";
 export * from "./array";
 export * from "./check-password-strength";
 export * from "./client-cookies";
@@ -16,7 +17,6 @@ export * from "./platform";
 export * from "./safe";
 export * from "./string";
 export * from "./uuid";
-export * from "./api-errors";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -1,2 +1,2 @@
-export * from "./resource-link";
 export * from "./datalist-icon";
+export * from "./resource-link";

@@ -28,7 +28,7 @@ export const UserResourceLink = ({
     <ResourceLink
       IconComponent={() =>
         hideAvatar ? undefined : data?.avatar ? (
-          <Avatar url={data.avatar} size="sm" />
+          <Avatar url={data.avatar} size="sm" className="rounded-full" />
         ) : (
           <UserIcon className="h-4 w-4" />
         )

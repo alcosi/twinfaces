@@ -21,6 +21,7 @@ export function UserResourceTooltip({ data, link }: Props) {
               url={data.avatar}
               alt={data.fullName ?? "Avatar"}
               size="xlg"
+              className="rounded-full"
             />
           ) : (
             UserIcon

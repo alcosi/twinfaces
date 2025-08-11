@@ -62,10 +62,6 @@ export function TwinFieldFormItem({
     return onChange?.(newValue);
   }
 
-  function handleMarkdownChange(event: { target: { markdown: string } }) {
-    onChange?.(event.target.markdown);
-  }
-
   function handleOnTwinSelect(twins?: Twin[]) {
     if (isPopulatedArray<Twin>(twins)) {
       return onChange?.(twins[0].id!);
@@ -98,8 +94,7 @@ export function TwinFieldFormItem({
         return (
           <TwinFieldTextFormItem
             descriptor={descriptor}
-            onTextChange={handleInputChange}
-            onMarkdownChange={handleMarkdownChange}
+            onChange={onChange}
             {...props}
           />
         );

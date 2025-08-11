@@ -7,14 +7,14 @@ import { toast } from "sonner";
 import { FaceTC001ViewRs, FaceWT001 } from "@/entities/face";
 import {
   STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP,
-  STATIC_TWIN_FIELD_KEY_TO_ID_MAP,
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP,
   TwinFormValues,
   TwinSelfFieldId,
   useCreateTwin,
   useTwinFilters,
-  useTwinSearchV3,
+  useTwinSearch,
 } from "@/entities/twin";
 import {
   TwinClass_DETAILED,
@@ -49,7 +49,7 @@ import {
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
-import { TCForm } from "../../faces/widgets/views/tc";
+import { TC001Form } from "../../faces/widgets/views/index.client";
 import { TwinFormFields } from "./form-fields";
 
 type Props = {
@@ -60,6 +60,8 @@ type Props = {
   // === start === NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
   targetHeadTwinId?: string;
+  searchId?: string;
+  searchParams?: Record<string, string>;
   // === end ===
   modalCreateData?: FaceTC001ViewRs;
   onRowClick?: (row: Twin_DETAILED) => void;
@@ -74,6 +76,8 @@ export function TwinsTable({
   resourceNavigationEnabled = true,
   modalCreateData,
   onRowClick,
+  searchId,
+  searchParams = {},
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -87,7 +91,7 @@ export function TwinsTable({
     enabledColumns,
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
-  const { searchTwins } = useTwinSearchV3();
+  const { searchTwins, searchTwinBySearchId } = useTwinSearch();
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -102,14 +106,14 @@ export function TwinsTable({
     : undefined;
 
   const staticColDefs: Record<string, ColumnDef<Twin_DETAILED>> = {
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.id,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.id]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.id,
       accessorKey: "id",
       header: "ID",
       cell: (data) => <GuidWithCopy value={data.row.original.id} />,
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.twinClassId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.twinClassId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
       accessorKey: "twinClassId",
       header: "Twin class",
       cell: ({ row: { original } }) =>
@@ -123,18 +127,18 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.aliases]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.aliases,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.aliases]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.aliases,
       accessorKey: "aliases",
       header: "Alias",
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.name]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.name,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.name]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.name,
       accessorKey: "name",
       header: "Name",
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.statusId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.statusId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
       accessorKey: "statusId",
       header: "Status",
       cell: ({ row: { original } }) => (
@@ -149,8 +153,8 @@ export function TwinsTable({
         </div>
       ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.description]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.description,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.description]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.description,
       accessorKey: "description",
       header: "Description",
       cell: ({ row: { original } }) =>
@@ -160,8 +164,8 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.authorUserId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.authorUserId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
       accessorKey: "authorUserId",
       header: "Author",
       cell: ({ row: { original } }) =>
@@ -175,8 +179,8 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.assignerUserId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.assignerUserId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
       accessorKey: "assignerUserId",
       header: "Assignee",
       cell: ({ row: { original } }) =>
@@ -190,8 +194,8 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.headTwinId]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.headTwinId,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId,
       accessorKey: "headTwinId",
       header: "Head",
       cell: ({ row: { original } }) =>
@@ -205,8 +209,8 @@ export function TwinsTable({
           </div>
         ) : null,
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.tags]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.tags,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.tags]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.tags,
       accessorKey: "tags",
       header: "Tags",
       cell: ({ row: { original } }) =>
@@ -222,8 +226,8 @@ export function TwinsTable({
           </div>
         ),
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.markers]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.markers,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.markers]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.markers,
       accessorKey: "markers",
       header: "Markers",
       cell: ({ row: { original } }) =>
@@ -240,8 +244,8 @@ export function TwinsTable({
           </div>
         ) : null,
     },
-    [STATIC_TWIN_FIELD_KEY_TO_ID_MAP.createdAt]: {
-      id: STATIC_TWIN_FIELD_KEY_TO_ID_MAP.createdAt,
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt,
       accessorKey: "createdAt",
       header: "Created at",
       cell: ({ row: { original } }) =>
@@ -313,21 +317,30 @@ export function TwinsTable({
     pagination?: PaginationState;
     filters: FiltersState;
   }) {
-    const _filters = mapFiltersToPayload(filters.filters);
+    const _baseFilters = mapFiltersToPayload(filters.filters);
+    const _override = {
+      twinClassExtendsHierarchyContainsIdList: baseTwinClassId
+        ? [baseTwinClassId]
+        : _baseFilters.twinClassExtendsHierarchyContainsIdList,
+      headTwinIdList: targetHeadTwinId
+        ? [targetHeadTwinId]
+        : _baseFilters.headTwinIdList,
+    };
+
+    const searchData = searchId
+      ? await searchTwinBySearchId({
+          searchId,
+          searchParams,
+          pagination: pagination,
+          filters: { ..._baseFilters, ..._override },
+        })
+      : await searchTwins({
+          pagination: pagination,
+          filters: { ..._baseFilters, ..._override },
+        });
 
     try {
-      return await searchTwins({
-        pagination: pagination,
-        filters: {
-          ..._filters,
-          twinClassExtendsHierarchyContainsIdList: baseTwinClassId
-            ? [baseTwinClassId]
-            : _filters.twinClassExtendsHierarchyContainsIdList,
-          headTwinIdList: targetHeadTwinId
-            ? [targetHeadTwinId]
-            : _filters.headTwinIdList,
-        },
-      });
+      return searchData;
     } catch (e) {
       toast.error("Failed to fetch twins");
       return { data: [], pagination: {} };
@@ -336,7 +349,12 @@ export function TwinsTable({
 
   const form = useForm<TwinFormValues>({
     resolver: zodResolver(TWIN_SCHEMA),
-    defaultValues: { classId: "", name: "", description: "" },
+    defaultValues: {
+      classId: "",
+      name: "",
+      description: "",
+      isSketch: modalCreateData?.faceTwinCreate?.sketchMode,
+    },
   });
 
   async function handleOnCreateSubmit(formValues: TwinFormValues) {
@@ -380,7 +398,7 @@ export function TwinsTable({
       onRowClick={onRowClick}
       renderFormFields={() =>
         modalCreateData ? (
-          <TCForm control={form.control} modalCreateData={modalCreateData} />
+          <TC001Form payload={modalCreateData} />
         ) : (
           <TwinFormFields
             control={form.control}
