@@ -260,3 +260,27 @@ export async function requirePermissionsOr404(permissionIds: string[]) {
     }
   }
 }
+
+export async function refreshAuthTokenAction(
+  authToken: string,
+  refreshToken: string,
+  domainId: string
+) {
+  try {
+    const { data, error } = await TwinsAPI.POST("/auth/refresh/v2", {
+      body: { refreshToken },
+      params: {
+        header: {
+          AuthToken: authToken,
+          DomainId: domainId,
+          Channel: "WEB",
+        },
+      },
+    });
+
+    if (error) throw new Error(error.statusDetails || error.msg);
+    return { ok: true, data };
+  } catch (error) {
+    return errorToResult(error);
+  }
+}
