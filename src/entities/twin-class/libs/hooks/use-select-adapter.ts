@@ -75,7 +75,7 @@ export function useTwinClassBySearchIdSelectAdapter(): SelectAdapter<TwinClass_D
     const response = await searchBySearchId({
       searchId,
       narrow: {
-        twinClassKeyLikeList: [wrapWithPercent(search)],
+        nameI18nLikeList: [wrapWithPercent(search)],
       },
       params,
     });
