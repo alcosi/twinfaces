@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { fetchSidebarFace } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { isUndefined, safe } from "@/shared/libs";
+import { isUndefined } from "@/shared/libs";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
 type Props = {
@@ -24,9 +24,8 @@ export default async function Page(props: Props) {
 }
 
 async function resolvePageFaceId(pageKey: string): Promise<string | undefined> {
-  const result = await safe(
-    withRedirectOnUnauthorized(() => fetchSidebarFace())
-  );
+  const result = await withRedirectOnUnauthorized(() => fetchSidebarFace())();
+
   if (!result.ok) return;
 
   const page = result.data.userAreaMenuItems?.find(

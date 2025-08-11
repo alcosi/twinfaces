@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { getAuthHeaders } from "@/entities/face";
 import { Twin_DETAILED, fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { isNotFoundError, safe } from "@/shared/libs";
 import { StatusAlert } from "@/widgets/faces/components";
 import { LayoutRenderer } from "@/widgets/faces/layouts";
 
@@ -22,34 +21,27 @@ export default async function Page(props: Props) {
     showTwin2TwinClassMode: "DETAILED",
     showTwinClassPage2FaceMode: "DETAILED",
   } as const;
-  const result = await safe(
-    withRedirectOnUnauthorized(() =>
-      fetchTwinById<Twin_DETAILED>(params.twinId, { header, query })
-    )
-  );
+  const result = await withRedirectOnUnauthorized(() =>
+    fetchTwinById<Twin_DETAILED>(params.twinId, { header, query })
+  )();
 
   if (!result.ok) {
-    if (isNotFoundError(result.error)) {
-      notFound();
-    }
-
-    throw result.error;
+    notFound();
   }
 
   const twin = result.data;
-
-  if (!twin.twinClass?.pageFaceId) {
+  if (twin.twinClass?.pageFaceId) {
     return (
-      <StatusAlert
-        variant="warn"
-        title="Page not set up yet"
-        message="We're working on it. Please check back soon!"
-        className="mt-4"
-      />
+      <LayoutRenderer pageFaceId={twin.twinClass.pageFaceId} twinId={twin.id} />
     );
   }
 
   return (
-    <LayoutRenderer pageFaceId={twin.twinClass.pageFaceId} twinId={twin.id} />
+    <StatusAlert
+      variant="warn"
+      title="Page not set up yet"
+      message="We're working on it. Please check back soon!"
+      className="mt-4"
+    />
   );
 }
