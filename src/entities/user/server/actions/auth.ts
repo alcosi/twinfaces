@@ -279,9 +279,8 @@ export async function refreshAuthTokenAction(
     });
 
     if (error) throw new Error(error.statusDetails || error.msg);
-    return data;
-  } catch (err) {
-    console.error("[refreshAuthTokenAction] failed", err);
-    throw err;
+    return { ok: true, data };
+  } catch (error) {
+    return errorToResult(error);
   }
 }

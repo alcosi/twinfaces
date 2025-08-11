@@ -18,11 +18,13 @@ export async function getDomainFromHeaders(): Promise<
 export async function getAuthHeaders(): Promise<{
   DomainId: string;
   AuthToken: string;
+  RefreshToken: string;
   Channel: "WEB";
   currentUserId: string;
 }> {
   const DomainId = await getDomainIdFromCookies();
   const AuthToken = await getAuthTokenFromCookies();
+  const RefreshToken = await getRefreshTokenFromCookies();
   const currentUserId = await getUserIdFromCookies();
 
   if (isUndefined(currentUserId)) {
@@ -32,6 +34,7 @@ export async function getAuthHeaders(): Promise<{
   return {
     DomainId: DomainId,
     AuthToken,
+    RefreshToken,
     Channel: "WEB",
     currentUserId,
   };
@@ -55,6 +58,17 @@ async function getAuthTokenFromCookies(): Promise<string> {
   const token = cookieStore.get("authToken")?.value;
   if (isUndefined(token)) {
     throw new Error("Missing authToken in cookies");
+  }
+
+  return token;
+}
+
+async function getRefreshTokenFromCookies(): Promise<string> {
+  const cookieStore = await cookies();
+
+  const token = cookieStore.get("refreshToken")?.value;
+  if (isUndefined(token)) {
+    throw new Error("Missing refreshToken in cookies");
   }
 
   return token;
