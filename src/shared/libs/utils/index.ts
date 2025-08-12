@@ -9,6 +9,7 @@ export * from "./check-password-strength";
 export * from "./client-cookies";
 export * from "./collection";
 export * from "./date";
+export * from "./dev-kit";
 export * from "./event";
 export * from "./local-storage";
 export * from "./map-pattern-to-input-type";

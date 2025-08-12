@@ -21,6 +21,7 @@ export async function TW004(props: TWidgetFaceProps) {
       fetchTW004Face(widget.widgetFaceId, twinId)
     )
   );
+
   if (!twidgetResult.ok || !twidgetResult.data.widget) {
     return (
       <StatusAlert variant="error" message="Widget TW004 failed to load." />

@@ -23,6 +23,7 @@ export async function TW001(props: TWidgetFaceProps) {
       fetchTW001Face(widget.widgetFaceId, twinId)
     )
   );
+
   if (!twidgetResult.ok || !twidgetResult.data.widget) {
     return (
       <StatusAlert variant="error" message="Widget TW001 failed to load." />
@@ -35,6 +36,7 @@ export async function TW001(props: TWidgetFaceProps) {
       fetchTwinById(twidget.pointedTwinId!, { header, query })
     )
   );
+
   if (!twinResult.ok) {
     return <StatusAlert message="Failed to load twin." />;
   }

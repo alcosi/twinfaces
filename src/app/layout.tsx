@@ -8,6 +8,7 @@ import { cn } from "@/shared/libs";
 import { PublicLayoutProviders } from "@/widgets/layout";
 
 import "../styles/globals.css";
+import { DevKitProvider } from "./dev-kit.client";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -46,6 +47,8 @@ export default async function RootLayout({
       >
         <PublicLayoutProviders config={config}>
           {children}
+
+          <DevKitProvider />
         </PublicLayoutProviders>
       </body>
     </html>

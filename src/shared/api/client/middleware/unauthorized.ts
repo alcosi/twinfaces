@@ -1,12 +1,11 @@
 import { Middleware } from "openapi-fetch";
 
-import { isBrowserRuntime, isUnauthorizedError } from "@/shared/libs";
-
-import { EXPIRED_SESSION_TAG } from "../client";
+import { EXPIRED_SESSION_TAG } from "@/shared/api";
+import { isBrowserRuntime } from "@/shared/libs";
 
 export const unauthorizedMiddleware: Middleware = {
   async onResponse({ response }) {
-    if (isUnauthorizedError(response) && isBrowserRuntime()) {
+    if (isBrowserRuntime() && response.status === 401) {
       window.location.href = `/?reason=${EXPIRED_SESSION_TAG}`;
     }
 

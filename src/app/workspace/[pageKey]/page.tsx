@@ -27,6 +27,7 @@ async function resolvePageFaceId(pageKey: string): Promise<string | undefined> {
   const result = await safe(
     withRedirectOnUnauthorized(() => fetchSidebarFace())
   );
+
   if (!result.ok) return;
 
   const page = result.data.userAreaMenuItems?.find(

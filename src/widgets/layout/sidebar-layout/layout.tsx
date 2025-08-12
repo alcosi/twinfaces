@@ -48,14 +48,16 @@ async function filterAccessibleMenuItems(
 
 export async function SidebarLayout({ children }: Props) {
   const { currentUserId } = await getAuthHeaders();
-  const { domains } = await fetchDomainsList();
+
+  const result = await safe(withRedirectOnUnauthorized(fetchDomainsList));
+  const domains = result.ok ? result.data.domains : [];
+
   const isAdmin = await isAuthUserGranted({
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const faceResult = await safe(
-    withRedirectOnUnauthorized(() => fetchSidebarFace())
-  );
+  const faceResult = await safe(withRedirectOnUnauthorized(fetchSidebarFace));
+
   let sidebarFace: FaceNB001 | undefined = faceResult.ok
     ? faceResult.data
     : undefined;

@@ -44,9 +44,7 @@ export function isHttpError(error: unknown): error is HttpError {
 export function isUnauthorizedError(
   error: unknown
 ): error is UnauthorizedError {
-  // TODO: Replace with a custom `UnauthorizedError` class for more robust handling.
   return error instanceof UnauthorizedError;
-  // return error instanceof Response && error.status === 401;
 }
 
 export function isForbiddenError(error: unknown): error is ForbiddenError {
