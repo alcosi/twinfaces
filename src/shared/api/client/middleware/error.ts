@@ -6,6 +6,7 @@ import {
   HttpError,
   NotFoundError,
   UnauthorizedError,
+  isString,
 } from "@/shared/libs";
 
 import { isApiErrorResponse } from "../../utils";
@@ -80,6 +81,8 @@ function toError({
       case ERROR_CODE_MAP.USER_GROUP_UNKNOWN:
       case ERROR_CODE_MAP.BUSINESS_ACCOUNT_UNKNOWN:
         return new NotFoundError(payload);
+      case ERROR_CODE_MAP.IDP_UNAUTHORIZED:
+        return new UnauthorizedError(payload);
     }
 
     return new HttpError(httpStatus, payload);
@@ -91,7 +94,6 @@ function toError({
   }
 
   // 4) Fallback: stringify anything else
-  const message =
-    typeof payload === "string" ? payload : JSON.stringify(payload);
+  const message = isString(payload) ? payload : JSON.stringify(payload);
   return new HttpError(httpStatus, message);
 }
