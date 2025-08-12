@@ -1,7 +1,7 @@
 import { FaceWT002, fetchWT002Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { RelatedObjects } from "@/shared/api";
-import { cn } from "@/shared/libs";
+import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
@@ -9,9 +9,11 @@ import { fetchModalCreateData } from "../tc001/fetch-modal-create-data";
 import { WT002EntryClient } from "./wt002-entry-client";
 
 export async function WT002({ widget, twinId }: WidgetFaceProps) {
-  const wtResult = await withRedirectOnUnauthorized(() =>
-    fetchWT002Face(widget.widgetFaceId, twinId)
-  )();
+  const wtResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchWT002Face(widget.widgetFaceId, twinId)
+    )
+  );
 
   if (!wtResult.ok) {
     return (
