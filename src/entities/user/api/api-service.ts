@@ -95,6 +95,17 @@ export function createUserApi(settings: ApiSettings) {
     });
   }
 
+  function getByRefreshToken({ refreshToken }: { refreshToken: string }) {
+    return settings.client.POST("/auth/refresh/v2", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: {
+        refreshToken,
+      },
+    });
+  }
+
   function update({ id, body }: { id: string; body: User }) {
     return settings.client.PUT(`/private/user/{userId}/v1`, {
       params: {
@@ -145,6 +156,7 @@ export function createUserApi(settings: ApiSettings) {
     getPermissionsByUserId,
     getPermissionGroupsByUserId,
     getByAuthToken,
+    getByRefreshToken,
   };
 }
 

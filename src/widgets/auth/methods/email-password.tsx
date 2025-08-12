@@ -58,6 +58,7 @@ export function EmailPasswordAuthWidget() {
 
     if (result.ok) {
       const authToken = result.data.authData?.auth_token;
+      const refreshToken = result.data.authData?.refresh_token;
       if (isUndefined(authToken)) {
         throw new Error("Login failed: no auth token returned");
       }
@@ -74,6 +75,7 @@ export function EmailPasswordAuthWidget() {
       setAuthUser({
         domainUser: domainUser,
         authToken: authToken,
+        refreshToken: refreshToken,
         domainId,
       });
 
