@@ -6,7 +6,7 @@ import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TableSkeleton } from "@/features/ui/skeletons";
 import { RelatedObjects } from "@/shared/api";
-import { isTruthy } from "@/shared/libs";
+import { isTruthy, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
@@ -18,9 +18,11 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const wtResult = await withRedirectOnUnauthorized(() =>
-    fetchWT001Face(widget.widgetFaceId, twinId)
-  )();
+  const wtResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchWT001Face(widget.widgetFaceId, twinId)
+    )
+  );
 
   if (!wtResult.ok) {
     return (

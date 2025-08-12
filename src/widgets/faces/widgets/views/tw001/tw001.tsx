@@ -2,7 +2,7 @@ import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { MediaType } from "@/features/ui/sliders";
-import { cn } from "@/shared/libs";
+import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -18,9 +18,11 @@ export async function TW001(props: TWidgetFaceProps) {
     showTwin2AttachmentMode: "DETAILED",
   } as const;
 
-  const twidgetResult = await withRedirectOnUnauthorized(() =>
-    fetchTW001Face(widget.widgetFaceId, twinId)
-  )();
+  const twidgetResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchTW001Face(widget.widgetFaceId, twinId)
+    )
+  );
 
   if (!twidgetResult.ok || !twidgetResult.data.widget) {
     return (
@@ -29,9 +31,11 @@ export async function TW001(props: TWidgetFaceProps) {
   }
   const twidget = twidgetResult.data.widget;
 
-  const twinResult = await withRedirectOnUnauthorized(() =>
-    fetchTwinById(twidget.pointedTwinId!, { header, query })
-  )();
+  const twinResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchTwinById(twidget.pointedTwinId!, { header, query })
+    )
+  );
 
   if (!twinResult.ok) {
     return <StatusAlert message="Failed to load twin." />;

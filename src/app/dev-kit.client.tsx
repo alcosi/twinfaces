@@ -2,12 +2,14 @@
 
 import { useEffect } from "react";
 
-import { installDevTools } from "./dev-tools";
+import { installDevKit } from "@/shared/libs";
 
-export function DevToolsClient() {
+export function DevKitProvider() {
   useEffect(() => {
     if (process.env.NODE_ENV !== "development") return;
-    installDevTools();
+
+    installDevKit();
   }, []);
+
   return null;
 }

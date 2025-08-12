@@ -6,6 +6,7 @@ import {
   HttpError,
   NotFoundError,
   UnauthorizedError,
+  isString,
 } from "@/shared/libs";
 
 import { isApiErrorResponse } from "../../utils";
@@ -93,7 +94,6 @@ function toError({
   }
 
   // 4) Fallback: stringify anything else
-  const message =
-    typeof payload === "string" ? payload : JSON.stringify(payload);
+  const message = isString(payload) ? payload : JSON.stringify(payload);
   return new HttpError(httpStatus, message);
 }

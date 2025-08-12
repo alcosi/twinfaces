@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { Face_DETAILED, fetchFaceById } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { isPopulatedString } from "@/shared/libs";
+import { isPopulatedString, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../components";
 import { TWidgetFaceProps, Widget, WidgetFaceProps } from "./types";
@@ -31,11 +31,13 @@ export async function WidgetRenderer({ twinId, widget, className }: Props) {
   // TODO: Move `fetchFaceById` into each widget component so we can leverage React Suspense
   // and show per-widget fallback-skeleton instead of blocking the entire renderer.
   // Task: https://alcosi.atlassian.net/browse/TWINFACES-603
-  const faceResult = await withRedirectOnUnauthorized(() =>
-    fetchFaceById<Face_DETAILED>(widget.widgetFaceId!, {
-      query: { showFaceMode: "DETAILED" },
-    })
-  )();
+  const faceResult = await safe(
+    withRedirectOnUnauthorized(() =>
+      fetchFaceById<Face_DETAILED>(widget.widgetFaceId!, {
+        query: { showFaceMode: "DETAILED" },
+      })
+    )
+  );
 
   if (!faceResult.ok) {
     return (
