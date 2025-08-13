@@ -134,7 +134,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }, [pagination.tanstask]);
 
   if (loading) {
-    return <TableSkeleton withHeader={false} />;
+    return <TableSkeleton hideHeader />;
   }
 
   return (

@@ -40,7 +40,7 @@ export async function WT002({ widget, twinId }: WidgetFaceProps) {
   return (
     <div className={cn(widget.styleClasses)}>
       {buttonsWithModalData.map((props) => (
-        <WT002EntryClient {...props} />
+        <WT002EntryClient key={props.trigger.id} {...props} />
       ))}
     </div>
   );

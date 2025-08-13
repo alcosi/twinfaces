@@ -17,7 +17,7 @@ export function CarouselSkeleton({ count = 1 }: { count?: number }) {
 
 export function ThumbnailsSkeleton({ count = 4 }: { count?: number }) {
   return (
-    <div className="mt-2 flex w-full items-center justify-center gap-4">
+    <section className="mt-2 flex w-full items-center justify-center gap-4">
       <Skeleton className="h-10 w-10 rounded-full" />
 
       {Array.from({ length: count }).map((_, i) => (
@@ -25,6 +25,6 @@ export function ThumbnailsSkeleton({ count = 4 }: { count?: number }) {
       ))}
 
       <Skeleton className="h-10 w-10 rounded-full" />
-    </div>
+    </section>
   );
 }
