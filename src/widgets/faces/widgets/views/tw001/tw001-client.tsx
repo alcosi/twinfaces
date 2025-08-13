@@ -17,7 +17,7 @@ export function TW001Client({ items, twinId, options }: TW001ClientProps) {
   const router = useRouter();
 
   async function handleUploadFile(file: File) {
-    await uploadTwinAttachment({ twinId, options, file });
+    await uploadTwinAttachment(twinId, file, options);
     router.refresh();
   }
 
