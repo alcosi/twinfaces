@@ -24,7 +24,7 @@ export function MediaCarouselPlaceholder({ onUploadFile }: Props) {
           className="mt-3"
         >
           <UploadCloudIcon className="mr-2 h-5 w-5" />
-          add file
+          Upload attachment
         </FileUploadButton>
       </div>
       <div className="text-muted-foreground mt-2 flex w-full items-center justify-between gap-4">

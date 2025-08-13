@@ -68,7 +68,7 @@ export async function TW001(props: TWidgetFaceProps) {
       <TW001Client
         items={typedMedia}
         twinId={twidget.pointedTwinId!}
-        imagesTwinClassFieldId={twidget.imagesTwinClassFieldId!}
+        options={{ imagesTwinClassFieldId: twidget.imagesTwinClassFieldId }}
       />
     </div>
   );
