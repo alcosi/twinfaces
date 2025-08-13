@@ -6,7 +6,7 @@ import {
   AlertSkeleton,
   ButtonSkeleton,
   CarouselSkeleton,
-  TableSkeleton2,
+  TableSkeleton,
   ThumbnailsSkeleton,
   TwidgetItem,
 } from "@/features/ui/skeletons";
@@ -30,7 +30,7 @@ const TWIDGETS: Record<string, FC<TWidgetFaceProps>> = {
 };
 
 const WIDGET_SKELETONS: Record<string, FC> = {
-  WT001: () => <TableSkeleton2 />,
+  WT001: () => <TableSkeleton />,
   WT002: () => <ButtonSkeleton />,
   WT003: () => <AlertSkeleton />,
   TW001: () => (
