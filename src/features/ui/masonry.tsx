@@ -54,7 +54,7 @@ export function MasonryLayout({
     const itemNode = (
       <Masonry.Item
         key={index}
-        className="relative" //NOTE use `debug` class to enable debug mode
+        className="relative"
         col={distributedColIndex + 1}
         row={isFinite(rowIndex) ? rowIndex + 1 : undefined}
       >
