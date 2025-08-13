@@ -1,4 +1,11 @@
-import { PropsWithChildren, ReactNode, isValidElement } from "react";
+import {
+  Children,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+  cloneElement,
+  isValidElement,
+} from "react";
 
 import { isNumber } from "@/shared/libs";
 import { Masonry } from "@/shared/ui/masonry";
@@ -17,35 +24,63 @@ export function MasonryLayout({
 
   const { colCount, layoutClassNames } = analyzeClassName(className);
 
-  const columns: ReactNode[][] = Array.from({ length: colCount }, () => []);
+  type ColItem = { node: ReactNode; rowIndex: number; order: number };
+  const columns: ColItem[][] = Array.from({ length: colCount }, () => []);
 
-  const normalizedChildren = Array.isArray(children) ? children : [children];
+  const normalizedChildren = Children.toArray(children);
+
   normalizedChildren.forEach((child, index) => {
     if (!isValidElement(child)) return;
 
     const childClassName =
       (child.props as { className?: string })?.className ?? "";
-    const { columnIndex, rowIndex } = parseGridPlacement(childClassName);
+    const { columnIndex: col0, rowIndex: row0 } =
+      parseGridPlacement(childClassName);
+
+    const { restClasses } = splitLayoutAndRest(childClassName);
 
     // NOTE: use the parsed columnIndex if provided, otherwise fallback to [round-robin](https://en.wikipedia.org/wiki/Round-robin_scheduling)
-    const distributedColIndex = isNumber(columnIndex)
-      ? columnIndex
-      : index % colCount;
+    const distributedColIndex = isNumber(col0) ? col0 : index % colCount;
     const targetColumn = columns[distributedColIndex];
     if (!targetColumn) return;
 
-    const item = <Masonry.Item key={index}>{child}</Masonry.Item>;
+    const childWithRest = cloneElement(
+      child as ReactElement<{ className?: string }>,
+      { className: restClasses || undefined }
+    );
 
-    if (isNumber(rowIndex) && rowIndex < targetColumn.length) {
-      targetColumn.splice(rowIndex, 0, item);
-    } else {
-      targetColumn.push(item);
-    }
+    const rowIndex = isNumber(row0) ? row0 : Number.POSITIVE_INFINITY;
+
+    const itemNode = (
+      <Masonry.Item
+        key={index}
+        className="relative" //NOTE use `debug` class to enable debug mode
+        col={distributedColIndex + 1}
+        row={isFinite(rowIndex) ? rowIndex + 1 : undefined}
+      >
+        {childWithRest}
+      </Masonry.Item>
+    );
+
+    targetColumn.push({ node: itemNode, rowIndex, order: index });
   });
 
+  const sortedCols = columns.map((col) =>
+    col
+      .sort((a, b) =>
+        a.rowIndex === b.rowIndex ? a.order - b.order : a.rowIndex - b.rowIndex
+      )
+      .map((x) => x.node)
+  );
+
+  const gridClass = `grid grid-cols-${colCount}`;
+
   return (
-    <Masonry.Grid colCount={colCount} className={className}>
-      {columns.map((col, i) => (
+    <Masonry.Grid
+      colCount={colCount}
+      className={`${gridClass} ${className ?? ""}`}
+    >
+      {sortedCols.map((col, i) => (
         <Masonry.Column key={i} className={layoutClassNames}>
           {col}
         </Masonry.Column>
@@ -100,17 +135,20 @@ function parseGridPlacement(className?: string): {
   rowIndex?: number;
 } {
   if (!className) return {};
-
   const colMatch = className.match(/col-start-(\d+)/);
   const rowMatch = className.match(/row-start-(\d+)/);
-
-  const columnIndex =
-    colMatch && colMatch[1] ? parseInt(colMatch[1], 10) - 1 : undefined;
-  const rowIndex =
-    rowMatch && rowMatch[1] ? parseInt(rowMatch[1], 10) - 1 : undefined;
-
+  const columnIndex = colMatch?.[1] ? parseInt(colMatch[1], 10) - 1 : undefined;
+  const rowIndex = rowMatch?.[1] ? parseInt(rowMatch[1], 10) - 1 : undefined;
   return {
-    columnIndex: isFinite(columnIndex!) ? columnIndex : undefined,
-    rowIndex: isFinite(rowIndex!) ? rowIndex : undefined,
+    columnIndex: Number.isFinite(columnIndex!) ? columnIndex : undefined,
+    rowIndex: Number.isFinite(rowIndex!) ? rowIndex : undefined,
   };
+}
+
+function splitLayoutAndRest(className?: string) {
+  const parts = (className ?? "").split(/\s+/).filter(Boolean);
+  const isPlace = (c: string) =>
+    /^col-start-\d+$/.test(c) || /^row-start-\d+$/.test(c);
+  const restClasses = parts.filter((c) => !isPlace(c)).join(" ");
+  return { restClasses };
 }
