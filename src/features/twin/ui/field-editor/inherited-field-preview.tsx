@@ -25,12 +25,14 @@ import { UserResourceLink } from "../../../../features/user/ui";
 type Props = {
   field: TwinFieldUI;
   disabled?: boolean;
+  editable?: boolean;
   onChange?: (value: string) => void;
 };
 
 export function InheritedFieldPreview({
   field,
   disabled = false,
+  editable = true,
   onChange,
 }: Props) {
   const { descriptor, value } = field;
@@ -143,7 +145,7 @@ export function InheritedFieldPreview({
           <SwitchFormItem
             fieldValue={checked}
             onChange={(v) => onChange?.(String(v))}
-            disabled={disabled}
+            disabled={!editable}
           />
         );
       }
@@ -152,7 +154,7 @@ export function InheritedFieldPreview({
         <CheckboxFormItem
           fieldValue={checked}
           onChange={(v) => onChange?.(String(v))}
-          disabled={disabled}
+          disabled={!editable}
         />
       );
     }
