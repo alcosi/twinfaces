@@ -4512,11 +4512,6 @@ export interface components {
             assigneeRequired?: boolean;
             /** @description external id */
             externalId?: string;
-            /**
-             * Format: uuid
-             * @description breadcrumbs face id
-             */
-            breadCrumbsFaceId?: string;
         };
         TwinflowBaseV1: {
             /**
@@ -6314,11 +6309,6 @@ export interface components {
             assigneeRequired?: boolean;
             /** @description external id */
             externalId?: string;
-            /**
-             * Format: uuid
-             * @description breadcrumbs face id
-             */
-            breadCrumbsFaceId?: string;
             /** @description Class fields list */
             fields?: components["schemas"]["TwinClassFieldV1"][];
             /** @description Class fields id list */
@@ -10823,6 +10813,112 @@ export interface components {
             /** @description twinflow schema id exclude list */
             twinflowSchemaIdExcludeList?: string[];
         };
+        TransitionValidatorRuleBaseV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /** @description active */
+            active?: boolean;
+            /**
+             * Format: uuid
+             * @description grouped set of twin validators id
+             */
+            twinValidatorSetId?: string;
+            /** @description Twin validator list */
+            twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
+            /** @description grouping set of twin validator */
+            twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+            /**
+             * Format: uuid
+             * @description twinflow transition id
+             */
+            twinflowTransitionId?: string;
+        };
+        TriggerV1: {
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /**
+             * Format: int32
+             * @description trigger featurer id
+             */
+            triggerFeaturerId?: number;
+            /** @description featurer params */
+            triggerParams?: {
+                [key: string]: string;
+            };
+            /** @description active */
+            active?: boolean;
+            /**
+             * Format: uuid
+             * @description id
+             * @example 9d956a15-6858-40ba-b0aa-b123c54e250d
+             */
+            id?: string;
+            /** @description trigger featurer */
+            triggerFeaturer?: components["schemas"]["FeaturerV1"];
+        };
+        TwinValidatorBaseV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description grouped set of twin validators id
+             */
+            twinValidatorSetId?: string;
+            /**
+             * Format: int32
+             * @description validator featurer id
+             */
+            validatorFeaturerId?: number;
+            /** @description featurer params */
+            validatorParams?: {
+                [key: string]: string;
+            };
+            /** @description invert */
+            invert?: boolean;
+            /** @description active */
+            active?: boolean;
+            /** @description description */
+            description?: string;
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /** @description grouping set of twin validator */
+            twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+            /** @description validator featurer */
+            validatorFeaturer?: components["schemas"]["FeaturerV1"];
+        };
+        TwinValidatorSetBaseV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description domain id
+             */
+            domainId?: string;
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+        };
         TwinflowBaseV3: {
             /**
              * Format: uuid
@@ -10977,6 +11073,16 @@ export interface components {
             draftingTwinFactoryId?: string;
             /** @description drafting factory */
             draftingTwinFactory?: components["schemas"]["FactoryV1"];
+            /**
+             * @deprecated
+             * @description validators
+             */
+            validatorRules?: components["schemas"]["TransitionValidatorRuleBaseV1"][];
+            /**
+             * @deprecated
+             * @description triggers
+             */
+            triggers?: components["schemas"]["TriggerV1"][];
         };
         TwinStatusSearchRqV1: {
             /** @description id list */
@@ -13120,6 +13226,132 @@ export interface components {
              * @enum {string}
              */
             twinflowTransitionTypeId?: "STATUS_CHANGE" | "OPERATION";
+            /**
+             * @deprecated
+             * @description validator rules cud operations
+             */
+            validatorRules?: components["schemas"]["ValidatorCudV1"];
+            /**
+             * @deprecated
+             * @description triggers cud operations
+             */
+            triggers?: components["schemas"]["TriggerCudV1"];
+        };
+        TriggerCreateV1: {
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /**
+             * Format: int32
+             * @description trigger featurer id
+             */
+            triggerFeaturerId?: number;
+            /** @description featurer params */
+            triggerParams?: {
+                [key: string]: string;
+            };
+            /** @description active */
+            active?: boolean;
+        };
+        TriggerCudV1: {
+            /** @description triggers create list */
+            create?: components["schemas"]["TriggerCreateV1"][];
+            /** @description triggers update list */
+            update?: components["schemas"]["TriggerUpdateV1"][];
+            /** @description triggers ids list to deletes */
+            delete?: string[];
+        };
+        TriggerUpdateV1: {
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /**
+             * Format: int32
+             * @description trigger featurer id
+             */
+            triggerFeaturerId?: number;
+            /** @description featurer params */
+            triggerParams?: {
+                [key: string]: string;
+            };
+            /** @description active */
+            active?: boolean;
+            /**
+             * Format: uuid
+             * @description id
+             * @example 9d956a15-6858-40ba-b0aa-b123c54e250d
+             */
+            id?: string;
+            /** @description trigger featurer */
+            triggerFeaturer?: components["schemas"]["FeaturerV1"];
+        };
+        ValidatorCreateV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /** @description active */
+            active?: boolean;
+            /**
+             * Format: uuid
+             * @description grouped set of twin validators id
+             */
+            twinValidatorSetId?: string;
+            /** @description Twin validator list */
+            twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
+            /** @description grouping set of twin validator */
+            twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+            /**
+             * Format: uuid
+             * @description twinflow transition id
+             */
+            twinflowTransitionId?: string;
+        };
+        ValidatorCudV1: {
+            /** @description validators create list */
+            create?: components["schemas"]["ValidatorCreateV1"][];
+            /** @description validators update list */
+            update?: components["schemas"]["ValidatorUpdateV1"][];
+            /** @description validators ids list to deletes */
+            delete?: string[];
+        };
+        ValidatorUpdateV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /**
+             * Format: int32
+             * @description order
+             */
+            order?: number;
+            /** @description active */
+            active?: boolean;
+            /**
+             * Format: uuid
+             * @description grouped set of twin validators id
+             */
+            twinValidatorSetId?: string;
+            /** @description Twin validator list */
+            twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
+            /** @description grouping set of twin validator */
+            twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+            /**
+             * Format: uuid
+             * @description twinflow transition id
+             */
+            twinflowTransitionId?: string;
         };
         TwinflowTransitionUpdateRsV1: {
             /**
