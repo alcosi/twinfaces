@@ -65,7 +65,11 @@ export async function TW001(props: TWidgetFaceProps) {
       className={cn("h-auto w-full max-w-[480px] object-contain", className)}
     >
       {twidget.label && <p>{twidget.label}</p>}
-      <TW001Client items={typedMedia} twinId={twinId} />
+      <TW001Client
+        items={typedMedia}
+        twinId={twidget.pointedTwinId!}
+        options={{ imagesTwinClassFieldId: twidget.imagesTwinClassFieldId }}
+      />
     </div>
   );
 }

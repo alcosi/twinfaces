@@ -62,7 +62,7 @@ export function MediaCarousel<T extends Media>({
   }, [mainSlider]);
 
   if (isEmptyArray(items)) {
-    return <MediaCarouselPlaceholder />;
+    return <MediaCarouselPlaceholder onUploadFile={onUploadFile} />;
   }
 
   return (

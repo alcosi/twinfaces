@@ -42,7 +42,13 @@ export async function fetchTwinById<T extends Twin_HYDRATED>(
   return data.twin as T;
 }
 
-export async function uploadTwinAttachment(twinId: string, file: File) {
+export async function uploadTwinAttachment(
+  twinId: string,
+  file: File,
+  options: {
+    imagesTwinClassFieldId?: string;
+  }
+) {
   const header = await getAuthHeaders();
 
   const formData = new FormData();
@@ -52,11 +58,11 @@ export async function uploadTwinAttachment(twinId: string, file: File) {
   const payload = {
     attachments: [
       {
-        twinId,
         storageLink: "multipart://file",
         title: file.name,
         size: file.size,
         description: "User uploaded image",
+        twinClassFieldId: options.imagesTwinClassFieldId,
       },
     ],
   };
