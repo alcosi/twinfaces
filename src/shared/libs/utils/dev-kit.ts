@@ -5,12 +5,18 @@ type DevKit = {
     invalidate: () => void;
     validate: () => Promise<void>;
   };
+
+  masonry: {
+    toggleDebug: () => boolean;
+  };
+
   after: (ms: number, fn: () => void) => number;
 };
 
 const TOKEN_NAME = "authToken";
 const TOKEN_STUB = "invalid-auth-token";
 const DAY_SEC = 60 * 60 * 24;
+const INVALID_TOKEN_TTL_SEC = 60;
 
 export function installDevKit() {
   if (typeof window === "undefined") return undefined; // SSR guard
@@ -46,8 +52,15 @@ export function installDevKit() {
         if (current && current !== TOKEN_STUB) {
           lastKnownValidToken = current;
         }
-        setCookie(TOKEN_NAME, TOKEN_STUB, { maxAgeSec: 60, ...cookieDefaults }); // short TTL by default
+        setCookie(TOKEN_NAME, TOKEN_STUB, {
+          maxAgeSec: INVALID_TOKEN_TTL_SEC,
+          ...cookieDefaults,
+        });
         console.info(`[devKit.auth] invalidated ${TOKEN_NAME}`);
+
+        setTimeout(() => {
+          void devKit.auth.validate();
+        }, INVALID_TOKEN_TTL_SEC * 1000);
       },
 
       validate: async () => {
@@ -62,6 +75,10 @@ export function installDevKit() {
         });
         console.info(`[devKit.auth] restored ${TOKEN_NAME}`);
       },
+    },
+
+    masonry: {
+      toggleDebug: toggleMasonryDebug,
     },
 
     /**
@@ -119,4 +136,34 @@ function setCookie(
     ...(secure ? ["Secure"] : []),
   ];
   document.cookie = parts.join("; ");
+}
+
+function toggleMasonryDebug(): boolean {
+  const selector = ".grid-rows-masonry";
+  const elements = Array.from(document.querySelectorAll<HTMLElement>(selector));
+
+  if (elements.length === 0) {
+    console.warn(
+      `[devKit.masonry] No elements matched selector "${selector}".`
+    );
+    return false;
+  }
+
+  const isDebugOn = elements.some((el) => !el.classList.contains("debug"));
+
+  for (const element of elements) {
+    if (isDebugOn) {
+      element.classList.remove("debug");
+      element.classList.add("debug");
+    } else {
+      element.classList.remove("debug");
+    }
+  }
+
+  console.info(
+    `%c[devKit.masonry] ${isDebugOn ? "ENABLED" : "DISABLED"} .debug on element(s) via "${selector}".`,
+    `color: ${isDebugOn ? " #22c55e" : "#FFD700"}`
+  );
+
+  return isDebugOn;
 }
