@@ -11,7 +11,7 @@ export function Grid({
   className?: string | string[];
 }>) {
   return (
-    <div className={cn(`group columns-${colCount}`, className)}>{children}</div> //NOTE use `debug` class to enable debug mode
+    <div className={cn(`group columns-${colCount}`, className)}>{children}</div>
   );
 }
 
@@ -26,20 +26,24 @@ function Column({
   );
 }
 
-function Item({
-  className,
-  children,
-  col,
-  row,
-}: PropsWithChildren<{
-  className?: string | string[];
-  col?: number;
-  row?: number;
-}>) {
+function Item(
+  props: PropsWithChildren<{
+    testId?: string;
+    className?: string | string[];
+  }>
+) {
+  const { testId, className, children } = props;
+
   return (
-    <div className={cn("min-w-0 break-inside-avoid", className)}>
-      <span className="pointer-events-none absolute top-0 left-0 z-10 hidden rounded-br bg-red-600 px-2 py-0.5 text-xs font-bold text-white group-[.debug]:inline-flex">
-        {col != null && row != null ? `col-${col}(row-${row})` : ""}
+    <div
+      className={cn(
+        "relative min-w-0 break-inside-avoid",
+        "group-[.debug]:border-error group-[.debug]:border-2 group-[.debug]:border-dashed",
+        className
+      )}
+    >
+      <span className="bg-error text-secondary pointer-events-none absolute top-0 left-0 z-10 hidden rounded-br px-2 py-0.5 text-xs font-bold group-[.debug]:inline">
+        {testId ?? "N/A"}
       </span>
       {children}
     </div>

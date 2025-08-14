@@ -1,11 +1,4 @@
-import {
-  Children,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
-  cloneElement,
-  isValidElement,
-} from "react";
+import { PropsWithChildren, ReactNode, isValidElement } from "react";
 
 import { isNumber } from "@/shared/libs";
 import { Masonry } from "@/shared/ui/masonry";
@@ -24,63 +17,43 @@ export function MasonryLayout({
 
   const { colCount, layoutClassNames } = analyzeClassName(className);
 
-  type ColItem = { node: ReactNode; rowIndex: number; order: number };
-  const columns: ColItem[][] = Array.from({ length: colCount }, () => []);
-
-  const normalizedChildren = Children.toArray(children);
+  const normalizedChildren = Array.isArray(children) ? children : [children];
+  const columns: ReactNode[][] = Array.from({ length: colCount }, () =>
+    Array.from({ length: normalizedChildren.length })
+  );
 
   normalizedChildren.forEach((child, index) => {
     if (!isValidElement(child)) return;
 
     const childClassName =
       (child.props as { className?: string })?.className ?? "";
-    const { columnIndex: col0, rowIndex: row0 } =
-      parseGridPlacement(childClassName);
-
-    const { restClasses } = splitLayoutAndRest(childClassName);
+    const { columnIndex, rowIndex } = parseGridPlacement(childClassName);
 
     // NOTE: use the parsed columnIndex if provided, otherwise fallback to [round-robin](https://en.wikipedia.org/wiki/Round-robin_scheduling)
-    const distributedColIndex = isNumber(col0) ? col0 : index % colCount;
+    const distributedColIndex = isNumber(columnIndex)
+      ? columnIndex
+      : index % colCount;
     const targetColumn = columns[distributedColIndex];
+
     if (!targetColumn) return;
 
-    const childWithRest = cloneElement(
-      child as ReactElement<{ className?: string }>,
-      { className: restClasses || undefined }
-    );
-
-    const rowIndex = isNumber(row0) ? row0 : Number.POSITIVE_INFINITY;
-
-    const itemNode = (
-      <Masonry.Item
-        key={index}
-        className="relative"
-        col={distributedColIndex + 1}
-        row={isFinite(rowIndex) ? rowIndex + 1 : undefined}
-      >
-        {childWithRest}
+    const testId = `col-${distributedColIndex + 1} : row-${isNumber(rowIndex) ? rowIndex + 1 : undefined}`;
+    const item = (
+      <Masonry.Item key={testId} testId={testId}>
+        {child}
       </Masonry.Item>
     );
 
-    targetColumn.push({ node: itemNode, rowIndex, order: index });
+    if (isNumber(rowIndex) && rowIndex < targetColumn.length) {
+      targetColumn[rowIndex] = item;
+    } else {
+      targetColumn.push(item);
+    }
   });
 
-  const sortedCols = columns.map((col) =>
-    col
-      .sort((a, b) =>
-        a.rowIndex === b.rowIndex ? a.order - b.order : a.rowIndex - b.rowIndex
-      )
-      .map((x) => x.node)
-  );
-
-  const gridClass = `grid grid-cols-${colCount}`;
-
   return (
-    <Masonry.Grid
-      colCount={colCount}
-      className={`${gridClass} ${className ?? ""}`}
-    >
-      {sortedCols.map((col, i) => (
+    <Masonry.Grid colCount={colCount} className={className}>
+      {columns.map((col, i) => (
         <Masonry.Column key={i} className={layoutClassNames}>
           {col}
         </Masonry.Column>
@@ -135,20 +108,17 @@ function parseGridPlacement(className?: string): {
   rowIndex?: number;
 } {
   if (!className) return {};
+
   const colMatch = className.match(/col-start-(\d+)/);
   const rowMatch = className.match(/row-start-(\d+)/);
-  const columnIndex = colMatch?.[1] ? parseInt(colMatch[1], 10) - 1 : undefined;
-  const rowIndex = rowMatch?.[1] ? parseInt(rowMatch[1], 10) - 1 : undefined;
-  return {
-    columnIndex: Number.isFinite(columnIndex!) ? columnIndex : undefined,
-    rowIndex: Number.isFinite(rowIndex!) ? rowIndex : undefined,
-  };
-}
 
-function splitLayoutAndRest(className?: string) {
-  const parts = (className ?? "").split(/\s+/).filter(Boolean);
-  const isPlace = (c: string) =>
-    /^col-start-\d+$/.test(c) || /^row-start-\d+$/.test(c);
-  const restClasses = parts.filter((c) => !isPlace(c)).join(" ");
-  return { restClasses };
+  const columnIndex =
+    colMatch && colMatch[1] ? parseInt(colMatch[1], 10) - 1 : undefined;
+  const rowIndex =
+    rowMatch && rowMatch[1] ? parseInt(rowMatch[1], 10) - 1 : undefined;
+
+  return {
+    columnIndex: isFinite(columnIndex!) ? columnIndex : undefined,
+    rowIndex: isFinite(rowIndex!) ? rowIndex : undefined,
+  };
 }
