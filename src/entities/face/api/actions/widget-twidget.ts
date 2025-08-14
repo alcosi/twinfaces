@@ -10,6 +10,7 @@ import {
   FaceTW002ViewRs,
   FaceTW004ViewRs,
   FaceTW005ViewRs,
+  FaceTW007ViewRs,
   FaceWT001ViewRs,
   FaceWT002ViewRs,
   FaceWT003ViewRs,
@@ -26,6 +27,7 @@ type FetchFaceOptions = {
     | "/private/face/tw002/{faceId}/v1"
     | "/private/face/tw004/{faceId}/v2"
     | "/private/face/tw005/{faceId}/v1"
+    | "/private/face/tw007/{faceId}/v1"
     | "/private/face/tc001/{faceId}/v1";
   query: Record<string, string>;
 };
@@ -158,6 +160,18 @@ export async function fetchTW005Face(
       showFaceTW005Button2TransitionMode: "DETAILED",
       showFaceTwidget2TwinMode: "DETAILED",
     },
+  });
+}
+
+export async function fetchTW007Face(
+  faceId: string,
+  twinId: string
+): Promise<FaceTW007ViewRs> {
+  return fetchFace<FaceTW007ViewRs>({
+    endpoint: "/private/face/tw007/{faceId}/v1",
+    twinId,
+    faceId,
+    query: {},
   });
 }
 
