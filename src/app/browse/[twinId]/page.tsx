@@ -35,7 +35,7 @@ export default async function Page(props: Props) {
     throw result.error;
   }
 
-  const twin = result.data;
+  const { twin } = result.data;
 
   if (!twin.pageFaceId) {
     return (
