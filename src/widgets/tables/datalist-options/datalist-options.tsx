@@ -44,7 +44,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   const { createDatalistOption } = useCreateDatalistOption();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
     enabledFilters: isTruthy(datalist?.id)
-      ? ["idList", "optionLikeList", "statusIdList"]
+      ? ["idList", "optionI18nLikeList", "statusIdList"]
       : undefined,
   });
   const [columns, setColumns] = useState<ColumnDef<DataListOptionV3>[]>([]);

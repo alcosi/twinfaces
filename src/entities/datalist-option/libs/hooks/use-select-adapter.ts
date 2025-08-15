@@ -1,8 +1,9 @@
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   wrapWithPercent,
 } from "@/shared/libs";
+
 import {
   DataListOptionFilters,
   DataListOptionV3,
@@ -24,9 +25,9 @@ export function useDatalistOptionSelectAdapter(): SelectAdapter<DataListOptionV3
   async function getItems(search: string, filters?: DataListOptionFilters) {
     const response = await searchDatalistOptions({
       filters: {
-        optionLikeList: isPopulatedString(search)
+        optionI18nLikeList: isPopulatedString(search)
           ? [wrapWithPercent(search)]
-          : filters?.optionLikeList,
+          : filters?.optionI18nLikeList,
         ...filters,
       },
     });

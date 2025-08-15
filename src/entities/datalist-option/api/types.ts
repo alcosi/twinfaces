@@ -10,8 +10,8 @@ export type DataListOptionUpdateRqV1 =
 export type DataListOptionFilterKeys =
   | "idList"
   | "dataListIdList"
-  | "optionLikeList"
-  | "statusIdList";
+  | "statusIdList"
+  | "optionI18nLikeList";
 
 export type DataListOptionFilters = Partial<
   Pick<
