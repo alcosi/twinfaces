@@ -4,8 +4,7 @@ import React from "react";
 
 import { UserApi, createUserApi } from "@/entities/user";
 import { ApiSettings, PublicApiContext, TwinsAPI } from "@/shared/api";
-
-import { useAuthUser } from "../../auth";
+import { clientCookies } from "@/shared/libs";
 
 export interface PublicApiContextProps {
   user: UserApi;
@@ -16,11 +15,17 @@ export function PublicApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser } = useAuthUser();
+  let authToken = "";
+  let domainId = "";
+
+  if (typeof document !== "undefined") {
+    authToken = clientCookies.get("authToken") ?? "";
+    domainId = clientCookies.get("domainId") ?? "";
+  }
 
   const settings: ApiSettings = {
-    authToken: authUser?.authToken ?? "",
-    domain: authUser?.domainId ?? "",
+    authToken: authToken,
+    domain: domainId,
     channel: "WEB",
     client: TwinsAPI,
   };

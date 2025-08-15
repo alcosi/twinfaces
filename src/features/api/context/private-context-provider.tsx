@@ -82,9 +82,8 @@ import {
 import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
 import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
+import { clientCookies } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
-
-import { useAuthUser } from "../../auth";
 
 export interface PrivateApiContextProps {
   attachment: AttachmentApi;
@@ -125,11 +124,17 @@ export function PrivateApiContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authUser } = useAuthUser();
+  let authToken = "";
+  let domainId = "";
+
+  if (typeof document !== "undefined") {
+    authToken = clientCookies.get("authToken") ?? "";
+    domainId = clientCookies.get("domainId") ?? "";
+  }
 
   const settings: ApiSettings = {
-    authToken: authUser?.authToken ?? "",
-    domain: authUser?.domainId ?? "",
+    authToken: authToken,
+    domain: domainId,
     channel: "WEB",
     client: TwinsAPI,
   };
