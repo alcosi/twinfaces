@@ -17,9 +17,11 @@ export function MasonryLayout({
 
   const { colCount, layoutClassNames } = analyzeClassName(className);
 
-  const columns: ReactNode[][] = Array.from({ length: colCount }, () => []);
-
   const normalizedChildren = Array.isArray(children) ? children : [children];
+  const columns: ReactNode[][] = Array.from({ length: colCount }, () =>
+    Array.from({ length: normalizedChildren.length })
+  );
+
   normalizedChildren.forEach((child, index) => {
     if (!isValidElement(child)) return;
 
@@ -32,12 +34,18 @@ export function MasonryLayout({
       ? columnIndex
       : index % colCount;
     const targetColumn = columns[distributedColIndex];
+
     if (!targetColumn) return;
 
-    const item = <Masonry.Item key={index}>{child}</Masonry.Item>;
+    const testId = `col-${distributedColIndex + 1} : row-${isNumber(rowIndex) ? rowIndex + 1 : undefined}`;
+    const item = (
+      <Masonry.Item key={testId} testId={testId}>
+        {child}
+      </Masonry.Item>
+    );
 
     if (isNumber(rowIndex) && rowIndex < targetColumn.length) {
-      targetColumn.splice(rowIndex, 0, item);
+      targetColumn[rowIndex] = item;
     } else {
       targetColumn.push(item);
     }
