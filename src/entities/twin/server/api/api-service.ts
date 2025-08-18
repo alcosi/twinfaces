@@ -104,7 +104,7 @@ export async function updateTwinClassById(
   );
 
   if (error) {
-    throw new Error("Change twinClass of current twin is failed!");
+    throw new Error("Changing twin-class has failed!");
   }
 
   return data;
