@@ -1,8 +1,6 @@
 import { fetchTW007Face, getAuthHeaders } from "@/entities/face";
-import {
-  changeTwinClassOfCurrentTwin,
-  fetchTwinById,
-} from "@/entities/twin/server";
+import { TwinClass } from "@/entities/twin-class";
+import { fetchTwinById, updateTwinClassById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { safe } from "@/shared/libs";
 
@@ -45,17 +43,17 @@ export async function TW007(props: TWidgetFaceProps) {
     );
   }
 
-  async function handleChangeTwinClass(payload: { newTwinClassId: string }) {
+  async function handleChangeTwinClass(newTwinClassId: string) {
     "use server";
-    await changeTwinClassOfCurrentTwin(twinId, { header, payload });
+    await updateTwinClassById(twinId, { header, newTwinClassId });
   }
 
   //NOTE add wrapper with styleClasses when BE add this param
   return (
     <TW007EntryClient
       faceData={loadedWidget}
-      twinClassName={twinResult.data.twinClass?.name}
-      onChangeTwinClass={handleChangeTwinClass}
+      twinClass={twinResult.data.twinClass as TwinClass}
+      onChange={handleChangeTwinClass}
     />
   );
 }

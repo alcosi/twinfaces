@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -10,7 +11,10 @@ import z from "zod";
 import { ComboboxFormField } from "@/components/form-fields";
 
 import { FaceTW007 } from "@/entities/face";
-import { useTwinClassBySearchIdSelectAdapter } from "@/entities/twin-class";
+import {
+  TwinClass,
+  useTwinClassBySearchIdSelectAdapter,
+} from "@/entities/twin-class";
 import { FIRST_ID_EXTRACTOR, isPopulatedString } from "@/shared/libs";
 import {
   Button,
@@ -24,8 +28,8 @@ import {
 
 type Props = {
   faceData?: FaceTW007;
-  twinClassName?: string;
-  onChangeTwinClass: (payload: { newTwinClassId: string }) => Promise<void>;
+  twinClass: TwinClass;
+  onChange: (newTwinClassId: string) => Promise<void>;
 };
 
 const TW007_SCHEMA = z.object({
@@ -34,13 +38,10 @@ const TW007_SCHEMA = z.object({
 
 type TW007FormValues = z.infer<typeof TW007_SCHEMA>;
 
-export function TW007EntryClient({
-  faceData,
-  twinClassName,
-  onChangeTwinClass,
-}: Props) {
+export function TW007EntryClient({ faceData, twinClass, onChange }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const twinClassBySearchIdAdapter = useTwinClassBySearchIdSelectAdapter();
+  const router = useRouter();
 
   const form = useForm<TW007FormValues>({
     resolver: zodResolver(TW007_SCHEMA),
@@ -50,9 +51,10 @@ export function TW007EntryClient({
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
-    await onChangeTwinClass(values);
+    await onChange(values.newTwinClassId);
 
     toast.success(`Category is changed successfully!`);
+    router.refresh();
     setIsOpen(false);
   });
 
@@ -87,10 +89,10 @@ export function TW007EntryClient({
             className="flex-1 space-y-6 overflow-y-auto px-8 py-6"
             onSubmit={onSubmit}
           >
-            {twinClassName && (
+            {twinClass && (
               <div className="text-muted-foreground">
-                Current category:{" "}
-                <span className="text-foreground">{twinClassName}</span>
+                Current category:&nbsp;
+                <span className="text-foreground">{twinClass.name}</span>
               </div>
             )}
 

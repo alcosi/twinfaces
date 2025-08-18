@@ -81,7 +81,7 @@ export async function uploadTwinAttachment(twinId: string, file: File) {
   return data;
 }
 
-export async function changeTwinClassOfCurrentTwin(
+export async function updateTwinClassById(
   twinId: string,
   options: {
     header: {
@@ -89,9 +89,7 @@ export async function changeTwinClassOfCurrentTwin(
       AuthToken: string;
       Channel: "WEB";
     };
-    payload: {
-      newTwinClassId: string;
-    };
+    newTwinClassId: string;
   }
 ) {
   const { data, error } = await TwinsAPI.PUT(
@@ -101,7 +99,7 @@ export async function changeTwinClassOfCurrentTwin(
         header: options.header,
         path: { twinId },
       },
-      body: options.payload,
+      body: { newTwinClassId: options.newTwinClassId },
     }
   );
 
