@@ -11,6 +11,7 @@ import { useState } from "react";
 import { CheckboxFormItem } from "@/components/form-fields";
 
 import { cn } from "@/shared/libs";
+import { Label } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import {
   Popover,
@@ -142,12 +143,14 @@ function DraggableCheckbox({
       style={style}
       className="flex flex-row items-center justify-between"
     >
+      <Label className="grow">{column.name}</Label>
+
       <CheckboxFormItem
         key={column.id}
         fieldValue={column.visible}
         onChange={onChange}
-        label={column.name}
       />
+
       <div {...listeners} {...attributes}>
         <GripVertical />
       </div>
