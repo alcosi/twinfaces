@@ -1,33 +1,55 @@
 "use client";
 
-import { DomainUser_DETAILED } from "@/entities/user";
+import { useCallback, useEffect, useState } from "react";
+
 import { clientCookies } from "@/shared/libs";
 
 type AuthUser = {
-  domainUser?: DomainUser_DETAILED;
+  userId?: string;
   authToken: string;
   domainId: string;
 };
 
 type UseAuthUser = {
+  authUser: AuthUser | null;
   setAuthUser: (user: AuthUser | null) => void;
   logout: () => void;
 };
 
 export function useAuthUser(): UseAuthUser {
-  const setAuthUser = (user: AuthUser | null) => {
-    clientCookies.set("authToken", `${user?.authToken}`, { path: "/" });
-    clientCookies.set("domainId", `${user?.domainId}`, { path: "/" });
-    clientCookies.set("userId", `${user?.domainUser?.userId}`, { path: "/" });
-  };
+  const [authUser, setAuthUserState] = useState<AuthUser | null>(null);
 
-  const logout = () => {
+  useEffect(() => {
+    const authToken = clientCookies.get("authToken");
+    const domainId = clientCookies.get("domainId");
+    const userId = clientCookies.get("userId");
+
+    setAuthUserState({
+      authToken: authToken ?? "",
+      domainId: domainId ?? "",
+      userId: userId ?? "",
+    });
+  }, []);
+
+  const setAuthUser = useCallback((user: AuthUser | null) => {
+    setAuthUserState(user);
+
+    if (user) {
+      clientCookies.set("authToken", `${user?.authToken}`, { path: "/" });
+      clientCookies.set("domainId", `${user?.domainId}`, { path: "/" });
+      clientCookies.set("userId", `${user?.userId}`, { path: "/" });
+    }
+  }, []);
+
+  const logout = useCallback(() => {
+    setAuthUserState(null);
     clientCookies.remove("authToken");
     clientCookies.remove("domainId");
     clientCookies.remove("userId");
-  };
+  }, []);
 
   return {
+    authUser,
     setAuthUser,
     logout,
   };

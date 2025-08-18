@@ -45,9 +45,8 @@ export function AppSidebar({
   currentAuthUser,
   domainsList,
 }: Props) {
-  const domainId = clientCookies.get("domainId") ?? "";
-  const { logout } = useAuthUser();
-  const currentDomain = domainsList?.find((i) => i.id === domainId);
+  const { authUser, logout } = useAuthUser();
+  const currentDomain = domainsList?.find((i) => i.id === authUser?.domainId);
 
   const router = useRouter();
   const pathname = usePathname();

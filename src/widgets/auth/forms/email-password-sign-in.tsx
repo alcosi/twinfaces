@@ -90,7 +90,7 @@ export function EmailPasswordSignInForm({
         }
 
         setAuthUser({
-          domainUser,
+          userId: domainUser.userId,
           authToken,
           domainId,
         });

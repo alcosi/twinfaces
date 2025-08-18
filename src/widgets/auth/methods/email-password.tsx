@@ -72,7 +72,7 @@ export function EmailPasswordAuthWidget() {
       }
 
       setAuthUser({
-        domainUser: domainUser,
+        userId: domainUser.userId,
         authToken: authToken,
         domainId,
       });
