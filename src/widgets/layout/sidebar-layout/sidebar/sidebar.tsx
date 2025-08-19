@@ -10,7 +10,7 @@ import { DomainUser } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";
-import { clientCookies, isUndefined } from "@/shared/libs";
+import { isUndefined } from "@/shared/libs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +45,7 @@ export function AppSidebar({
   currentAuthUser,
   domainsList,
 }: Props) {
-  const { authUser, logout } = useAuthUser();
+  const { authUser, setAuthUser, logout } = useAuthUser();
   const currentDomain = domainsList?.find((i) => i.id === authUser?.domainId);
 
   const router = useRouter();
@@ -60,7 +60,13 @@ export function AppSidebar({
   const [area, setArea] = useState<keyof typeof PlatformArea>(initialArea);
 
   function onDomainSwitch(domain: DomainView_SHORT) {
-    clientCookies.set("domainId", `${domain.id}`, { path: "/" });
+    if (authUser) {
+      setAuthUser({
+        authToken: authUser.authToken,
+        domainId: domain.id,
+        userId: authUser.userId,
+      });
+    }
 
     // Reload the page to apply changes (e.g., re-fetching data using the new domainId)
     // TODO: Replace reload with context/state management to avoid full page reloads.
