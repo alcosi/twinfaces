@@ -11,7 +11,7 @@ import {
   getAuthenticatedUser,
   loginAuthAction,
 } from "@/entities/user/server";
-import { useAuthUser } from "@/features/auth";
+import { setAuthUser } from "@/features/auth";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { isApiErrorResponse } from "@/shared/api/utils";
 import { capitalize, isUndefined } from "@/shared/libs";
@@ -25,7 +25,6 @@ export function EmailPasswordSignInForm({
   onError?: () => void;
 }) {
   const router = useRouter();
-  const { setAuthUser } = useAuthUser();
   const { alert } = useActionDialogs();
   const searchParams = useSearchParams();
   const [isAuthenticating, startAuthTransition] = useTransition();
