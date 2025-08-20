@@ -8,3 +8,4 @@ export type AuthSignupByEmailRs =
   components["schemas"]["AuthSignupByEmailRsV1"];
 export type AuthSignUpVerificationByEmailRs =
   components["schemas"]["AuthSignupByEmailConfirmRsV1"];
+export type AuthRefreshRs = components["schemas"]["AuthRefreshRsV1"];

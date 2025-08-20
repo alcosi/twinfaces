@@ -50,7 +50,6 @@ export function EmailPasswordSignInForm({
   function onSignInSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>
   ) {
-    // setAuthError(null);
     signInForm.setError("root", {});
 
     const domainId = values.domainId;
@@ -76,6 +75,8 @@ export function EmailPasswordSignInForm({
 
       if (result.ok) {
         const authToken = result.data.authData?.auth_token;
+        const refreshToken = result.data.authData?.refresh_token;
+        const authTokenExpiresAt = result.data.authData?.auth_token_expires_at;
         if (isUndefined(authToken)) {
           return handleAuthError("Login failed: no auth token returned");
         }
@@ -93,6 +94,8 @@ export function EmailPasswordSignInForm({
           domainUser,
           authToken,
           domainId,
+          refreshToken,
+          authTokenExpiresAt,
         });
 
         router.push(`/profile`);

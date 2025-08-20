@@ -18,6 +18,7 @@ import {
 import {
   AuthConfig,
   AuthLoginRs,
+  AuthRefreshRs,
   AuthSignUpVerificationByEmailRs,
   AuthSignupByEmailRs,
 } from "../types";
@@ -258,5 +259,36 @@ export async function requirePermissionsOr404(permissionIds: string[]) {
     if (!allowed) {
       notFound();
     }
+  }
+}
+
+export async function refreshAuthTokenAction(
+  authToken: string,
+  refreshToken: string,
+  domainId: string
+): Promise<Result<AuthRefreshRs>> {
+  try {
+    const { data, error } = await TwinsAPI.POST("/auth/refresh/v2", {
+      params: {
+        header: {
+          AuthToken: authToken,
+          DomainId: domainId,
+          Channel: "WEB",
+        },
+      },
+      body: { refreshToken },
+    });
+
+    if (error) {
+      return errorToResult(error);
+    }
+
+    if (isUndefined(data)) {
+      return errorToResult(error);
+    }
+
+    return { ok: true, data };
+  } catch (error) {
+    return errorToResult(error);
   }
 }
