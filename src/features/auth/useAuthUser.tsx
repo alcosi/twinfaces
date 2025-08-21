@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 
-import { clientCookies } from "@/shared/libs";
+import { clientCookies, isServerRuntime } from "@/shared/libs";
 
 import { AuthUser } from "./types";
 
@@ -12,7 +12,9 @@ type UseAuthUser = {
   logout: () => void;
 };
 export function useAuthUser(): UseAuthUser {
-  function getAuthUser(): AuthUser {
+  function getAuthUser(): AuthUser | null {
+    if (isServerRuntime()) return null;
+
     const authToken = clientCookies.get("authToken");
     const domainId = clientCookies.get("domainId");
     const userId = clientCookies.get("userId");
