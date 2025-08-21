@@ -15,6 +15,6 @@ export const TwinsAPI = createClient<paths>({
 
 // NOTE: order matters: normalize errors first, then handle 401s
 TwinsAPI.use(errorMiddleware);
-TwinsAPI.use(unauthorizedMiddleware);
 // NOTE: If auth token expires in <= treshholdMinutes, it will be refreshed before the request
 TwinsAPI.use(refreshTokenMiddleware(1));
+TwinsAPI.use(unauthorizedMiddleware);

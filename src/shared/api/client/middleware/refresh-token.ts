@@ -2,25 +2,10 @@ import { Middleware } from "openapi-fetch";
 
 import { isServerRuntime } from "@/shared/libs";
 
-import { refreshAuthTokenAction } from "../../../../entities/user/server";
-
-type RefreshData = {
-  auth_token: string;
-  refresh_token: string;
-  auth_token_expires_at: string;
-};
-
-function getClientCookie(name: string): string | undefined {
-  return document.cookie
-    .split("; ")
-    .find((row) => row.startsWith(`${name}=`))
-    ?.split("=")[1];
-}
-
-const IGNORED_PATHS = ["/auth/refresh/v2"];
+import { IGNORED_PATHS, getCookie, getFreshToken } from "./utils";
 
 export function refreshTokenMiddleware(treshholdMinutes = 10): Middleware {
-  let refreshingPromise: Promise<void> | null = null;
+  let refreshingPromise: Promise<string | null> | null = null;
 
   return {
     async onRequest({ request }) {
@@ -29,44 +14,25 @@ export function refreshTokenMiddleware(treshholdMinutes = 10): Middleware {
 
       if (isServerRuntime()) return request;
 
-      let authToken = getClientCookie("authToken");
-      const refreshToken = getClientCookie("refreshToken");
-      const authTokenExpiresAt = getClientCookie("authTokenExpiresAt");
-      const domainId = getClientCookie("domainId");
+      let authToken = getCookie("authToken");
+      const refreshToken = getCookie("refreshToken");
+      const authTokenExpiresAt = getCookie("authTokenExpiresAt");
+      const domainId = getCookie("domainId");
 
-      if (authToken && refreshToken && authTokenExpiresAt && domainId) {
+      if (refreshToken && authTokenExpiresAt && domainId) {
         try {
           const expiresAt = new Date(decodeURIComponent(authTokenExpiresAt));
-          const diffMinutes =
-            (expiresAt.getTime() - new Date().getTime()) / 1000 / 60;
+          const diffMinutes = (expiresAt.getTime() - Date.now()) / 1000 / 60;
 
           if (diffMinutes <= treshholdMinutes) {
             if (!refreshingPromise) {
-              refreshingPromise = (async () => {
-                const result = await refreshAuthTokenAction(
-                  authToken!,
-                  refreshToken!,
-                  domainId!
-                );
-
-                if (result.ok) {
-                  const {
-                    auth_token: newAuthToken,
-                    refresh_token: newRefreshToken,
-                    auth_token_expires_at: newAuthTokenExpiresAt,
-                  } = result.data.authData as RefreshData;
-
-                  document.cookie = `authToken=${newAuthToken}; path=/`;
-                  document.cookie = `refreshToken=${newRefreshToken}; path=/`;
-                  document.cookie = `authTokenExpiresAt=${newAuthTokenExpiresAt}; path=/`;
-                }
-              })().finally(() => {
-                refreshingPromise = null;
-              });
+              refreshingPromise = getFreshToken().finally(
+                () => (refreshingPromise = null)
+              );
             }
 
             await refreshingPromise;
-            authToken = getClientCookie("authToken");
+            authToken = getCookie("authToken");
           }
         } catch (error) {
           console.error("refreshTokenMiddleware error", error);

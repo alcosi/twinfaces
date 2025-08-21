@@ -9,6 +9,10 @@ export async function safe<T>(fn: () => Promise<T>): Promise<Result<T, Error>> {
   } catch (error) {
     console.warn("[safe] Caught error:", error);
 
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+      throw error;
+    }
+
     return {
       ok: false,
       error: isErrorInstance(error) ? error : new Error("Unknown Error"),
