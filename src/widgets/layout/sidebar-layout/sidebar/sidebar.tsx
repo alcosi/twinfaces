@@ -45,8 +45,9 @@ export function AppSidebar({
   currentAuthUser,
   domainsList,
 }: Props) {
-  const { authUser, updateUser, logout } = useAuthUser();
+  const { authUser, setAuthUser, logout } = useAuthUser();
   const currentDomain = domainsList?.find((i) => i.id === authUser?.domainId);
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -59,7 +60,13 @@ export function AppSidebar({
   const [area, setArea] = useState<keyof typeof PlatformArea>(initialArea);
 
   function onDomainSwitch(domain: DomainView_SHORT) {
-    updateUser({ domainId: domain.id });
+    if (authUser) {
+      setAuthUser({
+        authToken: authUser.authToken,
+        domainId: domain.id,
+        userId: authUser.userId,
+      });
+    }
 
     // Reload the page to apply changes (e.g., re-fetching data using the new domainId)
     // TODO: Replace reload with context/state management to avoid full page reloads.

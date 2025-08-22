@@ -40,7 +40,11 @@ export function StubAuthForm() {
 
   useEffect(() => {
     if (authUser) {
-      setAuthUser(authUser);
+      setAuthUser({
+        authToken: authUser.authToken,
+        domainId: authUser.domainId,
+        userId: authUser.domainUser.userId,
+      });
       router.push("/profile");
     }
   }, [authUser]);

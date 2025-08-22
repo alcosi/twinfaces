@@ -1,65 +1,44 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
-import { DomainUser_DETAILED } from "@/entities/user";
-import { clientCookies, useLocalStorage } from "@/shared/libs";
+import { clientCookies, isServerRuntime } from "@/shared/libs";
 
-type AuthUser = {
-  domainUser?: DomainUser_DETAILED;
-  authToken: string;
-  domainId: string;
-};
+import { AuthUser } from "./types";
 
 type UseAuthUser = {
   authUser: AuthUser | null;
   setAuthUser: (user: AuthUser | null) => void;
-  updateUser: (updatedFields: Partial<AuthUser>) => void;
   logout: () => void;
 };
-
 export function useAuthUser(): UseAuthUser {
-  const [storedValue, setStoredValue] = useLocalStorage<AuthUser | null>(
-    "auth-user",
-    null
-  );
-  const [authUser, setAuthUserState] = useState<AuthUser | null>(storedValue);
+  function getAuthUser(): AuthUser | null {
+    if (isServerRuntime()) return null;
 
-  useEffect(() => {
-    setAuthUserState(storedValue);
-  }, [storedValue]);
+    const authToken = clientCookies.get("authToken");
+    const domainId = clientCookies.get("domainId");
+    const userId = clientCookies.get("userId");
 
-  const setAuthUser = useCallback(
-    (user: AuthUser | null) => {
-      setStoredValue(user);
+    return { authToken, domainId, userId };
+  }
+
+  const setAuthUser = useCallback((user: AuthUser | null) => {
+    if (user) {
       clientCookies.set("authToken", `${user?.authToken}`, { path: "/" });
       clientCookies.set("domainId", `${user?.domainId}`, { path: "/" });
-      clientCookies.set("userId", `${user?.domainUser?.userId}`, { path: "/" });
-    },
-    [setStoredValue]
-  );
-
-  const updateUser = useCallback(
-    (updatedFields: Partial<AuthUser>) => {
-      if (authUser) {
-        const updatedUser = { ...authUser, ...updatedFields };
-        setStoredValue(updatedUser);
-      }
-    },
-    [authUser, setStoredValue]
-  );
+      clientCookies.set("userId", `${user?.userId}`, { path: "/" });
+    }
+  }, []);
 
   const logout = useCallback(() => {
-    setStoredValue(null);
     clientCookies.remove("authToken");
     clientCookies.remove("domainId");
     clientCookies.remove("userId");
-  }, [setStoredValue]);
+  }, []);
 
   return {
-    authUser,
+    authUser: getAuthUser(),
     setAuthUser,
-    updateUser,
     logout,
   };
 }
