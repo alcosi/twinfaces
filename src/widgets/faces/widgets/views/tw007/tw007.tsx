@@ -52,7 +52,7 @@ export async function TW007(props: TWidgetFaceProps) {
   return (
     <TW007EntryClient
       faceData={loadedWidget}
-      twinClass={twinResult.data.twinClass as TwinClass}
+      twinClass={twinResult.data.twin.twinClass as TwinClass}
       onChange={handleChangeTwinClass}
     />
   );
