@@ -82,15 +82,20 @@ export async function SidebarLayout({ children }: Props) {
   return (
     <SidebarProvider>
       <RenderOnClient>
-        <AppSidebar
-          face={sidebarFace}
-          mode={isAdmin ? "admin" : undefined}
-          currentAuthUser={authUser}
-          domainsList={domains?.map((dto) => hydrateDomainView(dto)) ?? []}
-        />
-        <div className="w-full">
-          <SidebarLayoutHeader />
-          <SidebarLayoutContent>{children}</SidebarLayoutContent>
+        <div className="flex w-full flex-col">
+          <SidebarLayoutHeader currentAuthUser={authUser} />
+
+          <div className="flex">
+            <AppSidebar
+              face={sidebarFace}
+              mode={isAdmin ? "admin" : undefined}
+              currentAuthUser={authUser}
+              domainsList={domains?.map((dto) => hydrateDomainView(dto)) ?? []}
+            />
+            <div className="w-full">
+              <SidebarLayoutContent>{children}</SidebarLayoutContent>
+            </div>
+          </div>
         </div>
       </RenderOnClient>
     </SidebarProvider>

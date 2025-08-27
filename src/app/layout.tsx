@@ -1,5 +1,5 @@
 import { PublicEnvScript } from "next-runtime-env";
-import { Inter } from "next/font/google";
+import { Inter, Rubik } from "next/font/google";
 import React from "react";
 
 import { getDomainFromHeaders } from "@/entities/face";
@@ -14,6 +14,11 @@ const fontSans = Inter({
   subsets: ["latin"],
   // NOTE: Set by Tailwind's default theme — see docs: https://tailwindcss.com/docs/theme#default-theme-variable-reference
   variable: "--font-sans",
+});
+
+const fontRubik = Rubik({
+  subsets: ["latin"],
+  variable: "--font-rubik",
 });
 
 export default async function RootLayout({
@@ -42,7 +47,8 @@ export default async function RootLayout({
       <body
         className={cn(
           "bg-background text-foreground min-h-screen overflow-hidden antialiased",
-          fontSans.className
+          fontSans.className,
+          fontRubik.variable
         )}
       >
         <PublicLayoutProviders config={config}>

@@ -73,6 +73,13 @@
   --color-link-enabled: var(--brand-500);
   --color-link-disabled: var(--muted-foreground);
   --color-link: var(--border);
+
+  /* Fonts */
+  --font-rubik: var(--font-rubik);
+
+  /* On Schelves Colors */
+  --color-dark-gray: var(--dark-gray);
+  --color-main-black: var(--main-black);
 }
 
 @theme {

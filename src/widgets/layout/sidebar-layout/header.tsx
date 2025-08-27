@@ -1,63 +1,60 @@
 "use client";
 
-import { House } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { ThemeToggle } from "@/features/ui/theme-toggle";
+import { DomainUser } from "@/entities/user";
 import { PlatformArea } from "@/shared/config";
-import { cn, useRouteCrumbs } from "@/shared/libs";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/shared/ui/breadcrumb";
-import { SidebarTrigger } from "@/shared/ui/sidebar";
+import { isPopulatedString } from "@/shared/libs";
 
-export function SidebarLayoutHeader() {
-  const breadcrumbs = useRouteCrumbs();
+type Props = {
+  currentAuthUser?: DomainUser;
+};
 
-  const displayBreadcrumbs =
-    breadcrumbs[0]?.label.toLowerCase() === PlatformArea.core ||
-    breadcrumbs[0]?.label.toLowerCase() === PlatformArea.workspace
-      ? breadcrumbs.slice(1)
-      : breadcrumbs;
+export function SidebarLayoutHeader({ currentAuthUser }: Props) {
+  const getInitials = (userFullName?: string) => {
+    if (!isPopulatedString(userFullName)) return "UN";
+
+    const parts = userFullName.split(" ");
+
+    if (parts.length === 1) return (parts[0]?.[0] ?? "U").toUpperCase();
+
+    return (
+      (parts[0]?.[0] ?? "U").toUpperCase() +
+      (parts[1]?.[0] ?? "U").toUpperCase()
+    );
+  };
 
   return (
-    <header className="border-border bg-background sticky top-0 z-10 flex h-16 items-center justify-between border-b px-4 md:px-6">
+    <header className="border-border bg-background sticky top-0 z-15 flex h-16 w-full items-center justify-between border-b px-4 md:px-6">
       <div className="flex items-center">
-        <SidebarTrigger className="border-border bg-sidebar z-20 mt-16 mr-4 -ml-4 border shadow-sm md:mr-8 md:-ml-8" />
-
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <Link href="/">
-                <House className="h-4 w-4" />
-              </Link>
-            </BreadcrumbItem>
-            {displayBreadcrumbs.map((item, index, array) => (
-              <React.Fragment key={index}>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <Link
-                    href={item.href}
-                    title={item.label}
-                    className={cn(
-                      "max-w-28 truncate capitalize",
-                      index === array.length - 1 && "font-semibold"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                </BreadcrumbItem>
-              </React.Fragment>
-            ))}
-          </BreadcrumbList>
-        </Breadcrumb>
+        <Link href={`/${PlatformArea.workspace}/products`}>
+          <Image src="/logo.svg" alt="Logo" width={162} height={27} priority />
+        </Link>
       </div>
 
-      <ThemeToggle />
+      {currentAuthUser && (
+        <Link
+          href="/profile"
+          className="flex cursor-pointer items-center gap-2 select-none"
+        >
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#F15728]">
+            <span className="font-rubik text-[11.2px] leading-[1.2] font-semibold text-white">
+              {getInitials(currentAuthUser.user?.fullName)}
+            </span>
+          </div>
+
+          <div className="flex flex-col leading-tight">
+            <span className="text-dark-gray font-rubik text-sm leading-[1.2] font-semibold">
+              {currentAuthUser.user?.fullName}
+            </span>
+            <span className="text-dark-gray font-rubik text-[11px] leading-[1.3] font-normal">
+              {currentAuthUser.user?.email}
+            </span>
+          </div>
+        </Link>
+      )}
     </header>
   );
 }

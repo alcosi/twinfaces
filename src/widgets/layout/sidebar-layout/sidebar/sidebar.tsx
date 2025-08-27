@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
+import { ChevronUp, User2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -8,28 +8,23 @@ import { DomainView_SHORT } from "@/entities/domain";
 import { FaceNB001 } from "@/entities/face";
 import { DomainUser } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
-import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";
 import { isUndefined } from "@/shared/libs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SlideView,
   Tabs,
-  ThemeImage,
 } from "@/shared/ui";
 
-import { SidebarAreaSwitcher } from "./area-switcher";
 import { CoreAreaSidebarMenu, WorkspaceAreaSidebarMenu } from "./menu";
 
 type Props = {
@@ -98,13 +93,6 @@ export function AppSidebar({
               </nav>
             </SlideView>
           </section>
-
-          <SidebarAreaSwitcher
-            userLabel={face.userAreaLabel ?? ""}
-            adminLabel={face.adminAreaLabel ?? ""}
-            area={area}
-            setArea={setArea}
-          />
         </Tabs>
       );
     }
@@ -115,61 +103,6 @@ export function AppSidebar({
   return (
     <nav>
       <Sidebar collapsible="icon">
-        <SidebarHeader className="border-border h-16 items-center justify-center border-b">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    {currentDomain?.iconLight && currentDomain?.iconDark ? (
-                      <ThemeImage
-                        className="h-4 w-4 rounded-full"
-                        lightSrc={currentDomain?.iconLight}
-                        darkSrc={currentDomain?.iconDark}
-                        width={56}
-                        height={56}
-                        alt="Domain logo icon"
-                      />
-                    ) : (
-                      <Globe className="h-4 w-4" />
-                    )}
-                    {currentDomain?.name ?? "Select Domain"}
-                    <ChevronsUpDown className="ml-auto" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-(--radix-popper-anchor-width)">
-                  <>
-                    {domainsList?.map((domain) => (
-                      <DropdownMenuItem
-                        key={domain.id}
-                        disabled={domain.id === currentDomain?.id}
-                        onClick={() => onDomainSwitch(domain)}
-                        className="gap-x-2"
-                      >
-                        {domain.iconLight && domain.iconDark ? (
-                          <ThemeImage
-                            className="h-4 w-4 rounded-full"
-                            lightSrc={domain.iconLight}
-                            darkSrc={domain.iconDark}
-                            width={56}
-                            height={56}
-                            alt="Domain logo icon"
-                          />
-                        ) : (
-                          <Globe className="h-4 w-4" />
-                        )}
-                        <span>{domain.name}</span>
-                      </DropdownMenuItem>
-                    ))}
-                    <DropdownMenuSeparator />
-                    <CreateDomainButton />
-                  </>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarHeader>
-
         <SidebarContent>{renderSidebarContent()}</SidebarContent>
 
         <SidebarFooter className="border-border border-t">
