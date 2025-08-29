@@ -87,7 +87,7 @@ export async function SidebarLayout({ children }: Props) {
 
           <div className="flex">
             <AppSidebar />
-            <div className="w-full">
+            <div className="bg-sidebar-bg w-full">
               <SidebarLayoutContent>{children}</SidebarLayoutContent>
             </div>
           </div>

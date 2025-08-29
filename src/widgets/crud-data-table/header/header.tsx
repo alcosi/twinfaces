@@ -103,9 +103,13 @@ function CrudDataTableHeaderComponent<
     );
 
   return (
-    <div className="mb-2 flex justify-between">
+    <div className="bg-background flex h-[56px] justify-between rounded-t-[20px] px-6 shadow-[0_1px_0_0_#D9DEE9]">
       <div className="flex items-center">
-        {title && <div className="text-lg">{title}</div>}
+        {title && (
+          <div className="font-rubik text-[16px] leading-[1.1] font-medium text-[#0D114E]">
+            {title}
+          </div>
+        )}
         {search?.enabled && (
           <form className="flex flex-row space-x-1" onSubmit={handleOnSearch}>
             <Input
@@ -120,8 +124,8 @@ function CrudDataTableHeaderComponent<
           </form>
         )}
       </div>
-      <div className="flex space-x-4">
-        {!hideRefresh && (
+      <div className="flex items-center space-x-4">
+        {/* {!hideRefresh && (
           <Button
             variant="ghost"
             onClick={() => {
@@ -130,7 +134,7 @@ function CrudDataTableHeaderComponent<
           >
             <RefreshCw />
           </Button>
-        )}
+        )} */}
 
         {filters && (
           <FiltersPopover
@@ -139,7 +143,7 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {isPopulatedArray(defaultVisibleColumns) && (
+        {/* {isPopulatedArray(defaultVisibleColumns) && (
           <ColumnManagerPopover
             columns={visibleOrderedColumns}
             sortKeys={viewSettings.orderKeys}
@@ -153,16 +157,16 @@ function CrudDataTableHeaderComponent<
               })
             }
           />
-        )}
+        )} */}
 
-        {isPopulatedArray(groupableColumns) && (
+        {/* {isPopulatedArray(groupableColumns) && (
           <GroupByButton
             columns={groupableColumns}
             onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
           />
-        )}
+        )} */}
 
-        <Button
+        {/* <Button
           IconComponent={
             viewSettings.layoutMode === "grid"
               ? () => <GridIcon className="h-6 w-6" />
@@ -173,13 +177,15 @@ function CrudDataTableHeaderComponent<
               layoutMode: viewSettings.layoutMode === "grid" ? "list" : "grid",
             })
           }
-        />
+        /> */}
 
         {onCreateClick && (
           <>
-            <Separator orientation="vertical" />
-            <Button onClick={onCreateClick}>
-              <Plus />
+            <Button
+              className="font-rubik h-[32px] rounded-[8px] text-[14px] leading-[1.2] font-normal text-white"
+              onClick={onCreateClick}
+            >
+              Create new product
             </Button>
           </>
         )}

@@ -24,16 +24,16 @@ type ResourceLinkProps<T> = {
   "IconComponent" | "disabled" | "backgroundColor" | "fontColor" | "hideIcon"
 >;
 
-const ResourceLinkContent = ({
+function ResourceLinkContent({
   IconComponent,
   displayName,
   disabled,
   backgroundColor = "transparent",
   fontColor,
   hideIcon,
-}: ResourceLinkContentProps) => {
+}: ResourceLinkContentProps) {
   const styles = {
-    base: "inline-flex items-center h-6 max-w-full border border-border rounded-lg px-2 transition-colors",
+    base: "inline-flex items-center h-6 max-w-full  rounded-lg px-2 transition-colors",
     borderColor: disabled ? "border-link-disabled" : "",
     hover: disabled
       ? "hover:border-link-disabled"
@@ -72,7 +72,7 @@ const ResourceLinkContent = ({
 
       <span
         className={cn(
-          `${hideIcon ? "truncate text-sm font-medium" : "ml-2 truncate text-sm font-medium"}`,
+          `${hideIcon ? "truncate" : "ml-2 truncate"} text-xs font-normal`,
           css`
             color: ${fontColor};
           `
@@ -82,9 +82,9 @@ const ResourceLinkContent = ({
       </span>
     </div>
   );
-};
+}
 
-export const ResourceLink = <T,>({
+export function ResourceLink<T>({
   IconComponent,
   data,
   renderTooltip,
@@ -94,7 +94,7 @@ export const ResourceLink = <T,>({
   backgroundColor,
   fontColor,
   hideIcon,
-}: ResourceLinkProps<T>) => {
+}: ResourceLinkProps<T>) {
   const displayName = getDisplayName(data);
 
   const ResourceLinkWrapper = disabled ? (
@@ -131,4 +131,4 @@ export const ResourceLink = <T,>({
   ) : (
     ResourceLinkWrapper
   );
-};
+}

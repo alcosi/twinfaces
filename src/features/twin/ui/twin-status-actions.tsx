@@ -43,9 +43,9 @@ export function TwinStatusActions({
         data={twin.status!}
         disabled={allowNavigation}
       />
-      {isPopulatedArray(twin.transitions) && (
+      {/* {isPopulatedArray(twin.transitions) && (
         <TransitionPerformer twin={twin} onSuccess={handleSuccess} />
-      )}
+      )} */}
     </div>
   );
 }

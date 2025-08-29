@@ -141,12 +141,12 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     <>
       <div
         className={cn(
-          "relative mb-2",
-          layoutMode === "grid" && "border-border rounded-md border"
+          "bg-background relative mb-2 pr-8 pl-8",
+          layoutMode === "grid" && "border-border rounded-b-[20px] border-t"
         )}
       >
         {isEmptyArray(table.getRowModel().rows) ? (
-          <div className="text-muted-foreground rounded-md p-4 text-center">
+          <div className="text-muted-foreground rounded-b-[20px] p-4 text-center">
             No results.
           </div>
         ) : layoutMode === "grid" ? (

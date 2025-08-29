@@ -4,6 +4,7 @@ export * from "./box-icon";
 export * from "./circle";
 export * from "./dashboard";
 export * from "./file-question-icon";
+export * from "./filters";
 export * from "./grid";
 export * from "./help";
 export * from "./html";

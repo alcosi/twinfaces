@@ -1,7 +1,5 @@
 "use client";
 
-import { Square } from "lucide-react";
-
 import { TwinStatusV2 } from "@/entities/twin-status";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
@@ -25,21 +23,14 @@ export function TwinClassStatusResourceLink({
 }: Props) {
   const link = `/${PlatformArea.core}/twinclass/${twinClassId}/twinStatus/${data.id}`;
 
-  const Icon = data.backgroundColor ? (
-    <Square
-      className="h-4 w-4"
-      fill={data.backgroundColor}
-      stroke={data.backgroundColor}
-    />
-  ) : (
-    <TwinStatusIcon className="h-4 w-4" />
-  );
-
   return (
     <ResourceLink
-      IconComponent={() => Icon}
+      IconComponent={() => undefined}
+      hideIcon={true}
       data={data}
       disabled={disabled}
+      backgroundColor={data.backgroundColor}
+      fontColor="#252634"
       renderTooltip={
         withTooltip
           ? (data) => (

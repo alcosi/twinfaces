@@ -7,6 +7,7 @@ import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
 import { cn, isTruthy } from "@/shared/libs";
 import {
   Button,
+  FiltersIcon,
   Form,
   Popover,
   PopoverContent,
@@ -60,13 +61,15 @@ export function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
       <PopoverTrigger asChild>
         <Button
           type="button"
-          className={cn("block")}
+          className={cn(
+            "block h-[32px] rounded-lg bg-[#E7F0FE] p-0 px-1 hover:bg-transparent"
+          )}
           onClick={() => {
             setOpen(true);
           }}
           variant="default"
         >
-          <FilterIcon />
+          <FiltersIcon className="h-6 w-6" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0">
