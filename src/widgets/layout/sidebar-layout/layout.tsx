@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 
-import { fetchDomainsList, hydrateDomainView } from "@/entities/domain";
+import { fetchDomainsList } from "@/entities/domain";
 import {
   FaceNB001,
   FaceNB001MenuItem,
@@ -86,12 +86,7 @@ export async function SidebarLayout({ children }: Props) {
           <SidebarLayoutHeader currentAuthUser={authUser} />
 
           <div className="flex">
-            <AppSidebar
-              face={sidebarFace}
-              mode={isAdmin ? "admin" : undefined}
-              currentAuthUser={authUser}
-              domainsList={domains?.map((dto) => hydrateDomainView(dto)) ?? []}
-            />
+            <AppSidebar />
             <div className="w-full">
               <SidebarLayoutContent>{children}</SidebarLayoutContent>
             </div>

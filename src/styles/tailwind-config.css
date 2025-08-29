@@ -38,7 +38,7 @@
   /* Neutral Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
+  /* --color-primary: var(--primary); */
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -80,6 +80,10 @@
   /* On Schelves Colors */
   --color-dark-gray: var(--dark-gray);
   --color-main-black: var(--main-black);
+  --color-primary: var(--primary);
+  --color-sidebar-bg: var(--sidebar-background);
+  --color-ons-brand-50: var(--ons-brand-50);
+  --color-ons-white-400: var(--ons-white-400);
 }
 
 @theme {

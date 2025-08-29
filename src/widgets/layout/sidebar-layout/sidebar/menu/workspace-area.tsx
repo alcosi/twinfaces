@@ -1,4 +1,4 @@
-import { FaceNB001, FaceNB001MenuItem } from "@/entities/face";
+import { FaceNB001MenuItem } from "@/entities/face";
 import { PlatformArea } from "@/shared/config";
 import { cn, isEmptyArray, slugify } from "@/shared/libs";
 import {
@@ -6,6 +6,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  MarketplacesIcon,
+  ProductsIcon,
   SidebarGroupLabel,
   SidebarMenu,
   useSidebar,
@@ -15,29 +17,52 @@ import { CollapsedMenu } from "./collapsed-menu";
 import { MenuItem } from "./menu-item";
 
 type Props = {
-  items: NonNullable<FaceNB001["userAreaMenuItems"]>;
+  items: MenuItemWithIcon[];
 };
+
+type MenuItemWithIcon = Omit<FaceNB001MenuItem, "icon" | "children"> & {
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  children?: MenuItemWithIcon[];
+};
+
+const WORKSPACE_SIDEBAR_MENU_ITEMS: MenuItemWithIcon[] = [
+  {
+    key: "products",
+    label: "Products",
+    icon: ProductsIcon,
+    targetPageFaceId: "a3d30213-a3ba-4858-9b5c-ebcaf2060764",
+    children: [],
+  },
+  {
+    key: "marketplaces",
+    label: "Marketplaces",
+    icon: MarketplacesIcon,
+    targetPageFaceId: "19a27370-f6f5-4056-9e73-ca2645fae098",
+    children: [],
+  },
+];
 
 const MAX_NESTING_LEVEL = 3;
 
-export function WorkspaceAreaSidebarMenu({ items }: Props) {
+export function WorkspaceAreaSidebarMenu() {
   const { open } = useSidebar();
 
   return (
-    <SidebarMenu className={cn(!open && "p-2")}>
+    <SidebarMenu className={cn(!open && "")}>
       {open ? (
-        <AccordionMenu items={items} />
+        <AccordionMenu items={WORKSPACE_SIDEBAR_MENU_ITEMS} />
       ) : (
         <CollapsedMenu
-          items={items}
+          items={WORKSPACE_SIDEBAR_MENU_ITEMS}
           getItemProps={(item) => ({
             key: item.key || "",
             label: item.label ?? "N/A",
             url: item.targetPageFaceId
               ? `/${PlatformArea.workspace}/${slugify(item.key)}`
               : undefined,
-            iconSource: item.icon,
+            Icon: item.icon,
             hidden: false,
+            className: "flex items-center justify-center h-10 w-full",
           })}
         />
       )}
@@ -47,7 +72,7 @@ export function WorkspaceAreaSidebarMenu({ items }: Props) {
 
 function AccordionMenu({ items }: Props) {
   const renderItems = (
-    items: FaceNB001MenuItem[],
+    items: MenuItemWithIcon[],
     level = 0,
     parentKey = "root"
   ) => {
@@ -63,8 +88,8 @@ function AccordionMenu({ items }: Props) {
             key={keyPath}
             label={item.label!}
             url={url}
-            iconSource={item.icon ?? ""}
-            className={cn("px-2", `ml-${level * 2}`)}
+            Icon={item.icon}
+            className={cn(`ml-${level * 2}`)}
           />
         );
       }
@@ -73,7 +98,7 @@ function AccordionMenu({ items }: Props) {
         <AccordionItem
           key={keyPath}
           value={keyPath}
-          className="px-0 border-b-0"
+          className="border-b-0 px-0"
         >
           <AccordionTrigger
             className={cn(
@@ -86,7 +111,7 @@ function AccordionMenu({ items }: Props) {
               <MenuItem
                 label={item.label ?? "N/A"}
                 url={url}
-                iconSource={item.icon!}
+                Icon={item.icon!}
               />
             </SidebarGroupLabel>
           </AccordionTrigger>
@@ -95,7 +120,7 @@ function AccordionMenu({ items }: Props) {
             <AccordionContent
               className={cn("mt-1 py-1", `ml-${(level + 1) * 2}`)}
             >
-              <div className="border-l border-border ml-2">
+              <div className="border-border ml-2 border-l">
                 {renderItems(item.children!, level, keyPath)}
               </div>
             </AccordionContent>
@@ -106,7 +131,7 @@ function AccordionMenu({ items }: Props) {
   };
 
   return (
-    <Accordion type="multiple" className="w-full p-0 pt-2 space-y-1">
+    <Accordion type="multiple" className="w-full space-y-1 pt-6 pr-2 pl-4">
       {renderItems(items)}
     </Accordion>
   );
