@@ -2,14 +2,12 @@ import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import React from "react";
 
-import { fetchBC001Face, getAuthHeaders } from "@/entities/face";
+import { getAuthHeaders } from "@/entities/face";
 import { Twin_DETAILED, fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import {
-  ServerBreadcrumbHeader,
-  UrlBreadcrumbHeader,
-} from "@/features/ui/headers";
-import { isPopulatedArray, isTruthy, safe } from "@/shared/libs";
+import { UrlBreadcrumbHeader } from "@/features/ui/headers";
+import { safe } from "@/shared/libs";
+import { BC001 } from "@/widgets/faces/widgets/views/bc001";
 import { PrivateLayoutProviders } from "@/widgets/layout";
 
 type Props = {
@@ -37,30 +35,15 @@ export default async function Layout({ children, params }: Props) {
 
   const { twin, relatedObjects } = twinResult.data;
 
-  const breadCrumbsResult = await safe(
-    withRedirectOnUnauthorized(() =>
-      fetchBC001Face(twin.breadCrumbsFaceId!, twin.id)
-    )
-  );
-
-  if (!breadCrumbsResult.ok) {
-    console.error(`Failed to load bread crumbs data:`, breadCrumbsResult.error);
-    return undefined;
-  }
-
-  const breadCrumbsFace = relatedObjects.faceMap?.[twin.breadCrumbsFaceId!];
-  const breadCrumbsData = isTruthy(breadCrumbsFace)
-    ? breadCrumbsResult.data.breadCrumbs
-    : undefined;
-  const sortedBreadCrumbsData = breadCrumbsData?.items?.sort(
-    (b, a) => (a.order ?? 0) - (b.order ?? 0)
-  );
-
   return (
     <PrivateLayoutProviders>
       <>
-        {isPopulatedArray(sortedBreadCrumbsData) ? (
-          <ServerBreadcrumbHeader items={sortedBreadCrumbsData} />
+        {twin.breadCrumbsFaceId ? (
+          <BC001
+            breadCrumbsFaceId={twin.breadCrumbsFaceId}
+            twinId={twin.id}
+            relatedObjects={relatedObjects}
+          />
         ) : (
           <UrlBreadcrumbHeader />
         )}

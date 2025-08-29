@@ -35,10 +35,11 @@ export function ServerBreadcrumbHeader({ items }: Props) {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             {items.map((item, index) => {
-              const isActive = index === items.length - 1;
+              const isLastBreadcrumb = index === items.length - 1;
+
               const href =
-                item.label === "Products" || item.label === "Marketplaces"
-                  ? `/${PlatformArea.workspace}/${item.label.toLowerCase()}`
+                index === 0
+                  ? `/${PlatformArea.workspace}/${item.label?.toLowerCase()}`
                   : `/${PlatformArea.browse}/${item.twinId}`;
 
               const Icon = isPopulatedString(item.iconUrl)
@@ -56,7 +57,7 @@ export function ServerBreadcrumbHeader({ items }: Props) {
               return (
                 <Fragment key={item.id}>
                   <BreadcrumbItem>
-                    {isActive ? (
+                    {isLastBreadcrumb ? (
                       <BreadcrumbPage className="flex">
                         {Icon && <Icon />}
                         {item.label}
@@ -64,7 +65,7 @@ export function ServerBreadcrumbHeader({ items }: Props) {
                     ) : (
                       <Link
                         href={href}
-                        className={`flex ${isActive ? "text-foreground font-semibold" : ""}`}
+                        className={`flex ${isLastBreadcrumb ? "text-foreground font-semibold" : ""}`}
                       >
                         {Icon && <Icon />}
                         {item.label}
