@@ -84,6 +84,9 @@
   --color-sidebar-bg: var(--sidebar-background);
   --color-ons-brand-50: var(--ons-brand-50);
   --color-ons-white-400: var(--ons-white-400);
+  --color-ons-blue-700: var(--ons-blue-700);
+  --color-ons-blue-500: var(--ons-blue-500);
+  --color-ons-orange-500: var(--ons-orange-500);
 }
 
 @theme {

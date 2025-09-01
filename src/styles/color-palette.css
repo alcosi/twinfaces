@@ -73,6 +73,9 @@
     --sidebar-background: hsl(240 2% 96%);
     --ons-brand-50: hsla(231, 78%, 95%, 1);
     --ons-white-400: hsla(225, 13%, 94%, 1);
+    --ons-blue-700: rgb(7, 28, 159);
+    --ons-blue-500: rgb(10, 40, 224);
+    --ons-orange-500: rgb(241, 87, 40);
 
     /* Sidebar Colors */
     /* --sidebar-background: hsl(0 0% 98%); */
