@@ -24,8 +24,8 @@ export const ImageCropper = forwardRef<
       if (!cropper) return;
 
       const canvas = cropper.getCroppedCanvas({
-        width: 300,
-        height: 300,
+        width: 500,
+        height: 500,
         imageSmoothingEnabled: true,
         imageSmoothingQuality: "high",
       });
