@@ -14,12 +14,14 @@ import {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 import { PagedResponse } from "@/shared/api";
 import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 
+import { CreateProduct } from "../../screens/create-product";
 import { DEFAULT_PAGE_SIZES } from "./constans";
 import {
   DataTable,
@@ -52,6 +54,7 @@ type CrudDataTableProps<
     getRowId: (row: TData) => string;
     modalTitle?: string;
     submitButtonLabel?: string;
+    baseTwinClassId?: string;
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -78,6 +81,8 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   );
   const tableRef = useRef<DataTableHandle>(null);
   const dialogRef = useRef<CrudDataTableDialogRef>(null);
+
+  const [showCreateScreen, setShowCreateScreen] = useState(false);
 
   useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
@@ -124,9 +129,9 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     props.defaultVisibleColumns,
   ]);
 
-  const handleOnCreateClick = onCreateSubmit
-    ? () => dialogRef.current?.open()
-    : undefined;
+  const handleOnCreateClick = () => {
+    setShowCreateScreen(true);
+  };
 
   function handleOnRowClick(row: TData) {
     if (onRowClick) {
@@ -140,40 +145,49 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }
 
   return (
-    <div className={cn("flex-1 py-4", className)}>
-      <CrudDataTableHeader
-        ref={tableRef}
-        title={props.title}
-        search={props.search}
-        hideRefresh={props.hideRefresh}
-        columns={props.columns}
-        defaultVisibleColumns={props.defaultVisibleColumns}
-        orderedColumns={props.orderedColumns}
-        groupableColumns={props.groupableColumns}
-        filters={props.filters}
-        onCreateClick={handleOnCreateClick}
-        onViewSettingsChange={updateViewSettings}
-      />
+    <>
+      {showCreateScreen ? (
+        <CreateProduct
+          baseTwinClassId={props.baseTwinClassId}
+          onBack={() => setShowCreateScreen(false)}
+        />
+      ) : (
+        <div className={cn("flex-1 py-4", className)}>
+          <CrudDataTableHeader
+            ref={tableRef}
+            title={props.title}
+            search={props.search}
+            hideRefresh={props.hideRefresh}
+            columns={props.columns}
+            defaultVisibleColumns={props.defaultVisibleColumns}
+            orderedColumns={props.orderedColumns}
+            groupableColumns={props.groupableColumns}
+            filters={props.filters}
+            onCreateClick={handleOnCreateClick}
+            onViewSettingsChange={updateViewSettings}
+          />
 
-      <DataTable
-        ref={tableRef}
-        {...props}
-        columns={visibleColumns}
-        fetcher={fetchWrapper}
-        pageSizes={pageSizes}
-        onRowClick={handleOnRowClick}
-        layoutMode={viewSettings.layoutMode}
-      />
+          <DataTable
+            ref={tableRef}
+            {...props}
+            columns={visibleColumns}
+            fetcher={fetchWrapper}
+            pageSizes={pageSizes}
+            onRowClick={handleOnRowClick}
+            layoutMode={viewSettings.layoutMode}
+          />
 
-      <CrudDataTableDialog
-        ref={dialogRef}
-        dialogForm={dialogForm}
-        renderFormFields={renderFormFields}
-        onCreateSubmit={onCreateSubmit}
-        onSubmitSuccess={() => tableRef.current?.refresh()}
-        title={props.modalTitle}
-        submitButtonLabel={props.submitButtonLabel}
-      />
-    </div>
+          <CrudDataTableDialog
+            ref={dialogRef}
+            dialogForm={dialogForm}
+            renderFormFields={renderFormFields}
+            onCreateSubmit={onCreateSubmit}
+            onSubmitSuccess={() => tableRef.current?.refresh()}
+            title={props.modalTitle}
+            submitButtonLabel={props.submitButtonLabel}
+          />
+        </div>
+      )}
+    </>
   );
 }

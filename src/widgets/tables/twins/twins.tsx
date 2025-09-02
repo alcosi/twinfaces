@@ -408,6 +408,7 @@ export function TwinsTable({
       }
       modalTitle={modalCreateData?.faceTwinCreate?.headerLabel}
       submitButtonLabel={modalCreateData?.faceTwinCreate?.saveButtonLabel}
+      baseTwinClassId={baseTwinClassId}
     />
   );
 }
