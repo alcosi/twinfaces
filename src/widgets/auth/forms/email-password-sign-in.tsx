@@ -88,7 +88,7 @@ export function EmailPasswordSignInForm({
           return handleAuthError("Failed to load domain user");
         }
 
-        setAuthUser({
+        await setAuthUser({
           userId: domainUser.userId,
           authToken,
           domainId,
