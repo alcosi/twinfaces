@@ -7,11 +7,11 @@ import { TooltipProvider } from "@/shared/ui";
 
 import { SidebarLayout } from "../sidebar-layout";
 
-export function PrivateLayoutProviders({
-  children,
-}: {
+type Props = {
   children: React.ReactNode;
-}) {
+};
+
+export function PrivateLayoutProviders({ children }: Props) {
   return (
     <PrivateApiContextProvider>
       <QuickViewProvider>

@@ -24,6 +24,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
   SlideView,
   Tabs,
   ThemeImage,
@@ -113,8 +114,10 @@ export function AppSidebar({
   }
 
   return (
-    <nav>
+    <nav className="relative">
       <Sidebar collapsible="icon">
+        <SidebarTrigger className="border-border bg-sidebar absolute top-12 -right-4 z-20 border shadow-sm" />
+
         <SidebarHeader className="border-border h-16 items-center justify-center border-b">
           <SidebarMenu>
             <SidebarMenuItem>
