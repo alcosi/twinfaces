@@ -1,16 +1,18 @@
 import { useCallback, useContext, useState } from "react";
 
+import {
+  TwinStatus_DETAILED,
+  hydrateTwinStatusFromMap,
+} from "@/entities/twin-status";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-
-import { TwinStatusV2 } from "../../api";
 
 export const useFetchTwinStatusById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchTwinStatusById = useCallback(
-    async (id: string): Promise<TwinStatusV2> => {
+    async (id: string): Promise<TwinStatus_DETAILED> => {
       setLoading(true);
       try {
         const { data, error } = await api.twinStatus.getById({
@@ -28,7 +30,7 @@ export const useFetchTwinStatusById = () => {
           throw new Error("Response does not have twin-status data", error);
         }
 
-        return data.twinStatus;
+        return hydrateTwinStatusFromMap(data.twinStatus, data.relatedObjects);
       } finally {
         setLoading(false);
       }

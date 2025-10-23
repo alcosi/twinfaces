@@ -77,6 +77,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
           query: {
             showTwinClassFieldMode: "MANAGED",
             showTwinClass2TwinClassFieldMode: "MANAGED",
+            showTwinClassFieldCollectionMode: "SHOW",
           },
           path: { twinClassId: id },
         },

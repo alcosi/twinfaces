@@ -1,11 +1,13 @@
+import { Permission } from "@/entities/permission";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type TwinClass = components["schemas"]["TwinClassV1"];
+
+export type TwinClassBaseV1 = components["schemas"]["TwinClassBaseV1"];
 export type TwinClass_SHORT = RequireFields<TwinClass, "id" | "key">;
 export type TwinClass_DETAILED = RequireFields<
   TwinClass,
-  | "logo"
   | "id"
   | "key"
   | "name"
@@ -14,11 +16,13 @@ export type TwinClass_DETAILED = RequireFields<
   | "abstractClass"
   | "markersDataListId"
   | "tagsDataListId"
-  | "viewPermission"
-  | "createPermission"
-  | "editPermission"
-  | "deletePermission"
->;
+> & {
+  createPermission: Permission;
+  viewPermission: Permission;
+  editPermission: Permission;
+  deletePermission: Permission;
+  headClass: TwinClassBaseV1;
+};
 export type TwinClass_MANAGED = RequireFields<
   TwinClass,
   | "id"

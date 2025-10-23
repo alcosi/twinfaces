@@ -16,11 +16,11 @@ export const TwinClassResourceTooltip = ({ data, link }: Props) => {
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}
         iconSource={
-          data.logo ? (
-            <Avatar url={data.logo} alt={data.name ?? "Logo"} size="xlg" />
-          ) : (
-            TwinClassIcon
-          )
+          // data.logo ? (
+          //   <Avatar url={data.logo} alt={data.name ?? "Logo"} size="xlg" />
+          // ) : (
+          TwinClassIcon
+          // )
         }
       />
 

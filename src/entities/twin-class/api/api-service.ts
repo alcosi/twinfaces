@@ -34,6 +34,7 @@ export function createTwinClassApi(settings: ApiSettings) {
           showTwinClassMarker2DataListOptionMode: "DETAILED",
           showTwinClassTag2DataListOptionMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
+          showTwinClassFieldCollectionMode: "SHOW",
           showTwinClass2PermissionMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,

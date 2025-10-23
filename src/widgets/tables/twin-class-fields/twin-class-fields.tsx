@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 import {
   TwinClassFieldCreateRq,
-  TwinClassFieldV2_DETAILED,
+  TwinClassFieldV1_DETAILED,
   useTwinClassFieldFilters,
   useTwinClassFieldSearch,
 } from "@/entities/twin-class-field";
@@ -31,7 +31,7 @@ import { TwinClassFieldFormValues } from "./types";
 
 const colDefs: Record<
   keyof Pick<
-    TwinClassFieldV2_DETAILED,
+    TwinClassFieldV1_DETAILED,
     | "id"
     | "twinClassId"
     | "key"
@@ -42,7 +42,7 @@ const colDefs: Record<
     | "editPermissionId"
     | "required"
   >,
-  ColumnDef<TwinClassFieldV2_DETAILED>
+  ColumnDef<TwinClassFieldV1_DETAILED>
 > = {
   id: {
     accessorKey: "id",
@@ -152,7 +152,7 @@ export function TwinClassFieldsTable({
   async function fetchFields(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<PagedResponse<TwinClassFieldV2_DETAILED>> {
+  ): Promise<PagedResponse<TwinClassFieldV1_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
     try {
       const response = await searchByFilters({

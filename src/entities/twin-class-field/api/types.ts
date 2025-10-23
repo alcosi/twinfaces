@@ -1,4 +1,5 @@
 import { Featurer_DETAILED } from "@/entities/featurer";
+import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
@@ -23,10 +24,11 @@ export type TwinClassFieldCreateRq =
 export type TwinClassFieldUpdateRq =
   components["schemas"]["TwinClassFieldUpdateRqV1"];
 
-export type TwinClassFieldV2 = components["schemas"]["TwinClassFieldV2"];
-export type TwinClassFieldV2_DETAILED = Required<TwinClassFieldV2> & {
+export type TwinClassFieldV1_DETAILED = Required<TwinClassField> & {
   twinClass: TwinClass_DETAILED;
   fieldTyperFeaturer: Featurer_DETAILED;
+  viewPermission: Permission_DETAILED;
+  editPermission: Permission_DETAILED;
 };
 
 export type TwinClassFieldV2FilterKeys =

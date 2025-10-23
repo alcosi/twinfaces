@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check, Unplug } from "lucide-react";
+import { Check } from "lucide-react";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -19,7 +19,6 @@ import {
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
 import {
@@ -33,7 +32,7 @@ import { TwinClassFormFields } from "./form-fields";
 const colDefs: Record<
   keyof Pick<
     TwinClass_DETAILED,
-    | "logo"
+    // | "logo"
     | "id"
     | "key"
     | "name"
@@ -55,24 +54,24 @@ const colDefs: Record<
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
-  logo: {
-    id: "logo",
-    accessorKey: "logo",
-    header: "Logo",
-    cell: (data) => {
-      const value = data.row.original.logo;
-      return (
-        <ImageWithFallback
-          src={value as string}
-          alt={value as string}
-          fallbackContent={<Unplug />}
-          width={32}
-          height={32}
-          className="text-[0]"
-        />
-      );
-    },
-  },
+  // logo: {
+  //   id: "logo",
+  //   accessorKey: "logo",
+  //   header: "Logo",
+  //   cell: (data) => {
+  //     const value = data.row.original.logo;
+  //     return (
+  //       <ImageWithFallback
+  //         src={value as string}
+  //         alt={value as string}
+  //         fallbackContent={<Unplug />}
+  //         width={32}
+  //         height={32}
+  //         className="text-[0]"
+  //       />
+  //     );
+  //   },
+  // },
   id: {
     id: "id",
     accessorKey: "id",
@@ -342,7 +341,6 @@ export function TwinClasses() {
       ref={tableRef}
       fetcher={fetchTwinClasses}
       columns={[
-        colDefs.logo,
         colDefs.id,
         colDefs.key,
         colDefs.name,

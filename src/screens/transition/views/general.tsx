@@ -12,10 +12,7 @@ import {
   useTransitionAliasSelectAdapter,
   useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
-import {
-  TwinStatusV2,
-  useTwinStatusSelectAdapter,
-} from "@/entities/twin-status";
+import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import {
   InPlaceEdit,
@@ -124,7 +121,7 @@ export function TwinflowTransitionGeneral() {
     renderPreview: transition.srcTwinStatus
       ? (_) => (
           <TwinClassStatusResourceLink
-            data={transition.srcTwinStatus as TwinStatusV2}
+            data={transition.srcTwinStatus as TwinStatus}
             twinClassId={transition.srcTwinStatus?.twinClassId!}
           />
         )
@@ -155,7 +152,7 @@ export function TwinflowTransitionGeneral() {
     renderPreview: transition.dstTwinStatus
       ? (_) => (
           <TwinClassStatusResourceLink
-            data={transition.dstTwinStatus as TwinStatusV2}
+            data={transition.dstTwinStatus as TwinStatus}
             twinClassId={transition.dstTwinStatus?.twinClassId!}
           />
         )

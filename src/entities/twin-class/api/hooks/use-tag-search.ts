@@ -2,7 +2,7 @@ import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
 import {
-  DataListOptionV3,
+  DataListOptionV1,
   hydrateDatalistOptionFromMap,
 } from "@/entities/datalist-option";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
@@ -20,7 +20,7 @@ export const useTagSearch = (twinClassId?: string) => {
     }: {
       pagination?: PaginationState;
       filters?: TagSearchFilters;
-    }): Promise<PagedResponse<DataListOptionV3>> => {
+    }): Promise<PagedResponse<DataListOptionV1>> => {
       if (isUndefined(twinClassId)) {
         return { data: [], pagination: {} };
       }

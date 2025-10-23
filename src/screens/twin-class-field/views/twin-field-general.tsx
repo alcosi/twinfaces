@@ -12,7 +12,7 @@ import { FeaturerTypes, useFeaturerSelectAdapter } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   TwinClassFieldUpdateRq,
-  TwinClassFieldV2_DETAILED,
+  TwinClassFieldV1_DETAILED,
   useFieldUpdate,
 } from "@/entities/twin-class-field";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
@@ -31,7 +31,7 @@ export function TwinFieldGeneral({
   twinField,
 }: {
   twinFieldId: string;
-  twinField: TwinClassFieldV2_DETAILED;
+  twinField: TwinClassFieldV1_DETAILED;
 }) {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =

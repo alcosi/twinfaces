@@ -24,7 +24,8 @@ export const TwinClassResourceLink = ({
   return (
     <ResourceLink
       IconComponent={
-        data.logo ? () => <Avatar url={data.logo} size="sm" /> : TwinClassIcon
+        // data.logo ? () => <Avatar url={data.icon} size="sm" /> :
+        TwinClassIcon
       }
       data={data}
       disabled={disabled}

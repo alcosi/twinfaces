@@ -293,6 +293,7 @@ export function TwinsTable({
       query: {
         showTwinClassMode: "SHORT",
         showTwinClass2TwinClassFieldMode: "DETAILED",
+        showTwinClassFieldCollectionMode: "SHOW",
       },
     }).then(({ fields = [] }) => {
       const { supportedFields, columnEntries } =

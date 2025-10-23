@@ -2,7 +2,7 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import {
-  DataListOptionV3,
+  DataListOption_DETAILED,
   useDatalistOption,
 } from "@/entities/datalist-option";
 import { isUndefined } from "@/shared/libs";
@@ -10,7 +10,7 @@ import { LoadingOverlay } from "@/shared/ui";
 
 type DataListOptionContextProps = {
   optionId: string;
-  datalistOption: DataListOptionV3;
+  datalistOption: DataListOption_DETAILED;
   refresh: () => Promise<void>;
 };
 
@@ -30,7 +30,7 @@ export function DataListOptionContextProvider({
   }, [optionId]);
 
   const [datalistOption, setDatalistOption] = useState<
-    DataListOptionV3 | undefined
+    DataListOption_DETAILED | undefined
   >(undefined);
   const { fetchDatalistOptionById, loading } = useDatalistOption();
 

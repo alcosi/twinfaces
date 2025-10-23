@@ -3,7 +3,7 @@ import { useCallback, useContext } from "react";
 
 import {
   DataListOptionFilters,
-  DataListOptionV3,
+  DataListOption_DETAILED,
   hydrateDatalistOptionFromMap,
 } from "@/entities/datalist-option";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
@@ -18,7 +18,7 @@ export const useDatalistOptionSearch = () => {
     }: {
       pagination?: PaginationState;
       filters?: DataListOptionFilters;
-    }): Promise<PagedResponse<DataListOptionV3>> => {
+    }): Promise<PagedResponse<DataListOption_DETAILED>> => {
       try {
         const { data, error } = await api.datalistOption.search({
           pagination,

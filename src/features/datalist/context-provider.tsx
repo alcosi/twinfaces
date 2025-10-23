@@ -33,7 +33,9 @@ export function DatalistContextProvider({
     return fetchDatalistById({
       dataListId: datalistId,
       query: {
-        showDataListMode: "MANAGED",
+        //Find out if these showMode are needed
+        showDataListOption2DataListMode: "MANAGED",
+        showDataListOptionMode: "DETAILED",
       },
     })
       .then((response) => {

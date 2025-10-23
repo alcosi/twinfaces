@@ -1,13 +1,16 @@
 import { PropsWithChildren, createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { TwinClass, useFetchTwinClassById } from "@/entities/twin-class";
+import {
+  TwinClass_DETAILED,
+  useFetchTwinClassById,
+} from "@/entities/twin-class";
 import { isErrorInstance, isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 interface TwinClassContextProps {
   twinClassId: string;
-  twinClass: TwinClass;
+  twinClass: TwinClass_DETAILED;
   refresh: () => void;
 }
 
@@ -24,7 +27,9 @@ export function TwinClassContextProvider({
   children,
 }: TwinClassLayoutProps) {
   const { fetchTwinClassById, loading } = useFetchTwinClassById();
-  const [twinClass, setTwinClass] = useState<TwinClass | undefined>(undefined);
+  const [twinClass, setTwinClass] = useState<TwinClass_DETAILED | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     refresh();

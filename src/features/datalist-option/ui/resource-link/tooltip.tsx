@@ -1,13 +1,13 @@
 import { Option } from "lucide-react";
 
-import { DataListOptionV3 } from "@/entities/datalist-option";
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 
 import { DatalistResourceLink } from "../../../datalist/ui";
 
 type Props = {
-  data: DataListOptionV3;
+  data: DataListOptionV1;
   link: string;
 };
 
@@ -20,9 +20,9 @@ export function DatalistOptionResourceTooltip({ data, link }: Props) {
       />
 
       <ResourceLinkTooltip.Main>
-        {data.dataList && (
+        {data.dataListId && (
           <ResourceLinkTooltip.Item title="Datalist">
-            <DatalistResourceLink data={data.dataList} />
+            <DatalistResourceLink data={data} />
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>

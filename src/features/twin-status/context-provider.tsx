@@ -3,13 +3,16 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { TwinStatusV2, useFetchTwinStatusById } from "@/entities/twin-status";
+import {
+  TwinStatus_DETAILED,
+  useFetchTwinStatusById,
+} from "@/entities/twin-status";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 
 type TwinStatusContextProps = {
   twinStatusId: string;
-  twinStatus: TwinStatusV2;
+  twinStatus: TwinStatus_DETAILED;
   refresh: () => Promise<void>;
 };
 
@@ -28,7 +31,7 @@ export function TwinStatusContextProvider({
     refresh();
   }, [twinStatusId]);
 
-  const [twinStatus, setTwinStatus] = useState<TwinStatusV2 | undefined>(
+  const [twinStatus, setTwinStatus] = useState<TwinStatus_DETAILED | undefined>(
     undefined
   );
   const { fetchTwinStatusById, loading } = useFetchTwinStatusById();

@@ -12,11 +12,11 @@ export const hydrateTwinFlowFromMap = (
   ) as TwinFlow_DETAILED;
 
   if (dto.initialStatusId && relatedObjects?.statusMap) {
-    hydrated.initialStatus = relatedObjects.statusMap[dto.initialStatusId];
+    hydrated.initialStatus = relatedObjects.statusMap[dto.initialStatusId]!;
   }
 
   if (dto.createdByUserId && relatedObjects?.userMap) {
-    hydrated.createdByUser = relatedObjects.userMap[dto.createdByUserId];
+    hydrated.createdByUser = relatedObjects.userMap[dto.createdByUserId]!;
   }
 
   if (dto.twinClassId && relatedObjects?.twinClassMap) {

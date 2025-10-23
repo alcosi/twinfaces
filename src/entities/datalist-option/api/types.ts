@@ -1,7 +1,11 @@
+import { DataList } from "@/entities/datalist";
 import { components } from "@/shared/api/generated/schema";
 
 export type DataListOptionV1 = components["schemas"]["DataListOptionV1"];
-export type DataListOptionV3 = components["schemas"]["DataListOptionV3"];
+export type DataListOption_DETAILED = Required<DataListOptionV1> & {
+  dataList: DataList;
+};
+
 export type DataListOptionCreateRqDV1 =
   components["schemas"]["DataListOptionCreateRqDV1"];
 export type DataListOptionUpdateRqV1 =

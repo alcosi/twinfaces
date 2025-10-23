@@ -1,14 +1,18 @@
 import { RelatedObjects } from "@/shared/api";
-import { DataListOptionV3 } from "../api";
+
+import { DataListOptionV1, DataListOption_DETAILED } from "../api";
 
 export function hydrateDatalistOptionFromMap(
-  dto: DataListOptionV3,
+  dto: DataListOptionV1,
   relatedObjects?: RelatedObjects
-): DataListOptionV3 {
-  const hydrate: DataListOptionV3 = Object.assign({}, dto) as DataListOptionV3;
+): DataListOption_DETAILED {
+  const hydrate: DataListOption_DETAILED = Object.assign(
+    {},
+    dto
+  ) as DataListOption_DETAILED;
 
   if (dto.dataListId && relatedObjects?.dataListsMap) {
-    hydrate.dataList = relatedObjects.dataListsMap[dto.dataListId];
+    hydrate.dataList = relatedObjects.dataListsMap[dto.dataListId]!;
   }
 
   return hydrate;

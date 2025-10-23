@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { CheckboxFormItem, SwitchFormItem } from "@/components/form-fields";
 
-import { DataListOptionV3 } from "@/entities/datalist-option";
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { Twin } from "@/entities/twin/server";
 import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
@@ -84,7 +84,7 @@ export function InheritedFieldPreview({
       if (isObject(value) && isTruthy(value.id)) {
         return (
           <DatalistOptionResourceLink
-            data={value as DataListOptionV3}
+            data={value as DataListOptionV1}
             withTooltip
             disabled={disabled}
           />

@@ -1,11 +1,16 @@
+import { TwinStatus } from "@/entities/twin-status";
+import { User } from "@/entities/user";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type TwinFlow = components["schemas"]["TwinflowBaseV3"];
+export type TwinFlow = components["schemas"]["TwinflowBaseV1"] & {};
 export type TwinFlow_DETAILED = RequireFields<
   TwinFlow,
   "id" | "name" | "twinClassId"
->;
+> & {
+  initialStatus: TwinStatus;
+  createdByUser: User;
+};
 
 export type TwinFlowFilterKeys =
   | "idList"

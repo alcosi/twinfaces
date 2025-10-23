@@ -8,13 +8,13 @@ import {
 } from "@/shared/libs";
 
 import {
+  TwinStatus,
   TwinStatusFilters,
-  TwinStatusV2,
   useFetchTwinStatusById,
   useTwinStatusSearchV1,
 } from "../../api";
 
-export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatusV2> {
+export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatus> {
   const { theme } = useTheme();
   const { fetchTwinStatusById } = useFetchTwinStatusById();
   const { searchTwinStatuses } = useTwinStatusSearchV1();
@@ -38,7 +38,7 @@ export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatusV2> {
     }
   }
 
-  function renderItem(status: TwinStatusV2) {
+  function renderItem(status: TwinStatus) {
     const squareColor =
       status.backgroundColor || (theme === "light" ? "#0c66e4" : "#579dff");
 

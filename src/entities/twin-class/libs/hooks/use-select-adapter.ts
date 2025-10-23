@@ -1,4 +1,4 @@
-import { DataListOptionV3 } from "@/entities/datalist-option";
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { useValidTwinsForLinkSelectAdapter as useValidTwinsAdapter } from "@/entities/twin";
 import { TwinSimpleFilters, Twin_DETAILED } from "@/entities/twin/server";
 import {
@@ -135,7 +135,7 @@ export function useValidTwinsForLinkSelectAdapter({
 
 export function useTagsByTwinClassIdSelectAdapter(
   twinClassId?: string
-): SelectAdapter<DataListOptionV3> {
+): SelectAdapter<DataListOptionV1> {
   const { searchTags } = useTagSearch(twinClassId);
 
   async function getById() {
@@ -158,7 +158,7 @@ export function useTagsByTwinClassIdSelectAdapter(
     return response.data;
   }
 
-  function renderItem(item: DataListOptionV3 | string) {
+  function renderItem(item: DataListOptionV1 | string) {
     // NOTE: The item can be a string when the user creates a new item using Combobox,
     // which relates to the `as T` type assertion issue in `ComboboxProps<T>`.
     // Since `SelectAdapter<T>` doesn't support `T & string`, consider extending `T` with `id` and `name`

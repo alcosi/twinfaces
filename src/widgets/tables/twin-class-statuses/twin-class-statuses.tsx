@@ -1,12 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Unplug } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
@@ -17,7 +15,6 @@ import {
   useTwinStatusSearchV1,
 } from "@/entities/twin-status";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
@@ -35,7 +32,7 @@ import { TwinClassStatusFormFields } from "./form-fields";
 const colDefs: Record<
   keyof Pick<
     TwinStatus_DETAILED,
-    | "logo"
+    // | "logo"
     | "id"
     | "key"
     | "name"
@@ -46,24 +43,24 @@ const colDefs: Record<
   >,
   ColumnDef<TwinStatus_DETAILED>
 > = {
-  logo: {
-    id: "logo",
-    accessorKey: "logo",
-    header: "Logo",
-    cell: (data) => {
-      const value = data.row.original.logo;
-      return (
-        <ImageWithFallback
-          src={value as string}
-          alt={value as string}
-          fallbackContent={<Unplug />}
-          width={32}
-          height={32}
-          className="text-[0]"
-        />
-      );
-    },
-  },
+  // logo: {
+  //   id: "logo",
+  //   accessorKey: "logo",
+  //   header: "Logo",
+  //   cell: (data) => {
+  //     const value = data.row.original.logo;
+  //     return (
+  //       <ImageWithFallback
+  //         src={value as string}
+  //         alt={value as string}
+  //         fallbackContent={<Unplug />}
+  //         width={32}
+  //         height={32}
+  //         className="text-[0]"
+  //       />
+  //     );
+  //   },
+  // },
 
   id: {
     id: "id",
@@ -79,10 +76,7 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.twinClass && (
         <div className="inline-flex max-w-48">
-          <TwinClassResourceLink
-            data={original.twinClass as TwinClass_DETAILED}
-            withTooltip
-          />
+          <TwinClassResourceLink data={original.twinClass} withTooltip />
         </div>
       ),
   },
@@ -166,7 +160,7 @@ export function TwinClassStatusesTable({
       key: "",
       name: "",
       description: "",
-      logo: "",
+      // logo: "",
       backgroundColor: "#000000",
       fontColor: "#000000",
     },
@@ -205,7 +199,7 @@ export function TwinClassStatusesTable({
         translationInCurrentLocale: formValues.description,
         translations: {},
       },
-      logo: formValues.logo,
+      // logo: formValues.logo,
       backgroundColor: formValues.backgroundColor,
       fontColor: formValues.fontColor,
     };
@@ -229,7 +223,7 @@ export function TwinClassStatusesTable({
       title="Statuses"
       ref={tableRef}
       columns={[
-        colDefs.logo,
+        // colDefs.logo,
         colDefs.id,
         ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
         colDefs.key,
@@ -247,7 +241,7 @@ export function TwinClassStatusesTable({
         filtersInfo: buildFilterFields(),
       }}
       defaultVisibleColumns={[
-        colDefs.logo,
+        // colDefs.logo,
         colDefs.id,
         ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
         colDefs.key,
