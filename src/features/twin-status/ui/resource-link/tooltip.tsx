@@ -1,20 +1,20 @@
 import { ElementType } from "react";
 
-import { TwinStatusV2 } from "@/entities/twin-status";
+import { TwinStatus } from "@/entities/twin-status";
 import { isPopulatedString } from "@/shared/libs";
 import { ColorTile, ResourceLinkTooltip } from "@/shared/ui";
 
 type Props = {
-  data: TwinStatusV2;
+  data: TwinStatus;
   link: string;
   IconComponent: ElementType;
 };
 
-export const TwinClassStatusResourceTooltip = ({
+export function TwinClassStatusResourceTooltip({
   data,
   link,
   IconComponent,
-}: Props) => {
+}: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
@@ -40,4 +40,4 @@ export const TwinClassStatusResourceTooltip = ({
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
-};
+}

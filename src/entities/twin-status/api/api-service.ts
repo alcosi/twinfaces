@@ -50,6 +50,7 @@ export function createTwinStatusApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         path: { twinStatusId },
         query: {
+          lazyRelation: false,
           showStatusMode: "DETAILED",
           showTwinStatus2TwinClassMode: "DETAILED",
         },

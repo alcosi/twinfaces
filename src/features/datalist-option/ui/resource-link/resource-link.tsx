@@ -1,6 +1,6 @@
 import { Option } from "lucide-react";
 
-import { DataListOptionV3 } from "@/entities/datalist-option";
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
@@ -8,7 +8,7 @@ import { ResourceLink } from "@/shared/ui";
 import { DatalistOptionResourceTooltip } from "./tooltip";
 
 type Props = {
-  data: DataListOptionV3;
+  data: DataListOptionV1;
   disabled?: boolean;
   withTooltip?: boolean;
 };

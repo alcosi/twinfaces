@@ -2,13 +2,16 @@
 
 import { ReactNode, createContext, useEffect, useState } from "react";
 
-import { TwinFlow, useTwinFlowFetchByIdV1 } from "@/entities/twin-flow";
+import {
+  TwinFlow_DETAILED,
+  useTwinFlowFetchByIdV1,
+} from "@/entities/twin-flow";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 type TwinFlowContextType = {
   twinFlowId: string;
-  twinFlow: TwinFlow;
+  twinFlow: TwinFlow_DETAILED;
   refresh: () => Promise<void>;
 };
 
@@ -24,7 +27,9 @@ export function TwinFlowContextProvider({
   children: ReactNode;
 }) {
   const { fetchTwinFlowById, loading } = useTwinFlowFetchByIdV1();
-  const [twinFlow, setTwinFlow] = useState<TwinFlow | undefined>(undefined);
+  const [twinFlow, setTwinFlow] = useState<TwinFlow_DETAILED | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     refresh();

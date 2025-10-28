@@ -26,9 +26,11 @@ export async function buildFieldEditorProps(
           // NOTE: for static-key variant
           showTwinMode: "DETAILED",
           // NOTE: for dynamic-key variant
-          showTwinFieldCollectionMode: "ALL_FIELDS",
+          showTwinFieldCollectionMode: "SHOW",
+          showTwinFieldCollectionFilterEmptyMode: "ANY",
           showTwin2TwinClassMode: "SHORT",
           showTwinClass2TwinClassFieldMode: "DETAILED",
+          showTwinClassFieldCollectionMode: "SHOW",
           showTwin2UserMode: "DETAILED",
           showTwin2StatusMode: "DETAILED",
           showTwinByHeadMode: "YELLOW",

@@ -2,7 +2,7 @@
 
 import { Square } from "lucide-react";
 
-import { TwinStatusV2 } from "@/entities/twin-status";
+import { TwinStatus } from "@/entities/twin-status";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
@@ -11,7 +11,7 @@ import { TwinStatusIcon } from "../twin-status-icon";
 import { TwinClassStatusResourceTooltip } from "./tooltip";
 
 type Props = {
-  data: TwinStatusV2;
+  data: TwinStatus;
   twinClassId: string;
   disabled?: boolean;
   withTooltip?: boolean;

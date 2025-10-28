@@ -1,7 +1,10 @@
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components } from "@/shared/api/generated/schema";
 
-export type TwinStatusV2 = components["schemas"]["TwinStatusV2"];
-export type TwinStatus_DETAILED = Required<TwinStatusV2>;
+export type TwinStatus = components["schemas"]["TwinStatusV1"];
+export type TwinStatus_DETAILED = Required<TwinStatus> & {
+  twinClass: TwinClass_DETAILED;
+};
 
 export type TwinStatusCreateRq = components["schemas"]["TwinStatusCreateRqV1"];
 export type TwinStatusUpdateRq = components["schemas"]["TwinStatusUpdateRqV1"];

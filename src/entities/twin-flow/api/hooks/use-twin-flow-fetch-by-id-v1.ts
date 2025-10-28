@@ -1,10 +1,11 @@
 import { useCallback, useContext, useState } from "react";
 
-import { hydrateTwinFlowFromMap } from "@/entities/twin-flow";
+import {
+  TwinFlow_DETAILED,
+  hydrateTwinFlowFromMap,
+} from "@/entities/twin-flow";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
-
-import { TwinFlow } from "../types";
 
 export const useTwinFlowFetchByIdV1 = () => {
   const api = useContext(PrivateApiContext);
@@ -12,7 +13,7 @@ export const useTwinFlowFetchByIdV1 = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchTwinFlowById = useCallback(
-    async (id: string): Promise<TwinFlow> => {
+    async (id: string): Promise<TwinFlow_DETAILED> => {
       setLoading(true);
       try {
         const { data, error } = await api.twinFlow.getById({

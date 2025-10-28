@@ -12,7 +12,7 @@ import { FeaturerTypes, useFeaturerSelectAdapter } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   TwinClassFieldUpdateRq,
-  TwinClassFieldV2_DETAILED,
+  TwinClassFieldV1_DETAILED,
   useFieldUpdate,
 } from "@/entities/twin-class-field";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
@@ -31,7 +31,7 @@ export function TwinFieldGeneral({
   twinField,
 }: {
   twinFieldId: string;
-  twinField: TwinClassFieldV2_DETAILED;
+  twinField: TwinClassFieldV1_DETAILED;
 }) {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
@@ -50,7 +50,7 @@ export function TwinFieldGeneral({
       });
 
       router.refresh();
-    } catch (e) {
+    } catch {
       toast.error("not updated twin field");
     }
   }
@@ -118,7 +118,7 @@ export function TwinFieldGeneral({
       ...permissionAdapter,
     },
     renderPreview: twinField.viewPermission
-      ? (_) => <PermissionResourceLink data={twinField.viewPermission} />
+      ? () => <PermissionResourceLink data={twinField.viewPermission} />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
@@ -137,7 +137,7 @@ export function TwinFieldGeneral({
       ...permissionAdapter,
     },
     renderPreview: twinField.editPermission
-      ? (_) => <PermissionResourceLink data={twinField.editPermission} />
+      ? () => <PermissionResourceLink data={twinField.editPermission} />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;

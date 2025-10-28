@@ -1,9 +1,10 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
+
 import {
   DataListOptionCreateRqDV1,
   DataListOptionFilters,
 } from "@/entities/datalist-option";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createDatalistOptionApi(settings: ApiSettings) {
   function search({
@@ -39,6 +40,7 @@ export function createDatalistOptionApi(settings: ApiSettings) {
           header: getApiDomainHeaders(settings),
           path: { dataListOptionId },
           query: {
+            lazyRelation: false,
             showDataListOptionMode: "DETAILED",
             showDataListOption2DataListMode: "DETAILED",
           },

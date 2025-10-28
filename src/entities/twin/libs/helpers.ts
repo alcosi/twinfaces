@@ -1,4 +1,4 @@
-import { DataListOptionV3 } from "@/entities/datalist-option";
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { Twin, TwinTagManageV1 } from "@/entities/twin/server";
 import {
   isFalsy,
@@ -15,13 +15,13 @@ export function formatTwinDisplay({ aliases, name }: Twin): string {
 }
 
 export function categorizeTwinTags(
-  nextTags: (string | DataListOptionV3)[],
-  prevTags: DataListOptionV3[]
+  nextTags: (string | DataListOptionV1)[],
+  prevTags: DataListOptionV1[]
 ): TwinTagManageV1 {
   const existingTags: string[] = [];
   const newTags: string[] = [];
   nextTags.forEach((tag) => {
-    if (isObject<DataListOptionV3>(tag) && isPopulatedString(tag.id)) {
+    if (isObject<DataListOptionV1>(tag) && isPopulatedString(tag.id)) {
       existingTags.push(tag.id);
     } else if (isPopulatedString(tag)) {
       newTags.push(tag);
@@ -31,7 +31,7 @@ export function categorizeTwinTags(
   const deleteTags = prevTags.reduce((tags, tag) => {
     const isStillPresent = nextTags.some(
       (inputTag) =>
-        isObject<DataListOptionV3>(inputTag) &&
+        isObject<DataListOptionV1>(inputTag) &&
         isPopulatedString(inputTag.id) &&
         inputTag.id === tag.id
     );

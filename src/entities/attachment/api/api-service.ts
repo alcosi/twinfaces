@@ -25,6 +25,7 @@ export function createAttachmentApi(settings: ApiSettings) {
           showAttachment2CommentModeMode: "DETAILED",
           showAttachmentCollectionMode: "ALL",
           showTwinClass2TwinClassFieldMode: "DETAILED",
+          showTwinClassFieldCollectionMode: "SHOW",
           showTwin2TwinClassMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,

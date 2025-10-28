@@ -293,6 +293,7 @@ export function TwinsTable({
       query: {
         showTwinClassMode: "SHORT",
         showTwinClass2TwinClassFieldMode: "DETAILED",
+        showTwinClassFieldCollectionMode: "SHOW",
       },
     }).then(({ fields = [] }) => {
       const { supportedFields, columnEntries } =
@@ -341,7 +342,7 @@ export function TwinsTable({
 
     try {
       return searchData;
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch twins");
       return { data: [], pagination: {} };
     }

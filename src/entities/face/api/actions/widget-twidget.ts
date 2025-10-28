@@ -189,6 +189,7 @@ export async function fetchTC001Face(
       showFaceTC0012TwinClassFieldMode: "DETAILED",
       showFaceTC0012TwinClassMode: "DETAILED",
       showTwinClass2TwinClassFieldMode: "DETAILED",
+      showTwinClassFieldCollectionMode: "SHOW",
       showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
     },
   });

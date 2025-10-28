@@ -6,10 +6,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinFlowUpdateRq, useUpdateTwinFlow } from "@/entities/twin-flow";
-import {
-  TwinStatusV2,
-  useTwinStatusSelectAdapter,
-} from "@/entities/twin-status";
+import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
@@ -96,9 +93,9 @@ export function TwinFlowGeneral() {
         }),
     },
     renderPreview: twinFlow.initialStatus
-      ? (_) => (
+      ? () => (
           <TwinClassStatusResourceLink
-            data={twinFlow.initialStatus as TwinStatusV2}
+            data={twinFlow.initialStatus as TwinStatus}
             twinClassId={twinFlow.twinClassId!}
           />
         )

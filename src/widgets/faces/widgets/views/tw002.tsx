@@ -15,7 +15,8 @@ export async function TW002(props: TWidgetFaceProps) {
   const { twinId, widget } = props;
   const header = await getAuthHeaders();
   const query = {
-    showTwinFieldCollectionMode: "ALL_FIELDS",
+    showTwinFieldCollectionMode: "SHOW",
+    showTwinFieldCollectionFilterEmptyMode: "ANY",
   } as const;
 
   const twidgetResult = await safe(() =>

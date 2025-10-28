@@ -47,7 +47,7 @@ export function TwinClassStatusFormFields({
         label="Description"
       />
 
-      <TextFormField control={control} name="logo" label="Logo URL" />
+      {/*<TextFormField control={control} name="logo" label="Logo URL" />*/}
 
       <ColorPickerFormField
         control={control}

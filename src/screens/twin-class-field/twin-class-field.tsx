@@ -1,4 +1,4 @@
-import { TwinClassFieldV2_DETAILED } from "@/entities/twin-class-field";
+import { TwinClassFieldV1_DETAILED } from "@/entities/twin-class-field";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { TwinFieldGeneral } from "./views";
@@ -8,7 +8,7 @@ export function TwinClassFieldScreen({
   twinField,
 }: {
   twinFieldId: string;
-  twinField: TwinClassFieldV2_DETAILED;
+  twinField: TwinClassFieldV1_DETAILED;
 }) {
   const tabs: Tab[] = [
     {

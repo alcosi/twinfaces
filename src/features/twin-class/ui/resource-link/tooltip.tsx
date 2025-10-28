@@ -1,3 +1,5 @@
+import { useTheme } from "next-themes";
+
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { formatIntlDate, isPopulatedString } from "@/shared/libs";
 import { Avatar, ResourceLinkTooltip } from "@/shared/ui";
@@ -9,15 +11,24 @@ type Props = {
   link: string;
 };
 
-export const TwinClassResourceTooltip = ({ data, link }: Props) => {
+export function TwinClassResourceTooltip({ data, link }: Props) {
+  const { resolvedTheme } = useTheme();
+
+  const themeIcon =
+    resolvedTheme === "light"
+      ? data.iconLight
+      : resolvedTheme === "dark"
+        ? data.iconDark
+        : null;
+
   return (
     <ResourceLinkTooltip uuid={data.id} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}
         iconSource={
-          data.logo ? (
-            <Avatar url={data.logo} alt={data.name ?? "Logo"} size="xlg" />
+          themeIcon ? (
+            <Avatar url={themeIcon} alt={data.name ?? "Logo"} size="xlg" />
           ) : (
             TwinClassIcon
           )
@@ -34,4 +45,4 @@ export const TwinClassResourceTooltip = ({ data, link }: Props) => {
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
-};
+}

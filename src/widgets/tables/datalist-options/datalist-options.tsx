@@ -12,7 +12,7 @@ import { DataList } from "@/entities/datalist";
 import {
   DATALIST_OPTION_SCHEMA,
   DataListOptionCreateRqDV1,
-  DataListOptionV3,
+  DataListOption_DETAILED,
   useCreateDatalistOption,
   useDatalistOptionFilters,
   useDatalistOptionSearch,
@@ -47,12 +47,14 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       ? ["idList", "optionI18nLikeList", "statusIdList"]
       : undefined,
   });
-  const [columns, setColumns] = useState<ColumnDef<DataListOptionV3>[]>([]);
+  const [columns, setColumns] = useState<ColumnDef<DataListOption_DETAILED>[]>(
+    []
+  );
 
   async function fetchDatalistOptions(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<PagedResponse<DataListOptionV3>> {
+  ): Promise<PagedResponse<DataListOption_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
@@ -68,7 +70,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
 
       const datalistOption = Object.values(response.data);
       const attributeKeys = new Set<string>();
-      datalistOption.forEach((item: DataListOptionV3) => {
+      datalistOption.forEach((item) => {
         if (item?.attributes) {
           Object.keys(item?.attributes).forEach((key) =>
             attributeKeys.add(key)
@@ -76,7 +78,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
         }
       });
 
-      const dynamicColumns: ColumnDef<DataListOptionV3>[] = Array.from(
+      const dynamicColumns: ColumnDef<DataListOption_DETAILED>[] = Array.from(
         attributeKeys
       ).map((key) => ({
         id: `attributes.${key}`,
@@ -104,7 +106,11 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
                 id: "dataListId",
                 accessorKey: "dataListId",
                 header: "Datalist",
-                cell: ({ row }: { row: { original: DataListOptionV3 } }) =>
+                cell: ({
+                  row,
+                }: {
+                  row: { original: DataListOption_DETAILED };
+                }) =>
                   row.original.dataList ? (
                     <div className="inline-flex max-w-48">
                       <DatalistResourceLink
@@ -122,7 +128,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
           accessorKey: "name",
           header: "Name",
           cell: ({ row: { original } }) =>
-            original.dataList ? (
+            original.dataListId ? (
               <div className="inline-flex max-w-48">
                 <DatalistOptionResourceLink data={original} withTooltip />
               </div>
@@ -139,7 +145,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       ]);
 
       return response;
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch datalist options");
       return { data: [], pagination: {} };
     }

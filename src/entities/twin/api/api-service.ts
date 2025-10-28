@@ -6,7 +6,6 @@ import {
   TwinFiltersBySearchId,
   TwinSimpleFilters,
   TwinUpdateRq,
-  TwinViewQuery,
 } from "@/entities/twin/server";
 import { ApiSettings, HttpPostSpec, getApiDomainHeaders } from "@/shared/api";
 
@@ -32,7 +31,8 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinTag2DataListOptionMode: "DETAILED",
           showTwinByHeadMode: "YELLOW",
           showTwinAliasMode: "C",
-          showTwinFieldCollectionMode: "ALL_FIELDS",
+          showTwinFieldCollectionMode: "SHOW",
+          showTwinFieldCollectionFilterEmptyMode: "ANY",
           showTwin2TransitionMode: "DETAILED",
           showTwinByLinkMode: "GREEN",
           showTwin2TwinLinkMode: "SHORT",
@@ -41,6 +41,7 @@ export function createTwinApi(settings: ApiSettings) {
           sortAsc: false,
           showTwinField2DataListOptionMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
+          showTwinClassFieldCollectionMode: "SHOW",
           showAttachment2TwinMode: "DETAILED",
           showTwin2AttachmentMode: "DETAILED",
           showTwin2AttachmentCollectionMode: "FROM_FIELDS",
@@ -70,13 +71,15 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinTag2DataListOptionMode: "DETAILED",
           showTwinByHeadMode: "YELLOW",
           showTwinAliasMode: "C",
-          showTwinFieldCollectionMode: "ALL_FIELDS",
+          showTwinFieldCollectionMode: "SHOW",
+          showTwinFieldCollectionFilterEmptyMode: "ANY",
           showTwin2TransitionMode: "DETAILED",
           showTwinByLinkMode: "GREEN",
           showTwin2TwinLinkMode: "SHORT",
           sortAsc: false,
           showTwinField2DataListOptionMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
+          showTwinClassFieldCollectionMode: "SHOW",
           showAttachment2TwinMode: "DETAILED",
           showTwin2AttachmentMode: "DETAILED",
           showTwin2AttachmentCollectionMode: "FROM_FIELDS",
@@ -87,15 +90,15 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
-    return settings.client.GET("/private/twin/{twinId}/v2", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { twinId: id },
-        query: query,
-      },
-    });
-  }
+  // function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
+  //   return settings.client.GET("/private/twin/{twinId}/v2", {
+  //     params: {
+  //       header: getApiDomainHeaders(settings),
+  //       path: { twinId: id },
+  //       query: query,
+  //     },
+  //   });
+  // }
 
   function create({ body }: { body: TwinCreateRq }) {
     return settings.client.POST("/private/twin/v2", {
@@ -126,7 +129,9 @@ export function createTwinApi(settings: ApiSettings) {
           showTwinMode: "DETAILED",
           showTwin2TwinClassMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
-          showTwinFieldCollectionMode: "ALL_FIELDS",
+          showTwinClassFieldCollectionMode: "SHOW",
+          showTwinFieldCollectionMode: "SHOW",
+          showTwinFieldCollectionFilterEmptyMode: "ANY",
           showTwinField2DataListOptionMode: "DETAILED",
           showTwinClass2LinkMode: "DETAILED",
           showTwinField2UserMode: "DETAILED",

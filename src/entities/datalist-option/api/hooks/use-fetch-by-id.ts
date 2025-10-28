@@ -1,6 +1,9 @@
 import { useCallback, useContext, useState } from "react";
 
-import { DataListOptionV3 } from "@/entities/datalist-option";
+import {
+  DataListOption_DETAILED,
+  hydrateDatalistOptionFromMap,
+} from "@/entities/datalist-option";
 import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
@@ -9,7 +12,7 @@ export const useDatalistOption = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchDatalistOptionById = useCallback(
-    async (dataListOptionId: string): Promise<DataListOptionV3> => {
+    async (dataListOptionId: string): Promise<DataListOption_DETAILED> => {
       setLoading(true);
       try {
         const { data, error } = await api.datalistOption.getById({
@@ -26,7 +29,7 @@ export const useDatalistOption = () => {
           );
         }
 
-        return data.option;
+        return hydrateDatalistOptionFromMap(data.option, data.relatedObjects);
       } finally {
         setLoading(false);
       }

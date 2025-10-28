@@ -1,4 +1,4 @@
-import { DataListOptionV3 } from "@/entities/datalist-option";
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { Twin } from "@/entities/twin/server";
 import { User } from "@/entities/user";
@@ -11,7 +11,7 @@ export type TwinFieldUI = RequireFields<
   TwinClassField,
   "id" | "key" | "descriptor"
 > & {
-  value: string | DataListOptionV3 | Twin | User;
+  value: string | DataListOptionV1 | Twin | User;
 };
 
 export type TwinClassFieldDescriptorTextV1 =

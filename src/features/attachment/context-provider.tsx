@@ -49,6 +49,7 @@ export function AttachmentContextProvider({
           showAttachment2CommentModeMode: "DETAILED",
           showAttachmentCollectionMode: "ALL",
           showTwinClass2TwinClassFieldMode: "DETAILED",
+          showTwinClassFieldCollectionMode: "SHOW",
           showTwin2TwinClassMode: "DETAILED",
         },
       });

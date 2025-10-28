@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState } from "react";
 
 import {
-  TwinClassFieldV2_DETAILED,
+  TwinClassFieldV1_DETAILED,
   hydrateTwinClassFieldFromMap,
 } from "@/entities/twin-class-field";
 import { PrivateApiContext } from "@/shared/api";
@@ -12,7 +12,7 @@ export const useFetchTwinClassFieldById = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchTwinClassFieldById = useCallback(
-    async (fieldId: string): Promise<TwinClassFieldV2_DETAILED> => {
+    async (fieldId: string): Promise<TwinClassFieldV1_DETAILED> => {
       setLoading(true);
       try {
         const { data, error } = await api.twinClassField.getById({ fieldId });

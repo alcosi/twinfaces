@@ -4,7 +4,7 @@ import { Permission } from "@/entities/permission";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
-import { TwinClass, TwinClass_DETAILED } from "../api";
+import { TwinClass, TwinClassBaseV1, TwinClass_DETAILED } from "../api";
 
 export const hydrateTwinClassFromMap = (
   dto: TwinClass,
@@ -18,7 +18,9 @@ export const hydrateTwinClassFromMap = (
   if (!relatedObjects?.twinClassMap) return hydrated;
 
   if (dto.headClassId) {
-    hydrated.headClass = relatedObjects.twinClassMap[dto.headClassId];
+    hydrated.headClass = relatedObjects.twinClassMap[
+      dto.headClassId
+    ] as TwinClassBaseV1;
   }
 
   if (dto.extendsClassId) {

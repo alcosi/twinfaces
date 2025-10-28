@@ -1,4 +1,5 @@
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+
 import { DataList, useDatalistSearchV1, useFetchDatalistById } from "../../api";
 
 export function useDatalistSelectAdapter(): SelectAdapter<DataList> {
@@ -9,7 +10,7 @@ export function useDatalistSelectAdapter(): SelectAdapter<DataList> {
     const datalist = await fetchDatalistById({
       dataListId: id,
       query: {
-        showDataListMode: "MANAGED",
+        showDataListOption2DataListMode: "MANAGED",
       },
     });
 

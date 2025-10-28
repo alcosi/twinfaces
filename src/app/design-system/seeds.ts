@@ -32,7 +32,7 @@ export const Fake = {
     description: "Default supply portion twinflow",
     twinClassId: "5e8ff555-fda9-440e-9102-3d8f120ce532",
     twinClass: twinClassMap.supplyPortion,
-  },
+  } as any,
   TwinFlowSchema: {
     id: "2c618b09-e8dc-4712-a433-2e18915ee70d",
     name: "TwinFlowSchema name",

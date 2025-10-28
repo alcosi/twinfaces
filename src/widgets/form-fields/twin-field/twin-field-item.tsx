@@ -12,7 +12,7 @@ import {
 } from "@/components/form-fields";
 
 import {
-  DataListOptionV3,
+  DataListOptionV1,
   useDatalistOptionSelectAdapter,
 } from "@/entities/datalist-option";
 import { useTwinSelectAdapter } from "@/entities/twin";
@@ -68,8 +68,8 @@ export function TwinFieldFormItem({
     }
   }
 
-  function handleOnDataListSelect(datalistOptions?: DataListOptionV3[]) {
-    if (isPopulatedArray<DataListOptionV3>(datalistOptions)) {
+  function handleOnDataListSelect(datalistOptions?: DataListOptionV1[]) {
+    if (isPopulatedArray<DataListOptionV1>(datalistOptions)) {
       return onChange?.(datalistOptions[0].id!);
     }
   }
