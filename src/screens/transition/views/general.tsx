@@ -58,7 +58,7 @@ export function TwinflowTransitionGeneral() {
       selectPlaceholder: "Select alias...",
       ...transitionAliasAdapter,
     },
-    renderPreview: transition.alias ? (_) => transition.alias : undefined,
+    renderPreview: transition.alias ? () => transition.alias : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ alias: string }>)[0]?.alias;
       return update({ alias: id });
@@ -119,7 +119,7 @@ export function TwinflowTransitionGeneral() {
         }),
     },
     renderPreview: transition.srcTwinStatus
-      ? (_) => (
+      ? () => (
           <TwinClassStatusResourceLink
             data={transition.srcTwinStatus as TwinStatus}
             twinClassId={transition.srcTwinStatus?.twinClassId!}
@@ -150,7 +150,7 @@ export function TwinflowTransitionGeneral() {
         }),
     },
     renderPreview: transition.dstTwinStatus
-      ? (_) => (
+      ? () => (
           <TwinClassStatusResourceLink
             data={transition.dstTwinStatus as TwinStatus}
             twinClassId={transition.dstTwinStatus?.twinClassId!}
@@ -172,7 +172,7 @@ export function TwinflowTransitionGeneral() {
       ...permissionAdapter,
     },
     renderPreview: transition.permission
-      ? (_) => <PermissionResourceLink data={transition.permission!} />
+      ? () => <PermissionResourceLink data={transition.permission!} />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
@@ -191,7 +191,7 @@ export function TwinflowTransitionGeneral() {
       ...factoryAdapter,
     },
     renderPreview: transition.inbuiltTwinFactory
-      ? (_) => (
+      ? () => (
           <FactoryResourceLink
             data={transition.inbuiltTwinFactory!}
             withTooltip

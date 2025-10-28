@@ -37,7 +37,7 @@ export const useDatalistOptionSearch = () => {
           data: options,
           pagination: data.pagination ?? {},
         };
-      } catch (error) {
+      } catch {
         throw new Error("An error occurred while fetching datalist options");
       }
     },

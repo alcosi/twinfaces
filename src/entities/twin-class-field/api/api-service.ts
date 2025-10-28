@@ -68,22 +68,22 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     );
   }
 
-  function getFields({ id }: { id: string }) {
-    return settings.client.GET(
-      `/private/twin_class/{twinClassId}/field/list/v1`,
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          query: {
-            showTwinClassFieldMode: "MANAGED",
-            showTwinClass2TwinClassFieldMode: "MANAGED",
-            showTwinClassFieldCollectionMode: "SHOW",
-          },
-          path: { twinClassId: id },
-        },
-      }
-    );
-  }
+  // function getFields({ id }: { id: string }) {
+  //   return settings.client.GET(
+  //     `/private/twin_class/{twinClassId}/field/list/v1`,
+  //     {
+  //       params: {
+  //         header: getApiDomainHeaders(settings),
+  //         query: {
+  //           showTwinClassFieldMode: "MANAGED",
+  //           showTwinClass2TwinClassFieldMode: "MANAGED",
+  //           showTwinClassFieldCollectionMode: "SHOW",
+  //         },
+  //         path: { twinClassId: id },
+  //       },
+  //     }
+  //   );
+  // }
 
   function getById({ fieldId }: { fieldId: string }) {
     return settings.client.GET(

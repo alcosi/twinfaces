@@ -169,7 +169,7 @@ export function TwinClassFieldsTable({
         data: response.data ?? [],
         pagination: response.pagination ?? {},
       };
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch fields");
       return { data: [], pagination: {} };
     }

@@ -93,7 +93,7 @@ export function TwinFlowGeneral() {
         }),
     },
     renderPreview: twinFlow.initialStatus
-      ? (_) => (
+      ? () => (
           <TwinClassStatusResourceLink
             data={twinFlow.initialStatus as TwinStatus}
             twinClassId={twinFlow.twinClassId!}

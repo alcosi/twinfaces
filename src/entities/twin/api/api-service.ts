@@ -6,7 +6,6 @@ import {
   TwinFiltersBySearchId,
   TwinSimpleFilters,
   TwinUpdateRq,
-  TwinViewQuery,
 } from "@/entities/twin/server";
 import { ApiSettings, HttpPostSpec, getApiDomainHeaders } from "@/shared/api";
 
@@ -91,15 +90,15 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
-    return settings.client.GET("/private/twin/{twinId}/v2", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { twinId: id },
-        query: query,
-      },
-    });
-  }
+  // function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
+  //   return settings.client.GET("/private/twin/{twinId}/v2", {
+  //     params: {
+  //       header: getApiDomainHeaders(settings),
+  //       path: { twinId: id },
+  //       query: query,
+  //     },
+  //   });
+  // }
 
   function create({ body }: { body: TwinCreateRq }) {
     return settings.client.POST("/private/twin/v2", {

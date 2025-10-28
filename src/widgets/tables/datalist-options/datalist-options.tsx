@@ -145,7 +145,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       ]);
 
       return response;
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch datalist options");
       return { data: [], pagination: {} };
     }

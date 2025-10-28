@@ -10,11 +10,11 @@ type Props = {
   IconComponent: ElementType;
 };
 
-export const TwinClassStatusResourceTooltip = ({
+export function TwinClassStatusResourceTooltip({
   data,
   link,
   IconComponent,
-}: Props) => {
+}: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
@@ -40,4 +40,4 @@ export const TwinClassStatusResourceTooltip = ({
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
-};
+}
