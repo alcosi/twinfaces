@@ -2,7 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check } from "lucide-react";
+import { Check, Unplug } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ import {
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
 import {
@@ -29,10 +31,32 @@ import {
 
 import { TwinClassFormFields } from "./form-fields";
 
+function ThemeIconCell({ data }: { data: TwinClass_DETAILED }) {
+  const { resolvedTheme } = useTheme();
+
+  const themeIcon =
+    resolvedTheme === "light"
+      ? data.iconLight
+      : resolvedTheme === "dark"
+        ? data.iconDark
+        : undefined;
+
+  return (
+    <ImageWithFallback
+      src={themeIcon as string}
+      alt={themeIcon as string}
+      fallbackContent={<Unplug />}
+      width={32}
+      height={32}
+      className="text-[0]"
+    />
+  );
+}
+
 const colDefs: Record<
   keyof Pick<
     TwinClass_DETAILED,
-    // | "logo"
+    | "iconLight"
     | "id"
     | "key"
     | "name"
@@ -54,24 +78,12 @@ const colDefs: Record<
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
-  // logo: {
-  //   id: "logo",
-  //   accessorKey: "logo",
-  //   header: "Logo",
-  //   cell: (data) => {
-  //     const value = data.row.original.logo;
-  //     return (
-  //       <ImageWithFallback
-  //         src={value as string}
-  //         alt={value as string}
-  //         fallbackContent={<Unplug />}
-  //         width={32}
-  //         height={32}
-  //         className="text-[0]"
-  //       />
-  //     );
-  //   },
-  // },
+  iconLight: {
+    id: "logo",
+    accessorKey: "logo",
+    header: "Logo",
+    cell: ({ row: { original } }) => <ThemeIconCell data={original} />,
+  },
   id: {
     id: "id",
     accessorKey: "id",
@@ -253,7 +265,7 @@ export function TwinClasses() {
         pagination,
         filters: _filters,
       });
-    } catch (error) {
+    } catch {
       toast.error("Failed to fetch twin classes");
       return { data: [], pagination: {} };
     }
@@ -341,6 +353,7 @@ export function TwinClasses() {
       ref={tableRef}
       fetcher={fetchTwinClasses}
       columns={[
+        colDefs.iconLight,
         colDefs.id,
         colDefs.key,
         colDefs.name,

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTheme } from "next-themes";
+
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
@@ -14,18 +16,21 @@ type Props = {
   withTooltip?: boolean;
 };
 
-export const TwinClassResourceLink = ({
-  data,
-  disabled,
-  withTooltip,
-}: Props) => {
+export function TwinClassResourceLink({ data, disabled, withTooltip }: Props) {
   const link = `/${PlatformArea.core}/twinclass/${data.id}`;
+  const { resolvedTheme } = useTheme();
+
+  const themeIcon =
+    resolvedTheme === "light"
+      ? data.iconLight
+      : resolvedTheme === "dark"
+        ? data.iconDark
+        : null;
 
   return (
     <ResourceLink
       IconComponent={
-        // data.logo ? () => <Avatar url={data.icon} size="sm" /> :
-        TwinClassIcon
+        themeIcon ? () => <Avatar url={themeIcon} size="sm" /> : TwinClassIcon
       }
       data={data}
       disabled={disabled}
@@ -40,4 +45,4 @@ export const TwinClassResourceLink = ({
       link={link}
     />
   );
-};
+}
