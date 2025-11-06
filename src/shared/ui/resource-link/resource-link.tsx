@@ -24,14 +24,14 @@ type ResourceLinkProps<T> = {
   "IconComponent" | "disabled" | "backgroundColor" | "fontColor" | "hideIcon"
 >;
 
-const ResourceLinkContent = ({
+function ResourceLinkContent({
   IconComponent,
   displayName,
   disabled,
   backgroundColor = "transparent",
   fontColor,
   hideIcon,
-}: ResourceLinkContentProps) => {
+}: ResourceLinkContentProps) {
   const styles = {
     base: "inline-flex items-center h-6 max-w-full border border-border rounded-lg px-2 transition-colors",
     borderColor: disabled ? "border-link-disabled" : "",
@@ -82,9 +82,9 @@ const ResourceLinkContent = ({
       </span>
     </div>
   );
-};
+}
 
-export const ResourceLink = <T,>({
+export function ResourceLink<T>({
   IconComponent,
   data,
   renderTooltip,
@@ -94,7 +94,7 @@ export const ResourceLink = <T,>({
   backgroundColor,
   fontColor,
   hideIcon,
-}: ResourceLinkProps<T>) => {
+}: ResourceLinkProps<T>) {
   const displayName = getDisplayName(data);
 
   const ResourceLinkWrapper = disabled ? (
@@ -125,10 +125,12 @@ export const ResourceLink = <T,>({
 
   return renderTooltip ? (
     <Tooltip>
-      <TooltipTrigger asChild>{ResourceLinkWrapper}</TooltipTrigger>
+      <TooltipTrigger asChild>
+        <span className="inline-flex max-w-full">{ResourceLinkWrapper}</span>
+      </TooltipTrigger>
       <TooltipContent className="p-0">{renderTooltip(data)}</TooltipContent>
     </Tooltip>
   ) : (
     ResourceLinkWrapper
   );
-};
+}
