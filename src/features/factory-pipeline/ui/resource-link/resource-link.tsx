@@ -18,7 +18,7 @@ export function FactoryPipelineResourceLink({
   withTooltip,
 }: Props) {
   const title = isPopulatedString(data.id) ? shortenUUID(data.id) : "N/A";
-  const link = `/${PlatformArea.core}/factory-pipeline/${data.id}`;
+  const link = `/${PlatformArea.core}/pipelines/${data.id}`;
 
   return (
     <ResourceLink
