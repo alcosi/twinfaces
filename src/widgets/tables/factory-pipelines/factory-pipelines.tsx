@@ -188,7 +188,7 @@ export function FactoryPipelinesTable({
         inputTwinClassId: "",
         factoryConditionSetId: "",
         factoryConditionSetInvert: false,
-        active: false,
+        active: true,
         outputStatusId: "",
         nextFactoryId: "",
         description: undefined,

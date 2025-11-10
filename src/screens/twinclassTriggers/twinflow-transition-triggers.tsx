@@ -70,7 +70,7 @@ export function TwinflowTransitionTriggers() {
     resolver: zodResolver(TRIGGER_SCHEMA),
     defaultValues: {
       order: 0,
-      active: false,
+      active: true,
       triggerParams: {},
       triggerFeaturerId: 0,
     },
