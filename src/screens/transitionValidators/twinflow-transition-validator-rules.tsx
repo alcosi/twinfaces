@@ -70,7 +70,7 @@ export function TwinflowTransitionValidatorRules() {
     resolver: zodResolver(VALIDATOR_RULES_SCHEMA),
     defaultValues: {
       order: 0,
-      active: false,
+      active: true,
     },
   });
 

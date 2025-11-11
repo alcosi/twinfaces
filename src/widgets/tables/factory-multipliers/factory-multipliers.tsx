@@ -139,7 +139,7 @@ export function FactoryMultipliersTable({
     defaultValues: {
       factoryId: factoryId || "",
       inputTwinClassId: "",
-      active: false,
+      active: true,
       description: undefined,
     },
   });

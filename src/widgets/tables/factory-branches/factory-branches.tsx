@@ -133,7 +133,7 @@ export function FactoryBranchesTable({
       factoryConditionSetId: "",
       factoryConditionSetInvert: false,
       description: undefined,
-      active: false,
+      active: true,
       nextFactoryId: "",
     },
   });

@@ -19,11 +19,10 @@ type Props = {
 
 export function TwinClassStatusResourceLink({
   data,
-  twinClassId,
   disabled,
   withTooltip,
 }: Props) {
-  const link = `/${PlatformArea.core}/twinclass/${twinClassId}/twinStatus/${data.id}`;
+  const link = `/${PlatformArea.core}/statuses/${data.id}`;
 
   const Icon = data.backgroundColor ? (
     <Square

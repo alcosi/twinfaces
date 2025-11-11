@@ -186,7 +186,7 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
       factoryPipelineId: pipelineId || "",
       factoryConditionSetId: "",
       factoryConditionSetInvert: false,
-      active: false,
+      active: true,
       optional: false,
       order: 0,
       description: undefined,
