@@ -15,7 +15,6 @@ export type TwinFlowTransition_DETAILED = RequireFields<
   | "srcTwinStatusId"
   | "dstTwinStatusId"
   | "permissionId"
-  | "type"
 >;
 
 export type TwinFlowTransitionCreateRq =

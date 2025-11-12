@@ -196,6 +196,7 @@ export function TwinFlowTransitionsTable({
       srcTwinStatusId: undefined,
       dstTwinStatusId: "",
       permissionId: undefined,
+      twinflowTransitionTypeId: "STATUS_CHANGE",
     },
   });
 
