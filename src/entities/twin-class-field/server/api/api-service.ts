@@ -1,13 +1,14 @@
 import { getAuthHeaders } from "@/entities/face";
-import { TwinsAPI } from "@/shared/api";
+import { apiFromRequest } from "@/entities/user/server";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinClassFieldFromMap } from "../../libs/helpers";
 
 export async function fetchTwinClassFieldById(id: string) {
   const header = await getAuthHeaders();
+  const api = await apiFromRequest();
 
-  const { data, error } = await TwinsAPI.GET(
+  const { data, error } = await api.GET(
     "/private/twin_class_field/{twinClassFieldId}/v1",
     {
       params: {

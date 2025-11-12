@@ -8,11 +8,17 @@ import { isFalsy, isUndefined } from "@/shared/libs";
 export async function getDomainFromHeaders(): Promise<
   RemoteConfig | undefined
 > {
-  const domainConfig = (await headers()).get("X-Domain-Config");
+  const h = await headers();
+  const raw = h.get("x-domain-config");
+  if (isFalsy(raw)) return undefined;
 
-  if (isFalsy(domainConfig)) return undefined;
-
-  return JSON.parse(domainConfig) as RemoteConfig;
+  try {
+    const decoded = decodeURIComponent(raw);
+    return JSON.parse(decoded) as RemoteConfig;
+  } catch (e) {
+    console.warn("[domain] bad X-Domain-Config header:", e);
+    return undefined;
+  }
 }
 
 export async function getAuthHeaders(): Promise<{

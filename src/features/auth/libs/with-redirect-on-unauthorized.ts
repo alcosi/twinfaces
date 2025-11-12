@@ -8,7 +8,7 @@ export function withRedirectOnUnauthorized<T>(
 ): () => Promise<T> {
   return async function wrappedFn(): Promise<T> {
     try {
-      return fn();
+      return await fn();
     } catch (error) {
       if (isUnauthorizedError(error)) {
         redirect(`/?reason=${EXPIRED_SESSION_TAG}`);

@@ -1,5 +1,6 @@
 import { getAuthHeaders } from "@/entities/face";
-import { RelatedObjects, TwinsAPI } from "@/shared/api";
+import { apiFromRequest } from "@/entities/user/server";
+import { RelatedObjects } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 
 import { hydrateTwinFromMap } from "../libs";
@@ -16,7 +17,9 @@ export async function fetchTwinById<T extends Twin_HYDRATED>(
     query?: TwinViewQuery;
   }
 ): Promise<{ twin: T; relatedObjects: RelatedObjects }> {
-  const { data, error } = await TwinsAPI.GET("/private/twin/{twinId}/v2", {
+  const api = await apiFromRequest();
+
+  const { data, error } = await api.GET("/private/twin/{twinId}/v2", {
     params: {
       header: options.header,
       path: { twinId },
@@ -55,6 +58,7 @@ export async function uploadTwinAttachment(
   }
 ) {
   const header = await getAuthHeaders();
+  const api = await apiFromRequest();
 
   const formData = new FormData();
 
@@ -74,7 +78,7 @@ export async function uploadTwinAttachment(
 
   formData.append("request", JSON.stringify(payload));
 
-  const { data, error } = await TwinsAPI.POST(
+  const { data, error } = await api.POST(
     "/private/twin/{twinId}/attachment/v1",
     {
       params: {
@@ -103,7 +107,9 @@ export async function updateTwinClassById(
     newTwinClassId: string;
   }
 ) {
-  const { data, error } = await TwinsAPI.PUT(
+  const api = await apiFromRequest();
+
+  const { data, error } = await api.PUT(
     "/private/twin/{twinId}/class_change/v1",
     {
       params: {

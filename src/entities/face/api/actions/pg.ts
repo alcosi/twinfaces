@@ -1,6 +1,6 @@
 "use server";
 
-import { TwinsAPI } from "@/shared/api";
+import { apiFromRequest } from "@/entities/user/server";
 import { isUndefined } from "@/shared/libs";
 
 import { getAuthHeaders } from "../../libs";
@@ -22,8 +22,9 @@ async function fetchPGFace<T>({
   twinId,
 }: FetchPGFaceOptions): Promise<T> {
   const headers = await getAuthHeaders();
+  const api = await apiFromRequest();
 
-  const { data } = await TwinsAPI.GET(endpoint, {
+  const { data } = await api.GET(endpoint, {
     params: {
       header: headers,
       path: { faceId },

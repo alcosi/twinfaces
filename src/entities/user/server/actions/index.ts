@@ -1,6 +1,7 @@
 import { getAuthHeaders } from "@/entities/face";
-import { TwinsAPI } from "@/shared/api";
 import { isFound, isUndefined } from "@/shared/libs";
+
+import { apiFromRequest } from "./auth";
 
 export * from "./auth";
 
@@ -13,8 +14,9 @@ export async function isGranted({
   permission: string;
 }): Promise<boolean> {
   const header = await getAuthHeaders();
+  const api = await apiFromRequest();
 
-  const { data } = await TwinsAPI.GET("/private/user/{userId}/permission/v1", {
+  const { data } = await api.GET("/private/user/{userId}/permission/v1", {
     params: {
       header,
       path: { userId },
@@ -36,8 +38,9 @@ export async function isAuthUserGranted({
   permission: string;
 }): Promise<boolean> {
   const header = await getAuthHeaders();
+  const api = await apiFromRequest();
 
-  const { data } = await TwinsAPI.GET("/private/user/permission/v1", {
+  const { data } = await api.GET("/private/user/permission/v1", {
     params: {
       header,
       query: {

@@ -15,11 +15,10 @@ export function useAuthUser(): UseAuthUser {
   function getAuthUser(): AuthUser | null {
     if (isServerRuntime()) return null;
 
-    const authToken = clientCookies.get("authToken");
     const domainId = clientCookies.get("domainId");
     const userId = clientCookies.get("userId");
 
-    return { authToken, domainId, userId };
+    return { domainId, userId };
   }
 
   const setAuthUser = useCallback((user: AuthUser | null) => {
