@@ -72,7 +72,7 @@ export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
       ],
       { message: "Invalid type" }
     )
-    //.optional()
+    .optional()
     .or(TRANSITION_TYPE_EXTRACTOR),
 });
 
