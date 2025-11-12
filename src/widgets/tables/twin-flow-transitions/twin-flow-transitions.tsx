@@ -218,6 +218,7 @@ export function TwinFlowTransitionsTable({
         });
 
         return response;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Failed to fetch twin-flow-transitions");
         return { data: [], pagination: {} };
@@ -247,6 +248,7 @@ export function TwinFlowTransitionsTable({
       srcStatusId: formValues.srcTwinStatusId,
       dstStatusId: formValues.dstTwinStatusId,
       permissionId: formValues.permissionId,
+      twinflowTransitionTypeId: formValues.twinflowTransitionTypeId,
     };
 
     await createTwinFlowTransition({
