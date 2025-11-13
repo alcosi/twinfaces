@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { Client } from "openapi-fetch";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { Result, TwinsAPI } from "@/shared/api";
+import { Result } from "@/shared/api";
 import { createTwinsClient } from "@/shared/api";
 import { paths } from "@/shared/api/generated/schema";
 import { errorToResult, isPopulatedArray, isUndefined } from "@/shared/libs";
