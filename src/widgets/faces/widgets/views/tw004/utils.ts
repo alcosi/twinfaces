@@ -3,9 +3,10 @@ import { TwinSelfFieldId } from "@/entities/twin";
 import { Twin } from "@/entities/twin/server";
 import { hydrateTwinFieldFromMap } from "@/entities/twinField";
 import { User } from "@/entities/user";
+import { apiFromRequest } from "@/entities/user/server";
 import { TwinFieldEditorProps } from "@/features/twin/ui";
 import { SELF_FIELD_MAP } from "@/features/twin/ui/field-editor/constants";
-import { RelatedObjects, Result, TwinsAPI } from "@/shared/api";
+import { RelatedObjects, Result } from "@/shared/api";
 import { errorToResult, isTruthy } from "@/shared/libs";
 
 export async function buildFieldEditorProps(
@@ -15,9 +16,10 @@ export async function buildFieldEditorProps(
   Result<Pick<TwinFieldEditorProps, "twin" | "field" | "relatedObjects">>
 > {
   const header = await getAuthHeaders();
+  const api = await apiFromRequest();
 
   try {
-    const { data, error } = await TwinsAPI.GET("/private/twin/{twinId}/v2", {
+    const { data, error } = await api.GET("/private/twin/{twinId}/v2", {
       params: {
         header,
         path: { twinId },

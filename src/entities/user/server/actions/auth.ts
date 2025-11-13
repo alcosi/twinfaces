@@ -1,10 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies as nextCookies, headers as nextHeaders } from "next/headers";
 import { notFound } from "next/navigation";
+import { Client } from "openapi-fetch";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { Result, TwinsAPI } from "@/shared/api";
+import { Result, TwinsAPI_STUB_LOGIN } from "@/shared/api";
+import { createTwinsClient } from "@/shared/api";
+import { paths } from "@/shared/api/generated/schema";
 import { errorToResult, isPopulatedArray, isUndefined } from "@/shared/libs";
 
 import { DomainUser_DETAILED } from "../../api";
@@ -22,8 +26,65 @@ import {
   AuthSignupByEmailRs,
 } from "../types";
 
+export async function apiFromRequest(): Promise<Client<paths>> {
+  const h = await nextHeaders();
+  const c = await nextCookies();
+
+  const proto =
+    h.get("x-forwarded-proto") ??
+    (process.env.NODE_ENV === "production" ? "https" : "http");
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
+  const origin = process.env.APP_URL ?? `${proto}://${host}`;
+
+  const cookieHeader = ["authToken", "refreshToken", "domainId", "userId"]
+    .map((n) => {
+      const v = c.get(n)?.value;
+      return v ? `${n}=${v}` : null;
+    })
+    .filter(Boolean)
+    .join("; ");
+
+  const fetchWithCookies: typeof fetch = (input, init) => {
+    if (!cookieHeader) return fetch(input as any, init);
+
+    const merged = new Headers(
+      input instanceof Request ? input.headers : undefined
+    );
+    if (init?.headers) {
+      for (const [k, v] of new Headers(init.headers).entries()) {
+        merged.set(k, v);
+      }
+    }
+    merged.set("cookie", cookieHeader);
+
+    const nextInit: RequestInit & { duplex?: "half" } = {
+      ...init,
+      headers: merged,
+    };
+
+    if (
+      !nextInit.duplex &&
+      (nextInit.body || (input instanceof Request && input.body))
+    ) {
+      nextInit.duplex = "half";
+    }
+
+    const url = input instanceof Request ? input.url : (input as any);
+    if (input instanceof Request) {
+      if (!nextInit.method) nextInit.method = input.method;
+      if (!nextInit.body) nextInit.body = input.body;
+    }
+
+    return fetch(url, nextInit);
+  };
+
+  return createTwinsClient(`${origin}/api/proxy`, fetchWithCookies);
+}
+
 export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
-  const result = await TwinsAPI.POST("/auth/config/v1", {
+  const api = await apiFromRequest();
+
+  const result = await api.POST("/auth/config/v1", {
     params: {
       header: {
         DomainId: domainId,
@@ -54,7 +115,7 @@ async function stubLogin({
 }) {
   const authToken = [userId, businessAccountId].filter(Boolean).join(",");
 
-  const { data, error } = await TwinsAPI.POST(
+  const { data, error } = await TwinsAPI_STUB_LOGIN.POST(
     "/private/domain/user/search/v1",
     {
       params: {
@@ -93,7 +154,9 @@ export async function getAuthenticatedUser({
   domainId: string;
   authToken: string;
 }) {
-  const { data, error } = await TwinsAPI.GET("/private/domain/user/v1", {
+  const api = await apiFromRequest();
+
+  const { data, error } = await api.GET("/private/domain/user/v1", {
     params: {
       header: {
         DomainId: domainId,
@@ -112,12 +175,10 @@ export async function getAuthenticatedUser({
     throw error;
   }
 
-  const hydratedDomainUser = hydrateDomainUserFromMap(
+  return hydrateDomainUserFromMap(
     data.user as DomainUser_DETAILED,
     data.relatedObjects
   );
-
-  return hydratedDomainUser;
 }
 
 export async function stubLoginFormAction(_: unknown, formData: FormData) {
@@ -160,8 +221,9 @@ export async function loginAuthAction(
         username: formData.get("username"),
         password: formData.get("password"),
       });
+    const api = await apiFromRequest();
 
-    const { data, error } = await TwinsAPI.POST("/auth/login/v1", {
+    const { data, error } = await api.POST("/auth/login/v1", {
       body: { username, password },
       params: { header: { DomainId: domainId, Channel: "WEB" } },
     });
@@ -180,6 +242,8 @@ export async function signUpAuthAction(
   _: unknown,
   formData: FormData
 ): Promise<Result<AuthSignupByEmailRs>> {
+  const api = await apiFromRequest();
+
   try {
     const { domainId, firstName, lastName, email, password } =
       EMAIL_PASSWORD_SIGN_UP_PAYLOAD_SCHEMA.parse({
@@ -190,7 +254,7 @@ export async function signUpAuthAction(
         password: formData.get("password"),
       });
 
-    const { data, error } = await TwinsAPI.POST(
+    const { data, error } = await api.POST(
       "/auth/signup_by_email/initiate/v1",
       {
         body: { firstName, lastName, email, password },
@@ -212,26 +276,25 @@ export async function verifyEmailAction(
   _: unknown,
   formData: FormData
 ): Promise<Result<AuthSignUpVerificationByEmailRs>> {
+  const api = await apiFromRequest();
+
   const { domainId, verificationToken } = EMAIL_VERIFICATION_FORM_SCHEMA.parse({
     domainId: formData.get("domainId"),
     verificationToken: formData.get("verificationToken"),
   });
 
   try {
-    const { data, error } = await TwinsAPI.POST(
-      "/auth/signup_by_email/confirm/v1",
-      {
-        params: {
-          header: {
-            DomainId: domainId,
-            Channel: "WEB",
-          },
-          query: {
-            verificationToken,
-          },
+    const { data, error } = await api.POST("/auth/signup_by_email/confirm/v1", {
+      params: {
+        header: {
+          DomainId: domainId,
+          Channel: "WEB",
         },
-      }
-    );
+        query: {
+          verificationToken,
+        },
+      },
+    });
 
     if (error) {
       return errorToResult(error);

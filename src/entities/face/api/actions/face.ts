@@ -1,6 +1,6 @@
 "use server";
 
-import { TwinsAPI } from "@/shared/api";
+import { apiFromRequest } from "@/entities/user/server";
 import { isUndefined } from "@/shared/libs";
 
 import { getAuthHeaders } from "../../libs";
@@ -13,8 +13,9 @@ export async function fetchFaceById<T extends Face>(
   }
 ): Promise<T> {
   const header = await getAuthHeaders();
+  const api = await apiFromRequest();
 
-  const { data, error } = await TwinsAPI.GET("/private/face/{faceId}/v1", {
+  const { data, error } = await api.GET("/private/face/{faceId}/v1", {
     params: {
       header,
       path: { faceId },

@@ -1,10 +1,9 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import { getAuthenticatedUser, loginAuthAction } from "@/entities/user/server";
-import { useAuthUser } from "@/features/auth";
 import { DomainLogo } from "@/features/domain/ui";
 import { FlipCard } from "@/features/ui/flip-card";
 import { isApiErrorResponse } from "@/shared/api/utils";
@@ -18,7 +17,6 @@ import { EmailVerificationForm } from "../forms/email-verification";
 
 export function EmailPasswordAuthWidget() {
   const config = useContext(ProductFlavorConfigContext);
-  const { logout } = useAuthUser();
 
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const [credentials, setCredentials] = useState<{
@@ -26,15 +24,10 @@ export function EmailPasswordAuthWidget() {
     password?: string;
   }>({});
   const router = useRouter();
-  const { setAuthUser } = useAuthUser();
   const searchParams = useSearchParams();
   const domainId = searchParams.get("domainId") ?? undefined;
   const [step, setStep] = useState<"sign-up" | "email-verification">("sign-up");
   const [isShaking, setShake] = useState(false);
-
-  useEffect(() => {
-    logout();
-  }, []);
 
   function toggleMode() {
     setMode((prev) => (prev === "sign-in" ? "sign-up" : "sign-in"));
@@ -70,12 +63,6 @@ export function EmailPasswordAuthWidget() {
       if (isUndefined(domainUser)) {
         throw new Error("Failed to load domain user");
       }
-
-      setAuthUser({
-        userId: domainUser.userId,
-        authToken: authToken,
-        domainId,
-      });
 
       router.push("/profile");
     }

@@ -1,5 +1,8 @@
 export type AuthUser = {
   userId?: string;
-  authToken?: string;
   domainId?: string;
+  authToken?: string;
+  authTokenExpiresAt?: string;
+  refreshToken?: string;
+  refreshTokenExpiresAt?: string;
 };

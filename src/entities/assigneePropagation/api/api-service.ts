@@ -1,6 +1,7 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
+
 import { PermissionGrantAssigneePropagationFilter } from "@/entities/assigneePropagation";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createPermissionAssigneePropagationApi(settings: ApiSettings) {
   async function search({

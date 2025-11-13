@@ -1,7 +1,7 @@
 import { env } from "next-runtime-env";
 import { NextRequest, NextResponse } from "next/server";
 
-import { fetchDomainByKey } from "@/entities/domain/api";
+import { fetchDomainByKeyDefault } from "@/entities/domain/api";
 import { isDev, isTruthy, safe } from "@/shared/libs";
 
 const SUBDOMAIN_DEPTH = isDev ? 2 : 3;
@@ -27,7 +27,9 @@ export async function middleware(req: NextRequest) {
   const domainKey = resolveDomainKey(host || undefined);
 
   if (domainKey) {
-    const result = await safe(() => fetchDomainByKey(domainKey));
+    const result = await safe(() =>
+      fetchDomainByKeyDefault(domainKey, { showDomainMode: "DETAILED" })
+    );
 
     if (result.ok && isTruthy(result.data)) {
       response.headers.set("X-Domain-Config", JSON.stringify(result.data));

@@ -1,7 +1,7 @@
 "use server";
 
 import { fetchCurrentDomain } from "@/entities/domain/api/actions";
-import { TwinsAPI } from "@/shared/api";
+import { apiFromRequest } from "@/entities/user/server";
 import { isUndefined } from "@/shared/libs";
 
 import { getAuthHeaders } from "../../libs";
@@ -18,8 +18,9 @@ export async function fetchSidebarFace(): Promise<FaceNB001> {
 
 async function fetchSidebarFaceById(faceId: string): Promise<Face> {
   const headers = await getAuthHeaders();
+  const api = await apiFromRequest();
 
-  const { data } = await TwinsAPI.GET("/private/face/nb001/{faceId}/v1", {
+  const { data } = await api.GET("/private/face/nb001/{faceId}/v1", {
     params: {
       header: headers,
       path: { faceId },

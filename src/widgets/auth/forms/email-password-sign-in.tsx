@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
@@ -49,7 +51,6 @@ export function EmailPasswordSignInForm({
   function onSignInSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>
   ) {
-    // setAuthError(null);
     signInForm.setError("root", {});
 
     const domainId = values.domainId;
@@ -75,9 +76,21 @@ export function EmailPasswordSignInForm({
 
       if (result.ok) {
         const authToken = result.data.authData?.auth_token;
+        const authTokenExpiresAt = result.data.authData?.auth_token_expires_at;
+        const refreshToken = result.data.authData?.refresh_token;
+        const refreshTokenExpiresAt =
+          result.data.authData?.refresh_token_expires_at;
+
         if (isUndefined(authToken)) {
           return handleAuthError("Login failed: no auth token returned");
         }
+        await setAuthUser({
+          domainId,
+          authToken,
+          authTokenExpiresAt,
+          refreshToken,
+          refreshTokenExpiresAt,
+        });
 
         const domainUser = await getAuthenticatedUser({
           domainId,
@@ -90,8 +103,6 @@ export function EmailPasswordSignInForm({
 
         await setAuthUser({
           userId: domainUser.userId,
-          authToken,
-          domainId,
         });
 
         router.push(`/profile`);
