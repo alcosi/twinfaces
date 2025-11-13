@@ -218,8 +218,7 @@ export function TwinFlowTransitionsTable({
         });
 
         return response;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
+      } catch {
         toast.error("Failed to fetch twin-flow-transitions");
         return { data: [], pagination: {} };
       }
