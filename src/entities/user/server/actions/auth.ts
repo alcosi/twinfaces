@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { Client } from "openapi-fetch";
 
 import { isAuthUserGranted } from "@/entities/user/server";
-import { Result } from "@/shared/api";
+import { Result, TwinsAPI_STUB_LOGIN } from "@/shared/api";
 import { createTwinsClient } from "@/shared/api";
 import { paths } from "@/shared/api/generated/schema";
 import { errorToResult, isPopulatedArray, isUndefined } from "@/shared/libs";
@@ -113,30 +113,32 @@ async function stubLogin({
   domainId: string;
   businessAccountId?: string;
 }) {
-  const api = await apiFromRequest();
   const authToken = [userId, businessAccountId].filter(Boolean).join(",");
 
-  const { data, error } = await api.POST("/private/domain/user/search/v1", {
-    params: {
-      header: {
-        DomainId: domainId,
-        AuthToken: authToken,
-        Channel: "WEB",
+  const { data, error } = await TwinsAPI_STUB_LOGIN.POST(
+    "/private/domain/user/search/v1",
+    {
+      params: {
+        header: {
+          DomainId: domainId,
+          AuthToken: authToken,
+          Channel: "WEB",
+        },
+        query: {
+          lazyRelation: false,
+          showDomainUser2UserMode: "DETAILED",
+          showDomainUserMode: "DETAILED",
+          offset: 0,
+          limit: 1,
+          sortAsc: false,
+        },
       },
-      query: {
-        lazyRelation: false,
-        showDomainUser2UserMode: "DETAILED",
-        showDomainUserMode: "DETAILED",
-        offset: 0,
-        limit: 1,
-        sortAsc: false,
+      body: {
+        userIdList: [userId],
+        businessAccountIdList: [],
       },
-    },
-    body: {
-      userIdList: [userId],
-      businessAccountIdList: [],
-    },
-  });
+    }
+  );
 
   if (error) {
     throw error;
