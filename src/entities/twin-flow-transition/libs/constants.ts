@@ -6,6 +6,26 @@ import {
   isPopulatedString,
 } from "@/shared/libs";
 
+import { TransitionType, TransitionTypesEnum } from "./types";
+
+const TRANSITION_TYPE_EXTRACTOR = z
+  .array(z.object({ id: z.string() }))
+  .min(1)
+  .transform((arr) => arr[0]?.id as TransitionType);
+
+export const TRANSITION_TYPES_ENUM: Array<{
+  id: TransitionType;
+  label: string;
+}> = [
+  { id: TransitionTypesEnum.MARKETING, label: "Marketing" },
+  { id: TransitionTypesEnum.OPERATION, label: "Operation" },
+  { id: TransitionTypesEnum.STATUS_CHANGE, label: "Status change" },
+  {
+    id: TransitionTypesEnum.STATUS_CHANGE_MARKETING,
+    label: "Status change marketing",
+  },
+] as const;
+
 export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
   twinflow: z
     .array(
@@ -42,6 +62,18 @@ export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
     .uuid("Permission ID must be a valid UUID")
     .optional()
     .or(FIRST_ID_EXTRACTOR),
+  twinflowTransitionTypeId: z
+    .enum(
+      [
+        TransitionTypesEnum.MARKETING,
+        TransitionTypesEnum.OPERATION,
+        TransitionTypesEnum.STATUS_CHANGE,
+        TransitionTypesEnum.STATUS_CHANGE_MARKETING,
+      ],
+      { message: "Invalid type" }
+    )
+    .optional()
+    .or(TRANSITION_TYPE_EXTRACTOR),
 });
 
 export const TRIGGER_SCHEMA = z.object({

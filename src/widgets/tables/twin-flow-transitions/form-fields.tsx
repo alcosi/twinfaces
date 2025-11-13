@@ -9,6 +9,7 @@ import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
 import {
   TwinFlowTransitionFormValues,
   useTransitionAliasSelectAdapter,
+  useTransitionSelectTypeAdapter,
 } from "@/entities/twin-flow-transition";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
@@ -34,6 +35,7 @@ export function TwinFlowTransitionFormFields({
   const factoryAdapter = useFactorySelectAdapter();
   const transitionAliasAdapter = useTransitionAliasSelectAdapter();
   const twinStatusAdapter = useTwinStatusSelectAdapter();
+  const transitionTypeAdapter = useTransitionSelectTypeAdapter();
 
   return (
     <>
@@ -127,6 +129,15 @@ export function TwinFlowTransitionFormFields({
         searchPlaceholder="Search permission..."
         noItemsText="No permission found"
         {...permissionAdapter}
+      />
+
+      <ComboboxFormField
+        control={control}
+        name="twinflowTransitionTypeId"
+        label="Transition type"
+        selectPlaceholder="Select Transition type"
+        noItemsText="No Transition type found"
+        {...transitionTypeAdapter}
       />
     </>
   );

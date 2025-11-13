@@ -218,7 +218,7 @@ export function TwinFlowTransitionsTable({
         });
 
         return response;
-      } catch (error) {
+      } catch {
         toast.error("Failed to fetch twin-flow-transitions");
         return { data: [], pagination: {} };
       }
@@ -247,6 +247,7 @@ export function TwinFlowTransitionsTable({
       srcStatusId: formValues.srcTwinStatusId,
       dstStatusId: formValues.dstTwinStatusId,
       permissionId: formValues.permissionId,
+      twinflowTransitionTypeId: formValues.twinflowTransitionTypeId,
     };
 
     await createTwinFlowTransition({
