@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   TransitionAliasFilters,
+  TransitionTriggersFilters,
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFilters,
   TwinFlowTransitionUpdateRq,
@@ -12,7 +13,6 @@ import {
 
 export function createTwinFlowTransitionApi(settings: ApiSettings) {
   async function search({
-    search,
     pagination,
     filters,
   }: {
@@ -139,6 +139,29 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     });
   }
 
+  function searchTriggers({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters?: TransitionTriggersFilters;
+  }) {
+    return settings.client.POST("/private/transition_trigger/search/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          showTransitionTriggerMode: "DETAILED",
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+          sortAsc: false,
+        },
+      },
+      body: {
+        search: filters,
+      },
+    });
+  }
+
   return {
     search,
     fetchById,
@@ -146,6 +169,7 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     update,
     performTransition,
     searchAlias,
+    searchTriggers,
   };
 }
 

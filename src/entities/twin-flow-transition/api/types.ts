@@ -44,7 +44,8 @@ export type TwinFlowTransitionFilters = Partial<
   >
 >;
 
-export type TwinFlowTransitionTrigger = components["schemas"]["TriggerV1"];
+export type TwinFlowTransitionTrigger =
+  components["schemas"]["TransitionTriggerV1"];
 export type TwinFlowTransitionTriggerCud =
   components["schemas"]["TriggerCudV1"];
 export type TwinFlowTransitionTriggerUpdate =
@@ -70,5 +71,21 @@ export type TransitionAliasFilters = Partial<
   Pick<
     components["schemas"]["TransitionAliasSearchRqV1"],
     TransitionAliasFiltersKeys
+  >
+>;
+
+export type TransitionTriggersFiltersKeys =
+  | "idList"
+  | "idExcludeList"
+  | "twinflowTransitionIdList"
+  | "twinflowTransitionIdExcludeList"
+  | "transitionTriggerFeaturerIdList"
+  | "transitionTriggerFeaturerIdExcludeList"
+  | "active";
+
+export type TransitionTriggersFilters = Partial<
+  Pick<
+    components["schemas"]["TransitionTriggerSearchV1"],
+    TransitionTriggersFiltersKeys
   >
 >;

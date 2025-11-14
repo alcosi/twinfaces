@@ -10,7 +10,7 @@ import {
   TriggersFormValues,
   TwinFlowTransitionTrigger,
   TwinFlowTransitionTriggerUpdate,
-  useTwinFlowTransitionTriggersSearch,
+  useTwinFlowTransitionTriggersSearchV1,
   useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
 import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
@@ -22,7 +22,7 @@ import { TriggersFormFields } from "./form-fields";
 const colDefs: Record<
   keyof Pick<
     TwinFlowTransitionTrigger,
-    "id" | "order" | "triggerFeaturerId" | "active"
+    "id" | "order" | "transitionTriggerFeaturerId" | "active"
   >,
   ColumnDef<TwinFlowTransitionTrigger>
 > = {
@@ -39,9 +39,9 @@ const colDefs: Record<
     header: "Order",
   },
 
-  triggerFeaturerId: {
-    id: "triggerFeaturerId",
-    accessorKey: "triggerFeaturerId",
+  transitionTriggerFeaturerId: {
+    id: "transitionTriggerFeaturerId",
+    accessorKey: "transitionTriggerFeaturerId",
     header: "Featurer",
   },
 
@@ -50,7 +50,7 @@ const colDefs: Record<
     accessorKey: "active",
     header: "Active",
     cell: (data) => {
-      data.getValue() && <Check />;
+      return data.getValue() ? <Check /> : null;
     },
   },
 };
@@ -58,11 +58,16 @@ const colDefs: Record<
 export function TwinflowTransitionTriggers() {
   const { transitionId } = useContext(TwinFlowTransitionContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const { fetchTriggers } = useTwinFlowTransitionTriggersSearch();
+  const { searchTwinFlowTransitionTriggers } =
+    useTwinFlowTransitionTriggersSearchV1();
   const { updateTwinFlowTransition } = useUpdateTwinFlowTransition();
 
   async function fetchData() {
-    const response = await fetchTriggers({ transitionId: transitionId });
+    const response = await searchTwinFlowTransitionTriggers({
+      filters: {
+        twinflowTransitionIdList: [transitionId],
+      },
+    });
     return response;
   }
 
@@ -91,6 +96,9 @@ export function TwinflowTransitionTriggers() {
           triggers: { create: [body] },
         },
       });
+
+      tableRef.current?.refresh();
+      toast.success("Trigger created successfully");
     } catch (e) {
       toast.error("Failed to create trigger");
       throw e;
@@ -105,7 +113,7 @@ export function TwinflowTransitionTriggers() {
       columns={[
         colDefs.id,
         colDefs.order,
-        colDefs.triggerFeaturerId,
+        colDefs.transitionTriggerFeaturerId,
         colDefs.active,
       ]}
       getRowId={(x) => x.id!}
@@ -114,7 +122,7 @@ export function TwinflowTransitionTriggers() {
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.order,
-        colDefs.triggerFeaturerId,
+        colDefs.transitionTriggerFeaturerId,
         colDefs.active,
       ]}
       dialogForm={triggersForm}
