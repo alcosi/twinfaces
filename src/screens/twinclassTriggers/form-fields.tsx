@@ -25,7 +25,7 @@ export function TriggersFormFields({
         control={control}
         label="Featurer"
         name="triggerFeaturerId"
-        paramsFieldName="fieldTyperFeaturerParams"
+        paramsFieldName="triggerParams"
       />
     </>
   );

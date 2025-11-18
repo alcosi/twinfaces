@@ -76,8 +76,6 @@ export function TwinflowTransitionTriggers() {
     defaultValues: {
       order: 0,
       active: true,
-      triggerParams: {},
-      //triggerFeaturerId: э,
     },
   });
 
