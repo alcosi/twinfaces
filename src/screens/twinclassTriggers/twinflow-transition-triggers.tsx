@@ -9,9 +9,9 @@ import {
   TRIGGER_SCHEMA,
   TriggersFormValues,
   TwinFlowTransitionTrigger,
-  TwinFlowTransitionTriggerUpdate,
+  useCreateTransitionTrigger,
   useTwinFlowTransitionTriggersSearchV1,
-  useUpdateTwinFlowTransition,
+  //useUpdateTransitionTrigger,
 } from "@/entities/twin-flow-transition";
 import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -60,7 +60,7 @@ export function TwinflowTransitionTriggers() {
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinFlowTransitionTriggers } =
     useTwinFlowTransitionTriggersSearchV1();
-  const { updateTwinFlowTransition } = useUpdateTwinFlowTransition();
+  const { createTransitionTrigger } = useCreateTransitionTrigger();
 
   async function fetchData() {
     const response = await searchTwinFlowTransitionTriggers({
@@ -82,18 +82,16 @@ export function TwinflowTransitionTriggers() {
   });
 
   async function createTrigger(formValues: TriggersFormValues) {
-    const body: TwinFlowTransitionTriggerUpdate = {
-      order: formValues.order,
-      triggerFeaturerId: formValues.triggerFeaturerId,
-      active: formValues.active,
-      triggerParams: formValues.triggerParams,
-    };
-
     try {
-      await updateTwinFlowTransition({
-        transitionId: transitionId,
+      await createTransitionTrigger({
         body: {
-          triggers: { create: [body] },
+          trigger: {
+            twinflowTransitionId: transitionId,
+            order: formValues.order,
+            transitionTriggerFeaturerId: formValues.triggerFeaturerId,
+            active: formValues.active,
+            transitionTriggerParams: formValues.triggerParams,
+          },
         },
       });
 

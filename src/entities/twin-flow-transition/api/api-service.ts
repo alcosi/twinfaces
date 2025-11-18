@@ -9,6 +9,8 @@ import {
   TwinFlowTransitionFilters,
   TwinFlowTransitionUpdateRq,
   TwinTransitionPerformRq,
+  TwinTransitionTriggerCreate,
+  TwinTransitionTriggerUpdate,
 } from "./types";
 
 export function createTwinFlowTransitionApi(settings: ApiSettings) {
@@ -162,6 +164,29 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     });
   }
 
+  function createTrigger({ body }: { body: TwinTransitionTriggerCreate }) {
+    return settings.client.POST("/private/transition_trigger/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function updateTrigger({
+    body,
+  }: {
+    triggerId: string;
+    body: TwinTransitionTriggerUpdate;
+  }) {
+    return settings.client.PUT("/private/transition_trigger/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
   return {
     search,
     fetchById,
@@ -170,6 +195,8 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     performTransition,
     searchAlias,
     searchTriggers,
+    createTrigger,
+    updateTrigger,
   };
 }
 

@@ -59,6 +59,11 @@ export type TwinFlowTransitionValidatorCreate =
 export type TwinFlowTransitionValidatorUpdate =
   components["schemas"]["ValidatorUpdateV1"];
 
+export type TwinTransitionTriggerUpdate =
+  components["schemas"]["TransitionTriggerUpdateRqV1"];
+export type TwinTransitionTriggerCreate =
+  components["schemas"]["TransitionTriggerCreateRqV1"];
+
 export type TransitionAliasV1 = components["schemas"]["TransitionAliasV1"];
 
 export type TransitionAliasFiltersKeys =
