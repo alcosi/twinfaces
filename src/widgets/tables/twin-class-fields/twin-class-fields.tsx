@@ -17,7 +17,7 @@ import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -221,7 +221,7 @@ export function TwinClassFieldsTable({
       ref={tableRef}
       columns={[
         colDefs.id,
-        ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
+        colDefs.twinClassId,
         colDefs.key,
         colDefs.name,
         colDefs.description,
@@ -240,7 +240,7 @@ export function TwinClassFieldsTable({
       }}
       defaultVisibleColumns={[
         colDefs.id,
-        ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
+        colDefs.twinClassId,
         colDefs.key,
         colDefs.name,
         colDefs.description,

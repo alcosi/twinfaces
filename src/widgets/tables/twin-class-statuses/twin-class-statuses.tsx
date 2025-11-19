@@ -20,7 +20,7 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { ColorTile } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
@@ -238,7 +238,7 @@ export function TwinClassStatusesTable({
       columns={[
         colDefs.iconLight,
         colDefs.id,
-        ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
+        colDefs.twinClassId,
         colDefs.key,
         colDefs.name,
         colDefs.description,
@@ -255,7 +255,7 @@ export function TwinClassStatusesTable({
       }}
       defaultVisibleColumns={[
         colDefs.id,
-        ...(isFalsy(twinClassId) ? [colDefs.twinClassId] : []),
+        colDefs.twinClassId,
         colDefs.key,
         colDefs.name,
         colDefs.description,
