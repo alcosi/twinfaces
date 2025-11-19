@@ -9,9 +9,9 @@ import {
   TRIGGER_SCHEMA,
   TriggersFormValues,
   TwinFlowTransitionTrigger,
-  TwinFlowTransitionTriggerUpdate,
-  useTwinFlowTransitionTriggersSearch,
-  useUpdateTwinFlowTransition,
+  useCreateTransitionTrigger,
+  useTwinFlowTransitionTriggersSearchV1,
+  //useUpdateTransitionTrigger,
 } from "@/entities/twin-flow-transition";
 import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -22,7 +22,7 @@ import { TriggersFormFields } from "./form-fields";
 const colDefs: Record<
   keyof Pick<
     TwinFlowTransitionTrigger,
-    "id" | "order" | "triggerFeaturerId" | "active"
+    "id" | "order" | "transitionTriggerFeaturerId" | "active"
   >,
   ColumnDef<TwinFlowTransitionTrigger>
 > = {
@@ -39,9 +39,9 @@ const colDefs: Record<
     header: "Order",
   },
 
-  triggerFeaturerId: {
-    id: "triggerFeaturerId",
-    accessorKey: "triggerFeaturerId",
+  transitionTriggerFeaturerId: {
+    id: "transitionTriggerFeaturerId",
+    accessorKey: "transitionTriggerFeaturerId",
     header: "Featurer",
   },
 
@@ -50,7 +50,7 @@ const colDefs: Record<
     accessorKey: "active",
     header: "Active",
     cell: (data) => {
-      data.getValue() && <Check />;
+      return data.getValue() ? <Check /> : null;
     },
   },
 };
@@ -58,11 +58,16 @@ const colDefs: Record<
 export function TwinflowTransitionTriggers() {
   const { transitionId } = useContext(TwinFlowTransitionContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const { fetchTriggers } = useTwinFlowTransitionTriggersSearch();
-  const { updateTwinFlowTransition } = useUpdateTwinFlowTransition();
+  const { searchTwinFlowTransitionTriggers } =
+    useTwinFlowTransitionTriggersSearchV1();
+  const { createTransitionTrigger } = useCreateTransitionTrigger();
 
   async function fetchData() {
-    const response = await fetchTriggers({ transitionId: transitionId });
+    const response = await searchTwinFlowTransitionTriggers({
+      filters: {
+        twinflowTransitionIdList: [transitionId],
+      },
+    });
     return response;
   }
 
@@ -71,26 +76,25 @@ export function TwinflowTransitionTriggers() {
     defaultValues: {
       order: 0,
       active: true,
-      triggerParams: {},
-      triggerFeaturerId: 0,
     },
   });
 
   async function createTrigger(formValues: TriggersFormValues) {
-    const body: TwinFlowTransitionTriggerUpdate = {
-      order: formValues.order,
-      triggerFeaturerId: formValues.triggerFeaturerId,
-      active: formValues.active,
-      triggerParams: formValues.triggerParams,
-    };
-
     try {
-      await updateTwinFlowTransition({
-        transitionId: transitionId,
+      await createTransitionTrigger({
         body: {
-          triggers: { create: [body] },
+          trigger: {
+            twinflowTransitionId: transitionId,
+            order: formValues.order,
+            transitionTriggerFeaturerId: formValues.triggerFeaturerId,
+            active: formValues.active,
+            transitionTriggerParams: formValues.triggerParams,
+          },
         },
       });
+
+      tableRef.current?.refresh();
+      toast.success("Trigger created successfully");
     } catch (e) {
       toast.error("Failed to create trigger");
       throw e;
@@ -105,7 +109,7 @@ export function TwinflowTransitionTriggers() {
       columns={[
         colDefs.id,
         colDefs.order,
-        colDefs.triggerFeaturerId,
+        colDefs.transitionTriggerFeaturerId,
         colDefs.active,
       ]}
       getRowId={(x) => x.id!}
@@ -114,7 +118,7 @@ export function TwinflowTransitionTriggers() {
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.order,
-        colDefs.triggerFeaturerId,
+        colDefs.transitionTriggerFeaturerId,
         colDefs.active,
       ]}
       dialogForm={triggersForm}

@@ -1,6 +1,10 @@
 import { z } from "zod";
 
 import {
+  FEATURER_ID_EXTRACTOR,
+  FEATURER_PARAMS_VALUE,
+} from "@/entities/featurer";
+import {
   FIRST_ID_EXTRACTOR,
   isPopulatedArray,
   isPopulatedString,
@@ -77,13 +81,10 @@ export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
 });
 
 export const TRIGGER_SCHEMA = z.object({
-  order: z.number().min(0, "Order must be at least 0").default(0),
+  order: z.coerce.number().min(0, "Order must be at least 0").default(0),
   active: z.boolean().default(false),
-  triggerFeaturerId: z
-    .number()
-    .or(z.literal("").transform(() => undefined))
-    .optional(),
-  triggerParams: z.record(z.string(), z.any()).optional(),
+  triggerFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
+  triggerParams: FEATURER_PARAMS_VALUE,
 });
 
 export const VALIDATOR_RULES_SCHEMA = z.object({

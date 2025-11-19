@@ -1,12 +1,10 @@
 import { Control } from "react-hook-form";
-import { z } from "zod";
 
 import { CheckboxFormField, TextFormField } from "@/components/form-fields";
 
 import { FeaturerTypes } from "@/entities/featurer";
+import { TriggersFormValues } from "@/entities/twin-flow-transition";
 import { FeaturerFormField } from "@/widgets/form-fields";
-
-type TriggersFormValues = z.infer<any>;
 
 export function TriggersFormFields({
   control,
@@ -26,8 +24,8 @@ export function TriggersFormFields({
         typeId={FeaturerTypes.trigger}
         control={control}
         label="Featurer"
-        name="fieldTyperFeaturerId"
-        paramsFieldName="fieldTyperFeaturerParams"
+        name="triggerFeaturerId"
+        paramsFieldName="triggerParams"
       />
     </>
   );
