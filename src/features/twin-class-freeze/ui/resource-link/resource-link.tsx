@@ -18,7 +18,7 @@ export function TwinClassFreezeResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  const link = `/${PlatformArea.core}/twinclassfreeze/${data.id}`;
+  const link = `/${PlatformArea.core}/twinclass/${data.id}`;
 
   return (
     <ResourceLink

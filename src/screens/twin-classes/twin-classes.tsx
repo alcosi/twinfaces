@@ -20,6 +20,7 @@ import {
 } from "@/entities/twin-class";
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassFreezeResourceLink } from "@/features/twin-class-freeze/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
@@ -31,8 +32,6 @@ import {
 } from "@/widgets/crud-data-table";
 
 import { TwinClassFormFields } from "./form-fields";
-
-// import { TwinClassFreezeResourceLink } from "@/features/twin-class-freeze/ui";
 
 function ThemeIconCell({ data }: { data: TwinClass_DETAILED }) {
   const { resolvedTheme } = useTheme();
@@ -290,7 +289,7 @@ const colDefs: Record<
     cell: ({ row: { original } }) =>
       original.twinClassFreeze ? (
         <div className="inline-flex max-w-48">
-          <TwinClassResourceLink
+          <TwinClassFreezeResourceLink
             data={original.twinClassFreeze as TwinClass_DETAILED}
             withTooltip
           />
