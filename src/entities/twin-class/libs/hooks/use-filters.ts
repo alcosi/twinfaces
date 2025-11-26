@@ -144,6 +144,18 @@ export function useTwinClassFilters(): FilterFeature<
         multi: true,
         ...dlAdapter,
       },
+      segment: {
+        type: AutoFormValueType.boolean,
+        label: "Segment",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
+      hasSegments: {
+        type: AutoFormValueType.boolean,
+        label: "Has segment",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
     };
   }
 
@@ -207,6 +219,8 @@ export function useTwinClassFilters(): FilterFeature<
         toArray(filters.tagDatalistIdList),
         "id"
       ),
+      segment: mapToChoice(filters.segment),
+      hasSegments: mapToChoice(filters.hasSegments),
     };
 
     return result;
