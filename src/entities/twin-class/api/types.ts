@@ -25,6 +25,7 @@ export type TwinClass_DETAILED = RequireFields<
   segmentClass?: TwinClassBaseV1;
   hasSegment?: boolean;
   segment?: boolean;
+  twinClassFreeze?: TwinClassBaseV1;
 };
 export type TwinClass_MANAGED = RequireFields<
   TwinClass,

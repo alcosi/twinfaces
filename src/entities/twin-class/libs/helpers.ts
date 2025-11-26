@@ -78,5 +78,9 @@ export const hydrateTwinClassFromMap = (
     }, []);
   }
 
+  if (dto.twinClassFreezeId && relatedObjects.twinClassFreezeMap) {
+    hydrated.twinClassFreeze =
+      relatedObjects.twinClassFreezeMap[dto.twinClassFreezeId];
+  }
   return hydrated;
 };

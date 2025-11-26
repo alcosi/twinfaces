@@ -82,7 +82,7 @@ const colDefs: Record<
     | "externalId"
     | "segment"
     | "hasSegment"
-    // | 'twinClassFreezeId'
+    | "twinClassFreezeId"
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
@@ -283,20 +283,20 @@ const colDefs: Record<
     cell: (data) => data.getValue() && <Check />,
   },
 
-  // twinClassFreezeId: {
-  //   id: "twinClassFreezeId",
-  //   accessorKey: "twinClassFreezeId",
-  //   header: "Freeze",
-  //   cell: ({ row: { original } }) =>
-  //     original.twinClassFreezeId && (
-  //       <div className="column-flex max-w-48 space-y-2">
-  //         <TwinClassFreezeResourceLink
-  //           data={original.twinClassFreezeId}
-  //           withTooltip
-  //         />
-  //       </div>
-  //     ),
-  // },
+  twinClassFreezeId: {
+    id: "twinClassFreezeId",
+    accessorKey: "twinClassFreezeId",
+    header: "Freeze",
+    cell: ({ row: { original } }) =>
+      original.twinClassFreeze ? (
+        <div className="inline-flex max-w-48">
+          <TwinClassResourceLink
+            data={original.twinClassFreeze as TwinClass_DETAILED}
+            withTooltip
+          />
+        </div>
+      ) : null,
+  },
 };
 
 export function TwinClasses({ type }: { type?: string }) {
@@ -450,7 +450,7 @@ export function TwinClasses({ type }: { type?: string }) {
         colDefs.externalId,
         colDefs.segment,
         colDefs.hasSegment,
-        // colDefs.twinClassFreezeId,
+        colDefs.twinClassFreezeId,
       ]}
       getRowId={(row) => row.id!}
       filters={{
@@ -469,7 +469,7 @@ export function TwinClasses({ type }: { type?: string }) {
         colDefs.externalId,
         colDefs.segment,
         colDefs.hasSegment,
-        // colDefs.twinClassFreezeId,
+        colDefs.twinClassFreezeId,
       ]}
       dialogForm={twinClassesForm}
       onCreateSubmit={!type ? handleOnCreateSubmit : undefined}

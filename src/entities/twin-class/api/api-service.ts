@@ -39,6 +39,7 @@ export function createTwinClassApi(settings: ApiSettings) {
           showTwinClassSegmentMode: "SHOW",
           showTwinClassFreezeMode: "DETAILED",
           showTwinClassFreeze2StatusMode: "DETAILED",
+          showTwinClassMode2TwinClassFreezeMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
