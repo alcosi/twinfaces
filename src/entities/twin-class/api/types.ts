@@ -22,6 +22,9 @@ export type TwinClass_DETAILED = RequireFields<
   editPermission: Permission;
   deletePermission: Permission;
   headClass: TwinClassBaseV1;
+  hasSegment: boolean;
+  segment: boolean;
+  twinClassFreeze?: TwinClassBaseV1;
 };
 export type TwinClass_MANAGED = RequireFields<
   TwinClass,
@@ -37,6 +40,11 @@ export type TwinClass_MANAGED = RequireFields<
   | "twinClassSchemaSpace"
   | "twinflowSchemaSpace"
 >;
+
+export type TwinClassFiltersHierarchyOverride = {
+  idList: string[];
+  depth: number;
+};
 
 export type TwinClassCreateRq = components["schemas"]["TwinClassCreateRqV1"];
 export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"];
@@ -71,10 +79,14 @@ export type TwinClassFilterKeys =
   | "deletePermissionIdList"
   | "markerDatalistIdList"
   | "tagDatalistIdList"
-  | "headHierarchyChildsForTwinClassSearch";
+  | "headHierarchyChildsForTwinClassSearch"
+  | "hasSegments"
+  | "segment"
+  | "assigneeRequired"
+  | "externalIdLikeList";
 
 export type TwinClassFilters = Partial<
-  Pick<components["schemas"]["TwinClassListRqV1"], TwinClassFilterKeys>
+  Pick<components["schemas"]["TwinClassSearchV1"], TwinClassFilterKeys>
 >;
 
 export type TwinClassListRs = components["schemas"]["TwinClassListRsV1"];

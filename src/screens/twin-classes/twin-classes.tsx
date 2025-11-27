@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,17 +12,21 @@ import { z } from "zod";
 
 import {
   TWIN_CLASSES_SCHEMA,
+  TwinClassContext,
   TwinClassCreateRq,
   TwinClassFieldValues,
+  TwinClassFiltersHierarchyOverride,
   TwinClass_DETAILED,
   useTwinClassFilters,
   useTwinClassSearch,
 } from "@/entities/twin-class";
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassFreezeResourceLink } from "@/features/twin-class-freeze/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
@@ -63,6 +68,7 @@ const colDefs: Record<
     | "headClassId"
     | "extendsClassId"
     | "abstractClass"
+    | "assigneeRequired"
     | "permissionSchemaSpace"
     | "twinflowSchemaSpace"
     | "twinClassSchemaSpace"
@@ -75,6 +81,10 @@ const colDefs: Record<
     | "editPermissionId"
     | "deletePermissionId"
     | "ownerType"
+    | "externalId"
+    | "segment"
+    | "hasSegment"
+    | "twinClassFreezeId"
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
@@ -145,6 +155,14 @@ const colDefs: Record<
     header: "Abstract",
     cell: (data) => data.getValue() && <Check />,
   },
+
+  assigneeRequired: {
+    id: "assigneeRequired",
+    accessorKey: "assigneeRequired",
+    header: "Assignee required",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
   ownerType: {
     id: "ownerType",
     accessorKey: "ownerType",
@@ -246,10 +264,47 @@ const colDefs: Record<
         </div>
       ),
   },
+
+  externalId: {
+    id: "externalId",
+    accessorKey: "externalId",
+    header: "External Id",
+  },
+
+  segment: {
+    id: "segment",
+    accessorKey: "segment",
+    header: "Segment",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  hasSegment: {
+    id: "hasSegment",
+    accessorKey: "hasSegment",
+    header: "Has segment",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  twinClassFreezeId: {
+    id: "twinClassFreezeId",
+    accessorKey: "twinClassFreezeId",
+    header: "Freeze",
+    cell: ({ row: { original } }) =>
+      original.twinClassFreeze ? (
+        <div className="inline-flex max-w-48">
+          <TwinClassFreezeResourceLink
+            data={original.twinClassFreeze as TwinClass_DETAILED}
+            withTooltip
+          />
+        </div>
+      ) : null,
+  },
 };
 
-export function TwinClasses() {
+export function TwinClasses({ type }: { type?: string }) {
   const api = useContext(PrivateApiContext);
+  const router = useRouter();
+  const { twinClass } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { searchByFilters } = useTwinClassSearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
@@ -260,10 +315,34 @@ export function TwinClasses() {
   ): Promise<PagedResponse<TwinClass_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
+    let _override:
+      | Record<string, TwinClassFiltersHierarchyOverride>
+      | undefined;
+
+    if (twinClass) {
+      if (type === "Heads") {
+        _override = {
+          headHierarchyParentsForTwinClassSearch: {
+            idList: [twinClass.id],
+            depth: 1,
+          },
+        };
+      }
+
+      if (type === "Childs") {
+        _override = {
+          headHierarchyChildsForTwinClassSearch: {
+            idList: [twinClass.id],
+            depth: 1,
+          },
+        };
+      }
+    }
+
     try {
       return await searchByFilters({
         pagination,
-        filters: _filters,
+        filters: { ..._filters, ...(_override || {}) },
       });
     } catch {
       toast.error("Failed to fetch twin classes");
@@ -361,6 +440,7 @@ export function TwinClasses() {
         colDefs.headClassId,
         colDefs.extendsClassId,
         colDefs.abstractClass,
+        colDefs.assigneeRequired,
         colDefs.ownerType,
         colDefs.permissionSchemaSpace,
         colDefs.twinflowSchemaSpace,
@@ -372,8 +452,15 @@ export function TwinClasses() {
         colDefs.createPermissionId,
         colDefs.editPermissionId,
         colDefs.deletePermissionId,
+        colDefs.externalId,
+        colDefs.segment,
+        colDefs.hasSegment,
+        colDefs.twinClassFreezeId,
       ]}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
+      }
       filters={{
         filtersInfo: buildFilterFields(),
       }}
@@ -382,16 +469,22 @@ export function TwinClasses() {
         colDefs.key,
         colDefs.name,
         colDefs.headClassId,
+        colDefs.assigneeRequired,
         colDefs.extendsClassId,
         colDefs.abstractClass,
         colDefs.markersDataListId,
         colDefs.tagsDataListId,
+        colDefs.externalId,
+        colDefs.segment,
+        colDefs.hasSegment,
+        colDefs.twinClassFreezeId,
       ]}
       dialogForm={twinClassesForm}
-      onCreateSubmit={handleOnCreateSubmit}
+      onCreateSubmit={!type ? handleOnCreateSubmit : undefined}
       renderFormFields={() => (
         <TwinClassFormFields control={twinClassesForm.control} />
       )}
+      title={type || ""}
     />
   );
 }

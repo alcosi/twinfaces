@@ -13,6 +13,7 @@ import {
   LinkStrengthEnum,
   LinkTypesEnum,
   UpdateLinkRequestBody,
+  hydrateLinkFromMap,
   useCreateLink,
 } from "@/entities/link";
 import { TwinClassContext, TwinClass_DETAILED } from "@/entities/twin-class";
@@ -26,6 +27,7 @@ import { LoadingOverlay } from "@/shared/ui/loading";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 
 import { CreateLinkFormFields } from "../links";
+import { TwinClasses } from "../twin-classes";
 
 const mapLinkToFormPayload = (
   link: Link,
@@ -148,15 +150,25 @@ export function TwinClassRelations() {
       return {
         data:
           type === "forward"
-            ? Object.values(data.forwardLinkMap || {}).map((link) =>
-                mapLinkToFormPayload(link, { twinClassId: twinClass.id! })
-              )
-            : Object.values(data.backwardLinkMap || {}).map((link) =>
-                mapLinkToFormPayload(link, {
+            ? Object.values(data.forwardLinkMap || {}).map((link) => {
+                const hydratedLink = hydrateLinkFromMap(
+                  link,
+                  data.relatedObjects
+                );
+                return mapLinkToFormPayload(hydratedLink, {
+                  twinClassId: twinClass.id!,
+                });
+              })
+            : Object.values(data.backwardLinkMap || {}).map((link) => {
+                const hydratedLink = hydrateLinkFromMap(
+                  link,
+                  data.relatedObjects
+                );
+                return mapLinkToFormPayload(hydratedLink, {
                   twinClassId: twinClass.id!,
                   isBackward: true,
-                })
-              ),
+                });
+              }),
         pagination: {},
       };
     } catch (e) {
@@ -193,6 +205,7 @@ export function TwinClassRelations() {
 
   return (
     <>
+      <TwinClasses type="Heads" />
       <CrudDataTable
         className="mb-10"
         ref={tableRefForward}
@@ -253,6 +266,7 @@ export function TwinClassRelations() {
           <CreateLinkFormFields control={backwardLinkForm.control} />
         )}
       />
+      <TwinClasses type="Childs" />
     </>
   );
 }

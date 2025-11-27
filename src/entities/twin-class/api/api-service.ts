@@ -23,7 +23,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     search?: string;
     filters: TwinClassFilters;
   }) {
-    return settings.client.POST("/private/twin_class/search/v1", {
+    return settings.client.POST("/private/twin_class/search/v2", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
@@ -36,15 +36,21 @@ export function createTwinClassApi(settings: ApiSettings) {
           showTwinClass2TwinClassFieldMode: "DETAILED",
           showTwinClassFieldCollectionMode: "SHOW",
           showTwinClass2PermissionMode: "DETAILED",
+          showTwinClassSegmentMode: "SHOW",
+          showTwinClassFreezeMode: "DETAILED",
+          showTwinClassFreeze2StatusMode: "DETAILED",
+          showTwinClassMode2TwinClassFreezeMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
       },
       body: {
-        ...filters,
-        nameI18nLikeList: search
-          ? ["%" + search + "%"]
-          : filters.nameI18nLikeList,
+        search: {
+          ...filters,
+          nameI18nLikeList: search
+            ? ["%" + search + "%"]
+            : filters.nameI18nLikeList,
+        },
       },
     });
   }
@@ -161,7 +167,9 @@ export function createTwinClassApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         path: { twinClassId },
         query: {
-          showLinkDst2TwinClassMode: "MANAGED",
+          lazyRelation: false,
+          showTwinClass2LinkMode: "DETAILED",
+          showLinkDst2TwinClassMode: "DETAILED",
           showLinkMode: "DETAILED",
         },
       },
