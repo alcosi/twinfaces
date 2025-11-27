@@ -128,7 +128,6 @@ export function TwinClassRelations() {
     type: "forward" | "backward",
     _: PaginationState
   ): Promise<PagedResponse<Link>> {
-    console.log(_);
     if (!twinClass?.id) {
       toast.error("Twin class ID is missing");
       return { data: [], pagination: {} };

@@ -1,1 +1,23 @@
+echo "🔍 Starting Linter..."
 npx lint-staged
+LINT_EXIT_CODE=$?
+
+if [ $LINT_EXIT_CODE -ne 0 ]; then
+  echo "❌ Linter failed. Aborting commit."
+  exit $LINT_EXIT_CODE
+fi
+
+echo "✅ Linter finished successfully."
+echo ""
+
+echo "🧪 Starting TypeScript checks..."
+npm run test:ts
+TEST_EXIT_CODE=$?
+
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+  echo "❌ TypeScript check failed. Aborting commit."
+  exit $TEST_EXIT_CODE
+fi
+
+echo "✅ TypeScript check finished successfully."
+echo "🎉 All checks passed. Proceeding with commit..."

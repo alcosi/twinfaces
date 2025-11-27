@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -14,6 +15,7 @@ import {
   TwinClassContext,
   TwinClassCreateRq,
   TwinClassFieldValues,
+  TwinClassFiltersHierarchyOverride,
   TwinClass_DETAILED,
   useTwinClassFilters,
   useTwinClassSearch,
@@ -24,6 +26,7 @@ import { TwinClassFreezeResourceLink } from "@/features/twin-class-freeze/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
@@ -300,6 +303,7 @@ const colDefs: Record<
 
 export function TwinClasses({ type }: { type?: string }) {
   const api = useContext(PrivateApiContext);
+  const router = useRouter();
   const { twinClass } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { searchByFilters } = useTwinClassSearch();
@@ -311,7 +315,9 @@ export function TwinClasses({ type }: { type?: string }) {
   ): Promise<PagedResponse<TwinClass_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
-    let _override: Record<string, any> | undefined;
+    let _override:
+      | Record<string, TwinClassFiltersHierarchyOverride>
+      | undefined;
 
     if (twinClass) {
       if (type === "Heads") {
@@ -452,6 +458,9 @@ export function TwinClasses({ type }: { type?: string }) {
         colDefs.twinClassFreezeId,
       ]}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
+      }
       filters={{
         filtersInfo: buildFilterFields(),
       }}

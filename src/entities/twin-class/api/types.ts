@@ -22,9 +22,8 @@ export type TwinClass_DETAILED = RequireFields<
   editPermission: Permission;
   deletePermission: Permission;
   headClass: TwinClassBaseV1;
-  segmentClass?: TwinClassBaseV1;
-  hasSegment?: boolean;
-  segment?: boolean;
+  hasSegment: boolean;
+  segment: boolean;
   twinClassFreeze?: TwinClassBaseV1;
 };
 export type TwinClass_MANAGED = RequireFields<
@@ -41,6 +40,11 @@ export type TwinClass_MANAGED = RequireFields<
   | "twinClassSchemaSpace"
   | "twinflowSchemaSpace"
 >;
+
+export type TwinClassFiltersHierarchyOverride = {
+  idList: string[];
+  depth: number;
+};
 
 export type TwinClassCreateRq = components["schemas"]["TwinClassCreateRqV1"];
 export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"];
@@ -77,7 +81,9 @@ export type TwinClassFilterKeys =
   | "tagDatalistIdList"
   | "headHierarchyChildsForTwinClassSearch"
   | "hasSegments"
-  | "segment";
+  | "segment"
+  | "assigneeRequired"
+  | "externalIdLikeList";
 
 export type TwinClassFilters = Partial<
   Pick<components["schemas"]["TwinClassSearchV1"], TwinClassFilterKeys>

@@ -78,6 +78,12 @@ export function useTwinClassFilters(): FilterFeature<
         renderItem: (o: unknown) => o as string,
         multi: true,
       },
+      assigneeRequired: {
+        type: AutoFormValueType.boolean,
+        label: "Assignee required",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
+      },
       twinflowSchemaSpace: {
         type: AutoFormValueType.boolean,
         label: "Twinflow schema space",
@@ -156,6 +162,10 @@ export function useTwinClassFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
+      externalIdLikeList: {
+        type: AutoFormValueType.tag,
+        label: "External Id",
+      },
     };
   }
 
@@ -190,6 +200,7 @@ export function useTwinClassFilters(): FilterFeature<
       ownerTypeList: toArray(
         filters.ownerTypeList as TwinClassFilters["ownerTypeList"]
       ),
+      assigneeRequired: mapToChoice(filters.assigneeRequired),
       twinflowSchemaSpace: mapToChoice(filters.twinflowSchemaSpace),
       twinClassSchemaSpace: mapToChoice(filters.twinClassSchemaSpace),
       permissionSchemaSpace: mapToChoice(filters.permissionSchemaSpace),
@@ -221,6 +232,9 @@ export function useTwinClassFilters(): FilterFeature<
       ),
       segment: mapToChoice(filters.segment),
       hasSegments: mapToChoice(filters.hasSegments),
+      externalIdLikeList: toArrayOfString(filters.externalIdLikeList).map(
+        wrapWithPercent
+      ),
     };
 
     return result;
