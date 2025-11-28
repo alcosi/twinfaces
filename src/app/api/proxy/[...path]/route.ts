@@ -14,8 +14,6 @@ const REFRESH_PATH = (
   process.env.TWINS_REFRESH_PATH || "/auth/refresh/v2"
 ).replace(/^\/?/, "/");
 
-if (!API_BASE) console.warn("[proxy] TWINS_API_URL is empty!");
-
 type Tokens = {
   accessToken: string;
   refreshToken?: string;
@@ -47,23 +45,37 @@ const inflightRefreshes = new Map<string, Promise<Tokens | null>>();
 
 function sanitizeHeaders(req: NextRequest, withAuth?: string) {
   const h = new Headers(req.headers);
+
+  const PUBLIC_URL_EXCLUDE_MAP = [
+    "/public/",
+    "/auth/login/v1",
+    "/private/domain/user/search/v1",
+  ] as const;
+
+  const isPublicEndpoint = PUBLIC_URL_EXCLUDE_MAP.some((item) =>
+    req.nextUrl.pathname.includes(item)
+  );
+
   h.delete("host");
   h.delete("content-length");
 
   for (const [k] of h) {
     const kl = k.toLowerCase();
-    if (
-      kl === "accept-encoding" ||
-      kl === "authtoken" ||
-      kl === "authorization"
-    )
+    if (kl === "accept-encoding") h.delete(k);
+    if (kl === "authorization") {
+      if (isPublicEndpoint) continue;
       h.delete(k);
+    }
   }
   h.set("accept-encoding", "identity");
 
   if (withAuth) {
     h.set("Authorization", `Bearer ${withAuth}`);
     h.set("AuthToken", withAuth);
+  }
+
+  if (isPublicEndpoint) {
+    h.delete("transfer-encoding");
   }
 
   const rawDid = h.get("DomainId") ?? h.get("domainid");
