@@ -1,17 +1,27 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
 
 import {
-  FactoryConditionSet,
+  CONDITION_SET_SCHEMA,
+  ConditionSetFieldValues,
+  FactoryConditionSetCreateRq,
+  FactoryConditionSet_DETAILED,
   useFactoryConditionSetFilters,
   useFactoryConditionSetSearch,
 } from "@/entities/factory-condition-set";
 import { UserResourceLink } from "@/features/user/ui";
+import { PrivateApiContext } from "@/shared/api";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+
+import { ConditionSetFields } from "./form-fields";
 
 const colDefs: Record<
   | "id"
@@ -24,13 +34,16 @@ const colDefs: Record<
   | "inFactoryEraserUsagesCount"
   | "createdByUserId"
   | "createdAt",
-  ColumnDef<FactoryConditionSet>
+  ColumnDef<FactoryConditionSet_DETAILED>
 > = {
   id: {
     id: "id",
     accessorKey: "id",
     header: "ID",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    cell: (data) => {
+      const value = data.getValue<string | undefined>();
+      return value ? <GuidWithCopy value={value} /> : null;
+    },
   },
   name: {
     id: "name",
@@ -95,6 +108,7 @@ const colDefs: Record<
 };
 
 export function ConditionSetsScreen() {
+  const api = useContext(PrivateApiContext);
   const { searchFactoryConditionSet } = useFactoryConditionSetSearch();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryConditionSetFilters();
@@ -117,6 +131,36 @@ export function ConditionSetsScreen() {
     }
   }
 
+  const conditionSetForm = useForm<ConditionSetFieldValues>({
+    resolver: zodResolver(CONDITION_SET_SCHEMA),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof CONDITION_SET_SCHEMA>
+  ) => {
+    const requestBody: FactoryConditionSetCreateRq = {
+      conditionSets: [
+        {
+          name: formValues.name,
+          description: formValues.description,
+        },
+      ],
+    };
+
+    const { error } = await api.factoryConditionSet.create({
+      body: requestBody,
+    });
+
+    if (error) {
+      throw error;
+    }
+    toast.success("Condition set created successfully!");
+  };
+
   return (
     <CrudDataTable
       columns={[
@@ -132,7 +176,7 @@ export function ConditionSetsScreen() {
         colDefs.createdAt,
       ]}
       fetcher={fetchFactoryConditionSet}
-      getRowId={(row) => row.id!}
+      getRowId={(row) => row.id || ""}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,
@@ -146,6 +190,11 @@ export function ConditionSetsScreen() {
         colDefs.createdAt,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={conditionSetForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <ConditionSetFields control={conditionSetForm.control} />
+      )}
     />
   );
 }
