@@ -50,6 +50,7 @@ function sanitizeHeaders(req: NextRequest, withAuth?: string) {
     "/public/",
     "/auth/login/v1",
     "/private/domain/user/search/v1",
+    "/public/domain/search/v1",
   ] as const;
 
   const isPublicEndpoint = PUBLIC_URL_EXCLUDE_MAP.some((item) =>
