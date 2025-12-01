@@ -9,6 +9,7 @@ const API_BASE = (
   env("NEXT_PUBLIC_TWINS_API_URL") ||
   ""
 ).replace(/\/+$/, "");
+console.log("🚀 ~ API_BASE:", API_BASE);
 
 console.log("🚀 ~ process:", JSON.stringify(process.env));
 console.log("🚀 ~ ENV:", JSON.stringify(env, null, 2));
@@ -53,11 +54,18 @@ function sanitizeHeaders(req: NextRequest, withAuth?: string) {
     "/public/",
     "/auth/login/v1",
     "/private/domain/user/search/v1",
+    "/public/domain/search/v1",
   ] as const;
 
-  const isPublicEndpoint = PUBLIC_URL_EXCLUDE_MAP.some((item) =>
-    req.nextUrl.pathname.includes(item)
-  );
+  const isPublicEndpoint = PUBLIC_URL_EXCLUDE_MAP.some((item) => {
+    console.log("🚀 ~ sanitizeHeaders ~ item:", item);
+    console.log(
+      "🚀 ~ sanitizeHeaders ~ req.nextUrl.pathname:",
+      req.nextUrl.pathname
+    );
+    return req.nextUrl.pathname.includes(item);
+  });
+  console.log("🚀 ~ sanitizeHeaders ~ isPublicEndpoint:", isPublicEndpoint);
 
   h.delete("host");
   h.delete("content-length");
@@ -103,8 +111,10 @@ async function callBackend(
   access?: string,
   bodyBuf?: ArrayBuffer
 ) {
+  console.log("🚀 ~ callBackend ~ req:", req);
   const rel = req.nextUrl.pathname.replace(/^\/api\/proxy\//, "");
   const target = `${API_BASE}/${rel}${req.nextUrl.search}`;
+  console.log("🚀 ~ callBackend ~ target:", target);
 
   const init: RequestInit & { duplex?: "half" } = {
     method: req.method,
@@ -120,8 +130,10 @@ async function callBackend(
 
   try {
     const upstream = await fetch(target, init);
+    console.log("🚀 ~ callBackend ~ upstream:", upstream);
     return { upstream, target };
   } catch (e) {
+    console.log("🚀 ~ callBackend ~ e:", e);
     return { upstream: null as any, target, error: e as Error };
   }
 }
@@ -199,6 +211,7 @@ function makeProxyResponse(
   extra?: Record<string, string>
 ) {
   const headers = new Headers(upstream.headers);
+  console.log("🚀 ~ makeProxyResponse ~ headers:", headers);
 
   [
     "content-encoding",
@@ -240,6 +253,7 @@ async function handler(req: NextRequest) {
       const res = makeProxyResponse(upstream, target, {
         "x-proxy-refresh": "success",
       });
+      console.log("🚀 ~ handler ~ res:", res);
 
       const cookieOpts = {
         httpOnly: true,
@@ -271,6 +285,7 @@ async function handler(req: NextRequest) {
           : "no-refresh-token"
         : "n/a",
   });
+  console.log("🚀 ~ handler ~ res:", res);
 
   return res;
 }
