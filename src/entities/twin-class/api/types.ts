@@ -1,10 +1,16 @@
+import type { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
+import type { TwinClassField } from "@/entities/twin-class-field";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type TwinClass = components["schemas"]["TwinClassV1"];
+export type TwinClass = components["schemas"]["TwinClassV1"] & {
+  extendsClass?: TwinClass;
+  headHunterFeaturer?: Featurer;
+  fields?: TwinClassField[];
+};
 
-export type TwinClassBaseV1 = components["schemas"]["TwinClassBaseV1"];
+export type TwinClassBaseV1 = components["schemas"]["TwinClassV1"];
 export type TwinClass_SHORT = RequireFields<TwinClass, "id" | "key">;
 export type TwinClass_DETAILED = RequireFields<
   TwinClass,

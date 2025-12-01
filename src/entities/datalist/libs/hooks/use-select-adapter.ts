@@ -10,7 +10,7 @@ export function useDatalistSelectAdapter(): SelectAdapter<DataList> {
     const datalist = await fetchDatalistById({
       dataListId: id,
       query: {
-        showDataListOption2DataListMode: "MANAGED",
+        showDataListMode: "MANAGED",
       },
     });
 

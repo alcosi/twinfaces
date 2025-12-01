@@ -1,3 +1,4 @@
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
 import { TwinFlow, TwinFlow_DETAILED } from "../api";
@@ -20,7 +21,9 @@ export const hydrateTwinFlowFromMap = (
   }
 
   if (dto.twinClassId && relatedObjects?.twinClassMap) {
-    hydrated.twinClass = relatedObjects.twinClassMap[dto.twinClassId];
+    hydrated.twinClass = relatedObjects.twinClassMap[
+      dto.twinClassId
+    ] as TwinClass_DETAILED;
   }
 
   return hydrated;

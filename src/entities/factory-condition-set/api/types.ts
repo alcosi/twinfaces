@@ -1,9 +1,8 @@
+import { User } from "@/entities/user";
 import { components } from "@/shared/api/generated/schema";
 
 export type FactoryConditionSet =
   components["schemas"]["FactoryConditionSetV1"];
-
-export type User = components["schemas"]["UserV1"];
 
 export type FactoryConditionSet_DETAILED = FactoryConditionSet & {
   createdByUser?: User;

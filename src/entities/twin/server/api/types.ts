@@ -1,16 +1,33 @@
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinFlowTransition } from "@/entities/twin-flow-transition";
+import { TwinStatus } from "@/entities/twin-status";
 import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type Twin = components["schemas"]["TwinV2"];
+type TwinSchema = components["schemas"]["TwinV2"];
 
-export type Twin_HYDRATED = Omit<components["schemas"]["TwinV2"], "fields"> & {
+type TwinRelations = {
+  twinClass?: TwinClass_DETAILED;
+  status?: TwinStatus;
+  authorUser?: User;
+  assignerUser?: User;
+  ownerUser?: User;
+  headTwin?: TwinSchema;
+  transitions?: TwinFlowTransition[];
+  tags?: DataListOptionV1[];
+  markers?: DataListOptionV1[];
+};
+
+export type Twin = TwinSchema & TwinRelations;
+
+export type Twin_HYDRATED = Omit<Twin, "fields"> & {
   fields?: {
     [key: string]: TwinFieldUI;
   };
-  ownerUser?: User;
+  fieldRules?: Record<string, unknown>;
 
   // TODO: implement selfFields, inheritedFields, and allFields (combined)
   // selfFields?: Record<string, unknown>;

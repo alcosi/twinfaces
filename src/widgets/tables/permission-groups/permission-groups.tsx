@@ -22,7 +22,7 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
 
 const colDefs: Record<
-  keyof Omit<PermissionGroup, "twinClass" | "permissions">,
+  "id" | "key" | "name" | "description" | "twinClassId",
   ColumnDef<PermissionGroup>
 > = {
   id: {

@@ -1,6 +1,9 @@
+import { PermissionGroup } from "@/entities/permission-group";
 import { components, operations } from "@/shared/api/generated/schema";
 
-export type Permission = components["schemas"]["PermissionV2"];
+export type Permission = components["schemas"]["PermissionV1"] & {
+  group?: PermissionGroup;
+};
 export type Permission_DETAILED = Required<Permission>;
 
 export type CreatePermissionRequestBody =

@@ -1,7 +1,10 @@
+import { User } from "@/entities/user";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type Factory = components["schemas"]["FactoryV2"];
+export type Factory = components["schemas"]["FactoryV1"] & {
+  createdByUser?: User;
+};
 export type Factory_SHORT = RequireFields<
   Factory,
   "id" | "name" | "key" | "createdAt"

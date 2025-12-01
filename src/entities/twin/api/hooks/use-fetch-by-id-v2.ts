@@ -20,6 +20,7 @@ export const useTwinFetchByIdV2 = () => {
             Channel: "WEB",
           },
           query: {
+            lazyRelation: "false",
             showTwinMode: "DETAILED",
             showTwinClassMode: "DETAILED",
             showTwin2TwinClassMode: "DETAILED",

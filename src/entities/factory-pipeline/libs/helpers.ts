@@ -1,10 +1,12 @@
-import { RelatedObjects } from "@/shared/api";
+import type { Factory } from "@/entities/factory";
+import type { FactoryConditionSet } from "@/entities/factory-condition-set";
 import {
   FactoryPipeline,
   FactoryPipeline_DETAILED,
 } from "@/entities/factory-pipeline";
-import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { Factory } from "@/entities/factory";
+import type { TwinClass_DETAILED } from "@/entities/twin-class";
+import type { TwinStatus } from "@/entities/twin-status";
+import { RelatedObjects } from "@/shared/api";
 
 export const hydrateFactoryPipelineFromMap = (
   dto: FactoryPipeline,
@@ -34,7 +36,13 @@ export const hydrateFactoryPipelineFromMap = (
   if (dto.outputTwinStatusId && relatedObjects?.statusMap) {
     hydrated.outputTwinStatus = relatedObjects.statusMap[
       dto.outputTwinStatusId
-    ] as TwinClass_DETAILED;
+    ] as TwinStatus;
+  }
+
+  if (dto.factoryConditionSetId && relatedObjects?.factoryConditionSetMap) {
+    hydrated.factoryConditionSet = relatedObjects.factoryConditionSetMap[
+      dto.factoryConditionSetId
+    ] as FactoryConditionSet;
   }
 
   return hydrated;

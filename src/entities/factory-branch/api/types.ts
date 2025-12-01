@@ -1,7 +1,13 @@
+import { Factory } from "@/entities/factory";
+import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type FactoryBranch = components["schemas"]["FactoryBranchV2"];
+export type FactoryBranch = components["schemas"]["FactoryBranchV1"] & {
+  factory?: Factory;
+  factoryConditionSet?: FactoryConditionSet;
+  nextFactory?: Factory;
+};
 export type FactoryBranch_SHORT = RequireFields<
   FactoryBranch,
   "id" | "factoryId" | "factory" | "factoryConditionSetInvert" | "active"
