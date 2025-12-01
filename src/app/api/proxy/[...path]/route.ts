@@ -9,14 +9,14 @@ const API_BASE = (
   env("NEXT_PUBLIC_TWINS_API_URL") ||
   ""
 ).replace(/\/+$/, "");
-console.log("🚀 ~ API_BASE:", API_BASE);
 
-console.log("🚀 ~ process:", JSON.stringify(process.env));
-console.log("🚀 ~ ENV:", JSON.stringify(env, null, 2));
+console.log("🔧 API_BASE =", API_BASE);
 
 const REFRESH_PATH = (
   process.env.TWINS_REFRESH_PATH || "/auth/refresh/v2"
 ).replace(/^\/?/, "/");
+
+console.log("🔧 REFRESH_PATH =", REFRESH_PATH);
 
 type Tokens = {
   accessToken: string;
@@ -26,95 +26,198 @@ type Tokens = {
 
 type CacheEntry<T> = { value: T; expiresAt: number };
 const resolvedRefreshes = new Map<string, CacheEntry<Tokens>>();
-const RESOLVED_TTL_MS = 20_000;
+const inflight = new Map<string, Promise<Tokens | null>>();
+const TTL = 20_000;
 
-function putResolved(oldRefresh: string, tokens: Tokens) {
-  resolvedRefreshes.set(oldRefresh, {
+const PUBLIC_ENDPOINTS = ["/public/", "/auth/signup"] as const;
+
+function isPublicEndpoint(path: string) {
+  const result = PUBLIC_ENDPOINTS.some((p) => path.includes(p));
+  console.log("🌐 isPublicEndpoint(", path, ") =", result);
+  return result;
+}
+
+function putResolved(refresh: string, tokens: Tokens) {
+  console.log("💾 putResolved refresh=", refresh, " tokens=", tokens);
+  resolvedRefreshes.set(refresh, {
     value: tokens,
-    expiresAt: Date.now() + RESOLVED_TTL_MS,
+    expiresAt: Date.now() + TTL,
   });
 }
 
-function getResolved(oldRefresh: string): Tokens | null {
-  const e = resolvedRefreshes.get(oldRefresh);
-  if (!e) return null;
-  if (Date.now() > e.expiresAt) {
-    resolvedRefreshes.delete(oldRefresh);
+function getResolved(refresh: string): Tokens | null {
+  const v = resolvedRefreshes.get(refresh);
+  console.log("📦 getResolved(", refresh, ") =", v);
+  if (!v) return null;
+  if (Date.now() > v.expiresAt) {
+    console.log("⚠️ getResolved expired");
+    resolvedRefreshes.delete(refresh);
     return null;
   }
-  return e.value;
+  return v.value;
 }
 
-const inflightRefreshes = new Map<string, Promise<Tokens | null>>();
+async function refreshTokens(req: NextRequest, refresh?: string) {
+  console.log("🔄 refreshTokens START refresh=", refresh);
+  if (!refresh) return null;
 
-function sanitizeHeaders(req: NextRequest, withAuth?: string) {
-  const h = new Headers(req.headers);
+  const cached = getResolved(refresh);
+  if (cached) {
+    console.log("🔄 refreshTokens RETURN CACHED");
+    return cached;
+  }
 
-  const PUBLIC_URL_EXCLUDE_MAP = [
-    "/public/",
-    "/auth/login/v1",
-    "/private/domain/user/search/v1",
-    "/public/domain/search/v1",
-  ] as const;
+  const infl = inflight.get(refresh);
+  if (infl) {
+    console.log("🔄 refreshTokens RETURN INFLIGHT");
+    return infl;
+  }
 
-  const isPublicEndpoint = PUBLIC_URL_EXCLUDE_MAP.some((item) => {
-    console.log("🚀 ~ sanitizeHeaders ~ item:", item);
-    console.log(
-      "🚀 ~ sanitizeHeaders ~ req.nextUrl.pathname:",
-      req.nextUrl.pathname
-    );
-    return req.nextUrl.pathname.includes(item);
+  const url = `${API_BASE}${REFRESH_PATH}`;
+  console.log("🔄 refreshTokens URL =", url);
+
+  const p = (async () => {
+    const headers: Record<string, string> = {
+      "content-type": "application/json",
+      Channel: "WEB",
+    };
+
+    const did = req.cookies.get("domainId")?.value;
+    if (did) headers["DomainId"] = did;
+
+    console.log("🔄 REFRESH POST headers=", headers);
+
+    const r = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ refreshToken: refresh }),
+      cache: "no-store",
+    });
+
+    console.log("🔄 REFRESH response status =", r.status);
+
+    if (!r.ok) return null;
+
+    let data: any;
+    try {
+      data = await r.json();
+    } catch (err) {
+      console.log("❌ refreshTokens JSON parse failed", err);
+      return null;
+    }
+
+    console.log("🔄 refreshTokens data =", data);
+
+    const auth = data?.authData ?? data;
+    const accessToken =
+      auth?.auth_token || auth?.accessToken || data?.accessToken;
+
+    console.log("🔄 refreshTokens accessToken =", accessToken);
+
+    if (!accessToken) return null;
+
+    const tokens: Tokens = {
+      accessToken,
+      refreshToken: auth?.refresh_token ?? auth?.refreshToken,
+      authTokenExpiresAt:
+        auth?.auth_token_expires_at ?? auth?.authTokenExpiresAt,
+    };
+
+    console.log("🔄 refreshTokens TOKENS RESOLVED =", tokens);
+
+    putResolved(refresh, tokens);
+    return tokens;
+  })();
+
+  inflight.set(refresh, p);
+  p.finally(() => {
+    console.log("🔄 refreshTokens inflight finished");
+    inflight.delete(refresh);
   });
-  console.log("🚀 ~ sanitizeHeaders ~ isPublicEndpoint:", isPublicEndpoint);
+
+  return p;
+}
+
+function sanitizeHeaders(req: NextRequest, access?: string | null) {
+  console.log("🧹 sanitizeHeaders START access=", access);
+
+  const h = new Headers(req.headers);
+  const path = req.nextUrl.pathname;
+
+  const isPublic = isPublicEndpoint(path);
+
+  console.log("🧹 sanitizeHeaders original headers =", Object.fromEntries(h));
 
   h.delete("host");
   h.delete("content-length");
-
-  for (const [k] of h) {
-    const kl = k.toLowerCase();
-    if (kl === "accept-encoding") h.delete(k);
-    if (kl === "authorization") {
-      if (isPublicEndpoint) continue;
-      h.delete(k);
-    }
-  }
+  h.delete("accept-encoding");
   h.set("accept-encoding", "identity");
 
-  if (withAuth) {
-    h.set("Authorization", `Bearer ${withAuth}`);
-    h.set("AuthToken", withAuth);
+  h.delete("transfer-encoding");
+
+  if (isPublic) {
+    console.log("🧹 sanitizeHeaders PUBLIC endpoint — removing auth headers");
+
+    [
+      "authorization",
+      "authtoken",
+      "AuthToken",
+      "DomainId",
+      "domainid",
+      "cookie",
+      "Cookie",
+    ].forEach((k) => h.delete(k));
+
+    h.set("Channel", "WEB");
+
+    console.log("🧹 sanitizeHeaders PUBLIC result =", Object.fromEntries(h));
+    return h;
   }
 
-  if (isPublicEndpoint) {
-    h.delete("transfer-encoding");
+  if (access) {
+    h.set("Authorization", `Bearer ${access}`);
+    h.set("AuthToken", access);
   }
 
   const rawDid = h.get("DomainId") ?? h.get("domainid");
   const needsFix =
-    !rawDid ||
-    rawDid === "undefined" ||
-    rawDid === "null" ||
-    rawDid.trim() === "";
+    !rawDid || rawDid === "null" || rawDid === "undefined" || rawDid === "";
+
+  console.log(
+    "🧹 sanitizeHeaders DomainId raw =",
+    rawDid,
+    " needsFix=",
+    needsFix
+  );
+
   if (needsFix) {
     h.delete("DomainId");
     h.delete("domainid");
     const did = req.cookies.get("domainId")?.value;
+    console.log("🧹 setting DomainId from cookie =", did);
     if (did) h.set("DomainId", did);
   }
-  if (!h.has("Channel") && !h.has("channel")) h.set("Channel", "WEB");
+
+  if (!h.has("Channel")) h.set("Channel", "WEB");
+
+  console.log("🧹 sanitizeHeaders FINAL headers =", Object.fromEntries(h));
 
   return h;
 }
 
 async function callBackend(
   req: NextRequest,
-  access?: string,
+  access?: string | null,
   bodyBuf?: ArrayBuffer
 ) {
-  console.log("🚀 ~ callBackend ~ req:", req);
+  console.log("📡 callBackend START access=", access);
+
   const rel = req.nextUrl.pathname.replace(/^\/api\/proxy\//, "");
-  const target = `${API_BASE}/${rel}${req.nextUrl.search}`;
-  console.log("🚀 ~ callBackend ~ target:", target);
+  const search = req.nextUrl.search;
+
+  const target = `${API_BASE}/${rel}${search}`;
+
+  console.log("📡 callBackend target =", target);
 
   const init: RequestInit & { duplex?: "half" } = {
     method: req.method,
@@ -124,94 +227,26 @@ async function callBackend(
   };
 
   if (!["GET", "HEAD"].includes(req.method)) {
-    init.body = bodyBuf ? bodyBuf : undefined;
+    init.body = bodyBuf;
     init.duplex = "half";
   }
 
+  console.log("📡 callBackend init =", init);
+
   try {
     const upstream = await fetch(target, init);
-    console.log("🚀 ~ callBackend ~ upstream:", upstream);
+    console.log("📡 callBackend response status =", upstream.status);
     return { upstream, target };
   } catch (e) {
-    console.log("🚀 ~ callBackend ~ e:", e);
+    console.log("❌ callBackend ERROR =", e);
     return { upstream: null as any, target, error: e as Error };
   }
 }
 
-function normalizeTokensFromJson(data: any): Tokens | null {
-  const auth = data?.authData ?? data;
-  const at = auth?.auth_token ?? auth?.accessToken ?? null;
-  if (!at) return null;
-  return {
-    accessToken: at,
-    refreshToken: auth?.refresh_token ?? auth?.refreshToken,
-    authTokenExpiresAt: auth?.auth_token_expires_at ?? auth?.authTokenExpiresAt,
-  };
-}
+function makeProxyResponse(upstream: Response, target: string) {
+  console.log("📦 makeProxyResponse status =", upstream.status);
 
-async function refreshTokens(req: NextRequest, refreshToken?: string) {
-  if (!refreshToken) return null;
-
-  const cached = getResolved(refreshToken);
-  if (cached) return cached;
-
-  const url = `${API_BASE}${REFRESH_PATH}`;
-  const headers: Record<string, string> = {
-    "content-type": "application/json",
-    Channel: "WEB",
-  };
-  const did = req.cookies.get("domainId")?.value;
-  if (did) headers["DomainId"] = did;
-
-  const r = await fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ refreshToken }),
-    cache: "no-store",
-  });
-
-  if (!r.ok) {
-    const again = getResolved(refreshToken);
-    return again ?? null;
-  }
-
-  let data: any = null;
-  try {
-    data = await r.json();
-  } catch {
-    /* no-op */
-  }
-
-  const tokens = normalizeTokensFromJson(data);
-  if (!tokens?.accessToken) return null;
-
-  putResolved(refreshToken, tokens);
-  return tokens;
-}
-
-async function getRefreshedTokens(req: NextRequest, refreshToken: string) {
-  const inFlight = inflightRefreshes.get(refreshToken);
-  if (inFlight) return inFlight;
-
-  const p = (async () => {
-    try {
-      return await refreshTokens(req, refreshToken);
-    } finally {
-      inflightRefreshes.delete(refreshToken);
-    }
-  })();
-
-  inflightRefreshes.set(refreshToken, p);
-  return p;
-}
-
-function makeProxyResponse(
-  upstream: Response,
-  target: string,
-  extra?: Record<string, string>
-) {
   const headers = new Headers(upstream.headers);
-  console.log("🚀 ~ makeProxyResponse ~ headers:", headers);
 
   [
     "content-encoding",
@@ -227,67 +262,85 @@ function makeProxyResponse(
   });
 
   res.headers.set("x-proxy-target", target);
-  if (extra) for (const [k, v] of Object.entries(extra)) res.headers.set(k, v);
+
+  console.log(
+    "📦 makeProxyResponse final headers =",
+    Object.fromEntries(res.headers)
+  );
+
   return res;
 }
 
 async function handler(req: NextRequest) {
-  const access = req.cookies.get("authToken")?.value;
-  const refresh = req.cookies.get("refreshToken")?.value;
+  console.log("====== 🛰  PROXY REQUEST START ======");
+  console.log("➡️ req.method =", req.method);
+  console.log("➡️ req.url =", req.url);
+
+  const isPublic = isPublicEndpoint(req.nextUrl.pathname);
+  console.log("➡️ isPublic =", isPublic);
+
+  const accessCookie = req.cookies.get("authToken")?.value ?? null;
+  const refresh = req.cookies.get("refreshToken")?.value ?? null;
+
+  console.log("🍪 accessCookie =", accessCookie);
+  console.log("🍪 refreshCookie =", refresh);
+
   const bodyBuf = !["GET", "HEAD"].includes(req.method)
     ? await req.arrayBuffer()
     : undefined;
 
+  let access = isPublic ? null : accessCookie;
+
+  if (!isPublic && refresh) {
+    const cached = getResolved(refresh);
+    console.log("🔎 cached TOKEN =", cached);
+    if (cached?.accessToken) access = cached.accessToken;
+  }
+
+  console.log("➡️ Using access token =", access);
+
   let { upstream, target } = await callBackend(req, access, bodyBuf);
 
-  if (upstream?.status === 401 && refresh) {
-    const renewed = await getRefreshedTokens(req, refresh);
+  if (!isPublic && upstream?.status === 401 && refresh) {
+    console.log("🔄 401 detected — trying refresh flow");
+
+    const renewed = await refreshTokens(req, refresh);
+    console.log("🔄 renewed =", renewed);
 
     if (renewed?.accessToken) {
-      ({ upstream, target } = await callBackend(
-        req,
-        renewed.accessToken,
-        bodyBuf
-      ));
+      access = renewed.accessToken;
 
-      const res = makeProxyResponse(upstream, target, {
-        "x-proxy-refresh": "success",
-      });
-      console.log("🚀 ~ handler ~ res:", res);
+      ({ upstream, target } = await callBackend(req, access, bodyBuf));
 
-      const cookieOpts = {
+      const res = makeProxyResponse(upstream, target);
+
+      const opts = {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax" as const,
         path: "/",
       };
 
-      res.cookies.set("authToken", renewed.accessToken, cookieOpts);
+      console.log("🍪 Setting refreshed cookies");
+
+      res.cookies.set("authToken", renewed.accessToken, opts);
       if (renewed.refreshToken)
-        res.cookies.set("refreshToken", renewed.refreshToken, cookieOpts);
+        res.cookies.set("refreshToken", renewed.refreshToken, opts);
+
       if (renewed.authTokenExpiresAt)
         res.cookies.set(
           "authTokenExpiresAt",
           String(renewed.authTokenExpiresAt),
-          cookieOpts
+          opts
         );
 
+      console.log("====== 🛰  PROXY REQUEST END (REFRESHED) ======");
       return res;
     }
   }
 
-  const res = makeProxyResponse(upstream, target, {
-    "x-proxy-did": req.cookies.get("domainId")?.value ?? "none",
-    "x-proxy-refresh":
-      upstream.status === 401
-        ? refresh
-          ? "failed-or-skip"
-          : "no-refresh-token"
-        : "n/a",
-  });
-  console.log("🚀 ~ handler ~ res:", res);
-
-  return res;
+  console.log("====== 🛰  PROXY REQUEST END ======");
+  return makeProxyResponse(upstream, target);
 }
 
 export {
