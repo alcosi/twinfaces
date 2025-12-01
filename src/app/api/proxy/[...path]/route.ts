@@ -10,6 +10,9 @@ const API_BASE = (
   ""
 ).replace(/\/+$/, "");
 
+console.log("🚀 ~ process:", JSON.stringify(process.env));
+console.log("🚀 ~ ENV:", JSON.stringify(env, null, 2));
+
 const REFRESH_PATH = (
   process.env.TWINS_REFRESH_PATH || "/auth/refresh/v2"
 ).replace(/^\/?/, "/");
@@ -50,7 +53,6 @@ function sanitizeHeaders(req: NextRequest, withAuth?: string) {
     "/public/",
     "/auth/login/v1",
     "/private/domain/user/search/v1",
-    "/public/domain/search/v1",
   ] as const;
 
   const isPublicEndpoint = PUBLIC_URL_EXCLUDE_MAP.some((item) =>
