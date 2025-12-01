@@ -96,8 +96,6 @@ export async function fetchDomains(): Promise<DomainPublicView[]> {
     body: { search: {} },
     cache: "no-store",
   });
-  console.log("🚀 ~ fetchDomains ~ data:", data);
-  console.log("🚀 ~ fetchDomains ~ error:", error);
 
   if (error) throw error;
   if (isUndefined(data?.domains))
