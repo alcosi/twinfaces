@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
@@ -23,7 +25,7 @@ export const useTwinClassOwnerType = () => {
       }
 
       return data.twinClassOwnerTypes;
-    } catch (error) {
+    } catch {
       throw new Error("Failed to fetch class owner type list due to API error");
     }
   }, [api]);
