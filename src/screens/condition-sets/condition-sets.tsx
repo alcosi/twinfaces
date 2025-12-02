@@ -163,6 +163,7 @@ export function ConditionSetsScreen() {
 
   return (
     <CrudDataTable
+      title="Condition sets"
       columns={[
         colDefs.id,
         colDefs.name,

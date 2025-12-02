@@ -1,3 +1,5 @@
+import { FactoryConditionSet } from "@/entities/factory-condition-set";
+import { FactoryMultiplier } from "@/entities/factory-multiplier/api";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
@@ -14,6 +16,18 @@ export const hydrateFactoryMultiplierFilterFromMap = (
     {},
     dto
   ) as FactoryMultiplierFilter_DETAILED;
+
+  if (dto.multiplierId && relatedObjects?.factoryMultiplierMap) {
+    hydrated.multiplier = relatedObjects.factoryMultiplierMap[
+      dto.multiplierId
+    ] as FactoryMultiplier;
+  }
+
+  if (dto.factoryConditionSetId && relatedObjects?.factoryConditionSetMap) {
+    hydrated.factoryConditionSet = relatedObjects.factoryConditionSetMap[
+      dto.factoryConditionSetId
+    ] as FactoryConditionSet;
+  }
 
   if (
     dto.multiplier?.factoryId &&
