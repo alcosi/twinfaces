@@ -50,6 +50,18 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
     }, []);
   }
 
+  if (dto.markerIdList && relatedObjects.dataListsOptionMap) {
+    hydrated.markers = dto.markerIdList.reduce<DataListOptionV1[]>(
+      (acc, id) => {
+        const marker = relatedObjects.dataListsOptionMap?.[id];
+        if (marker) acc.push(marker);
+
+        return acc;
+      },
+      []
+    );
+  }
+
   if (dto.transitionsIdList && relatedObjects.transitionsMap) {
     hydrated.transitions = dto.transitionsIdList.reduce<TwinFlowTransition[]>(
       (acc, id) => {

@@ -1,6 +1,11 @@
+import { BusinessAccount } from "@/entities/business-account";
+import { User } from "@/entities/user";
 import { components, operations } from "@/shared/api/generated/schema";
 
-export type PermissionSchema = components["schemas"]["PermissionSchemaV2"];
+export type PermissionSchema = components["schemas"]["PermissionSchemaV1"] & {
+  createdByUser?: User;
+  businessAccount?: BusinessAccount;
+};
 
 export type PermissionSchemaSearchFilterKeys = "nameLikeList";
 export type PermissionSchemaSearchFilters = Partial<

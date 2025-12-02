@@ -1,3 +1,4 @@
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
 import { FactoryEraser, FactoryEraser_DETAILED } from "../api";
@@ -16,8 +17,9 @@ export function hydrateFactoryEraserFromMap(
   }
 
   if (dto.inputTwinClassId && relatedObjects?.twinClassMap) {
-    hydrated.inputTwinClass =
-      relatedObjects.twinClassMap[dto.inputTwinClassId]!;
+    hydrated.inputTwinClass = relatedObjects.twinClassMap[
+      dto.inputTwinClassId
+    ] as TwinClass_DETAILED;
   }
 
   return hydrated;

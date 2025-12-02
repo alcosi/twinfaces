@@ -1,6 +1,13 @@
+import { PermissionSchema } from "@/entities/permission-schema";
+import { TwinClassSchema } from "@/entities/twin-class-schema";
+import { TwinFlowSchema } from "@/entities/twinFlowSchema";
 import { components } from "@/shared/api/generated/schema";
 
-export type Tier = components["schemas"]["TierV2"];
+export type Tier = components["schemas"]["TierV1"] & {
+  permissionSchema?: PermissionSchema;
+  twinClassSchema?: TwinClassSchema;
+  twinflowSchema?: TwinFlowSchema;
+};
 export type Tier_DETAILED = Required<Tier>;
 
 export type TierFilterKeys =

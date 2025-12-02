@@ -1,8 +1,20 @@
+import type { Factory } from "@/entities/factory";
+import type { Permission } from "@/entities/permission";
+import type { TwinFlow } from "@/entities/twin-flow";
+import type { TwinStatus } from "@/entities/twin-status";
+import type { User } from "@/entities/user";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
 export type TwinFlowTransition =
-  components["schemas"]["TwinflowTransitionBaseV3"];
+  components["schemas"]["TwinflowTransitionBaseV2"] & {
+    srcTwinStatus?: TwinStatus;
+    dstTwinStatus?: TwinStatus;
+    permission?: Permission;
+    createdByUser?: User;
+    twinflow?: TwinFlow;
+    inbuiltTwinFactory?: Factory;
+  };
 export type TwinFlowTransition_SHORT = RequireFields<
   TwinFlowTransition,
   "id" | "alias" | "name" | "allowAttachments" | "allowComment" | "allowLinks"

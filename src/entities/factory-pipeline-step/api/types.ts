@@ -1,6 +1,13 @@
+import { FactoryConditionSet } from "@/entities/factory-condition-set";
+import { FactoryPipeline } from "@/entities/factory-pipeline";
+import { Featurer } from "@/entities/featurer";
 import { components, operations } from "@/shared/api/generated/schema";
 
-export type PipelineStep = components["schemas"]["FactoryPipelineStepV2"];
+export type PipelineStep = components["schemas"]["FactoryPipelineStepV1"] & {
+  factoryPipeline?: FactoryPipeline;
+  fillerFeaturer?: Featurer;
+  factoryConditionSet?: FactoryConditionSet;
+};
 export type PipelineStep_DETAILED = Required<PipelineStep>;
 
 export type PipelineStepSearchRq =

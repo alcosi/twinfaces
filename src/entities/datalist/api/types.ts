@@ -1,7 +1,7 @@
 import { DataListOptionV1 } from "@/entities/datalist-option";
 import { components, operations } from "@/shared/api/generated/schema";
 
-export type DataList = components["schemas"]["DataListV2"];
+export type DataList = components["schemas"]["DataListV1"];
 
 export type DataListRqQuery =
   operations["dataListPublicViewV1"]["parameters"]["query"];

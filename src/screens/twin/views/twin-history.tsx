@@ -55,12 +55,9 @@ const colDefs: Record<
     accessorKey: "actorUserId",
     header: "Actor",
     cell: ({ row: { original } }) =>
-      original.twin?.authorUser && (
+      original.actorUser && (
         <div className="inline-flex max-w-48">
-          <UserResourceLink
-            data={original.twin?.authorUser as User}
-            withTooltip
-          />
+          <UserResourceLink data={original.actorUser as User} withTooltip />
         </div>
       ),
   },
@@ -97,7 +94,7 @@ export function TwinHistory() {
       });
 
       return response;
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch twin history");
       return { data: [], pagination: {} };
     }

@@ -1,4 +1,6 @@
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
+
 import { PermissionGroup, PermissionGroup_DETAILED } from "../api";
 
 export const hydratePermissionGroupFromMap = (
@@ -11,8 +13,9 @@ export const hydratePermissionGroupFromMap = (
   ) as PermissionGroup_DETAILED;
 
   if (permissionDTO.twinClassId && relatedObjects?.twinClassMap) {
-    hydrated.twinClass =
-      relatedObjects.twinClassMap[permissionDTO.twinClassId]!;
+    hydrated.twinClass = relatedObjects.twinClassMap[
+      permissionDTO.twinClassId
+    ] as TwinClass_DETAILED;
   }
 
   return hydrated;

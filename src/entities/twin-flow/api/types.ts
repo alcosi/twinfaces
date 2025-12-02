@@ -1,9 +1,12 @@
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinStatus } from "@/entities/twin-status";
 import { User } from "@/entities/user";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type TwinFlow = components["schemas"]["TwinflowBaseV1"] & {};
+export type TwinFlow = components["schemas"]["TwinflowBaseV1"] & {
+  twinClass?: TwinClass_DETAILED;
+};
 export type TwinFlow_DETAILED = RequireFields<
   TwinFlow,
   "id" | "name" | "twinClassId"

@@ -1,6 +1,8 @@
-import { RelatedObjects } from "@/shared/api";
-import { PipelineStep, PipelineStep_DETAILED } from "../api";
+import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { FactoryPipeline } from "@/entities/factory-pipeline";
+import { RelatedObjects } from "@/shared/api";
+
+import { PipelineStep, PipelineStep_DETAILED } from "../api";
 
 export const hydratePipelineStepFromMap = (
   dto: PipelineStep,
@@ -25,6 +27,15 @@ export const hydratePipelineStepFromMap = (
   if (hydrated.fillerFeaturerId && relatedObjects?.featurerMap) {
     hydrated.fillerFeaturer =
       relatedObjects.featurerMap[hydrated.fillerFeaturerId]!;
+  }
+
+  if (
+    hydrated.factoryConditionSetId &&
+    relatedObjects?.factoryConditionSetMap
+  ) {
+    hydrated.factoryConditionSet = relatedObjects.factoryConditionSetMap[
+      hydrated.factoryConditionSetId
+    ] as FactoryConditionSet;
   }
 
   return hydrated;

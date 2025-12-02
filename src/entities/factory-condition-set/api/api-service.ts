@@ -1,6 +1,11 @@
 import { PaginationState } from "@tanstack/react-table";
-import { FactoryConditionSetFilters } from "./types";
+
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
+import {
+  FactoryConditionSetCreateRq,
+  FactoryConditionSetFilters,
+} from "./types";
 
 export function createFactoryConditionSetApi(settings: ApiSettings) {
   function search({
@@ -32,7 +37,16 @@ export function createFactoryConditionSetApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function create({ body }: { body: FactoryConditionSetCreateRq }) {
+    return settings.client.POST("/private/factory_condition_set/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  return { search, create };
 }
 
 export type FactoryConditionSetApi = ReturnType<

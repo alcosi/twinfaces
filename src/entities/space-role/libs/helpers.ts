@@ -3,6 +3,7 @@ import {
   PermissionGrantSpaceRole_DETAILED,
   SpaceRole,
 } from "@/entities/space-role";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
 export const hydratePermissionGrantSpaceRoleFromMap = (
@@ -37,7 +38,9 @@ export const hydrateSpaceRoleFromMap = (
   const hydrated: SpaceRole = Object.assign({}, dto) as SpaceRole;
 
   if (dto.twinClassId && relatedObjects?.twinClassMap) {
-    hydrated.twinClass = relatedObjects.twinClassMap[dto.twinClassId];
+    hydrated.twinClass = relatedObjects.twinClassMap[
+      dto.twinClassId
+    ] as TwinClass_DETAILED;
   }
 
   return hydrated;

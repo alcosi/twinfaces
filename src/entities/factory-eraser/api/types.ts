@@ -1,6 +1,13 @@
+import { Factory } from "@/entities/factory";
+import { FactoryConditionSet } from "@/entities/factory-condition-set";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components, operations } from "@/shared/api/generated/schema";
 
-export type FactoryEraser = components["schemas"]["FactoryEraserV2"];
+export type FactoryEraser = components["schemas"]["FactoryEraserV1"] & {
+  factory?: Factory;
+  inputTwinClass?: TwinClass_DETAILED;
+  factoryConditionSet?: FactoryConditionSet;
+};
 export type FactoryEraser_DETAILED = Required<FactoryEraser>;
 
 export type FactoryEraserSearchRq =

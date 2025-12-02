@@ -40,8 +40,16 @@ type TwinFormValuesByOption = TwinFormValues & {
   options: SelectedOptionProps[];
 };
 
-export function TC001Form({ payload }: { payload: FaceTC001ViewRs }) {
+export function TC001Form({ payload }: { payload?: FaceTC001ViewRs }) {
   const form = useFormContext<TwinFormValuesByOption>();
+
+  if (!payload?.faceTwinCreate) {
+    return (
+      <div className="text-muted-foreground rounded border border-dashed p-4 text-sm">
+        Twin creation configuration is unavailable for this face.
+      </div>
+    );
+  }
 
   const { faceTwinCreate } = payload;
   const variantOptions = faceTwinCreate?.options || [];
@@ -165,7 +173,7 @@ function TwinClassSelector() {
     form,
     fromKey: "options",
     toKey: "headTwinId",
-    merge: (fromValue, _) => fromValue?.[0]?.pointedHeadTwinId,
+    merge: (fromValue) => fromValue?.[0]?.pointedHeadTwinId,
   });
 
   if (!selectedOption?.twinClassSearchId) {

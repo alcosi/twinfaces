@@ -1,6 +1,13 @@
+import { Factory } from "@/entities/factory";
+import { Featurer } from "@/entities/featurer";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components, operations } from "@/shared/api/generated/schema";
 
-export type FactoryMultiplier = components["schemas"]["FactoryMultiplierV2"];
+export type FactoryMultiplier = components["schemas"]["FactoryMultiplierV1"] & {
+  factory?: Factory;
+  inputTwinClass?: TwinClass_DETAILED;
+  multiplierFeaturer?: Featurer;
+};
 export type FactoryMultiplier_DETAILED = Required<FactoryMultiplier>;
 
 export type FactoryMultiplierSearchRq =
