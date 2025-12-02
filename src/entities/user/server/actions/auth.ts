@@ -219,12 +219,15 @@ export async function loginAuthAction(
         username: formData.get("username"),
         password: formData.get("password"),
       });
+    console.log("🚀 ~ loginAuthAction ~ domainId:", domainId);
     const api = await apiFromRequest();
 
     const { data, error } = await api.POST("/auth/login/v1", {
       body: { username, password },
       params: { header: { DomainId: domainId, Channel: "WEB" } },
     });
+    console.log("🚀 ~ loginAuthAction ~ error:", error);
+    console.log("🚀 ~ loginAuthAction ~ data:", data);
 
     if (error) {
       return errorToResult(error);

@@ -51,6 +51,7 @@ export function EmailPasswordSignInForm({
   function onSignInSubmit(
     values: z.infer<typeof EMAIL_PASSWORD_SIGN_IN_SCHEMA>
   ) {
+    console.log("🚀 ~ onSignInSubmit ~ values:", values);
     signInForm.setError("root", {});
 
     const domainId = values.domainId;
