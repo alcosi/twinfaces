@@ -21,4 +21,7 @@ export type FactoryConditionSetFilters = Partial<
 >;
 
 export type FactoryConditionSetCreateRq =
-  components["schemas"]["FactoryConditionSetCreateRqDTOv1"];
+  components["schemas"]["FactoryConditionSetCreateRqV1"];
+
+export type FactoryConditionSetUpdateRq =
+  components["schemas"]["FactoryConditionSetUpdateRqV1"];

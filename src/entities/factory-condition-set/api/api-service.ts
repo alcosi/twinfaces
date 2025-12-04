@@ -5,6 +5,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import {
   FactoryConditionSetCreateRq,
   FactoryConditionSetFilters,
+  FactoryConditionSetUpdateRq,
 } from "./types";
 
 export function createFactoryConditionSetApi(settings: ApiSettings) {
@@ -46,7 +47,16 @@ export function createFactoryConditionSetApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create };
+  function update({ body }: { body: FactoryConditionSetUpdateRq }) {
+    return settings.client.PUT("/private/factory_condition_set/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, create, update };
 }
 
 export type FactoryConditionSetApi = ReturnType<
