@@ -34,7 +34,6 @@ export function FactoryConditionSetGeneral() {
       input_props: {
         fieldSize: "sm",
       },
-      label: "",
     },
     schema: z.string().min(1, "Name is required"),
     onSubmit: async (value) => {
@@ -61,7 +60,6 @@ export function FactoryConditionSetGeneral() {
       input_props: {
         fieldSize: "sm",
       },
-      label: "",
     },
     schema: z.string().optional(),
     onSubmit: async (value) => {
@@ -109,13 +107,11 @@ export function FactoryConditionSetGeneral() {
           <TableRow>
             <TableCell>Created by</TableCell>
             <TableCell>
-              {factoryConditionSet.createdByUser ? (
+              {factoryConditionSet.createdByUser && (
                 <UserResourceLink
                   data={factoryConditionSet.createdByUser}
                   withTooltip
                 />
-              ) : (
-                "-"
               )}
             </TableCell>
           </TableRow>
@@ -123,12 +119,8 @@ export function FactoryConditionSetGeneral() {
           <TableRow>
             <TableCell>Created at</TableCell>
             <TableCell>
-              {factoryConditionSet.createdAt
-                ? formatIntlDate(
-                    factoryConditionSet.createdAt,
-                    "datetime-local"
-                  )
-                : "-"}
+              {factoryConditionSet.createdAt &&
+                formatIntlDate(factoryConditionSet.createdAt, "datetime-local")}
             </TableCell>
           </TableRow>
         </TableBody>

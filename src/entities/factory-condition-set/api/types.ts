@@ -1,5 +1,5 @@
 import { User } from "@/entities/user";
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 
 export type FactoryConditionSet =
   components["schemas"]["FactoryConditionSetV1"];
@@ -7,6 +7,9 @@ export type FactoryConditionSet =
 export type FactoryConditionSet_DETAILED = FactoryConditionSet & {
   createdByUser?: User;
 };
+
+export type FactoryConditionSetViewQuery =
+  operations["factoryConditionSetViewV1"]["parameters"]["query"];
 
 export type FactoryConditionSetSearchRq =
   components["schemas"]["FactoryConditionSetSearchRqV1"];

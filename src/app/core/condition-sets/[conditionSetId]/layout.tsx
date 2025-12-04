@@ -6,7 +6,7 @@ import { FactoryConditionSetProvider } from "@/features/factory-condition-set";
 
 type LayoutProps = {
   params: Promise<{
-    id: string;
+    conditionSetId: string;
   }>;
   children: ReactNode;
 };
@@ -14,10 +14,10 @@ type LayoutProps = {
 export default function ConditionSetLayout(props: LayoutProps) {
   const { children } = props;
 
-  const { id } = use(props.params);
+  const { conditionSetId } = use(props.params);
 
   return (
-    <FactoryConditionSetProvider id={id}>
+    <FactoryConditionSetProvider id={conditionSetId}>
       {children}
     </FactoryConditionSetProvider>
   );
