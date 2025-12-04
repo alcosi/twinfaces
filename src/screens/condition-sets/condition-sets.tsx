@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -17,6 +18,7 @@ import {
 } from "@/entities/factory-condition-set";
 import { UserResourceLink } from "@/features/user/ui";
 import { PrivateApiContext } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
@@ -108,6 +110,7 @@ const colDefs: Record<
 };
 
 export function ConditionSetsScreen() {
+  const router = useRouter();
   const api = useContext(PrivateApiContext);
   const { searchFactoryConditionSet } = useFactoryConditionSetSearch();
   const { buildFilterFields, mapFiltersToPayload } =
@@ -178,6 +181,9 @@ export function ConditionSetsScreen() {
       ]}
       fetcher={fetchFactoryConditionSet}
       getRowId={(row) => row.id || ""}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/condition-sets/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,
