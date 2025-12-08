@@ -1,6 +1,8 @@
-import nextPlugin from "@next/eslint-plugin-next";
 import tseslint from "@typescript-eslint/eslint-plugin";
 import parserTs from "@typescript-eslint/parser";
+import next from "eslint-config-next";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import fsdImport from "eslint-plugin-fsd-import";
 import importPlugin from "eslint-plugin-import";
 import perfectionist from "eslint-plugin-perfectionist";
@@ -8,6 +10,9 @@ import prettier from "eslint-plugin-prettier";
 import react from "eslint-plugin-react";
 
 const config = [
+  ...next,
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   {
     name: "Global Ignore Patterns",
     ignores: [
@@ -17,7 +22,6 @@ const config = [
       "src/lib/api/generated/schema.d.ts",
     ],
   },
-
   {
     name: "Base ESLint Rules",
     languageOptions: {
@@ -43,7 +47,6 @@ const config = [
       ],
     },
   },
-
   {
     name: "Prettier Formatting Rules",
     files: ["**/*.{js,ts,jsx,tsx}"],
@@ -54,18 +57,6 @@ const config = [
       "prettier/prettier": "warn",
     },
   },
-
-  {
-    name: "Next.js Rules",
-    files: ["**/*.{js,ts,jsx,tsx}"],
-    plugins: {
-      "@next/next": nextPlugin,
-    },
-    rules: {
-      ...nextPlugin.configs.recommended.rules,
-    },
-  },
-
   {
     name: "Feature-Sliced Design Rules",
     files: ["src/**/*.{ts,tsx}"],
@@ -76,7 +67,6 @@ const config = [
       "fsd-import/layer-imports": ["error", { alias: "@" }],
     },
   },
-
   {
     name: "Type-Aware TypeScript Rules",
     files: ["src/**/*.{ts,tsx}"],
@@ -87,7 +77,6 @@ const config = [
       },
     },
   },
-
   {
     name: "Perfectionist Rules",
     files: ["**/*.{js,ts,jsx,tsx}"],
