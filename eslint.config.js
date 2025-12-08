@@ -1,4 +1,3 @@
-import nextPlugin from "@next/eslint-plugin-next";
 import tseslint from "@typescript-eslint/eslint-plugin";
 import parserTs from "@typescript-eslint/parser";
 import next from "eslint-config-next";
@@ -58,16 +57,6 @@ const config = [
       "prettier/prettier": "warn",
     },
   },
-  // {
-  //   name: "Next.js Rules",
-  //   files: ["**/*.{js,ts,jsx,tsx}"],
-  //   plugins: {
-  //     "@next/next": nextPlugin,
-  //   },
-  //   rules: {
-  //     ...nextPlugin.configs.recommended.rules,
-  //   },
-  // },
   {
     name: "Feature-Sliced Design Rules",
     files: ["src/**/*.{ts,tsx}"],
