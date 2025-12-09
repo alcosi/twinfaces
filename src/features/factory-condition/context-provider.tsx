@@ -38,6 +38,11 @@ export function FactoryConditionContextProvider({
   const { fetchFactoryConditionById, isLoading } =
     useFetchFactoryConditionById();
 
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [factoryConditionId]);
+
   const refresh = useCallback(async () => {
     try {
       const result = await fetchFactoryConditionById(factoryConditionId);
@@ -46,11 +51,6 @@ export function FactoryConditionContextProvider({
       console.error("Failed to fetch factory condition:", err);
     }
   }, [factoryConditionId, fetchFactoryConditionById]);
-
-  useEffect(() => {
-    refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [factoryConditionId]);
 
   if (isUndefined(factoryCondition) || isLoading) {
     return <LoadingOverlay />;
