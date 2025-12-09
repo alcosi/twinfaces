@@ -13,6 +13,7 @@ import {
   SquareAsterisk,
   User,
   UsersRound,
+  Workflow,
 } from "lucide-react";
 
 import { DatalistIcon } from "@/features/datalist/ui";
@@ -172,6 +173,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Erasers",
         url: `/${PlatformArea.core}/erasers`,
         icon: Eraser,
+      },
+      {
+        title: "Conditions",
+        url: `/${PlatformArea.core}/conditions`,
+        icon: Workflow,
       },
       {
         title: "Condition sets",
