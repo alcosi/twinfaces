@@ -45,13 +45,11 @@ export function FactoryConditionGeneral() {
         <TableRow>
           <TableCell>Conditioner Featurer</TableCell>
           <TableCell>
-            {factoryCondition.conditionerFeaturer ? (
+            {factoryCondition.conditionerFeaturer && (
               <FeaturerResourceLink
                 data={factoryCondition.conditionerFeaturer as Featurer_DETAILED}
                 withTooltip
               />
-            ) : (
-              "-"
             )}
           </TableCell>
         </TableRow>
@@ -59,12 +57,10 @@ export function FactoryConditionGeneral() {
         <TableRow>
           <TableCell>Description</TableCell>
           <TableCell>
-            {factoryCondition.description ? (
+            {factoryCondition.description && (
               <div className="text-muted-foreground">
                 {factoryCondition.description}
               </div>
-            ) : (
-              "-"
             )}
           </TableCell>
         </TableRow>

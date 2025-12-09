@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
   FilterFeature,
@@ -14,13 +13,14 @@ import {
 } from "@/shared/libs";
 
 import { FactoryConditionFilterKeys, FactoryConditionFilters } from "../../api";
+import { useFactoryConditionSelectAdapter } from "./use-select-adapter";
 
 export function useFactoryConditionFilters({
   enabledFilters,
 }: {
   enabledFilters?: FactoryConditionFilterKeys[];
 }): FilterFeature<FactoryConditionFilterKeys, FactoryConditionFilters> {
-  const conditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const conditionSetAdapter = useFactoryConditionSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(24);
 
   const allFilters: Record<FactoryConditionFilterKeys, AutoFormValueInfo> = {

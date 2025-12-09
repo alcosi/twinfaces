@@ -1,8 +1,4 @@
-import {
-  SelectAdapter,
-  isPopulatedString,
-  //wrapWithPercent,
-} from "@/shared/libs";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
 
 import {
   FactoryCondition,
@@ -11,7 +7,7 @@ import {
   useFetchFactoryConditionById,
 } from "../../api";
 
-export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryCondition> {
+export function useFactoryConditionSelectAdapter(): SelectAdapter<FactoryCondition> {
   const { searchFactoryCondition } = useFactoryConditionSearch();
   const { fetchFactoryConditionById } = useFetchFactoryConditionById();
 
@@ -26,9 +22,6 @@ export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryCond
         pageSize: 10,
       },
       filters: {
-        // nameLikeList: isPopulatedString(search)
-        //   ? [wrapWithPercent(search)]
-        //   : undefined,
         ...filters,
       },
     });
