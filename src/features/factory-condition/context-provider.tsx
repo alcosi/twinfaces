@@ -40,7 +40,6 @@ export function FactoryConditionContextProvider({
 
   useEffect(() => {
     refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [factoryConditionId]);
 
   const refresh = useCallback(async () => {

@@ -45,6 +45,8 @@ const config = [
         "warn",
         { namedComponents: "function-declaration" },
       ],
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/immutability": "off",
     },
   },
   {
