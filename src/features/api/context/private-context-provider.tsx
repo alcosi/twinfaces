@@ -20,6 +20,10 @@ import {
   createFactoryBranchApi,
 } from "@/entities/factory-branch";
 import {
+  FactoryConditionApi,
+  createFactoryConditionApi,
+} from "@/entities/factory-condition";
+import {
   FactoryConditionSetApi,
   createFactoryConditionSetApi,
 } from "@/entities/factory-condition-set";
@@ -109,6 +113,7 @@ export interface PrivateApiContextProps {
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
   factoryBranch: FactoryBranchApi;
+  factoryCondition: FactoryConditionApi;
   factoryConditionSet: FactoryConditionSetApi;
   factoryMultiplier: FactoryMultiplierApi;
   factoryMultiplierFilter: FactoryMultiplierFilterApi;
@@ -158,6 +163,7 @@ export function PrivateApiContextProvider({
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
         factoryBranch: createFactoryBranchApi(settings),
+        factoryCondition: createFactoryConditionApi(settings),
         factoryConditionSet: createFactoryConditionSetApi(settings),
         factoryMultiplier: createFactoryMultiplierApi(settings),
         factoryMultiplierFilter: createFactoryMultiplierFilterApi(settings),
