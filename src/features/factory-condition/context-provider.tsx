@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import {
   FactoryCondition_DETAILED,
@@ -25,36 +31,36 @@ export function FactoryConditionContextProvider({
   factoryConditionId: string;
   children: ReactNode;
 }) {
-  useEffect(() => {
-    refresh();
-  }, [factoryConditionId]);
-
   const [factoryCondition, setFactoryCondition] = useState<
     FactoryCondition_DETAILED | undefined
   >(undefined);
+
   const { fetchFactoryConditionById, isLoading } =
     useFetchFactoryConditionById();
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     try {
-      const fetchFactoryCondition =
-        await fetchFactoryConditionById(factoryConditionId);
-
-      if (fetchFactoryCondition) {
-        setFactoryCondition(fetchFactoryCondition);
-      }
-    } catch (error) {
-      console.error("Failed to fetch factory condition:", error);
+      const result = await fetchFactoryConditionById(factoryConditionId);
+      if (result) setFactoryCondition(result);
+    } catch (err) {
+      console.error("Failed to fetch factory condition:", err);
     }
-  }
+  }, [factoryConditionId, fetchFactoryConditionById]);
 
-  if (isUndefined(factoryCondition) || isLoading) return <LoadingOverlay />;
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [factoryConditionId]);
+
+  if (isUndefined(factoryCondition) || isLoading) {
+    return <LoadingOverlay />;
+  }
 
   return (
     <FactoryConditionContext.Provider
       value={{ factoryConditionId, factoryCondition, refresh }}
     >
-      {isLoading ? <LoadingOverlay /> : children}
+      {children}
     </FactoryConditionContext.Provider>
   );
 }
