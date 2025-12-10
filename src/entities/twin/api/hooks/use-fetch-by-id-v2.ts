@@ -1,46 +1,62 @@
+"use client";
+
 import { useCallback, useState } from "react";
 
-import { Twin_DETAILED, fetchTwinById as fetch } from "@/entities/twin/server";
-import { clientCookies } from "@/shared/libs";
+import { hydrateTwinFromMap } from "@/entities/twin/server";
+import type { Twin, Twin_DETAILED } from "@/entities/twin/server";
+
+function buildTwinUrl(id: string) {
+  const url = new URL(
+    `/api/proxy/private/twin/${id}/v2`,
+    window.location.origin
+  );
+  const q = url.searchParams;
+
+  q.set("lazyRelation", "false");
+  q.set("showTwinMode", "DETAILED");
+  q.set("showTwinClassMode", "DETAILED");
+  q.set("showTwin2TwinClassMode", "DETAILED");
+  q.set("showTwin2UserMode", "DETAILED");
+  q.set("showTwin2StatusMode", "DETAILED");
+  q.set("showTwinMarker2DataListOptionMode", "DETAILED");
+  q.set("showTwinByHeadMode", "YELLOW");
+  q.set("showTwinAliasMode", "C");
+  q.set("showTwinTag2DataListOptionMode", "DETAILED");
+  q.set("showTwin2TransitionMode", "DETAILED");
+
+  return url.toString();
+}
 
 export const useTwinFetchByIdV2 = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const domainId = clientCookies.get("domainId");
-  const authToken = clientCookies.get("authToken");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<unknown>(null);
 
   const fetchTwinById = useCallback(
     async (id: string): Promise<Twin_DETAILED | undefined> => {
       setLoading(true);
-
+      setError(null);
       try {
-        const { twin } = await fetch<Twin_DETAILED>(id, {
-          header: {
-            DomainId: domainId ?? "",
-            AuthToken: authToken ?? "",
-            Channel: "WEB",
-          },
-          query: {
-            lazyRelation: "false",
-            showTwinMode: "DETAILED",
-            showTwinClassMode: "DETAILED",
-            showTwin2TwinClassMode: "DETAILED",
-            showTwin2UserMode: "DETAILED",
-            showTwin2StatusMode: "DETAILED",
-            showTwinMarker2DataListOptionMode: "DETAILED",
-            showTwinByHeadMode: "YELLOW",
-            showTwinAliasMode: "C",
-            showTwinTag2DataListOptionMode: "DETAILED",
-            showTwin2TransitionMode: "DETAILED",
-          },
+        const res = await fetch(buildTwinUrl(id), {
+          method: "GET",
+          credentials: "same-origin",
+          cache: "no-store",
         });
 
-        return twin;
+        if (!res.ok) throw new Error(`Twin ${id} fetch failed (${res.status})`);
+
+        const data = await res.json();
+        const payload = (data.twin ?? data) as Twin;
+        const hydrated = hydrateTwinFromMap(payload, data.relatedObjects);
+        return hydrated as Twin_DETAILED;
+      } catch (e) {
+        setError(e);
+        return undefined;
       } finally {
         setLoading(false);
       }
     },
-    [authToken, domainId]
+    []
   );
 
-  return { fetchTwinById, loading };
+  return { fetchTwinById, loading, error };
 };
