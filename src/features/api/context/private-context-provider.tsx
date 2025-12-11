@@ -58,6 +58,7 @@ import {
   PermissionSchemaApi,
   createPermissionSchemaApi,
 } from "@/entities/permission-schema";
+import { ProjectionApi, createProjectionApi } from "@/entities/projection";
 import {
   PermissionSpaceRoleApi,
   createPermissionSpaceRoleApi,
@@ -123,6 +124,7 @@ export interface PrivateApiContextProps {
   datalistOption: DatalistOptionApi;
   link: LinkApi;
   tier: TierApi;
+  projection: ProjectionApi;
 }
 
 export function PrivateApiContextProvider({
@@ -173,6 +175,7 @@ export function PrivateApiContextProvider({
         datalistOption: createDatalistOptionApi(settings),
         link: createLinkApi(settings),
         tier: createTierApi(settings),
+        projection: createProjectionApi(settings),
       }
     : ({} as PrivateApiContextProps);
 

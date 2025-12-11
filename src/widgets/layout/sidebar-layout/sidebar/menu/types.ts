@@ -11,7 +11,8 @@ export type GroupKeys =
   | "factory"
   | "transition"
   | "businessAccount"
-  | "misc";
+  | "misc"
+  | "projection";
 
 export type Group = {
   title: string;
