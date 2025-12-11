@@ -3,5 +3,5 @@
 import { FactoryConditionsTable } from "@/widgets/tables";
 
 export function FactoryConditionsScreen() {
-  return <FactoryConditionsTable />;
+  return <FactoryConditionsTable title="Conditions" />;
 }
