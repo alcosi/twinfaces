@@ -3,6 +3,7 @@ import {
   BriefcaseBusiness,
   Eraser,
   Factory,
+  Layers,
   Link2,
   MessageCircle,
   Option,
@@ -228,6 +229,16 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Featurers",
         url: `/${PlatformArea.core}/featurers`,
         icon: Play,
+      },
+    ],
+  },
+  projection: {
+    title: "Projection",
+    items: [
+      {
+        title: "Projections",
+        url: `/${PlatformArea.core}/projections`,
+        icon: Layers,
       },
     ],
   },
