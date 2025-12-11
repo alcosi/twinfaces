@@ -8,14 +8,15 @@ export const useFactoryConditionCreate = () => {
   const api = useContext(PrivateApiContext);
 
   const createFactoryCondition = useCallback(
-    async ({ body }: { id: string; body: FactoryConditionCreateRq }) => {
+    async ({ body }: { body: FactoryConditionCreateRq }) => {
       try {
         const { error } = await api.factoryCondition.create({ body });
 
         if (error) {
           throw new Error("Failed to create factory condition");
         }
-      } catch {
+      } catch (error) {
+        console.error("Failed to create factory condition:", error);
         throw new Error("An error occured while creating factory condition");
       }
     },

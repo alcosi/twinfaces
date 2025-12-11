@@ -1,12 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  FACTORY_CONDITION_SCHEMA,
   FactoryCondition_DETAILED,
+  useFactoryConditionCreate,
   useFactoryConditionFilters,
   useFactoryConditionSearch,
 } from "@/entities/factory-condition";
@@ -19,6 +24,7 @@ import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { FactoryConditionFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -113,6 +119,19 @@ export function FactoryConditionsTable({
         : undefined,
     }
   );
+  const { createFactoryCondition } = useFactoryConditionCreate();
+
+  const factoryConditionForm = useForm<
+    z.infer<typeof FACTORY_CONDITION_SCHEMA>
+  >({
+    resolver: zodResolver(FACTORY_CONDITION_SCHEMA),
+    defaultValues: {
+      factoryConditionSetId: factoryConditionSetId || "",
+      active: true,
+      invert: false,
+      description: undefined,
+    },
+  });
 
   async function fetchFactoryConditions(
     pagination: PaginationState,
@@ -137,6 +156,17 @@ export function FactoryConditionsTable({
       throw new Error("An error occured while factory conditions: " + error);
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof FACTORY_CONDITION_SCHEMA>
+  ) => {
+    await createFactoryCondition({
+      body: {
+        conditions: [formValues],
+      },
+    });
+    toast.success("Factory condition created successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -166,6 +196,14 @@ export function FactoryConditionsTable({
         colDefs.invert,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={factoryConditionForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <FactoryConditionFormFields
+          control={factoryConditionForm.control}
+          factoryConditionSetId={factoryConditionSetId}
+        />
+      )}
       title={title || "Factory Conditions"}
     />
   );
