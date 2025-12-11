@@ -204,7 +204,7 @@ export function FactoryConditionsTable({
           factoryConditionSetId={factoryConditionSetId}
         />
       )}
-      title={title || "Factory Conditions"}
+      title={title}
     />
   );
 }
