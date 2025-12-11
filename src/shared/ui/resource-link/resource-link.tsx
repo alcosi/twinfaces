@@ -131,6 +131,6 @@ export function ResourceLink<T>({
       <TooltipContent className="p-0">{renderTooltip(data)}</TooltipContent>
     </Tooltip>
   ) : (
-    ResourceLinkWrapper
+    <span className="inline-flex max-w-full">{ResourceLinkWrapper}</span>
   );
 }
