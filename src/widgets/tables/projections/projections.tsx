@@ -1,12 +1,19 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
 
 import { Featurer_DETAILED } from "@/entities/featurer";
 import {
   Projection_DETAILED,
+  useProjectionCreate,
   useProjectionsSearch,
 } from "@/entities/projection";
-import { useProjectionFilters } from "@/entities/projection/libs";
+import {
+  PROJECTION_SCHEMA,
+  useProjectionFilters,
+} from "@/entities/projection/libs";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { ProjectionTypeResourceLink } from "@/features/projection-type/ui";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
@@ -14,6 +21,7 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { ProjectionFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -107,6 +115,18 @@ export function ProjectionsTable() {
   const { buildFilterFields, mapFiltersToPayload } = useProjectionFilters({
     enabledFilters: undefined,
   });
+  const { createProjection } = useProjectionCreate();
+
+  const projectionForm = useForm<z.infer<typeof PROJECTION_SCHEMA>>({
+    resolver: zodResolver(PROJECTION_SCHEMA),
+    defaultValues: {
+      srcTwinPointerId: "00000000-0000-0000-0012-000000000001",
+      projectionTypeId: "",
+      srcTwinClassFieldId: "",
+      dstTwinClassId: "",
+      dstTwinClassFieldId: "",
+    },
+  });
 
   async function fetchProjections(
     pagination: PaginationState,
@@ -126,6 +146,18 @@ export function ProjectionsTable() {
       throw new Error("An error occured while fetching projections: " + error);
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof PROJECTION_SCHEMA>
+  ) => {
+    const { ...body } = formValues;
+
+    await createProjection({
+      body: { projectionList: [body] },
+    });
+
+    toast.success("Projection created successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -149,6 +181,11 @@ export function ProjectionsTable() {
       ]}
       title="Projections"
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={projectionForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <ProjectionFormFields control={projectionForm.control} />
+      )}
     />
   );
 }

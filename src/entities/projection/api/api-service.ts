@@ -2,7 +2,11 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { ProjectionFilters, ProjectionTypeFilters } from "./types";
+import {
+  ProjectionCreateRq,
+  ProjectionFilters,
+  ProjectionTypeFilters,
+} from "./types";
 
 export function createProjectionApi(settings: ApiSettings) {
   function search({
@@ -61,7 +65,16 @@ export function createProjectionApi(settings: ApiSettings) {
     });
   }
 
-  return { search, searchProjectionType };
+  function create({ body }: { body: ProjectionCreateRq }) {
+    return settings.client.POST(`/private/projection/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  return { search, searchProjectionType, create };
 }
 
 export type ProjectionApi = ReturnType<typeof createProjectionApi>;
