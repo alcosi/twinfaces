@@ -31,6 +31,8 @@ export type ProjectionType = components["schemas"]["ProjectionTypeV1"];
 export type ProjectionTypeSearchRq =
   components["schemas"]["ProjectionTypeSearchV1"];
 
+export type ProjectionCreateRq = components["schemas"]["ProjectionCreateRqV1"];
+
 export type ProjectionTypeFiltersKeys = "nameLikeList";
 
 export type ProjectionTypeFilters = Partial<

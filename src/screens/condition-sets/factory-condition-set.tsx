@@ -17,8 +17,8 @@ export function FactoryConditionSetScreen() {
       content: <FactoryConditionSetGeneral />,
     },
     {
-      key: "condition",
-      label: "Condition",
+      key: "conditions",
+      label: "Conditions",
       content: (
         <FactoryConditionsTable
           factoryConditionSetId={factoryConditionSet.id}
