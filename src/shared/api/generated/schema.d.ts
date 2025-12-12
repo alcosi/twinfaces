@@ -6604,9 +6604,11 @@ export interface components {
             ownerType?: "SYSTEM" | "USER" | "BUSINESS_ACCOUNT" | "DOMAIN" | "DOMAIN_BUSINESS_ACCOUNT" | "DOMAIN_USER" | "DOMAIN_BUSINESS_ACCOUNT_USER";
             /**
              * Format: uuid
-             * @description extends class id or empty if class is not linked to any classes
+             * @description extends class id (direct) or empty if class is not extends any classes
              */
             extendsClassId?: string;
+            /** @description extends class id set  */
+            extendsClassIdSet?: string[];
             /** @description if true, take the twinflow scheme in space */
             twinflowSchemaSpace?: boolean;
             twinClassSchemaSpace?: boolean;
@@ -7276,18 +7278,12 @@ export interface components {
              * @example true
              */
             system?: boolean;
-            /**
-             * @description Is dependent field
-             * @example true
-             */
-            dependentField?: boolean;
-            /**
-             * @description has dependent fields
-             * @example true
-             */
-            hasDependentFields?: boolean;
             /** @description external id */
             externalId?: string;
+            /** @description external properties */
+            externalProperties?: {
+                [key: string]: string;
+            };
             /**
              * Format: int32
              * @description Field typer featurer ID
@@ -7299,6 +7295,19 @@ export interface components {
              * @example {}
              */
             fieldTyperParams?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: int32
+             * @description Twin sorter featurer ID
+             * @example 1
+             */
+            twinSorterFeaturerId?: number;
+            /**
+             * @description Twin sorter parameters
+             * @example {}
+             */
+            twinSorterParams?: {
                 [key: string]: string;
             };
             /** @description I18n frontend validation error */
@@ -11524,6 +11533,19 @@ export interface components {
             /** @description results - status list */
             statuses?: components["schemas"]["TwinStatusV1"][];
         };
+        FieldProjectionSearchV1: {
+            /**
+             * @description projection field selector
+             * @enum {string}
+             */
+            projectionFieldSelector?: "src" | "dst" | "all";
+            /** @description src id list */
+            srcIdList?: string[];
+            /** @description dst id list */
+            dstIdList?: string[];
+            /** @description projection type id list */
+            projectionTypeIdList?: string[];
+        };
         LongRangeDTOv1: {
             /**
              * Format: int64
@@ -11601,6 +11623,32 @@ export interface components {
             beValidationErrorI18nNotLikeList?: string[];
             /** @description order range */
             orderRange?: components["schemas"]["LongRangeDTOv1"];
+            /**
+             * @description is dependent field
+             * @example ANY
+             * @enum {string}
+             */
+            dependentField?: "ONLY" | "ONLY_NOT" | "ANY";
+            /**
+             * @description has dependent fields
+             * @example ANY
+             * @enum {string}
+             */
+            hasDependentFields?: "ONLY" | "ONLY_NOT" | "ANY";
+            /**
+             * @description is projection field
+             * @example ANY
+             * @enum {string}
+             */
+            projectionField?: "ONLY" | "ONLY_NOT" | "ANY";
+            /**
+             * @description has projection fields
+             * @example ANY
+             * @enum {string}
+             */
+            hasProjectionFields?: "ONLY" | "ONLY_NOT" | "ANY";
+            /** @description field projection search */
+            fieldProjectionSearch?: components["schemas"]["FieldProjectionSearchV1"];
         };
         TwinClassFieldSearchRsV1: {
             /**
@@ -11863,18 +11911,12 @@ export interface components {
              * @example true
              */
             system?: boolean;
-            /**
-             * @description Is dependent field
-             * @example true
-             */
-            dependentField?: boolean;
-            /**
-             * @description has dependent fields
-             * @example true
-             */
-            hasDependentFields?: boolean;
             /** @description external id */
             externalId?: string;
+            /** @description external properties */
+            externalProperties?: {
+                [key: string]: string;
+            };
             /**
              * Format: int32
              * @description Field typer featurer ID
@@ -11886,6 +11928,19 @@ export interface components {
              * @example {}
              */
             fieldTyperParams?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: int32
+             * @description Twin sorter featurer ID
+             * @example 1
+             */
+            twinSorterFeaturerId?: number;
+            /**
+             * @description Twin sorter parameters
+             * @example {}
+             */
+            twinSorterParams?: {
                 [key: string]: string;
             };
             /** @description I18n frontend validation error */
@@ -14630,6 +14685,10 @@ export interface components {
             dstTwinClassFieldIdList?: string[];
             /** @description dst twin class field id exclude list */
             dstTwinClassFieldIdExcludeList?: string[];
+            /** @description projection type id list */
+            projectionTypeIdList?: string[];
+            /** @description projection type id exclude list */
+            projectionTypeIdExcludeList?: string[];
             /** @description field projector id list */
             fieldProjectorIdList?: number[];
             /** @description field projector id exclude list */
@@ -22933,6 +22992,7 @@ export interface operations {
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showProjection2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showProjection2ProjectionTypeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showProjection2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showProjection2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -23056,6 +23116,7 @@ export interface operations {
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showProjection2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showProjection2ProjectionTypeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showProjection2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showProjection2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -24668,8 +24729,10 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showFactoryCondition2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryCondition2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
@@ -24719,8 +24782,10 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showFactoryCondition2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryCondition2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
@@ -33805,6 +33870,7 @@ export interface operations {
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showProjection2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showProjection2ProjectionTypeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showProjection2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showProjection2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -37034,8 +37100,10 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showFactoryCondition2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryCondition2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;

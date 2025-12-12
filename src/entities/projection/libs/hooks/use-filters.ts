@@ -14,6 +14,7 @@ import {
 } from "@/shared/libs";
 
 import { ProjectionFilterKeys, ProjectionFilters } from "../../api";
+import { useProjectionTypeSelectAdapter } from "./use-projection-type-select-adapter";
 
 export function useProjectionFilters({
   enabledFilters,
@@ -23,6 +24,7 @@ export function useProjectionFilters({
   const twinClassAdapter = useTwinClassSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(44);
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
+  const projectionTypeAdapter = useProjectionTypeSelectAdapter();
 
   const allFilters: Record<ProjectionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -30,6 +32,12 @@ export function useProjectionFilters({
       label: "Id",
       schema: z.string().uuid("Please enter a valid UUID"),
       placeholder: "Enter UUID",
+    },
+    projectionTypeIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Type",
+      multi: true,
+      ...projectionTypeAdapter,
     },
     dstTwinClassIdList: {
       type: AutoFormValueType.combobox,
@@ -71,6 +79,7 @@ export function useProjectionFilters({
   ): ProjectionFilters {
     return {
       idList: toArrayOfString(filters.idList),
+      projectionTypeIdList: toArrayOfString(filters.projectionTypeIdList, "id"),
       dstTwinClassIdList: toArrayOfString(filters.dstTwinClassIdList, "id"),
       fieldProjectorIdList: toArrayOfString(
         filters.fieldProjectorIdList,
