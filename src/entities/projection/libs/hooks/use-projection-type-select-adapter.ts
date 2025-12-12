@@ -7,15 +7,16 @@ import {
 import {
   ProjectionType,
   ProjectionTypeFilters,
+  useFetchProjectionTypeById,
   useProjectionTypesSearch,
 } from "../../api";
 
 export function useProjectionTypeSelectAdapter(): SelectAdapter<ProjectionType> {
   const { searchProjectionTypes } = useProjectionTypesSearch();
+  const { fetchProjectionTypeById } = useFetchProjectionTypeById();
 
   async function getById(id: string) {
-    // TODO: Apply valid logic here
-    return { id };
+    return await fetchProjectionTypeById(id);
   }
 
   async function getItems(search: string, filters?: ProjectionTypeFilters) {

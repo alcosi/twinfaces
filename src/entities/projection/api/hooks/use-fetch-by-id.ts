@@ -4,14 +4,14 @@ import { PrivateApiContext } from "@/shared/api";
 import { isEmptyArray, isUndefined } from "@/shared/libs";
 
 import { hydrateProjectionFromMap } from "../../libs";
-import { Projection } from "../types";
+import { Projection_DETAILED } from "../types";
 
 export function useFetchProjectionById() {
   const api = useContext(PrivateApiContext);
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const fetchProjectionById = useCallback(
-    async (id: string): Promise<Projection | undefined> => {
+    async (id: string): Promise<Projection_DETAILED | undefined> => {
       setLoading(true);
 
       try {

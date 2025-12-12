@@ -30,10 +30,10 @@ export type ProjectionType = components["schemas"]["ProjectionTypeV1"];
 
 export type ProjectionTypeSearchRq =
   components["schemas"]["ProjectionTypeSearchV1"];
-
 export type ProjectionCreateRq = components["schemas"]["ProjectionCreateRqV1"];
+export type ProjectionUpdateRq = components["schemas"]["ProjectionUpdateRqV1"];
 
-export type ProjectionTypeFiltersKeys = "nameLikeList";
+export type ProjectionTypeFiltersKeys = "nameLikeList" | "idList";
 
 export type ProjectionTypeFilters = Partial<
   Pick<ProjectionTypeSearchRq, ProjectionTypeFiltersKeys>

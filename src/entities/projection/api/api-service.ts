@@ -6,6 +6,7 @@ import {
   ProjectionCreateRq,
   ProjectionFilters,
   ProjectionTypeFilters,
+  ProjectionUpdateRq,
 } from "./types";
 
 export function createProjectionApi(settings: ApiSettings) {
@@ -74,7 +75,16 @@ export function createProjectionApi(settings: ApiSettings) {
     });
   }
 
-  return { search, searchProjectionType, create };
+  function update({ body }: { body: ProjectionUpdateRq }) {
+    return settings.client.PUT("/private/projection/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  return { search, searchProjectionType, create, update };
 }
 
 export type ProjectionApi = ReturnType<typeof createProjectionApi>;
