@@ -6,13 +6,16 @@ import {
   useState,
 } from "react";
 
-import { Projection, useFetchProjectionById } from "@/entities/projection";
+import {
+  Projection_DETAILED,
+  useFetchProjectionById,
+} from "@/entities/projection";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 
 type ProjectionContextProps = {
   projectionId: string;
-  projection: Projection;
+  projection: Projection_DETAILED;
   refresh: () => Promise<void>;
 };
 
@@ -27,7 +30,7 @@ export function ProjectionContextProvider({
   projectionId: string;
   children: ReactNode;
 }) {
-  const [projection, setProjection] = useState<Projection | undefined>(
+  const [projection, setProjection] = useState<Projection_DETAILED | undefined>(
     undefined
   );
 

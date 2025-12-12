@@ -1,14 +1,17 @@
 import { TwinClassFieldV1_DETAILED } from "@/entities/twin-class-field";
-import { SelectAdapter } from "@/shared/libs";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
 
-import { useTwinClassFieldSearch } from "../../api/hooks";
+import {
+  useFetchTwinClassFieldById,
+  useTwinClassFieldSearch,
+} from "../../api/hooks";
 
 export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassFieldV1_DETAILED> {
   const { searchByFilters } = useTwinClassFieldSearch();
+  const { fetchTwinClassFieldById } = useFetchTwinClassFieldById();
 
   async function getById(id: string) {
-    // TODO: Apply valid logic here
-    return { id } as TwinClassFieldV1_DETAILED;
+    return await fetchTwinClassFieldById(id);
   }
 
   async function getItems(search: string) {
@@ -16,8 +19,8 @@ export function useTwinClassFieldSelectAdapter(): SelectAdapter<TwinClassFieldV1
     return response.data;
   }
 
-  function renderItem({ key }: TwinClassFieldV1_DETAILED) {
-    return key;
+  function renderItem({ key = "", name }: TwinClassFieldV1_DETAILED) {
+    return isPopulatedString(name) ? `${name} : ${key}` : key;
   }
 
   return {
