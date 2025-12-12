@@ -20,7 +20,8 @@ export type ProjectionFilterKeys =
   | "dstTwinClassIdList"
   | "fieldProjectorIdList"
   | "srcTwinClassFieldIdList"
-  | "dstTwinClassFieldIdList";
+  | "dstTwinClassFieldIdList"
+  | "projectionTypeIdList";
 
 export type ProjectionFilters = Partial<
   Pick<ProjectionSearchRq, ProjectionFilterKeys>
