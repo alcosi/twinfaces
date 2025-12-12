@@ -59,7 +59,7 @@ export function ProjectionGeneral() {
       ...projectionTypeAdapter,
     },
     renderPreview: projection.projectionType
-      ? (_) => (
+      ? () => (
           <ProjectionTypeResourceLink
             data={projection.projectionType as ProjectionType}
             withTooltip
@@ -92,7 +92,7 @@ export function ProjectionGeneral() {
       ...twinClassFieldAdapter,
     },
     renderPreview: projection.srcTwinClassField
-      ? (_) => (
+      ? () => (
           <TwinClassFieldResourceLink
             data={projection.srcTwinClassField as TwinClassField_DETAILED}
             withTooltip
@@ -125,7 +125,7 @@ export function ProjectionGeneral() {
       ...twinClassAdapter,
     },
     renderPreview: projection.dstTwinClass
-      ? (_) => (
+      ? () => (
           <TwinClassResourceLink
             data={projection.dstTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -158,7 +158,7 @@ export function ProjectionGeneral() {
       ...twinClassFieldAdapter,
     },
     renderPreview: projection.dstTwinClassField
-      ? (_) => (
+      ? () => (
           <TwinClassFieldResourceLink
             data={projection.dstTwinClassField as TwinClassField_DETAILED}
             withTooltip
