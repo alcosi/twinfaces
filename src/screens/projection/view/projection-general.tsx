@@ -12,8 +12,8 @@ import { ProjectionType, useUpdateProjection } from "@/entities/projection";
 import { useProjectionTypeSelectAdapter } from "@/entities/projection/libs";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import {
-  TwinClassField_DETAILED,
-  useTwinClassFieldSelectAdapter,
+  useTwinClassFieldFilters,
+  useTwinClassFieldSelectAdapterWithFilters,
 } from "@/entities/twin-class-field";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import {
@@ -39,9 +39,15 @@ export function ProjectionGeneral() {
   const { projection, refresh } = useContext(ProjectionContext);
   const { updateProjection } = useUpdateProjection();
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
-  const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
   const twinClassAdapter = useTwinClassSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(44);
+
+  const {
+    buildFilterFields: buildTwinClassFieldFilters,
+    mapFiltersToPayload: mapTwinClassFieldFilters,
+  } = useTwinClassFieldFilters({});
+
+  const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
 
   const [editFieldDialogOpen, setEditFieldDialogOpen] =
     useState<boolean>(false);
@@ -73,39 +79,6 @@ export function ProjectionGeneral() {
           projectionList: [
             {
               projectionTypeId: id,
-              id: projection.id,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
-
-  const srcTwinClassFieldSettings: InPlaceEditProps<
-    typeof projection.srcTwinClassFieldId
-  > = {
-    id: "srcTwinClassFieldId",
-    value: projection.srcTwinClassFieldId,
-    valueInfo: {
-      type: AutoFormValueType.combobox,
-      selectPlaceholder: "Select src twin class field...",
-      ...twinClassFieldAdapter,
-    },
-    renderPreview: projection.srcTwinClassField
-      ? () => (
-          <TwinClassFieldResourceLink
-            data={projection.srcTwinClassField as TwinClassField_DETAILED}
-            withTooltip
-          />
-        )
-      : undefined,
-    onSubmit: async (value) => {
-      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return updateProjection({
-        body: {
-          projectionList: [
-            {
-              srcTwinClassFieldId: id,
               id: projection.id,
             },
           ],
@@ -147,39 +120,6 @@ export function ProjectionGeneral() {
     },
   };
 
-  const dstTwinClassFieldSettings: InPlaceEditProps<
-    typeof projection.dstTwinClassFieldId
-  > = {
-    id: "dstTwinClassFieldId",
-    value: projection.dstTwinClassFieldId,
-    valueInfo: {
-      type: AutoFormValueType.combobox,
-      selectPlaceholder: "Select dst twin class field...",
-      ...twinClassFieldAdapter,
-    },
-    renderPreview: projection.dstTwinClassField
-      ? () => (
-          <TwinClassFieldResourceLink
-            data={projection.dstTwinClassField as TwinClassField_DETAILED}
-            withTooltip
-          />
-        )
-      : undefined,
-    onSubmit: async (value) => {
-      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return updateProjection({
-        body: {
-          projectionList: [
-            {
-              dstTwinClassFieldId: id,
-              id: projection.id,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
-
   const fieldProjectorFeaturerSettings: AutoEditDialogSettings = {
     value: {
       fieldProjectorFeaturerId: projection.fieldProjectorFeaturerId,
@@ -209,6 +149,72 @@ export function ProjectionGeneral() {
     },
   };
 
+  const srcTwinClassFieldDialogSettings: AutoEditDialogSettings = {
+    title: "Update source twin class field",
+
+    value: {
+      srcTwinClassFieldId: projection.srcTwinClassFieldId,
+    },
+
+    valuesInfo: {
+      srcTwinClassFieldId: {
+        type: AutoFormValueType.complexCombobox,
+        label: "Src twin class field",
+        adapter: twinClassFieldAdapter,
+        extraFilters: buildTwinClassFieldFilters(),
+        mapExtraFilters: mapTwinClassFieldFilters,
+      },
+    },
+
+    onSubmit: async (values) => {
+      const id = values.srcTwinClassFieldId?.[0]?.id;
+
+      return updateProjection({
+        body: {
+          projectionList: [
+            {
+              id: projection.id,
+              srcTwinClassFieldId: id,
+            },
+          ],
+        },
+      }).then(refresh);
+    },
+  };
+
+  const dstTwinClassFieldDialogSettings: AutoEditDialogSettings = {
+    title: "Update destination twin class field",
+
+    value: {
+      dstTwinClassFieldId: projection.dstTwinClassFieldId,
+    },
+
+    valuesInfo: {
+      dstTwinClassFieldId: {
+        type: AutoFormValueType.complexCombobox,
+        label: "Dst twin class field",
+        adapter: twinClassFieldAdapter,
+        extraFilters: buildTwinClassFieldFilters(),
+        mapExtraFilters: mapTwinClassFieldFilters,
+      },
+    },
+
+    onSubmit: async (values) => {
+      const id = values.dstTwinClassFieldId?.[0]?.id;
+
+      return updateProjection({
+        body: {
+          projectionList: [
+            {
+              id: projection.id,
+              dstTwinClassFieldId: id,
+            },
+          ],
+        },
+      }).then(refresh);
+    },
+  };
+
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
     setEditFieldDialogOpen(true);
@@ -232,10 +238,17 @@ export function ProjectionGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(srcTwinClassFieldDialogSettings)}
+          >
             <TableCell>Src field</TableCell>
             <TableCell>
-              <InPlaceEdit {...srcTwinClassFieldSettings} />
+              {projection.srcTwinClassField && (
+                <TwinClassFieldResourceLink
+                  data={projection.srcTwinClassField}
+                />
+              )}
             </TableCell>
           </TableRow>
 
@@ -246,10 +259,17 @@ export function ProjectionGeneral() {
             </TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(dstTwinClassFieldDialogSettings)}
+          >
             <TableCell>Dst field</TableCell>
             <TableCell>
-              <InPlaceEdit {...dstTwinClassFieldSettings} />
+              {projection.dstTwinClassField && (
+                <TwinClassFieldResourceLink
+                  data={projection.dstTwinClassField}
+                />
+              )}
             </TableCell>
           </TableRow>
 

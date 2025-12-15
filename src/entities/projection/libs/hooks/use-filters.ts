@@ -4,7 +4,10 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
+import {
+  useTwinClassFieldFilters,
+  useTwinClassFieldSelectAdapterWithFilters,
+} from "@/entities/twin-class-field";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -23,8 +26,14 @@ export function useProjectionFilters({
 }): FilterFeature<ProjectionFilterKeys, ProjectionFilters> {
   const twinClassAdapter = useTwinClassSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(44);
-  const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
+
+  const {
+    buildFilterFields: buildTwinClassFieldFilters,
+    mapFiltersToPayload: mapTwinClassFieldFilters,
+  } = useTwinClassFieldFilters({});
+
+  const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
 
   const allFilters: Record<ProjectionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -52,16 +61,18 @@ export function useProjectionFilters({
       ...featurerAdapter,
     },
     srcTwinClassFieldIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Src twin class field",
-      multi: true,
-      ...twinClassFieldAdapter,
+      adapter: twinClassFieldAdapter,
+      extraFilters: buildTwinClassFieldFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFieldFilters(filters),
     },
     dstTwinClassFieldIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Dst twin class field",
-      multi: true,
-      ...twinClassFieldAdapter,
+      adapter: twinClassFieldAdapter,
+      extraFilters: buildTwinClassFieldFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFieldFilters(filters),
     },
   };
 
@@ -96,5 +107,8 @@ export function useProjectionFilters({
     };
   }
 
-  return { buildFilterFields, mapFiltersToPayload };
+  return {
+    buildFilterFields,
+    mapFiltersToPayload,
+  };
 }
