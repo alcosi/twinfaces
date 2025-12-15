@@ -51,7 +51,7 @@ export function useTwinClassFieldFilters({
       label: "Name",
     },
     descriptionI18nLikeList: {
-      type: AutoFormValueType.string,
+      type: AutoFormValueType.tag,
       label: "Description",
     },
     fieldTyperIdList: {

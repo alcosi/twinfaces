@@ -7,6 +7,13 @@ export type SelectAdapter<Entity> = {
   renderItem: (entity: Entity) => ReactNode | string;
 };
 
+export type SelectAdapterWithFilters<T, F = any> = SelectAdapter<T> & {
+  setFilters?: (filters: F) => void;
+  getFilters?: () => F;
+  invalidate?: () => void;
+  version?: number;
+};
+
 export type FormFieldValidationError = {
   key: string;
   message: string;

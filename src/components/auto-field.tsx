@@ -1,5 +1,6 @@
 import { Control, FieldPath } from "react-hook-form";
 
+import { SelectAdapterWithFilters } from "@/shared/libs";
 import { ComboboxProps, InputProps, TagBoxProps } from "@/shared/ui";
 import {
   FeaturerFieldProps,
@@ -9,6 +10,10 @@ import {
   TwinFieldFormItemProps,
 } from "@/widgets/form-fields";
 
+import {
+  ComplexComboboxFormField,
+  ComplexComboboxFormItem,
+} from "./complex-combobox";
 import {
   CheckboxFormField,
   CheckboxFormItem,
@@ -34,9 +39,20 @@ export enum AutoFormValueType {
   tag = "tag",
   twinField = "twinField",
   numberRange = "numberRange",
+  complexCombobox = "complexCombobox",
 }
 
-/* eslint-enable no-unused-vars */
+export interface AutoFormComplexComboboxValueInfo {
+  type: AutoFormValueType.complexCombobox;
+
+  label?: string;
+  description?: string;
+
+  adapter: SelectAdapterWithFilters<any, any>;
+
+  extraFilters: Record<string, AutoFormValueInfo>;
+  mapExtraFilters?: (filters: Record<string, any>) => any;
+}
 
 export type AutoFormValueInfo = AutoFormCommonInfo &
   (
@@ -49,6 +65,7 @@ export type AutoFormValueInfo = AutoFormCommonInfo &
     | AutoFormFeaturerValueInfo
     | AutoFormColorValueInfo
     | AutoFormNumberRangeValueInfo
+    | AutoFormComplexComboboxValueInfo
   );
 
 export interface AutoFormCommonInfo {
@@ -141,6 +158,17 @@ export function AutoField({
           />
         );
 
+      case AutoFormValueType.complexCombobox:
+        return name && control ? (
+          <ComplexComboboxFormField name={name} control={control} info={info} />
+        ) : (
+          <ComplexComboboxFormItem
+            value={value}
+            onChange={onChange}
+            info={info}
+          />
+        );
+
       case AutoFormValueType.combobox:
         return name && control ? (
           <ComboboxFormField name={name} control={control} {...info} />
@@ -168,7 +196,7 @@ export function AutoField({
         return name && control ? (
           <TagsFormField name={name} control={control} {...info} />
         ) : (
-          <TagsFormItem fieldValue={value} {...info} />
+          <TagsFormItem fieldValue={value} {...info} onChange={setValue} />
         );
 
       case AutoFormValueType.twinField:
