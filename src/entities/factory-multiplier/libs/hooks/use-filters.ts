@@ -4,7 +4,10 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -26,8 +29,13 @@ export function useFactoryMultiplierFilters({
   enabledFilters?: FactoryMultiplierFilterKeys[];
 }): FilterFeature<FactoryMultiplierFilterKeys, FactoryMultiplierFilters> {
   const factoryAdapter = useFactorySelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const featurerAdapter = useFeaturerSelectAdapter(22);
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   const allFilters: Record<FactoryMultiplierFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -43,10 +51,14 @@ export function useFactoryMultiplierFilters({
       ...factoryAdapter,
     },
     inputTwinClassIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Input class",
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinClassAdapter,
     },
     multiplierFeaturerIdList: {
       type: AutoFormValueType.combobox,

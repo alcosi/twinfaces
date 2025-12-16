@@ -3,7 +3,10 @@ import z from "zod";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import {
   useTwinClassFieldFilters,
   useTwinClassFieldSelectAdapterWithFilters,
@@ -24,7 +27,6 @@ export function useProjectionFilters({
 }: {
   enabledFilters?: ProjectionFilterKeys[];
 }): FilterFeature<ProjectionFilterKeys, ProjectionFilters> {
-  const twinClassAdapter = useTwinClassSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(44);
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
 
@@ -33,7 +35,13 @@ export function useProjectionFilters({
     mapFiltersToPayload: mapTwinClassFieldFilters,
   } = useTwinClassFieldFilters({});
 
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
 
   const allFilters: Record<ProjectionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -49,10 +57,14 @@ export function useProjectionFilters({
       ...projectionTypeAdapter,
     },
     dstTwinClassIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Dst twin class",
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinClassAdapter,
     },
     fieldProjectorIdList: {
       type: AutoFormValueType.combobox,
@@ -66,6 +78,9 @@ export function useProjectionFilters({
       adapter: twinClassFieldAdapter,
       extraFilters: buildTwinClassFieldFilters(),
       mapExtraFilters: (filters) => mapTwinClassFieldFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
+      multi: true,
     },
     dstTwinClassFieldIdList: {
       type: AutoFormValueType.complexCombobox,
@@ -73,6 +88,9 @@ export function useProjectionFilters({
       adapter: twinClassFieldAdapter,
       extraFilters: buildTwinClassFieldFilters(),
       mapExtraFilters: (filters) => mapTwinClassFieldFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
+      multi: true,
     },
   };
 

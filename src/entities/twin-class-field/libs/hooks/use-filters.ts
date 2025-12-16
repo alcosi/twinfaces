@@ -6,7 +6,8 @@ import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   TwinClass_DETAILED,
-  useTwinClassSelectAdapter,
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import {
   type FilterFeature,
@@ -25,9 +26,14 @@ export function useTwinClassFieldFilters({
 }: {
   enabledFilters?: TwinClassFieldV2FilterKeys[];
 }): FilterFeature<TwinClassFieldV2FilterKeys, TwinClassFieldV2Filters> {
-  const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
   const fAdapter = useFeaturerSelectAdapter(13);
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   const allFilters: Record<TwinClassFieldV2FilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -37,10 +43,14 @@ export function useTwinClassFieldFilters({
       placeholder: "Enter UUID",
     },
     twinClassIdMap: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin Class",
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...tcAdapter,
     },
     keyLikeList: {
       type: AutoFormValueType.tag,

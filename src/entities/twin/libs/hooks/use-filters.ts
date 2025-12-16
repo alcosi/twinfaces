@@ -5,7 +5,8 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { FaceWT001 } from "@/entities/face";
 import {
   TwinClass_DETAILED,
-  useTwinClassSelectAdapter,
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { TwinFilterKeys, TwinFilters } from "@/entities/twin/server";
@@ -39,10 +40,16 @@ export function useTwinFilters({
   twinClassFields?: TwinClass_DETAILED["fields"];
   enabledColumns?: FaceWT001["columns"];
 }): FilterFeature<TwinFilterKeys, TwinFilters> {
-  const tcAdapter = useTwinClassSelectAdapter();
   const sAdapter = useTwinStatusSelectAdapter();
   const uAdapter = useUserSelectAdapter();
   const tAdapter = useTwinSelectAdapter();
+
+  const tcAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   function buildFilterFields(
     filters?: TwinFilterKeys[]
@@ -60,24 +67,16 @@ export function useTwinFilters({
         placeholder: "Enter UUID",
       },
       twinClassIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label:
           columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["twinClassId"]]?.label ??
           "Twin Class",
+        adapter: tcAdapter,
         multi: true,
-        ...tcAdapter,
-        getItems: (search: string) => {
-          if (baseTwinClassId) {
-            tcAdapter.getItems(search, {
-              abstractt: "ONLY_NOT",
-              extendsHierarchyChildsForTwinClassSearch: baseTwinClassId
-                ? { idList: [baseTwinClassId], depth: 0 }
-                : undefined,
-            });
-          }
-
-          return tcAdapter.getItems(search);
-        },
+        extraFilters: buildTwinClassFilters(),
+        mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
       },
 
       statusIdList: {

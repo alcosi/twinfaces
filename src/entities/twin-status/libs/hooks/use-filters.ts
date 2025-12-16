@@ -4,7 +4,8 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import {
   TwinClass_DETAILED,
-  useTwinClassSelectAdapter,
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import {
   TwinStatusFilterKeys,
@@ -25,7 +26,12 @@ export function useStatusFilters({
 }: {
   enabledFilters?: TwinStatusFilterKeys[];
 }): FilterFeature<TwinStatusFilterKeys, TwinStatusFilters> {
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   const allFilters: Record<TwinStatusFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -36,10 +42,14 @@ export function useStatusFilters({
     },
 
     twinClassIdMap: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Class",
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinClassAdapter,
     },
 
     keyLikeList: {

@@ -163,6 +163,8 @@ export function ProjectionGeneral() {
         adapter: twinClassFieldAdapter,
         extraFilters: buildTwinClassFieldFilters(),
         mapExtraFilters: mapTwinClassFieldFilters,
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
       },
     },
 
@@ -196,6 +198,8 @@ export function ProjectionGeneral() {
         adapter: twinClassFieldAdapter,
         extraFilters: buildTwinClassFieldFilters(),
         mapExtraFilters: mapTwinClassFieldFilters,
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
       },
     },
 
