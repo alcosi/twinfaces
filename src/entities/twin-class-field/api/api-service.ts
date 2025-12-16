@@ -16,7 +16,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     pagination: PaginationState;
     filters: TwinClassFieldSearchFilters;
   }) {
-    return settings.client.POST("/private/twin_class_fields/search/v1", {
+    return settings.client.POST("/private/twin_class_fields/search/v2", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
@@ -31,7 +31,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: filters,
       },
     });
   }

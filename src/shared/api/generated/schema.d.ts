@@ -11599,6 +11599,10 @@ export interface components {
             fieldTyperIdList?: number[];
             /** @description field typer id exclude list */
             fieldTyperIdExcludeList?: number[];
+            /** @description field sorter id list */
+            twinSorterIdList?: number[];
+            /** @description field sorter id exclude list */
+            twinSorterIdExcludeList?: number[];
             /** @description view permission id list */
             viewPermissionIdList?: string[];
             /** @description view permission id exclude list */
@@ -11613,6 +11617,12 @@ export interface components {
              * @enum {string}
              */
             required?: "ONLY" | "ONLY_NOT" | "ANY";
+            /**
+             * @description system
+             * @example ANY
+             * @enum {string}
+             */
+            system?: "ONLY" | "ONLY_NOT" | "ANY";
             /** @description frontend validation error i18n like list */
             feValidationErrorI18nLikeList?: string[];
             /** @description frontend validation error i18n not like list */
