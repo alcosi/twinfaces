@@ -9,7 +9,10 @@ import {
   FactoryEraserFilterKeys,
   FactoryEraserFilters,
 } from "@/entities/factory-eraser";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import {
   FilterFeature,
   createFixedSelectAdapter,
@@ -24,8 +27,13 @@ export function useFactoryEraserFilters(): FilterFeature<
   FactoryEraserFilters
 > {
   const factoryAdapter = useFactorySelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   function buildFilterFields(): Record<
     FactoryEraserFilterKeys,
@@ -47,10 +55,14 @@ export function useFactoryEraserFilters(): FilterFeature<
       },
 
       inputTwinClassIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Input class",
+        adapter: twinClassAdapter,
+        extraFilters: buildTwinClassFilters(),
+        mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...twinClassAdapter,
       },
 
       factoryConditionSetIdList: {

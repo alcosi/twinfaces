@@ -27,7 +27,6 @@ export function useProjectionFilters({
 }: {
   enabledFilters?: ProjectionFilterKeys[];
 }): FilterFeature<ProjectionFilterKeys, ProjectionFilters> {
-  // const twinClassAdapter = useTwinClassSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(44);
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
 
@@ -57,12 +56,6 @@ export function useProjectionFilters({
       multi: true,
       ...projectionTypeAdapter,
     },
-    // dstTwinClassIdList: {
-    //   type: AutoFormValueType.combobox,
-    //   label: "Dst twin class",
-    //   multi: true,
-    //   ...twinClassAdapter,
-    // },
     dstTwinClassIdList: {
       type: AutoFormValueType.complexCombobox,
       label: "Dst twin class",

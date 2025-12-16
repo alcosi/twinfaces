@@ -4,7 +4,8 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import {
   TwinClass_DETAILED,
-  useTwinClassSelectAdapter,
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { useUserSelectAdapter } from "@/entities/user";
@@ -29,7 +30,12 @@ export function useTwinFlowFilters({
 }): FilterFeature<TwinFlowFilterKeys, TwinFlowFilters> {
   const twinStatusAdapter = useTwinStatusSelectAdapter();
   const userAdapter = useUserSelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   const allFilters: Record<TwinFlowFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -39,10 +45,14 @@ export function useTwinFlowFilters({
       placeholder: "Enter UUID",
     },
     twinClassIdMap: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Class",
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinClassAdapter,
     },
     nameI18nLikeList: {
       type: AutoFormValueType.string,

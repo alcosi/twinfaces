@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import {
   type FilterFeature,
   toArray,
@@ -16,7 +19,12 @@ export function usePermissionGroupFilters(): FilterFeature<
   PermissionGroupFilterKeys,
   PermissionGroupFilters
 > {
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   function buildFilterFields(): Record<
     PermissionGroupFilterKeys,
@@ -34,10 +42,14 @@ export function usePermissionGroupFilters(): FilterFeature<
         label: "Key",
       },
       twinClassIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Class",
+        adapter: twinClassAdapter,
+        extraFilters: buildTwinClassFilters(),
+        mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...twinClassAdapter,
       },
       nameLikeList: {
         type: AutoFormValueType.tag,
@@ -58,7 +70,7 @@ export function usePermissionGroupFilters(): FilterFeature<
       keyLikeList: toArrayOfString(toArray(filters.keyLikeList), "key").map(
         wrapWithPercent
       ),
-      twinClassIdList: toArrayOfString(filters.twinClassIdList),
+      twinClassIdList: toArrayOfString(filters.twinClassIdList, "id"),
       nameLikeList: toArrayOfString(toArray(filters.nameLikeList), "name").map(
         wrapWithPercent
       ),

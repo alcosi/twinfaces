@@ -8,7 +8,10 @@ import {
   FactoryPipelineFilterKeys,
   FactoryPipelineFilters,
 } from "@/entities/factory-pipeline";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
   FilterFeature,
@@ -26,9 +29,14 @@ export function useFactoryPipelineFilters({
   enabledFilters?: FactoryPipelineFilterKeys[];
 }): FilterFeature<FactoryPipelineFilterKeys, FactoryPipelineFilters> {
   const factorySelectAdapter = useFactorySelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const twinStatusAdapter = useTwinStatusSelectAdapter();
   const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   const allFilters: Record<FactoryPipelineFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -44,10 +52,14 @@ export function useFactoryPipelineFilters({
       ...factorySelectAdapter,
     },
     inputTwinClassIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Input Twin Class",
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinClassAdapter,
     },
     factoryConditionSetIdList: {
       type: AutoFormValueType.combobox,

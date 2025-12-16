@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import {
   FilterFeature,
   toArray,
@@ -17,9 +20,14 @@ import {
 } from "./use-select-adapter";
 
 export function useLinkFilters(): FilterFeature<LinkFilterKeys, LinkFilters> {
-  const tcSelectAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const ltSelectAdapter = useLinkTypeSelectAdapter();
   const lsSelectAdapter = useLinkStrengthSelectAdapter();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   function buildFilterFields(): Record<LinkFilterKeys, AutoFormValueInfo> {
     return {
@@ -38,16 +46,24 @@ export function useLinkFilters(): FilterFeature<LinkFilterKeys, LinkFilters> {
         label: "Backward name",
       },
       srcTwinClassIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Source Twin Class",
+        adapter: twinClassAdapter,
+        extraFilters: buildTwinClassFilters(),
+        mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...tcSelectAdapter,
       },
       dstTwinClassIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Destination Twin Class",
+        adapter: twinClassAdapter,
+        extraFilters: buildTwinClassFilters(),
+        mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...tcSelectAdapter,
       },
       typeLikeList: {
         type: AutoFormValueType.combobox,
