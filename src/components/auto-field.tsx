@@ -44,14 +44,13 @@ export enum AutoFormValueType {
 
 export interface AutoFormComplexComboboxValueInfo {
   type: AutoFormValueType.complexCombobox;
-
   label?: string;
   description?: string;
-
   adapter: SelectAdapterWithFilters<any, any>;
-
   extraFilters: Record<string, AutoFormValueInfo>;
   mapExtraFilters?: (filters: Record<string, any>) => any;
+  selectPlaceholder?: string;
+  searchPlaceholder?: string;
 }
 
 export type AutoFormValueInfo = AutoFormCommonInfo &

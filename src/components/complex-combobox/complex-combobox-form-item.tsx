@@ -74,6 +74,8 @@ export function ComplexComboboxFormItem({
         fieldValue={value}
         onSelect={onChange}
         inForm={inForm}
+        selectPlaceholder={info.selectPlaceholder}
+        searchPlaceholder={info.searchPlaceholder}
       />
 
       <button
