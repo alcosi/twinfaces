@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp, FilterX } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { cn, isPopulatedString } from "@/shared/libs";
 
@@ -41,10 +41,18 @@ export function ComplexComboboxFormItem({
 
   const hasFilters = hasActiveFilters(extraFilters);
 
-  function applyFilters() {
+  const prevFiltersRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const serialized = JSON.stringify(mappedFilters);
+
+    if (prevFiltersRef.current === serialized) return;
+
+    prevFiltersRef.current = serialized;
+
     info.adapter.setFilters?.(mappedFilters);
     info.adapter.invalidate?.();
-  }
+  }, [mappedFilters, info.adapter]);
 
   function resetFilters() {
     const cleared = Object.fromEntries(
@@ -132,20 +140,6 @@ export function ComplexComboboxFormItem({
             >
               <FilterX size={14} />
               Reset
-            </button>
-
-            <button
-              type="button"
-              className={cn(
-                "rounded px-3 py-1 text-xs font-medium transition-colors",
-                hasFilters
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                  : "bg-muted text-muted-foreground cursor-not-allowed"
-              )}
-              onClick={applyFilters}
-              disabled={!hasFilters}
-            >
-              Apply
             </button>
           </div>
         </>

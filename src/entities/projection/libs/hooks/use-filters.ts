@@ -68,6 +68,7 @@ export function useProjectionFilters({
       mapExtraFilters: (filters) => mapTwinClassFieldFilters(filters),
       searchPlaceholder: "Search...",
       selectPlaceholder: "Select...",
+      multi: true,
     },
     dstTwinClassFieldIdList: {
       type: AutoFormValueType.complexCombobox,
@@ -77,6 +78,7 @@ export function useProjectionFilters({
       mapExtraFilters: (filters) => mapTwinClassFieldFilters(filters),
       searchPlaceholder: "Search...",
       selectPlaceholder: "Select...",
+      multi: true,
     },
   };
 
