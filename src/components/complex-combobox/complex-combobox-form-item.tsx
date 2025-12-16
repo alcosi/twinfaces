@@ -76,6 +76,7 @@ export function ComplexComboboxFormItem({
         inForm={inForm}
         selectPlaceholder={info.selectPlaceholder}
         searchPlaceholder={info.searchPlaceholder}
+        multi={info.multi}
       />
 
       <button

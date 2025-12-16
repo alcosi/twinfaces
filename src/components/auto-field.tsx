@@ -51,6 +51,7 @@ export interface AutoFormComplexComboboxValueInfo {
   mapExtraFilters?: (filters: Record<string, any>) => any;
   selectPlaceholder?: string;
   searchPlaceholder?: string;
+  multi?: boolean;
 }
 
 export type AutoFormValueInfo = AutoFormCommonInfo &

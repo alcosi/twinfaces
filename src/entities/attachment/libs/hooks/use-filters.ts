@@ -4,7 +4,10 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useTwinSelectAdapter } from "@/entities/twin";
-import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
+import {
+  useTwinClassFieldFilters,
+  useTwinClassFieldSelectAdapterWithFilters,
+} from "@/entities/twin-class-field";
 import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
 import { useUserSelectAdapter } from "@/entities/user";
 import { DataTimeRangeV1 } from "@/shared/api";
@@ -28,7 +31,13 @@ export function useAttachmentFilters({
   const transitionAdapter = useTransitionSelectAdapter();
   const userAdapter = useUserSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
-  const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
+
+  const {
+    buildFilterFields: buildTwinClassFieldFilters,
+    mapFiltersToPayload: mapTwinClassFieldFilters,
+  } = useTwinClassFieldFilters({});
+
+  const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
 
   const allFilters: Record<AttachmentFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -78,10 +87,14 @@ export function useAttachmentFilters({
       ...permissionAdapter,
     },
     twinClassFieldIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Field",
+      adapter: twinClassFieldAdapter,
+      extraFilters: buildTwinClassFieldFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFieldFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinClassFieldAdapter,
     },
     createdAtFrom: {
       type: AutoFormValueType.string,
