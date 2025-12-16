@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -18,6 +19,8 @@ import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { ProjectionTypeResourceLink } from "@/features/projection-type/ui";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { PlatformArea } from "@/shared/config";
+import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -110,10 +113,34 @@ const colDefs: Record<
   },
 };
 
-export function ProjectionsTable() {
+export function ProjectionsTable({
+  twinClassId,
+  title,
+}: {
+  twinClassId?: string;
+  title?: string;
+}) {
+  const router = useRouter();
   const { searchProjections } = useProjectionsSearch();
   const { buildFilterFields, mapFiltersToPayload } = useProjectionFilters({
-    enabledFilters: undefined,
+    enabledFilters:
+      title === "Incoming"
+        ? [
+            "idList",
+            "dstTwinClassIdList",
+            "fieldProjectorIdList",
+            "srcTwinClassFieldIdList",
+            "projectionTypeIdList",
+          ]
+        : title === "Outgoing"
+          ? [
+              "idList",
+              "dstTwinClassIdList",
+              "fieldProjectorIdList",
+              "dstTwinClassFieldIdList",
+              "projectionTypeIdList",
+            ]
+          : undefined,
   });
   const { createProjection } = useProjectionCreate();
 
@@ -122,9 +149,11 @@ export function ProjectionsTable() {
     defaultValues: {
       srcTwinPointerId: "00000000-0000-0000-0012-000000000001",
       projectionTypeId: "",
-      srcTwinClassFieldId: "",
+      srcTwinClassFieldId:
+        twinClassId && title === "Incoming" ? twinClassId : "",
       dstTwinClassId: "",
-      dstTwinClassFieldId: "",
+      dstTwinClassFieldId:
+        twinClassId && title === "Outgoing" ? twinClassId : "",
     },
   });
 
@@ -139,6 +168,14 @@ export function ProjectionsTable() {
         pagination,
         filters: {
           ..._filters,
+          srcTwinClassFieldIdList:
+            twinClassId && title === "Incoming"
+              ? toArrayOfString(toArray(twinClassId), "id")
+              : _filters.srcTwinClassFieldIdList,
+          dstTwinClassFieldIdList:
+            twinClassId && title === "Outgoing"
+              ? toArrayOfString(toArray(twinClassId), "id")
+              : _filters.dstTwinClassFieldIdList,
         },
       });
     } catch (error) {
@@ -164,22 +201,43 @@ export function ProjectionsTable() {
       columns={[
         colDefs.id,
         colDefs.projectionType,
-        colDefs.srcTwinClassField,
-        colDefs.dstTwinClass,
-        colDefs.dstTwinClassField,
+        //* colDefs.srcTwinClassField,
+        ...(isTruthy(twinClassId && title === "Incoming")
+          ? [colDefs.srcTwinClassField]
+          : []),
+        //!colDefs.dstTwinClass,
+        ...(isTruthy(twinClassId && title === "Outgoing")
+          ? [colDefs.dstTwinClass]
+          : []),
+        //! colDefs.dstTwinClassField,
+        ...(isTruthy(twinClassId && title === "Outgoing")
+          ? [colDefs.dstTwinClassField]
+          : []),
         colDefs.fieldProjectorFeaturer,
       ]}
       fetcher={fetchProjections}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/projections/${row.id}`)
+      }
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.projectionType,
-        colDefs.srcTwinClassField,
-        colDefs.dstTwinClass,
-        colDefs.dstTwinClassField,
+        //* colDefs.srcTwinClassField,
+        ...(isTruthy(twinClassId && title === "Incoming")
+          ? [colDefs.srcTwinClassField]
+          : []),
+        //!colDefs.dstTwinClass,
+        ...(isTruthy(twinClassId && title === "Outgoing")
+          ? [colDefs.dstTwinClass]
+          : []),
+        //! colDefs.dstTwinClassField,
+        ...(isTruthy(twinClassId && title === "Outgoing")
+          ? [colDefs.dstTwinClassField]
+          : []),
         colDefs.fieldProjectorFeaturer,
       ]}
-      title="Projections"
+      title={title}
       filters={{ filtersInfo: buildFilterFields() }}
       dialogForm={projectionForm}
       onCreateSubmit={handleOnCreateSubmit}
