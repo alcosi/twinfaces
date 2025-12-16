@@ -6,6 +6,7 @@ import { cn, isPopulatedString } from "@/shared/libs";
 import {
   AutoField,
   AutoFormComplexComboboxValueInfo,
+  AutoFormValueInfo,
   AutoFormValueType,
 } from "../auto-field";
 import { ComboboxFormItem } from "../form-fields";
@@ -24,12 +25,23 @@ export function ComplexComboboxFormItem({
   const [open, setOpen] = useState(false);
   const [filtersVersion, setFiltersVersion] = useState(0);
 
+  const [touchedFilters, setTouchedFilters] = useState<Record<string, boolean>>(
+    {}
+  );
+
   const [extraFilters, setExtraFilters] = useState<Record<string, any>>(() =>
     Object.fromEntries(
-      Object.entries(info.extraFilters).map(([key, filter]) => [
-        key,
-        filter.type === AutoFormValueType.tag ? [] : "",
-      ])
+      Object.entries(info.extraFilters)
+        .filter(([, filter]) => filter !== undefined)
+        .map(([key, filter]) => [
+          key,
+          filter!.type === AutoFormValueType.tag
+            ? []
+            : filter!.type === AutoFormValueType.boolean &&
+                filter!.hasIndeterminate
+              ? "indeterminate"
+              : "",
+        ])
     )
   );
 
@@ -44,22 +56,34 @@ export function ComplexComboboxFormItem({
   const prevFiltersRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const serialized = JSON.stringify(mappedFilters);
+    const sanitizedFilters = stripIndeterminateFilters(
+      mappedFilters,
+      info.extraFilters,
+      touchedFilters
+    );
 
+    const serialized = JSON.stringify(sanitizedFilters);
     if (prevFiltersRef.current === serialized) return;
 
     prevFiltersRef.current = serialized;
 
-    info.adapter.setFilters?.(mappedFilters);
+    info.adapter.setFilters?.(sanitizedFilters);
     info.adapter.invalidate?.();
-  }, [mappedFilters, info.adapter]);
+  }, [mappedFilters, touchedFilters, info.adapter]);
 
   function resetFilters() {
     const cleared = Object.fromEntries(
-      Object.entries(info.extraFilters).map(([key, filter]) => [
-        key,
-        filter.type === AutoFormValueType.tag ? [] : "",
-      ])
+      Object.entries(info.extraFilters)
+        .filter(([, filter]) => filter !== undefined)
+        .map(([key, filter]) => [
+          key,
+          filter!.type === AutoFormValueType.tag
+            ? []
+            : filter!.type === AutoFormValueType.boolean &&
+                filter!.hasIndeterminate
+              ? "indeterminate"
+              : "",
+        ])
     );
 
     setExtraFilters(cleared);
@@ -116,19 +140,26 @@ export function ComplexComboboxFormItem({
           </div>
 
           <div className="space-y-2">
-            {Object.entries(info.extraFilters).map(([key, filterInfo]) => (
-              <AutoField
-                key={`${filtersVersion}-${key}`}
-                info={filterInfo}
-                value={extraFilters[key]}
-                onChange={(v) =>
-                  setExtraFilters((prev) => ({
-                    ...prev,
-                    [key]: v,
-                  }))
-                }
-              />
-            ))}
+            {Object.entries(info.extraFilters)
+              .filter(([, filterInfo]) => filterInfo !== undefined)
+              .map(([key, filterInfo]) => (
+                <AutoField
+                  key={`${filtersVersion}-${key}`}
+                  info={filterInfo!}
+                  value={extraFilters[key]}
+                  onChange={(v) => {
+                    setTouchedFilters((prev) => ({
+                      ...prev,
+                      [key]: true,
+                    }));
+
+                    setExtraFilters((prev) => ({
+                      ...prev,
+                      [key]: normalizeFilterValue(v, filterInfo!),
+                    }));
+                  }}
+                />
+              ))}
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-3">
@@ -151,8 +182,37 @@ export function ComplexComboboxFormItem({
 function hasActiveFilters(filters: Record<string, any>) {
   return Object.values(filters).some((v) => {
     if (Array.isArray(v)) return v.length > 0;
+    if (v === "indeterminate") return false;
     if (typeof v === "string") return isPopulatedString(v);
     if (typeof v === "object" && v !== null) return true;
     return false;
   });
+}
+
+function normalizeFilterValue(value: unknown, filter: AutoFormValueInfo) {
+  if (filter.type === AutoFormValueType.boolean && filter.hasIndeterminate) {
+    return value === undefined ? "indeterminate" : value;
+  }
+
+  return value;
+}
+
+function stripIndeterminateFilters(
+  filters: Record<string, any>,
+  filterInfos: Record<string, AutoFormValueInfo | undefined>,
+  touched: Record<string, boolean>
+) {
+  return Object.fromEntries(
+    Object.entries(filters).filter(([key, value]) => {
+      const info = filterInfos[key];
+
+      if (info?.type === AutoFormValueType.boolean && info.hasIndeterminate) {
+        if (!touched[key]) return false;
+
+        return value !== "indeterminate";
+      }
+
+      return true;
+    })
+  );
 }

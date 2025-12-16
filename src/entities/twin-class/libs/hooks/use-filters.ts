@@ -46,7 +46,7 @@ export function useTwinClassFilters(): FilterFeature<
         label: "Name",
       },
       descriptionI18nLikeList: {
-        type: AutoFormValueType.string,
+        type: AutoFormValueType.tag,
         label: "Description",
       },
       headHierarchyParentsForTwinClassSearch: {
