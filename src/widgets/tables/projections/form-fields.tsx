@@ -1,4 +1,5 @@
-import { Control } from "react-hook-form";
+import { useRef } from "react";
+import { Control, useWatch } from "react-hook-form";
 import z from "zod";
 
 import {
@@ -18,6 +19,7 @@ import {
   useTwinClassFieldFilters,
   useTwinClassFieldSelectAdapterWithFilters,
 } from "@/entities/twin-class-field";
+import { isTruthy } from "@/shared/libs";
 
 import { FeaturerFormField } from "../../form-fields";
 
@@ -29,6 +31,23 @@ export function ProjectionFormFields({
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
   const twinClassAdapter = useTwinClassSelectAdapter();
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
+
+  const srcTwinClassFieldWatch = useWatch({
+    control,
+    name: "srcTwinClassFieldId",
+  });
+  const srcTwinClassFieldDisabled = useRef(
+    isTruthy(srcTwinClassFieldWatch)
+  ).current;
+
+  const dstTwinClassFieldWatch = useWatch({
+    control,
+    name: "dstTwinClassFieldId",
+  });
+  const dstTwinClassFieldDisabled = useRef(
+    isTruthy(dstTwinClassFieldWatch)
+  ).current;
+
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters(
     {}
   );
@@ -41,6 +60,7 @@ export function ProjectionFormFields({
     mapExtraFilters: mapFiltersToPayload,
     selectPlaceholder: "Select...",
     searchPlaceholder: "Search...",
+    disabled: srcTwinClassFieldDisabled,
   };
 
   const dstFieldInfo: AutoFormComplexComboboxValueInfo = {
@@ -51,6 +71,7 @@ export function ProjectionFormFields({
     mapExtraFilters: mapFiltersToPayload,
     selectPlaceholder: "Select...",
     searchPlaceholder: "Search...",
+    disabled: dstTwinClassFieldDisabled,
   };
 
   return (

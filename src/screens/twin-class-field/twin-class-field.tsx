@@ -2,6 +2,7 @@ import { TwinClassFieldV1_DETAILED } from "@/entities/twin-class-field";
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { TwinFieldGeneral } from "./views";
+import { TwinFieldProjections } from "./views/twin-field-projections";
 
 export function TwinClassFieldScreen({
   twinFieldId,
@@ -17,6 +18,11 @@ export function TwinClassFieldScreen({
       content: (
         <TwinFieldGeneral twinFieldId={twinFieldId} twinField={twinField} />
       ),
+    },
+    {
+      key: "projections",
+      label: "Projections",
+      content: <TwinFieldProjections twinField={twinField} />,
     },
   ];
 

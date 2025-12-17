@@ -52,6 +52,7 @@ export interface AutoFormComplexComboboxValueInfo {
   selectPlaceholder?: string;
   searchPlaceholder?: string;
   multi?: boolean;
+  disabled?: boolean;
 }
 
 export type AutoFormValueInfo = AutoFormCommonInfo &
