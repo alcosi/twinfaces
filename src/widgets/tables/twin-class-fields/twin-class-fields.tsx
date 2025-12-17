@@ -38,9 +38,16 @@ const colDefs: Record<
     | "name"
     | "description"
     | "fieldTyperFeaturerId"
+    | "twinSorterFeaturerId"
     | "viewPermissionId"
     | "editPermissionId"
     | "required"
+    | "system"
+    | "externalId"
+    | "dependent"
+    | "hasDependentFields"
+    | "projectionField"
+    | "hasProjectedFields"
   >,
   ColumnDef<TwinClassFieldV1_DETAILED>
 > = {
@@ -97,6 +104,20 @@ const colDefs: Record<
       ),
   },
 
+  twinSorterFeaturerId: {
+    accessorKey: "twinSorterFeaturerId",
+    header: "Twin sorter",
+    cell: ({ row: { original } }) =>
+      original.twinSorterFeaturer && (
+        <div className="inline-flex max-w-48">
+          <FeaturerResourceLink
+            data={original.twinSorterFeaturer}
+            withTooltip
+          />
+        </div>
+      ),
+  },
+
   viewPermissionId: {
     accessorKey: "viewPermissionId",
     header: "View permission",
@@ -124,6 +145,41 @@ const colDefs: Record<
     header: "Required",
     cell: (data) => data.getValue() && <Check />,
   },
+
+  system: {
+    accessorKey: "system",
+    header: "System",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  externalId: {
+    accessorKey: "externalId",
+    header: "External id",
+  },
+
+  dependent: {
+    accessorKey: "dependent",
+    header: "Dependent",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  hasDependentFields: {
+    accessorKey: "hasDependentFields",
+    header: "Has dependent fields",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  projectionField: {
+    accessorKey: "projectionField",
+    header: "Projected",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  hasProjectedFields: {
+    accessorKey: "hasProjectedFields",
+    header: "Has projected fields",
+    cell: (data) => data.getValue() && <Check />,
+  },
 };
 
 export function TwinClassFieldsTable({
@@ -142,8 +198,15 @@ export function TwinClassFieldsTable({
           "nameI18nLikeList",
           "descriptionI18nLikeList",
           "fieldTyperIdList",
+          "twinSorterIdList",
           "viewPermissionIdList",
           "editPermissionIdList",
+          "required",
+          "system",
+          "dependentField",
+          "hasDependentFields",
+          "projectionField",
+          "hasProjectionFields",
         ]
       : undefined,
   });
@@ -226,9 +289,16 @@ export function TwinClassFieldsTable({
         colDefs.name,
         colDefs.description,
         colDefs.fieldTyperFeaturerId,
+        colDefs.twinSorterFeaturerId,
         colDefs.viewPermissionId,
         colDefs.editPermissionId,
         colDefs.required,
+        colDefs.system,
+        colDefs.externalId,
+        colDefs.dependent,
+        colDefs.hasDependentFields,
+        colDefs.projectionField,
+        colDefs.hasProjectedFields,
       ]}
       getRowId={(row) => row.id}
       fetcher={fetchFields}
@@ -245,9 +315,16 @@ export function TwinClassFieldsTable({
         colDefs.name,
         colDefs.description,
         colDefs.fieldTyperFeaturerId,
+        colDefs.twinSorterFeaturerId,
         colDefs.viewPermissionId,
         colDefs.editPermissionId,
         colDefs.required,
+        colDefs.system,
+        colDefs.externalId,
+        colDefs.dependent,
+        colDefs.hasDependentFields,
+        colDefs.projectionField,
+        colDefs.hasProjectedFields,
       ]}
       dialogForm={form}
       onCreateSubmit={handleOnCreateSubmit}

@@ -13,6 +13,7 @@ import {
   type FilterFeature,
   extractEnabledFilters,
   isPopulatedArray,
+  mapToChoice,
   reduceToObject,
   toArray,
   toArrayOfString,
@@ -27,13 +28,13 @@ export function useTwinClassFieldFilters({
   enabledFilters?: TwinClassFieldV2FilterKeys[];
 }): FilterFeature<TwinClassFieldV2FilterKeys, TwinClassFieldV2Filters> {
   const pAdapter = usePermissionSelectAdapter();
-  const fAdapter = useFeaturerSelectAdapter(13);
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
-
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const fieldTyperAdapter = useFeaturerSelectAdapter(13);
+  const twinSorterAdapter = useFeaturerSelectAdapter(41);
 
   const allFilters: Record<TwinClassFieldV2FilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -68,7 +69,13 @@ export function useTwinClassFieldFilters({
       type: AutoFormValueType.combobox,
       label: "Field typer",
       multi: true,
-      ...fAdapter,
+      ...fieldTyperAdapter,
+    },
+    twinSorterIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Twin sorter",
+      multi: true,
+      ...twinSorterAdapter,
     },
     viewPermissionIdList: {
       type: AutoFormValueType.combobox,
@@ -81,6 +88,42 @@ export function useTwinClassFieldFilters({
       label: "Edit permission",
       multi: true,
       ...pAdapter,
+    },
+    required: {
+      type: AutoFormValueType.boolean,
+      label: "Required",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+    system: {
+      type: AutoFormValueType.boolean,
+      label: "System",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+    dependentField: {
+      type: AutoFormValueType.boolean,
+      label: "Dependent",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+    hasDependentFields: {
+      type: AutoFormValueType.boolean,
+      label: "Has dependents",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+    projectionField: {
+      type: AutoFormValueType.boolean,
+      label: "Projected",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+    hasProjectionFields: {
+      type: AutoFormValueType.boolean,
+      label: "Has projections",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
     },
   };
 
@@ -114,6 +157,10 @@ export function useTwinClassFieldFilters({
         toArray(filters.fieldTyperIdList),
         "id"
       ).map(Number),
+      twinSorterIdList: toArrayOfString(
+        toArray(filters.twinSorterIdList),
+        "id"
+      ).map(Number),
       viewPermissionIdList: toArrayOfString(
         toArray(filters.viewPermissionIdList),
         "id"
@@ -122,6 +169,12 @@ export function useTwinClassFieldFilters({
         toArray(filters.editPermissionIdList),
         "id"
       ),
+      required: mapToChoice(filters.required),
+      system: mapToChoice(filters.system),
+      dependentField: mapToChoice(filters.dependentField),
+      hasDependentFields: mapToChoice(filters.hasDependentFields),
+      projectionField: mapToChoice(filters.projectionField),
+      hasProjectionFields: mapToChoice(filters.hasProjectionFields),
     };
 
     return result;

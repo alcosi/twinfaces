@@ -7,6 +7,7 @@ export const FeaturerTypes = {
   multiplier: 22,
   conditioner: 24,
   projector: 44,
+  sorter: 41,
 } as const;
 
 export type FeaturerTypeId = (typeof FeaturerTypes)[keyof typeof FeaturerTypes];

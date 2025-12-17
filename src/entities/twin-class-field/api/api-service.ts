@@ -16,12 +16,12 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     pagination: PaginationState;
     filters: TwinClassFieldSearchFilters;
   }) {
-    return settings.client.POST("/private/twin_class_fields/search/v1", {
+    return settings.client.POST("/private/twin_class_fields/search/v2", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
-          showTwinClassFieldMode: "MANAGED",
+          showTwinClassFieldMode: "DETAILED",
           showTwinClassField2TwinClassMode: "DETAILED",
           showTwinClassField2PermissionMode: "DETAILED",
           showTwinClassField2FeaturerMode: "DETAILED",
@@ -31,7 +31,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: filters,
       },
     });
   }

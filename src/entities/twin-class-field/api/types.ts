@@ -29,6 +29,9 @@ export type TwinClassFieldV1_DETAILED = Required<TwinClassField> & {
   fieldTyperFeaturer: Featurer_DETAILED;
   viewPermission: Permission_DETAILED;
   editPermission: Permission_DETAILED;
+  projectionField: boolean;
+  hasProjectedFields: boolean;
+  twinSorterFeaturer: Featurer_DETAILED;
 };
 
 export type TwinClassFieldV2FilterKeys =
@@ -38,14 +41,19 @@ export type TwinClassFieldV2FilterKeys =
   | "nameI18nLikeList"
   | "descriptionI18nLikeList"
   | "fieldTyperIdList"
+  | "twinSorterIdList"
   | "viewPermissionIdList"
-  | "editPermissionIdList";
+  | "editPermissionIdList"
+  | "required"
+  | "system"
+  | "dependentField"
+  | "hasDependentFields"
+  | "projectionField"
+  | "hasProjectionFields";
 
 export type TwinClassFieldV2Filters = Partial<
-  Pick<
-    components["schemas"]["TwinClassFieldSearchRqV1"],
-    TwinClassFieldV2FilterKeys
-  >
+  components["schemas"]["TwinClassFieldSearchV1"]
 >;
+
 export type TwinClassFieldSearchRsV1 =
   components["schemas"]["TwinClassFieldSearchRsV1"];

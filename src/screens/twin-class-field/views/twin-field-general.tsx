@@ -38,7 +38,6 @@ export function TwinFieldGeneral({
     useState<AutoEditDialogSettings | undefined>(undefined);
   const { updateField } = useFieldUpdate();
   const router = useRouter();
-
   const permissionAdapter = usePermissionSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(13);
 
@@ -107,6 +106,22 @@ export function TwinFieldGeneral({
     },
   };
 
+  const systemSettings: InPlaceEditProps<typeof twinField.system> = {
+    id: "abstract",
+    value: twinField.system,
+    valueInfo: {
+      type: AutoFormValueType.boolean,
+      label: "",
+    },
+    schema: z.boolean(),
+    renderPreview: (value) => (value ? "Yes" : "No"),
+    onSubmit: (value) => {
+      return update({
+        system: value,
+      });
+    },
+  };
+
   const viewPermissionSettings: InPlaceEditProps<
     typeof twinField.viewPermissionId
   > = {
@@ -164,6 +179,46 @@ export function TwinFieldGeneral({
         paramsFieldName: "fieldTyperFeaturerParams",
         ...featurerAdapter,
       },
+    },
+  };
+
+  const twinSorterAutoDialogSettings: AutoEditDialogSettings = {
+    value: {
+      twinSorterFeaturerId: twinField.twinSorterFeaturerId,
+    },
+    title: "Update twin sorter",
+    onSubmit: (values) => {
+      return update({
+        twinSorterFeaturerId: values.twinSorterFeaturerId[0].id,
+        twinSorterParams: values.twinSorterFeaturerParams,
+      });
+    },
+    valuesInfo: {
+      twinSorterFeaturerId: {
+        type: AutoFormValueType.featurer,
+        label: "Twin sorter",
+        typeId: FeaturerTypes.sorter,
+        paramsFieldName: "twinSorterFeaturerParams",
+        ...featurerAdapter,
+      },
+    },
+  };
+
+  const externalIdSettings: InPlaceEditProps<typeof twinField.externalId> = {
+    id: "externalId",
+    value: twinField.externalId,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      input_props: {
+        fieldSize: "sm",
+      },
+      label: "",
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return update({
+        externalId: value,
+      });
     },
   };
 
@@ -226,10 +281,32 @@ export function TwinFieldGeneral({
             </TableCell>
           </TableRow>
 
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(twinSorterAutoDialogSettings)}
+          >
+            <TableCell>Twin sorter</TableCell>
+            <TableCell>
+              {twinField.twinSorterFeaturer && (
+                <FeaturerResourceLink
+                  data={twinField.twinSorterFeaturer}
+                  withTooltip
+                />
+              )}
+            </TableCell>
+          </TableRow>
+
           <TableRow className="cursor-pointer">
             <TableCell>Required</TableCell>
             <TableCell>
               <InPlaceEdit {...requiredSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow className="cursor-pointer">
+            <TableCell>System</TableCell>
+            <TableCell>
+              <InPlaceEdit {...systemSettings} />
             </TableCell>
           </TableRow>
 
@@ -245,6 +322,33 @@ export function TwinFieldGeneral({
             <TableCell>
               <InPlaceEdit {...editPermissionSettings} />
             </TableCell>
+          </TableRow>
+
+          <TableRow className="cursor-pointer">
+            <TableCell>External Id</TableCell>
+            <TableCell>
+              <InPlaceEdit {...externalIdSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Dependent</TableCell>
+            <TableCell>{twinField.dependent ? "Yes" : "No"}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Has dependent fields</TableCell>
+            <TableCell>{twinField.hasDependentFields ? "Yes" : "No"}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Projected</TableCell>
+            <TableCell>{twinField.projectionField ? "Yes" : "No"}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Has projections</TableCell>
+            <TableCell>{twinField.hasProjectedFields ? "Yes" : "No"}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

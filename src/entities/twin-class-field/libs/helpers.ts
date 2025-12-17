@@ -38,5 +38,12 @@ export const hydrateTwinClassFieldFromMap = (
     ] as Featurer_DETAILED;
   }
 
+  if (dto.twinSorterFeaturerId && relatedObjects?.featurerMap) {
+    console.log(relatedObjects);
+    hydrated.twinSorterFeaturer = relatedObjects.featurerMap[
+      dto.twinSorterFeaturerId
+    ] as Featurer_DETAILED;
+  }
+
   return hydrated;
 };
