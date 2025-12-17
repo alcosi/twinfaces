@@ -2,6 +2,11 @@ import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import z from "zod";
 
+import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import { ComboboxFormField } from "@/components/form-fields";
 
 import { FeaturerTypes } from "@/entities/featurer";
@@ -10,7 +15,10 @@ import {
   useProjectionTypeSelectAdapter,
 } from "@/entities/projection/libs";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { useTwinClassFieldSelectAdapterWithFilters } from "@/entities/twin-class-field";
+import {
+  useTwinClassFieldFilters,
+  useTwinClassFieldSelectAdapterWithFilters,
+} from "@/entities/twin-class-field";
 import { isTruthy } from "@/shared/libs";
 
 import { FeaturerFormField } from "../../form-fields";
@@ -40,6 +48,32 @@ export function ProjectionFormFields({
     isTruthy(dstTwinClassFieldWatch)
   ).current;
 
+  const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters(
+    {}
+  );
+
+  const srcFieldInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Src field",
+    adapter: twinClassFieldAdapter,
+    extraFilters: buildFilterFields(),
+    mapExtraFilters: mapFiltersToPayload,
+    selectPlaceholder: "Select...",
+    searchPlaceholder: "Search...",
+    disabled: srcTwinClassFieldDisabled,
+  };
+
+  const dstFieldInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Dst field",
+    adapter: twinClassFieldAdapter,
+    extraFilters: buildFilterFields(),
+    mapExtraFilters: mapFiltersToPayload,
+    selectPlaceholder: "Select...",
+    searchPlaceholder: "Search...",
+    disabled: dstTwinClassFieldDisabled,
+  };
+
   return (
     <>
       <ComboboxFormField
@@ -52,15 +86,10 @@ export function ProjectionFormFields({
         {...projectionTypeAdapter}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="srcTwinClassFieldId"
-        label="Src field"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={srcTwinClassFieldDisabled}
-        {...twinClassFieldAdapter}
+        info={srcFieldInfo}
       />
 
       <ComboboxFormField
@@ -73,15 +102,10 @@ export function ProjectionFormFields({
         {...twinClassAdapter}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="dstTwinClassFieldId"
-        label="Dst field"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={dstTwinClassFieldDisabled}
-        {...twinClassFieldAdapter}
+        info={dstFieldInfo}
       />
 
       <FeaturerFormField

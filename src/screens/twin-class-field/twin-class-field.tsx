@@ -22,9 +22,7 @@ export function TwinClassFieldScreen({
     {
       key: "projections",
       label: "Projections",
-      content: (
-        <TwinFieldProjections twinFieldId={twinFieldId} twinField={twinField} />
-      ),
+      content: <TwinFieldProjections twinField={twinField} />,
     },
   ];
 

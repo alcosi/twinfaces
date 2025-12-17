@@ -6,7 +6,6 @@ import { ProjectionsTable } from "@/widgets/tables/projections";
 export function TwinFieldProjections({
   twinField,
 }: {
-  twinFieldId: string;
   twinField: TwinClassFieldV1_DETAILED;
 }) {
   return (

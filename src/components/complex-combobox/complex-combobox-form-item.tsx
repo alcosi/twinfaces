@@ -109,26 +109,29 @@ export function ComplexComboboxFormItem({
         selectPlaceholder={info.selectPlaceholder}
         searchPlaceholder={info.searchPlaceholder}
         multi={info.multi}
+        disabled={info.disabled}
       />
 
-      <button
-        type="button"
-        className={cn(
-          "inline-flex items-center gap-1 text-xs transition-colors",
-          hasFilters ? "text-link-enabled" : "text-muted-foreground",
-          "hover:text-primary"
-        )}
-        onClick={() => setOpen((v) => !v)}
-      >
-        {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-        {open ? "Hide advanced filters" : "Advanced filters"}
+      {!info.disabled && (
+        <button
+          type="button"
+          className={cn(
+            "inline-flex items-center gap-1 text-xs transition-colors",
+            hasFilters ? "text-link-enabled" : "text-muted-foreground",
+            "hover:text-primary"
+          )}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          {open ? "Hide advanced filters" : "Advanced filters"}
 
-        {hasFilters && (
-          <span className="bg-ons-blue-100 text-ons-blue-700 ml-1 rounded-full px-1.5 text-[10px] font-medium">
-            ●
-          </span>
-        )}
-      </button>
+          {hasFilters && (
+            <span className="bg-ons-blue-100 text-ons-blue-700 ml-1 rounded-full px-1.5 text-[10px] font-medium">
+              ●
+            </span>
+          )}
+        </button>
+      )}
 
       {open && (
         <>
