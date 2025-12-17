@@ -20,7 +20,7 @@ import { ProjectionTypeResourceLink } from "@/features/projection-type/ui";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PlatformArea } from "@/shared/config";
-import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
+import { isFalsy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -127,7 +127,6 @@ export function ProjectionsTable({
       title === "Incoming"
         ? [
             "idList",
-            "dstTwinClassIdList",
             "fieldProjectorIdList",
             "srcTwinClassFieldIdList",
             "projectionTypeIdList",
@@ -201,16 +200,13 @@ export function ProjectionsTable({
       columns={[
         colDefs.id,
         colDefs.projectionType,
-        //* colDefs.srcTwinClassField,
-        ...(isTruthy(twinFieldId && title === "Incoming")
+        ...(isFalsy(twinFieldId && title !== "Incoming")
           ? [colDefs.srcTwinClassField]
           : []),
-        //!colDefs.dstTwinClass,
-        ...(isTruthy(twinFieldId && title === "Outgoing")
+        ...(isFalsy(twinFieldId && title !== "Outgoing")
           ? [colDefs.dstTwinClass]
           : []),
-        //! colDefs.dstTwinClassField,
-        ...(isTruthy(twinFieldId && title === "Outgoing")
+        ...(isFalsy(twinFieldId && title !== "Outgoing")
           ? [colDefs.dstTwinClassField]
           : []),
         colDefs.fieldProjectorFeaturer,
@@ -223,16 +219,13 @@ export function ProjectionsTable({
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.projectionType,
-        //* colDefs.srcTwinClassField,
-        ...(isTruthy(twinFieldId && title === "Incoming")
+        ...(isFalsy(twinFieldId && title !== "Incoming")
           ? [colDefs.srcTwinClassField]
           : []),
-        //!colDefs.dstTwinClass,
-        ...(isTruthy(twinFieldId && title === "Outgoing")
+        ...(isFalsy(twinFieldId && title !== "Outgoing")
           ? [colDefs.dstTwinClass]
           : []),
-        //! colDefs.dstTwinClassField,
-        ...(isTruthy(twinFieldId && title === "Outgoing")
+        ...(isFalsy(twinFieldId && title !== "Outgoing")
           ? [colDefs.dstTwinClassField]
           : []),
         colDefs.fieldProjectorFeaturer,
