@@ -114,10 +114,10 @@ const colDefs: Record<
 };
 
 export function ProjectionsTable({
-  twinClassId,
+  twinFieldId,
   title,
 }: {
-  twinClassId?: string;
+  twinFieldId?: string;
   title?: string;
 }) {
   const router = useRouter();
@@ -150,10 +150,10 @@ export function ProjectionsTable({
       srcTwinPointerId: "00000000-0000-0000-0012-000000000001",
       projectionTypeId: "",
       srcTwinClassFieldId:
-        twinClassId && title === "Incoming" ? twinClassId : "",
+        twinFieldId && title === "Incoming" ? twinFieldId : "",
       dstTwinClassId: "",
       dstTwinClassFieldId:
-        twinClassId && title === "Outgoing" ? twinClassId : "",
+        twinFieldId && title === "Outgoing" ? twinFieldId : "",
     },
   });
 
@@ -169,12 +169,12 @@ export function ProjectionsTable({
         filters: {
           ..._filters,
           srcTwinClassFieldIdList:
-            twinClassId && title === "Incoming"
-              ? toArrayOfString(toArray(twinClassId), "id")
+            twinFieldId && title === "Incoming"
+              ? toArrayOfString(toArray(twinFieldId), "id")
               : _filters.srcTwinClassFieldIdList,
           dstTwinClassFieldIdList:
-            twinClassId && title === "Outgoing"
-              ? toArrayOfString(toArray(twinClassId), "id")
+            twinFieldId && title === "Outgoing"
+              ? toArrayOfString(toArray(twinFieldId), "id")
               : _filters.dstTwinClassFieldIdList,
         },
       });
@@ -202,15 +202,15 @@ export function ProjectionsTable({
         colDefs.id,
         colDefs.projectionType,
         //* colDefs.srcTwinClassField,
-        ...(isTruthy(twinClassId && title === "Incoming")
+        ...(isTruthy(twinFieldId && title === "Incoming")
           ? [colDefs.srcTwinClassField]
           : []),
         //!colDefs.dstTwinClass,
-        ...(isTruthy(twinClassId && title === "Outgoing")
+        ...(isTruthy(twinFieldId && title === "Outgoing")
           ? [colDefs.dstTwinClass]
           : []),
         //! colDefs.dstTwinClassField,
-        ...(isTruthy(twinClassId && title === "Outgoing")
+        ...(isTruthy(twinFieldId && title === "Outgoing")
           ? [colDefs.dstTwinClassField]
           : []),
         colDefs.fieldProjectorFeaturer,
@@ -224,15 +224,15 @@ export function ProjectionsTable({
         colDefs.id,
         colDefs.projectionType,
         //* colDefs.srcTwinClassField,
-        ...(isTruthy(twinClassId && title === "Incoming")
+        ...(isTruthy(twinFieldId && title === "Incoming")
           ? [colDefs.srcTwinClassField]
           : []),
         //!colDefs.dstTwinClass,
-        ...(isTruthy(twinClassId && title === "Outgoing")
+        ...(isTruthy(twinFieldId && title === "Outgoing")
           ? [colDefs.dstTwinClass]
           : []),
         //! colDefs.dstTwinClassField,
-        ...(isTruthy(twinClassId && title === "Outgoing")
+        ...(isTruthy(twinFieldId && title === "Outgoing")
           ? [colDefs.dstTwinClassField]
           : []),
         colDefs.fieldProjectorFeaturer,
