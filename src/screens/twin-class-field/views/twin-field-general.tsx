@@ -38,7 +38,6 @@ export function TwinFieldGeneral({
     useState<AutoEditDialogSettings | undefined>(undefined);
   const { updateField } = useFieldUpdate();
   const router = useRouter();
-  console.log(twinField);
   const permissionAdapter = usePermissionSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(13);
 
