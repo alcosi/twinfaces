@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -14,6 +15,7 @@ import {
   //useUpdateTransitionTrigger,
 } from "@/entities/twin-flow-transition";
 import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 
@@ -56,6 +58,7 @@ const colDefs: Record<
 };
 
 export function TwinflowTransitionTriggers() {
+  const router = useRouter();
   const { transitionId } = useContext(TwinFlowTransitionContext);
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTwinFlowTransitionTriggers } =
@@ -114,6 +117,9 @@ export function TwinflowTransitionTriggers() {
       ]}
       getRowId={(x) => x.id!}
       fetcher={fetchData}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/transition-triggers/${row.id}`)
+      }
       disablePagination={true}
       defaultVisibleColumns={[
         colDefs.id,

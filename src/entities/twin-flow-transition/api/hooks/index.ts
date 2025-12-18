@@ -1,6 +1,7 @@
 export * from "./use-create-transition";
 export * from "./use-create-transition-triggers";
 export * from "./use-fetch-by-id";
+export * from "./use-fetch-transition-trigger-by-id";
 export * from "./use-perform-transition";
 export * from "./use-search-alias";
 export * from "./use-search-transition";

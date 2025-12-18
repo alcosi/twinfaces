@@ -152,7 +152,11 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
+          lazyRelation: false,
           showTransitionTriggerMode: "DETAILED",
+          showTransitionTrigger2TransitionMode: "DETAILED",
+          showTransitionTrigger2FeaturerMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
