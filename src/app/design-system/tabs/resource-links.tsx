@@ -16,7 +16,7 @@ import { Fake } from "../seeds";
 
 export function ResourceLinksTab() {
   return (
-    <div className="h-screen overflow-y-auto max-h-98">
+    <div className="h-screen max-h-98 overflow-y-auto">
       <div className="space-y-4 p-4">
         <UiSection title="Class">
           <UiSection.Item
@@ -88,8 +88,6 @@ export function ResourceLinksTab() {
             value={
               <TwinFlowTransitionResourceLink
                 data={Fake.TwinFlowTransition}
-                twinClassId={Fake.TwinClass.id}
-                twinFlowId="26d272e1-a899-47a7-b27c-d441b4b4cdd7"
                 withTooltip
               />
             }

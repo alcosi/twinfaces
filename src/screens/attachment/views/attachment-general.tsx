@@ -79,8 +79,6 @@ export function AttachmentGeneral() {
                 data={
                   attachment.twinflowTransition as TwinFlowTransition_DETAILED
                 }
-                twinClassId={attachment.twin.twinClassId!}
-                twinFlowId={attachment.twinflowTransitionId!}
                 withTooltip
               />
             )}

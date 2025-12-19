@@ -12,7 +12,7 @@ import { TwinClassStatusResourceTooltip } from "./tooltip";
 
 type Props = {
   data: TwinStatus;
-  twinClassId: string;
+  twinClassId?: string;
   disabled?: boolean;
   withTooltip?: boolean;
 };

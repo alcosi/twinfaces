@@ -128,8 +128,6 @@ const colDefs: Record<
         <div className="inline-flex max-w-48">
           <TwinFlowTransitionResourceLink
             data={original.twinflowTransition as TwinFlowTransition_DETAILED}
-            twinClassId={original.twin?.twinClassId!}
-            twinFlowId={original.twinflowTransitionId!}
             withTooltip
           />
         </div>
@@ -233,7 +231,7 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
         data: response.data ?? [],
         pagination: response.pagination ?? {},
       };
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch attachments");
       return { data: [], pagination: {} };
     }
