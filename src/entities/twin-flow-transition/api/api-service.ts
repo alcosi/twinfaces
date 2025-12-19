@@ -157,6 +157,7 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
           showTransitionTrigger2TransitionMode: "DETAILED",
           showTransitionTrigger2FeaturerMode: "DETAILED",
           showFeaturerParamMode: "SHOW",
+          showTwinClassMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

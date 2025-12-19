@@ -44,20 +44,14 @@ export function TransitionTriggerGeneral() {
       selectPlaceholder: "Select transition...",
       ...transitionAdapter,
     },
-    renderPreview:
-      transitionTrigger.twinflowTransitionId &&
-      transitionTrigger.twinflowTransition?.twinflow?.twinClassId
-        ? () => (
-            <TwinFlowTransitionResourceLink
-              data={transitionTrigger.twinflowTransition!}
-              twinClassId={
-                transitionTrigger.twinflowTransition!.twinflow!.twinClassId!
-              }
-              twinFlowId={transitionTrigger.twinflowTransition!.twinflowId!}
-              withTooltip
-            />
-          )
-        : undefined,
+    renderPreview: transitionTrigger.twinflowTransitionId
+      ? () => (
+          <TwinFlowTransitionResourceLink
+            data={transitionTrigger.twinflowTransition!}
+            withTooltip
+          />
+        )
+      : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return updateTransitionTrigger({

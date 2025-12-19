@@ -10,14 +10,9 @@ import { TwinFlowTransitionIcon } from "../twin-flow-transition-icon";
 type Props = {
   data: TwinFlowTransition_DETAILED;
   link: string;
-  twinClassId: string;
 };
 
-export function TwinFlowTransitionResourceTooltip({
-  data,
-  link,
-  twinClassId,
-}: Props) {
+export function TwinFlowTransitionResourceTooltip({ data, link }: Props) {
   if (isUndefined(data.id)) return null;
 
   return (
@@ -33,19 +28,13 @@ export function TwinFlowTransitionResourceTooltip({
 
         {data.srcTwinStatus && (
           <ResourceLinkTooltip.Item title="Source">
-            <TwinClassStatusResourceLink
-              data={data.srcTwinStatus}
-              twinClassId={twinClassId}
-            />
+            <TwinClassStatusResourceLink data={data.srcTwinStatus} />
           </ResourceLinkTooltip.Item>
         )}
 
         {data.dstTwinStatus && (
           <ResourceLinkTooltip.Item title="Destination">
-            <TwinClassStatusResourceLink
-              data={data.dstTwinStatus}
-              twinClassId={twinClassId}
-            />
+            <TwinClassStatusResourceLink data={data.dstTwinStatus} />
           </ResourceLinkTooltip.Item>
         )}
 
