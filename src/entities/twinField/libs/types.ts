@@ -7,11 +7,14 @@ import { RequireFields, createEnum } from "@/shared/libs";
 
 import { TWIN_FIELD_TYPES } from "./constants";
 
+export type FieldAttribute = components["schemas"]["TwinFieldAttributeV1"];
+
 export type TwinFieldUI = RequireFields<
   TwinClassField,
   "id" | "key" | "descriptor"
 > & {
   value: string | DataListOptionV1 | Twin | User;
+  attributes?: FieldAttribute[];
 };
 
 export type TwinClassFieldDescriptorTextV1 =

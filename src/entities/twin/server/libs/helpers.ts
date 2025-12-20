@@ -102,5 +102,18 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
     }, hydrated.fields ?? {});
   }
 
+  if (dto.fieldsMap && hydrated.fields) {
+    Object.values(dto.fieldsMap).forEach((fMapEntry) => {
+      const fieldKey = fMapEntry.key;
+      const hydratedField = hydrated.fields?.[fieldKey!];
+
+      if (!hydratedField) return;
+
+      if (fMapEntry.fieldAttributes) {
+        hydratedField.attributes = Object.values(fMapEntry.fieldAttributes);
+      }
+    });
+  }
+
   return hydrated;
 }
