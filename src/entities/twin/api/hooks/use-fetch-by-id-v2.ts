@@ -23,6 +23,11 @@ function buildTwinUrl(id: string) {
   q.set("showTwinAliasMode", "C");
   q.set("showTwinTag2DataListOptionMode", "DETAILED");
   q.set("showTwin2TransitionMode", "DETAILED");
+  q.set("showTwinFieldCollectionMode", "SHOW");
+  q.set("showTwinFieldCollectionFilterEmptyMode", "ANY");
+  q.set("showTwinFieldAttributeMode", "SHOW");
+  q.set("showTwinClass2TwinClassFieldMode", "DETAILED");
+  q.set("showTwinClassFieldCollectionMode", "SHOW");
 
   return url.toString();
 }
