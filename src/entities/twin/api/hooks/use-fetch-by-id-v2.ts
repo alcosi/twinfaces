@@ -28,6 +28,13 @@ function buildTwinUrl(id: string) {
   q.set("showTwinFieldAttributeMode", "SHOW");
   q.set("showTwinClass2TwinClassFieldMode", "DETAILED");
   q.set("showTwinClassFieldCollectionMode", "SHOW");
+  q.set("showTwinFieldCollectionFilterRequiredMode", "ANY");
+  q.set("showTwinFieldCollectionFilterSystemMode", "ANY");
+  q.set("showTwinClassFieldCollectionFilterRequiredMode", "ANY");
+  q.set("showTwinClassFieldCollectionFilterSystemMode", "ANY");
+  q.set("showTwinField2DataListOptionMode", "DETAILED");
+  q.set("showTwinByLinkMode", "GREEN");
+  q.set("showTwin2TwinLinkMode", "SHORT");
 
   return url.toString();
 }
