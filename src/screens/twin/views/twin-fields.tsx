@@ -14,7 +14,7 @@ import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
 import { resolveTwinFieldSchema } from "@/widgets/form-fields";
 
 export function TwinFields() {
-  const { twinId, twin } = useContext(TwinContext);
+  const { twinId, twin, refresh } = useContext(TwinContext);
   const tableRef = useRef<DataTableHandle>(null);
 
   const columns: ColumnDef<TwinFieldUI>[] = [
@@ -49,7 +49,7 @@ export function TwinFields() {
               twin={original}
               field={original}
               schema={resolveTwinFieldSchema(original)}
-              onSuccess={tableRef.current?.refresh}
+              onSuccess={refresh}
               editable
             />
           </div>

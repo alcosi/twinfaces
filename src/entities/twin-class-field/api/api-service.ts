@@ -21,7 +21,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
-          showTwinClassFieldMode: "MANAGED",
+          showTwinClassFieldMode: "MANAGED", //! DETAILED only for dev, prod MANAGED ?
           showTwinClassField2TwinClassMode: "DETAILED",
           showTwinClassField2PermissionMode: "DETAILED",
           showTwinClassField2FeaturerMode: "DETAILED",
