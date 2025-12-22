@@ -5,7 +5,11 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
-import { useTransitionAliasSelectAdapter } from "@/entities/twin-flow-transition";
+import {
+  TransitionType,
+  useTransitionAliasSelectAdapter,
+  useTransitionSelectTypeAdapter,
+} from "@/entities/twin-flow-transition";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
   type FilterFeature,
@@ -34,6 +38,7 @@ export function useTwinFlowTransitionFilters({
   const twinFlowAdapter = useTwinFlowSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
   const transitionAliasAdapter = useTransitionAliasSelectAdapter();
+  const typeSelectAdapter = useTransitionSelectTypeAdapter();
 
   const allFilters: Record<TwinFlowTransitionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -60,6 +65,13 @@ export function useTwinFlowTransitionFilters({
     nameLikeList: {
       type: AutoFormValueType.tag,
       label: "Name",
+    },
+
+    twinflowTransitionTypeList: {
+      type: AutoFormValueType.combobox,
+      label: "Type",
+      multi: true,
+      ...typeSelectAdapter,
     },
 
     descriptionLikeList: {
@@ -125,6 +137,10 @@ export function useTwinFlowTransitionFilters({
       nameLikeList: toArrayOfString(toArray(filters.nameLikeList), "name").map(
         wrapWithPercent
       ),
+      twinflowTransitionTypeList: toArrayOfString(
+        filters.twinflowTransitionTypeList,
+        "id"
+      ) as TransitionType[],
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),
         "description"

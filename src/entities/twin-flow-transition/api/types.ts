@@ -42,6 +42,7 @@ export type FaceWT001ButtonV1 = components["schemas"]["FaceWT001ColumnV1"];
 export type TwinFlowTransitionFilterKeys =
   | "idList"
   | "nameLikeList"
+  | "twinflowTransitionTypeList"
   | "descriptionLikeList"
   | "twinflowIdList"
   | "aliasLikeList"

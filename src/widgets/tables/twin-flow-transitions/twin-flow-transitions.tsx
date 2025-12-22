@@ -30,6 +30,7 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs";
+import { Badge } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -41,6 +42,7 @@ const colDefs: Record<
     | "id"
     | "alias"
     | "name"
+    | "type"
     | "description"
     | "srcTwinStatusId"
     | "dstTwinStatusId"
@@ -77,6 +79,14 @@ const colDefs: Record<
     id: "name",
     accessorKey: "name",
     header: "Name",
+  },
+
+  type: {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row: { original } }) => (
+      <Badge variant="outline">{original.type}</Badge>
+    ),
   },
 
   alias: {
@@ -176,6 +186,7 @@ export function TwinFlowTransitionsTable({
             "idList",
             "aliasLikeList",
             "nameLikeList",
+            "twinflowTransitionTypeList",
             "descriptionLikeList",
             "srcStatusIdList",
             "dstStatusIdList",
@@ -265,6 +276,7 @@ export function TwinFlowTransitionsTable({
         colDefs.id,
         colDefs.twinflowId,
         colDefs.name,
+        colDefs.type,
         colDefs.alias,
         colDefs.srcTwinStatusId,
         colDefs.dstTwinStatusId,
@@ -285,6 +297,7 @@ export function TwinFlowTransitionsTable({
         colDefs.id,
         ...(isFalsy(twinflow?.id) ? [colDefs.twinflowId] : []),
         colDefs.name,
+        colDefs.type,
         colDefs.alias,
         colDefs.srcTwinStatusId,
         colDefs.dstTwinStatusId,
