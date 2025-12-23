@@ -8,7 +8,10 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import {
+  useStatusFilters,
+  useTwinStatusSelectAdapterWithFilters,
+} from "@/entities/twin-status";
 import { TwinFilterKeys, TwinFilters } from "@/entities/twin/server";
 import { useUserSelectAdapter } from "@/entities/user";
 import {
@@ -18,7 +21,6 @@ import {
   isTruthy,
   isUndefined,
   keyBy,
-  reduceToObject,
   toArray,
   toArrayOfString,
   wrapWithPercent,
@@ -40,16 +42,21 @@ export function useTwinFilters({
   twinClassFields?: TwinClass_DETAILED["fields"];
   enabledColumns?: FaceWT001["columns"];
 }): FilterFeature<TwinFilterKeys, TwinFilters> {
-  const sAdapter = useTwinStatusSelectAdapter();
   const uAdapter = useUserSelectAdapter();
   const tAdapter = useTwinSelectAdapter();
 
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
+  const tsAdapter = useTwinStatusSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildStatusFilters,
+    mapFiltersToPayload: mapStatusFilters,
+  } = useStatusFilters({ enabledFilters: undefined });
 
   function buildFilterFields(
     filters?: TwinFilterKeys[]
@@ -80,20 +87,18 @@ export function useTwinFilters({
       },
 
       statusIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label:
           columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["statusId"]]?.label ??
           "Status",
+        adapter: tsAdapter,
         multi: true,
-        ...sAdapter,
-        getItems: async (search: string) =>
-          sAdapter.getItems(search, {
-            twinClassIdMap: reduceToObject({
-              list: toArray(baseTwinClassId),
-              defaultValue: true,
-            }),
-          }),
+        extraFilters: buildStatusFilters(),
+        mapExtraFilters: (filters) => mapStatusFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
       },
+
       twinNameLikeList: {
         type: AutoFormValueType.tag,
         label:

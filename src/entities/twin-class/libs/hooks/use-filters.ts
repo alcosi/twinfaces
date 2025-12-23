@@ -166,6 +166,12 @@ export function useTwinClassFilters(): FilterFeature<
         type: AutoFormValueType.tag,
         label: "External Id",
       },
+      freezeIdList: {
+        type: AutoFormValueType.tag,
+        label: "Freeze Id",
+        schema: z.string().uuid("Please enter a valid UUID"),
+        placeholder: "Enter UUID",
+      },
     };
   }
 
@@ -235,6 +241,7 @@ export function useTwinClassFilters(): FilterFeature<
       externalIdLikeList: toArrayOfString(filters.externalIdLikeList).map(
         wrapWithPercent
       ),
+      freezeIdList: toArrayOfString(toArray(filters.freezeIdList), "id"),
     };
 
     return result;
