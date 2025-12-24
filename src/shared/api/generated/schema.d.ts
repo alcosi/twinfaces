@@ -4830,7 +4830,7 @@ export interface components {
              * Format: uuid
              * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
              */
-            twinFactoryId?: string;
+            factoryId?: string;
             /**
              * Format: uuid
              * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
@@ -5061,6 +5061,11 @@ export interface components {
              * @example Bharat
              */
             name?: string;
+            /**
+             * @description description
+             * @example Bharat
+             */
+            description?: string;
             /**
              * @description icon
              * @example Icon path
@@ -6977,7 +6982,7 @@ export interface components {
              * Format: uuid
              * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
              */
-            twinFactoryId?: string;
+            factoryId?: string;
         };
         TwinflowSchemaV1: {
             /**
@@ -10110,6 +10115,8 @@ export interface components {
             icon?: string;
             /** @description option */
             optionI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description description */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
             /** @description attributes map */
             attributesMap?: {
                 [key: string]: string;
@@ -10148,6 +10155,8 @@ export interface components {
             icon?: string;
             /** @description option */
             optionI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description description */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
             /** @description attributes map */
             attributesMap?: {
                 [key: string]: string;
@@ -11413,7 +11422,7 @@ export interface components {
              * Format: uuid
              * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
              */
-            twinFactoryId?: string;
+            factoryId?: string;
         };
         TwinflowFactoryCreateRsV1: {
             /**
@@ -11451,9 +11460,9 @@ export interface components {
             /** @description twinflow id exclude set */
             twinflowIdExcludeSet?: string[];
             /** @description twin factory id set */
-            twinFactoryIdSet?: string[];
+            factoryIdSet?: string[];
             /** @description twin factory id exclude set */
-            twinFactoryIdExcludeSet?: string[];
+            factoryIdExcludeSet?: string[];
             /** @description factory launcher set */
             factoryLauncherSet?: string[];
             /** @description factory launcher exclude set */
@@ -12585,6 +12594,10 @@ export interface components {
             tagDatalistIdList?: string[];
             /** @description tag data list id exclude list */
             tagDatalistIdExcludeList?: string[];
+            /** @description freeze id list */
+            freezeIdList?: string[];
+            /** @description freeze id exclude list */
+            freezeIdExcludeList?: string[];
             /**
              * @description twin class is abstract
              * @example ANY
@@ -13512,9 +13525,9 @@ export interface components {
             /** @description actor user id exclude list */
             actorUserIdExcludeList?: string[];
             /** @description type list */
-            typeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentDelete" | "attachmentUpdate" | "linkCreated" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "unknown")[];
+            typeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "unknown")[];
             /** @description type exclude list */
-            typeExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentDelete" | "attachmentUpdate" | "linkCreated" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "unknown")[];
+            typeExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "unknown")[];
             /** @description create at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
         };
@@ -13572,7 +13585,7 @@ export interface components {
              */
             actorUserId?: string;
             /** @enum {string} */
-            type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentDelete" | "attachmentUpdate" | "linkCreated" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "unknown";
+            type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "unknown";
             /** @description Filled only if type = fieldChanged */
             fieldName?: string;
             /** @description twin */
@@ -13694,6 +13707,12 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description twin list */
             twinList?: components["schemas"]["TwinV2"][];
+            /** @description Invalid twin field id list */
+            invalidTwinFieldErrors?: {
+                [key: string]: {
+                    [key: string]: string;
+                };
+            };
         };
         TransitionTriggerCreateRqV1: {
             /** @description transition trigger */
@@ -16734,6 +16753,8 @@ export interface components {
             icon?: string;
             /** @description option */
             optionI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description description */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
             /** @description attributes map */
             attributesMap?: {
                 [key: string]: string;
@@ -16793,6 +16814,8 @@ export interface components {
             icon?: string;
             /** @description option */
             optionI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description description */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
             /** @description attributes map */
             attributesMap?: {
                 [key: string]: string;
@@ -16844,6 +16867,8 @@ export interface components {
             icon?: string;
             /** @description option */
             optionI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description description */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
             /** @description attributes map */
             attributesMap?: {
                 [key: string]: string;
