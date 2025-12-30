@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-//import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
@@ -11,7 +10,6 @@ import {
 } from "@/entities/twinflow-factory";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
-//import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { Badge, GuidWithCopy } from "@/shared/ui";
 
@@ -35,12 +33,10 @@ const colDefs: Record<
     accessorKey: "twinflowId",
     header: "Twinflow",
     cell: ({ row: { original } }) =>
-      original.twinflow ? (
+      original.twinflow && (
         <div className="inline-flex max-w-48">
           <TwinFlowResourceLink data={original.twinflow} withTooltip />
         </div>
-      ) : (
-        "-"
       ),
   },
   twinFactoryLauncherId: {
@@ -55,12 +51,10 @@ const colDefs: Record<
     accessorKey: "factoryId",
     header: "Factory",
     cell: ({ row: { original } }) =>
-      original.factory ? (
+      original.factory && (
         <div className="inline-flex max-w-48">
           <FactoryResourceLink data={original.factory} withTooltip />
         </div>
-      ) : (
-        "-"
       ),
   },
 };
@@ -72,7 +66,6 @@ export function TwinFlowFactoriesTable({
   twinflowId?: string;
   title?: string;
 }) {
-  //const router = useRouter();
   const { searchTwinFlowFactories } = useTwinFlowFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinFlowFactoryFilters({
     enabledFilters: isTruthy(twinflowId)
@@ -118,9 +111,6 @@ export function TwinFlowFactoriesTable({
       fetcher={fetchTwinflowFactories}
       getRowId={(row) => row.id}
       // TODO: add detailed twinflow factory page
-      // onRowClick={(row) =>
-      //   router.push(`/${PlatformArea.core}/twinflow-factories/${row.id}`)
-      // }
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(twinflowId) ? [colDefs.twinflowId] : []),

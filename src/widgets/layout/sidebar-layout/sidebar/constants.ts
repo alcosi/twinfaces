@@ -1,4 +1,5 @@
 import {
+  Activity,
   Asterisk,
   BriefcaseBusiness,
   Eraser,
@@ -206,9 +207,9 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         icon: SquareActivity,
       },
       {
-        title: "Factories",
+        title: "Twinflow factories",
         url: `/${PlatformArea.core}/twinflow-factories`,
-        icon: Factory,
+        icon: Activity,
       },
     ],
   },
