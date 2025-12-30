@@ -84,6 +84,10 @@ import {
   TwinFlowSchemaApi,
   createTwinFlowSchemaApi,
 } from "@/entities/twinFlowSchema";
+import {
+  TwinFlowFactoryApi,
+  createTwinFlowFactoryApi,
+} from "@/entities/twinflow-factory";
 import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
 import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
@@ -100,6 +104,7 @@ export interface PrivateApiContextProps {
   twinStatus: TwinStatusApi;
   twinFlow: TwinFlowApi;
   twinFlowTransition: TwinFlowTransitionApi;
+  twinFlowFactory: TwinFlowFactoryApi;
   featurer: FeaturerApi;
   twin: TwinApi;
   permission: PermissionApi;
@@ -151,6 +156,7 @@ export function PrivateApiContextProvider({
         twinStatus: createTwinStatusApi(settings),
         twinFlow: createTwinFlowApi(settings),
         twinFlowTransition: createTwinFlowTransitionApi(settings),
+        twinFlowFactory: createTwinFlowFactoryApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
         permission: createPermissionApi(settings),
