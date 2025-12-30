@@ -121,7 +121,6 @@ export function TwinFlowFactoriesTable({
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof TWINFLOW_FACTORY_SCHEMA>
   ) => {
-    console.log(formValues);
     await createTwinFlowFactory({
       body: {
         twinflowFactories: [formValues],
