@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { FIRST_ID_EXTRACTOR, isPopulatedArray } from "@/shared/libs";
+
 import { LauncherType, LauncherTypesEnum } from "./types";
 
 export const LAUNCHER_TYPES_SCHEMA = z.enum(
@@ -51,3 +53,17 @@ export const LAUNCHER_TYPES_ENUM: Array<{
     label: "After Transition Perform",
   },
 ] as const;
+
+export const TWINFLOW_FACTORY_SCHEMA = z.object({
+  twinflowId: z.string().uuid().or(FIRST_ID_EXTRACTOR),
+  twinFactoryLauncherId: z
+    .array(z.object({ id: LAUNCHER_TYPES_SCHEMA }))
+    .min(1, "Required")
+    .transform<LauncherType>((arr) =>
+      isPopulatedArray<{ id: string }>(arr)
+        ? (arr[0].id as LauncherType)
+        : LauncherTypesEnum.afterSketchCreate
+    )
+    .or(LAUNCHER_TYPES_SCHEMA),
+  factoryId: z.string().uuid().or(FIRST_ID_EXTRACTOR),
+});

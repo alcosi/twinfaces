@@ -24,3 +24,8 @@ export type TwinFlowFactoryFilters = Partial<
     TwinFlowFactoryFilterKeys
   >
 >;
+
+export type TwinFlowFactoryCreateRq =
+  components["schemas"]["TwinflowFactoryCreateRqV1"];
+export type TwinFlowFactoryCreateV1 =
+  components["schemas"]["TwinflowFactoryCreateV1"];

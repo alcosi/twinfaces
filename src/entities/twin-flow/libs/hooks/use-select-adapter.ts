@@ -3,7 +3,7 @@ import {
   useTwinFlowFetchByIdV1,
   useTwinFlowSearchV1,
 } from "@/entities/twin-flow";
-import { SelectAdapter } from "@/shared/libs";
+import { SelectAdapter, isEmptyString } from "@/shared/libs";
 
 export function useTwinFlowSelectAdapter(): SelectAdapter<TwinFlow_DETAILED> {
   const { searchTwinFlows } = useTwinFlowSearchV1();
@@ -19,8 +19,8 @@ export function useTwinFlowSelectAdapter(): SelectAdapter<TwinFlow_DETAILED> {
     return response.data;
   }
 
-  function renderItem({ name }: TwinFlow_DETAILED) {
-    return name;
+  function renderItem({ name, id }: TwinFlow_DETAILED) {
+    return !isEmptyString(name) ? name : id;
   }
 
   return {
