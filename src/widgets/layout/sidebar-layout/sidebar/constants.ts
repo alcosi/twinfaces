@@ -205,6 +205,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         url: `/${PlatformArea.core}/twinflow-schemas`,
         icon: SquareActivity,
       },
+      {
+        title: "Factories",
+        url: `/${PlatformArea.core}/twinflow-factories`,
+        icon: Factory,
+      },
     ],
   },
   businessAccount: {
