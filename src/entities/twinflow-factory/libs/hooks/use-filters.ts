@@ -12,6 +12,7 @@ import {
 } from "@/shared/libs";
 
 import { TwinFlowFactoryFilterKeys, TwinFlowFactoryFilters } from "../../api";
+import { useFactoryLauncherSelectAdapter } from "./use-select-adapter";
 
 export function useTwinFlowFactoryFilters({
   enabledFilters,
@@ -20,6 +21,7 @@ export function useTwinFlowFactoryFilters({
 } = {}): FilterFeature<TwinFlowFactoryFilterKeys, TwinFlowFactoryFilters> {
   const twinflowAdapter = useTwinFlowSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
+  const flSelectAdapter = useFactoryLauncherSelectAdapter();
 
   const allFilters: Record<TwinFlowFactoryFilterKeys, AutoFormValueInfo> = {
     idSet: {
@@ -41,8 +43,10 @@ export function useTwinFlowFactoryFilters({
       ...factoryAdapter,
     },
     factoryLauncherSet: {
-      type: AutoFormValueType.tag,
+      type: AutoFormValueType.combobox,
       label: "Launcher",
+      multi: true,
+      ...flSelectAdapter,
     },
   };
 
@@ -62,7 +66,7 @@ export function useTwinFlowFactoryFilters({
       idSet: toArrayOfString(filters.idSet),
       twinflowIdSet: toArrayOfString(filters.twinflowIdSet, "id"),
       factoryIdSet: toArrayOfString(filters.factoryIdSet, "id"),
-      factoryLauncherSet: toArrayOfString(filters.factoryLauncherSet),
+      factoryLauncherSet: toArrayOfString(filters.factoryLauncherSet, "id"),
     };
   }
 
