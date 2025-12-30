@@ -1,19 +1,27 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  TWINFLOW_FACTORY_SCHEMA,
   TwinFlowFactory_DETAILED,
+  useTwinFlowFactoryCreate,
   useTwinFlowFactoryFilters,
   useTwinFlowFactorySearch,
 } from "@/entities/twinflow-factory";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinFlowResourceLink } from "@/features/twin-flow/ui";
+import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { Badge, GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { TwinFlowFactoryFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -66,11 +74,22 @@ export function TwinFlowFactoriesTable({
   twinflowId?: string;
   title?: string;
 }) {
+  const router = useRouter();
   const { searchTwinFlowFactories } = useTwinFlowFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinFlowFactoryFilters({
     enabledFilters: isTruthy(twinflowId)
       ? ["idSet", "factoryIdSet", "factoryLauncherSet"]
       : undefined,
+  });
+  const { createTwinFlowFactory } = useTwinFlowFactoryCreate();
+
+  const twinFlowFactoryForm = useForm<z.infer<typeof TWINFLOW_FACTORY_SCHEMA>>({
+    resolver: zodResolver(TWINFLOW_FACTORY_SCHEMA),
+    defaultValues: {
+      twinflowId: twinflowId || "",
+      twinFactoryLauncherId: undefined,
+      factoryId: "",
+    },
   });
 
   async function fetchTwinflowFactories(
@@ -99,6 +118,17 @@ export function TwinFlowFactoriesTable({
     }
   }
 
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof TWINFLOW_FACTORY_SCHEMA>
+  ) => {
+    await createTwinFlowFactory({
+      body: {
+        twinflowFactories: [formValues],
+      },
+    });
+    toast.success("Twinflow factory created successfully!");
+  };
+
   return (
     <CrudDataTable
       title={title || "Twinflow Factories"}
@@ -110,7 +140,9 @@ export function TwinFlowFactoriesTable({
       ]}
       fetcher={fetchTwinflowFactories}
       getRowId={(row) => row.id}
-      // TODO: add detailed twinflow factory page
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/twinflow-factories/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(twinflowId) ? [colDefs.twinflowId] : []),
@@ -118,6 +150,14 @@ export function TwinFlowFactoriesTable({
         colDefs.factoryId,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={twinFlowFactoryForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <TwinFlowFactoryFormFields
+          control={twinFlowFactoryForm.control}
+          twinflowId={twinflowId}
+        />
+      )}
     />
   );
 }

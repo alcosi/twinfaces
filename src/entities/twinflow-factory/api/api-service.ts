@@ -2,7 +2,7 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { TwinFlowFactoryFilters } from "./types";
+import { TwinFlowFactoryCreateRq, TwinFlowFactoryFilters } from "./types";
 
 export function createTwinFlowFactoryApi(settings: ApiSettings) {
   function search({
@@ -31,7 +31,16 @@ export function createTwinFlowFactoryApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function create({ body }: { body: TwinFlowFactoryCreateRq }) {
+    return settings.client.POST("/private/twinflow/factory/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, create };
 }
 
 export type TwinFlowFactoryApi = ReturnType<typeof createTwinFlowFactoryApi>;
