@@ -29,3 +29,7 @@ export type TwinFlowFactoryCreateRq =
   components["schemas"]["TwinflowFactoryCreateRqV1"];
 export type TwinFlowFactoryCreateV1 =
   components["schemas"]["TwinflowFactoryCreateV1"];
+export type TwinFlowFactoryUpdateRq =
+  components["schemas"]["TwinflowFactoryUpdateRqV1"];
+export type TwinFlowFactoryUpdateV1 =
+  components["schemas"]["TwinflowFactoryUpdateV1"];

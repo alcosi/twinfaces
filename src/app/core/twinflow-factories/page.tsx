@@ -1,5 +1,5 @@
 import { TwinFlowFactoriesScreen } from "@/screens/twinflow-factories";
 
-export default function TwinflowFactoriesPage() {
+export default function Page() {
   return <TwinFlowFactoriesScreen />;
 }
