@@ -9,9 +9,11 @@ import {
   TWINFLOW_FACTORY_SCHEMA,
   useFactoryLauncherSelectAdapter,
 } from "@/entities/twinflow-factory";
+import { isTruthy } from "@/shared/libs";
 
 export function TwinFlowFactoryFormFields({
   control,
+  twinflowId,
 }: {
   control: Control<z.infer<typeof TWINFLOW_FACTORY_SCHEMA>>;
   twinflowId?: string;
@@ -19,6 +21,8 @@ export function TwinFlowFactoryFormFields({
   const twinflowAdapter = useTwinFlowSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
   const launcherAdapter = useFactoryLauncherSelectAdapter();
+
+  const twinflowDisabled = isTruthy(twinflowId);
 
   return (
     <>
@@ -29,6 +33,7 @@ export function TwinFlowFactoryFormFields({
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
+        disabled={twinflowDisabled}
         {...twinflowAdapter}
       />
 
