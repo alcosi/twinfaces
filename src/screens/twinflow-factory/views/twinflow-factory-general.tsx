@@ -4,6 +4,8 @@ import { toast } from "sonner";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
+import { useFactorySelectAdapter } from "@/entities/factory";
+import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
 import {
   TwinFlowFactory_DETAILED,
   useFactoryLauncherSelectAdapter,
@@ -28,6 +30,8 @@ export function TwinFlowFactoryGeneral({
 }) {
   const { updateTwinFlowFactory } = useUpdateTwinFlowFactory();
   const launcherAdapter = useFactoryLauncherSelectAdapter();
+  const twinflowAdapter = useTwinFlowSelectAdapter();
+  const factoryAdapter = useFactorySelectAdapter();
 
   async function update(updateData: any) {
     try {
@@ -48,6 +52,29 @@ export function TwinFlowFactoryGeneral({
       console.error(error);
     }
   }
+
+  const twinflowSettings: InPlaceEditProps<typeof twinflowFactory.twinflowId> =
+    {
+      id: "twinflowId",
+      value: twinflowFactory.twinflowId,
+      valueInfo: {
+        type: AutoFormValueType.combobox,
+        selectPlaceholder: "Select twinflow...",
+        ...twinflowAdapter,
+      },
+      renderPreview: twinflowFactory.twinflow
+        ? () => (
+            <TwinFlowResourceLink
+              data={twinflowFactory.twinflow!}
+              withTooltip
+            />
+          )
+        : undefined,
+      onSubmit: async (value) => {
+        const twinflowId = (value as unknown as Array<{ id: string }>)[0]?.id;
+        return update({ twinflowId });
+      },
+    };
 
   const launcherSettings: InPlaceEditProps<
     typeof twinflowFactory.twinFactoryLauncherId
@@ -72,6 +99,25 @@ export function TwinFlowFactoryGeneral({
     },
   };
 
+  const factorySettings: InPlaceEditProps<typeof twinflowFactory.factoryId> = {
+    id: "factoryId",
+    value: twinflowFactory.factoryId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select factory...",
+      ...factoryAdapter,
+    },
+    renderPreview: twinflowFactory.factory
+      ? () => (
+          <FactoryResourceLink data={twinflowFactory.factory!} withTooltip />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      const factoryId = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ factoryId });
+    },
+  };
+
   return (
     <InPlaceEditContextProvider>
       <Table>
@@ -86,12 +132,7 @@ export function TwinFlowFactoryGeneral({
           <TableRow>
             <TableCell>Twinflow</TableCell>
             <TableCell>
-              {twinflowFactory.twinflow && (
-                <TwinFlowResourceLink
-                  data={twinflowFactory.twinflow}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...twinflowSettings} />
             </TableCell>
           </TableRow>
 
@@ -105,12 +146,7 @@ export function TwinFlowFactoryGeneral({
           <TableRow>
             <TableCell>Factory</TableCell>
             <TableCell>
-              {twinflowFactory.factory && (
-                <FactoryResourceLink
-                  data={twinflowFactory.factory}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...factorySettings} />
             </TableCell>
           </TableRow>
         </TableBody>
