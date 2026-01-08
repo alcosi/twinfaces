@@ -7,6 +7,8 @@ import { AutoFormValueType } from "@/components/auto-field";
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
 import {
+  LauncherId,
+  TwinFlowFactoryUpdateV1,
   TwinFlowFactory_DETAILED,
   useFactoryLauncherSelectAdapter,
   useUpdateTwinFlowFactory,
@@ -33,7 +35,7 @@ export function TwinFlowFactoryGeneral({
   const twinflowAdapter = useTwinFlowSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
 
-  async function update(updateData: any) {
+  async function update(updateData: TwinFlowFactoryUpdateV1) {
     try {
       await updateTwinFlowFactory({
         body: {
@@ -94,7 +96,7 @@ export function TwinFlowFactoryGeneral({
         )
       : undefined,
     onSubmit: async (value) => {
-      const launcherId = (value as unknown as Array<{ id: string }>)[0]?.id;
+      const launcherId = (value as unknown as Array<{ id: LauncherId }>)[0]?.id;
       return update({ twinFactoryLauncherId: launcherId });
     },
   };

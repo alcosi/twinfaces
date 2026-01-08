@@ -33,3 +33,6 @@ export type TwinFlowFactoryUpdateRq =
   components["schemas"]["TwinflowFactoryUpdateRqV1"];
 export type TwinFlowFactoryUpdateV1 =
   components["schemas"]["TwinflowFactoryUpdateV1"];
+export type LauncherId = NonNullable<
+  TwinFlowFactoryUpdateV1["twinFactoryLauncherId"]
+>;
