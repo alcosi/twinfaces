@@ -2,7 +2,11 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { TwinFlowFactoryCreateRq, TwinFlowFactoryFilters } from "./types";
+import {
+  TwinFlowFactoryCreateRq,
+  TwinFlowFactoryFilters,
+  TwinFlowFactoryUpdateRq,
+} from "./types";
 
 export function createTwinFlowFactoryApi(settings: ApiSettings) {
   function search({
@@ -40,7 +44,35 @@ export function createTwinFlowFactoryApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create };
+  function getById({ twinflowFactoryId }: { twinflowFactoryId: string }) {
+    return settings.client.GET(
+      "/private/twinflow/factory/{twinflowFactoryId}/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { twinflowFactoryId },
+          query: {
+            lazyRelation: false,
+            showTwinflowFactoryMode: "DETAILED",
+            showTwinflowFactory2TwinflowMode: "DETAILED",
+            showTwinflowFactory2FactoryMode: "DETAILED",
+            showTwinflow2TwinClassMode: "DETAILED",
+          },
+        },
+      }
+    );
+  }
+
+  function update({ body }: { body: TwinFlowFactoryUpdateRq }) {
+    return settings.client.PUT("/private/twinflow/factory/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, create, getById, update };
 }
 
 export type TwinFlowFactoryApi = ReturnType<typeof createTwinFlowFactoryApi>;

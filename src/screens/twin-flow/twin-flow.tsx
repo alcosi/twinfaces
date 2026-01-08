@@ -25,7 +25,7 @@ export function TwinFlowScreen() {
     },
     {
       key: "twinflowFactories",
-      label: "Twinflow factories",
+      label: "Factories",
       content: (
         <TwinFlowFactoriesTable
           twinflowId={twinFlow.id}
