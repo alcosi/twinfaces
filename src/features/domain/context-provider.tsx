@@ -41,7 +41,6 @@ export function DomainContextProvider({
           showDomainMode: "DETAILED",
           showDomain2TierMode: "DETAILED",
           showDomain2TwinClassSchemaMode: "DETAILED",
-          showDomainBusinessAccountInitiator2FeaturerMode: "DETAILED",
           showDomainBusinessAccountTemplate2TwinMode: "DETAILED",
           showDomain2PermissionSchemaMode: "DETAILED",
           showDomainNavbar2FaceMode: "DETAILED",
