@@ -1,3 +1,5 @@
+"use client";
+
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { DomainGeneral } from "./views";

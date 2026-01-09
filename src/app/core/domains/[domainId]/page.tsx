@@ -1,13 +1,15 @@
+import { use } from "react";
+
 import { DomainContextProvider } from "@/features/domain";
 import { DomainScreen } from "@/screens/domain";
 
 type Props = {
-  params: {
-    domainId: string;
-  };
+  params: Promise<{ domainId: string }>;
 };
 
-export default async function Page({ params: { domainId } }: Props) {
+export default function Page({ params }: Props) {
+  const { domainId } = use(params);
+
   return (
     <DomainContextProvider domainId={domainId}>
       <DomainScreen />
