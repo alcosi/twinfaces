@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import { useTwinClassFreezeSelectAdapter } from "@/entities/freeze";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   OWNER_TYPES,
@@ -26,6 +27,7 @@ export function useTwinClassFilters(): FilterFeature<
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
+  const fAdapter = useTwinClassFreezeSelectAdapter();
 
   function buildFilterFields(): Partial<
     Record<TwinClassFilterKeys, AutoFormValueInfo>
@@ -167,10 +169,13 @@ export function useTwinClassFilters(): FilterFeature<
         label: "External Id",
       },
       freezeIdList: {
-        type: AutoFormValueType.tag,
+        //type: AutoFormValueType.tag,
         label: "Freeze Id",
-        schema: z.string().uuid("Please enter a valid UUID"),
-        placeholder: "Enter UUID",
+        //schema: z.string().uuid("Please enter a valid UUID"),
+        //placeholder: "Enter UUID",
+        type: AutoFormValueType.combobox,
+        multi: true,
+        ...fAdapter,
       },
     };
   }

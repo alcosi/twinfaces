@@ -48,6 +48,10 @@ import {
   createPipelineStepApi,
 } from "@/entities/factory-pipeline-step";
 import { FeaturerApi, createFeaturerApi } from "@/entities/featurer";
+import {
+  TwinClassFreezeApi,
+  createTwinClassFreezeApi,
+} from "@/entities/freeze";
 import { LinkApi, createLinkApi } from "@/entities/link";
 import { PermissionApi, createPermissionApi } from "@/entities/permission";
 import {
@@ -100,6 +104,7 @@ export interface PrivateApiContextProps {
   domain: DomainApi;
   twinFlowSchema: TwinFlowSchemaApi;
   twinClassField: TwinClassFieldApi;
+  twinClassFreeze: TwinClassFreezeApi;
   twinClass: TwinClassApi;
   twinStatus: TwinStatusApi;
   twinFlow: TwinFlowApi;
@@ -157,6 +162,7 @@ export function PrivateApiContextProvider({
         twinFlow: createTwinFlowApi(settings),
         twinFlowTransition: createTwinFlowTransitionApi(settings),
         twinFlowFactory: createTwinFlowFactoryApi(settings),
+        twinClassFreeze: createTwinClassFreezeApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
         permission: createPermissionApi(settings),
