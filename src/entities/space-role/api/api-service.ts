@@ -46,7 +46,7 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
         params: {
           header: getApiDomainHeaders(settings),
           query: {
-            lazyRelation: true,
+            lazyRelation: false,
             showPermissionGrantSpaceRoleMode: "DETAILED",
             showPermissionGrantUserGroup2PermissionSchemaMode: "DETAILED",
             showPermissionGrantSpaceRole2SpaceRoleMode: "DETAILED",

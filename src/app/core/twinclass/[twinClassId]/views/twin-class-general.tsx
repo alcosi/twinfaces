@@ -15,6 +15,7 @@ import {
   useTwinClassSelectAdapter,
   useUpdateTwinClass,
 } from "@/entities/twin-class";
+import { useTwinClassFreezeSelectAdapter } from "@/entities/twin-class-freeze";
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import {
@@ -23,6 +24,7 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { PermissionResourceLink } from "@/features/permission/ui";
+import { TwinClassFreezeResourceLink } from "@/features/twin-class-freeze/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { formatIntlDate, isPopulatedString } from "@/shared/libs";
@@ -36,6 +38,7 @@ export function TwinClassGeneral() {
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
+  const fAdapter = useTwinClassFreezeSelectAdapter();
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
@@ -131,7 +134,7 @@ export function TwinClassGeneral() {
       ...pAdapter,
     },
     renderPreview: twinClass.createPermission
-      ? (_) => <PermissionResourceLink data={twinClass.createPermission!} />
+      ? () => <PermissionResourceLink data={twinClass.createPermission!} />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
@@ -150,7 +153,7 @@ export function TwinClassGeneral() {
       ...pAdapter,
     },
     renderPreview: twinClass.viewPermission
-      ? (_) => <PermissionResourceLink data={twinClass.viewPermission!} />
+      ? () => <PermissionResourceLink data={twinClass.viewPermission!} />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
@@ -169,7 +172,7 @@ export function TwinClassGeneral() {
       ...pAdapter,
     },
     renderPreview: twinClass.editPermission
-      ? (_) => <PermissionResourceLink data={twinClass.editPermission!} />
+      ? () => <PermissionResourceLink data={twinClass.editPermission!} />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
@@ -188,11 +191,50 @@ export function TwinClassGeneral() {
       ...pAdapter,
     },
     renderPreview: twinClass.deletePermission
-      ? (_) => <PermissionResourceLink data={twinClass.deletePermission!} />
+      ? () => <PermissionResourceLink data={twinClass.deletePermission!} />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({ deletePermissionId: id });
+    },
+  };
+
+  const externalIdSettings: InPlaceEditProps = {
+    id: "externalId",
+    value: twinClass.externalId,
+    valueInfo: {
+      type: AutoFormValueType.string,
+      label: "",
+      input_props: {
+        fieldSize: "sm",
+      },
+    },
+    schema: z.string().min(3),
+    onSubmit: (value) => {
+      return update({
+        externalId: value as string,
+      });
+    },
+  };
+
+  const freezeSettings: InPlaceEditProps<typeof twinClass.twinClassFreezeId> = {
+    id: "twinClassFreezeId",
+    value: twinClass.twinClassFreezeId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select freeze...",
+      ...fAdapter,
+    },
+    renderPreview: twinClass.twinClassFreeze
+      ? () => (
+          <TwinClassFreezeResourceLink
+            data={twinClass.twinClassFreeze! as TwinClass_DETAILED}
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ twinClassFreezeId: id });
     },
   };
 
@@ -207,7 +249,7 @@ export function TwinClassGeneral() {
       ...dlAdapter,
     },
     renderPreview: twinClass.tagMap
-      ? (_) => <DatalistResourceLink data={twinClass.tagMap as DataList} />
+      ? () => <DatalistResourceLink data={twinClass.tagMap as DataList} />
       : undefined,
     onSubmit: async (value) => {
       return update({ tagDataListUpdate: { newId: value[0].id } });
@@ -225,7 +267,7 @@ export function TwinClassGeneral() {
       ...dlAdapter,
     },
     renderPreview: twinClass.markerMap
-      ? (_) => <DatalistResourceLink data={twinClass.markerMap as DataList} />
+      ? () => <DatalistResourceLink data={twinClass.markerMap as DataList} />
       : undefined,
     onSubmit: async (value) => {
       return update({ markerDataListUpdate: { newId: value[0].id } });
@@ -247,6 +289,36 @@ export function TwinClassGeneral() {
       onSuccess: () => {
         return update({
           abstractClass: !twinClass.abstractClass,
+        });
+      },
+    });
+  }
+
+  function switchAssigneeRequired() {
+    const action = twinClass.assigneeRequired ? "disable" : "enable";
+    const status = twinClass.assigneeRequired ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Assignee required Mode`,
+      body: `Are you sure you want to ${action} assignee required mode for this class?`,
+      onSuccess: () => {
+        return update({
+          assigneeRequired: !twinClass.assigneeRequired,
+        });
+      },
+    });
+  }
+
+  function switchSegment() {
+    const action = twinClass.segment ? "disable" : "enable";
+    const status = twinClass.segment ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Segment Mode`,
+      body: `Are you sure you want to ${action} segment mode for this class?`,
+      onSuccess: () => {
+        return update({
+          segment: !twinClass.segment,
         });
       },
     });
@@ -288,6 +360,16 @@ export function TwinClassGeneral() {
               <Switch
                 checked={twinClass.abstractClass ?? false}
                 onCheckedChange={switchAbstract}
+              />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Assignee required</TableCell>
+            <TableCell>
+              <Switch
+                checked={twinClass.assigneeRequired ?? false}
+                onCheckedChange={switchAssigneeRequired}
               />
             </TableCell>
           </TableRow>
@@ -373,6 +455,35 @@ export function TwinClassGeneral() {
             <TableCell>Delete Permission</TableCell>
             <TableCell>
               <InPlaceEdit {...deletePermissionSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>External Id</TableCell>
+            <TableCell>
+              <InPlaceEdit {...externalIdSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Segment</TableCell>
+            <TableCell>
+              <Switch
+                checked={twinClass.segment ?? false}
+                onCheckedChange={switchSegment}
+              />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Has segment</TableCell>
+            <TableCell>{twinClass.hasSegment ? "Yes" : "No"}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Freeze</TableCell>
+            <TableCell>
+              <InPlaceEdit {...freezeSettings} />
             </TableCell>
           </TableRow>
 

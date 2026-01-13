@@ -9,6 +9,7 @@ import {
   TwinClassFilters,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
+import { useTwinClassFreezeSelectAdapter } from "@/entities/twin-class-freeze";
 import {
   type FilterFeature,
   mapToChoice,
@@ -26,6 +27,7 @@ export function useTwinClassFilters(): FilterFeature<
   const tcAdapter = useTwinClassSelectAdapter();
   const pAdapter = usePermissionSelectAdapter();
   const dlAdapter = useDatalistSelectAdapter();
+  const fAdapter = useTwinClassFreezeSelectAdapter();
 
   function buildFilterFields(): Partial<
     Record<TwinClassFilterKeys, AutoFormValueInfo>
@@ -167,10 +169,10 @@ export function useTwinClassFilters(): FilterFeature<
         label: "External Id",
       },
       freezeIdList: {
-        type: AutoFormValueType.tag,
         label: "Freeze Id",
-        schema: z.string().uuid("Please enter a valid UUID"),
-        placeholder: "Enter UUID",
+        type: AutoFormValueType.combobox,
+        multi: true,
+        ...fAdapter,
       },
     };
   }

@@ -70,6 +70,10 @@ import {
   TwinClassFieldApi,
   createTwinClassFieldApi,
 } from "@/entities/twin-class-field";
+import {
+  TwinClassFreezeApi,
+  createTwinClassFreezeApi,
+} from "@/entities/twin-class-freeze";
 import { TwinFlowApi, createTwinFlowApi } from "@/entities/twin-flow";
 import {
   TwinFlowTransitionApi,
@@ -100,6 +104,7 @@ export interface PrivateApiContextProps {
   domain: DomainApi;
   twinFlowSchema: TwinFlowSchemaApi;
   twinClassField: TwinClassFieldApi;
+  twinClassFreeze: TwinClassFreezeApi;
   twinClass: TwinClassApi;
   twinStatus: TwinStatusApi;
   twinFlow: TwinFlowApi;
@@ -157,6 +162,7 @@ export function PrivateApiContextProvider({
         twinFlow: createTwinFlowApi(settings),
         twinFlowTransition: createTwinFlowTransitionApi(settings),
         twinFlowFactory: createTwinFlowFactoryApi(settings),
+        twinClassFreeze: createTwinClassFreezeApi(settings),
         featurer: createFeaturerApi(settings),
         twin: createTwinApi(settings),
         permission: createPermissionApi(settings),
