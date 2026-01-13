@@ -1,11 +1,6 @@
-import { TwinStatus_DETAILED } from "@/entities/twin-status";
 import { components } from "@/shared/api/generated/schema";
 
 export type TwinClassFreeze = components["schemas"]["TwinClassFreezeV1"];
-
-export type TwinClassFreeze_DETAILED = Required<TwinClassFreeze> & {
-  status: TwinStatus_DETAILED;
-};
 
 export type TwinClassFreezeFilterKeys =
   | "idList"
@@ -25,8 +20,3 @@ export type TwinClassFreezeFilters = Partial<
     TwinClassFreezeFilterKeys
   >
 >;
-
-export type QueryTwinClassFreezeViewV1 = {
-  showTwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
-  showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-};
