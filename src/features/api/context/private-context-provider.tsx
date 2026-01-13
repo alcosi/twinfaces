@@ -48,10 +48,6 @@ import {
   createPipelineStepApi,
 } from "@/entities/factory-pipeline-step";
 import { FeaturerApi, createFeaturerApi } from "@/entities/featurer";
-import {
-  TwinClassFreezeApi,
-  createTwinClassFreezeApi,
-} from "@/entities/freeze";
 import { LinkApi, createLinkApi } from "@/entities/link";
 import { PermissionApi, createPermissionApi } from "@/entities/permission";
 import {
@@ -74,6 +70,10 @@ import {
   TwinClassFieldApi,
   createTwinClassFieldApi,
 } from "@/entities/twin-class-field";
+import {
+  TwinClassFreezeApi,
+  createTwinClassFreezeApi,
+} from "@/entities/twin-class-freeze";
 import { TwinFlowApi, createTwinFlowApi } from "@/entities/twin-flow";
 import {
   TwinFlowTransitionApi,

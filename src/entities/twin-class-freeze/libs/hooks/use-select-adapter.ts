@@ -1,4 +1,7 @@
-import { TwinClassFreeze, useTwinClassFreezeSearch } from "@/entities/freeze";
+import {
+  TwinClassFreeze,
+  useTwinClassFreezeSearch,
+} from "@/entities/twin-class-freeze";
 import { SelectAdapter, isPopulatedString } from "@/shared/libs";
 
 export function useTwinClassFreezeSelectAdapter(): SelectAdapter<TwinClassFreeze> {
@@ -19,7 +22,7 @@ export function useTwinClassFreezeSelectAdapter(): SelectAdapter<TwinClassFreeze
   }
 
   function renderItem({ name, key }: TwinClassFreeze) {
-    return isPopulatedString(name) ? `${name} : ${key}` : key;
+    return isPopulatedString(name) ? `${name} : ${key}` : `N/A | ${key}`;
   }
 
   return {

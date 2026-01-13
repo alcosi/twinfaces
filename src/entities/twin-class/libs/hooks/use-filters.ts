@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTwinClassFreezeSelectAdapter } from "@/entities/freeze";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   OWNER_TYPES,
@@ -10,6 +9,7 @@ import {
   TwinClassFilters,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
+import { useTwinClassFreezeSelectAdapter } from "@/entities/twin-class-freeze";
 import {
   type FilterFeature,
   mapToChoice,
@@ -169,10 +169,7 @@ export function useTwinClassFilters(): FilterFeature<
         label: "External Id",
       },
       freezeIdList: {
-        //type: AutoFormValueType.tag,
         label: "Freeze Id",
-        //schema: z.string().uuid("Please enter a valid UUID"),
-        //placeholder: "Enter UUID",
         type: AutoFormValueType.combobox,
         multi: true,
         ...fAdapter,
