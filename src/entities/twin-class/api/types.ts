@@ -52,7 +52,7 @@ export type TwinClassFiltersHierarchyOverride = {
   depth: number;
 };
 
-export type TwinClassCreateRq = components["schemas"]["TwinClassCreateRqV1"];
+export type TwinClassCreateRq = components["schemas"]["TwinClassCreateRqV2"];
 export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"];
 
 export type TwinClassValidHeadQuery =

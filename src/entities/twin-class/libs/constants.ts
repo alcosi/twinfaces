@@ -50,6 +50,8 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     )
     .optional(),
   abstractClass: z.boolean(),
+  segment: z.boolean(),
+  assigneeRequired: z.boolean(),
   headTwinClass: z.array(z.object({ id: z.string().uuid() })).nullable(),
   headHunterFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR).optional(),
   headHunterParams: FEATURER_PARAMS_VALUE,
@@ -69,5 +71,6 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   createPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   editPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   deletePermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
+  autoCreateTwinflow: z.boolean(),
   autoCreatePermissions: z.boolean(),
 });

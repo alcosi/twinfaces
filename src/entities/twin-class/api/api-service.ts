@@ -115,7 +115,7 @@ export function createTwinClassApi(settings: ApiSettings) {
   }
 
   function create({ body }: { body: TwinClassCreateRq }) {
-    return settings.client.POST("/private/twin_class/v1", {
+    return settings.client.POST("/private/twin_class/v2", {
       params: {
         header: getApiDomainHeaders(settings),
       },
