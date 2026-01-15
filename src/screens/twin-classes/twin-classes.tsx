@@ -387,44 +387,80 @@ export function TwinClasses({ type }: { type?: string }) {
       deletePermissionId,
       tagDataListId,
       markerDataListId,
-      ...rest
+      segment,
+      assigneeRequired,
+      autoCreateTwinflow,
+      ownerType,
+      abstractClass,
+      permissionSchemaSpace,
+      twinflowSchemaSpace,
+      twinClassSchemaSpace,
+      aliasSpace,
+      key,
     } = formValues;
 
-    const requestBody: TwinClassCreateRq = {
-      ...rest,
-      extendsTwinClassId: extendsTwinClassId ?? "",
-      headTwinClassId: headTwinClass?.[0]?.id,
-      headHunterFeaturerId: headHunterFeaturerId,
-      headHunterParams: headHunterParams,
-      nameI18n: {
-        translationInCurrentLocale: name,
-        translations: {},
-      },
-      descriptionI18n: description
-        ? {
-            translationInCurrentLocale: description,
+    const twinClassCreateRq: TwinClassCreateRq = {
+      twinClassCreates: [
+        {
+          key,
+          nameI18n: {
+            translationInCurrentLocale: name,
             translations: {},
-          }
-        : undefined,
-      autoCreatePermissions,
-      viewPermissionId: autoCreatePermissions ? undefined : viewPermissionId,
-      createPermissionId: autoCreatePermissions
-        ? undefined
-        : createPermissionId,
-      editPermissionId: autoCreatePermissions ? undefined : editPermissionId,
-      deletePermissionId: autoCreatePermissions
-        ? undefined
-        : deletePermissionId,
-      tagDataListId: tagDataListId,
-      markerDataListId: markerDataListId,
+          },
+          descriptionI18n: description
+            ? {
+                translationInCurrentLocale: description,
+                translations: {},
+              }
+            : undefined,
+          abstractClass,
+          segment,
+          assigneeRequired,
+          ownerType,
+          headTwinClassId: headTwinClass?.[0]?.id,
+          headHunterFeaturerId,
+          headHunterParams,
+          extendsTwinClassId: extendsTwinClassId || undefined,
+          markerDataListId: markerDataListId || undefined,
+          tagDataListId: tagDataListId || undefined,
+          autoCreatePermissions,
+          autoCreateTwinflow,
+          viewPermissionId: !autoCreatePermissions
+            ? viewPermissionId
+            : undefined,
+          createPermissionId: !autoCreatePermissions
+            ? createPermissionId
+            : undefined,
+          editPermissionId: !autoCreatePermissions
+            ? editPermissionId
+            : undefined,
+          deletePermissionId: !autoCreatePermissions
+            ? deletePermissionId
+            : undefined,
+          permissionSchemaSpace,
+          twinflowSchemaSpace,
+          twinClassSchemaSpace,
+          aliasSpace,
+        },
+      ],
     };
 
-    const { error } = await api.twinClass.create({ body: requestBody });
+    try {
+      const { error } = await api.twinClass.create({
+        body: twinClassCreateRq,
+      });
 
-    if (error) {
+      if (error) {
+        toast.error("Failed to create twin class");
+        throw error;
+      }
+
+      toast.success("Twin class created successfully!");
+      tableRef.current?.refresh();
+    } catch (error) {
+      console.error("Create error:", error);
       throw error;
     }
-    toast.success("Twin class created successfully!");
   };
 
   return (

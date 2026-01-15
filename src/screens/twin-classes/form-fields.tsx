@@ -73,6 +73,14 @@ export function TwinClassFormFields({
         label="Is abstract"
       />
 
+      <CheckboxFormField control={control} name="segment" label="Is segment" />
+
+      <CheckboxFormField
+        control={control}
+        name="assigneeRequired"
+        label="Is assignee required"
+      />
+
       <TextFormField control={control} name="logo" label="Logo URL" />
 
       <ComboboxFormField
@@ -123,6 +131,12 @@ export function TwinClassFormFields({
         searchPlaceholder="Search datalist..."
         noItemsText="No datalist found"
         {...dlAdapter}
+      />
+
+      <CheckboxFormField
+        control={control}
+        name="autoCreateTwinflow"
+        label="Auto create Twinflow"
       />
 
       <CheckboxFormField
