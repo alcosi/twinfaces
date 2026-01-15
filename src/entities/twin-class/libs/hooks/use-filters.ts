@@ -169,7 +169,7 @@ export function useTwinClassFilters(): FilterFeature<
         label: "External Id",
       },
       freezeIdList: {
-        label: "Freeze Id",
+        label: "Freeze",
         type: AutoFormValueType.combobox,
         multi: true,
         ...fAdapter,
