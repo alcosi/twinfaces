@@ -1,13 +1,15 @@
 export const FeaturerTypes = {
+  businessAccountInitiator: 11,
   fieldTyper: 13,
   trigger: 15,
   validator: 16,
-  headHunter: 26,
-  filler: 23,
+  userGroupManager: 21,
   multiplier: 22,
   conditioner: 24,
   projector: 44,
   sorter: 41,
+  filler: 23,
+  headHunter: 26,
 } as const;
 
 export type FeaturerTypeId = (typeof FeaturerTypes)[keyof typeof FeaturerTypes];
