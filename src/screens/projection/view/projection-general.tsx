@@ -286,6 +286,7 @@ export function ProjectionGeneral() {
               {projection.fieldProjectorFeaturer && (
                 <FeaturerResourceLink
                   data={projection.fieldProjectorFeaturer as Featurer_DETAILED}
+                  params={projection.fieldProjectorParams}
                   withTooltip
                 />
               )}

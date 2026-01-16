@@ -106,6 +106,7 @@ const colDefs: Record<
         <div className="inline-flex max-w-48">
           <FeaturerResourceLink
             data={original.fieldProjectorFeaturer as Featurer_DETAILED}
+            params={original.fieldProjectorParams}
             withTooltip
           />
         </div>

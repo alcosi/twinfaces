@@ -98,6 +98,7 @@ const colDefs: Record<
         <div className="inline-flex max-w-48">
           <FeaturerResourceLink
             data={original.fieldTyperFeaturer}
+            params={original.fieldTyperParams}
             withTooltip
           />
         </div>
@@ -112,6 +113,7 @@ const colDefs: Record<
         <div className="inline-flex max-w-48">
           <FeaturerResourceLink
             data={original.twinSorterFeaturer}
+            params={original.twinSorterParams}
             withTooltip
           />
         </div>

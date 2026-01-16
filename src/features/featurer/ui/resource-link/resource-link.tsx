@@ -9,15 +9,17 @@ import { FeaturerResourceTooltip } from "./tooltip";
 
 type Props = {
   data: Featurer_DETAILED;
+  params?: Record<string, unknown>;
   disabled?: boolean;
   withTooltip?: boolean;
 };
 
-export const FeaturerResourceLink = ({
+export function FeaturerResourceLink({
   data,
+  params,
   disabled,
   withTooltip,
-}: Props) => {
+}: Props) {
   const link = `/${PlatformArea.core}/featurer/${data.id}`;
 
   return (
@@ -27,7 +29,13 @@ export const FeaturerResourceLink = ({
       disabled={disabled}
       renderTooltip={
         withTooltip
-          ? (data) => <FeaturerResourceTooltip data={data} link={link} />
+          ? (data) => (
+              <FeaturerResourceTooltip
+                data={data}
+                link={link}
+                params={params}
+              />
+            )
           : undefined
       }
       getDisplayName={(data) =>
@@ -36,4 +44,4 @@ export const FeaturerResourceLink = ({
       link={link}
     />
   );
-};
+}
