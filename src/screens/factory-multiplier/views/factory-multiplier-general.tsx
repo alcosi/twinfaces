@@ -51,7 +51,7 @@ export function FactoryMultiplierGeneral() {
       ...tcAdapter,
     },
     renderPreview: factoryMultiplier.inputTwinClass
-      ? (_) => (
+      ? () => (
           <TwinClassResourceLink
             data={factoryMultiplier.inputTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -185,6 +185,7 @@ export function FactoryMultiplierGeneral() {
                   data={
                     factoryMultiplier.multiplierFeaturer as Featurer_DETAILED
                   }
+                  params={factoryMultiplier.multiplierParams}
                   withTooltip
                 />
               )}
