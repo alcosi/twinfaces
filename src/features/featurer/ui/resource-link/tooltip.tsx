@@ -1,7 +1,14 @@
+"use client";
+
 import { Play } from "lucide-react";
+import Link from "next/link";
 
 import { Featurer_DETAILED } from "@/entities/featurer";
-import { isPopulatedString } from "@/shared/libs";
+import {
+  ExtendedFeaturerParam,
+  getFeaturerLink,
+} from "@/entities/featurer/utils";
+import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import {
   Table,
@@ -15,12 +22,11 @@ import {
 type Props = {
   data: Featurer_DETAILED;
   link: string;
-  params?: Record<string, unknown>;
+  params?: ExtendedFeaturerParam[];
 };
 
 export function FeaturerResourceTooltip({ data, link, params }: Props) {
-  const paramsEntries = params ? Object.entries(params) : [];
-  const hasParams = paramsEntries.length > 0;
+  const hasParams = isPopulatedArray(params);
 
   return (
     <ResourceLinkTooltip uuid={`${data.id}`} link={link}>
@@ -34,7 +40,7 @@ export function FeaturerResourceTooltip({ data, link, params }: Props) {
         {data.description && <p className="text-xs">{data.description}</p>}
 
         {!hasParams ? (
-          <p className="text-xs font-semibold">Params: N/A</p>
+          <p className="text-xs">Params: N/A</p>
         ) : (
           <>
             <p className="text-xs font-semibold">Params:</p>
@@ -42,21 +48,38 @@ export function FeaturerResourceTooltip({ data, link, params }: Props) {
               <Table className="text-xs">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="h-8 px-2 py-1">Name</TableHead>
+                    <TableHead className="h-8 px-2 py-1">Key</TableHead>
                     <TableHead className="h-8 px-2 py-1">Value</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paramsEntries.map(([key, value], idx) => (
-                    <TableRow key={idx} className="hover:bg-muted/50">
-                      <TableCell className="px-2 py-1 font-medium">
-                        {key}
-                      </TableCell>
-                      <TableCell className="px-2 py-1">
-                        {String(value) || "N/A"}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {params.map((param, idx) => {
+                    const linkUrl = getFeaturerLink(param.type, param.value);
+
+                    return (
+                      <TableRow key={idx} className="hover:bg-muted/50">
+                        <TableCell
+                          className="px-2 py-1 font-medium"
+                          title={param.type}
+                        >
+                          {param.key}
+                        </TableCell>
+                        <TableCell className="px-2 py-1 break-all">
+                          {linkUrl ? (
+                            <Link
+                              href={linkUrl}
+                              className="text-blue-500 hover:text-blue-700 hover:underline"
+                              rel="noopener noreferrer"
+                            >
+                              {param.value}
+                            </Link>
+                          ) : (
+                            param.value || "N/A"
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>

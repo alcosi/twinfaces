@@ -177,7 +177,7 @@ export function FactoryConditionGeneral() {
                   data={
                     factoryCondition.conditionerFeaturer as Featurer_DETAILED
                   }
-                  params={factoryCondition.conditionerParams}
+                  params={factoryCondition.conditionerDetailedParams}
                   withTooltip
                 />
               )}

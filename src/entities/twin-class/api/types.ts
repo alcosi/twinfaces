@@ -1,4 +1,4 @@
-import type { Featurer } from "@/entities/featurer";
+import type { ExtendedFeaturerParam, Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import type { TwinClassField } from "@/entities/twin-class-field";
 import { components, operations } from "@/shared/api/generated/schema";
@@ -31,6 +31,7 @@ export type TwinClass_DETAILED = RequireFields<
   hasSegment: boolean;
   segment: boolean;
   twinClassFreeze?: TwinClassBaseV1;
+  headHunterDetailedParams?: ExtendedFeaturerParam[];
 };
 export type TwinClass_MANAGED = RequireFields<
   TwinClass,

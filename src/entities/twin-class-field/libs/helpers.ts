@@ -1,4 +1,4 @@
-import { Featurer_DETAILED } from "@/entities/featurer";
+import { Featurer_DETAILED, extendFeaturerParams } from "@/entities/featurer";
 import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
@@ -39,10 +39,23 @@ export const hydrateTwinClassFieldFromMap = (
   }
 
   if (dto.twinSorterFeaturerId && relatedObjects?.featurerMap) {
-    console.log(relatedObjects);
     hydrated.twinSorterFeaturer = relatedObjects.featurerMap[
       dto.twinSorterFeaturerId
     ] as Featurer_DETAILED;
+  }
+
+  if (hydrated.fieldTyperParams && hydrated.fieldTyperFeaturer?.params) {
+    hydrated.fieldTyperDetailedParams = extendFeaturerParams(
+      hydrated.fieldTyperParams,
+      hydrated.fieldTyperFeaturer.params
+    );
+  }
+
+  if (hydrated.twinSorterParams && hydrated.twinSorterFeaturer?.params) {
+    hydrated.twinSorterDetailedParams = extendFeaturerParams(
+      hydrated.twinSorterParams,
+      hydrated.twinSorterFeaturer.params
+    );
   }
 
   return hydrated;

@@ -163,7 +163,7 @@ export function FactoryMultiplierGeneral() {
           <TableRow>
             <TableCell>Factory</TableCell>
             <TableCell>
-              <FactoryResourceLink data={factoryMultiplier.factory} />
+              <FactoryResourceLink data={factoryMultiplier.factory!} />
             </TableCell>
           </TableRow>
 
@@ -185,7 +185,7 @@ export function FactoryMultiplierGeneral() {
                   data={
                     factoryMultiplier.multiplierFeaturer as Featurer_DETAILED
                   }
-                  params={factoryMultiplier.multiplierParams}
+                  params={factoryMultiplier.multiplierDetailedParams}
                   withTooltip
                 />
               )}

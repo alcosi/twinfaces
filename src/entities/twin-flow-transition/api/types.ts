@@ -1,5 +1,5 @@
 import type { Factory } from "@/entities/factory";
-import { Featurer_DETAILED } from "@/entities/featurer";
+import { ExtendedFeaturerParam, Featurer_DETAILED } from "@/entities/featurer";
 import type { Permission } from "@/entities/permission";
 import type { TwinFlow } from "@/entities/twin-flow";
 import type { TwinStatus } from "@/entities/twin-status";
@@ -64,6 +64,7 @@ export type TwinFlowTransitionTrigger_DETAILED =
   components["schemas"]["TransitionTriggerV1"] & {
     twinflowTransition?: TwinFlowTransition_DETAILED;
     triggerFeaturer?: Featurer_DETAILED;
+    transitionTriggerDetailedParams?: ExtendedFeaturerParam[];
   };
 export type TwinFlowTransitionTriggerCud =
   components["schemas"]["TriggerCudV1"];

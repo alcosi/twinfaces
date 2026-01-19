@@ -1,4 +1,4 @@
-import { Featurer_DETAILED } from "@/entities/featurer";
+import { ExtendedFeaturerParam, Featurer_DETAILED } from "@/entities/featurer";
 import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components } from "@/shared/api/generated/schema";
@@ -32,6 +32,8 @@ export type TwinClassFieldV1_DETAILED = Required<TwinClassField> & {
   projectionField: boolean;
   hasProjectedFields: boolean;
   twinSorterFeaturer: Featurer_DETAILED;
+  fieldTyperDetailedParams?: ExtendedFeaturerParam[];
+  twinSorterDetailedParams?: ExtendedFeaturerParam[];
 };
 
 export type TwinClassFieldV2FilterKeys =

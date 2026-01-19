@@ -275,7 +275,7 @@ export function TwinFieldGeneral({
               {twinField.fieldTyperFeaturer && (
                 <FeaturerResourceLink
                   data={twinField.fieldTyperFeaturer}
-                  params={twinField.fieldTyperParams}
+                  params={twinField.fieldTyperDetailedParams}
                   withTooltip
                 />
               )}
@@ -291,7 +291,7 @@ export function TwinFieldGeneral({
               {twinField.twinSorterFeaturer && (
                 <FeaturerResourceLink
                   data={twinField.twinSorterFeaturer}
-                  params={twinField.twinSorterParams}
+                  params={twinField.twinSorterDetailedParams}
                   withTooltip
                 />
               )}

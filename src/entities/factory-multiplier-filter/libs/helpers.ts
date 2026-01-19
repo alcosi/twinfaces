@@ -1,15 +1,12 @@
 import { FactoryConditionSet } from "@/entities/factory-condition-set";
-import { FactoryMultiplier } from "@/entities/factory-multiplier/api";
+import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier/api";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
-import {
-  FactoryMultiplierFilter,
-  FactoryMultiplierFilter_DETAILED,
-} from "../api";
+import { FactoryMultiplierFilter_DETAILED } from "../api";
 
 export const hydrateFactoryMultiplierFilterFromMap = (
-  dto: FactoryMultiplierFilter,
+  dto: FactoryMultiplierFilter_DETAILED,
   relatedObjects?: RelatedObjects
 ): FactoryMultiplierFilter_DETAILED => {
   const hydrated: FactoryMultiplierFilter_DETAILED = Object.assign(
@@ -20,7 +17,7 @@ export const hydrateFactoryMultiplierFilterFromMap = (
   if (dto.multiplierId && relatedObjects?.factoryMultiplierMap) {
     hydrated.multiplier = relatedObjects.factoryMultiplierMap[
       dto.multiplierId
-    ] as FactoryMultiplier;
+    ] as FactoryMultiplier_DETAILED;
   }
 
   if (dto.factoryConditionSetId && relatedObjects?.factoryConditionSetMap) {

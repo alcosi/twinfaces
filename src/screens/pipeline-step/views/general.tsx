@@ -67,7 +67,7 @@ export function PipelineStepGeneral() {
     renderPreview: step.factoryConditionSet
       ? () => (
           <FactoryConditionSetResourceLink
-            data={step.factoryConditionSet}
+            data={step.factoryConditionSet!}
             withTooltip
           />
         )
@@ -234,7 +234,7 @@ export function PipelineStepGeneral() {
               {step.fillerFeaturer && (
                 <FeaturerResourceLink
                   data={step.fillerFeaturer as Featurer_DETAILED}
-                  params={step.fillerParams}
+                  params={step.fillerDetailedParams}
                   withTooltip
                 />
               )}

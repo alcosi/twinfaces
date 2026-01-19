@@ -47,6 +47,7 @@ export function PipelineStepContextProvider({
           showFactoryPipelineStep2FactoryPipelineMode: "DETAILED",
           showFactoryPipelineStep2FeaturerMode: "DETAILED",
           showFactoryPipelineStep2FactoryConditionSetMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
         },
       });
       setStep(response);

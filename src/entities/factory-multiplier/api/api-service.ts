@@ -27,6 +27,7 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
           showFactoryMultiplierFiltersCountMode: "SHOW",
           showFactoryMultiplierMode: "DETAILED",
           showFactoryMultiplier2FeaturerMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

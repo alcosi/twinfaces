@@ -25,6 +25,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
           showTwinClassField2TwinClassMode: "DETAILED",
           showTwinClassField2PermissionMode: "DETAILED",
           showTwinClassField2FeaturerMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
@@ -99,6 +100,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
             showTwinClassField2TwinClassMode: "DETAILED",
             showTwinClassField2FeaturerMode: "DETAILED",
             showTwinClassField2PermissionMode: "DETAILED",
+            showFeaturerParamMode: "SHOW",
           },
         },
       }

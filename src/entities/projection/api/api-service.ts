@@ -28,6 +28,7 @@ export function createProjectionApi(settings: ApiSettings) {
           showProjectionMode: "MANAGED",
           showProjectionType2TwinClassMode: "DETAILED",
           showProjection2FeaturerMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

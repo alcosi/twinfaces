@@ -1,5 +1,5 @@
 import { DataListsMap } from "@/entities/datalist";
-import { Featurer_DETAILED } from "@/entities/featurer";
+import { Featurer_DETAILED, extendFeaturerParams } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
@@ -76,6 +76,13 @@ export const hydrateTwinClassFromMap = (
 
       return acc;
     }, []);
+  }
+
+  if (hydrated.headHunterParams && hydrated.headHunterFeaturer?.params) {
+    hydrated.headHunterDetailedParams = extendFeaturerParams(
+      hydrated.headHunterParams,
+      hydrated.headHunterFeaturer.params
+    );
   }
 
   if (dto.twinClassFreezeId && relatedObjects.twinClassFreezeMap) {

@@ -5,11 +5,12 @@ import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 
+import { ExtendedFeaturerParam } from "../../../../entities/featurer/utils";
 import { FeaturerResourceTooltip } from "./tooltip";
 
 type Props = {
   data: Featurer_DETAILED;
-  params?: Record<string, unknown>;
+  params?: ExtendedFeaturerParam[];
   disabled?: boolean;
   withTooltip?: boolean;
 };

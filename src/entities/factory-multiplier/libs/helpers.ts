@@ -1,3 +1,4 @@
+import { extendFeaturerParams } from "@/entities/featurer";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
@@ -25,6 +26,13 @@ export const hydrateFactoryMultiplierFromMap = (
   if (dto.multiplierFeaturerId && relatedObjects?.featurerMap) {
     hydrated.multiplierFeaturer =
       relatedObjects.featurerMap[dto.multiplierFeaturerId]!;
+  }
+
+  if (hydrated.multiplierParams && hydrated.multiplierFeaturer?.params) {
+    hydrated.multiplierDetailedParams = extendFeaturerParams(
+      hydrated.multiplierParams,
+      hydrated.multiplierFeaturer.params
+    );
   }
 
   return hydrated;

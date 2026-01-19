@@ -40,7 +40,7 @@ export function useFactoryMultiplierFilterSearch() {
           data: factoryMultiplierFilters ?? [],
           pagination: data.pagination ?? {},
         };
-      } catch (error) {
+      } catch {
         throw new Error(
           "An error occured while fetching factory multiplier filters"
         );

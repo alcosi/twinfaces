@@ -1,4 +1,4 @@
-import { Featurer } from "@/entities/featurer";
+import { ExtendedFeaturerParam, Featurer } from "@/entities/featurer";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { components } from "@/shared/api/generated/schema";
@@ -13,6 +13,7 @@ export type Projection_DETAILED = Required<Projection> & {
   dstTwinClass?: TwinClass_DETAILED;
   dstTwinClassField?: TwinClassField_DETAILED;
   fieldProjectorFeaturer?: Featurer;
+  projectorDetailedParams?: ExtendedFeaturerParam[];
 };
 
 export type ProjectionFilterKeys =

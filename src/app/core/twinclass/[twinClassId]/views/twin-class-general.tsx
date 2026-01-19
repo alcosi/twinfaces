@@ -398,6 +398,7 @@ export function TwinClassGeneral() {
               {twinClass.headHunterFeaturer && (
                 <FeaturerResourceLink
                   data={twinClass.headHunterFeaturer as Featurer_DETAILED}
+                  params={twinClass.headHunterDetailedParams}
                   withTooltip
                 />
               )}

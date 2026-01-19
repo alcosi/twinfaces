@@ -80,7 +80,7 @@ const colDefs: Record<
         <div className="inline-flex max-w-48">
           <FeaturerResourceLink
             data={original.multiplierFeaturer as Featurer_DETAILED}
-            params={original.multiplierParams}
+            params={original.multiplierDetailedParams}
             withTooltip
           />
         </div>
