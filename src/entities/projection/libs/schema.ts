@@ -28,5 +28,6 @@ export const PROJECTION_SCHEMA = z.object({
     .uuid("Dst twin class field ID must be a valid UUID")
     .or(FIRST_ID_EXTRACTOR),
   fieldProjectorFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
+  active: z.boolean(),
   fieldProjectorParams: FEATURER_PARAMS_VALUE,
 });
