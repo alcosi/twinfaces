@@ -1,7 +1,7 @@
-import { extendFeaturerParams } from "@/entities/featurer";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { FactoryMultiplier, FactoryMultiplier_DETAILED } from "../api";
 
 export const hydrateFactoryMultiplierFromMap = (

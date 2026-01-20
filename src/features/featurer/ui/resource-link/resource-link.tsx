@@ -5,7 +5,7 @@ import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 
-import { ExtendedFeaturerParam } from "../../../../entities/featurer/utils";
+import { ExtendedFeaturerParam } from "../../utils/helpers";
 import { FeaturerResourceTooltip } from "./tooltip";
 
 type Props = {

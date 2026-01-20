@@ -1,8 +1,10 @@
-import { ExtendedFeaturerParam, Featurer_DETAILED } from "@/entities/featurer";
+import { Featurer_DETAILED } from "@/entities/featurer";
 import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
+
+import { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
 
 // TODO: Unify TwinClassFieldV1 & TwinClassFieldV2
 export type TwinClassField = components["schemas"]["TwinClassFieldV1"];

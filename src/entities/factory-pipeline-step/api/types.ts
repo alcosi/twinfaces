@@ -1,7 +1,9 @@
 import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { FactoryPipeline } from "@/entities/factory-pipeline";
-import { ExtendedFeaturerParam, Featurer } from "@/entities/featurer";
+import { Featurer } from "@/entities/featurer";
 import { components, operations } from "@/shared/api/generated/schema";
+
+import { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
 
 export type PipelineStep = components["schemas"]["FactoryPipelineStepV1"];
 

@@ -1,8 +1,8 @@
-import { extendFeaturerParams } from "@/entities/featurer";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { Projection, Projection_DETAILED } from "../api";
 
 export const hydrateProjectionFromMap = (

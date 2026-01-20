@@ -1,5 +1,5 @@
 import type { Factory } from "@/entities/factory";
-import { Featurer_DETAILED, extendFeaturerParams } from "@/entities/featurer";
+import { Featurer_DETAILED } from "@/entities/featurer";
 import type { Permission } from "@/entities/permission";
 import type { TwinClass_DETAILED } from "@/entities/twin-class";
 import type { TwinFlow } from "@/entities/twin-flow";
@@ -7,6 +7,7 @@ import type { TwinStatus } from "@/entities/twin-status";
 import type { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import {
   TwinFlowTransition,
   TwinFlowTransitionTrigger,

@@ -1,6 +1,6 @@
-import { extendFeaturerParams } from "@/entities/featurer";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { FactoryCondition, FactoryCondition_DETAILED } from "../api";
 
 export const hydrateFactoryConditionFromMap = (

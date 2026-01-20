@@ -1,11 +1,13 @@
 import type { Factory } from "@/entities/factory";
-import { ExtendedFeaturerParam, Featurer_DETAILED } from "@/entities/featurer";
+import { Featurer_DETAILED } from "@/entities/featurer";
 import type { Permission } from "@/entities/permission";
 import type { TwinFlow } from "@/entities/twin-flow";
 import type { TwinStatus } from "@/entities/twin-status";
 import type { User } from "@/entities/user";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
+
+import { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
 
 export type TwinFlowTransition =
   components["schemas"]["TwinflowTransitionBaseV2"] & {

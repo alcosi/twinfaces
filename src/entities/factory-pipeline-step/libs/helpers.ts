@@ -1,8 +1,8 @@
 import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { FactoryPipeline } from "@/entities/factory-pipeline";
-import { extendFeaturerParams } from "@/entities/featurer";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { PipelineStep, PipelineStep_DETAILED } from "../api";
 
 export const hydratePipelineStepFromMap = (

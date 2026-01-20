@@ -1,9 +1,10 @@
 import { DataListsMap } from "@/entities/datalist";
-import { Featurer_DETAILED, extendFeaturerParams } from "@/entities/featurer";
+import { Featurer_DETAILED } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { TwinClass, TwinClassBaseV1, TwinClass_DETAILED } from "../api";
 
 export const hydrateTwinClassFromMap = (

@@ -1,8 +1,9 @@
-import { Featurer_DETAILED, extendFeaturerParams } from "@/entities/featurer";
+import { Featurer_DETAILED } from "@/entities/featurer";
 import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { TwinClassField, TwinClassFieldV1_DETAILED } from "../api";
 
 export const hydrateTwinClassFieldFromMap = (

@@ -1,7 +1,9 @@
 import { Factory } from "@/entities/factory";
-import { ExtendedFeaturerParam, Featurer } from "@/entities/featurer";
+import { Featurer } from "@/entities/featurer";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { components, operations } from "@/shared/api/generated/schema";
+
+import { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
 
 export type FactoryMultiplier = components["schemas"]["FactoryMultiplierV1"];
 

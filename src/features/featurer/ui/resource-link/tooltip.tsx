@@ -4,10 +4,6 @@ import { Play } from "lucide-react";
 import Link from "next/link";
 
 import { Featurer_DETAILED } from "@/entities/featurer";
-import {
-  ExtendedFeaturerParam,
-  getFeaturerLink,
-} from "@/entities/featurer/utils";
 import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 import {
@@ -18,6 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/table";
+
+import { ExtendedFeaturerParam, getFeaturerLinks } from "../../utils/helpers";
 
 type Props = {
   data: Featurer_DETAILED;
@@ -54,7 +52,7 @@ export function FeaturerResourceTooltip({ data, link, params }: Props) {
                 </TableHeader>
                 <TableBody>
                   {params.map((param, idx) => {
-                    const linkUrl = getFeaturerLink(param.type, param.value);
+                    const links = getFeaturerLinks(param.type, param.value);
 
                     return (
                       <TableRow key={idx} className="hover:bg-muted/50">
@@ -65,14 +63,20 @@ export function FeaturerResourceTooltip({ data, link, params }: Props) {
                           {param.key}
                         </TableCell>
                         <TableCell className="px-2 py-1 break-all">
-                          {linkUrl ? (
-                            <Link
-                              href={linkUrl}
-                              className="text-blue-500 hover:text-blue-700 hover:underline"
-                              rel="noopener noreferrer"
-                            >
-                              {param.value}
-                            </Link>
+                          {links.length > 0 ? (
+                            <div className="space-y-1">
+                              {links.map((link, linkIdx) => (
+                                <div key={linkIdx}>
+                                  <Link
+                                    href={link.href}
+                                    className="text-blue-500 hover:text-blue-700 hover:underline"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {link.id}
+                                  </Link>
+                                </div>
+                              ))}
+                            </div>
                           ) : (
                             param.value || "N/A"
                           )}

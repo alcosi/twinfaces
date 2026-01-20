@@ -1,8 +1,10 @@
-import type { ExtendedFeaturerParam, Featurer } from "@/entities/featurer";
+import { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import type { TwinClassField } from "@/entities/twin-class-field";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
+
+import type { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
 
 export type TwinClass = components["schemas"]["TwinClassV1"] & {
   extendsClass?: TwinClass;
