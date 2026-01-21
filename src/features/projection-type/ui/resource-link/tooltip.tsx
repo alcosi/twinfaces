@@ -22,6 +22,11 @@ export function ProjectionTypeResourceTooltip({ data, link }: Props) {
             {data.name}
           </ResourceLinkTooltip.Item>
         )}
+        {data.key && (
+          <ResourceLinkTooltip.Item title="Key">
+            {data.key}
+          </ResourceLinkTooltip.Item>
+        )}
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
