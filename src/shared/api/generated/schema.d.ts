@@ -493,6 +493,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/history_notification_recipient/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update history notification recipient */
+        put: operations["historyNotificationRecipientUpdateV1"];
+        /** Create batch history notification recipient */
+        post: operations["historyNotificationRecipientCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/factory_pipeline/{factoryPipelineId}/v1": {
         parameters: {
             query?: never;
@@ -2171,6 +2189,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/scheduler_log/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns scheduler log search result */
+        post: operations["schedulerLogSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/scheduler/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns scheduler search result */
+        post: operations["schedulerSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/projection_type/search/v1": {
         parameters: {
             query?: never;
@@ -2523,6 +2575,23 @@ export interface paths {
         put?: never;
         /** Return a list of i18n translations by search criteria */
         post: operations["i18nTranslationSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/history_notification_recipient/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return a list of all history notification recipient for the current domain */
+        post: operations["historyNotificationRecipientSearchV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2928,6 +2997,23 @@ export interface paths {
          * @deprecated
          */
         post: operations["dataListOptionCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/data_list_option/search/{searchId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Data list options by search id */
+        post: operations["dataListOptionSearchConfiguredV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3522,23 +3608,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/private/twin_class_field/{twinClassFieldId}/data_list_shared_in_head/{headTwinId}/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Returns twin class field options shared in head (free for select) */
-        get: operations["twinClassFieldDataListSharedInHeadV1"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/private/twin_class_by_key/{twinClassKey}/v1": {
         parameters: {
             query?: never;
@@ -3565,23 +3634,6 @@ export interface paths {
         };
         /** Returns twin class field list */
         get: operations["twinClassFieldViewByKeyV1"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/private/twin_class/{twinClassId}/widget/list/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Returns widget list */
-        get: operations["twinClassWidgetListV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3622,23 +3674,6 @@ export interface paths {
          * @deprecated
          */
         get: operations["twinClassFieldListV1"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/private/twin_class/{twinClassId}/card/list/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Returns card list */
-        get: operations["twinClassCardListV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8314,6 +8349,8 @@ export interface components {
              * @description field projector featurer id
              */
             fieldProjectorFeaturerId?: number;
+            /** @description is projection active */
+            active?: boolean;
             /** @description field projector params */
             fieldProjectorParams?: {
                 [key: string]: string;
@@ -8357,6 +8394,8 @@ export interface components {
              * @description an id of src twin, for which current config is pointed
              */
             srcPointedTwinId?: string;
+            /** @description is projection active */
+            active?: boolean;
             /**
              * Format: uuid
              * @description src twin class field id
@@ -9022,6 +9061,64 @@ export interface components {
              * @example 100
              */
             total?: number;
+        };
+        HistoryNotificationRecipientUpdateRqV1: {
+            /** @description history notification recipients */
+            recipients?: components["schemas"]["HistoryNotificationRecipientUpdateV1"][];
+        };
+        HistoryNotificationRecipientUpdateV1: {
+            /** @description nameI18n */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description descriptionI18n */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: uuid
+             * @description history notification recipient id
+             */
+            id?: string;
+        };
+        HistoryNotificationRecipientListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description history notification recipients */
+            recipients?: components["schemas"]["HistoryNotificationRecipientV1"][];
+        };
+        HistoryNotificationRecipientV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /**
+             * Format: uuid
+             * @description createdByUserId
+             */
+            createdByUserId?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             */
+            createdAt?: string;
         };
         FactoryPipelineUpdateRqV1: {
             /** @description factory pipeline update */
@@ -14721,6 +14818,235 @@ export interface components {
             spaceRoleUserEnterList?: string[];
             spaceRoleUserExitList?: string[];
         };
+        DataTimeRange: {
+            /** Format: date-time */
+            from?: string;
+            /** Format: date-time */
+            to?: string;
+        };
+        SchedulerLogSearchRqV1: {
+            /** @description search DTO */
+            search?: components["schemas"]["SchedulerLogSearchV1"];
+        };
+        SchedulerLogSearchV1: {
+            /** @description id set */
+            idSet?: string[];
+            /** @description id exclude set */
+            idExcludeSet?: string[];
+            /** @description scheduler id set */
+            schedulerIdSet?: string[];
+            /** @description scheduler id exclude set */
+            schedulerIdExcludeSet?: string[];
+            /** @description created at */
+            createdAt?: components["schemas"]["DataTimeRange"];
+            /** @description result like set */
+            resultLikeSet?: string[];
+            /** @description result not like set */
+            resultNotLikeSet?: string[];
+            /** @description execution time range */
+            executionTimeRange?: components["schemas"]["LongRangeDTOv1"];
+        };
+        SchedulerLogSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - scheduler log list */
+            schedulerLogs?: components["schemas"]["SchedulerLogV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+        };
+        SchedulerLogV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description scheduler id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            schedulerId?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * @description scheduler log result
+             * @example Some description
+             */
+            result?: string;
+            /**
+             * Format: int64
+             * @description execution time of scheduler task
+             * @example 500
+             */
+            executionTime?: number;
+        };
+        IntegerRangev1: {
+            /**
+             * Format: int32
+             * @description from
+             */
+            from?: number;
+            /**
+             * Format: int32
+             * @description to
+             */
+            to?: number;
+        };
+        SchedulerSearchRqV1: {
+            /** @description search DTO */
+            search?: components["schemas"]["SchedulerSearchV1"];
+        };
+        SchedulerSearchV1: {
+            /** @description id set */
+            idSet?: string[];
+            /** @description id exclude set */
+            idExcludeSet?: string[];
+            /** @description domain id set */
+            domainIdSet?: string[];
+            /** @description domain id exclude set */
+            domainIdExcludeSet?: string[];
+            /** @description id set */
+            featurerIdSet?: number[];
+            /** @description id exclude set */
+            featurerIdExcludeSet?: number[];
+            /**
+             * @description active
+             * @example ANY
+             * @enum {string}
+             */
+            active?: "ONLY" | "ONLY_NOT" | "ANY";
+            /**
+             * @description logEnabled
+             * @example ANY
+             * @enum {string}
+             */
+            logEnabled?: "ONLY" | "ONLY_NOT" | "ANY";
+            /** @description cron like set */
+            cronLikeSet?: string[];
+            /** @description cron not like set */
+            cronNotLikeSet?: string[];
+            /** @description fixed rate range */
+            fixedRateRange?: components["schemas"]["IntegerRangev1"];
+            /** @description description like set */
+            descriptionLikeSet?: string[];
+            /** @description description not like set */
+            descriptionNotLikeSet?: string[];
+            /** @description created at range */
+            createdAtRange?: components["schemas"]["DataTimeRangeV1"];
+            /** @description updated at range */
+            updatedAtRange?: components["schemas"]["DataTimeRangeV1"];
+        };
+        SchedulerSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - scheduler list */
+            schedulers?: components["schemas"]["SchedulerV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+        };
+        SchedulerV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description domain id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            domainId?: string;
+            /**
+             * Format: int32
+             * @description scheduler featurer id
+             * @example 1000
+             */
+            schedulerFeaturerId?: number;
+            /**
+             * @description params for scheduler featurer
+             * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
+             *     "GTEvalue"=>"2"}
+             */
+            schedulerParams?: {
+                [key: string]: string;
+            };
+            /**
+             * @description flag to activate/deactivate scheduler
+             * @example true
+             */
+            active?: boolean;
+            /**
+             * @description flag to enable/disable logging scheduler results to db
+             * @example true
+             */
+            logEnabled?: boolean;
+            /**
+             * @description time condition to run scheduler task
+             * @example 0
+             */
+            cron?: string;
+            /**
+             * Format: int32
+             * @description time interval in ms at which scheduler will run task
+             * @example 500
+             */
+            fixedRate?: number;
+            /**
+             * @description description
+             * @example Some description
+             */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description updated at
+             * @example 2023-09-13T09:32:08
+             */
+            updatedAt?: string;
+        };
         ProjectionTypeCreateRqV1: {
             /** @description data list projections */
             projectionTypes?: components["schemas"]["ProjectionTypeCreateV1"][];
@@ -14823,6 +15149,8 @@ export interface components {
              * @description field projector featurer id
              */
             fieldProjectorFeaturerId?: number;
+            /** @description is projection active */
+            active?: boolean;
             /** @description field projector params */
             fieldProjectorParams?: {
                 [key: string]: string;
@@ -14882,6 +15210,11 @@ export interface components {
             fieldProjectorIdList?: number[];
             /** @description field projector id exclude list */
             fieldProjectorIdExcludeList?: number[];
+            /**
+             * @description projections active
+             * @enum {string}
+             */
+            active?: "ONLY" | "ONLY_NOT" | "ANY";
         };
         ProjectionSearchRsV1: {
             /**
@@ -15705,6 +16038,57 @@ export interface components {
             from?: number;
             /** Format: int64 */
             to?: number;
+        };
+        HistoryNotificationRecipientCreateRqV1: {
+            /** @description history notification recipients */
+            recipients?: components["schemas"]["HistoryNotificationRecipientCreateV1"][];
+        };
+        HistoryNotificationRecipientCreateV1: {
+            /** @description nameI18n */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description descriptionI18n */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+        };
+        HistoryNotificationRecipientSearchRqV1: {
+            search?: components["schemas"]["HistoryNotificationRecipientSearchV1"];
+        };
+        HistoryNotificationRecipientSearchV1: {
+            /** @description idList */
+            idList?: string[];
+            /** @description idExcludeList */
+            idExcludeList?: string[];
+            /** @description nameLikeList */
+            nameLikeList?: string[];
+            /** @description nameNotLikeList */
+            nameNotLikeList?: string[];
+            /** @description descriptionLikeList */
+            descriptionLikeList?: string[];
+            /** @description descriptionNotLikeList */
+            descriptionNotLikeList?: string[];
+        };
+        HistoryNotificationRecipientSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description history notification recipients */
+            recipients?: components["schemas"]["HistoryNotificationRecipientV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         FeaturerSearchRqV1: {
             /** @description ids list */
@@ -16999,6 +17383,14 @@ export interface components {
              */
             dataListId?: string;
         };
+        DataListOptionSearchConfiguredRqV1: {
+            /** @description Search named params values */
+            params?: {
+                [key: string]: string;
+            };
+            /** @description search narrow */
+            narrow?: components["schemas"]["DataListOptionSearchV1"];
+        };
         DataListCreateRqV1: {
             /**
              * @description key
@@ -17869,44 +18261,6 @@ export interface components {
             /** @description twin status */
             twinStatus?: components["schemas"]["TwinStatusV1"];
         };
-        WidgetListRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - valid widget list */
-            widgetList?: components["schemas"]["WidgetV1"][];
-        };
-        WidgetV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example 4245e338-3c09-4390-8a03-435d1da4e311
-             */
-            id?: string;
-            /**
-             * @description key
-             * @example details
-             */
-            key?: string;
-            /**
-             * @description name
-             * @example Details
-             */
-            name?: string;
-        };
         TwinClassLinkListRsV1: {
             /**
              * Format: int32
@@ -17954,93 +18308,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description results - twin class fields list */
             twinClassFieldList?: components["schemas"]["TwinClassFieldV1"][];
-        };
-        CardListRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - card list */
-            cardList?: components["schemas"]["CardV1"][];
-        };
-        CardV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example c2a7f81f-d7da-43e8-a1d3-18d6f632878b
-             */
-            id?: string;
-            /**
-             * @description key
-             * @example details
-             */
-            key?: string;
-            /**
-             * @description name
-             * @example Details
-             */
-            name?: string;
-            /**
-             * @description logo
-             * @example http://twins.org/t/card/main.png
-             */
-            logo?: string;
-            /**
-             * @description layout
-             * @example OneColumn
-             */
-            layoutKey?: string;
-            /** @description Class fields list */
-            widgets?: components["schemas"]["CardWidgetV1"][];
-        };
-        CardWidgetV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example c2a7f81f-d7da-43e8-a1d3-18d6f632878b
-             */
-            id?: string;
-            /**
-             * @description layoutPosition
-             * @example FirstColumn
-             */
-            layoutPositionKey?: string;
-            /**
-             * Format: int32
-             * @description in layout position order
-             * @example 1
-             */
-            inPositionOrder?: number;
-            /**
-             * @description name
-             * @example Details
-             */
-            name?: string;
-            /**
-             * @description color
-             * @example red
-             */
-            color?: string;
-            /**
-             * Format: uuid
-             * @description widgetId
-             * @example 4245e338-3c09-4390-8a03-435d1da4e311
-             */
-            widgetId?: string;
-            /** @description widget */
-            widget?: components["schemas"]["WidgetV1"];
         };
         HistoryListRsV1: {
             /**
@@ -20244,9 +20511,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -20279,6 +20546,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -20364,9 +20632,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -20399,6 +20667,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -20494,9 +20763,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -20529,6 +20798,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -20623,9 +20893,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -20658,6 +20928,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -20747,9 +21018,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -20782,6 +21053,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -20881,9 +21153,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -20916,6 +21188,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -20998,9 +21271,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -21033,6 +21306,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -21118,9 +21392,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -21153,6 +21427,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -21235,9 +21510,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -21270,6 +21545,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -21352,9 +21628,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -21388,6 +21664,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -21469,9 +21746,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -21505,6 +21782,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -21630,9 +21908,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -21666,6 +21944,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -21748,9 +22027,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -21783,6 +22062,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -21864,9 +22144,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -21899,6 +22179,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -22037,9 +22318,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -22072,6 +22353,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -22167,9 +22449,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -22202,6 +22484,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -22377,9 +22660,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -22412,6 +22695,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -22495,9 +22779,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -22530,6 +22814,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -22616,9 +22901,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -22651,6 +22936,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -22737,9 +23023,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -22772,6 +23058,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -22862,9 +23149,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -22897,6 +23184,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -22983,9 +23271,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23018,6 +23306,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -23196,9 +23485,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23231,6 +23520,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -23316,9 +23606,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23351,6 +23641,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -23440,9 +23731,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23475,6 +23766,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -23564,9 +23856,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23599,6 +23891,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -23728,9 +24021,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23763,6 +24056,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -23903,9 +24197,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23938,6 +24232,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -24069,9 +24364,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24104,6 +24399,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -24237,9 +24533,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24272,6 +24568,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -24404,9 +24701,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24439,6 +24736,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -24527,9 +24825,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24562,6 +24860,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -24646,9 +24945,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24681,6 +24980,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -24779,6 +25079,92 @@ export interface operations {
             };
         };
     };
+    historyNotificationRecipientUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showHistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HistoryNotificationRecipientUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HistoryNotificationRecipientListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    historyNotificationRecipientCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showHistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HistoryNotificationRecipientCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description The history notification recipient batch was created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HistoryNotificationRecipientListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     factoryPipelineUpdateV1: {
         parameters: {
             query?: {
@@ -24828,9 +25214,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24863,6 +25249,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -24959,9 +25346,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24994,6 +25381,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -25526,9 +25914,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25561,6 +25949,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -25662,9 +26051,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25697,6 +26086,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -25839,9 +26229,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25874,6 +26264,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -26037,9 +26428,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26072,6 +26463,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -26202,9 +26594,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26237,6 +26629,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -26325,9 +26718,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26360,6 +26753,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -26712,9 +27106,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26747,6 +27141,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -26830,9 +27225,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26865,6 +27260,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -27613,9 +28009,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27648,6 +28044,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -27736,9 +28133,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27771,6 +28168,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -27866,9 +28264,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27901,6 +28299,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -27993,9 +28392,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28028,6 +28427,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -28113,9 +28513,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28148,6 +28548,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -28233,9 +28634,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28269,6 +28670,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -28357,9 +28759,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28393,6 +28795,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -28478,9 +28881,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28514,6 +28917,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -28599,9 +29003,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28635,6 +29039,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -28717,9 +29122,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28753,6 +29158,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -28835,9 +29241,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28870,6 +29276,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -28959,9 +29366,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28994,6 +29401,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -29084,9 +29492,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29119,6 +29527,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -29218,9 +29627,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29253,6 +29662,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -29388,9 +29798,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29423,6 +29833,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -29514,9 +29925,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29550,6 +29961,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -29635,9 +30047,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29670,6 +30082,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -29755,9 +30168,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29790,6 +30203,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -29872,9 +30286,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29907,6 +30321,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -29995,9 +30410,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30030,6 +30445,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -30115,9 +30531,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30150,6 +30566,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -30278,9 +30695,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30313,6 +30730,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -30412,9 +30830,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30447,6 +30865,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -30532,9 +30951,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30567,6 +30986,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -30701,9 +31121,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30736,6 +31156,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -30865,9 +31286,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30900,6 +31321,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -31198,9 +31620,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31233,6 +31655,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -31318,9 +31741,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31353,6 +31776,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -31482,9 +31906,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31517,6 +31941,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -31606,9 +32031,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31641,6 +32066,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -31727,9 +32153,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31762,6 +32188,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -31935,9 +32362,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31970,6 +32397,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -32104,9 +32532,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32139,6 +32567,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -32227,9 +32656,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32262,6 +32691,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -32352,9 +32782,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32387,6 +32817,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -32476,9 +32907,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32511,6 +32942,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -32601,9 +33033,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32636,6 +33068,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -32874,9 +33307,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32909,6 +33342,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -33005,9 +33439,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33040,6 +33474,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -33131,9 +33566,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33166,6 +33601,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -33256,9 +33692,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33291,6 +33727,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -33380,9 +33817,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33415,6 +33852,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -33505,9 +33943,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33540,6 +33978,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -33733,9 +34172,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33768,6 +34207,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -33964,9 +34404,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33999,6 +34439,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -34088,9 +34529,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34123,6 +34564,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -34276,6 +34718,102 @@ export interface operations {
             };
         };
     };
+    schedulerLogSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showScheduler2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showSchedulerLog2SchedulerMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SchedulerLogSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Scheduler log list prepared */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SchedulerLogSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    schedulerSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showScheduler2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showSchedulerMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SchedulerSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Scheduler list prepared */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SchedulerSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     projectionTypeSearchV1: {
         parameters: {
             query?: {
@@ -34310,9 +34848,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34345,6 +34883,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -34437,9 +34976,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34472,6 +35011,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -34607,9 +35147,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34642,6 +35182,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -34734,9 +35275,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34769,6 +35310,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -34858,9 +35400,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34893,6 +35435,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -34984,9 +35527,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35019,6 +35562,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -35116,9 +35660,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35151,6 +35695,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -35239,9 +35784,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35274,6 +35819,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -35366,9 +35912,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35401,6 +35947,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -35490,9 +36037,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35525,6 +36072,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -35619,9 +36167,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35654,6 +36202,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -35745,9 +36294,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35780,6 +36329,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -35873,9 +36423,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35908,6 +36458,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -35998,9 +36549,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36033,6 +36584,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -36119,9 +36671,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36154,6 +36706,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -36235,9 +36788,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36270,6 +36823,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -36355,9 +36909,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36390,6 +36944,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -36473,9 +37028,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36508,6 +37063,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -36596,9 +37152,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36631,6 +37187,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -36716,9 +37273,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36751,6 +37308,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -36839,6 +37397,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["I18nTranslationListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    historyNotificationRecipientSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showHistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HistoryNotificationRecipientSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HistoryNotificationRecipientSearchRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -36951,9 +37555,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36986,6 +37590,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -37089,9 +37694,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37124,6 +37729,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -37229,9 +37835,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37264,6 +37870,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -37360,9 +37967,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37395,6 +38002,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -37496,9 +38104,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37531,6 +38139,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -37804,9 +38413,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37839,6 +38448,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -37935,9 +38545,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37970,6 +38580,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -38071,9 +38682,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38106,6 +38717,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -38415,9 +39027,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38450,6 +39062,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -38798,9 +39411,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38833,6 +39446,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -38919,6 +39533,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataListOptionRsV3"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    dataListOptionSearchConfiguredV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example 8c580967-c050-47cf-ac27-4096c6dda2d1 */
+                searchId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataListOptionSearchConfiguredRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataListOptionSearchRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -39146,9 +39811,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39181,6 +39846,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -39314,9 +39980,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39349,6 +40015,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -39477,9 +40144,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39512,6 +40179,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -39646,9 +40314,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39681,6 +40349,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -40464,9 +41133,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40499,6 +41168,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -40581,9 +41251,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40616,6 +41286,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -40698,9 +41369,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40733,6 +41404,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -40812,9 +41484,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40847,6 +41519,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -40967,9 +41640,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41002,6 +41675,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -41057,50 +41731,6 @@ export interface operations {
             };
         };
     };
-    twinClassFieldDataListSharedInHeadV1: {
-        parameters: {
-            query?: {
-                lazyRelation?: unknown;
-                showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-            };
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path: {
-                /** @example 2fe95272-afcb-40ee-a6a8-87c5da4d5b8d */
-                twinClassFieldId: string;
-                /** @example 5d956a15-6858-40ba-b0aa-b123c54e250d */
-                headTwinId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DataListRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
     twinClassViewByKeyV1: {
         parameters: {
             query?: {
@@ -41132,9 +41762,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41167,6 +41797,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -41248,9 +41879,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41284,6 +41915,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -41336,45 +41968,6 @@ export interface operations {
             };
         };
     };
-    twinClassWidgetListV1: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path: {
-                /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
-                twinClassId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Widget list prepared */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WidgetListRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
     twinClassLinkListV1: {
         parameters: {
             query?: {
@@ -41407,9 +42000,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41442,6 +42035,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -41523,9 +42117,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41559,6 +42153,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -41609,48 +42204,6 @@ export interface operations {
             };
         };
     };
-    twinClassCardListV1: {
-        parameters: {
-            query?: {
-                showCard2WidgetMode?: "HIDE" | "SHORT" | "DETAILED";
-                showCardMode?: "HIDE" | "SHORT" | "DETAILED";
-            };
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path: {
-                /** @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673 */
-                twinClassId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Twin card list prepared */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CardListRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
     twinClassListV1: {
         parameters: {
             query?: {
@@ -41682,9 +42235,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41717,6 +42270,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -41798,9 +42352,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41833,6 +42387,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -41915,9 +42470,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41950,6 +42505,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -42035,9 +42591,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42070,6 +42626,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -42156,9 +42713,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42191,6 +42748,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -42538,9 +43096,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42573,6 +43131,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -42660,9 +43219,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42695,6 +43254,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -42869,9 +43429,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42904,6 +43464,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -42986,9 +43547,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43021,6 +43582,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -43109,9 +43671,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43144,6 +43706,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -43232,9 +43795,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43267,6 +43830,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -43357,9 +43921,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43392,6 +43956,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -43481,9 +44046,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43516,6 +44081,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -43598,9 +44164,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43633,6 +44199,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -43776,9 +44343,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43811,6 +44378,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -43910,9 +44478,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43945,6 +44513,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -44046,9 +44615,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44081,6 +44650,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -44173,9 +44743,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44208,6 +44778,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -44305,9 +44876,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44340,6 +44911,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -44607,9 +45179,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44642,6 +45214,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -44726,9 +45299,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44761,6 +45334,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -44845,9 +45419,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44880,6 +45454,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -44965,9 +45540,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45000,6 +45575,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -45085,9 +45661,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45120,6 +45696,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -45205,9 +45782,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45240,6 +45817,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -45325,9 +45903,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45360,6 +45938,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -45446,9 +46025,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45481,6 +46060,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -45701,9 +46281,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45736,6 +46316,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -45873,9 +46454,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45908,6 +46489,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -46097,9 +46679,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46132,6 +46714,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
@@ -46342,9 +46925,9 @@ export interface operations {
                 showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
                 showTwinAttachmentActionMode?: "HIDE" | "SHOW";
                 showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
                 showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46377,6 +46960,7 @@ export interface operations {
                 showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinFieldAttributeMode?: "HIDE" | "SHOW";
                 showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
                 showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
