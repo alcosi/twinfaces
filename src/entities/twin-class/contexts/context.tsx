@@ -53,6 +53,9 @@ export function TwinClassContextProvider({
           showTwinClassFreezeMode: "DETAILED",
           showTwinClassFreeze2StatusMode: "DETAILED",
           showTwinClassMode2TwinClassFreezeMode: "DETAILED",
+          showTwinClassField2FeaturerMode: "DETAILED",
+          showTwinClass2FeaturerMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
           lazyRelation: false,
         },
       });

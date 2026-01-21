@@ -7,6 +7,8 @@ import type { User } from "@/entities/user";
 import { components } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
+import { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
+
 export type TwinFlowTransition =
   components["schemas"]["TwinflowTransitionBaseV2"] & {
     srcTwinStatus?: TwinStatus;
@@ -64,6 +66,7 @@ export type TwinFlowTransitionTrigger_DETAILED =
   components["schemas"]["TransitionTriggerV1"] & {
     twinflowTransition?: TwinFlowTransition_DETAILED;
     triggerFeaturer?: Featurer_DETAILED;
+    transitionTriggerDetailedParams?: ExtendedFeaturerParam[];
   };
 export type TwinFlowTransitionTriggerCud =
   components["schemas"]["TriggerCudV1"];

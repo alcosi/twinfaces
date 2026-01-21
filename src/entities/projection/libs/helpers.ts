@@ -2,6 +2,7 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { Projection, Projection_DETAILED } from "../api";
 
 export const hydrateProjectionFromMap = (
@@ -39,6 +40,16 @@ export const hydrateProjectionFromMap = (
   if (dto.fieldProjectorFeaturerId && relatedObjects?.featurerMap) {
     hydrated.fieldProjectorFeaturer =
       relatedObjects.featurerMap[dto.fieldProjectorFeaturerId];
+  }
+
+  if (
+    hydrated.fieldProjectorParams &&
+    hydrated.fieldProjectorFeaturer?.params
+  ) {
+    hydrated.projectorDetailedParams = extendFeaturerParams(
+      hydrated.fieldProjectorParams,
+      hydrated.fieldProjectorFeaturer.params
+    );
   }
 
   return hydrated;

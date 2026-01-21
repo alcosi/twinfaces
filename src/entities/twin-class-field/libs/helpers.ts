@@ -3,6 +3,7 @@ import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { TwinClassField, TwinClassFieldV1_DETAILED } from "../api";
 
 export const hydrateTwinClassFieldFromMap = (
@@ -39,10 +40,23 @@ export const hydrateTwinClassFieldFromMap = (
   }
 
   if (dto.twinSorterFeaturerId && relatedObjects?.featurerMap) {
-    console.log(relatedObjects);
     hydrated.twinSorterFeaturer = relatedObjects.featurerMap[
       dto.twinSorterFeaturerId
     ] as Featurer_DETAILED;
+  }
+
+  if (hydrated.fieldTyperParams && hydrated.fieldTyperFeaturer?.params) {
+    hydrated.fieldTyperDetailedParams = extendFeaturerParams(
+      hydrated.fieldTyperParams,
+      hydrated.fieldTyperFeaturer.params
+    );
+  }
+
+  if (hydrated.twinSorterParams && hydrated.twinSorterFeaturer?.params) {
+    hydrated.twinSorterDetailedParams = extendFeaturerParams(
+      hydrated.twinSorterParams,
+      hydrated.twinSorterFeaturer.params
+    );
   }
 
   return hydrated;

@@ -2,6 +2,7 @@ import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { FactoryPipeline } from "@/entities/factory-pipeline";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { PipelineStep, PipelineStep_DETAILED } from "../api";
 
 export const hydratePipelineStepFromMap = (
@@ -36,6 +37,13 @@ export const hydratePipelineStepFromMap = (
     hydrated.factoryConditionSet = relatedObjects.factoryConditionSetMap[
       hydrated.factoryConditionSetId
     ] as FactoryConditionSet;
+  }
+
+  if (hydrated.fillerParams && hydrated.fillerFeaturer?.params) {
+    hydrated.fillerDetailedParams = extendFeaturerParams(
+      hydrated.fillerParams,
+      hydrated.fillerFeaturer.params
+    );
   }
 
   return hydrated;

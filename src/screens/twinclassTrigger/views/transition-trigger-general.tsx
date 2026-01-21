@@ -178,6 +178,7 @@ export function TransitionTriggerGeneral() {
               {transitionTrigger.transitionTriggerFeaturerId && (
                 <FeaturerResourceLink
                   data={transitionTrigger.triggerFeaturer!}
+                  params={transitionTrigger.transitionTriggerDetailedParams}
                   withTooltip
                 />
               )}

@@ -67,7 +67,7 @@ export function TwinClassGeneral() {
       onSubmit: (values) => {
         return update({
           headTwinClassUpdate: { newId: values.headClassId[0].id },
-          headHunterFeaturerId: values.headHunterFeaturerId,
+          headHunterFeaturerId: values.headHunterFeaturerId[0].id,
           headHunterParams: values.headHunterParams,
         });
       },
@@ -398,6 +398,7 @@ export function TwinClassGeneral() {
               {twinClass.headHunterFeaturer && (
                 <FeaturerResourceLink
                   data={twinClass.headHunterFeaturer as Featurer_DETAILED}
+                  params={twinClass.headHunterDetailedParams}
                   withTooltip
                 />
               )}

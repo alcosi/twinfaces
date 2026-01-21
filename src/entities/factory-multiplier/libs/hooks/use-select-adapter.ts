@@ -5,13 +5,13 @@ import {
 } from "@/shared/libs";
 
 import {
-  FactoryMultiplier,
   FactoryMultiplierFilters,
+  FactoryMultiplier_DETAILED,
   useFactoryMultipliersSearch,
   useFetchFactoryMultiplierById,
 } from "../../api";
 
-export function useFactoryMultiplierSelectAdapter(): SelectAdapter<FactoryMultiplier> {
+export function useFactoryMultiplierSelectAdapter(): SelectAdapter<FactoryMultiplier_DETAILED> {
   const { searchFactoryMultipliers } = useFactoryMultipliersSearch();
   const { fetchFactoryMultiplierById } = useFetchFactoryMultiplierById();
 
@@ -34,7 +34,10 @@ export function useFactoryMultiplierSelectAdapter(): SelectAdapter<FactoryMultip
     return response.data;
   }
 
-  function renderItem({ inputTwinClass, description }: FactoryMultiplier) {
+  function renderItem({
+    inputTwinClass,
+    description,
+  }: FactoryMultiplier_DETAILED) {
     return isPopulatedString(description) &&
       isPopulatedString(inputTwinClass?.name)
       ? `${inputTwinClass.name} | ${description}`

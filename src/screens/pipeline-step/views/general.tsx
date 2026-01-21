@@ -49,7 +49,7 @@ export function PipelineStepGeneral() {
       await updateFactoryPipelineStep({ factoryPipelineStepId: step.id, body });
       toast.success("Pipeline step update successfully!");
       refresh?.();
-    } catch (e) {
+    } catch {
       toast.error("Failed to update pipeline step");
     }
   }
@@ -65,9 +65,9 @@ export function PipelineStepGeneral() {
       ...fCAdapter,
     },
     renderPreview: step.factoryConditionSet
-      ? (_) => (
+      ? () => (
           <FactoryConditionSetResourceLink
-            data={step.factoryConditionSet}
+            data={step.factoryConditionSet!}
             withTooltip
           />
         )
@@ -234,6 +234,7 @@ export function PipelineStepGeneral() {
               {step.fillerFeaturer && (
                 <FeaturerResourceLink
                   data={step.fillerFeaturer as Featurer_DETAILED}
+                  params={step.fillerDetailedParams}
                   withTooltip
                 />
               )}

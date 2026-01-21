@@ -51,7 +51,7 @@ export function FactoryMultiplierGeneral() {
       ...tcAdapter,
     },
     renderPreview: factoryMultiplier.inputTwinClass
-      ? (_) => (
+      ? () => (
           <TwinClassResourceLink
             data={factoryMultiplier.inputTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -163,7 +163,7 @@ export function FactoryMultiplierGeneral() {
           <TableRow>
             <TableCell>Factory</TableCell>
             <TableCell>
-              <FactoryResourceLink data={factoryMultiplier.factory} />
+              <FactoryResourceLink data={factoryMultiplier.factory!} />
             </TableCell>
           </TableRow>
 
@@ -185,6 +185,7 @@ export function FactoryMultiplierGeneral() {
                   data={
                     factoryMultiplier.multiplierFeaturer as Featurer_DETAILED
                   }
+                  params={factoryMultiplier.multiplierDetailedParams}
                   withTooltip
                 />
               )}

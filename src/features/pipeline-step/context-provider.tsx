@@ -41,11 +41,13 @@ export function PipelineStepContextProvider({
       const response = await fetchFactoryPipelineStepById({
         stepId,
         query: {
+          lazyRelation: false,
           showFactoryPipelineStepMode: "DETAILED",
           showFactoryPipeline2FactoryMode: "DETAILED",
           showFactoryPipelineStep2FactoryPipelineMode: "DETAILED",
           showFactoryPipelineStep2FeaturerMode: "DETAILED",
           showFactoryPipelineStep2FactoryConditionSetMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
         },
       });
       setStep(response);

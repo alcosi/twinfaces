@@ -4,6 +4,7 @@ import { Permission } from "@/entities/permission";
 import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { TwinClass, TwinClassBaseV1, TwinClass_DETAILED } from "../api";
 
 export const hydrateTwinClassFromMap = (
@@ -76,6 +77,13 @@ export const hydrateTwinClassFromMap = (
 
       return acc;
     }, []);
+  }
+
+  if (hydrated.headHunterParams && hydrated.headHunterFeaturer?.params) {
+    hydrated.headHunterDetailedParams = extendFeaturerParams(
+      hydrated.headHunterParams,
+      hydrated.headHunterFeaturer.params
+    );
   }
 
   if (dto.twinClassFreezeId && relatedObjects.twinClassFreezeMap) {

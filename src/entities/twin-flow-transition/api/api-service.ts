@@ -34,6 +34,7 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
           showTransition2TwinflowMode: "DETAILED",
           showTwinflow2TwinClassMode: "DETAILED",
           showTransition2FactoryMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

@@ -1,8 +1,10 @@
-import type { Featurer } from "@/entities/featurer";
+import { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import type { TwinClassField } from "@/entities/twin-class-field";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
+
+import type { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
 
 export type TwinClass = components["schemas"]["TwinClassV1"] & {
   extendsClass?: TwinClass;
@@ -31,6 +33,7 @@ export type TwinClass_DETAILED = RequireFields<
   hasSegment: boolean;
   segment: boolean;
   twinClassFreeze?: TwinClassBaseV1;
+  headHunterDetailedParams?: ExtendedFeaturerParam[];
 };
 export type TwinClass_MANAGED = RequireFields<
   TwinClass,

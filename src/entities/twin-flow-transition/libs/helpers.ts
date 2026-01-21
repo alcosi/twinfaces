@@ -7,6 +7,7 @@ import type { TwinStatus } from "@/entities/twin-status";
 import type { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import {
   TwinFlowTransition,
   TwinFlowTransitionTrigger,
@@ -88,6 +89,13 @@ export const hydrateTwinFlowTransitionTriggerFromMap = (
     hydrated.triggerFeaturer = relatedObjects.featurerMap[
       dto.transitionTriggerFeaturerId
     ] as Featurer_DETAILED;
+  }
+
+  if (hydrated.transitionTriggerParams && hydrated.triggerFeaturer?.params) {
+    hydrated.transitionTriggerDetailedParams = extendFeaturerParams(
+      hydrated.transitionTriggerParams,
+      hydrated.triggerFeaturer.params
+    );
   }
 
   return hydrated;

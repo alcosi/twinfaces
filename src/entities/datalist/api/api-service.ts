@@ -1,10 +1,11 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/table-core";
+
 import {
   DataListCreateRqV1,
-  DatalistFilters,
   DataListRqQuery,
+  DatalistFilters,
 } from "@/entities/datalist";
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createDatalistApi(settings: ApiSettings) {
   function search({
@@ -38,9 +39,9 @@ export function createDatalistApi(settings: ApiSettings) {
     dataListId: string;
     query: DataListRqQuery;
   }) {
-    return settings.client.GET(`/public/data_list/{dataListId}/v1`, {
+    return settings.client.GET(`/private/data_list/{dataListId}/v1`, {
       params: {
-        header: { ...getApiDomainHeaders(settings), Locale: "en" },
+        header: getApiDomainHeaders(settings),
         path: { dataListId },
         query,
       },

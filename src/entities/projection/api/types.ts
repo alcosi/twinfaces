@@ -3,6 +3,8 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { components } from "@/shared/api/generated/schema";
 
+import { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
+
 export type ProjectionSearchRq = components["schemas"]["ProjectionSearchV1"];
 
 export type Projection = components["schemas"]["ProjectionV1"];
@@ -13,6 +15,7 @@ export type Projection_DETAILED = Required<Projection> & {
   dstTwinClass?: TwinClass_DETAILED;
   dstTwinClassField?: TwinClassField_DETAILED;
   fieldProjectorFeaturer?: Featurer;
+  projectorDetailedParams?: ExtendedFeaturerParam[];
 };
 
 export type ProjectionFilterKeys =

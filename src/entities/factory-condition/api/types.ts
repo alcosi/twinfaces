@@ -2,11 +2,14 @@ import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { Featurer } from "@/entities/featurer";
 import { components } from "@/shared/api/generated/schema";
 
+import { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
+
 export type FactoryCondition = components["schemas"]["FactoryConditionV1"];
 
 export type FactoryCondition_DETAILED = Required<FactoryCondition> & {
   factoryConditionSet?: FactoryConditionSet;
   conditionerFeaturer?: Featurer;
+  conditionerDetailedParams?: ExtendedFeaturerParam[];
 };
 
 export type FactoryConditionSearchRq =

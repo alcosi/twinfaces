@@ -66,7 +66,7 @@ const colDefs: Record<
     accessorKey: "factory",
     header: "Factory",
     cell: ({ row: { original } }) =>
-      original.multiplier.factory && (
+      original?.multiplier?.factory && (
         <div className="inline-flex max-w-48">
           <FactoryResourceLink data={original.multiplier.factory} withTooltip />
         </div>

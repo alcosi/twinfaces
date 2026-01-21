@@ -4,7 +4,7 @@ import { components, operations } from "@/shared/api/generated/schema";
 export type DataList = components["schemas"]["DataListV1"];
 
 export type DataListRqQuery =
-  operations["dataListPublicViewV1"]["parameters"]["query"];
+  operations["dataListViewV1"]["parameters"]["query"];
 
 export type DataListSearchRqV1 = components["schemas"]["DataListSearchRqV1"];
 export type DataListCreateRqV1 = components["schemas"]["DataListCreateRqV1"];

@@ -1,5 +1,6 @@
 import { RelatedObjects } from "@/shared/api";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { FactoryCondition, FactoryCondition_DETAILED } from "../api";
 
 export const hydrateFactoryConditionFromMap = (
@@ -19,6 +20,13 @@ export const hydrateFactoryConditionFromMap = (
   if (dto.conditionerFeaturerId && relatedObjects?.featurerMap) {
     hydrated.conditionerFeaturer =
       relatedObjects.featurerMap[dto.conditionerFeaturerId]!;
+  }
+
+  if (hydrated.conditionerParams && hydrated.conditionerFeaturer?.params) {
+    hydrated.conditionerDetailedParams = extendFeaturerParams(
+      hydrated.conditionerParams,
+      hydrated.conditionerFeaturer?.params
+    );
   }
 
   return hydrated;

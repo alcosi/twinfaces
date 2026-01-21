@@ -21,6 +21,7 @@ export async function fetchTwinClassFieldById(id: string) {
           showTwinClassField2TwinClassMode: "DETAILED",
           showTwinClassField2FeaturerMode: "DETAILED",
           showTwinClassField2PermissionMode: "DETAILED",
+          showFeaturerParamMode: "SHOW",
         },
       },
     }

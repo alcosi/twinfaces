@@ -132,6 +132,7 @@ const colDefs: Record<
         <div className="inline-flex max-w-48">
           <FeaturerResourceLink
             data={original.fillerFeaturer as Featurer_DETAILED}
+            params={original.fillerDetailedParams}
             withTooltip
           />
         </div>
