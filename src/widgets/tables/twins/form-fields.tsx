@@ -14,7 +14,7 @@ import {
 import { TwinFormValues, useTwinClassFields } from "@/entities/twin";
 import {
   useTwinClassFilters,
-  useTwinClassSelectAdapterWithFiltersTwinForm,
+  useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 
@@ -37,9 +37,12 @@ export function TwinFormFields({
     optionAdapter,
   } = useTwinClassFields(control, { baseTwinClassId });
 
-  const tcAdapter = useTwinClassSelectAdapterWithFiltersTwinForm({
-    baseTwinClassId,
-  });
+  const tcAdapter = useTwinClassSelectAdapterWithFilters(
+    {
+      baseTwinClassId,
+    },
+    true
+  );
 
   const {
     buildFilterFields: buildTwinClassFilters,
