@@ -3,6 +3,11 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   CheckboxFormField,
   ComboboxFormField,
   TextAreaFormField,
@@ -11,9 +16,18 @@ import {
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import { FACTORY_PIPELINE_SCHEMA } from "@/entities/factory-pipeline";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import {
+  isFalsy,
+  isPopulatedString,
+  isTruthy,
+  reduceToObject,
+  toArray,
+} from "@/shared/libs";
 
 export function FactoryPipelineFormFields({
   control,
@@ -21,7 +35,7 @@ export function FactoryPipelineFormFields({
   control: Control<z.infer<typeof FACTORY_PIPELINE_SCHEMA>>;
 }) {
   const factoryAdapter = useFactorySelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
   const factoryWatch = useWatch({ control, name: "factoryId" });
   const twinClassWatch = useWatch({
@@ -33,6 +47,23 @@ export function FactoryPipelineFormFields({
 
   const disabledFactory = useRef(isTruthy(factoryWatch)).current;
   const disabledOutputStatus = isFalsy(twinClassWatch[0]?.id);
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const complexComboboxInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Input class",
+    adapter: twinClassAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+    disabled: isPopulatedString(twinClassWatch),
+  };
 
   return (
     <>
@@ -47,14 +78,10 @@ export function FactoryPipelineFormFields({
         {...factoryAdapter}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="inputTwinClassId"
-        label="Input class"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...twinClassAdapter}
+        info={complexComboboxInfo}
       />
 
       <ComboboxFormField

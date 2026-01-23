@@ -217,7 +217,7 @@ export function TwinClassStatusesTable({
       fontColor: formValues.fontColor,
     };
 
-    if (!twinClassId) {
+    if (!formValues.twinClassId) {
       toast.error("Twin class ID is missing");
       return;
     }

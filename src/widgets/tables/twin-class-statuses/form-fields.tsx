@@ -1,13 +1,20 @@
 import { Control, useWatch } from "react-hook-form";
 
 import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   ColorPickerFormField,
-  ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import { TwinClassStatusFormValues } from "@/entities/twin-status";
 import { isPopulatedString } from "@/shared/libs";
 
@@ -17,19 +24,31 @@ export function TwinClassStatusFormFields({
   control: Control<TwinClassStatusFormValues>;
 }) {
   const twinClassId = useWatch({ control, name: "twinClassId" });
-  const tcAdapter = useTwinClassSelectAdapter();
+  const tcAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const complexComboboxInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Class",
+    adapter: tcAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+    disabled: isPopulatedString(twinClassId),
+  };
 
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinClassId"
-        label="Class"
-        disabled={isPopulatedString(twinClassId)}
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText="No classes found"
-        {...tcAdapter}
+        info={complexComboboxInfo}
       />
 
       <TextFormField

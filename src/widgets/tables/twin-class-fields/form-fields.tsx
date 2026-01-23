@@ -1,6 +1,11 @@
 import { Control, useWatch } from "react-hook-form";
 
 import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   CheckboxFormField,
   ComboboxFormField,
   TextAreaFormField,
@@ -9,7 +14,10 @@ import {
 
 import { FeaturerTypes } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 
 import { FeaturerFormField } from "../../form-fields";
@@ -20,21 +28,33 @@ export function TwinClassFieldFormFields({
 }: {
   control: Control<TwinClassFieldFormValues>;
 }) {
-  const tcAdapter = useTwinClassSelectAdapter();
+  const tcAdapter = useTwinClassSelectAdapterWithFilters();
   const twinClassId = useWatch({ control, name: "twinClassId" });
   const pAdapter = usePermissionSelectAdapter();
 
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const complexComboboxInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Class",
+    adapter: tcAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+    disabled: isPopulatedString(twinClassId),
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinClassId"
-        label="Class"
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText="No classes found"
-        disabled={isPopulatedString(twinClassId)}
-        {...tcAdapter}
+        info={complexComboboxInfo}
       />
 
       <TextFormField control={control} name="key" label="Key" />
