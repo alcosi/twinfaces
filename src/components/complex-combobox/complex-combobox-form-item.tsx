@@ -16,11 +16,13 @@ export function ComplexComboboxFormItem({
   onChange,
   info,
   inForm,
+  required,
 }: {
   value?: any;
   onChange?: (v: any) => void;
   info: AutoFormComplexComboboxValueInfo;
   inForm?: boolean;
+  required?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [filtersVersion, setFiltersVersion] = useState(0);
@@ -110,6 +112,7 @@ export function ComplexComboboxFormItem({
         searchPlaceholder={info.searchPlaceholder}
         multi={info.multi}
         disabled={info.disabled}
+        required={required}
       />
 
       {!info.disabled && (

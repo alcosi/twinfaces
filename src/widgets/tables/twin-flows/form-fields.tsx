@@ -7,19 +7,18 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import {
-  ComboboxFormField,
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields";
+import { TextAreaFormField, TextFormField } from "@/components/form-fields";
 
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import { TWIN_FLOW_SCHEMA } from "@/entities/twin-flow";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import {
+  useStatusFilters,
+  useTwinStatusSelectAdapterWithFilters,
+} from "@/entities/twin-status";
+import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
 
 export function TwinClassTwinFlowFormFields({
   control,
@@ -28,14 +27,20 @@ export function TwinClassTwinFlowFormFields({
 }) {
   const twinClassIdWatch = useWatch({ control, name: "twinClassId" });
   const disabled = useRef(isTruthy(twinClassIdWatch)).current;
-  const twinStatusAdapter = useTwinStatusSelectAdapter();
-
+  const twinStatusAdapter = useTwinStatusSelectAdapterWithFilters();
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const disabledStatus = isFalsy(twinClassIdWatch);
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildTwinStatusFilters,
+    mapFiltersToPayload: mapTwinStatusFilters,
+  } = useStatusFilters({});
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -49,9 +54,28 @@ export function TwinClassTwinFlowFormFields({
     disabled: disabled,
   };
 
+  const initialTwinStatusInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Initial statuss",
+    adapter: twinStatusAdapter,
+    extraFilters: buildTwinStatusFilters(),
+    mapExtraFilters: (filters) => ({
+      ...mapTwinStatusFilters(filters),
+      twinClassIdMap: reduceToObject({
+        list: toArray(twinClassIdWatch),
+        defaultValue: true,
+      }),
+    }),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select initial status",
+    multi: false,
+    disabled: disabledStatus,
+  };
+
   return (
     <>
       <ComplexComboboxFormField
+        required={true}
         control={control}
         name="twinClassId"
         info={twinClassInfo}
@@ -71,7 +95,14 @@ export function TwinClassTwinFlowFormFields({
         label="Description"
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
+        required={true}
+        control={control}
+        name="initialStatus"
+        info={initialTwinStatusInfo}
+      />
+
+      {/* <ComboboxFormField
         control={control}
         name="initialStatus"
         label="Initial status"
@@ -88,7 +119,7 @@ export function TwinClassTwinFlowFormFields({
             }),
           });
         }}
-      />
+      /> */}
     </>
   );
 }
