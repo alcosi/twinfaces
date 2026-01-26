@@ -36,6 +36,7 @@ import {
 
 import { TwinClassFormFields } from "./form-fields";
 import {
+  FetchTreePageResult,
   TwinClassesExtendsTreeView,
   TwinClassesHeadTreeView,
   TwinClassesView,
@@ -316,17 +317,24 @@ export function TwinClasses({ type }: { type?: string }) {
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
   const [view, setView] = useState<TwinClassesView>("table");
 
-  async function fetchTwinClassesTree(
-    override: TwinClassFiltersHierarchyOverride
-  ): Promise<TwinClass_DETAILED[]> {
+  async function fetchTwinClassesTreePage(
+    override: TwinClassFiltersHierarchyOverride,
+    pagination: { pageIndex: number; pageSize: number }
+  ): Promise<FetchTreePageResult> {
     const res = await simplifiedSearchByFilters({
-      pagination: { pageIndex: 0, pageSize: 100 },
+      pagination,
       filters: {
         extendsHierarchyChildsForTwinClassSearch: override,
       },
     });
 
-    return res.data;
+    const total = res.pagination?.total ?? 0;
+    const loaded = (pagination.pageIndex + 1) * pagination.pageSize;
+
+    return {
+      data: res.data,
+      hasMore: loaded < total,
+    };
   }
 
   async function fetchTwinClasses(
@@ -549,7 +557,7 @@ export function TwinClasses({ type }: { type?: string }) {
       )}
 
       {view === "extendsTree" && (
-        <TwinClassesExtendsTreeView fetchTree={fetchTwinClassesTree} />
+        <TwinClassesExtendsTreeView fetchTreePage={fetchTwinClassesTreePage} />
       )}
       {view === "headTree" && <TwinClassesHeadTreeView />}
     </div>

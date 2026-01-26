@@ -2,103 +2,185 @@
 
 import { useEffect, useState } from "react";
 
+import { useFetchDomainById } from "@/entities/domain";
+import { getAuthHeaders } from "@/entities/face";
 import {
   TwinClassFiltersHierarchyOverride,
   TwinClass_DETAILED,
 } from "@/entities/twin-class";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TreeSkeleton } from "@/features/ui/skeletons";
 import { cn } from "@/shared/libs";
 import { LoadingSpinner } from "@/shared/ui";
 import { Accordion } from "@/shared/ui/accordion";
 
 type ExtendsTreeNode = {
   data: TwinClass_DETAILED;
-  children?: ExtendsTreeNode[];
+
+  children: ExtendsTreeNode[];
+  pageIndex: number;
+  hasMore: boolean;
+
   isLoading?: boolean;
   hasCheckedChildren?: boolean;
 };
 
-type Props = {
-  fetchTree: (
-    override: TwinClassFiltersHierarchyOverride
-  ) => Promise<TwinClass_DETAILED[]>;
+type RootTreeState = {
+  nodes: ExtendsTreeNode[];
+  pageIndex: number;
+  hasMore: boolean;
+  isLoading: boolean;
 };
 
-const EXTENDS_ROOT_ID = "3a2fcc3a-3f53-4ba9-b7ab-0b1ae1635be4";
+export type FetchTreePageResult = {
+  data: TwinClass_DETAILED[];
+  hasMore: boolean;
+};
 
-export function TwinClassesExtendsTreeView({ fetchTree }: Props) {
-  const [rootNodes, setRootNodes] = useState<ExtendsTreeNode[]>([]);
-  const [loadingRoot, setLoadingRoot] = useState(false);
+type Props = {
+  fetchTreePage: (
+    override: TwinClassFiltersHierarchyOverride,
+    pagination: { pageIndex: number; pageSize: number }
+  ) => Promise<FetchTreePageResult>;
+};
+
+export function TwinClassesExtendsTreeView({ fetchTreePage }: Props) {
+  const { fetchDomainById } = useFetchDomainById();
+
+  const [rootTwinClassId, setRootTwinClassId] = useState<string | null>(null);
 
   useEffect(() => {
-    loadRoot();
-  }, []);
+    async function loadDomain() {
+      const { DomainId } = await getAuthHeaders();
+      const domain = await fetchDomainById({
+        id: DomainId,
+      });
 
-  async function loadRoot() {
-    setLoadingRoot(true);
+      if (!domain.ancestorTwinClassId) {
+        throw new Error("Domain does not have ancestorTwinClassId");
+      }
 
-    const data = await fetchTree({
-      idList: [EXTENDS_ROOT_ID],
-      depth: 1,
-    });
+      setRootTwinClassId(domain.ancestorTwinClassId);
+    }
 
-    setRootNodes(data.map((tc) => ({ data: tc })));
-    setLoadingRoot(false);
-  }
+    loadDomain();
+  }, [fetchDomainById]);
+  const [root, setRoot] = useState<RootTreeState>({
+    nodes: [],
+    pageIndex: 0,
+    hasMore: false,
+    isLoading: false,
+  });
 
-  if (loadingRoot) {
-    return <div className="text-muted-foreground p-6">Loading tree…</div>;
+  useEffect(() => {
+    if (!rootTwinClassId) return;
+
+    loadRootPage(0);
+  }, [rootTwinClassId]);
+
+  async function loadRootPage(pageIndex: number) {
+    setRoot((s) => ({ ...s, isLoading: true }));
+
+    const res = await fetchTreePage(
+      { idList: [rootTwinClassId!], depth: 1 },
+      { pageIndex, pageSize: 10 }
+    );
+
+    setRoot((s) => ({
+      isLoading: false,
+      pageIndex,
+      hasMore: res.hasMore,
+      nodes:
+        pageIndex === 0
+          ? mapNodes(res.data)
+          : [...s.nodes, ...mapNodes(res.data)],
+    }));
   }
 
   return (
-    <div className="max-w-4xl">
-      <Accordion type="multiple">
-        {rootNodes.map((node) => (
-          <ExtendsTreeNodeItem
-            key={node.data.id}
-            node={node}
-            fetchTree={fetchTree}
-          />
-        ))}
-      </Accordion>
+    <div className="mt-5 max-w-4xl">
+      <div>
+        <p className="font-medium">Extends tree view:</p>
+        <Accordion type="multiple">
+          {root.nodes.map((node) => (
+            <ExtendsTreeNodeItem
+              key={node.data.id}
+              node={node}
+              fetchTreePage={fetchTreePage}
+              level={0}
+            />
+          ))}
+
+          {root.hasMore && (
+            <TreeLoadMore
+              level={0}
+              onClick={() => loadRootPage(root.pageIndex + 1)}
+            />
+          )}
+
+          {root.isLoading && <TreeSkeleton level={0} rows={10} withLoadMore />}
+        </Accordion>
+      </div>
     </div>
   );
 }
 
 function ExtendsTreeNodeItem({
   node,
-  fetchTree,
+  fetchTreePage,
   level = 0,
 }: {
   node: ExtendsTreeNode;
-  fetchTree: Props["fetchTree"];
+  fetchTreePage: Props["fetchTreePage"];
   level?: number;
 }) {
   const [state, setState] = useState<ExtendsTreeNode>(node);
   const [open, setOpen] = useState(false);
 
+  async function loadPage(pageIndex: number) {
+    setState((s) => ({ ...s, isLoading: true }));
+
+    const res = await fetchTreePage(
+      { idList: [state.data.id], depth: 1 },
+      { pageIndex, pageSize: 10 }
+    );
+
+    setState((s) => ({
+      ...s,
+      isLoading: false,
+      hasCheckedChildren: true,
+      pageIndex,
+      hasMore: res.hasMore,
+      children:
+        pageIndex === 0
+          ? res.data.map((tc) => ({
+              data: tc,
+              children: [],
+              pageIndex: 0,
+              hasMore: false,
+              hasCheckedChildren: false,
+            }))
+          : [
+              ...s.children,
+              ...res.data.map((tc) => ({
+                data: tc,
+                children: [],
+                pageIndex: 0,
+                hasMore: false,
+                hasCheckedChildren: false,
+              })),
+            ],
+    }));
+  }
+
   async function toggle() {
     if (!state.hasCheckedChildren) {
-      setState((s) => ({ ...s, isLoading: true }));
-
-      const data = await fetchTree({
-        idList: [state.data.id],
-        depth: 1,
-      });
-
-      setState((s) => ({
-        ...s,
-        isLoading: false,
-        hasCheckedChildren: true,
-        children: data.map((tc) => ({ data: tc })),
-      }));
+      await loadPage(0);
     }
-
     setOpen((v) => !v);
   }
 
-  const isLeaf =
-    state.hasCheckedChildren && (state.children?.length ?? 0) === 0;
+  const isLeaf = state.hasCheckedChildren && state.children.length === 0;
 
   return (
     <div>
@@ -109,10 +191,10 @@ function ExtendsTreeNodeItem({
           </div>
         ))}
 
-        <div className="hover:bg-muted/50 flex items-center gap-2 rounded-md px-1.5 py-1">
+        <div className="hover:bg-muted/50 flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1">
           <div
             className={cn(
-              "flex h-4 w-4 cursor-pointer items-center justify-center rounded border font-mono text-xs",
+              "flex h-4 w-4 items-center justify-center rounded border font-mono text-xs",
               isLeaf
                 ? "border-transparent"
                 : "border-muted-foreground/40 text-muted-foreground hover:border-foreground hover:text-foreground"
@@ -128,18 +210,91 @@ function ExtendsTreeNodeItem({
         </div>
       </div>
 
-      {open && state.children && (
+      {open && (
         <div className="flex flex-col">
           {state.children.map((child) => (
             <ExtendsTreeNodeItem
               key={child.data.id}
               node={child}
-              fetchTree={fetchTree}
+              fetchTreePage={fetchTreePage}
               level={level + 1}
             />
           ))}
+
+          {state.hasMore && (
+            <TreeLoadMore
+              level={level + 1}
+              onClick={() => loadPage(state.pageIndex + 1)}
+            />
+          )}
+
+          {state.isLoading && (
+            <TreeSkeleton level={level + 1} rows={10} withLoadMore={false} />
+          )}
         </div>
       )}
+    </div>
+  );
+}
+
+function mapNodes(data: TwinClass_DETAILED[]): ExtendsTreeNode[] {
+  return data.map((tc) => ({
+    data: tc,
+    children: [],
+    pageIndex: 0,
+    hasMore: false,
+    hasCheckedChildren: false,
+  }));
+}
+
+function TreeLoadMore({
+  level,
+  onClick,
+}: {
+  level: number;
+  onClick: () => void;
+}) {
+  return (
+    <div className="relative flex items-center gap-1 py-1 text-sm">
+      {Array.from({ length: level }).map((_, i) => (
+        <div key={i} className="relative w-5 self-stretch">
+          <div className="bg-border absolute top-0 bottom-0 left-2 w-px" />
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={onClick}
+        className={cn(
+          "group flex items-center gap-2 rounded-md px-1.5 py-1",
+          "text-muted-foreground",
+          "hover:bg-muted/50 hover:text-foreground",
+          "transition-colors"
+        )}
+      >
+        <div
+          className={cn(
+            "flex h-4 w-4 items-center justify-center rounded border border-dashed",
+            "border-muted-foreground/60 text-muted-foreground",
+            "font-mono text-xs",
+            "transition-colors",
+            "group-hover:border-foreground group-hover:text-foreground"
+          )}
+        >
+          …
+        </div>
+
+        <span
+          className={cn(
+            "text-xs font-medium",
+            "text-muted-foreground/70",
+            "transition-colors",
+            "group-hover:text-foreground"
+          )}
+        >
+          +10 more
+        </span>
+      </button>
     </div>
   );
 }
