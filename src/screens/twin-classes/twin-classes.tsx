@@ -5,7 +5,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -35,6 +35,12 @@ import {
 } from "@/widgets/crud-data-table";
 
 import { TwinClassFormFields } from "./form-fields";
+import {
+  TwinClassesExtendsTreeView,
+  TwinClassesHeadTreeView,
+  TwinClassesView,
+  ViewSwitcher,
+} from "./view";
 
 function ThemeIconCell({ data }: { data: TwinClass_DETAILED }) {
   const { resolvedTheme } = useTheme();
@@ -306,8 +312,22 @@ export function TwinClasses({ type }: { type?: string }) {
   const router = useRouter();
   const { twinClass } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
-  const { searchByFilters } = useTwinClassSearch();
+  const { searchByFilters, simplifiedSearchByFilters } = useTwinClassSearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
+  const [view, setView] = useState<TwinClassesView>("table");
+
+  async function fetchTwinClassesTree(
+    override: TwinClassFiltersHierarchyOverride
+  ): Promise<TwinClass_DETAILED[]> {
+    const res = await simplifiedSearchByFilters({
+      pagination: { pageIndex: 0, pageSize: 100 },
+      filters: {
+        extendsHierarchyChildsForTwinClassSearch: override,
+      },
+    });
+
+    return res.data;
+  }
 
   async function fetchTwinClasses(
     pagination: PaginationState,
@@ -464,63 +484,74 @@ export function TwinClasses({ type }: { type?: string }) {
   };
 
   return (
-    <CrudDataTable
-      ref={tableRef}
-      fetcher={fetchTwinClasses}
-      columns={[
-        colDefs.iconLight,
-        colDefs.id,
-        colDefs.key,
-        colDefs.name,
-        colDefs.description,
-        colDefs.headClassId,
-        colDefs.extendsClassId,
-        colDefs.abstractClass,
-        colDefs.assigneeRequired,
-        colDefs.ownerType,
-        colDefs.permissionSchemaSpace,
-        colDefs.twinflowSchemaSpace,
-        colDefs.twinClassSchemaSpace,
-        colDefs.aliasSpace,
-        colDefs.markersDataListId,
-        colDefs.tagsDataListId,
-        colDefs.viewPermissionId,
-        colDefs.createPermissionId,
-        colDefs.editPermissionId,
-        colDefs.deletePermissionId,
-        colDefs.externalId,
-        colDefs.segment,
-        colDefs.hasSegment,
-        colDefs.twinClassFreezeId,
-      ]}
-      getRowId={(row) => row.id!}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
-      }
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
-      defaultVisibleColumns={[
-        colDefs.id,
-        colDefs.key,
-        colDefs.name,
-        colDefs.headClassId,
-        colDefs.assigneeRequired,
-        colDefs.extendsClassId,
-        colDefs.abstractClass,
-        colDefs.markersDataListId,
-        colDefs.tagsDataListId,
-        colDefs.externalId,
-        colDefs.segment,
-        colDefs.hasSegment,
-        colDefs.twinClassFreezeId,
-      ]}
-      dialogForm={twinClassesForm}
-      onCreateSubmit={!type ? handleOnCreateSubmit : undefined}
-      renderFormFields={() => (
-        <TwinClassFormFields control={twinClassesForm.control} />
+    <div className="flex flex-col pt-4">
+      <ViewSwitcher value={view} onChange={setView} />
+
+      {view === "table" && (
+        <CrudDataTable
+          ref={tableRef}
+          fetcher={fetchTwinClasses}
+          columns={[
+            colDefs.iconLight,
+            colDefs.id,
+            colDefs.key,
+            colDefs.name,
+            colDefs.description,
+            colDefs.headClassId,
+            colDefs.extendsClassId,
+            colDefs.abstractClass,
+            colDefs.assigneeRequired,
+            colDefs.ownerType,
+            colDefs.permissionSchemaSpace,
+            colDefs.twinflowSchemaSpace,
+            colDefs.twinClassSchemaSpace,
+            colDefs.aliasSpace,
+            colDefs.markersDataListId,
+            colDefs.tagsDataListId,
+            colDefs.viewPermissionId,
+            colDefs.createPermissionId,
+            colDefs.editPermissionId,
+            colDefs.deletePermissionId,
+            colDefs.externalId,
+            colDefs.segment,
+            colDefs.hasSegment,
+            colDefs.twinClassFreezeId,
+          ]}
+          getRowId={(row) => row.id!}
+          onRowClick={(row) =>
+            router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
+          }
+          filters={{
+            filtersInfo: buildFilterFields(),
+          }}
+          defaultVisibleColumns={[
+            colDefs.id,
+            colDefs.key,
+            colDefs.name,
+            colDefs.headClassId,
+            colDefs.assigneeRequired,
+            colDefs.extendsClassId,
+            colDefs.abstractClass,
+            colDefs.markersDataListId,
+            colDefs.tagsDataListId,
+            colDefs.externalId,
+            colDefs.segment,
+            colDefs.hasSegment,
+            colDefs.twinClassFreezeId,
+          ]}
+          dialogForm={twinClassesForm}
+          onCreateSubmit={!type ? handleOnCreateSubmit : undefined}
+          renderFormFields={() => (
+            <TwinClassFormFields control={twinClassesForm.control} />
+          )}
+          title={type || ""}
+        />
       )}
-      title={type || ""}
-    />
+
+      {view === "extendsTree" && (
+        <TwinClassesExtendsTreeView fetchTree={fetchTwinClassesTree} />
+      )}
+      {view === "headTree" && <TwinClassesHeadTreeView />}
+    </div>
   );
 }

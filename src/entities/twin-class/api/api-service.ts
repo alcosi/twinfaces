@@ -55,6 +55,32 @@ export function createTwinClassApi(settings: ApiSettings) {
     });
   }
 
+  function simplifiedSearch({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    search?: string;
+    filters: TwinClassFilters;
+  }) {
+    return settings.client.POST("/private/twin_class/search/v2", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinClassMode: "MANAGED",
+          limit: pagination.pageSize,
+          offset: pagination.pageIndex * pagination.pageSize,
+        },
+      },
+      body: {
+        search: {
+          ...filters,
+        },
+      },
+    });
+  }
+
   function searchBySearchId({
     searchId,
     narrow,
@@ -245,6 +271,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     getValidTwinsForLink,
     searchTags,
     searchBySearchId,
+    simplifiedSearch,
   };
 }
 

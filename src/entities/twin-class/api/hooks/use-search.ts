@@ -70,7 +70,44 @@ export const useTwinClassSearch = () => {
     [api]
   );
 
-  return { searchBySearchId, searchByFilters, loading };
+  const simplifiedSearchByFilters = useCallback(
+    async ({
+      search,
+      pagination = { pageIndex: 0, pageSize: 10 },
+      filters = {},
+    }: {
+      search?: string;
+      pagination?: PaginationState;
+      filters?: TwinClassFilters;
+    }): Promise<PagedResponse<TwinClass_DETAILED>> => {
+      setLoading(true);
+
+      try {
+        const { data, error } = await api.twinClass.simplifiedSearch({
+          search,
+          pagination,
+          filters,
+        });
+
+        if (error) throw error;
+
+        return {
+          data: mapAndHydrate(data),
+          pagination: data.pagination ?? {},
+        };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [api]
+  );
+
+  return {
+    searchBySearchId,
+    searchByFilters,
+    loading,
+    simplifiedSearchByFilters,
+  };
 };
 
 function mapAndHydrate(res: TwinClassListRs) {
