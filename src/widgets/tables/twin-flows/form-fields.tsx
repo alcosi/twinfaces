@@ -56,7 +56,7 @@ export function TwinClassTwinFlowFormFields({
 
   const initialTwinStatusInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
-    label: "Initial statuss",
+    label: "Initial status",
     adapter: twinStatusAdapter,
     extraFilters: buildTwinStatusFilters(),
     mapExtraFilters: (filters) => ({
@@ -101,25 +101,6 @@ export function TwinClassTwinFlowFormFields({
         name="initialStatus"
         info={initialTwinStatusInfo}
       />
-
-      {/* <ComboboxFormField
-        control={control}
-        name="initialStatus"
-        label="Initial status"
-        selectPlaceholder="Select status"
-        searchPlaceholder="Search status..."
-        noItemsText="No status found"
-        required={true}
-        {...twinStatusAdapter}
-        getItems={async (search: string) => {
-          return twinStatusAdapter.getItems(search, {
-            twinClassIdMap: reduceToObject({
-              list: toArray(twinClassIdWatch),
-              defaultValue: true,
-            }),
-          });
-        }}
-      /> */}
     </>
   );
 }
