@@ -2,6 +2,7 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { DomainAddRqV1 } from "@/entities/domain";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { operations } from "@/shared/api/generated/schema";
 
 export function createDomainApi(settings: ApiSettings) {
   function search() {
@@ -29,8 +30,20 @@ export function createDomainApi(settings: ApiSettings) {
     });
   }
 
-  function getById() {
-    // TODO: Add implementation
+  function getById({
+    id,
+    query = {},
+  }: {
+    id: string;
+    query: operations["domainViewV1"]["parameters"]["query"];
+  }) {
+    return settings.client.GET(`/private/domain/{domainId}/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { domainId: id },
+        query: query,
+      },
+    });
   }
 
   function create({ body }: { body: DomainAddRqV1 }) {
