@@ -1,12 +1,22 @@
 import { Control } from "react-hook-form";
 
 import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 
 import { TwinFormValues, useTwinClassFields } from "@/entities/twin";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
+import { isPopulatedString } from "@/shared/libs";
 
 import { TwinFieldFormField } from "../../form-fields";
 
@@ -19,7 +29,6 @@ export function TwinFormFields({
 }) {
   const {
     selectedTwinClass,
-    twinClassAdapter,
     fields,
     userAdapter,
     hasHeadClass,
@@ -28,16 +37,36 @@ export function TwinFormFields({
     optionAdapter,
   } = useTwinClassFields(control, { baseTwinClassId });
 
+  const tcAdapter = useTwinClassSelectAdapterWithFilters(
+    {
+      baseTwinClassId,
+    },
+    true
+  );
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Class",
+    adapter: tcAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+    disabled: isPopulatedString(baseTwinClassId),
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="classId"
-        label="Class"
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText="No classes found"
-        {...twinClassAdapter}
+        info={twinClassInfo}
       />
 
       {hasHeadClass && (

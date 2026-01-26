@@ -1,6 +1,11 @@
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
+import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import { ComboboxFormField, TextFormField } from "@/components/form-fields";
 
 import {
@@ -8,7 +13,10 @@ import {
   useLinkStrengthSelectAdapter,
   useLinkTypeSelectAdapter,
 } from "@/entities/link";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 
 export function CreateLinkFormFields({
@@ -16,35 +24,54 @@ export function CreateLinkFormFields({
 }: {
   control: Control<z.infer<typeof LINK_SCHEMA>>;
 }) {
-  const tcAdapter = useTwinClassSelectAdapter();
+  const tcsAdapter = useTwinClassSelectAdapterWithFilters();
+  const tcdAdapter = useTwinClassSelectAdapterWithFilters();
   const typeAdapter = useLinkTypeSelectAdapter();
   const strengthAdapter = useLinkStrengthSelectAdapter();
 
   const srcTwinClassId = useWatch({ name: "srcTwinClassId", control });
   const dstTwinClassId = useWatch({ name: "dstTwinClassId", control });
 
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const srcTwinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Source Twin Class",
+    adapter: tcsAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+    disabled: isPopulatedString(srcTwinClassId),
+  };
+
+  const dstTwinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Destination Twin Class",
+    adapter: tcdAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+    disabled: isPopulatedString(dstTwinClassId),
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="srcTwinClassId"
-        label="Source Twin Class"
-        disabled={isPopulatedString(srcTwinClassId)}
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText="No classes found"
-        {...tcAdapter}
+        info={srcTwinClassInfo}
       />
-
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="dstTwinClassId"
-        label="Destination Twin Class"
-        disabled={isPopulatedString(dstTwinClassId)}
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText="No classes found"
-        {...tcAdapter}
+        info={dstTwinClassInfo}
       />
 
       <TextFormField control={control} name="name" label="Link Name" />

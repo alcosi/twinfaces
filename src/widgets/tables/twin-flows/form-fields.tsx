@@ -3,12 +3,20 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   ComboboxFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import { TWIN_FLOW_SCHEMA } from "@/entities/twin-flow";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
@@ -21,19 +29,32 @@ export function TwinClassTwinFlowFormFields({
   const twinClassIdWatch = useWatch({ control, name: "twinClassId" });
   const disabled = useRef(isTruthy(twinClassIdWatch)).current;
   const twinStatusAdapter = useTwinStatusSelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+
+  const tcAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Class",
+    adapter: tcAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+    disabled: disabled,
+  };
 
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinClassId"
-        label="Class"
-        disabled={disabled}
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText="No classes found"
-        {...twinClassAdapter}
+        info={twinClassInfo}
       />
 
       <TextFormField

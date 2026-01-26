@@ -14,12 +14,15 @@ import {
   PROJECTION_SCHEMA,
   useProjectionTypeSelectAdapter,
 } from "@/entities/projection/libs";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import {
   useTwinClassFieldFilters,
   useTwinClassFieldSelectAdapterWithFilters,
 } from "@/entities/twin-class-field";
-import { isTruthy } from "@/shared/libs";
+import { isPopulatedString, isTruthy } from "@/shared/libs";
 
 import { FeaturerFormField } from "../../form-fields";
 
@@ -29,9 +32,10 @@ export function ProjectionFormFields({
   control: Control<z.infer<typeof PROJECTION_SCHEMA>>;
 }) {
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
 
+  const twinClassId = useWatch({ control, name: "dstTwinClassId" });
   const srcTwinClassFieldWatch = useWatch({
     control,
     name: "srcTwinClassFieldId",
@@ -51,6 +55,23 @@ export function ProjectionFormFields({
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters(
     {}
   );
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const dstTwinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Dst class",
+    adapter: twinClassAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+    disabled: isPopulatedString(twinClassId),
+  };
 
   const srcFieldInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -92,14 +113,10 @@ export function ProjectionFormFields({
         info={srcFieldInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="dstTwinClassId"
-        label="Dst class"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...twinClassAdapter}
+        info={dstTwinClassInfo}
       />
 
       <ComplexComboboxFormField

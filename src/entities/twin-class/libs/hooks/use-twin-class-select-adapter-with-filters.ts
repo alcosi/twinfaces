@@ -8,14 +8,16 @@ import {
   useTwinClassSearch,
 } from "../../api";
 
-export function useTwinClassSelectAdapterWithFilters(): SelectAdapterWithFilters<
-  TwinClass_DETAILED,
-  any
-> {
+export function useTwinClassSelectAdapterWithFilters(
+  params?: {
+    baseTwinClassId?: string;
+  },
+  abstract?: boolean
+): SelectAdapterWithFilters<TwinClass_DETAILED, any> {
   const { searchByFilters } = useTwinClassSearch();
   const { fetchTwinClassById } = useFetchTwinClassById();
 
-  const filtersRef = useRef({});
+  const filtersRef = useRef<any>({});
   const [version, setVersion] = useState(0);
 
   function setFilters(filters: any) {
@@ -33,9 +35,24 @@ export function useTwinClassSelectAdapterWithFilters(): SelectAdapterWithFilters
   }
 
   async function getItems(search: string) {
+    const baseFilters = abstract
+      ? {
+          abstractt: "ONLY_NOT",
+          extendsHierarchyChildsForTwinClassSearch: params?.baseTwinClassId
+            ? {
+                idList: [params.baseTwinClassId],
+                depth: 0,
+              }
+            : undefined,
+        }
+      : {};
+
     const res = await searchByFilters({
       search: hasAdvancedFilters ? undefined : search,
-      filters: filtersRef.current,
+      filters: {
+        ...baseFilters,
+        ...filtersRef.current,
+      },
     });
 
     return res.data;
