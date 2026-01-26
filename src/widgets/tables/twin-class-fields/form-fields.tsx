@@ -37,7 +37,7 @@ export function TwinClassFieldFormFields({
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
 
-  const complexComboboxInfo: AutoFormComplexComboboxValueInfo = {
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
     label: "Class",
     adapter: tcAdapter,
@@ -54,7 +54,7 @@ export function TwinClassFieldFormFields({
       <ComplexComboboxFormField
         control={control}
         name="twinClassId"
-        info={complexComboboxInfo}
+        info={twinClassInfo}
       />
 
       <TextFormField control={control} name="key" label="Key" />

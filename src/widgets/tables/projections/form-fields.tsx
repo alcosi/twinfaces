@@ -61,7 +61,7 @@ export function ProjectionFormFields({
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
 
-  const complexComboboxInfo: AutoFormComplexComboboxValueInfo = {
+  const dstTwinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
     label: "Dst class",
     adapter: twinClassAdapter,
@@ -116,7 +116,7 @@ export function ProjectionFormFields({
       <ComplexComboboxFormField
         control={control}
         name="dstTwinClassId"
-        info={complexComboboxInfo}
+        info={dstTwinClassInfo}
       />
 
       <ComplexComboboxFormField

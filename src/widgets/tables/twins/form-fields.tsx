@@ -49,7 +49,7 @@ export function TwinFormFields({
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
 
-  const complexComboboxInfo: AutoFormComplexComboboxValueInfo = {
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
     label: "Class",
     adapter: tcAdapter,
@@ -66,7 +66,7 @@ export function TwinFormFields({
       <ComplexComboboxFormField
         control={control}
         name="classId"
-        info={complexComboboxInfo}
+        info={twinClassInfo}
       />
 
       {hasHeadClass && (

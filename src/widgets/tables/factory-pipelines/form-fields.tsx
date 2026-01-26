@@ -53,7 +53,7 @@ export function FactoryPipelineFormFields({
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
 
-  const complexComboboxInfo: AutoFormComplexComboboxValueInfo = {
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
     label: "Input class",
     adapter: twinClassAdapter,
@@ -81,7 +81,7 @@ export function FactoryPipelineFormFields({
       <ComplexComboboxFormField
         control={control}
         name="inputTwinClassId"
-        info={complexComboboxInfo}
+        info={twinClassInfo}
       />
 
       <ComboboxFormField

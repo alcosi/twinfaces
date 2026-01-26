@@ -37,7 +37,7 @@ export function CreateLinkFormFields({
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
 
-  const complexComboboxSrcInfo: AutoFormComplexComboboxValueInfo = {
+  const srcTwinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
     label: "Source Twin Class",
     adapter: tcsAdapter,
@@ -49,7 +49,7 @@ export function CreateLinkFormFields({
     disabled: isPopulatedString(srcTwinClassId),
   };
 
-  const complexComboboxDstInfo: AutoFormComplexComboboxValueInfo = {
+  const dstTwinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
     label: "Destination Twin Class",
     adapter: tcdAdapter,
@@ -66,12 +66,12 @@ export function CreateLinkFormFields({
       <ComplexComboboxFormField
         control={control}
         name="srcTwinClassId"
-        info={complexComboboxSrcInfo}
+        info={srcTwinClassInfo}
       />
       <ComplexComboboxFormField
         control={control}
         name="dstTwinClassId"
-        info={complexComboboxDstInfo}
+        info={dstTwinClassInfo}
       />
 
       <TextFormField control={control} name="name" label="Link Name" />
