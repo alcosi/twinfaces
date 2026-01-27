@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import {
+  FetchTreePageParams,
   TWIN_CLASSES_SCHEMA,
   TwinClassContext,
   TwinClassCreateRq,
@@ -318,18 +319,29 @@ export function TwinClasses({ type }: { type?: string }) {
   const [view, setView] = useState<TwinClassesView>("table");
 
   async function fetchTwinClassesTreePage(
-    override: TwinClassFiltersHierarchyOverride,
-    pagination: { pageIndex: number; pageSize: number }
+    params: FetchTreePageParams
   ): Promise<FetchTreePageResult> {
-    const res = await simplifiedSearchByFilters({
-      pagination,
-      filters: {
-        extendsHierarchyChildsForTwinClassSearch: override,
-      },
-    });
+    let res;
+
+    if (params.mode === "root") {
+      res = await simplifiedSearchByFilters({
+        pagination: params.pagination,
+        filters: {
+          twinClassIdList: params.twinClassIdList,
+        },
+      });
+    } else {
+      res = await simplifiedSearchByFilters({
+        pagination: params.pagination,
+        filters: {
+          extendsHierarchyChildsForTwinClassSearch: params.override,
+        },
+      });
+    }
 
     const total = res.pagination?.total ?? 0;
-    const loaded = (pagination.pageIndex + 1) * pagination.pageSize;
+    const loaded =
+      (params.pagination.pageIndex + 1) * params.pagination.pageSize;
 
     return {
       data: res.data,

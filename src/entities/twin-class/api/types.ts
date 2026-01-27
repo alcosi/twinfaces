@@ -55,6 +55,18 @@ export type TwinClassFiltersHierarchyOverride = {
   depth: number;
 };
 
+export type FetchTreePageParams =
+  | {
+      mode: "root";
+      twinClassIdList: string[];
+      pagination: { pageIndex: number; pageSize: number };
+    }
+  | {
+      mode: "extends";
+      override: TwinClassFiltersHierarchyOverride;
+      pagination: { pageIndex: number; pageSize: number };
+    };
+
 export type TwinClassCreateRq = components["schemas"]["TwinClassCreateRqV2"];
 export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"];
 
