@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useFetchDomainById } from "@/entities/domain";
 import { getAuthHeaders } from "@/entities/face";
-import {
-  TwinClassFiltersHierarchyOverride,
-  TwinClass_DETAILED,
-} from "@/entities/twin-class";
+import { FetchTreePageParams, TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TreeSkeleton } from "@/features/ui/skeletons";
 import { cn } from "@/shared/libs";
@@ -38,10 +35,7 @@ export type FetchTreePageResult = {
 };
 
 type Props = {
-  fetchTreePage: (
-    override: TwinClassFiltersHierarchyOverride,
-    pagination: { pageIndex: number; pageSize: number }
-  ) => Promise<FetchTreePageResult>;
+  fetchTreePage: (params: FetchTreePageParams) => Promise<FetchTreePageResult>;
 };
 
 export function TwinClassesExtendsTreeView({ fetchTreePage }: Props) {
@@ -79,12 +73,15 @@ export function TwinClassesExtendsTreeView({ fetchTreePage }: Props) {
   }, [rootTwinClassId]);
 
   async function loadRootPage(pageIndex: number) {
+    if (!rootTwinClassId) return;
+
     setRoot((s) => ({ ...s, isLoading: true }));
 
-    const res = await fetchTreePage(
-      { idList: [rootTwinClassId!], depth: 1 },
-      { pageIndex, pageSize: 10 }
-    );
+    const res = await fetchTreePage({
+      mode: "root",
+      twinClassIdList: [rootTwinClassId],
+      pagination: { pageIndex, pageSize: 10 },
+    });
 
     setRoot((s) => ({
       isLoading: false,
@@ -140,10 +137,14 @@ function ExtendsTreeNodeItem({
   async function loadPage(pageIndex: number) {
     setState((s) => ({ ...s, isLoading: true }));
 
-    const res = await fetchTreePage(
-      { idList: [state.data.id], depth: 1 },
-      { pageIndex, pageSize: 10 }
-    );
+    const res = await fetchTreePage({
+      mode: "extends",
+      override: {
+        idList: [state.data.id],
+        depth: 1,
+      },
+      pagination: { pageIndex, pageSize: 10 },
+    });
 
     setState((s) => ({
       ...s,
