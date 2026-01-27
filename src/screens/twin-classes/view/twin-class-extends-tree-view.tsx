@@ -94,28 +94,33 @@ export function TwinClassesExtendsTreeView({ fetchTreePage }: Props) {
     }));
   }
 
+  const isRootLoading =
+    rootTwinClassId !== null && root.nodes.length === 0 && root.isLoading;
+
   return (
     <div className="mt-5 max-w-4xl">
       <div>
         <p className="font-medium">Extends tree view:</p>
         <Accordion type="multiple">
-          {root.nodes.map((node) => (
-            <ExtendsTreeNodeItem
-              key={node.data.id}
-              node={node}
-              fetchTreePage={fetchTreePage}
-              level={0}
-            />
-          ))}
+          {isRootLoading ? (
+            <TreeSkeleton level={0} rows={1} withLoadMore={false} />
+          ) : (
+            root.nodes.map((node) => (
+              <ExtendsTreeNodeItem
+                key={node.data.id}
+                node={node}
+                fetchTreePage={fetchTreePage}
+                level={0}
+              />
+            ))
+          )}
 
-          {root.hasMore && (
+          {root.hasMore && !isRootLoading && (
             <TreeLoadMore
               level={0}
               onClick={() => loadRootPage(root.pageIndex + 1)}
             />
           )}
-
-          {root.isLoading && <TreeSkeleton level={0} rows={10} withLoadMore />}
         </Accordion>
       </div>
     </div>
