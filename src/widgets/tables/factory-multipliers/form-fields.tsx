@@ -20,7 +20,7 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { isPopulatedString, isTruthy } from "@/shared/libs";
+import { isTruthy } from "@/shared/libs";
 
 import { FeaturerFormField } from "../../form-fields";
 
@@ -33,10 +33,6 @@ export function FactoryMultiplierFormFields({
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const factoryWatch = useWatch({ control, name: "factoryId" });
   const disabled = useRef(isTruthy(factoryWatch)).current;
-  const twinClassWatch = useWatch({
-    control,
-    name: "inputTwinClassId",
-  });
 
   const {
     buildFilterFields: buildTwinClassFilters,
@@ -52,7 +48,6 @@ export function FactoryMultiplierFormFields({
     searchPlaceholder: "Search...",
     selectPlaceholder: "Select twin class",
     multi: false,
-    disabled: isPopulatedString(twinClassWatch),
   };
 
   return (
