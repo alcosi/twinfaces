@@ -20,7 +20,10 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import {
+  useStatusFilters,
+  useTwinStatusSelectAdapterWithFilters,
+} from "@/entities/twin-status";
 import {
   isFalsy,
   isPopulatedString,
@@ -43,7 +46,7 @@ export function FactoryPipelineFormFields({
     name: "inputTwinClassId",
   }) as unknown as { id: string }[];
 
-  const twinStatusAdapter = useTwinStatusSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapterWithFilters();
 
   const disabledFactory = useRef(isTruthy(factoryWatch)).current;
   const disabledOutputStatus = isFalsy(twinClassWatch[0]?.id);
@@ -52,6 +55,11 @@ export function FactoryPipelineFormFields({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildTwinStatusFilters,
+    mapFiltersToPayload: mapTwinStatusFilters,
+  } = useStatusFilters({});
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -63,6 +71,24 @@ export function FactoryPipelineFormFields({
     selectPlaceholder: "Select twin class",
     multi: false,
     disabled: isPopulatedString(twinClassWatch),
+  };
+
+  const outputTwinStatusInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Output status",
+    adapter: twinStatusAdapter,
+    extraFilters: buildTwinStatusFilters(),
+    mapExtraFilters: (filters) => ({
+      ...mapTwinStatusFilters(filters),
+      twinClassIdMap: reduceToObject({
+        list: toArray(twinClassWatch?.[0]),
+        defaultValue: true,
+      }),
+    }),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select output status",
+    multi: false,
+    disabled: disabledOutputStatus,
   };
 
   return (
@@ -102,23 +128,10 @@ export function FactoryPipelineFormFields({
 
       <CheckboxFormField control={control} name="active" label="Active" />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="outputStatusId"
-        label="Output status"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={disabledOutputStatus}
-        {...twinStatusAdapter}
-        getItems={async (search: string) => {
-          return twinStatusAdapter.getItems(search, {
-            twinClassIdMap: reduceToObject({
-              list: toArray(twinClassWatch[0]?.id),
-              defaultValue: true,
-            }),
-          });
-        }}
+        info={outputTwinStatusInfo}
       />
 
       <ComboboxFormField

@@ -9,10 +9,12 @@ export function ComplexComboboxFormField<TFormValues extends FieldValues>({
   name,
   control,
   info,
+  required,
 }: {
   name: FieldPath<TFormValues>;
   control: Control<TFormValues>;
   info: AutoFormComplexComboboxValueInfo;
+  required?: boolean;
 }) {
   return (
     <FormField
@@ -24,6 +26,7 @@ export function ComplexComboboxFormField<TFormValues extends FieldValues>({
           onChange={field.onChange}
           info={info}
           inForm
+          required={required}
         />
       )}
     />

@@ -3,6 +3,11 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   CheckboxFormField,
   ComboboxFormField,
   TextAreaFormField,
@@ -11,7 +16,10 @@ import {
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { FACTORY_MULTIPLIER_SCHEMA } from "@/entities/factory-multiplier";
 import { FeaturerTypes } from "@/entities/featurer";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import { isTruthy } from "@/shared/libs";
 
 import { FeaturerFormField } from "../../form-fields";
@@ -22,9 +30,25 @@ export function FactoryMultiplierFormFields({
   control: Control<z.infer<typeof FACTORY_MULTIPLIER_SCHEMA>>;
 }) {
   const factoryAdapter = useFactorySelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const factoryWatch = useWatch({ control, name: "factoryId" });
   const disabled = useRef(isTruthy(factoryWatch)).current;
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Input class",
+    adapter: twinClassAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+  };
 
   return (
     <>
@@ -39,14 +63,10 @@ export function FactoryMultiplierFormFields({
         {...factoryAdapter}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="inputTwinClassId"
-        label="Input class"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...twinClassAdapter}
+        info={twinClassInfo}
       />
 
       <FeaturerFormField
