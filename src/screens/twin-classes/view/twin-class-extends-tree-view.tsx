@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 
 import { useFetchDomainById } from "@/entities/domain";
 import { getAuthHeaders } from "@/entities/face";
-import { FetchTreePageParams, TwinClass_DETAILED } from "@/entities/twin-class";
+import {
+  FetchTreePageParams,
+  FetchTreePageResult,
+  TwinClass_DETAILED,
+} from "@/entities/twin-class";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TreeSkeleton } from "@/features/ui/skeletons";
 import { cn } from "@/shared/libs";
@@ -27,11 +31,6 @@ type RootTreeState = {
   pageIndex: number;
   hasMore: boolean;
   isLoading: boolean;
-};
-
-export type FetchTreePageResult = {
-  data: TwinClass_DETAILED[];
-  hasMore: boolean;
 };
 
 type Props = {
@@ -119,6 +118,7 @@ export function TwinClassesExtendsTreeView({ fetchTreePage }: Props) {
             <TreeLoadMore
               level={0}
               onClick={() => loadRootPage(root.pageIndex + 1)}
+              disabled={root.isLoading}
             />
           )}
         </Accordion>
@@ -138,8 +138,11 @@ function ExtendsTreeNodeItem({
 }) {
   const [state, setState] = useState<ExtendsTreeNode>(node);
   const [open, setOpen] = useState(false);
+  const isToggleDisabled = state.isLoading;
 
   async function loadPage(pageIndex: number) {
+    if (isToggleDisabled) return;
+
     setState((s) => ({ ...s, isLoading: true }));
 
     const res = await fetchTreePage({
@@ -180,6 +183,8 @@ function ExtendsTreeNodeItem({
   }
 
   async function toggle() {
+    if (isToggleDisabled) return;
+
     if (!state.hasCheckedChildren) {
       await loadPage(0);
     }
@@ -203,9 +208,10 @@ function ExtendsTreeNodeItem({
               "flex h-4 w-4 items-center justify-center rounded border font-mono text-xs",
               isLeaf
                 ? "border-transparent"
-                : "border-muted-foreground/40 text-muted-foreground hover:border-foreground hover:text-foreground"
+                : "border-muted-foreground/40 text-muted-foreground hover:border-foreground hover:text-foreground",
+              isToggleDisabled && "pointer-events-none opacity-50"
             )}
-            onClick={!isLeaf ? toggle : undefined}
+            onClick={!isLeaf && !isToggleDisabled ? toggle : undefined}
           >
             {!isLeaf && (open ? "−" : "+")}
           </div>
@@ -231,6 +237,7 @@ function ExtendsTreeNodeItem({
             <TreeLoadMore
               level={level + 1}
               onClick={() => loadPage(state.pageIndex + 1)}
+              disabled={state.isLoading}
             />
           )}
 
@@ -256,9 +263,11 @@ function mapNodes(data: TwinClass_DETAILED[]): ExtendsTreeNode[] {
 function TreeLoadMore({
   level,
   onClick,
+  disabled,
 }: {
   level: number;
   onClick: () => void;
+  disabled?: boolean;
 }) {
   return (
     <div className="relative flex items-center gap-1 py-1 text-sm">
@@ -270,12 +279,14 @@ function TreeLoadMore({
 
       <button
         type="button"
-        onClick={onClick}
+        disabled={disabled}
+        onClick={!disabled ? onClick : undefined}
         className={cn(
           "group flex items-center gap-2 rounded-md px-1.5 py-1",
-          "text-muted-foreground",
-          "hover:bg-muted/50 hover:text-foreground",
-          "transition-colors"
+          "text-muted-foreground transition-colors",
+          disabled
+            ? "pointer-events-none opacity-50"
+            : "hover:bg-muted/50 hover:text-foreground"
         )}
       >
         <div

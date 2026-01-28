@@ -12,6 +12,7 @@ import { z } from "zod";
 
 import {
   FetchTreePageParams,
+  FetchTreePageResult,
   TWIN_CLASSES_SCHEMA,
   TwinClassContext,
   TwinClassCreateRq,
@@ -37,7 +38,6 @@ import {
 
 import { TwinClassFormFields } from "./form-fields";
 import {
-  FetchTreePageResult,
   TwinClassesExtendsTreeView,
   TwinClassesHeadTreeView,
   TwinClassesView,
@@ -318,6 +318,43 @@ export function TwinClasses({ type }: { type?: string }) {
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
   const [view, setView] = useState<TwinClassesView>("table");
 
+  async function fetchTwinClassesHeadTreePage(
+    params: FetchTreePageParams
+  ): Promise<FetchTreePageResult> {
+    let res;
+
+    if (params.mode === "root") {
+      //* ROOTS: all classes with no headClassId
+      res = await simplifiedSearchByFilters({
+        pagination: params.pagination,
+        filters: {
+          headHierarchyChildsForTwinClassSearch: {
+            idList: ["ffffffff-ffff-ffff-ffff-ffffffffffff"],
+            depth: 1,
+          },
+          abstractt: "ONLY_NOT",
+        },
+      });
+    } else {
+      res = await simplifiedSearchByFilters({
+        pagination: params.pagination,
+        filters: {
+          headHierarchyChildsForTwinClassSearch: params.override,
+          abstractt: "ONLY_NOT",
+        },
+      });
+    }
+
+    const total = res.pagination?.total ?? 0;
+    const loaded =
+      (params.pagination.pageIndex + 1) * params.pagination.pageSize;
+
+    return {
+      data: res.data,
+      hasMore: loaded < total,
+    };
+  }
+
   async function fetchTwinClassesTreePage(
     params: FetchTreePageParams
   ): Promise<FetchTreePageResult> {
@@ -571,7 +608,9 @@ export function TwinClasses({ type }: { type?: string }) {
       {view === "extendsTree" && (
         <TwinClassesExtendsTreeView fetchTreePage={fetchTwinClassesTreePage} />
       )}
-      {view === "headTree" && <TwinClassesHeadTreeView />}
+      {view === "headTree" && (
+        <TwinClassesHeadTreeView fetchTreePage={fetchTwinClassesHeadTreePage} />
+      )}
     </div>
   );
 }

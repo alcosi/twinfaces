@@ -34,7 +34,8 @@ export function createTwinClassApi(settings: ApiSettings) {
           showTwinClassMarker2DataListOptionMode: "DETAILED",
           showTwinClassTag2DataListOptionMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
-          showTwinClassFieldCollectionMode: "SHOW",
+          // TODO testing if this showMode needed enable him
+          // showTwinClassFieldCollectionMode: "SHOW",
           showTwinClass2PermissionMode: "DETAILED",
           showTwinClassSegmentMode: "SHOW",
           showTwinClassFreezeMode: "DETAILED",
@@ -69,6 +70,7 @@ export function createTwinClassApi(settings: ApiSettings) {
         query: {
           lazyRelation: false,
           showTwinClassMode: "MANAGED",
+          showTwinClassHead2TwinClassMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
