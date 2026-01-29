@@ -14,10 +14,10 @@ export const useFetchDomainById = () => {
 
   const fetchDomainById = useCallback(
     async ({
-      id,
+      domainId,
       query,
     }: {
-      id: string;
+      domainId: string;
       query?: operations["domainViewV1"]["parameters"]["query"];
     }): Promise<DomainView> => {
       const _query = query ?? {
@@ -29,7 +29,7 @@ export const useFetchDomainById = () => {
 
       try {
         const { data, error } = await api.domain.getById({
-          id,
+          domainId,
           query: _query,
         });
 

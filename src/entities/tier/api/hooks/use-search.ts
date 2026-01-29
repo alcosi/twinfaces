@@ -41,7 +41,7 @@ export const useTierSearch = () => {
           ) ?? [];
 
         return { data: tiers, pagination: data.pagination ?? {} };
-      } catch (error) {
+      } catch {
         throw new Error("An error occurred while fetching tiers");
       }
     },

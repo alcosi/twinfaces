@@ -54,7 +54,7 @@ export function DomainGeneral() {
       });
       toast.success("Domain was updated successfully!");
       refresh?.();
-    } catch (e) {
+    } catch {
       toast.error("Failed to update Domain");
     }
   }
@@ -173,7 +173,7 @@ export function DomainGeneral() {
       ...permissionSchemaAdapter,
     },
     renderPreview: domain.permissionSchema
-      ? (_) => (
+      ? () => (
           <PermissionSchemaResourceLink
             data={domain.permissionSchema}
             withTooltip
@@ -195,7 +195,7 @@ export function DomainGeneral() {
       ...tierAdapter,
     },
     renderPreview: domain.tier
-      ? (_) => <TierResourceLink data={domain.tier} withTooltip />
+      ? () => <TierResourceLink data={domain.tier} withTooltip />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;

@@ -46,7 +46,8 @@ export function TwinClassesExtendsTreeView({ fetchTreePage }: Props) {
     async function loadDomain() {
       const { DomainId } = await getAuthHeaders();
       const domain = await fetchDomainById({
-        id: DomainId,
+        domainId: DomainId,
+        query: {},
       });
 
       if (!domain.ancestorTwinClassId) {

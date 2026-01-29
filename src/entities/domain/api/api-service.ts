@@ -6,7 +6,6 @@ import {
   DomainViewQuery,
 } from "@/entities/domain";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { operations } from "@/shared/api/generated/schema";
 
 export function createDomainApi(settings: ApiSettings) {
   function search() {
@@ -35,18 +34,6 @@ export function createDomainApi(settings: ApiSettings) {
   }
 
   function getById({
-<<<<<<< HEAD
-    id,
-    query = {},
-  }: {
-    id: string;
-    query: operations["domainViewV1"]["parameters"]["query"];
-  }) {
-    return settings.client.GET(`/private/domain/{domainId}/v1`, {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { domainId: id },
-=======
     domainId,
     query = {},
   }: {
@@ -57,7 +44,6 @@ export function createDomainApi(settings: ApiSettings) {
       params: {
         header: getApiDomainHeaders(settings),
         path: { domainId },
->>>>>>> 9c120f15 ([TWINFACES-528] added domain general)
         query: query,
       },
     });

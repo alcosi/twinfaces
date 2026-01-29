@@ -38,7 +38,9 @@ export type DomainPublicView = components["schemas"]["DomainViewPublicV1"];
 export type DomainAddRqV1 = components["schemas"]["DomainCreateRqV1"];
 export type DomainViewPublicQuery =
   operations["domainViewPublicV1"]["parameters"]["query"];
-export type DomainViewQuery = operations["domainViewV1"]["parameters"]["query"];
+export type DomainViewQuery = NonNullable<
+  operations["domainViewV1"]["parameters"]["query"]
+>;
 export type DomainUpdateRq = components["schemas"]["DomainUpdateRqV1"];
 export type LocaleV1 = components["schemas"]["LocaleV1"];
 

@@ -11,11 +11,11 @@ type Props = {
   withTooltip?: boolean;
 };
 
-export const TwinClassSchemaResourceLink = ({
+export function TwinClassSchemaResourceLink({
   data,
   disabled,
   withTooltip,
-}: Props) => {
+}: Props) {
   const link = `/under-construction`;
 
   return (
@@ -34,4 +34,4 @@ export const TwinClassSchemaResourceLink = ({
       link={link}
     />
   );
-};
+}

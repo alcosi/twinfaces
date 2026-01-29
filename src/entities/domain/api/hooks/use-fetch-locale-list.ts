@@ -19,7 +19,7 @@ export const useFetchLocaleList = () => {
       }
 
       return data.localeList;
-    } catch (error) {
+    } catch {
       throw new Error("Failed to fetch locale list due to API error");
     }
   }, [api]);
