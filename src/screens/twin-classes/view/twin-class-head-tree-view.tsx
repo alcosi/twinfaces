@@ -52,7 +52,7 @@ export function TwinClassesHeadTreeView({ fetchTreePage }: Props) {
 
     const res = await fetchTreePage({
       mode: "root",
-      pagination: { pageIndex, pageSize: 10 },
+      pagination: { pageIndex, pageSize: 50 },
     });
 
     setRoot((s) => ({
@@ -75,7 +75,7 @@ export function TwinClassesHeadTreeView({ fetchTreePage }: Props) {
 
         <Accordion type="multiple">
           {isInitialRootLoading ? (
-            <TreeSkeleton level={0} rows={10} withLoadMore={true} />
+            <TreeSkeleton level={0} rows={50} withLoadMore={true} />
           ) : (
             root.nodes.map((node) => (
               <HeadTreeNodeItem
@@ -95,7 +95,7 @@ export function TwinClassesHeadTreeView({ fetchTreePage }: Props) {
           )}
 
           {root.isLoading && root.nodes.length > 0 && (
-            <TreeSkeleton level={0} rows={10} withLoadMore={true} />
+            <TreeSkeleton level={0} rows={50} withLoadMore={true} />
           )}
         </Accordion>
       </div>
