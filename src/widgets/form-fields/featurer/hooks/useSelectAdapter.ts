@@ -53,6 +53,8 @@ export function useFeaturerParamTypesSelectAdapter(
       useTwinClassSelectAdapter(),
     [FeaturerParamType.UUID_SET_TWINS_TWIN_CLASS_FIELD_ID]:
       useTwinClassFieldSelectAdapter(),
+    [FeaturerParamType.UUID_TWINS_TWIN_CLASS_FIELD_ID]:
+      useTwinClassFieldSelectAdapter(),
     [FeaturerParamType.UUID_TWINS_PERMISSION_ID]: usePermissionSelectAdapter(),
     [FeaturerParamType.UUID_TWINS_PERMISSION_SCHEMA_ID]:
       usePermissionSchemaSelectAdapter(),

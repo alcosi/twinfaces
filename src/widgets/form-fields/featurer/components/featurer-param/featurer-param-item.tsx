@@ -101,9 +101,12 @@ export function FeaturerParamFormItem({ param, onChange, ...props }: Props) {
         );
       case FeaturerParamType.UUID_TWINS_TWIN_CLASS_FIELD_ID:
         return (
-          <Button variant="outline" className="block" disabled>
-            Not implemented
-          </Button>
+          <ComboboxFormItem
+            // TODO: find solution to remove `any`
+            {...(adapter as any)}
+            onSelect={handleOnComboboxSelect}
+            {...props}
+          />
         );
       case FeaturerParamType.STRING:
       case FeaturerParamType.UUID:
