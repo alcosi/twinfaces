@@ -111,6 +111,7 @@ export function ResourceLink<T>({
       href={link}
       className="flex max-w-full"
       passHref
+      prefetch={false}
       onClick={(e) => e.stopPropagation()}
     >
       <ResourceLinkContent
