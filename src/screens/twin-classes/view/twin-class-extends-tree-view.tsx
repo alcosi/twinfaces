@@ -42,12 +42,17 @@ export function TwinClassesExtendsTreeView({ fetchTreePage }: Props) {
 
   const [rootTwinClassId, setRootTwinClassId] = useState<string | null>(null);
 
+  const _query = {
+    lazyRelation: false,
+    showDomainMode: "DETAILED",
+  } as const;
+
   useEffect(() => {
     async function loadDomain() {
       const { DomainId } = await getAuthHeaders();
       const domain = await fetchDomainById({
         domainId: DomainId,
-        query: {},
+        query: _query,
       });
 
       if (!domain.ancestorTwinClassId) {

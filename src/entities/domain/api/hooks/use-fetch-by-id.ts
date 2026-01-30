@@ -29,6 +29,7 @@ export const useFetchDomainById = () => {
           domainId,
           query,
         });
+
         if (error) {
           throw new Error("Failed to fetch domain due to API error", error);
         }
