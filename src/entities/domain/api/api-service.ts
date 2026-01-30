@@ -1,8 +1,11 @@
 import { PaginationState } from "@tanstack/react-table";
 
-import { DomainAddRqV1 } from "@/entities/domain";
+import {
+  DomainAddRqV1,
+  DomainUpdateRq,
+  DomainViewQuery,
+} from "@/entities/domain";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
-import { operations } from "@/shared/api/generated/schema";
 
 export function createDomainApi(settings: ApiSettings) {
   function search() {
@@ -31,16 +34,16 @@ export function createDomainApi(settings: ApiSettings) {
   }
 
   function getById({
-    id,
+    domainId,
     query = {},
   }: {
-    id: string;
-    query: operations["domainViewV1"]["parameters"]["query"];
+    domainId: string;
+    query?: DomainViewQuery;
   }) {
-    return settings.client.GET(`/private/domain/{domainId}/v1`, {
+    return settings.client.GET("/private/domain/{domainId}/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { domainId: id },
+        path: { domainId },
         query: query,
       },
     });
@@ -55,8 +58,21 @@ export function createDomainApi(settings: ApiSettings) {
     });
   }
 
-  function update() {
-    // TODO: Add implementation
+  function update({ body }: { body: DomainUpdateRq }) {
+    return settings.client.PUT("/private/domain/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function getLocaleList() {
+    return settings.client.GET("/public/locale/list/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+    });
   }
 
   return {
@@ -66,6 +82,7 @@ export function createDomainApi(settings: ApiSettings) {
     create,
     update,
     fetchTwinClassOwnerType,
+    getLocaleList,
   };
 }
 

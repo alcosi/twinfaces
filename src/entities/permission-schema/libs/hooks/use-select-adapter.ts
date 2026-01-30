@@ -1,11 +1,23 @@
-import { isPopulatedString, SelectAdapter } from "@/shared/libs";
-import { PermissionSchema, usePermissionSchemaSearchV1 } from "../../api";
+import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+
+import {
+  PermissionSchema,
+  useFetchPermissionSchemaById,
+  usePermissionSchemaSearchV1,
+} from "../../api";
 
 export function usePermissionSchemaSelectAdapter(): SelectAdapter<PermissionSchema> {
   const { searchPermissionSchemas } = usePermissionSchemaSearchV1();
+  const { fetchPermissionSchemaById } = useFetchPermissionSchemaById();
 
   async function getById(id: string) {
-    return {};
+    return fetchPermissionSchemaById({
+      schemaId: id,
+      query: {
+        lazyRelation: false,
+        showPermissionSchemaMode: "DETAILED",
+      },
+    });
   }
 
   async function getItems(search: string) {

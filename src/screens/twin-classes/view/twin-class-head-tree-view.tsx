@@ -35,6 +35,9 @@ type Props = {
   fetchTreePage: (params: FetchTreePageParams) => Promise<FetchTreePageResult>;
 };
 
+const ROOT_PAGE_SIZE = 50;
+const CHILD_PAGE_SIZE = 10;
+
 export function TwinClassesHeadTreeView({ fetchTreePage }: Props) {
   const [root, setRoot] = useState<RootTreeState>({
     nodes: [],
@@ -52,7 +55,7 @@ export function TwinClassesHeadTreeView({ fetchTreePage }: Props) {
 
     const res = await fetchTreePage({
       mode: "root",
-      pagination: { pageIndex, pageSize: 50 },
+      pagination: { pageIndex, pageSize: ROOT_PAGE_SIZE },
     });
 
     setRoot((s) => ({
@@ -91,11 +94,12 @@ export function TwinClassesHeadTreeView({ fetchTreePage }: Props) {
               level={0}
               onClick={() => loadRootPage(root.pageIndex + 1)}
               disabled={root.isLoading}
+              count={ROOT_PAGE_SIZE}
             />
           )}
 
           {root.isLoading && root.nodes.length > 0 && (
-            <TreeSkeleton level={0} rows={50} withLoadMore={true} />
+            <TreeSkeleton level={0} rows={ROOT_PAGE_SIZE} withLoadMore={true} />
           )}
         </Accordion>
       </div>
@@ -127,7 +131,7 @@ function HeadTreeNodeItem({
         idList: [state.data.id],
         depth: 1,
       },
-      pagination: { pageIndex, pageSize: 10 },
+      pagination: { pageIndex, pageSize: CHILD_PAGE_SIZE },
     });
 
     setState((s) => ({
@@ -199,11 +203,16 @@ function HeadTreeNodeItem({
               level={level + 1}
               onClick={() => loadPage(state.pageIndex + 1)}
               disabled={state.isLoading}
+              count={CHILD_PAGE_SIZE}
             />
           )}
 
           {state.isLoading && (
-            <TreeSkeleton level={level + 1} rows={10} withLoadMore={false} />
+            <TreeSkeleton
+              level={level + 1}
+              rows={CHILD_PAGE_SIZE}
+              withLoadMore={false}
+            />
           )}
         </div>
       )}
@@ -225,10 +234,12 @@ function TreeLoadMore({
   level,
   onClick,
   disabled,
+  count,
 }: {
   level: number;
   onClick: () => void;
   disabled?: boolean;
+  count: number;
 }) {
   return (
     <div className="relative flex items-center gap-1 py-1 text-sm">
@@ -270,7 +281,7 @@ function TreeLoadMore({
             "group-hover:text-foreground"
           )}
         >
-          +10 more
+          +{count} more
         </span>
       </button>
     </div>

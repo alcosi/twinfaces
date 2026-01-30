@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronUp, ChevronsUpDown, Globe, User2 } from "lucide-react";
+import { ChevronUp, ChevronsUpDown, Globe, Pencil, User2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -143,26 +143,43 @@ export function AppSidebar({
                 <DropdownMenuContent className="w-(--radix-popper-anchor-width)">
                   <>
                     {domainsList?.map((domain) => (
-                      <DropdownMenuItem
+                      <div
                         key={domain.id}
-                        disabled={domain.id === currentDomain?.id}
-                        onClick={() => onDomainSwitch(domain)}
-                        className="gap-x-2"
+                        className="relative flex items-center gap-x-2"
                       >
-                        {domain.iconLight && domain.iconDark ? (
-                          <ThemeImage
-                            className="h-4 w-4 rounded-full"
-                            lightSrc={domain.iconLight}
-                            darkSrc={domain.iconDark}
-                            width={56}
-                            height={56}
-                            alt="Domain logo icon"
-                          />
-                        ) : (
-                          <Globe className="h-4 w-4" />
+                        <DropdownMenuItem
+                          disabled={domain.id === currentDomain?.id}
+                          onClick={() => onDomainSwitch(domain)}
+                          className="flex-1 gap-x-2"
+                        >
+                          {domain.iconLight && domain.iconDark ? (
+                            <ThemeImage
+                              className="h-4 w-4 rounded-full"
+                              lightSrc={domain.iconLight}
+                              darkSrc={domain.iconDark}
+                              width={56}
+                              height={56}
+                              alt="Domain logo icon"
+                            />
+                          ) : (
+                            <Globe className="h-4 w-4" />
+                          )}
+                          <span>{domain.name}</span>
+                        </DropdownMenuItem>
+
+                        {domain.id === currentDomain?.id && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(`/core/domains/${domain.id}`);
+                            }}
+                            className="hover:text-foreground text-muted-foreground pr-2 transition-colors"
+                            aria-label="Edit domain"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </button>
                         )}
-                        <span>{domain.name}</span>
-                      </DropdownMenuItem>
+                      </div>
                     ))}
                     <DropdownMenuSeparator />
                     <CreateDomainButton />
