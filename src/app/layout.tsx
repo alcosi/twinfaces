@@ -1,4 +1,3 @@
-import { PublicEnvScript } from "next-runtime-env";
 import { Inter } from "next/font/google";
 import React from "react";
 
@@ -27,7 +26,6 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <PublicEnvScript />
         <title>{config.name ?? config.productName}</title>
         <meta
           name="description"
