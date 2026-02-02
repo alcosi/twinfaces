@@ -1,4 +1,3 @@
-import { env } from "next-runtime-env";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -6,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 const API_BASE = (
   process.env.TWINS_API_URL ||
-  env("NEXT_PUBLIC_TWINS_API_URL") ||
+  process.env.NEXT_PUBLIC_TWINS_API_URL ||
   ""
 ).replace(/\/+$/, "");
 
