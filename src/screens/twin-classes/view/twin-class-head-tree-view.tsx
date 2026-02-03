@@ -15,13 +15,12 @@ import { Accordion } from "@/shared/ui/accordion";
 
 type HeadTreeNode = {
   data: TwinClass_DETAILED;
-
   children: HeadTreeNode[];
   pageIndex: number;
   hasMore: boolean;
-
   isLoading?: boolean;
   hasCheckedChildren?: boolean;
+  totalChildren: number;
 };
 
 type RootTreeState = {
@@ -80,12 +79,13 @@ export function TwinClassesHeadTreeView({ fetchTreePage }: Props) {
           {isInitialRootLoading ? (
             <TreeSkeleton level={0} rows={50} withLoadMore={true} />
           ) : (
-            root.nodes.map((node) => (
+            root.nodes.map((node, index) => (
               <HeadTreeNodeItem
                 key={node.data.id}
                 node={node}
                 fetchTreePage={fetchTreePage}
                 level={0}
+                isLast={index === root.nodes.length - 1}
               />
             ))
           )}
@@ -111,17 +111,19 @@ function HeadTreeNodeItem({
   node,
   fetchTreePage,
   level = 0,
+  isLast,
 }: {
   node: HeadTreeNode;
   fetchTreePage: Props["fetchTreePage"];
   level?: number;
+  isLast: boolean;
 }) {
   const [state, setState] = useState<HeadTreeNode>(node);
   const [open, setOpen] = useState(false);
   const isToggleDisabled = state.isLoading;
 
   async function loadPage(pageIndex: number) {
-    if (state.isLoading) return;
+    if (state.isLoading || state.totalChildren === 0) return;
 
     setState((s) => ({ ...s, isLoading: true }));
 
@@ -148,7 +150,7 @@ function HeadTreeNodeItem({
   }
 
   async function toggle() {
-    if (isToggleDisabled) return;
+    if (isToggleDisabled || state.totalChildren === 0) return;
 
     if (!state.hasCheckedChildren) {
       await loadPage(0);
@@ -156,7 +158,7 @@ function HeadTreeNodeItem({
     setOpen((v) => !v);
   }
 
-  const isLeaf = state.hasCheckedChildren && state.children.length === 0;
+  const isLeaf = state.totalChildren === 0;
 
   return (
     <div>
@@ -183,18 +185,25 @@ function HeadTreeNodeItem({
 
           <TwinClassResourceLink data={state.data} withTooltip />
 
+          {state.totalChildren > 0 && (
+            <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs">
+              {state.totalChildren}
+            </span>
+          )}
+
           {state.isLoading && <LoadingSpinner className="h-4 w-4" />}
         </div>
       </div>
 
       {open && (
         <div className="flex flex-col">
-          {state.children.map((child) => (
+          {state.children.map((child, index) => (
             <HeadTreeNodeItem
               key={child.data.id}
               node={child}
               fetchTreePage={fetchTreePage}
               level={level + 1}
+              isLast={index === state.children.length - 1}
             />
           ))}
 
@@ -221,13 +230,18 @@ function HeadTreeNodeItem({
 }
 
 function mapNodes(data: TwinClass_DETAILED[]): HeadTreeNode[] {
-  return data.map((tc) => ({
-    data: tc,
-    children: [],
-    pageIndex: 0,
-    hasMore: false,
-    hasCheckedChildren: false,
-  }));
+  return data.map((tc) => {
+    const totalChildren = tc.headHierarchyCounterDirectChildren ?? 0;
+
+    return {
+      data: tc,
+      children: [],
+      pageIndex: 0,
+      totalChildren,
+      hasMore: totalChildren > CHILD_PAGE_SIZE,
+      hasCheckedChildren: totalChildren === 0,
+    };
+  });
 }
 
 function TreeLoadMore({
