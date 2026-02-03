@@ -17,13 +17,12 @@ import { Accordion } from "@/shared/ui/accordion";
 
 type ExtendsTreeNode = {
   data: TwinClass_DETAILED;
-
   children: ExtendsTreeNode[];
   pageIndex: number;
   hasMore: boolean;
-
   isLoading?: boolean;
   hasCheckedChildren?: boolean;
+  totalChildren: number;
 };
 
 type RootTreeState = {
@@ -147,7 +146,7 @@ function ExtendsTreeNodeItem({
   const isToggleDisabled = state.isLoading;
 
   async function loadPage(pageIndex: number) {
-    if (isToggleDisabled) return;
+    if (isToggleDisabled || state.totalChildren === 0) return;
 
     setState((s) => ({ ...s, isLoading: true }));
 
@@ -168,28 +167,13 @@ function ExtendsTreeNodeItem({
       hasMore: res.hasMore,
       children:
         pageIndex === 0
-          ? res.data.map((tc) => ({
-              data: tc,
-              children: [],
-              pageIndex: 0,
-              hasMore: false,
-              hasCheckedChildren: false,
-            }))
-          : [
-              ...s.children,
-              ...res.data.map((tc) => ({
-                data: tc,
-                children: [],
-                pageIndex: 0,
-                hasMore: false,
-                hasCheckedChildren: false,
-              })),
-            ],
+          ? mapNodes(res.data)
+          : [...s.children, ...mapNodes(res.data)],
     }));
   }
 
   async function toggle() {
-    if (isToggleDisabled) return;
+    if (isToggleDisabled || state.totalChildren === 0) return;
 
     if (!state.hasCheckedChildren) {
       await loadPage(0);
@@ -197,7 +181,7 @@ function ExtendsTreeNodeItem({
     setOpen((v) => !v);
   }
 
-  const isLeaf = state.hasCheckedChildren && state.children.length === 0;
+  const isLeaf = state.totalChildren === 0;
 
   return (
     <div>
@@ -223,6 +207,12 @@ function ExtendsTreeNodeItem({
           </div>
 
           <TwinClassResourceLink data={state.data} withTooltip />
+
+          {state.totalChildren > 0 && (
+            <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs">
+              {state.totalChildren}
+            </span>
+          )}
 
           {state.isLoading && <LoadingSpinner className="h-4 w-4" />}
         </div>
@@ -257,13 +247,18 @@ function ExtendsTreeNodeItem({
 }
 
 function mapNodes(data: TwinClass_DETAILED[]): ExtendsTreeNode[] {
-  return data.map((tc) => ({
-    data: tc,
-    children: [],
-    pageIndex: 0,
-    hasMore: false,
-    hasCheckedChildren: false,
-  }));
+  return data.map((tc) => {
+    const totalChildren = tc.extendsHierarchyCounterDirectChildren ?? 0;
+
+    return {
+      data: tc,
+      children: [],
+      pageIndex: 0,
+      totalChildren,
+      hasMore: totalChildren > 10,
+      hasCheckedChildren: totalChildren === 0,
+    };
+  });
 }
 
 function TreeLoadMore({
