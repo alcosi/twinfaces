@@ -1097,6 +1097,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/twin_class_schema/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns twin class schemas */
+        post: operations["twinClassSchemaSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin_class_freeze/search/v1": {
         parameters: {
             query?: never;
@@ -5946,6 +5963,76 @@ export interface components {
             projectionTypeMap?: {
                 [key: string]: components["schemas"]["ProjectionTypeV1"];
             };
+            /** @description scheduler map */
+            schedulerMap?: {
+                [key: string]: components["schemas"]["SchedulerV1"];
+            };
+        };
+        SchedulerV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description domain id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            domainId?: string;
+            /**
+             * Format: int32
+             * @description scheduler featurer id
+             * @example 1000
+             */
+            schedulerFeaturerId?: number;
+            /**
+             * @description params for scheduler featurer
+             * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
+             *     "GTEvalue"=>"2"}
+             */
+            schedulerParams?: {
+                [key: string]: string;
+            };
+            /**
+             * @description flag to activate/deactivate scheduler
+             * @example true
+             */
+            active?: boolean;
+            /**
+             * @description flag to enable/disable logging scheduler results to db
+             * @example true
+             */
+            logEnabled?: boolean;
+            /**
+             * @description time condition to run scheduler task
+             * @example 0
+             */
+            cron?: string;
+            /**
+             * Format: int32
+             * @description time interval in ms at which scheduler will run task
+             * @example 500
+             */
+            fixedRate?: number;
+            /**
+             * @description description
+             * @example Some description
+             */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description updated at
+             * @example 2023-09-13T09:32:08
+             */
+            updatedAt?: string;
         };
         SpaceRoleV1: {
             /**
@@ -6765,6 +6852,16 @@ export interface components {
             segmentClassIds?: string[];
             segment?: boolean;
             hasSegment?: boolean;
+            /**
+             * Format: int32
+             * @description how many children by head
+             */
+            headHierarchyCounterDirectChildren?: number;
+            /**
+             * Format: int32
+             * @description how many children by extends
+             */
+            extendsHierarchyCounterDirectChildren?: number;
             /** @description Class fields id list */
             fieldIds?: string[];
             /** @description List of status id. Will be filled only in lazyRelations mode is false */
@@ -10904,6 +11001,17 @@ export interface components {
              */
             to?: string;
         };
+        HierarchySearchV1: {
+            /** @description entity id list */
+            idList?: string[];
+            /** @description entity id exclude list */
+            idExcludeList?: string[];
+            /**
+             * Format: int32
+             * @description search depth
+             */
+            depth?: number;
+        };
         SpaceSearchV1: {
             /**
              * Format: uuid
@@ -11166,6 +11274,10 @@ export interface components {
             };
             /** @description created at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
+            /** @description hierarchy children search */
+            hierarchyChildrenSearch?: components["schemas"]["HierarchySearchV1"];
+            /** @description apply distinct on query results */
+            distinct?: boolean;
         };
         UserSearchConfiguredRqV1: {
             /** @description search */
@@ -11729,6 +11841,53 @@ export interface components {
             pagination?: components["schemas"]["PaginationV1"];
             /** @description results - status list */
             statuses?: components["schemas"]["TwinStatusV1"][];
+        };
+        TwinClassSchemaSearchRqV1: {
+            search?: components["schemas"]["TwinClassSchemaSearchV1"];
+        };
+        TwinClassSchemaSearchV1: {
+            /** @description id list */
+            idList?: string[];
+            /** @description id exclude list */
+            idExcludeList?: string[];
+            /** @description name like list */
+            nameLikeList?: string[];
+            /** @description name not like list */
+            nameNotLikeList?: string[];
+            /** @description description like list */
+            descriptionLikeList?: string[];
+            /** @description description not like list */
+            descriptionNotLikeList?: string[];
+            /** @description created by user id list */
+            createdByUserIdList?: string[];
+            /** @description created by user id exclude list */
+            createdByUserIdExcludeList?: string[];
+            /** @description created at */
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
+        };
+        TwinClassSchemaSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description twin class schema list */
+            twinClassSchemas?: components["schemas"]["TwinClassSchemaV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         TwinClassFreezeCreateRqV1: {
             /** @description twin class freeze list */
@@ -12794,17 +12953,6 @@ export interface components {
             /** @description results - twin class */
             twinClass?: components["schemas"]["TwinClassV1"];
         };
-        HierarchySearchV1: {
-            /** @description twin class id list */
-            idList?: string[];
-            /** @description twin class id exclude list */
-            idExcludeList?: string[];
-            /**
-             * Format: int32
-             * @description Search depth
-             */
-            depth?: number;
-        };
         TwinClassSearchConfiguredRqV1: {
             /** @description Search named params values */
             params?: {
@@ -13551,6 +13699,10 @@ export interface components {
             };
             /** @description created at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
+            /** @description hierarchy children search */
+            hierarchyChildrenSearch?: components["schemas"]["HierarchySearchV1"];
+            /** @description apply distinct on query results */
+            distinct?: boolean;
             /** @description Head twin sub-search */
             headSearch?: components["schemas"]["TwinSearchV1"];
             /** @description Children twin sub-search */
@@ -13681,6 +13833,10 @@ export interface components {
             };
             /** @description created at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
+            /** @description hierarchy children search */
+            hierarchyChildrenSearch?: components["schemas"]["HierarchySearchV1"];
+            /** @description apply distinct on query results */
+            distinct?: boolean;
             /** @description Head twin sub-search */
             headSearch?: components["schemas"]["TwinSearchV1"];
             /** @description Children twin sub-search */
@@ -13782,9 +13938,9 @@ export interface components {
             /** @description actor user id exclude list */
             actorUserIdExcludeList?: string[];
             /** @description type list */
-            typeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserRemoved" | "unknown")[];
+            typeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
             /** @description type exclude list */
-            typeExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserRemoved" | "unknown")[];
+            typeExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
             /** @description create at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
         };
@@ -13842,7 +13998,7 @@ export interface components {
              */
             actorUserId?: string;
             /** @enum {string} */
-            type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserRemoved" | "unknown";
+            type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown";
             /** @description Filled only if type = fieldChanged */
             fieldName?: string;
             /** @description twin */
@@ -14818,12 +14974,6 @@ export interface components {
             spaceRoleUserEnterList?: string[];
             spaceRoleUserExitList?: string[];
         };
-        DataTimeRange: {
-            /** Format: date-time */
-            from?: string;
-            /** Format: date-time */
-            to?: string;
-        };
         SchedulerLogSearchRqV1: {
             /** @description search DTO */
             search?: components["schemas"]["SchedulerLogSearchV1"];
@@ -14838,7 +14988,7 @@ export interface components {
             /** @description scheduler id exclude set */
             schedulerIdExcludeSet?: string[];
             /** @description created at */
-            createdAt?: components["schemas"]["DataTimeRange"];
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description result like set */
             resultLikeSet?: string[];
             /** @description result not like set */
@@ -14980,72 +15130,6 @@ export interface components {
             schedulers?: components["schemas"]["SchedulerV1"][];
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
-        };
-        SchedulerV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example be44e826-ce24-4881-a227-f3f72d915a20
-             */
-            id?: string;
-            /**
-             * Format: uuid
-             * @description domain id
-             * @example be44e826-ce24-4881-a227-f3f72d915a20
-             */
-            domainId?: string;
-            /**
-             * Format: int32
-             * @description scheduler featurer id
-             * @example 1000
-             */
-            schedulerFeaturerId?: number;
-            /**
-             * @description params for scheduler featurer
-             * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
-             *     "GTEvalue"=>"2"}
-             */
-            schedulerParams?: {
-                [key: string]: string;
-            };
-            /**
-             * @description flag to activate/deactivate scheduler
-             * @example true
-             */
-            active?: boolean;
-            /**
-             * @description flag to enable/disable logging scheduler results to db
-             * @example true
-             */
-            logEnabled?: boolean;
-            /**
-             * @description time condition to run scheduler task
-             * @example 0
-             */
-            cron?: string;
-            /**
-             * Format: int32
-             * @description time interval in ms at which scheduler will run task
-             * @example 500
-             */
-            fixedRate?: number;
-            /**
-             * @description description
-             * @example Some description
-             */
-            description?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /**
-             * Format: date-time
-             * @description updated at
-             * @example 2023-09-13T09:32:08
-             */
-            updatedAt?: string;
         };
         ProjectionTypeCreateRqV1: {
             /** @description data list projections */
@@ -22573,7 +22657,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Response"];
+                    "application/json": components["schemas"]["DraftRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -28469,6 +28553,51 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TwinStatusSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassSchemaSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassSchemaSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin class schema list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassSchemaSearchRsV1"];
                 };
             };
             /** @description Access is denied */
