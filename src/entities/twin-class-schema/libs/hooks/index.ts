@@ -1,1 +1,1 @@
-export * from "./useSelectAdapter";
+export * from "./use-select-adapter";

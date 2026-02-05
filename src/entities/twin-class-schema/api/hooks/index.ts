@@ -1,1 +1,1 @@
-export * from "./useSearchV1";
+export * from "./use-search-v1";
