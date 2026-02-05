@@ -16,6 +16,7 @@ export type TierFilterKeys =
   | "custom"
   | "permissionSchemaIdList"
   | "twinflowSchemaIdList"
+  | "twinclassSchemaIdList"
   | "attachmentsStorageQuotaCountRange"
   | "attachmentsStorageQuotaSizeRange"
   | "userCountQuotaRange"

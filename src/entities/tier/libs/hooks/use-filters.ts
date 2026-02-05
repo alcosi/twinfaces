@@ -3,6 +3,7 @@ import { z } from "zod";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
+import { useTwinClassSchemaSelectAdapter } from "@/entities/twin-class-schema";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import {
   type FilterFeature,
@@ -17,6 +18,7 @@ import { TierFilterKeys, TierFilters } from "../../api";
 export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
   const permissionSchemaAdapter = usePermissionSchemaSelectAdapter();
   const twinFlowSchemaAdapter = useTwinFlowSchemaSelectAdapter();
+  const twinClassSchemaAdapter = useTwinClassSchemaSelectAdapter();
 
   function buildFilterFields(): Record<TierFilterKeys, AutoFormValueInfo> {
     return {
@@ -48,8 +50,12 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
         multi: true,
         ...twinFlowSchemaAdapter,
       },
-      // TODO: Add filter `class-schema`
-      // see BLOCKED -> https://alcosi.atlassian.net/browse/TWINFACES-406
+      twinclassSchemaIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Twinclass schema",
+        multi: true,
+        ...twinClassSchemaAdapter,
+      },
       attachmentsStorageQuotaCountRange: {
         type: AutoFormValueType.numberRange,
         label: "Attachments count quota",
@@ -82,6 +88,10 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
       ),
       twinflowSchemaIdList: toArrayOfString(
         toArray(filters.twinflowSchemaIdList),
+        "id"
+      ),
+      twinclassSchemaIdList: toArrayOfString(
+        toArray(filters.twinclassSchemaIdList),
         "id"
       ),
       attachmentsStorageQuotaCountRange: {
