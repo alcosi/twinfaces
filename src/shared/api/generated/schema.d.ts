@@ -5297,6 +5297,11 @@ export interface components {
              */
             createdByUserId?: string;
             /**
+             * Format: uuid
+             * @description twin factory id
+             */
+            twinFactoryId?: string;
+            /**
              * Format: date-time
              * @description updated at
              * @example 2023-09-13T09:32:08
@@ -6862,6 +6867,7 @@ export interface components {
              * @description how many children by extends
              */
             extendsHierarchyCounterDirectChildren?: number;
+            uniqueName?: boolean;
             /** @description Class fields id list */
             fieldIds?: string[];
             /** @description List of status id. Will be filled only in lazyRelations mode is false */
@@ -7644,6 +7650,8 @@ export interface components {
             assigneeRequired?: boolean;
             /** @description [optional] is segment */
             segment?: boolean;
+            /** @description [optional] is unique name */
+            uniqueName?: boolean;
             /** @description [optional] external id */
             externalId?: string;
             /** @description [optional] external properties */
@@ -7774,6 +7782,8 @@ export interface components {
             assigneeRequired?: boolean;
             /** @description [optional] is segment */
             segment?: boolean;
+            /** @description [optional] is unique name */
+            uniqueName?: boolean;
             /** @description [optional] external id */
             externalId?: string;
             /** @description [optional] external properties */
@@ -9365,6 +9375,11 @@ export interface components {
              * @example Some description
              */
             description?: string;
+            /**
+             * Format: uuid
+             * @description twin factory id
+             */
+            twinFactoryId?: string;
             /**
              * Format: uuid
              * @description conditionSetId
@@ -12750,6 +12765,8 @@ export interface components {
             assigneeRequired?: boolean;
             /** @description [optional] is segment */
             segment?: boolean;
+            /** @description [optional] is unique name */
+            uniqueName?: boolean;
             /** @description [optional] external id */
             externalId?: string;
             /** @description [optional] external properties */
@@ -12892,6 +12909,8 @@ export interface components {
             assigneeRequired?: boolean;
             /** @description [optional] is segment */
             segment?: boolean;
+            /** @description [optional] is unique name */
+            uniqueName?: boolean;
             /** @description [optional] external id */
             externalId?: string;
             /** @description [optional] external properties */
@@ -13018,6 +13037,12 @@ export interface components {
              * @enum {string}
              */
             hasSegments?: "ONLY" | "ONLY_NOT" | "ANY";
+            /**
+             * @description twin class has uniq name flag
+             * @example ANY
+             * @enum {string}
+             */
+            uniqueName?: "ONLY" | "ONLY_NOT" | "ANY";
             /**
              * @description twin class has twinflow schema space
              * @example ANY
@@ -16572,12 +16597,21 @@ export interface components {
              * @example Some description
              */
             description?: string;
+            /**
+             * Format: uuid
+             * @description twin factory id
+             */
+            twinFactoryId?: string;
         };
         FactoryConditionSetSearchRqV1: {
             /** @description id list */
             idList?: string[];
             /** @description id exclude list */
             idExcludeList?: string[];
+            /** @description twin factory id list */
+            twinFactoryIdList?: string[];
+            /** @description twin factory id exclude list */
+            twinFactoryIdExcludeList?: string[];
             /** @description name like list */
             nameLikeList?: string[];
             /** @description name like exclude list */
@@ -24256,6 +24290,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25271,6 +25306,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -25529,8 +25565,15 @@ export interface operations {
                 showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+                showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryErasersCountMode?: "HIDE" | "SHOW";
+                showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+                showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesCountMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
@@ -25579,8 +25622,15 @@ export interface operations {
                 showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+                showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryErasersCountMode?: "HIDE" | "SHOW";
+                showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+                showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesCountMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
@@ -25629,10 +25679,17 @@ export interface operations {
                 showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+                showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryBranchesCountMode?: "HIDE" | "SHOW";
                 showFactoryCondition2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryCondition2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryErasersCountMode?: "HIDE" | "SHOW";
+                showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+                showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesCountMode?: "HIDE" | "SHOW";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
@@ -25682,10 +25739,17 @@ export interface operations {
                 showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+                showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryBranchesCountMode?: "HIDE" | "SHOW";
                 showFactoryCondition2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryCondition2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryErasersCountMode?: "HIDE" | "SHOW";
+                showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+                showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesCountMode?: "HIDE" | "SHOW";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
@@ -25740,6 +25804,7 @@ export interface operations {
                 showFactoryBranch2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -25797,6 +25862,7 @@ export interface operations {
                 showFactoryBranch2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -25968,6 +26034,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -26110,6 +26177,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35764,6 +35832,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37654,6 +37723,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -37796,6 +37866,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -37935,6 +38006,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultiplier2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38208,6 +38280,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38332,8 +38405,15 @@ export interface operations {
                 showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+                showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryErasersCountMode?: "HIDE" | "SHOW";
+                showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+                showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesCountMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
@@ -38385,10 +38465,17 @@ export interface operations {
                 showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+                showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryBranchesCountMode?: "HIDE" | "SHOW";
                 showFactoryCondition2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryCondition2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryErasersCountMode?: "HIDE" | "SHOW";
+                showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+                showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesCountMode?: "HIDE" | "SHOW";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
@@ -38446,6 +38533,7 @@ export interface operations {
                 showFactoryBranch2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -38515,6 +38603,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -38786,6 +38875,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38954,6 +39044,7 @@ export interface operations {
                 showFactoryBranch2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -39126,6 +39217,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -44442,6 +44534,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -44580,6 +44673,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
@@ -44715,6 +44809,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryErasersCountMode?: "HIDE" | "SHOW";
                 showFactoryMultiplier2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44980,6 +45075,7 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryEraser2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45103,8 +45199,15 @@ export interface operations {
                 showConditionSetInFactoryMultiplierFilterUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
+                showFactory2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryBranchesCountMode?: "HIDE" | "SHOW";
+                showFactoryConditionSet2FactoryMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSet2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryConditionSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showFactoryErasersCountMode?: "HIDE" | "SHOW";
+                showFactoryMultipliersCountMode?: "HIDE" | "SHOW";
+                showFactoryPipelineCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesCountMode?: "HIDE" | "SHOW";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {

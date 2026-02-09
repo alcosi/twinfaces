@@ -15,5 +15,9 @@ export const hydrateFactoryConditionSetFromMap = (
     hydrated.createdByUser = relatedObjects.userMap[dto.createdByUserId]!;
   }
 
+  if (dto.twinFactoryId && relatedObjects?.factoryMap) {
+    hydrated.factory = relatedObjects.factoryMap[dto.twinFactoryId]!;
+  }
+
   return hydrated;
 };

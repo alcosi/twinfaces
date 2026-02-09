@@ -1,3 +1,4 @@
+import { Factory } from "@/entities/factory/api";
 import { User } from "@/entities/user";
 import { components, operations } from "@/shared/api/generated/schema";
 
@@ -6,6 +7,7 @@ export type FactoryConditionSet =
 
 export type FactoryConditionSet_DETAILED = FactoryConditionSet & {
   createdByUser?: User;
+  factory?: Factory;
 };
 
 export type FactoryConditionSetViewQuery =
@@ -16,6 +18,7 @@ export type FactoryConditionSetSearchRq =
 
 export type FactoryConditionSetFilterKeys =
   | "idList"
+  | "twinFactoryIdList"
   | "nameLikeList"
   | "descriptionLikeList";
 

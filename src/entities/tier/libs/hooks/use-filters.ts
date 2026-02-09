@@ -52,7 +52,7 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
       },
       twinclassSchemaIdList: {
         type: AutoFormValueType.combobox,
-        label: "Twinclass schema",
+        label: "Class schema",
         multi: true,
         ...twinClassSchemaAdapter,
       },
