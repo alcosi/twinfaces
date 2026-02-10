@@ -12,6 +12,7 @@ export function useUpdateFactoryConditionSet() {
       conditionSets: Array<{
         id?: string;
         name?: string;
+        twinFactoryId?: string;
         description?: string;
         conditionSetId?: string;
       }>;
