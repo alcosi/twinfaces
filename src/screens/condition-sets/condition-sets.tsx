@@ -16,6 +16,7 @@ import {
   useFactoryConditionSetFilters,
   useFactoryConditionSetSearch,
 } from "@/entities/factory-condition-set";
+import { FactoryResourceLink } from "@/features/factory/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
@@ -27,6 +28,7 @@ import { ConditionSetFields } from "./form-fields";
 
 const colDefs: Record<
   | "id"
+  | "twinFactoryId"
   | "name"
   | "description"
   | "inFactoryPipelineUsagesCount"
@@ -46,6 +48,17 @@ const colDefs: Record<
       const value = data.getValue<string | undefined>();
       return value ? <GuidWithCopy value={value} /> : null;
     },
+  },
+  twinFactoryId: {
+    id: "factoryId",
+    accessorKey: "factoryId",
+    header: "Factory",
+    cell: ({ row: { original } }) =>
+      original.factory && (
+        <div className="inline-flex max-w-48">
+          <FactoryResourceLink data={original.factory} withTooltip />
+        </div>
+      ),
   },
   name: {
     id: "name",
@@ -149,6 +162,7 @@ export function ConditionSetsScreen() {
       conditionSets: [
         {
           name: formValues.name,
+          twinFactoryId: formValues.twinFactoryId,
           description: formValues.description,
         },
       ],
@@ -169,6 +183,7 @@ export function ConditionSetsScreen() {
       title="Condition sets"
       columns={[
         colDefs.id,
+        colDefs.twinFactoryId,
         colDefs.name,
         colDefs.description,
         colDefs.inFactoryPipelineUsagesCount,
@@ -186,6 +201,7 @@ export function ConditionSetsScreen() {
       }
       defaultVisibleColumns={[
         colDefs.id,
+        colDefs.twinFactoryId,
         colDefs.name,
         colDefs.description,
         colDefs.inFactoryPipelineUsagesCount,

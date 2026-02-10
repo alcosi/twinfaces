@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import { useFactorySelectAdapter } from "@/entities/factory/libs";
 import {
   FilterFeature,
   toArray,
@@ -18,6 +19,7 @@ export function useFactoryConditionSetFilters(): FilterFeature<
   FactoryConditionSetFilterKeys,
   FactoryConditionSetFilters
 > {
+  const factoryAdapter = useFactorySelectAdapter();
   function buildFilterFields(): Record<
     FactoryConditionSetFilterKeys,
     AutoFormValueInfo
@@ -28,6 +30,12 @@ export function useFactoryConditionSetFilters(): FilterFeature<
         label: "Id",
         schema: z.string().uuid("Please enter a valid UUID"),
         placeholder: "Enter UUID",
+      },
+      twinFactoryIdList: {
+        type: AutoFormValueType.combobox,
+        label: "Factory",
+        multi: true,
+        ...factoryAdapter,
       },
       nameLikeList: {
         type: AutoFormValueType.tag,
@@ -45,6 +53,7 @@ export function useFactoryConditionSetFilters(): FilterFeature<
   ): FactoryConditionSetFilters {
     return {
       idList: toArrayOfString(filters.idList),
+      twinFactoryIdList: toArrayOfString(filters.twinFactoryIdList, "id"),
       nameLikeList: toArrayOfString(filters.nameLikeList).map(wrapWithPercent),
       descriptionLikeList: toArrayOfString(
         toArray(filters.descriptionLikeList),
