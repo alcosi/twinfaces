@@ -3,8 +3,10 @@ import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
+import { useFactorySelectAdapter } from "@/entities/factory";
 import { useUpdateFactoryConditionSet } from "@/entities/factory-condition-set";
 import { FactoryConditionSetContext } from "@/features/factory-condition-set";
+import { FactoryResourceLink } from "@/features/factory/ui";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
@@ -25,6 +27,7 @@ export function FactoryConditionSetGeneral() {
     FactoryConditionSetContext
   );
   const { updateFactoryConditionSet } = useUpdateFactoryConditionSet();
+  const factoryAdapter = useFactorySelectAdapter();
 
   const nameSettings: InPlaceEditProps<typeof factoryConditionSet.name> = {
     id: "name",
@@ -43,6 +46,39 @@ export function FactoryConditionSetGeneral() {
             {
               conditionSetId: factoryConditionSet.id,
               name: value,
+            },
+          ],
+        },
+      }).then(refresh);
+    },
+  };
+
+  const factorySettings: InPlaceEditProps<
+    typeof factoryConditionSet.twinFactoryId
+  > = {
+    id: "twinFactoryId",
+    value: factoryConditionSet.twinFactoryId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select factory...",
+      ...factoryAdapter,
+    },
+    renderPreview: factoryConditionSet.factory
+      ? () => (
+          <FactoryResourceLink
+            data={factoryConditionSet.factory!}
+            withTooltip
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return updateFactoryConditionSet({
+        body: {
+          conditionSets: [
+            {
+              conditionSetId: factoryConditionSet.id,
+              twinFactoryId: id,
             },
           ],
         },
@@ -94,6 +130,13 @@ export function FactoryConditionSetGeneral() {
             <TableCell>Name</TableCell>
             <TableCell>
               <InPlaceEdit {...nameSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Factory</TableCell>
+            <TableCell>
+              <InPlaceEdit {...factorySettings} />
             </TableCell>
           </TableRow>
 

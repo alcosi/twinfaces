@@ -26,6 +26,7 @@ export function useFetchFactoryConditionSetById() {
             showConditionSetInFactoryPipelineUsagesCountMode: "SHOW",
             showFactoryConditionSet2UserMode: "DETAILED",
             showFactoryConditionSetMode: "DETAILED",
+            showFactoryConditionSet2FactoryMode: "DETAILED",
           },
         });
 
