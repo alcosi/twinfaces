@@ -93,6 +93,7 @@ const colDefs: Record<
     | "segment"
     | "hasSegment"
     | "twinClassFreezeId"
+    | "uniqueName"
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
@@ -307,6 +308,13 @@ const colDefs: Record<
         </div>
       ) : null,
   },
+
+  uniqueName: {
+    id: "uniqueName",
+    accessorKey: "uniqueName",
+    header: "Unique name",
+    cell: (data) => data.getValue() && <Check />,
+  },
 };
 
 export function TwinClasses({ type }: { type?: string }) {
@@ -474,6 +482,7 @@ export function TwinClasses({ type }: { type?: string }) {
       twinClassSchemaSpace,
       aliasSpace,
       key,
+      uniqueName,
     } = formValues;
 
     const twinClassCreateRq: TwinClassCreateRq = {
@@ -501,6 +510,7 @@ export function TwinClasses({ type }: { type?: string }) {
           markerDataListId: markerDataListId || undefined,
           tagDataListId: tagDataListId || undefined,
           autoCreatePermissions,
+          uniqueName,
           autoCreateTwinflow,
           viewPermissionId: !autoCreatePermissions
             ? viewPermissionId
@@ -573,6 +583,7 @@ export function TwinClasses({ type }: { type?: string }) {
             colDefs.segment,
             colDefs.hasSegment,
             colDefs.twinClassFreezeId,
+            colDefs.uniqueName,
           ]}
           getRowId={(row) => row.id!}
           onRowClick={(row) =>

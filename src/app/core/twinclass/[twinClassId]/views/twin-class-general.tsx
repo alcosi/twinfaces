@@ -294,6 +294,21 @@ export function TwinClassGeneral() {
     });
   }
 
+  function switchUniqueName() {
+    const action = twinClass.uniqueName ? "disable" : "enable";
+    const status = twinClass.uniqueName ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Unique name Mode`,
+      body: `Are you sure you want to ${action} Unique name mode for this class?`,
+      onSuccess: () => {
+        return update({
+          uniqueName: !twinClass.uniqueName,
+        });
+      },
+    });
+  }
+
   function switchAssigneeRequired() {
     const action = twinClass.assigneeRequired ? "disable" : "enable";
     const status = twinClass.assigneeRequired ? "Disable" : "Enable";
@@ -360,6 +375,16 @@ export function TwinClassGeneral() {
               <Switch
                 checked={twinClass.abstractClass ?? false}
                 onCheckedChange={switchAbstract}
+              />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Unique name</TableCell>
+            <TableCell>
+              <Switch
+                checked={twinClass.uniqueName ?? false}
+                onCheckedChange={switchUniqueName}
               />
             </TableCell>
           </TableRow>
