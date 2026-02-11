@@ -141,6 +141,12 @@ export function TwinClassFormFields({
 
       <CheckboxFormField
         control={control}
+        name="uniqueName"
+        label="Unique name"
+      />
+
+      <CheckboxFormField
+        control={control}
         name="autoCreatePermissions"
         label="Auto create permissions"
         onClick={() => setIsAutoCreatePermission((prev) => !prev)}

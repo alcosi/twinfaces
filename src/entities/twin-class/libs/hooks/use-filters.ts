@@ -164,15 +164,21 @@ export function useTwinClassFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
-      externalIdLikeList: {
-        type: AutoFormValueType.tag,
-        label: "External Id",
-      },
       freezeIdList: {
         label: "Freeze",
         type: AutoFormValueType.combobox,
         multi: true,
         ...fAdapter,
+      },
+      externalIdLikeList: {
+        type: AutoFormValueType.tag,
+        label: "External Id",
+      },
+      uniqueName: {
+        type: AutoFormValueType.boolean,
+        label: "Unique name",
+        hasIndeterminate: true,
+        defaultValue: "indeterminate",
       },
     };
   }
@@ -244,6 +250,7 @@ export function useTwinClassFilters(): FilterFeature<
         wrapWithPercent
       ),
       freezeIdList: toArrayOfString(toArray(filters.freezeIdList), "id"),
+      uniqueName: mapToChoice(filters.uniqueName),
     };
 
     return result;

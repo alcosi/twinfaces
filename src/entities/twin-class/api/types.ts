@@ -110,7 +110,8 @@ export type TwinClassFilterKeys =
   | "segment"
   | "assigneeRequired"
   | "externalIdLikeList"
-  | "freezeIdList";
+  | "freezeIdList"
+  | "uniqueName";
 
 export type TwinClassFilters = Partial<
   Pick<components["schemas"]["TwinClassSearchV1"], TwinClassFilterKeys>
