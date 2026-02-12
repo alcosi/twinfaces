@@ -7,6 +7,7 @@ export * from "./factory-pipelines";
 export * from "./permission-groups";
 export * from "./permissions";
 export * from "./pipeline-steps";
+export * from "./twin-class-dynamic-markers";
 export * from "./twin-class-fields";
 export * from "./twin-class-statuses";
 export * from "./twin-flow-transitions";

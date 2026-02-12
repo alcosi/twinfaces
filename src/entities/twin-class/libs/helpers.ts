@@ -5,7 +5,13 @@ import { TwinClassField } from "@/entities/twin-class-field";
 import { RelatedObjects } from "@/shared/api";
 
 import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
-import { TwinClass, TwinClassBaseV1, TwinClass_DETAILED } from "../api";
+import {
+  TwinClass,
+  TwinClassBaseV1,
+  TwinClassDynamicMarker,
+  TwinClassDynamicMarker_DETAILED,
+  TwinClass_DETAILED,
+} from "../api";
 
 export const hydrateTwinClassFromMap = (
   dto: TwinClass,
@@ -90,5 +96,28 @@ export const hydrateTwinClassFromMap = (
     hydrated.twinClassFreeze =
       relatedObjects.twinClassFreezeMap[dto.twinClassFreezeId];
   }
+  return hydrated;
+};
+
+export const hydrateTwinClassDynamicMarkerFromMap = (
+  dto: TwinClassDynamicMarker,
+  relatedObjects?: RelatedObjects
+): TwinClassDynamicMarker_DETAILED => {
+  const hydrated: TwinClassDynamicMarker_DETAILED = Object.assign(
+    {},
+    dto
+  ) as TwinClassDynamicMarker_DETAILED;
+
+  if (!relatedObjects) return hydrated;
+
+  if (dto.twinClassId && relatedObjects.twinClassMap) {
+    hydrated.twinClass = relatedObjects.twinClassMap[dto.twinClassId];
+  }
+
+  if (dto.markerDataListOptionId && relatedObjects.dataListsOptionMap) {
+    hydrated.markerDataListOption =
+      relatedObjects.dataListsOptionMap[dto.markerDataListOptionId];
+  }
+
   return hydrated;
 };

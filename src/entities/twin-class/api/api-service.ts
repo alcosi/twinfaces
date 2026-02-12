@@ -7,6 +7,7 @@ import { operations } from "@/shared/api/generated/schema";
 import {
   TagSearchFilters,
   TwinClassCreateRq,
+  TwinClassDynamicMarkerFilters,
   TwinClassFilters,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
@@ -262,6 +263,38 @@ export function createTwinClassApi(settings: ApiSettings) {
     );
   }
 
+  function searchDynamicMarkers({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: TwinClassDynamicMarkerFilters;
+  }) {
+    return settings.client.POST(
+      "/private/twin_class_dynamic_marker/search/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          query: {
+            lazyRelation: false,
+            showTwinClassDynamicMarkerMode: "DETAILED",
+            showTwinClassMode: "DETAILED",
+            showTwinMarker2DataListOptionMode: "DETAILED",
+            showTwinClassDynamicMarker2TwinClassMode: "DETAILED",
+            showTwinClassMarker2DataListOptionMode: "DETAILED",
+            limit: pagination.pageSize,
+            offset: pagination.pageIndex * pagination.pageSize,
+          },
+        },
+        body: {
+          search: {
+            ...filters,
+          },
+        },
+      }
+    );
+  }
+
   return {
     search,
     getByKey,
@@ -274,6 +307,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     searchTags,
     searchBySearchId,
     simplifiedSearch,
+    searchDynamicMarkers,
   };
 }
 

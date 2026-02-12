@@ -6,6 +6,7 @@ import { TwinClassContext } from "@/entities/twin-class";
 import { TwinClassRelations } from "@/screens/twin-class-relations";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import {
+  TwinClassDynamicMarkersTable,
   TwinClassFieldsTable,
   TwinClassStatusesTable,
   TwinFlows,
@@ -41,6 +42,11 @@ export default function TwinClassPage() {
       key: "relations",
       label: "Relations",
       content: <TwinClassRelations />,
+    },
+    {
+      key: "dynamicMarkers",
+      label: "Dynamic Markers",
+      content: <TwinClassDynamicMarkersTable twinClassId={twinClassId} />,
     },
   ];
 
