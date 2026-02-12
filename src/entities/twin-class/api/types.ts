@@ -1,3 +1,4 @@
+import { DataListOptionV1 } from "@/entities/datalist-option";
 import { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import type { TwinClassField } from "@/entities/twin-class-field";
@@ -130,3 +131,21 @@ export type TagSearchFilterKeys =
 export type TagSearchFilters = Partial<
   Pick<components["schemas"]["TagSearchRqV1"], TagSearchFilterKeys>
 >;
+
+export type TwinClassDynamicMarkerSearchRq =
+  components["schemas"]["TwinClassDynamicMarkerSearchV1"];
+
+export type TwinClassDynamicMarkerFilterKeys = "twinClassIdMap";
+
+export type TwinClassDynamicMarkerFilters = Partial<
+  Pick<TwinClassDynamicMarkerSearchRq, TwinClassDynamicMarkerFilterKeys>
+>;
+
+export type TwinClassDynamicMarker =
+  components["schemas"]["TwinClassDynamicMarkerV1"];
+
+export type TwinClassDynamicMarker_DETAILED =
+  Required<TwinClassDynamicMarker> & {
+    twinClass?: TwinClass;
+    markerDataListOption?: DataListOptionV1;
+  };
