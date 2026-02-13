@@ -6644,6 +6644,15 @@ export interface components {
             };
             /**
              * Format: int32
+             * @description field initializer featurer id
+             */
+            fieldInitializerFeaturerId?: number;
+            /** @description field initializer params */
+            fieldInitializerParams?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: int32
              * @description twin sorter featurer id
              */
             twinSorterFeaturerId?: number;
@@ -6953,6 +6962,7 @@ export interface components {
         TwinFieldV2: {
             key?: string;
             value?: string;
+            editable?: boolean;
             fieldAttributes?: {
                 [key: string]: components["schemas"]["TwinFieldAttributeV1"];
             };
@@ -7577,6 +7587,19 @@ export interface components {
              * @example 1
              */
             order?: number;
+            /**
+             * Format: int32
+             * @description field initializer featurer ID
+             * @example 1
+             */
+            fieldInitializerFeaturerId?: number;
+            /**
+             * @description field initializer parameters
+             * @example {}
+             */
+            fieldInitializerParams?: {
+                [key: string]: string;
+            };
             /**
              * Format: uuid
              * @description twin class field id
@@ -11134,6 +11157,18 @@ export interface components {
              */
             depth?: number;
         };
+        IntegerRangeV1: {
+            /**
+             * Format: int32
+             * @description from
+             */
+            from?: number;
+            /**
+             * Format: int32
+             * @description to
+             */
+            to?: number;
+        };
         SpaceSearchV1: {
             /**
              * Format: uuid
@@ -11166,14 +11201,14 @@ export interface components {
         TwinFieldSearchDateV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
             /**
              * Format: date-time
-             * @description Twin field date less then given date
+             * @description Twin field date less then or equals given date
              */
-            lessThen?: string;
+            lessThenOrEquals?: string;
             /**
              * Format: date-time
-             * @description Twin field date greater then given date
+             * @description Twin field date greater then or equals given date
              */
-            moreThen?: string;
+            moreThenOrEquals?: string;
             /**
              * Format: date-time
              * @description Twin field date equals to given date
@@ -11398,6 +11433,8 @@ export interface components {
             createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description hierarchy children search */
             hierarchyChildrenSearch?: components["schemas"]["HierarchySearchV1"];
+            /** @description Filter by head hierarchy direct children count (range: from, to) */
+            headHierarchyCounterDirectChildrenRange?: components["schemas"]["IntegerRangeV1"];
             /** @description apply distinct on query results */
             distinct?: boolean;
         };
@@ -12508,6 +12545,19 @@ export interface components {
              */
             order?: number;
             /**
+             * Format: int32
+             * @description field initializer featurer ID
+             * @example 1
+             */
+            fieldInitializerFeaturerId?: number;
+            /**
+             * @description field initializer parameters
+             * @example {}
+             */
+            fieldInitializerParams?: {
+                [key: string]: string;
+            };
+            /**
              * Format: uuid
              * @description twin class id
              */
@@ -13563,6 +13613,7 @@ export interface components {
         TwinFieldV4: {
             key?: string;
             value?: string;
+            editable?: boolean;
             fieldAttributes?: {
                 [key: string]: components["schemas"]["TwinFieldAttributeV1"];
             };
@@ -13905,6 +13956,8 @@ export interface components {
             createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description hierarchy children search */
             hierarchyChildrenSearch?: components["schemas"]["HierarchySearchV1"];
+            /** @description Filter by head hierarchy direct children count (range: from, to) */
+            headHierarchyCounterDirectChildrenRange?: components["schemas"]["IntegerRangeV1"];
             /** @description apply distinct on query results */
             distinct?: boolean;
             /** @description Head twin sub-search */
@@ -14039,6 +14092,8 @@ export interface components {
             createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description hierarchy children search */
             hierarchyChildrenSearch?: components["schemas"]["HierarchySearchV1"];
+            /** @description Filter by head hierarchy direct children count (range: from, to) */
+            headHierarchyCounterDirectChildrenRange?: components["schemas"]["IntegerRangeV1"];
             /** @description apply distinct on query results */
             distinct?: boolean;
             /** @description Head twin sub-search */
@@ -15255,18 +15310,6 @@ export interface components {
              */
             executionTime?: number;
         };
-        IntegerRangev1: {
-            /**
-             * Format: int32
-             * @description from
-             */
-            from?: number;
-            /**
-             * Format: int32
-             * @description to
-             */
-            to?: number;
-        };
         SchedulerSearchRqV1: {
             /** @description search DTO */
             search?: components["schemas"]["SchedulerSearchV1"];
@@ -15301,7 +15344,7 @@ export interface components {
             /** @description cron not like set */
             cronNotLikeSet?: string[];
             /** @description fixed rate range */
-            fixedRateRange?: components["schemas"]["IntegerRangev1"];
+            fixedRateRange?: components["schemas"]["IntegerRangeV1"];
             /** @description description like set */
             descriptionLikeSet?: string[];
             /** @description description not like set */
@@ -22323,6 +22366,7 @@ export interface operations {
                 showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassDynamicMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassDynamicMarker2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassDynamicMarkerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -22442,6 +22486,7 @@ export interface operations {
                 showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassDynamicMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassDynamicMarker2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassDynamicMarkerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -29814,6 +29859,7 @@ export interface operations {
                 showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassDynamicMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassDynamicMarker2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassDynamicMarkerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";

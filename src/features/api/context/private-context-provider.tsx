@@ -59,6 +59,7 @@ import {
   createPermissionSchemaApi,
 } from "@/entities/permission-schema";
 import { ProjectionApi, createProjectionApi } from "@/entities/projection";
+import { RecipientApi, createRecipientApi } from "@/entities/recipient";
 import {
   PermissionSpaceRoleApi,
   createPermissionSpaceRoleApi,
@@ -140,6 +141,7 @@ export interface PrivateApiContextProps {
   link: LinkApi;
   tier: TierApi;
   projection: ProjectionApi;
+  recipient: RecipientApi;
 }
 
 export function PrivateApiContextProvider({
@@ -194,6 +196,7 @@ export function PrivateApiContextProvider({
         link: createLinkApi(settings),
         tier: createTierApi(settings),
         projection: createProjectionApi(settings),
+        recipient: createRecipientApi(settings),
       }
     : ({} as PrivateApiContextProps);
 

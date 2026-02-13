@@ -1,6 +1,7 @@
 import {
   Activity,
   Asterisk,
+  Bell,
   BriefcaseBusiness,
   Eraser,
   Factory,
@@ -245,6 +246,16 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Projections",
         url: `/${PlatformArea.core}/projections`,
         icon: Layers,
+      },
+    ],
+  },
+  recipient: {
+    title: "Recipient",
+    items: [
+      {
+        title: "Recipients",
+        url: `/${PlatformArea.core}/recipients`,
+        icon: Bell,
       },
     ],
   },
