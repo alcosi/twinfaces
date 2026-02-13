@@ -135,7 +135,10 @@ export type TagSearchFilters = Partial<
 export type TwinClassDynamicMarkerSearchRq =
   components["schemas"]["TwinClassDynamicMarkerSearchV1"];
 
-export type TwinClassDynamicMarkerFilterKeys = "twinClassIdMap";
+export type TwinClassDynamicMarkerFilterKeys =
+  | "idList"
+  | "twinClassIdMap"
+  | "markerDataListOptionIdList";
 
 export type TwinClassDynamicMarkerFilters = Partial<
   Pick<TwinClassDynamicMarkerSearchRq, TwinClassDynamicMarkerFilterKeys>
