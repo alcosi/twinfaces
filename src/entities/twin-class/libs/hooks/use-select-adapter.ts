@@ -10,10 +10,13 @@ import {
 
 import {
   TagSearchFilters,
+  TwinClassDynamicMarkerFilters,
+  TwinClassDynamicMarker_DETAILED,
   TwinClassFilters,
   TwinClass_DETAILED,
   useFetchTwinClassById,
   useTagSearch,
+  useTwinClassDynamicMarkerSearch,
   useTwinClassSearch,
   useValidTwinsForLink,
 } from "../../api";
@@ -171,6 +174,49 @@ export function useTagsByTwinClassIdSelectAdapter(
     getById,
     getItems: (search, options) =>
       getItems(search, options as TagSearchFilters),
+    renderItem,
+  };
+}
+
+export function useTwinClassDynamicMarkerSelectAdapter(): SelectAdapter<TwinClassDynamicMarker_DETAILED> {
+  const { searchTwinClassDynamicMarker } = useTwinClassDynamicMarkerSearch();
+
+  async function getById(id: string) {
+    const response = await searchTwinClassDynamicMarker({
+      pagination: { pageIndex: 0, pageSize: 1 },
+      filters: {
+        markerDataListOptionIdList: [id],
+      },
+    });
+    return response.data[0];
+  }
+
+  async function getItems(
+    search: string,
+    filters?: TwinClassDynamicMarkerFilters
+  ) {
+    const response = await searchTwinClassDynamicMarker({
+      pagination: { pageIndex: 0, pageSize: 10 },
+      filters: {
+        markerDataListOptionIdList: isPopulatedString(search)
+          ? [search]
+          : filters?.markerDataListOptionIdList,
+        ...filters,
+      },
+    });
+    return response.data;
+  }
+
+  function renderItem(item: TwinClassDynamicMarker_DETAILED | string) {
+    return isPopulatedString(item)
+      ? item
+      : `${item.markerDataListOption?.name} : ${item.markerDataListOption?.id}`;
+  }
+
+  return {
+    getById,
+    getItems: (search, options) =>
+      getItems(search, options as TwinClassDynamicMarkerFilters),
     renderItem,
   };
 }
