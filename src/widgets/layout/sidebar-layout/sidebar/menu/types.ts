@@ -12,7 +12,8 @@ export type GroupKeys =
   | "transition"
   | "businessAccount"
   | "misc"
-  | "projection";
+  | "projection"
+  | "recipient";
 
 export type Group = {
   title: string;
