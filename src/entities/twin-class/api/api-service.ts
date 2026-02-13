@@ -282,6 +282,7 @@ export function createTwinClassApi(settings: ApiSettings) {
             showTwinMarker2DataListOptionMode: "DETAILED",
             showTwinClassDynamicMarker2TwinClassMode: "DETAILED",
             showTwinClassMarker2DataListOptionMode: "DETAILED",
+            showTwinClassDynamicMarker2DataListOptionMode: "DETAILED",
             limit: pagination.pageSize,
             offset: pagination.pageIndex * pagination.pageSize,
           },
