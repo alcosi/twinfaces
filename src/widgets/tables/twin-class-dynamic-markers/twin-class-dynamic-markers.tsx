@@ -1,4 +1,5 @@
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { DataListOption_DETAILED } from "@/entities/datalist-option";
@@ -11,6 +12,7 @@ import {
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
@@ -49,7 +51,6 @@ const colDefs: Record<
     header: "Validator set",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
-  //TODO When there is a fix from the backend, we will need to check (perhaps add a new show mode)
   markerDataListOption: {
     id: "markerDataListOption",
     accessorKey: "markerDataListOption",
@@ -71,6 +72,7 @@ export function TwinClassDynamicMarkersTable({
 }: {
   twinClassId?: string;
 }) {
+  const router = useRouter();
   const { searchTwinClassDynamicMarker } = useTwinClassDynamicMarkerSearch();
   const { buildFilterFields, mapFiltersToPayload } =
     useTwinClassDynamicMarkerFilters({
@@ -115,6 +117,9 @@ export function TwinClassDynamicMarkersTable({
       ]}
       fetcher={fetchTwinClassDynamicMarkers}
       getRowId={(row) => row.id}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/dynamic-marker/${row.id}`)
+      }
       filters={{
         filtersInfo: buildFilterFields(),
       }}

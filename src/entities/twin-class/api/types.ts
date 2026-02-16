@@ -152,3 +152,8 @@ export type TwinClassDynamicMarker_DETAILED =
     twinClass?: TwinClass;
     markerDataListOption?: DataListOptionV1;
   };
+
+export type TwinClassDynamicMarkerUpdateRq =
+  components["schemas"]["TwinClassDynamicMarkerUpdateRqV1"];
+export type TwinClassDynamicMarkerUpdateV1 =
+  components["schemas"]["TwinClassDynamicMarkerUpdateV1"];
