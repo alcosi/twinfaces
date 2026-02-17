@@ -53,6 +53,12 @@ export function useTwinClassDynamicMarkerFilters({
       selectPlaceholder: "Select...",
       multi: true,
     },
+    twinValidatorSetIdList: {
+      type: AutoFormValueType.tag,
+      label: "Validator set",
+      schema: z.string().uuid("Please enter a valid UUID"),
+      placeholder: "Enter UUID",
+    },
     markerDataListOptionIdList: {
       type: AutoFormValueType.combobox,
       label: "Marker",
@@ -79,6 +85,7 @@ export function useTwinClassDynamicMarkerFilters({
         list: toArray(filters.twinClassIdMap) as TwinClass_DETAILED[],
         defaultValue: true,
       }),
+      twinValidatorSetIdList: toArrayOfString(filters.twinValidatorSetIdList),
       markerDataListOptionIdList: toArrayOfString(
         toArray(filters.markerDataListOptionIdList),
         "markerDataListOptionId"

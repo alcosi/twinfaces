@@ -138,6 +138,7 @@ export type TwinClassDynamicMarkerSearchRq =
 export type TwinClassDynamicMarkerFilterKeys =
   | "idList"
   | "twinClassIdMap"
+  | "twinValidatorSetIdList"
   | "markerDataListOptionIdList";
 
 export type TwinClassDynamicMarkerFilters = Partial<
