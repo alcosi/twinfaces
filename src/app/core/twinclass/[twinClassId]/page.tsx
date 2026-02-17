@@ -45,7 +45,7 @@ export default function TwinClassPage() {
     },
     {
       key: "dynamicMarkers",
-      label: "Dynamic Markers",
+      label: "Dynamic markers",
       content: <TwinClassDynamicMarkersTable twinClassId={twinClassId} />,
     },
   ];

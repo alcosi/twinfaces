@@ -14,6 +14,7 @@ import {
   Shapes,
   SquareActivity,
   SquareAsterisk,
+  Tags,
   User,
   UsersRound,
   Workflow,
@@ -61,6 +62,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Links",
         url: `/${PlatformArea.core}/links`,
         icon: Link2,
+      },
+      {
+        title: "Dynamic markers",
+        url: `/${PlatformArea.core}/dynamic-markers`,
+        icon: Tags,
       },
     ],
   },
@@ -249,8 +255,8 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       },
     ],
   },
-  recipient: {
-    title: "Recipient",
+  notification: {
+    title: "Notification",
     items: [
       {
         title: "Recipients",

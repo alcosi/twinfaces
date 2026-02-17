@@ -135,7 +135,11 @@ export type TagSearchFilters = Partial<
 export type TwinClassDynamicMarkerSearchRq =
   components["schemas"]["TwinClassDynamicMarkerSearchV1"];
 
-export type TwinClassDynamicMarkerFilterKeys = "twinClassIdMap";
+export type TwinClassDynamicMarkerFilterKeys =
+  | "idList"
+  | "twinClassIdMap"
+  | "twinValidatorSetIdList"
+  | "markerDataListOptionIdList";
 
 export type TwinClassDynamicMarkerFilters = Partial<
   Pick<TwinClassDynamicMarkerSearchRq, TwinClassDynamicMarkerFilterKeys>
@@ -149,3 +153,8 @@ export type TwinClassDynamicMarker_DETAILED =
     twinClass?: TwinClass;
     markerDataListOption?: DataListOptionV1;
   };
+
+export type TwinClassDynamicMarkerUpdateRq =
+  components["schemas"]["TwinClassDynamicMarkerUpdateRqV1"];
+export type TwinClassDynamicMarkerUpdateV1 =
+  components["schemas"]["TwinClassDynamicMarkerUpdateV1"];

@@ -1,16 +1,19 @@
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { DataListOption_DETAILED } from "@/entities/datalist-option";
 import {
   TwinClassDynamicMarker_DETAILED,
   TwinClass_DETAILED,
+  useTwinClassDynamicMarkerFilters,
   useTwinClassDynamicMarkerSearch,
 } from "@/entities/twin-class";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
-import { reduceToObject, toArray } from "@/shared/libs";
+import { PlatformArea } from "@/shared/config";
+import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -48,7 +51,6 @@ const colDefs: Record<
     header: "Validator set",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
-  //TODO When there is a fix from the backend, we will need to check (perhaps add a new show mode)
   markerDataListOption: {
     id: "markerDataListOption",
     accessorKey: "markerDataListOption",
@@ -70,21 +72,34 @@ export function TwinClassDynamicMarkersTable({
 }: {
   twinClassId?: string;
 }) {
+  const router = useRouter();
   const { searchTwinClassDynamicMarker } = useTwinClassDynamicMarkerSearch();
+  const { buildFilterFields, mapFiltersToPayload } =
+    useTwinClassDynamicMarkerFilters({
+      enabledFilters: isTruthy(twinClassId)
+        ? ["idList", "markerDataListOptionIdList"]
+        : undefined,
+    });
 
   async function fetchTwinClassDynamicMarkers(
     pagination: PaginationState,
-    filters?: FiltersState
+    filters: FiltersState
   ): Promise<PagedResponse<TwinClassDynamicMarker_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
     try {
-      return await searchTwinClassDynamicMarker({
+      const response = await searchTwinClassDynamicMarker({
         pagination,
         filters: {
+          ..._filters,
           twinClassIdMap: twinClassId
             ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
-            : undefined,
+            : _filters.twinClassIdMap,
         },
       });
+      return {
+        data: response.data ?? [],
+        pagination: response.pagination ?? {},
+      };
     } catch {
       toast.error("Failed to fetch twin class dynamic markers");
 
@@ -102,6 +117,12 @@ export function TwinClassDynamicMarkersTable({
       ]}
       fetcher={fetchTwinClassDynamicMarkers}
       getRowId={(row) => row.id}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/dynamic-markers/${row.id}`)
+      }
+      filters={{
+        filtersInfo: buildFilterFields(),
+      }}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.twinClass,

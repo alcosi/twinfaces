@@ -8,6 +8,7 @@ import {
   TagSearchFilters,
   TwinClassCreateRq,
   TwinClassDynamicMarkerFilters,
+  TwinClassDynamicMarkerUpdateRq,
   TwinClassFilters,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
@@ -282,6 +283,7 @@ export function createTwinClassApi(settings: ApiSettings) {
             showTwinMarker2DataListOptionMode: "DETAILED",
             showTwinClassDynamicMarker2TwinClassMode: "DETAILED",
             showTwinClassMarker2DataListOptionMode: "DETAILED",
+            showTwinClassDynamicMarker2DataListOptionMode: "DETAILED",
             limit: pagination.pageSize,
             offset: pagination.pageIndex * pagination.pageSize,
           },
@@ -293,6 +295,28 @@ export function createTwinClassApi(settings: ApiSettings) {
         },
       }
     );
+  }
+
+  function updateDynamicMarkers({
+    body,
+  }: {
+    body: TwinClassDynamicMarkerUpdateRq;
+  }) {
+    return settings.client.PUT("/private/twin_class_dynamic_marker/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinClassDynamicMarkerMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
+          showTwinMarker2DataListOptionMode: "DETAILED",
+          showTwinClassDynamicMarker2TwinClassMode: "DETAILED",
+          showTwinClassMarker2DataListOptionMode: "DETAILED",
+          showTwinClassDynamicMarker2DataListOptionMode: "DETAILED",
+        },
+      },
+      body: body,
+    });
   }
 
   return {
@@ -308,6 +332,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     searchBySearchId,
     simplifiedSearch,
     searchDynamicMarkers,
+    updateDynamicMarkers,
   };
 }
 
