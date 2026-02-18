@@ -2,7 +2,11 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { RecipientFilters } from "./types";
+import {
+  RecipientCreateRq,
+  RecipientFilters,
+  RecipientUpdateRq,
+} from "./types";
 
 export function createRecipientApi(settings: ApiSettings) {
   function search({
@@ -33,7 +37,33 @@ export function createRecipientApi(settings: ApiSettings) {
     );
   }
 
-  return { search };
+  function create({ body }: { body: RecipientCreateRq }) {
+    return settings.client.POST("/private/history_notification_recipient/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showHistoryNotificationRecipientMode: "DETAILED",
+        },
+      },
+      body,
+    });
+  }
+
+  function update({ body }: { body: RecipientUpdateRq }) {
+    return settings.client.PUT("/private/history_notification_recipient/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showHistoryNotificationRecipientMode: "DETAILED",
+        },
+      },
+      body,
+    });
+  }
+
+  return { search, create, update };
 }
 
 export type RecipientApi = ReturnType<typeof createRecipientApi>;
