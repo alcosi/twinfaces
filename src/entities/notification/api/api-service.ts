@@ -7,7 +7,9 @@ import {
   HistoryNotificationRecipientCollectorsFilters,
   NotificationCreateRq,
   NotificationUpdateRq,
+  RecipientCreateRq,
   RecipientFilters,
+  RecipientUpdateRq,
 } from "./types";
 
 export function createRecipientApi(settings: ApiSettings) {
@@ -26,6 +28,7 @@ export function createRecipientApi(settings: ApiSettings) {
           query: {
             lazyRelation: false,
             showHistoryNotificationRecipientMode: "DETAILED",
+            showHistoryNotificationRecipient2UserMode: "DETAILED",
             limit: pagination.pageSize,
             offset: pagination.pageIndex * pagination.pageSize,
           },
@@ -37,6 +40,32 @@ export function createRecipientApi(settings: ApiSettings) {
         },
       }
     );
+  }
+
+  function create({ body }: { body: RecipientCreateRq }) {
+    return settings.client.POST("/private/history_notification_recipient/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showHistoryNotificationRecipientMode: "DETAILED",
+        },
+      },
+      body,
+    });
+  }
+
+  function update({ body }: { body: RecipientUpdateRq }) {
+    return settings.client.PUT("/private/history_notification_recipient/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showHistoryNotificationRecipientMode: "DETAILED",
+        },
+      },
+      body,
+    });
   }
 
   function searchHistoryNotification({
@@ -123,6 +152,8 @@ export function createRecipientApi(settings: ApiSettings) {
 
   return {
     search,
+    create,
+    update,
     searchHistoryNotification,
     updateHistoryNotification,
     searchHistoryNotificationRecipientCollector,

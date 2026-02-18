@@ -88,3 +88,12 @@ export type HistoryNotificationRecipientCollectorsFilters = Partial<
 >;
 export type NotificationCreateRq =
   components["schemas"]["HistoryNotificationCreateRqV1"];
+export type RecipientCreateRq =
+  components["schemas"]["HistoryNotificationRecipientCreateRqV1"];
+export type RecipientCreateV1 =
+  components["schemas"]["HistoryNotificationRecipientCreateV1"];
+
+export type RecipientUpdateRq =
+  components["schemas"]["HistoryNotificationRecipientUpdateRqV1"];
+export type RecipientUpdateV1 =
+  components["schemas"]["HistoryNotificationRecipientUpdateV1"];
