@@ -36,6 +36,8 @@ export type TwinClassFieldV1_DETAILED = Required<TwinClassField> & {
   twinSorterFeaturer: Featurer_DETAILED;
   fieldTyperDetailedParams?: ExtendedFeaturerParam[];
   twinSorterDetailedParams?: ExtendedFeaturerParam[];
+  fieldInitializerDetailedParams?: ExtendedFeaturerParam[];
+  fieldInitializerFeaturer?: Featurer_DETAILED;
 };
 
 export type TwinClassFieldV2FilterKeys =

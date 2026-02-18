@@ -59,5 +59,20 @@ export const hydrateTwinClassFieldFromMap = (
     );
   }
 
+  if (dto.fieldInitializerFeaturerId && relatedObjects?.featurerMap) {
+    hydrated.fieldInitializerFeaturer = relatedObjects.featurerMap[
+      dto.fieldInitializerFeaturerId
+    ] as Featurer_DETAILED;
+  }
+
+  if (
+    hydrated.fieldInitializerParams &&
+    hydrated.fieldInitializerFeaturer?.params
+  ) {
+    hydrated.fieldInitializerDetailedParams = extendFeaturerParams(
+      hydrated.fieldInitializerParams,
+      hydrated.fieldInitializerFeaturer.params
+    );
+  }
   return hydrated;
 };
