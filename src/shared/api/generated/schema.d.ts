@@ -12417,6 +12417,10 @@ export interface components {
             fieldTyperIdList?: number[];
             /** @description field typer id exclude list */
             fieldTyperIdExcludeList?: number[];
+            /** @description field initiator id list */
+            fieldInitiatorIdList?: number[];
+            /** @description field initiator id exclude list */
+            fieldInitiatorIdExcludeList?: number[];
             /** @description field sorter id list */
             twinSorterIdList?: number[];
             /** @description field sorter id exclude list */
@@ -12539,6 +12543,10 @@ export interface components {
             fieldTyperIdList?: number[];
             /** @description field typer id exclude list */
             fieldTyperIdExcludeList?: number[];
+            /** @description field initiator id list */
+            fieldInitiatorIdList?: number[];
+            /** @description field initiator id exclude list */
+            fieldInitiatorIdExcludeList?: number[];
             /** @description view permission id list */
             viewPermissionIdList?: string[];
             /** @description view permission id exclude list */
@@ -14434,9 +14442,9 @@ export interface components {
             /** @description actor user id exclude list */
             actorUserIdExcludeList?: string[];
             /** @description type list */
-            typeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
+            typeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
             /** @description type exclude list */
-            typeExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
+            typeExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
             /** @description create at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
         };
@@ -14494,7 +14502,7 @@ export interface components {
              */
             actorUserId?: string;
             /** @enum {string} */
-            type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown";
+            type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown";
             /** @description Filled only if type = fieldChanged */
             fieldName?: string;
             /** @description twin */

@@ -55,7 +55,8 @@ export type TwinClassFieldV2FilterKeys =
   | "dependentField"
   | "hasDependentFields"
   | "projectionField"
-  | "hasProjectionFields";
+  | "hasProjectionFields"
+  | "fieldInitiatorIdList";
 
 export type TwinClassFieldV2Filters = Partial<
   components["schemas"]["TwinClassFieldSearchV1"]
