@@ -122,7 +122,7 @@ export function ProjectionGeneral() {
 
   const fieldProjectorFeaturerSettings: AutoEditDialogSettings = {
     value: {
-      fieldProjectorFeaturerId: projection.fieldProjectorFeaturerId,
+      fieldProjectorFeaturerId: projection.fieldProjectorFeaturerId?.toString(),
     },
     title: "Update projector",
     onSubmit: (values) => {

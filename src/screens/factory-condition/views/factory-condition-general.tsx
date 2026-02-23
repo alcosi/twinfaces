@@ -36,7 +36,8 @@ export function FactoryConditionGeneral() {
 
   const conditionerFeaturerSettings: AutoEditDialogSettings = {
     value: {
-      conditionerFeatureId: factoryCondition.conditionerFeaturerId || undefined,
+      conditionerFeatureId:
+        factoryCondition.conditionerFeaturerId?.toString() || undefined,
     },
     title: "Update conditioner",
     onSubmit: (values) => {

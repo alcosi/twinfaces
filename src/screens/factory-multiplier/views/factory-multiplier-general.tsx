@@ -73,7 +73,7 @@ export function FactoryMultiplierGeneral() {
 
   const multiplierFeaturerSettings: AutoEditDialogSettings = {
     value: {
-      multiplierFeaturerId: factoryMultiplier.multiplierFeaturerId,
+      multiplierFeaturerId: factoryMultiplier.multiplierFeaturerId?.toString(),
     },
     title: "Update multiplier",
     onSubmit: (values) => {

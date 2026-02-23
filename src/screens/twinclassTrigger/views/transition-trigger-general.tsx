@@ -90,7 +90,7 @@ export function TransitionTriggerGeneral() {
   const featurerSettings: AutoEditDialogSettings = {
     value: {
       transitionTriggerFeaturerId:
-        transitionTrigger.transitionTriggerFeaturerId,
+        transitionTrigger.transitionTriggerFeaturerId?.toString(),
     },
     title: "Update featurer",
     onSubmit: (values) => {

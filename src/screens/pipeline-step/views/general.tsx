@@ -122,7 +122,7 @@ export function PipelineStepGeneral() {
 
   const fillerFeaturerSettings: AutoEditDialogSettings = {
     value: {
-      fillerFeaturerId: step.fillerFeaturerId,
+      fillerFeaturerId: step.fillerFeaturerId?.toString(),
     },
     title: "Update filler featurer",
     onSubmit: (values) => {
