@@ -35,6 +35,7 @@ export function useTwinClassFieldFilters({
   } = useTwinClassFilters();
   const fieldTyperAdapter = useFeaturerSelectAdapter(13);
   const twinSorterAdapter = useFeaturerSelectAdapter(41);
+  const fieldInitializerAdapter = useFeaturerSelectAdapter(53);
 
   const allFilters: Record<TwinClassFieldV2FilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -125,6 +126,12 @@ export function useTwinClassFieldFilters({
       hasIndeterminate: true,
       defaultValue: "indeterminate",
     },
+    fieldInitiatorIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Field initializer",
+      multi: true,
+      ...fieldInitializerAdapter,
+    },
   };
 
   function buildFilterFields(): Record<
@@ -175,6 +182,10 @@ export function useTwinClassFieldFilters({
       hasDependentFields: mapToChoice(filters.hasDependentFields),
       projectionField: mapToChoice(filters.projectionField),
       hasProjectionFields: mapToChoice(filters.hasProjectionFields),
+      fieldInitiatorIdList: toArrayOfString(
+        toArray(filters.fieldInitiatorIdList),
+        "id"
+      ).map(Number),
     };
 
     return result;

@@ -48,6 +48,7 @@ const colDefs: Record<
     | "hasDependentFields"
     | "projectionField"
     | "hasProjectedFields"
+    | "fieldInitializerFeaturerId"
   >,
   ColumnDef<TwinClassFieldV1_DETAILED>
 > = {
@@ -182,6 +183,21 @@ const colDefs: Record<
     header: "Has projected fields",
     cell: (data) => data.getValue() && <Check />,
   },
+
+  fieldInitializerFeaturerId: {
+    accessorKey: "fieldInitializerFeaturerId",
+    header: "Field initializer",
+    cell: ({ row: { original } }) =>
+      original.fieldInitializerFeaturer && (
+        <div className="inline-flex max-w-48">
+          <FeaturerResourceLink
+            data={original.fieldInitializerFeaturer}
+            params={original.fieldInitializerDetailedParams}
+            withTooltip
+          />
+        </div>
+      ),
+  },
 };
 
 export function TwinClassFieldsTable({
@@ -301,6 +317,7 @@ export function TwinClassFieldsTable({
         colDefs.hasDependentFields,
         colDefs.projectionField,
         colDefs.hasProjectedFields,
+        colDefs.fieldInitializerFeaturerId,
       ]}
       getRowId={(row) => row.id}
       fetcher={fetchFields}

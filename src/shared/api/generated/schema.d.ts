@@ -75,6 +75,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/twin_validator_set/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Twin validator set batch update */
+        put: operations["twinValidatorSetUpdateV1"];
+        /** Twin validator set batch create */
+        post: operations["twinValidatorSetCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin_status/{twinStatusId}/v2": {
         parameters: {
             query?: never;
@@ -505,6 +523,24 @@ export interface paths {
         /** I18n translations for update */
         put: operations["i18nTranslationUpdateV1"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/history_notification_recipient_collector/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update history notification recipient collector */
+        put: operations["historyNotificationRecipientCollectorUpdateV1"];
+        /** Create batch history notification recipient collector */
+        post: operations["historyNotificationRecipientCollectorCreateV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1092,6 +1128,23 @@ export interface paths {
         put?: never;
         /** Returns twinflow factory search result */
         post: operations["twinflowFactorySearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin_validator_set/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Twin validator set search */
+        post: operations["twinValidatorSetSearchV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2627,6 +2680,23 @@ export interface paths {
         put?: never;
         /** Return a list of i18n translations by search criteria */
         post: operations["i18nTranslationSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/history_notification_recipient_collector/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return a list of all history notification recipient collector for the current domain */
+        post: operations["historyNotificationRecipientCollectorSearchV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5627,6 +5697,27 @@ export interface components {
             /** @description params list */
             params?: components["schemas"]["FeaturerParamV1"][];
         };
+        HistoryNotificationRecipientV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /**
+             * Format: uuid
+             * @description createdByUserId
+             */
+            createdByUserId?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             */
+            createdAt?: string;
+        };
         I18nV1: {
             /**
              * Format: uuid
@@ -6006,6 +6097,10 @@ export interface components {
             /** @description scheduler map */
             schedulerMap?: {
                 [key: string]: components["schemas"]["SchedulerV1"];
+            };
+            /** @description related history notification recipient map */
+            historyNotificationRecipientMap?: {
+                [key: string]: components["schemas"]["HistoryNotificationRecipientV1"];
             };
         };
         SchedulerV1: {
@@ -7321,6 +7416,59 @@ export interface components {
             avatar?: string;
             /** @description an ids of user groups */
             userGroupIds?: string[];
+        };
+        TwinValidatorSetUpdateRqV1: {
+            /** @description twin validator set list */
+            validatorSets?: components["schemas"]["TwinValidatorSetUpdateV1"][];
+        };
+        TwinValidatorSetUpdateV1: {
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /** @description invert */
+            invert?: boolean;
+            /**
+             * Format: uuid
+             * @description id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+        };
+        TwinValidatorSetListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description twin validator set list */
+            validatorSets?: components["schemas"]["TwinValidatorSetV1"][];
+        };
+        TwinValidatorSetV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /** @description invert */
+            invert?: boolean;
         };
         TwinStatusUpdateRqV1: {
             /**
@@ -9299,6 +9447,78 @@ export interface components {
              */
             total?: number;
         };
+        HistoryNotificationRecipientCollectorUpdateRqV1: {
+            /** @description history notification recipient collector list */
+            historyNotificationRecipients?: components["schemas"]["HistoryNotificationRecipientCollectorUpdateV1"][];
+        };
+        HistoryNotificationRecipientCollectorUpdateV1: {
+            /**
+             * Format: uuid
+             * @description recipient id
+             */
+            recipientId?: string;
+            /**
+             * Format: int32
+             * @description recipient resolver featurer id
+             */
+            recipientResolverFeaturerId?: number;
+            /** @description recipient resolver params */
+            recipientResolverParams?: {
+                [key: string]: string;
+            };
+            /** @description exclude */
+            exclude?: boolean;
+            /**
+             * Format: uuid
+             * @description history notification recipient collector id
+             */
+            id?: string;
+        };
+        HistoryNotificationRecipientCollectorListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description history notification recipient collectors */
+            recipientCollectors?: components["schemas"]["HistoryNotificationRecipientCollectorV1"][];
+        };
+        HistoryNotificationRecipientCollectorV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description recipient id
+             */
+            recipientId?: string;
+            /**
+             * Format: int32
+             * @description recipient resolver featurer id
+             */
+            recipientResolverFeaturerId?: number;
+            /** @description recipient resolver params */
+            recipientResolverParams?: {
+                [key: string]: string;
+            };
+            /** @description exclude */
+            exclude?: boolean;
+        };
         HistoryNotificationRecipientUpdateRqV1: {
             /** @description history notification recipients */
             recipients?: components["schemas"]["HistoryNotificationRecipientUpdateV1"][];
@@ -9335,27 +9555,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description history notification recipients */
             recipients?: components["schemas"]["HistoryNotificationRecipientV1"][];
-        };
-        HistoryNotificationRecipientV1: {
-            /**
-             * Format: uuid
-             * @description id
-             */
-            id?: string;
-            /** @description name */
-            name?: string;
-            /** @description description */
-            description?: string;
-            /**
-             * Format: uuid
-             * @description createdByUserId
-             */
-            createdByUserId?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             */
-            createdAt?: string;
         };
         FactoryPipelineUpdateRqV1: {
             /** @description factory pipeline update */
@@ -11642,7 +11841,7 @@ export interface components {
             /** @description Twin validator list */
             twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
             /** @description grouping set of twin validator */
-            twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+            twinValidatorSet?: components["schemas"]["TwinValidatorSetV1"];
             /**
              * Format: uuid
              * @description twinflow transition id
@@ -11706,24 +11905,6 @@ export interface components {
              * @description order
              */
             order?: number;
-            /** @description grouping set of twin validator */
-            twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
-        };
-        TwinValidatorSetBaseV1: {
-            /**
-             * Format: uuid
-             * @description id
-             */
-            id?: string;
-            /**
-             * Format: uuid
-             * @description domain id
-             */
-            domainId?: string;
-            /** @description name */
-            name?: string;
-            /** @description description */
-            description?: string;
         };
         TwinflowTransitionBaseV2: {
             /**
@@ -11950,6 +12131,62 @@ export interface components {
             pagination?: components["schemas"]["PaginationV1"];
             /** @description results - twinflow factory list */
             twinflowFactories?: components["schemas"]["TwinflowFactoryV1"][];
+        };
+        TwinValidatorSetCreateRqV1: {
+            /** @description twin validator set list */
+            validatorSets?: components["schemas"]["TwinValidatorSetCreateV1"][];
+        };
+        TwinValidatorSetCreateV1: {
+            /** @description name */
+            name?: string;
+            /** @description description */
+            description?: string;
+            /** @description invert */
+            invert?: boolean;
+        };
+        TwinValidatorSetSearchRqV1: {
+            /** @description idList */
+            idList?: string[];
+            /** @description idExcludeList */
+            idExcludeList?: string[];
+            /** @description nameLikeList */
+            nameLikeList?: string[];
+            /** @description nameNotLikeList */
+            nameNotLikeList?: string[];
+            /** @description descriptionLikeList */
+            descriptionLikeList?: string[];
+            /** @description descriptionNotLikeList */
+            descriptionNotLikeList?: string[];
+            /**
+             * @description invert
+             * @example ANY
+             * @enum {string}
+             */
+            invert?: "ONLY" | "ONLY_NOT" | "ANY";
+        };
+        TwinValidatorSetSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description twin validator set list */
+            validatorSets?: components["schemas"]["TwinValidatorSetV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         TwinStatusSearchRqV1: {
             /** @description id list */
@@ -12180,6 +12417,10 @@ export interface components {
             fieldTyperIdList?: number[];
             /** @description field typer id exclude list */
             fieldTyperIdExcludeList?: number[];
+            /** @description field initiator id list */
+            fieldInitiatorIdList?: number[];
+            /** @description field initiator id exclude list */
+            fieldInitiatorIdExcludeList?: number[];
             /** @description field sorter id list */
             twinSorterIdList?: number[];
             /** @description field sorter id exclude list */
@@ -12302,6 +12543,10 @@ export interface components {
             fieldTyperIdList?: number[];
             /** @description field typer id exclude list */
             fieldTyperIdExcludeList?: number[];
+            /** @description field initiator id list */
+            fieldInitiatorIdList?: number[];
+            /** @description field initiator id exclude list */
+            fieldInitiatorIdExcludeList?: number[];
             /** @description view permission id list */
             viewPermissionIdList?: string[];
             /** @description view permission id exclude list */
@@ -14197,9 +14442,9 @@ export interface components {
             /** @description actor user id exclude list */
             actorUserIdExcludeList?: string[];
             /** @description type list */
-            typeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
+            typeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
             /** @description type exclude list */
-            typeExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
+            typeExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
             /** @description create at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
         };
@@ -14257,7 +14502,7 @@ export interface components {
              */
             actorUserId?: string;
             /** @enum {string} */
-            type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown";
+            type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown";
             /** @description Filled only if type = fieldChanged */
             fieldName?: string;
             /** @description twin */
@@ -14822,7 +15067,7 @@ export interface components {
             /** @description Twin validator list */
             twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
             /** @description grouping set of twin validator */
-            twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+            twinValidatorSet?: components["schemas"]["TwinValidatorSetV1"];
             /**
              * Format: uuid
              * @description twinflow transition id
@@ -14858,7 +15103,7 @@ export interface components {
             /** @description Twin validator list */
             twinValidators?: components["schemas"]["TwinValidatorBaseV1"][];
             /** @description grouping set of twin validator */
-            twinValidatorSet?: components["schemas"]["TwinValidatorSetBaseV1"];
+            twinValidatorSet?: components["schemas"]["TwinValidatorSetV1"];
             /**
              * Format: uuid
              * @description twinflow transition id
@@ -16369,6 +16614,74 @@ export interface components {
             from?: number;
             /** Format: int64 */
             to?: number;
+        };
+        HistoryNotificationRecipientCollectorCreateRqV1: {
+            /** @description history notification recipient collectors */
+            recipientCollectors?: components["schemas"]["HistoryNotificationRecipientCollectorCreateV1"][];
+        };
+        HistoryNotificationRecipientCollectorCreateV1: {
+            /**
+             * Format: uuid
+             * @description recipient id
+             */
+            recipientId?: string;
+            /**
+             * Format: int32
+             * @description recipient resolver featurer id
+             */
+            recipientResolverFeaturerId?: number;
+            /** @description recipient resolver params */
+            recipientResolverParams?: {
+                [key: string]: string;
+            };
+            /** @description exclude */
+            exclude?: boolean;
+        };
+        HistoryNotificationRecipientCollectorSearchRqV1: {
+            search?: components["schemas"]["HistoryNotificationRecipientCollectorSearchV1"];
+        };
+        HistoryNotificationRecipientCollectorSearchV1: {
+            /** @description history notification recipient collector id list */
+            idList?: string[];
+            /** @description history notification recipient collector id exclude list */
+            idExcludeList?: string[];
+            /** @description history notification recipient id list */
+            recipientIdList?: string[];
+            /** @description history notification recipient id exclude list */
+            recipientIdExcludeList?: string[];
+            /** @description recipient resolver featurer id list */
+            recipientResolverFeaturerIdList?: number[];
+            /** @description recipient resolver featurer id exclude list */
+            recipientResolverFeaturerIdExcludeList?: number[];
+            /**
+             * @description exclude
+             * @enum {string}
+             */
+            exclude?: "ONLY" | "ONLY_NOT" | "ANY";
+        };
+        HistoryNotificationRecipientCollectorSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description history notification recipient collectors */
+            recipientCollectors?: components["schemas"]["HistoryNotificationRecipientCollectorV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         HistoryNotificationRecipientCreateRqV1: {
             /** @description history notification recipients */
@@ -21322,6 +21635,92 @@ export interface operations {
             };
         };
     };
+    twinValidatorSetUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showTwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinValidatorSetUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin validator set batch update */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinValidatorSetListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinValidatorSetCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showTwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinValidatorSetCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin validator set batch create */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinValidatorSetListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     twinStatusUpdateV2: {
         parameters: {
             query?: {
@@ -25629,6 +26028,98 @@ export interface operations {
             };
         };
     };
+    historyNotificationRecipientCollectorUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showHistoryNotificationRecipientCollector2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipientCollector2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipientCollectorMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HistoryNotificationRecipientCollectorUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description The history notification recipient collector was updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HistoryNotificationRecipientCollectorListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    historyNotificationRecipientCollectorCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showHistoryNotificationRecipientCollector2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipientCollector2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipientCollectorMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HistoryNotificationRecipientCollectorCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description The history notification recipient collector batch was created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HistoryNotificationRecipientCollectorListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     historyNotificationRecipientUpdateV1: {
         parameters: {
             query?: {
@@ -28917,6 +29408,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TwinflowFactorySearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinValidatorSetSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showTwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinValidatorSetSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin validator set search */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinValidatorSetSearchRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -38074,6 +38611,55 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["I18nTranslationListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    historyNotificationRecipientCollectorSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showHistoryNotificationRecipientCollector2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipientCollector2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipientCollectorMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HistoryNotificationRecipientCollectorSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HistoryNotificationRecipientCollectorSearchRsV1"];
                 };
             };
             /** @description Access is denied */
