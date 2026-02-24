@@ -2,7 +2,7 @@ import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { TwinClassFieldUpdateRq } from "../types";
+import { TwinClassFieldUpdateBody } from "../types";
 
 export const useFieldUpdate = () => {
   const api = useContext(PrivateApiContext);
@@ -13,7 +13,7 @@ export const useFieldUpdate = () => {
       body,
     }: {
       fieldId: string;
-      body: TwinClassFieldUpdateRq;
+      body: TwinClassFieldUpdateBody;
     }) => {
       return await api.twinClassField.update({ fieldId, body });
     },

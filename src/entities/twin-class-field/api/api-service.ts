@@ -5,7 +5,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import {
   TwinClassFieldCreateRq,
   TwinClassFieldSearchFilters,
-  TwinClassFieldUpdateRq,
+  TwinClassFieldUpdateBody,
 } from "./types";
 
 export function createTwinClassFieldApi(settings: ApiSettings) {
@@ -122,18 +122,21 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     body,
   }: {
     fieldId: string;
-    body: TwinClassFieldUpdateRq;
+    body: TwinClassFieldUpdateBody;
   }) {
-    return settings.client.PUT(
-      "/private/twin_class_field/{twinClassFieldId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { twinClassFieldId: fieldId },
-        },
-        body,
-      }
-    );
+    return settings.client.PUT("/private/twin_class_field/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: {
+        twinClassFields: [
+          {
+            twinClassFieldId: fieldId,
+            ...body,
+          },
+        ],
+      },
+    });
   }
 
   return {

@@ -24,7 +24,10 @@ export type TwinClassFieldSearchFilters = Partial<
 export type TwinClassFieldCreateRq =
   components["schemas"]["TwinClassFieldCreateRqV1"];
 export type TwinClassFieldUpdateRq =
-  components["schemas"]["TwinClassFieldUpdateRqV1"];
+  components["schemas"]["TwinClassFieldUpdateRqV2"]["twinClassFields"];
+
+export type TwinClassFieldUpdateBody =
+  components["schemas"]["TwinClassFieldUpdateV1"];
 
 export type TwinClassFieldV1_DETAILED = Required<TwinClassField> & {
   twinClass: TwinClass_DETAILED;

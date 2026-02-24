@@ -11,7 +11,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 import { FeaturerTypes, useFeaturerSelectAdapter } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
-  TwinClassFieldUpdateRq,
+  TwinClassFieldUpdateBody,
   TwinClassFieldV1_DETAILED,
   useFieldUpdate,
 } from "@/entities/twin-class-field";
@@ -41,7 +41,7 @@ export function TwinFieldGeneral({
   const permissionAdapter = usePermissionSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(13);
 
-  async function update(newField: TwinClassFieldUpdateRq) {
+  async function update(newField: TwinClassFieldUpdateBody) {
     try {
       await updateField({
         fieldId: twinFieldId,
@@ -222,6 +222,28 @@ export function TwinFieldGeneral({
     },
   };
 
+  const fieldInitializerAutoDialogSettings: AutoEditDialogSettings = {
+    value: {
+      fieldInitializerFeaturerId: twinField.fieldInitializerFeaturerId,
+    },
+    title: "Update field initializer",
+    onSubmit: (values) => {
+      return update({
+        fieldInitializerFeaturerId: values.fieldInitializerFeaturerId[0].id,
+        fieldInitializerParams: values.fieldInitializerParams,
+      });
+    },
+    valuesInfo: {
+      fieldInitializerFeaturerId: {
+        type: AutoFormValueType.featurer,
+        label: "Field initializer",
+        typeId: FeaturerTypes.initializer,
+        paramsFieldName: "fieldInitializerParams",
+        ...featurerAdapter,
+      },
+    },
+  };
+
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
     setEditFieldDialogOpen(true);
@@ -351,6 +373,22 @@ export function TwinFieldGeneral({
           <TableRow>
             <TableCell>Has projections</TableCell>
             <TableCell>{twinField.hasProjectedFields ? "Yes" : "No"}</TableCell>
+          </TableRow>
+
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(fieldInitializerAutoDialogSettings)}
+          >
+            <TableCell>Field initializer</TableCell>
+            <TableCell>
+              {twinField.fieldInitializerFeaturer && (
+                <FeaturerResourceLink
+                  data={twinField.fieldInitializerFeaturer}
+                  params={twinField.fieldInitializerDetailedParams}
+                  withTooltip
+                />
+              )}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
