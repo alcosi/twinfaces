@@ -7006,6 +7006,11 @@ export interface components {
              * @description how many children by extends
              */
             extendsHierarchyCounterDirectChildren?: number;
+            /**
+             * Format: int32
+             * @description how many twins of this class
+             */
+            twinCounter?: number;
             uniqueName?: boolean;
             /** @description Class fields id list */
             fieldIds?: string[];
@@ -13567,6 +13572,8 @@ export interface components {
             externalIdLikeList?: string[];
             /** @description external id not like list */
             externalIdNotLikeList?: string[];
+            /** @description Filter by twin class twin counter (range: from, to) */
+            twinCounterRange?: components["schemas"]["IntegerRangeV1"];
         };
         TwinClassListRsV1: {
             /**

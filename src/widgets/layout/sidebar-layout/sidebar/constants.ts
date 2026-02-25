@@ -15,6 +15,7 @@ import {
   SquareActivity,
   SquareAsterisk,
   Tags,
+  TicketCheck,
   User,
   UsersRound,
   Workflow,
@@ -262,6 +263,16 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Recipients",
         url: `/${PlatformArea.core}/recipients`,
         icon: Bell,
+      },
+    ],
+  },
+  validator: {
+    title: "Validator",
+    items: [
+      {
+        title: "Validator sets",
+        url: `/${PlatformArea.core}/validator-sets`,
+        icon: TicketCheck,
       },
     ],
   },

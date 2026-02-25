@@ -13,7 +13,8 @@ export type GroupKeys =
   | "businessAccount"
   | "misc"
   | "projection"
-  | "notification";
+  | "notification"
+  | "validator";
 
 export type Group = {
   title: string;
