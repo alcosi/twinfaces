@@ -270,7 +270,6 @@ export function TwinClassFieldsTable({
       fieldInitializerParams: {},
       viewPermissionId: "",
       editPermissionId: "",
-      fieldInitializerFeaturerId: "",
     },
   });
 

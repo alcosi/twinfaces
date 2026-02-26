@@ -12,7 +12,7 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import { FeaturerTypes } from "@/entities/featurer";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import {
   useTwinClassFilters,
@@ -20,6 +20,7 @@ import {
 } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 
+import { FeaturerFormField } from "../../form-fields";
 import { TwinClassFieldFormValues } from "./types";
 
 export function TwinClassFieldFormFields({
@@ -30,9 +31,6 @@ export function TwinClassFieldFormFields({
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
   const twinClassId = useWatch({ control, name: "twinClassId" });
   const permissionAdapter = usePermissionSelectAdapter();
-  const fieldTyperFeaturerAdapter = useFeaturerSelectAdapter(13);
-  const twinSorterFeaturerAdapter = useFeaturerSelectAdapter(41);
-  const fieldInitializerFeaturerAdapter = useFeaturerSelectAdapter(53);
 
   const {
     buildFilterFields: buildTwinClassFilters,
@@ -73,24 +71,20 @@ export function TwinClassFieldFormFields({
 
       <CheckboxFormField control={control} name="system" label="System" />
 
-      <ComboboxFormField
+      <FeaturerFormField
+        typeId={FeaturerTypes.fieldTyper}
         control={control}
-        name="fieldTyperFeaturerId"
         label="Type"
-        selectPlaceholder="Select type"
-        searchPlaceholder="Search type..."
-        noItemsText="No type found"
-        {...fieldTyperFeaturerAdapter}
+        name="fieldTyperFeaturerId"
+        paramsFieldName="fieldTyperParams"
       />
 
-      <ComboboxFormField
+      <FeaturerFormField
+        typeId={FeaturerTypes.sorter}
         control={control}
-        name="twinSorterFeaturerId"
         label="Twin sorter"
-        selectPlaceholder="Select twin sorter"
-        searchPlaceholder="Search twin sorter..."
-        noItemsText="No twin sorter found"
-        {...twinSorterFeaturerAdapter}
+        name="twinSorterFeaturerId"
+        paramsFieldName="twinSorterParams"
       />
 
       <ComboboxFormField
@@ -115,14 +109,12 @@ export function TwinClassFieldFormFields({
 
       <TextFormField control={control} name="externalId" label="External Id" />
 
-      <ComboboxFormField
+      <FeaturerFormField
+        typeId={FeaturerTypes.initializer}
         control={control}
-        name="fieldInitializerFeaturerId"
         label="Field initializer"
-        selectPlaceholder="Select field initializer"
-        searchPlaceholder="Search field initializer..."
-        noItemsText="No field initializer found"
-        {...fieldInitializerFeaturerAdapter}
+        name="fieldInitializerFeaturerId"
+        paramsFieldName="fieldInitializerParams"
       />
     </>
   );

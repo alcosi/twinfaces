@@ -27,6 +27,6 @@ export const TWIN_CLASS_FIELD_SCHEMA = z.object({
   viewPermissionId: z.string().optional().or(FIRST_ID_EXTRACTOR),
   editPermissionId: z.string().optional().or(FIRST_ID_EXTRACTOR),
   externalId: z.string().min(3),
-  fieldInitializerFeaturerId: z.string().or(FEATURER_ID_EXTRACTOR),
+  fieldInitializerFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
   fieldInitializerParams: FEATURER_PARAMS_VALUE,
 });
