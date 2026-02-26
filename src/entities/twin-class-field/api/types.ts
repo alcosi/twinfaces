@@ -22,7 +22,7 @@ export type TwinClassFieldSearchFilters = Partial<
 >;
 
 export type TwinClassFieldCreateRq =
-  components["schemas"]["TwinClassFieldCreateRqV1"];
+  components["schemas"]["TwinClassFieldCreateRqV2"];
 export type TwinClassFieldUpdateRq =
   components["schemas"]["TwinClassFieldUpdateRqV2"];
 

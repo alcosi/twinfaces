@@ -107,11 +107,10 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     );
   }
 
-  function create({ id, body }: { id: string; body: TwinClassFieldCreateRq }) {
-    return settings.client.POST(`/private/twin_class/{twinClassId}/field/v1`, {
+  function create({ body }: { body: TwinClassFieldCreateRq }) {
+    return settings.client.POST(`/private/twin_class_field/v1`, {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { twinClassId: id },
       },
       body: body,
     });
