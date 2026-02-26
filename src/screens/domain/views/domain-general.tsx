@@ -115,7 +115,11 @@ export function DomainGeneral() {
   const businessAccountInitiatorFeaturerSettings: AutoEditDialogSettings = {
     value: {
       businessAccountInitiatorFeaturerId:
-        domain.businessAccountInitiatorFeaturerId?.toString(),
+        domain.businessAccountInitiatorFeaturer
+          ? [domain.businessAccountInitiatorFeaturer]
+          : undefined,
+      businessAccountInitiatorFeaturerParams:
+        domain.businessAccountInitiatorParams ?? {},
     },
     title: "Update business account initiator",
     onSubmit: (values) => {

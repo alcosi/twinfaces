@@ -171,7 +171,10 @@ export function TwinFieldGeneral({
 
   const fieldTyperAutoDialogSettings: AutoEditDialogSettings = {
     value: {
-      fieldTyperFeaturerId: twinField.fieldTyperFeaturerId?.toString(),
+      fieldTyperFeaturerId: twinField.fieldTyperFeaturer
+        ? [twinField.fieldTyperFeaturer]
+        : undefined,
+      fieldTyperFeaturerParams: twinField.fieldTyperParams ?? {},
     },
     title: "Update field typer",
     onSubmit: (values) => {
@@ -193,7 +196,10 @@ export function TwinFieldGeneral({
 
   const twinSorterAutoDialogSettings: AutoEditDialogSettings = {
     value: {
-      twinSorterFeaturerId: twinField.twinSorterFeaturerId?.toString(),
+      twinSorterFeaturerId: twinField.twinSorterFeaturer
+        ? [twinField.twinSorterFeaturer]
+        : undefined,
+      twinSorterFeaturerParams: twinField.twinSorterParams ?? {},
     },
     title: "Update twin sorter",
     onSubmit: (values) => {
