@@ -39,13 +39,26 @@ export function TwinFieldGeneral({
   const { updateField } = useFieldUpdate();
   const router = useRouter();
   const permissionAdapter = usePermissionSelectAdapter();
-  const featurerAdapter = useFeaturerSelectAdapter(13);
+  const fieldTyperFeaturerAdapter = useFeaturerSelectAdapter(13);
+  const twinSorterFeaturerAdapter = useFeaturerSelectAdapter(41);
+  const fieldInitializerFeaturerAdapter = useFeaturerSelectAdapter(53);
 
-  async function update(newField: TwinClassFieldUpdateRq) {
+  async function update(
+    fieldUpdate: Omit<
+      TwinClassFieldUpdateRq["twinClassFields"],
+      "twinClassFieldId"
+    >
+  ) {
     try {
       await updateField({
-        fieldId: twinFieldId,
-        body: newField,
+        body: {
+          twinClassFields: [
+            {
+              twinClassFieldId: twinFieldId,
+              ...fieldUpdate,
+            },
+          ],
+        },
       });
 
       router.refresh();
@@ -100,9 +113,7 @@ export function TwinFieldGeneral({
     schema: z.boolean(),
     renderPreview: (value) => (value ? "Yes" : "No"),
     onSubmit: (value) => {
-      return update({
-        required: value,
-      });
+      return update({ required: value });
     },
   };
 
@@ -116,9 +127,7 @@ export function TwinFieldGeneral({
     schema: z.boolean(),
     renderPreview: (value) => (value ? "Yes" : "No"),
     onSubmit: (value) => {
-      return update({
-        system: value,
-      });
+      return update({ system: value });
     },
   };
 
@@ -177,7 +186,7 @@ export function TwinFieldGeneral({
         label: "Field typer",
         typeId: FeaturerTypes.fieldTyper,
         paramsFieldName: "fieldTyperFeaturerParams",
-        ...featurerAdapter,
+        ...fieldTyperFeaturerAdapter,
       },
     },
   };
@@ -199,7 +208,7 @@ export function TwinFieldGeneral({
         label: "Twin sorter",
         typeId: FeaturerTypes.sorter,
         paramsFieldName: "twinSorterFeaturerParams",
-        ...featurerAdapter,
+        ...twinSorterFeaturerAdapter,
       },
     },
   };
@@ -216,9 +225,29 @@ export function TwinFieldGeneral({
     },
     schema: z.string().min(3),
     onSubmit: (value) => {
+      return update({ externalId: value });
+    },
+  };
+
+  const fieldInitializerAutoDialogSettings: AutoEditDialogSettings = {
+    value: {
+      fieldInitializerFeaturerId: twinField.fieldInitializerFeaturerId,
+    },
+    title: "Update field initializer",
+    onSubmit: (values) => {
       return update({
-        externalId: value,
+        fieldInitializerFeaturerId: values.fieldInitializerFeaturerId[0].id,
+        fieldInitializerParams: values.fieldInitializerParams,
       });
+    },
+    valuesInfo: {
+      fieldInitializerFeaturerId: {
+        type: AutoFormValueType.featurer,
+        label: "Field initializer",
+        typeId: FeaturerTypes.initializer,
+        paramsFieldName: "fieldInitializerParams",
+        ...fieldInitializerFeaturerAdapter,
+      },
     },
   };
 
@@ -351,6 +380,22 @@ export function TwinFieldGeneral({
           <TableRow>
             <TableCell>Has projections</TableCell>
             <TableCell>{twinField.hasProjectedFields ? "Yes" : "No"}</TableCell>
+          </TableRow>
+
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(fieldInitializerAutoDialogSettings)}
+          >
+            <TableCell>Field initializer</TableCell>
+            <TableCell>
+              {twinField.fieldInitializerFeaturer && (
+                <FeaturerResourceLink
+                  data={twinField.fieldInitializerFeaturer}
+                  params={twinField.fieldInitializerDetailedParams}
+                  withTooltip
+                />
+              )}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

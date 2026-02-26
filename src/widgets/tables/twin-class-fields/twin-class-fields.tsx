@@ -264,7 +264,10 @@ export function TwinClassFieldsTable({
       name: "",
       description: "",
       required: false,
+      system: false,
       fieldTyperParams: {},
+      twinSorterParams: {},
+      fieldInitializerParams: {},
       viewPermissionId: "",
       editPermissionId: "",
     },
@@ -272,22 +275,34 @@ export function TwinClassFieldsTable({
 
   const handleOnCreateSubmit = async (formValues: TwinClassFieldFormValues) => {
     const body: TwinClassFieldCreateRq = {
-      key: formValues.key,
-      required: formValues.required,
-      nameI18n: {
-        translationInCurrentLocale: formValues.name,
-      },
-      descriptionI18n: {
-        translationInCurrentLocale: formValues.description,
-      },
-      fieldTyperFeaturerId: formValues.fieldTyperFeaturerId,
-      fieldTyperParams: formValues.fieldTyperParams,
-      viewPermissionId: formValues.viewPermissionId,
-      editPermissionId: formValues.editPermissionId,
+      twinClassFields: [
+        {
+          twinClassId: twinClassId || formValues.twinClassId!,
+          key: formValues.key,
+          required: formValues.required,
+          system: formValues.system,
+          nameI18n: {
+            translationInCurrentLocale: formValues.name,
+          },
+          descriptionI18n: {
+            translationInCurrentLocale: formValues.description,
+          },
+          fieldTyperFeaturerId: formValues.fieldTyperFeaturerId,
+          fieldTyperParams: formValues.fieldTyperParams,
+          twinSorterFeaturerId: formValues.twinSorterFeaturerId,
+          twinSorterParams: formValues.twinSorterParams,
+          viewPermissionId: formValues.viewPermissionId,
+          editPermissionId: formValues.editPermissionId,
+          externalId: formValues.externalId,
+          fieldInitializerFeaturerId: Number(
+            formValues.fieldInitializerFeaturerId
+          ),
+          fieldInitializerParams: formValues.fieldInitializerParams,
+        },
+      ],
     };
 
     const { error } = await api.twinClassField.create({
-      id: twinClassId || formValues.twinClassId!,
       body,
     });
     if (error) {

@@ -30,7 +30,7 @@ export function TwinClassFieldFormFields({
 }) {
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
   const twinClassId = useWatch({ control, name: "twinClassId" });
-  const pAdapter = usePermissionSelectAdapter();
+  const permissionAdapter = usePermissionSelectAdapter();
 
   const {
     buildFilterFields: buildTwinClassFilters,
@@ -69,12 +69,22 @@ export function TwinClassFieldFormFields({
 
       <CheckboxFormField control={control} name="required" label="Required" />
 
+      <CheckboxFormField control={control} name="system" label="System" />
+
       <FeaturerFormField
         typeId={FeaturerTypes.fieldTyper}
         control={control}
-        label="Field typer"
+        label="Type"
         name="fieldTyperFeaturerId"
         paramsFieldName="fieldTyperParams"
+      />
+
+      <FeaturerFormField
+        typeId={FeaturerTypes.sorter}
+        control={control}
+        label="Twin sorter"
+        name="twinSorterFeaturerId"
+        paramsFieldName="twinSorterParams"
       />
 
       <ComboboxFormField
@@ -84,7 +94,7 @@ export function TwinClassFieldFormFields({
         selectPlaceholder="Select view permission"
         searchPlaceholder="Search view permission..."
         noItemsText="No permission found"
-        {...pAdapter}
+        {...permissionAdapter}
       />
 
       <ComboboxFormField
@@ -94,7 +104,17 @@ export function TwinClassFieldFormFields({
         selectPlaceholder="Select edit permission"
         searchPlaceholder="Search edit permission..."
         noItemsText="No permission found"
-        {...pAdapter}
+        {...permissionAdapter}
+      />
+
+      <TextFormField control={control} name="externalId" label="External Id" />
+
+      <FeaturerFormField
+        typeId={FeaturerTypes.initializer}
+        control={control}
+        label="Field initializer"
+        name="fieldInitializerFeaturerId"
+        paramsFieldName="fieldInitializerParams"
       />
     </>
   );

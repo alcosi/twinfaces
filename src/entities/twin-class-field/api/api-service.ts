@@ -107,33 +107,22 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     );
   }
 
-  function create({ id, body }: { id: string; body: TwinClassFieldCreateRq }) {
-    return settings.client.POST(`/private/twin_class/{twinClassId}/field/v1`, {
+  function create({ body }: { body: TwinClassFieldCreateRq }) {
+    return settings.client.POST(`/private/twin_class_field/v1`, {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { twinClassId: id },
       },
       body: body,
     });
   }
 
-  function update({
-    fieldId,
-    body,
-  }: {
-    fieldId: string;
-    body: TwinClassFieldUpdateRq;
-  }) {
-    return settings.client.PUT(
-      "/private/twin_class_field/{twinClassFieldId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { twinClassFieldId: fieldId },
-        },
-        body,
-      }
-    );
+  function update({ body }: { body: TwinClassFieldUpdateRq }) {
+    return settings.client.PUT("/private/twin_class_field/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
   }
 
   return {
