@@ -99,6 +99,10 @@ import {
 } from "@/entities/twinflow-factory";
 import { UserApi, createUserApi } from "@/entities/user";
 import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
+import {
+  ValidatorSetApi,
+  createValidatorSetApi,
+} from "@/entities/validator-set/index";
 import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui";
 
@@ -142,6 +146,7 @@ export interface PrivateApiContextProps {
   tier: TierApi;
   projection: ProjectionApi;
   recipient: RecipientApi;
+  validatorSet: ValidatorSetApi;
 }
 
 export function PrivateApiContextProvider({
@@ -197,6 +202,7 @@ export function PrivateApiContextProvider({
         tier: createTierApi(settings),
         projection: createProjectionApi(settings),
         recipient: createRecipientApi(settings),
+        validatorSet: createValidatorSetApi(settings),
       }
     : ({} as PrivateApiContextProps);
 
