@@ -144,7 +144,10 @@ export function DomainGeneral() {
 
   const userGroupManagerFeaturerSettings: AutoEditDialogSettings = {
     value: {
-      userGroupManagerFeaturerId: domain.userGroupManagerFeaturerId?.toString(),
+      userGroupManagerFeaturerId: domain.userGroupManagerFeaturer
+        ? [domain.userGroupManagerFeaturer]
+        : undefined,
+      userGroupManagerFeaturerParams: domain.userGroupManagerParams ?? {},
     },
     title: "Update user group manager",
     onSubmit: (values) => {
