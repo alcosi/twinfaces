@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -115,7 +115,11 @@ export function DomainGeneral() {
   const businessAccountInitiatorFeaturerSettings: AutoEditDialogSettings = {
     value: {
       businessAccountInitiatorFeaturerId:
-        domain.businessAccountInitiatorFeaturerId,
+        domain.businessAccountInitiatorFeaturer
+          ? [domain.businessAccountInitiatorFeaturer]
+          : undefined,
+      businessAccountInitiatorFeaturerParams:
+        domain.businessAccountInitiatorParams ?? {},
     },
     title: "Update business account initiator",
     onSubmit: (values) => {
@@ -140,7 +144,10 @@ export function DomainGeneral() {
 
   const userGroupManagerFeaturerSettings: AutoEditDialogSettings = {
     value: {
-      userGroupManagerFeaturerId: domain.userGroupManagerFeaturerId,
+      userGroupManagerFeaturerId: domain.userGroupManagerFeaturer
+        ? [domain.userGroupManagerFeaturer]
+        : undefined,
+      userGroupManagerFeaturerParams: domain.userGroupManagerParams ?? {},
     },
     title: "Update user group manager",
     onSubmit: (values) => {

@@ -1,19 +1,25 @@
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   wrapWithPercent,
 } from "@/shared/libs";
-import { Featurer_DETAILED, useFeaturerSearch } from "../../api";
+
+import {
+  Featurer_DETAILED,
+  useFeaturerSearch,
+  useFetchFeaturerById,
+} from "../../api";
 import { FeaturerTypeId } from "../types";
 
 export function useFeaturerSelectAdapter(
   typeId: FeaturerTypeId
 ): SelectAdapter<Featurer_DETAILED> {
   const { searchFeaturers } = useFeaturerSearch();
+  const { fetchFeaturerById } = useFetchFeaturerById();
 
   async function getById(id: string) {
-    // TODO: Apply valid logic here
-    return { id } as unknown as Featurer_DETAILED;
+    const numId = typeof id === "string" ? parseInt(id, 10) : id;
+    return await fetchFeaturerById(numId);
   }
 
   async function getItems(search: string) {

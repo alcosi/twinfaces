@@ -50,7 +50,11 @@ export function FeaturerParamFormItem({ param, onChange, ...props }: Props) {
           <CheckboxFormItem
             onChange={(v) => handleOnCheckboxChange(v as boolean)}
             {...props}
-            fieldValue={Boolean(props.fieldValue)}
+            fieldValue={
+              typeof props.fieldValue === "boolean"
+                ? props.fieldValue
+                : props.fieldValue === "true"
+            }
           />
         );
       case FeaturerParamType.WORD_LIST:
