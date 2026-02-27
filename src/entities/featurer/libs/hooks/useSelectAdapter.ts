@@ -4,15 +4,18 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 
-import { Featurer_DETAILED, useFeaturerSearch } from "../../api";
-import { useFeaturerFetchById } from "../../api/hooks/use-fetch-by-id";
+import {
+  Featurer_DETAILED,
+  useFeaturerSearch,
+  useFetchFeaturerById,
+} from "../../api";
 import { FeaturerTypeId } from "../types";
 
 export function useFeaturerSelectAdapter(
   typeId: FeaturerTypeId
 ): SelectAdapter<Featurer_DETAILED> {
   const { searchFeaturers } = useFeaturerSearch();
-  const { fetchFeaturerById } = useFeaturerFetchById();
+  const { fetchFeaturerById } = useFetchFeaturerById();
 
   async function getById(id: string) {
     const numId = typeof id === "string" ? parseInt(id, 10) : id;

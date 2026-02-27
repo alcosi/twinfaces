@@ -6,7 +6,7 @@ import { isUndefined } from "@/shared/libs";
 import { hydrateFeaturerFromMap } from "../../libs";
 import { Featurer_DETAILED } from "../types";
 
-export const useFeaturerFetchById = () => {
+export const useFetchFeaturerById = () => {
   const api = useContext(PrivateApiContext);
   const [loading, setLoading] = useState<boolean>(false);
 

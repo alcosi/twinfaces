@@ -237,7 +237,10 @@ export function TwinFieldGeneral({
 
   const fieldInitializerAutoDialogSettings: AutoEditDialogSettings = {
     value: {
-      fieldInitializerFeaturerId: twinField.fieldInitializerFeaturerId,
+      fieldInitializerFeaturerId: twinField.fieldInitializerFeaturer
+        ? [twinField.fieldInitializerFeaturer]
+        : undefined,
+      fieldInitializerParams: twinField.fieldInitializerParams ?? {},
     },
     title: "Update field initializer",
     onSubmit: (values) => {
