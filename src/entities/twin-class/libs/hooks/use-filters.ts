@@ -180,6 +180,10 @@ export function useTwinClassFilters(): FilterFeature<
         hasIndeterminate: true,
         defaultValue: "indeterminate",
       },
+      twinCounterRange: {
+        type: AutoFormValueType.numberRange,
+        label: "Twins count",
+      },
     };
   }
 
@@ -251,6 +255,18 @@ export function useTwinClassFilters(): FilterFeature<
       ),
       freezeIdList: toArrayOfString(toArray(filters.freezeIdList), "id"),
       uniqueName: mapToChoice(filters.uniqueName),
+      twinCounterRange: {
+        from: (
+          filters.twinCounterRange as {
+            from?: number;
+          }
+        )?.from,
+        to: (
+          filters.twinCounterRange as {
+            to?: number;
+          }
+        )?.to,
+      },
     };
 
     return result;
