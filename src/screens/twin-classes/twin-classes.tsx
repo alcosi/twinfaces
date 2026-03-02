@@ -94,6 +94,7 @@ const colDefs: Record<
     | "hasSegment"
     | "twinClassFreezeId"
     | "uniqueName"
+    | "twinCounter"
   >,
   ColumnDef<TwinClass_DETAILED>
 > = {
@@ -314,6 +315,12 @@ const colDefs: Record<
     accessorKey: "uniqueName",
     header: "Unique name",
     cell: (data) => data.getValue() && <Check />,
+  },
+
+  twinCounter: {
+    id: "twinCounter",
+    accessorKey: "twinCounter",
+    header: "Twins count",
   },
 };
 
@@ -584,6 +591,7 @@ export function TwinClasses({ type }: { type?: string }) {
             colDefs.hasSegment,
             colDefs.twinClassFreezeId,
             colDefs.uniqueName,
+            colDefs.twinCounter,
           ]}
           getRowId={(row) => row.id!}
           onRowClick={(row) =>
@@ -606,6 +614,7 @@ export function TwinClasses({ type }: { type?: string }) {
             colDefs.segment,
             colDefs.hasSegment,
             colDefs.twinClassFreezeId,
+            colDefs.twinCounter,
           ]}
           dialogForm={twinClassesForm}
           onCreateSubmit={!type ? handleOnCreateSubmit : undefined}
