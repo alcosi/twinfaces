@@ -12,6 +12,10 @@ import {
   useTwinClassSelectAdapter,
   useUpdateTwinClassDynamicMarker,
 } from "@/entities/twin-class";
+import {
+  ValidatorSet_DETAILED,
+  useValidatorSetSelectAdapter,
+} from "@/entities/validator-set";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import {
   InPlaceEdit,
@@ -20,6 +24,7 @@ import {
 } from "@/features/inPlaceEdit";
 import { TwinClassDynamicMarkerContext } from "@/features/twin-class-dynamic-marker";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { ValidatorSetResourceLink } from "@/features/validator-set/ui/index";
 import { GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -27,6 +32,7 @@ export function TwinClassDynamicMarkerGeneral() {
   const { updateTwinClassDynamicMarker } = useUpdateTwinClassDynamicMarker();
   const twinClassAdapter = useTwinClassSelectAdapter();
   const markerAdapter = useTwinClassDynamicMarkerSelectAdapter();
+  const validatorSetAdapter = useValidatorSetSelectAdapter();
   const { dynamicMarker, refresh } = useContext(TwinClassDynamicMarkerContext);
 
   async function update(updateData: any) {
@@ -98,6 +104,31 @@ export function TwinClassDynamicMarkerGeneral() {
     },
   };
 
+  const validatorSetSettings: InPlaceEditProps<
+    typeof dynamicMarker.twinValidatorSetId
+  > = {
+    id: "twinValidatorSetId",
+    value: dynamicMarker.twinValidatorSetId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select validator set...",
+      ...validatorSetAdapter,
+    },
+    renderPreview: dynamicMarker.twinValidatorSet
+      ? () => (
+          <ValidatorSetResourceLink
+            data={dynamicMarker.twinValidatorSet as ValidatorSet_DETAILED}
+            withTooltip
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      const twinValidatorSetId = (value as unknown as Array<{ id: string }>)[0]
+        ?.id;
+      return update({ twinValidatorSetId });
+    },
+  };
+
   return (
     <InPlaceEditContextProvider>
       <Table>
@@ -119,10 +150,7 @@ export function TwinClassDynamicMarkerGeneral() {
           <TableRow>
             <TableCell>Validator set</TableCell>
             <TableCell>
-              <GuidWithCopy
-                value={dynamicMarker.twinValidatorSetId}
-                variant="long"
-              />
+              <InPlaceEdit {...validatorSetSettings} />
             </TableCell>
           </TableRow>
 

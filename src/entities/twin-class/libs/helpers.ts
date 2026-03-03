@@ -119,5 +119,10 @@ export const hydrateTwinClassDynamicMarkerFromMap = (
       relatedObjects.dataListsOptionMap[dto.markerDataListOptionId];
   }
 
+  if (dto.twinValidatorSetId && relatedObjects.twinValidatorSetMap) {
+    hydrated.twinValidatorSet =
+      relatedObjects.twinValidatorSetMap[dto.twinValidatorSetId];
+  }
+
   return hydrated;
 };
