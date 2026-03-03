@@ -9,6 +9,7 @@ import {
   ValidatorSet_DETAILED,
   useValidatorSetSearch,
 } from "@/entities/validator-set";
+import { useValidatorSetFilters } from "@/entities/validator-set/libs";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
@@ -51,14 +52,19 @@ const colDefs: Record<
 export function ValidatorSetsScreen() {
   const router = useRouter();
   const { searchValidatorSets } = useValidatorSetSearch();
+  const { buildFilterFields, mapFiltersToPayload } = useValidatorSetFilters();
 
   async function fetchValidatorSets(
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<ValidatorSet_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
     try {
       return await searchValidatorSets({
         pagination,
+        filters: {
+          ..._filters,
+        },
       });
     } catch (error) {
       toast.error("An error occured while fetching validator sets: " + error);
@@ -83,6 +89,7 @@ export function ValidatorSetsScreen() {
         colDefs.description,
         colDefs.invert,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }
