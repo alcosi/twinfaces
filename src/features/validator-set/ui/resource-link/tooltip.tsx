@@ -1,4 +1,4 @@
-import { Database } from "lucide-react";
+import { TicketCheck } from "lucide-react";
 
 import { ValidatorSet_DETAILED } from "@/entities/validator-set";
 import { isPopulatedString } from "@/shared/libs";
@@ -14,11 +14,25 @@ export function ValidatorSetResourceTooltip({ data, link }: Props) {
     <ResourceLinkTooltip uuid={data.id} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
-        iconSource={Database}
+        iconSource={TicketCheck}
       />
 
       <ResourceLinkTooltip.Main>
-        {data.description && <p className="text-xs">{data.description}</p>}
+        {data.id && (
+          <ResourceLinkTooltip.Item title="Id">
+            {data.id}
+          </ResourceLinkTooltip.Item>
+        )}
+        {data.name && (
+          <ResourceLinkTooltip.Item title="Name">
+            {data.name}
+          </ResourceLinkTooltip.Item>
+        )}
+        {data.description && (
+          <ResourceLinkTooltip.Item title="Description">
+            {data.description}
+          </ResourceLinkTooltip.Item>
+        )}
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );

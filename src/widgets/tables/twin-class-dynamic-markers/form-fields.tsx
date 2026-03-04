@@ -1,24 +1,27 @@
-import { Control } from "react-hook-form";
+import { useRef } from "react";
+import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { ComboboxFormField } from "@/components/form-fields";
 
 import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option/index";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  TWIN_CLASS_DYNAMIC_MARKER_SCHEMA,
+  useTwinClassSelectAdapter,
+} from "@/entities/twin-class";
 import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
-
-import { TWIN_CLASS_DYNAMIC_MARKER_SCHEMA } from "./constants";
+import { isTruthy } from "@/shared/libs";
 
 export function TwinClassDynamicMarkerFormFields({
   control,
-  twinClassId,
 }: {
   control: Control<z.infer<typeof TWIN_CLASS_DYNAMIC_MARKER_SCHEMA>>;
-  twinClassId?: string;
 }) {
   const twinClassAdapter = useTwinClassSelectAdapter();
   const validatorSetAdapter = useValidatorSetSelectAdapter();
   const markerAdapter = useDatalistOptionSelectAdapter();
+  const twinClassWatch = useWatch({ control, name: "twinClassId" });
+  const disabled = useRef(isTruthy(twinClassWatch)).current;
 
   return (
     <>
@@ -29,7 +32,7 @@ export function TwinClassDynamicMarkerFormFields({
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
-        disabled={!!twinClassId}
+        disabled={disabled}
         required
         {...twinClassAdapter}
       />

@@ -1,4 +1,8 @@
-import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+import {
+  SelectAdapter,
+  isPopulatedString,
+  wrapWithPercent,
+} from "@/shared/libs";
 
 import { ValidatorSet_DETAILED, useValidatorSetSearch } from "../../api";
 
@@ -19,7 +23,7 @@ export function useValidatorSetSelectAdapter(): SelectAdapter<ValidatorSet_DETAI
     const { data } = await searchValidatorSets({
       pagination: { pageIndex: 0, pageSize: 10 },
       filters: {
-        nameLikeList: search ? [`%${search}%`] : ["%"],
+        nameLikeList: search ? [wrapWithPercent(search)] : [],
       },
     });
 

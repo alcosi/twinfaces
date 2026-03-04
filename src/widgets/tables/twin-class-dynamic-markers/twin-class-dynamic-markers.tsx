@@ -7,6 +7,8 @@ import { toast } from "sonner";
 
 import { DataListOption_DETAILED } from "@/entities/datalist-option";
 import {
+  TWIN_CLASS_DYNAMIC_MARKER_SCHEMA,
+  TwinClassDynamicMarkerFieldValues,
   TwinClassDynamicMarker_DETAILED,
   TwinClass_DETAILED,
   useTwinClassDynamicMarkerFilters,
@@ -22,10 +24,6 @@ import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
-import {
-  TWIN_CLASS_DYNAMIC_MARKER_SCHEMA,
-  TwinClassDynamicMarkerFieldValues,
-} from "./constants";
 import { TwinClassDynamicMarkerFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -55,12 +53,6 @@ const colDefs: Record<
         </div>
       ),
   },
-  // twinValidatorSetId: {
-  //   id: "twinValidatorSetId",
-  //   accessorKey: "twinValidatorSetId",
-  //   header: "Validator set",
-  //   cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
-  // },
   twinValidatorSetId: {
     id: "twinValidatorSetId",
     accessorKey: "twinValidatorSetId",
@@ -102,7 +94,7 @@ export function TwinClassDynamicMarkersTable({
   const { buildFilterFields, mapFiltersToPayload } =
     useTwinClassDynamicMarkerFilters({
       enabledFilters: isTruthy(twinClassId)
-        ? ["idList", "markerDataListOptionIdList"]
+        ? ["idList", "twinValidatorSetIdList", "markerDataListOptionIdList"]
         : undefined,
     });
 
@@ -164,7 +156,8 @@ export function TwinClassDynamicMarkersTable({
 
       toast.success("Dynamic marker created successfully!");
     } catch (error) {
-      console.error("Create error:", error);
+      toast.error("Dynamic marker create erorr!");
+      console.error("Dynamic marker create error:", error);
       throw error;
     }
   };

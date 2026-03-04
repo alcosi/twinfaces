@@ -2,7 +2,7 @@ import { DataListOptionV1 } from "@/entities/datalist-option";
 import { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import type { TwinClassField } from "@/entities/twin-class-field";
-import { ValidatorSet } from "@/entities/validator-set/index";
+import { ValidatorSet } from "@/entities/validator-set";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
