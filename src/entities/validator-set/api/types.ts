@@ -12,9 +12,6 @@ export type ValidatorSetFilterKeys =
   | "nameLikeList"
   | "descriptionLikeList"
   | "invert";
-// | "idExcludeList"
-// | "nameNotLikeList"
-// | "descriptionNotLikeList"
 
 export type ValidatorSetFilters = Partial<
   Pick<ValidatorSetSearchRq, ValidatorSetFilterKeys>

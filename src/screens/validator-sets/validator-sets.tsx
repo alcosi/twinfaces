@@ -7,9 +7,9 @@ import { toast } from "sonner";
 
 import {
   ValidatorSet_DETAILED,
+  useValidatorSetFilters,
   useValidatorSetSearch,
 } from "@/entities/validator-set";
-import { useValidatorSetFilters } from "@/entities/validator-set/libs";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
