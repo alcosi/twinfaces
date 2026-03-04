@@ -2,6 +2,7 @@ import { DataListOptionV1 } from "@/entities/datalist-option";
 import { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import type { TwinClassField } from "@/entities/twin-class-field";
+import { ValidatorSet } from "@/entities/validator-set";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
@@ -153,9 +154,15 @@ export type TwinClassDynamicMarker_DETAILED =
   Required<TwinClassDynamicMarker> & {
     twinClass?: TwinClass;
     markerDataListOption?: DataListOptionV1;
+    twinValidatorSet?: ValidatorSet;
   };
 
 export type TwinClassDynamicMarkerUpdateRq =
   components["schemas"]["TwinClassDynamicMarkerUpdateRqV1"];
 export type TwinClassDynamicMarkerUpdateV1 =
   components["schemas"]["TwinClassDynamicMarkerUpdateV1"];
+
+export type TwinClassDynamicMarkerCreateRq =
+  components["schemas"]["TwinClassDynamicMarkerCreateRqV1"];
+export type TwinClassDynamicMarkerCreateV1 =
+  components["schemas"]["TwinClassDynamicMarkerCreateV1"];

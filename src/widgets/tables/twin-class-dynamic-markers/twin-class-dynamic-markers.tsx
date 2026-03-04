@@ -1,22 +1,30 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { DataListOption_DETAILED } from "@/entities/datalist-option";
 import {
+  TWIN_CLASS_DYNAMIC_MARKER_SCHEMA,
+  TwinClassDynamicMarkerFieldValues,
   TwinClassDynamicMarker_DETAILED,
   TwinClass_DETAILED,
   useTwinClassDynamicMarkerFilters,
   useTwinClassDynamicMarkerSearch,
 } from "@/entities/twin-class";
+import { ValidatorSet_DETAILED } from "@/entities/validator-set/index";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { PagedResponse } from "@/shared/api";
+import { ValidatorSetResourceLink } from "@/features/validator-set/ui/index";
+import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { TwinClassDynamicMarkerFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -49,7 +57,15 @@ const colDefs: Record<
     id: "twinValidatorSetId",
     accessorKey: "twinValidatorSetId",
     header: "Validator set",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    cell: ({ row: { original } }) =>
+      original.twinValidatorSet && (
+        <div className="inline-flex max-w-48">
+          <ValidatorSetResourceLink
+            data={original.twinValidatorSet as ValidatorSet_DETAILED}
+            withTooltip
+          />
+        </div>
+      ),
   },
   markerDataListOption: {
     id: "markerDataListOption",
@@ -73,11 +89,12 @@ export function TwinClassDynamicMarkersTable({
   twinClassId?: string;
 }) {
   const router = useRouter();
+  const api = useContext(PrivateApiContext);
   const { searchTwinClassDynamicMarker } = useTwinClassDynamicMarkerSearch();
   const { buildFilterFields, mapFiltersToPayload } =
     useTwinClassDynamicMarkerFilters({
       enabledFilters: isTruthy(twinClassId)
-        ? ["idList", "markerDataListOptionIdList"]
+        ? ["idList", "twinValidatorSetIdList", "markerDataListOptionIdList"]
         : undefined,
     });
 
@@ -107,6 +124,44 @@ export function TwinClassDynamicMarkersTable({
     }
   }
 
+  const dynamicMarkerForm = useForm<TwinClassDynamicMarkerFieldValues>({
+    resolver: zodResolver(TWIN_CLASS_DYNAMIC_MARKER_SCHEMA),
+    defaultValues: {
+      twinClassId: twinClassId || "",
+      twinValidatorSetId: "",
+      markerDataListOptionId: "",
+    },
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: TwinClassDynamicMarkerFieldValues
+  ) => {
+    try {
+      const { error } = await api.twinClass.createDynamicMarkers({
+        body: {
+          dynamicMarkers: [
+            {
+              twinClassId: formValues.twinClassId,
+              twinValidatorSetId: formValues.twinValidatorSetId || undefined,
+              markerDataListOptionId:
+                formValues.markerDataListOptionId || undefined,
+            },
+          ],
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success("Dynamic marker created successfully!");
+    } catch (error) {
+      toast.error("Dynamic marker create erorr!");
+      console.error("Dynamic marker create error:", error);
+      throw error;
+    }
+  };
+
   return (
     <CrudDataTable
       columns={[
@@ -129,6 +184,11 @@ export function TwinClassDynamicMarkersTable({
         colDefs.twinValidatorSetId,
         colDefs.markerDataListOption,
       ]}
+      dialogForm={dynamicMarkerForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <TwinClassDynamicMarkerFormFields control={dynamicMarkerForm.control} />
+      )}
     />
   );
 }

@@ -75,3 +75,19 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   autoCreatePermissions: z.boolean(),
   uniqueName: z.boolean(),
 });
+
+export const TWIN_CLASS_DYNAMIC_MARKER_SCHEMA = z.object({
+  twinClassId: z.string().uuid("Twin class is required").or(FIRST_ID_EXTRACTOR),
+  twinValidatorSetId: z
+    .string()
+    .uuid("Validator set is required")
+    .or(FIRST_ID_EXTRACTOR),
+  markerDataListOptionId: z
+    .string()
+    .uuid("Marker option is required")
+    .or(FIRST_ID_EXTRACTOR),
+});
+
+export type TwinClassDynamicMarkerFieldValues = z.infer<
+  typeof TWIN_CLASS_DYNAMIC_MARKER_SCHEMA
+>;
