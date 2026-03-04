@@ -2,13 +2,15 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTwinClassDynamicMarkerSelectAdapter } from "@/entities/twin-class";
 import {
   TwinClassDynamicMarkerFilterKeys,
   TwinClassDynamicMarkerFilters,
+  TwinClass_DETAILED,
+  useTwinClassDynamicMarkerSelectAdapter,
+  useTwinClassFilters,
+  useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { TwinClass_DETAILED, useTwinClassFilters } from "@/entities/twin-class";
+import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -32,6 +34,7 @@ export function useTwinClassDynamicMarkerFilters({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const validatorSetAdapter = useValidatorSetSelectAdapter();
 
   const allFilters: Record<
     TwinClassDynamicMarkerFilterKeys,
@@ -54,10 +57,10 @@ export function useTwinClassDynamicMarkerFilters({
       multi: true,
     },
     twinValidatorSetIdList: {
-      type: AutoFormValueType.tag,
-      label: "Validator set",
-      schema: z.string().uuid("Please enter a valid UUID"),
-      placeholder: "Enter UUID",
+      type: AutoFormValueType.combobox,
+      label: "Validator Set",
+      ...validatorSetAdapter,
+      multi: true,
     },
     markerDataListOptionIdList: {
       type: AutoFormValueType.combobox,
@@ -85,7 +88,10 @@ export function useTwinClassDynamicMarkerFilters({
         list: toArray(filters.twinClassIdMap) as TwinClass_DETAILED[],
         defaultValue: true,
       }),
-      twinValidatorSetIdList: toArrayOfString(filters.twinValidatorSetIdList),
+      twinValidatorSetIdList: toArrayOfString(
+        toArray(filters.twinValidatorSetIdList),
+        "id"
+      ),
       markerDataListOptionIdList: toArrayOfString(
         toArray(filters.markerDataListOptionIdList),
         "markerDataListOptionId"
