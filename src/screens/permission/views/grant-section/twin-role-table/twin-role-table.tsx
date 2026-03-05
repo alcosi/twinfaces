@@ -26,15 +26,15 @@ import { CrudDataTable } from "@/widgets/crud-data-table";
 import { TwinRoleTableFormFields } from "./form-fields";
 
 const colDefs: Record<
-  keyof Pick<
-    PermissionGrantTwinRoles_DETAILED,
-    | "id"
-    | "permissionSchemaId"
-    | "twinClassId"
-    | "twinRole"
-    | "grantedByUserId"
-    | "grantedAt"
-  >,
+  | keyof Pick<
+      PermissionGrantTwinRoles_DETAILED,
+      | "id"
+      | "permissionSchemaId"
+      | "twinClassId"
+      | "grantedByUserId"
+      | "grantedAt"
+    >
+  | "twinRole",
   ColumnDef<PermissionGrantTwinRoles_DETAILED>
 > = {
   id: {
@@ -73,8 +73,15 @@ const colDefs: Record<
 
   twinRole: {
     id: "twinRole",
-    accessorKey: "twinRole",
     header: "Twin role",
+    cell: ({ row: { original } }) => {
+      const roles: string[] = [];
+      if (original.grantedToAssignee) roles.push("assignee");
+      if (original.grantedToCreator) roles.push("creator");
+      if (original.grantedToSpaceAssignee) roles.push("space_assignee");
+      if (original.grantedToSpaceCreator) roles.push("space_creator");
+      return roles.join(", ") || "—";
+    },
   },
 
   grantedByUserId: {
@@ -127,7 +134,7 @@ export function TwinRoleTable() {
         },
       });
       return response;
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch permissions twin roles");
       return { data: [], pagination: {} };
     }
@@ -136,10 +143,20 @@ export function TwinRoleTable() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof PERMISSION_GRANT_TWIN_ROLE_SCHEMA>
   ) => {
-    const { ...body } = formValues;
+    const { twinRole, ...rest } = formValues;
 
     await createPermissionGrantTwinRole({
-      body: { permissionGrantTwinRole: body },
+      body: {
+        permissionGrantTwinRole: {
+          permissionId: rest.permissionId as string,
+          permissionSchemaId: rest.permissionSchemaId as string,
+          twinClassId: rest.twinClassId as string,
+          grantedToAssignee: twinRole === "assignee",
+          grantedToCreator: twinRole === "creator",
+          grantedToSpaceAssignee: twinRole === "space_assignee",
+          grantedToSpaceCreator: twinRole === "space_creator",
+        },
+      },
     });
     toast.success("Twin role permission is granted successfully!");
   };

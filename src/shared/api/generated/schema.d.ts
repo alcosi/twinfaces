@@ -9231,11 +9231,14 @@ export interface components {
              * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             grantedByUserId?: string;
-            /**
-             * @description twin role
-             * @enum {string}
-             */
-            twinRole?: "assignee" | "creator" | "watcher" | "space_assignee" | "space_creator";
+            /** @description is granted to assignee */
+            grantedToAssignee?: boolean;
+            /** @description is granted to space assignee */
+            grantedToSpaceAssignee?: boolean;
+            /** @description is granted to creator */
+            grantedToCreator?: boolean;
+            /** @description is granted to space creator */
+            grantedToSpaceCreator?: boolean;
             /**
              * Format: date-time
              * @description granted at

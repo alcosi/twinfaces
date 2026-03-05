@@ -8,7 +8,6 @@ export const TWIN_ROLE_SCHEMA = z.enum(
     TwinRoleEnum.creator,
     TwinRoleEnum.space_assignee,
     TwinRoleEnum.space_creator,
-    TwinRoleEnum.watcher,
   ],
   { message: "Invalid twin role" }
 );
