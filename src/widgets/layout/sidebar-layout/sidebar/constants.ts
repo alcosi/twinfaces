@@ -1,12 +1,13 @@
 import {
   Activity,
   Asterisk,
-  Bell,
+  BellRing,
   BriefcaseBusiness,
   Eraser,
   Factory,
   Layers,
   Link2,
+  Megaphone,
   MessageCircle,
   Option,
   Paperclip,
@@ -262,7 +263,12 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
       {
         title: "Recipients",
         url: `/${PlatformArea.core}/recipients`,
-        icon: Bell,
+        icon: Megaphone,
+      },
+      {
+        title: "Notifications",
+        url: `/${PlatformArea.core}/notifications`,
+        icon: BellRing,
       },
     ],
   },

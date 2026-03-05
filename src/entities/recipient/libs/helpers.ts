@@ -1,7 +1,10 @@
+import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { User } from "@/entities/user";
+import { ValidatorSet_DETAILED } from "@/entities/validator-set";
 
 import { RelatedObjects } from "../../../shared/api/types";
-import { Recipient_DETAILED } from "../api/types";
+import { Notification_DETAILED, Recipient_DETAILED } from "../api/types";
 
 export const hydrateRecipientFromMap = (
   dto: Recipient_DETAILED,
@@ -16,6 +19,36 @@ export const hydrateRecipientFromMap = (
     hydrated.createdByUser = relatedObjects.userMap[
       dto.createdByUserId
     ] as User;
+  }
+
+  return hydrated;
+};
+
+export const hydrateNotificationsFromMap = (
+  dto: Notification_DETAILED,
+  relatedObjects?: RelatedObjects
+): Notification_DETAILED => {
+  const hydrated: Notification_DETAILED = Object.assign(
+    {},
+    dto
+  ) as Notification_DETAILED;
+
+  if (dto.twinClassId && relatedObjects?.twinClassMap) {
+    hydrated.twinClass = relatedObjects.twinClassMap[
+      dto.twinClassId
+    ] as TwinClass_DETAILED;
+  }
+
+  if (dto.twinClassFieldId && relatedObjects?.twinClassFieldMap) {
+    hydrated.twinClassField = relatedObjects.twinClassFieldMap[
+      dto.twinClassFieldId
+    ] as TwinClassField_DETAILED;
+  }
+
+  if (dto.twinValidatorSetId && relatedObjects?.twinValidatorSetMap) {
+    hydrated.twinValidatorSet = relatedObjects.twinValidatorSetMap[
+      dto.twinValidatorSetId
+    ] as ValidatorSet_DETAILED;
   }
 
   return hydrated;
