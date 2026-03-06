@@ -11,10 +11,10 @@ export const useValidatorSetCreate = () => {
       try {
         const { error } = await api.validatorSet.create({ body });
         if (error) {
-          throw new Error("Failed to create validator sets");
+          throw new Error("Failed to create validator set");
         }
       } catch (error) {
-        throw new Error("An error occured while creating validator sets");
+        throw new Error("An error occured while creating validator set");
       }
     },
     [api]

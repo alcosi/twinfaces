@@ -101,7 +101,7 @@ export function ValidatorSetsScreen() {
       },
     });
 
-    toast.success(`Validator sets created successfully!`);
+    toast.success(`Validator set created successfully!`);
   }
 
   return (
