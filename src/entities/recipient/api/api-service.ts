@@ -50,6 +50,7 @@ export function createRecipientApi(settings: ApiSettings) {
           showTwinClass2TwinClassFieldMode: "DETAILED",
           showTwinClassFieldCollectionMode: "SHOW",
           showHistoryNotification2TwinValidatorSetMode: "DETAILED",
+          showHistoryNotification2NotificationSchemaMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

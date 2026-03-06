@@ -8,6 +8,7 @@ import {
   Notification_DETAILED,
   useHistoryNotificationSearch,
 } from "@/entities/recipient";
+import { NotificationSchemaResourceLink } from "@/features/notification-schema/ui/index";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ValidatorSetResourceLink } from "@/features/validator-set/ui";
@@ -65,13 +66,22 @@ const colDefs: Record<
     header: "History type",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
-  // TODO Replace by NotificationSchemaResourceLink https://alcosi.atlassian.net/browse/TWINFACES-779
+
   notificationSchemaId: {
     id: "notificationSchemaId",
     accessorKey: "notificationSchemaId",
     header: "Notification schema",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    cell: ({ row: { original } }) =>
+      original.notificationSchema && (
+        <div className="inline-flex max-w-48">
+          <NotificationSchemaResourceLink
+            data={original.notificationSchema}
+            withTooltip
+          />
+        </div>
+      ),
   },
+
   // TODO Replace by HistoryNotificationRecipientResourceLink https://alcosi.atlassian.net/browse/TWINFACES-780
   historyNotificationRecipientId: {
     id: "historyNotificationRecipientId",
