@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { Check } from "lucide-react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,7 +12,6 @@ import {
 } from "@/entities/permission";
 import {
   PermissionGrantTwinRoles_DETAILED,
-  TwinRoleEnum,
   usePermissionGrantTwinRolesSearchV1,
 } from "@/entities/twin-role";
 import { PermissionContext } from "@/features/permission";
@@ -31,8 +31,11 @@ const colDefs: Record<
     | "id"
     | "permissionSchemaId"
     | "twinClassId"
-    | "twinRole"
     | "grantedByUserId"
+    | "grantedToAssignee"
+    | "grantedToCreator"
+    | "grantedToSpaceAssignee"
+    | "grantedToSpaceCreator"
     | "grantedAt"
   >,
   ColumnDef<PermissionGrantTwinRoles_DETAILED>
@@ -71,10 +74,32 @@ const colDefs: Record<
       ),
   },
 
-  twinRole: {
-    id: "twinRole",
-    accessorKey: "twinRole",
-    header: "Twin role",
+  grantedToAssignee: {
+    id: "grantedToAssignee",
+    accessorKey: "grantedToAssignee",
+    header: "Assignee",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  grantedToCreator: {
+    id: "grantedToCreator",
+    accessorKey: "grantedToCreator",
+    header: "Creator",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  grantedToSpaceAssignee: {
+    id: "grantedToSpaceAssignee",
+    accessorKey: "grantedToSpaceAssignee",
+    header: "Space Assignee",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  grantedToSpaceCreator: {
+    id: "grantedToSpaceCreator",
+    accessorKey: "grantedToSpaceCreator",
+    header: "Space Creator",
+    cell: (data) => data.getValue() && <Check />,
   },
 
   grantedByUserId: {
@@ -112,7 +137,10 @@ export function TwinRoleTable() {
       permissionId: permissionId || "",
       permissionSchemaId: "",
       twinClassId: "",
-      twinRole: TwinRoleEnum.assignee,
+      grantedToAssignee: false,
+      grantedToCreator: false,
+      grantedToSpaceAssignee: false,
+      grantedToSpaceCreator: false,
     },
   });
 
@@ -127,7 +155,7 @@ export function TwinRoleTable() {
         },
       });
       return response;
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch permissions twin roles");
       return { data: [], pagination: {} };
     }
@@ -136,10 +164,10 @@ export function TwinRoleTable() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof PERMISSION_GRANT_TWIN_ROLE_SCHEMA>
   ) => {
-    const { ...body } = formValues;
-
     await createPermissionGrantTwinRole({
-      body: { permissionGrantTwinRole: body },
+      body: {
+        permissionGrantTwinRole: formValues,
+      },
     });
     toast.success("Twin role permission is granted successfully!");
   };
@@ -151,7 +179,10 @@ export function TwinRoleTable() {
         colDefs.id,
         colDefs.permissionSchemaId,
         colDefs.twinClassId,
-        colDefs.twinRole,
+        colDefs.grantedToAssignee,
+        colDefs.grantedToCreator,
+        colDefs.grantedToSpaceAssignee,
+        colDefs.grantedToSpaceCreator,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
@@ -161,7 +192,10 @@ export function TwinRoleTable() {
         colDefs.id,
         colDefs.permissionSchemaId,
         colDefs.twinClassId,
-        colDefs.twinRole,
+        colDefs.grantedToAssignee,
+        colDefs.grantedToCreator,
+        colDefs.grantedToSpaceAssignee,
+        colDefs.grantedToSpaceCreator,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}

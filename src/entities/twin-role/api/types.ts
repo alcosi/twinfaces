@@ -9,7 +9,9 @@ export type PermissionGrantTwinRoles =
     grantedByUser?: User;
   };
 export type PermissionGrantTwinRoles_DETAILED =
-  Required<PermissionGrantTwinRoles> & { twinClass: TwinClass_DETAILED };
+  Required<PermissionGrantTwinRoles> & {
+    twinClass: TwinClass_DETAILED;
+  };
 
 export type PermissionGrantTwinRolesFilter =
   components["schemas"]["PermissionGrantTwinRoleSearchRqV1"];
