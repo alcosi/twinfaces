@@ -11,7 +11,6 @@ import {
 } from "@/entities/permission";
 import {
   PermissionGrantTwinRoles_DETAILED,
-  TwinRoleEnum,
   usePermissionGrantTwinRolesSearchV1,
 } from "@/entities/twin-role";
 import { PermissionContext } from "@/features/permission";
@@ -119,7 +118,10 @@ export function TwinRoleTable() {
       permissionId: permissionId || "",
       permissionSchemaId: "",
       twinClassId: "",
-      twinRole: TwinRoleEnum.assignee,
+      grantedToAssignee: false,
+      grantedToCreator: false,
+      grantedToSpaceAssignee: false,
+      grantedToSpaceCreator: false,
     },
   });
 
@@ -143,19 +145,9 @@ export function TwinRoleTable() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof PERMISSION_GRANT_TWIN_ROLE_SCHEMA>
   ) => {
-    const { twinRole, ...rest } = formValues;
-
     await createPermissionGrantTwinRole({
       body: {
-        permissionGrantTwinRole: {
-          permissionId: rest.permissionId as string,
-          permissionSchemaId: rest.permissionSchemaId as string,
-          twinClassId: rest.twinClassId as string,
-          grantedToAssignee: twinRole === "assignee",
-          grantedToCreator: twinRole === "creator",
-          grantedToSpaceAssignee: twinRole === "space_assignee",
-          grantedToSpaceCreator: twinRole === "space_creator",
-        },
+        permissionGrantTwinRole: formValues,
       },
     });
     toast.success("Twin role permission is granted successfully!");

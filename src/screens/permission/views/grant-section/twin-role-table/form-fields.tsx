@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { ComboboxFormField } from "@/components/form-fields";
+import { CheckboxFormField, ComboboxFormField } from "@/components/form-fields";
 
 import {
   PERMISSION_GRANT_TWIN_ROLE_SCHEMA,
@@ -10,8 +10,7 @@ import {
 } from "@/entities/permission";
 import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { TWIN_ROLE } from "@/entities/twin-role";
-import { createFixedSelectAdapter, isTruthy } from "@/shared/libs";
+import { isTruthy } from "@/shared/libs";
 
 export function TwinRoleTableFormFields({
   control,
@@ -60,14 +59,39 @@ export function TwinRoleTableFormFields({
         }}
       />
 
-      <ComboboxFormField
+      {/*TODO commented out because the logic has changed to checkboxes*/}
+      {/*<ComboboxFormField*/}
+      {/*  control={control}*/}
+      {/*  name="twinRole"*/}
+      {/*  label="Twin role"*/}
+      {/*  selectPlaceholder="Select..."*/}
+      {/*  searchPlaceholder="Search..."*/}
+      {/*  noItemsText="No data found"*/}
+      {/*  {...createFixedSelectAdapter(TWIN_ROLE)}*/}
+      {/*/>*/}
+
+      <CheckboxFormField
         control={control}
-        name="twinRole"
-        label="Twin role"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...createFixedSelectAdapter(TWIN_ROLE)}
+        name="grantedToAssignee"
+        label="Is assignee"
+      />
+
+      <CheckboxFormField
+        control={control}
+        name="grantedToCreator"
+        label="Is creator"
+      />
+
+      <CheckboxFormField
+        control={control}
+        name="grantedToSpaceAssignee"
+        label="Is space assignee"
+      />
+
+      <CheckboxFormField
+        control={control}
+        name="grantedToSpaceCreator"
+        label="Is space creator"
       />
     </>
   );
