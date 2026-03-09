@@ -1,12 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  VALIDATOR_SETS_SHEMA,
   ValidatorSet_DETAILED,
+  useValidatorSetCreate,
   useValidatorSetFilters,
   useValidatorSetSearch,
 } from "@/entities/validator-set";
@@ -14,6 +19,8 @@ import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+
+import { ValidatorSetFormFields } from "./form-fields";
 
 const colDefs: Record<
   "id" | "name" | "description" | "invert",
@@ -52,6 +59,7 @@ const colDefs: Record<
 export function ValidatorSetsScreen() {
   const router = useRouter();
   const { searchValidatorSets } = useValidatorSetSearch();
+  const { createValidatorSet } = useValidatorSetCreate();
   const { buildFilterFields, mapFiltersToPayload } = useValidatorSetFilters();
 
   async function fetchValidatorSets(
@@ -74,6 +82,28 @@ export function ValidatorSetsScreen() {
     }
   }
 
+  const validatorSetsForm = useForm<z.infer<typeof VALIDATOR_SETS_SHEMA>>({
+    resolver: zodResolver(VALIDATOR_SETS_SHEMA),
+    defaultValues: {
+      name: "",
+      description: "",
+      invert: false,
+    },
+  });
+
+  async function handleOnCreateSubmit(
+    formValues: z.infer<typeof VALIDATOR_SETS_SHEMA>
+  ) {
+    const { ...body } = formValues;
+    await createValidatorSet({
+      body: {
+        validatorSets: [{ ...body }],
+      },
+    });
+
+    toast.success(`Validator set created successfully!`);
+  }
+
   return (
     <CrudDataTable
       title="Validator Sets"
@@ -90,6 +120,11 @@ export function ValidatorSetsScreen() {
         colDefs.invert,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={validatorSetsForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <ValidatorSetFormFields control={validatorSetsForm.control} />
+      )}
     />
   );
 }
