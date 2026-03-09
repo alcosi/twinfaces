@@ -22,10 +22,14 @@ export type RecipientFilters = Partial<
 
 export type Notification = components["schemas"]["HistoryNotificationV1"];
 
+export type NotificationSchema = components["schemas"]["NotificationSchemaV1"];
+
 export type Notification_DETAILED = Notification & {
   twinClass?: TwinClass_DETAILED;
   twinClassField?: TwinClassField_DETAILED;
   twinValidatorSet?: ValidatorSet_DETAILED;
+  notificationSchema?: NotificationSchema;
+  historyNotificationRecipient?: Recipient;
 };
 
 export type NotificationSearchRq =

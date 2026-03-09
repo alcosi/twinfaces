@@ -4,7 +4,12 @@ import { User } from "@/entities/user";
 import { ValidatorSet_DETAILED } from "@/entities/validator-set";
 
 import { RelatedObjects } from "../../../shared/api/types";
-import { Notification_DETAILED, Recipient_DETAILED } from "../api/types";
+import {
+  NotificationSchema,
+  Notification_DETAILED,
+  Recipient,
+  Recipient_DETAILED,
+} from "../api/types";
 
 export const hydrateRecipientFromMap = (
   dto: Recipient_DETAILED,
@@ -49,6 +54,22 @@ export const hydrateNotificationsFromMap = (
     hydrated.twinValidatorSet = relatedObjects.twinValidatorSetMap[
       dto.twinValidatorSetId
     ] as ValidatorSet_DETAILED;
+  }
+
+  if (dto.notificationSchemaId && relatedObjects?.notificationSchemaMap) {
+    hydrated.notificationSchema = relatedObjects.notificationSchemaMap[
+      dto.notificationSchemaId
+    ] as NotificationSchema;
+  }
+
+  if (
+    dto.historyNotificationRecipientId &&
+    relatedObjects?.historyNotificationRecipientMap
+  ) {
+    hydrated.historyNotificationRecipient = relatedObjects
+      .historyNotificationRecipientMap[
+      dto.historyNotificationRecipientId
+    ] as Recipient;
   }
 
   return hydrated;
