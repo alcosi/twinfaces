@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { Check } from "lucide-react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -25,15 +26,18 @@ import { CrudDataTable } from "@/widgets/crud-data-table";
 import { TwinRoleTableFormFields } from "./form-fields";
 
 const colDefs: Record<
-  | keyof Pick<
-      PermissionGrantTwinRoles_DETAILED,
-      | "id"
-      | "permissionSchemaId"
-      | "twinClassId"
-      | "grantedByUserId"
-      | "grantedAt"
-    >
-  | "twinRole",
+  keyof Pick<
+    PermissionGrantTwinRoles_DETAILED,
+    | "id"
+    | "permissionSchemaId"
+    | "twinClassId"
+    | "grantedByUserId"
+    | "grantedToAssignee"
+    | "grantedToCreator"
+    | "grantedToSpaceAssignee"
+    | "grantedToSpaceCreator"
+    | "grantedAt"
+  >,
   ColumnDef<PermissionGrantTwinRoles_DETAILED>
 > = {
   id: {
@@ -70,17 +74,32 @@ const colDefs: Record<
       ),
   },
 
-  twinRole: {
-    id: "twinRole",
-    header: "Twin role",
-    cell: ({ row: { original } }) => {
-      const roles: string[] = [];
-      if (original.grantedToAssignee) roles.push("assignee");
-      if (original.grantedToCreator) roles.push("creator");
-      if (original.grantedToSpaceAssignee) roles.push("space_assignee");
-      if (original.grantedToSpaceCreator) roles.push("space_creator");
-      return roles.join(", ") || "—";
-    },
+  grantedToAssignee: {
+    id: "grantedToAssignee",
+    accessorKey: "grantedToAssignee",
+    header: "Assignee",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  grantedToCreator: {
+    id: "grantedToCreator",
+    accessorKey: "grantedToCreator",
+    header: "Creator",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  grantedToSpaceAssignee: {
+    id: "grantedToSpaceAssignee",
+    accessorKey: "grantedToSpaceAssignee",
+    header: "Space Assignee",
+    cell: (data) => data.getValue() && <Check />,
+  },
+
+  grantedToSpaceCreator: {
+    id: "grantedToSpaceCreator",
+    accessorKey: "grantedToSpaceCreator",
+    header: "Space Creator",
+    cell: (data) => data.getValue() && <Check />,
   },
 
   grantedByUserId: {
@@ -160,7 +179,10 @@ export function TwinRoleTable() {
         colDefs.id,
         colDefs.permissionSchemaId,
         colDefs.twinClassId,
-        colDefs.twinRole,
+        colDefs.grantedToAssignee,
+        colDefs.grantedToCreator,
+        colDefs.grantedToSpaceAssignee,
+        colDefs.grantedToSpaceCreator,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
@@ -170,7 +192,10 @@ export function TwinRoleTable() {
         colDefs.id,
         colDefs.permissionSchemaId,
         colDefs.twinClassId,
-        colDefs.twinRole,
+        colDefs.grantedToAssignee,
+        colDefs.grantedToCreator,
+        colDefs.grantedToSpaceAssignee,
+        colDefs.grantedToSpaceCreator,
         colDefs.grantedByUserId,
         colDefs.grantedAt,
       ]}
