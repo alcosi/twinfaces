@@ -29,6 +29,7 @@ export type Notification_DETAILED = Notification & {
   twinClassField?: TwinClassField_DETAILED;
   twinValidatorSet?: ValidatorSet_DETAILED;
   notificationSchema?: NotificationSchema;
+  historyNotificationRecipient?: Recipient;
 };
 
 export type NotificationSearchRq =

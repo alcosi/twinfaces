@@ -7,6 +7,7 @@ import { RelatedObjects } from "../../../shared/api/types";
 import {
   NotificationSchema,
   Notification_DETAILED,
+  Recipient,
   Recipient_DETAILED,
 } from "../api/types";
 
@@ -59,6 +60,16 @@ export const hydrateNotificationsFromMap = (
     hydrated.notificationSchema = relatedObjects.notificationSchemaMap[
       dto.notificationSchemaId
     ] as NotificationSchema;
+  }
+
+  if (
+    dto.historyNotificationRecipientId &&
+    relatedObjects?.historyNotificationRecipientMap
+  ) {
+    hydrated.historyNotificationRecipient = relatedObjects
+      .historyNotificationRecipientMap[
+      dto.historyNotificationRecipientId
+    ] as Recipient;
   }
 
   return hydrated;
