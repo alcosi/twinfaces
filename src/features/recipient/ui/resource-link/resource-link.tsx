@@ -27,7 +27,7 @@ export function RecipientResourceLink({ data, disabled, withTooltip }: Props) {
           : undefined
       }
       getDisplayName={(data) =>
-        isPopulatedString(data.name) ? data.name! : data.id!
+        isPopulatedString(data.name) ? data.name : data.id!
       }
       link={link}
     />
