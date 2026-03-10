@@ -2,7 +2,7 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { NotificationFilters, RecipientFilters } from "./types";
+import { HistoryNotificationFilters, RecipientFilters } from "./types";
 
 export function createRecipientApi(settings: ApiSettings) {
   function search({
@@ -38,7 +38,7 @@ export function createRecipientApi(settings: ApiSettings) {
     filters,
   }: {
     pagination: PaginationState;
-    filters: NotificationFilters;
+    filters: HistoryNotificationFilters;
   }) {
     return settings.client.POST(`/private/history_notification/search/v1`, {
       params: {

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import {
   Notification_DETAILED,
+  useHistoryNotificationFilters,
   useHistoryNotificationSearch,
 } from "@/entities/recipient";
 import { NotificationSchemaResourceLink } from "@/features/notification-schema/ui/index";
@@ -127,15 +128,21 @@ const colDefs: Record<
 
 export function NotificationsScreen() {
   const { searchHistoryNotification } = useHistoryNotificationSearch();
+  const { buildFilterFields, mapFiltersToPayload } =
+    useHistoryNotificationFilters({ enabledFilters: undefined });
 
   async function fetchNotifications(
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<Notification_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
+
     try {
       return await searchHistoryNotification({
         pagination,
-        filters: {},
+        filters: {
+          ..._filters,
+        },
       });
     } catch (error) {
       toast.error(
@@ -174,6 +181,7 @@ export function NotificationsScreen() {
         colDefs.twinValidatorSetInvert,
       ]}
       getRowId={(row) => row.id!}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }

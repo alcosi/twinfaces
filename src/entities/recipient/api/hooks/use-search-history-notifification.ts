@@ -4,7 +4,7 @@ import { useCallback, useContext } from "react";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 import { hydrateNotificationsFromMap } from "../../libs";
-import { NotificationFilters, Notification_DETAILED } from "../types";
+import { HistoryNotificationFilters, Notification_DETAILED } from "../types";
 
 export function useHistoryNotificationSearch() {
   const api = useContext(PrivateApiContext);
@@ -15,7 +15,7 @@ export function useHistoryNotificationSearch() {
       filters = {},
     }: {
       pagination: PaginationState;
-      filters?: NotificationFilters;
+      filters?: HistoryNotificationFilters;
     }): Promise<PagedResponse<Notification_DETAILED>> => {
       try {
         const { data, error } = await api.recipient.searchHistoryNotification({

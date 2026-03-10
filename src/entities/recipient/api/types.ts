@@ -32,20 +32,20 @@ export type Notification_DETAILED = Notification & {
   historyNotificationRecipient?: Recipient;
 };
 
-export type NotificationSearchRq =
+export type HistoryNotificationSearchRq =
   components["schemas"]["HistoryNotificationSearchRqV1"];
 
-export type NotificationFilterKeys =
+export type HistoryNotificationFilterKeys =
   | "idList"
   | "twinClassIdList"
   | "twinClassFieldIdList"
+  | "historyNotificationRecipientIdList"
   | "historyTypeIdList"
   | "notificationSchemaIdList"
-  | "historyNotificationRecipientIdList"
   | "notificationChannelEventIdList"
   | "twinValidatorSetIdList"
   | "twinValidatorSetInvert";
 
-export type NotificationFilters = Partial<
-  Pick<NotificationSearchRq, NotificationFilterKeys>
+export type HistoryNotificationFilters = Partial<
+  Pick<HistoryNotificationSearchRq, HistoryNotificationFilterKeys>
 >;
