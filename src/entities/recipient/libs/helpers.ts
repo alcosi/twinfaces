@@ -5,6 +5,7 @@ import { ValidatorSet_DETAILED } from "@/entities/validator-set";
 
 import { RelatedObjects } from "../../../shared/api/types";
 import {
+  ChannelEvent,
   NotificationSchema,
   Notification_DETAILED,
   Recipient,
@@ -70,6 +71,16 @@ export const hydrateNotificationsFromMap = (
       .historyNotificationRecipientMap[
       dto.historyNotificationRecipientId
     ] as Recipient;
+  }
+
+  if (
+    dto.notificationChannelEventId &&
+    relatedObjects?.notificationChannelEventMap
+  ) {
+    hydrated.notificationChannelEvent = relatedObjects
+      .notificationChannelEventMap[
+      dto.notificationChannelEventId
+    ] as ChannelEvent;
   }
 
   return hydrated;

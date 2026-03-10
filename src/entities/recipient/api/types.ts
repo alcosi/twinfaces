@@ -6,6 +6,8 @@ import { components } from "@/shared/api/generated/schema";
 
 export type Recipient = components["schemas"]["HistoryNotificationRecipientV1"];
 
+export type ChannelEvent = components["schemas"]["NotificationChannelEventV1"];
+
 export type Recipient_DETAILED = Recipient & { createdByUser?: User };
 
 export type RecipientSearchRq =
@@ -30,6 +32,7 @@ export type Notification_DETAILED = Notification & {
   twinValidatorSet?: ValidatorSet_DETAILED;
   notificationSchema?: NotificationSchema;
   historyNotificationRecipient?: Recipient;
+  notificationChannelEvent?: ChannelEvent;
 };
 
 export type NotificationSearchRq =

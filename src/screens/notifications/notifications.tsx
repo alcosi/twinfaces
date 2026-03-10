@@ -8,6 +8,7 @@ import {
   Notification_DETAILED,
   useHistoryNotificationSearch,
 } from "@/entities/recipient";
+import { NotificationChannelEventResourceLink } from "@/features/channel-event/ui";
 import { NotificationSchemaResourceLink } from "@/features/notification-schema/ui/index";
 import { RecipientResourceLink } from "@/features/recipient/ui/index";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
@@ -96,12 +97,19 @@ const colDefs: Record<
         </div>
       ),
   },
-  // TODO Replace by NotificationChannelEventResourceLink https://alcosi.atlassian.net/browse/TWINFACES-781
   notificationChannelEventId: {
     id: "notificationChannelEventId",
     accessorKey: "notificationChannelEventId",
     header: "Notification channel event",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    cell: ({ row: { original } }) =>
+      original.notificationChannelEvent && (
+        <div className="inline-flex max-w-48">
+          <NotificationChannelEventResourceLink
+            data={original.notificationChannelEvent}
+            withTooltip
+          />
+        </div>
+      ),
   },
   twinValidatorSet: {
     id: "twinValidatorSet",
