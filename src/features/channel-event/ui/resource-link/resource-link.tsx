@@ -31,7 +31,7 @@ export function ChannelEventResourceLink({
           : undefined
       }
       getDisplayName={(data) =>
-        isPopulatedString(data.eventCode) ? data.eventCode! : data.id!
+        isPopulatedString(data.eventCode) ? data.eventCode : data.id!
       }
       link={link}
     />
