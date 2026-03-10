@@ -8,6 +8,7 @@ import {
   Notification_DETAILED,
   useHistoryNotificationSearch,
 } from "@/entities/recipient";
+import { ChannelEventResourceLink } from "@/features/channel-event/ui/index";
 import { NotificationSchemaResourceLink } from "@/features/notification-schema/ui/index";
 import { RecipientResourceLink } from "@/features/recipient/ui/index";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
@@ -101,7 +102,15 @@ const colDefs: Record<
     id: "notificationChannelEventId",
     accessorKey: "notificationChannelEventId",
     header: "Notification channel event",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    cell: ({ row: { original } }) =>
+      original.notificationChannelEvent && (
+        <div className="inline-flex max-w-48">
+          <ChannelEventResourceLink
+            data={original.notificationChannelEvent}
+            withTooltip
+          />
+        </div>
+      ),
   },
   twinValidatorSet: {
     id: "twinValidatorSet",
