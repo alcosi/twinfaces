@@ -9,7 +9,7 @@ type Props = {
   link: string;
 };
 
-export function ChannelEventResourceTooltip({ data, link }: Props) {
+export function NotificationChannelEventResourceTooltip({ data, link }: Props) {
   return (
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header

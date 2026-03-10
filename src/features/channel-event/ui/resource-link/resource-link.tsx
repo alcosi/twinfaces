@@ -5,7 +5,7 @@ import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";
 
-import { ChannelEventResourceTooltip } from "./tooltip";
+import { NotificationChannelEventResourceTooltip } from "./tooltip";
 
 type Props = {
   data: ChannelEvent;
@@ -13,7 +13,7 @@ type Props = {
   withTooltip?: boolean;
 };
 
-export function ChannelEventResourceLink({
+export function NotificationChannelEventResourceLink({
   data,
   disabled,
   withTooltip,
@@ -27,7 +27,12 @@ export function ChannelEventResourceLink({
       disabled={disabled}
       renderTooltip={
         withTooltip
-          ? (data) => <ChannelEventResourceTooltip data={data} link={link} />
+          ? (data) => (
+              <NotificationChannelEventResourceTooltip
+                data={data}
+                link={link}
+              />
+            )
           : undefined
       }
       getDisplayName={(data) =>
