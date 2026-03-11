@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   HistoryNotificationFilters,
+  HistoryNotificationRecipientCollectorsFilters,
   NotificationUpdateRq,
   RecipientFilters,
 } from "./types";
@@ -69,6 +70,38 @@ export function createRecipientApi(settings: ApiSettings) {
     });
   }
 
+  function searchHistoryNotificationRecipientCollector({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: HistoryNotificationRecipientCollectorsFilters;
+  }) {
+    return settings.client.POST(
+      `/private/history_notification_recipient_collector/search/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          query: {
+            lazyRelation: false,
+            showFeaturerParamMode: "SHOW",
+            showHistoryNotificationRecipientCollector2FeaturerMode: "DETAILED",
+            showHistoryNotificationRecipientCollector2HistoryNotificationRecipientMode:
+              "DETAILED",
+            showHistoryNotificationRecipientCollectorMode: "DETAILED",
+            limit: pagination.pageSize,
+            offset: pagination.pageIndex * pagination.pageSize,
+          },
+        },
+        body: {
+          search: {
+            ...filters,
+          },
+        },
+      }
+    );
+  }
+
   function updateHistoryNotification({ body }: { body: NotificationUpdateRq }) {
     return settings.client.PUT(`/private/history_notification/v1`, {
       params: {
@@ -78,7 +111,12 @@ export function createRecipientApi(settings: ApiSettings) {
     });
   }
 
-  return { search, searchHistoryNotification, updateHistoryNotification };
+  return {
+    search,
+    searchHistoryNotification,
+    updateHistoryNotification,
+    searchHistoryNotificationRecipientCollector,
+  };
 }
 
 export type RecipientApi = ReturnType<typeof createRecipientApi>;
