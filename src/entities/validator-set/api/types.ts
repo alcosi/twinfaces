@@ -10,6 +10,9 @@ export type ValidatorSetSearchRq =
 export type ValidatorSetCreateRq =
   components["schemas"]["TwinValidatorSetCreateRqV1"];
 
+export type ValidatorSetUpdateRq =
+  components["schemas"]["TwinValidatorSetUpdateRqV1"];
+
 export type ValidatorSetFilterKeys =
   | "idList"
   | "nameLikeList"

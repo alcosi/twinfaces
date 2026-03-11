@@ -2,7 +2,11 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { ValidatorSetCreateRq, ValidatorSetFilters } from "./types";
+import {
+  ValidatorSetCreateRq,
+  ValidatorSetFilters,
+  ValidatorSetUpdateRq,
+} from "./types";
 
 export function createValidatorSetApi(settings: ApiSettings) {
   function search({
@@ -37,7 +41,16 @@ export function createValidatorSetApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create };
+  function update({ body }: { body: ValidatorSetUpdateRq }) {
+    return settings.client.PUT("/private/twin_validator_set/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, create, update };
 }
 
 export type ValidatorSetApi = ReturnType<typeof createValidatorSetApi>;
