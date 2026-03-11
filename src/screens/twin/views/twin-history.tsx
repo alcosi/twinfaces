@@ -54,12 +54,7 @@ const colDefs: Record<
     id: "actorUserId",
     accessorKey: "actorUserId",
     header: "Actor",
-    cell: ({ row: { original } }) =>
-      original.actorUser && (
-        <div className="inline-flex max-w-48">
-          <UserResourceLink data={original.actorUser as User} withTooltip />
-        </div>
-      ),
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
 
   createdAt: {

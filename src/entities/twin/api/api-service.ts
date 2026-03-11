@@ -156,8 +156,10 @@ export function createTwinApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         path: { twinId },
         query: {
+          lazyRelation: false,
           showHistory2TwinMode: "DETAILED",
           showTwin2UserMode: "DETAILED",
+          showHistory2UserMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
