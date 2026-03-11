@@ -1,4 +1,4 @@
-import { ValidatorSetsScreen } from "@/screens/validator-sets/validator-sets";
+import { ValidatorSetsScreen } from "@/screens/validator-sets";
 
 export default function Page() {
   return <ValidatorSetsScreen />;
