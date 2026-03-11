@@ -6,6 +6,8 @@ import { components } from "@/shared/api/generated/schema";
 
 export type Recipient = components["schemas"]["HistoryNotificationRecipientV1"];
 
+export type ChannelEvent = components["schemas"]["NotificationChannelEventV1"];
+
 export type Recipient_DETAILED = Recipient & { createdByUser?: User };
 
 export type RecipientSearchRq =
@@ -22,26 +24,31 @@ export type RecipientFilters = Partial<
 
 export type Notification = components["schemas"]["HistoryNotificationV1"];
 
+export type NotificationSchema = components["schemas"]["NotificationSchemaV1"];
+
 export type Notification_DETAILED = Notification & {
   twinClass?: TwinClass_DETAILED;
   twinClassField?: TwinClassField_DETAILED;
   twinValidatorSet?: ValidatorSet_DETAILED;
+  notificationSchema?: NotificationSchema;
+  historyNotificationRecipient?: Recipient;
+  notificationChannelEvent?: ChannelEvent;
 };
 
-export type NotificationSearchRq =
+export type HistoryNotificationSearchRq =
   components["schemas"]["HistoryNotificationSearchRqV1"];
 
-export type NotificationFilterKeys =
+export type HistoryNotificationFilterKeys =
   | "idList"
   | "twinClassIdList"
   | "twinClassFieldIdList"
+  | "historyNotificationRecipientIdList"
   | "historyTypeIdList"
   | "notificationSchemaIdList"
-  | "historyNotificationRecipientIdList"
   | "notificationChannelEventIdList"
   | "twinValidatorSetIdList"
   | "twinValidatorSetInvert";
 
-export type NotificationFilters = Partial<
-  Pick<NotificationSearchRq, NotificationFilterKeys>
+export type HistoryNotificationFilters = Partial<
+  Pick<HistoryNotificationSearchRq, HistoryNotificationFilterKeys>
 >;
