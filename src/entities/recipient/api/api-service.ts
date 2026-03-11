@@ -2,7 +2,11 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { HistoryNotificationFilters, RecipientFilters } from "./types";
+import {
+  HistoryNotificationFilters,
+  NotificationUpdateRq,
+  RecipientFilters,
+} from "./types";
 
 export function createRecipientApi(settings: ApiSettings) {
   function search({
@@ -65,7 +69,16 @@ export function createRecipientApi(settings: ApiSettings) {
     });
   }
 
-  return { search, searchHistoryNotification };
+  function updateHistoryNotification({ body }: { body: NotificationUpdateRq }) {
+    return settings.client.PUT(`/private/history_notification/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  return { search, searchHistoryNotification, updateHistoryNotification };
 }
 
 export type RecipientApi = ReturnType<typeof createRecipientApi>;

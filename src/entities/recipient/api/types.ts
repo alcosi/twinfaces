@@ -52,3 +52,6 @@ export type HistoryNotificationFilterKeys =
 export type HistoryNotificationFilters = Partial<
   Pick<HistoryNotificationSearchRq, HistoryNotificationFilterKeys>
 >;
+
+export type NotificationUpdateRq =
+  components["schemas"]["HistoryNotificationUpdateRequestV1"];
