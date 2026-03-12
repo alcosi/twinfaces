@@ -233,7 +233,6 @@ export function NotificationGeneral() {
           </TableRow>
           // TODO Replace by HistoryTypeResourceLink
           https://alcosi.atlassian.net/browse/TWINFACES-778
-          https://alcosi.atlassian.net/browse/TWINFACES-784
           <TableRow>
             <TableCell>History type</TableCell>
             <TableCell>

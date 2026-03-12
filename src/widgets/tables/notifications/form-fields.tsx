@@ -48,7 +48,6 @@ export function NotificationFormFields({
       />
       // TODO Replace by [input field] history type
       https://alcosi.atlassian.net/browse/TWINFACES-784
-      https://alcosi.atlassian.net/browse/TWINFACES-786
       <TextFormField
         control={control}
         name="historyTypeId"
@@ -56,7 +55,6 @@ export function NotificationFormFields({
         required
       />
       // TODO Replace by [input field] notification schema
-      https://alcosi.atlassian.net/browse/TWINFACES-786
       https://alcosi.atlassian.net/browse/TWINFACES-786
       <TextFormField
         control={control}
@@ -76,7 +74,6 @@ export function NotificationFormFields({
       />
       // TODO Replace by [input filed] notification channel event
       https://alcosi.atlassian.net/browse/TWINFACES-788
-      https://alcosi.atlassian.net/browse/TWINFACES-786
       <TextFormField
         control={control}
         name="notificationChannelEventId"
