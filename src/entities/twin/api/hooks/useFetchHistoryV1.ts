@@ -4,6 +4,8 @@ import { useCallback, useContext } from "react";
 import { Twin } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
+import { hydrateTwinHistoryFromMap } from "../../libs";
+
 export const useFetchHistoryV1 = () => {
   const api = useContext(PrivateApiContext);
 
@@ -25,10 +27,12 @@ export const useFetchHistoryV1 = () => {
           throw new Error("Failed to fetch twin history due to API error");
         }
 
-        const twinList = data.historyList ?? [];
+        const historyList = data.historyList?.map((dto) =>
+          hydrateTwinHistoryFromMap(dto, data.relatedObjects)
+        );
 
-        return { data: twinList, pagination: data.pagination ?? {} };
-      } catch (error) {
+        return { data: historyList ?? [], pagination: data.pagination ?? {} };
+      } catch {
         throw new Error("An error occurred while fetching twin history");
       }
     },
