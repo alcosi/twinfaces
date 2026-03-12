@@ -219,21 +219,21 @@ export function NotificationGeneral() {
               <GuidWithCopy value={notification.id} variant="long" />
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Twin class</TableCell>
             <TableCell>
               <InPlaceEdit {...twinClassSettings} />
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Twin class field</TableCell>
             <TableCell>
               <InPlaceEdit {...twinClassFieldSettings} />
             </TableCell>
           </TableRow>
-
+          // TODO Replace by HistoryTypeResourceLink
+          https://alcosi.atlassian.net/browse/TWINFACES-778
+          https://alcosi.atlassian.net/browse/TWINFACES-784
           <TableRow>
             <TableCell>History type</TableCell>
             <TableCell>
@@ -242,7 +242,7 @@ export function NotificationGeneral() {
               )}
             </TableCell>
           </TableRow>
-
+          // TODO Replace by NotificationSchemaResourceLink
           <TableRow>
             <TableCell>Notification schema</TableCell>
             <TableCell>
@@ -256,14 +256,13 @@ export function NotificationGeneral() {
               )}
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>History notification recipient</TableCell>
             <TableCell>
               <InPlaceEdit {...historyNotificationRecipientSettings} />
             </TableCell>
           </TableRow>
-
+          // TODO Replace by NotificationChannelEventResourceLink
           <TableRow>
             <TableCell>Notification channel event</TableCell>
             <TableCell>
@@ -277,14 +276,12 @@ export function NotificationGeneral() {
               )}
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Twin validator set</TableCell>
             <TableCell>
               <InPlaceEdit {...twinValidatorSetSettings} />
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Twin validator set invert</TableCell>
             <TableCell>

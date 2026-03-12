@@ -1,14 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
 
 import {
+  NOTIFICATION_SCHEMA,
   Notification_DETAILED,
   useHistoryNotificationFilters,
   useHistoryNotificationSearch,
+  useNotificationCreate,
 } from "@/entities/recipient";
 import { NotificationChannelEventResourceLink } from "@/features/channel-event/ui";
 import { NotificationSchemaResourceLink } from "@/features/notification-schema/ui/index";
@@ -21,6 +26,7 @@ import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { NotificationFormFields } from "./form-fields";
 
 const colDefs: Record<
   | "id"
@@ -140,7 +146,22 @@ export function NotificationsTable() {
   const { searchHistoryNotification } = useHistoryNotificationSearch();
   const { buildFilterFields, mapFiltersToPayload } =
     useHistoryNotificationFilters({ enabledFilters: undefined });
+  const { createNotification } = useNotificationCreate();
   const router = useRouter();
+
+  const notificationForm = useForm<z.infer<typeof NOTIFICATION_SCHEMA>>({
+    resolver: zodResolver(NOTIFICATION_SCHEMA),
+    defaultValues: {
+      twinClassId: "",
+      twinClassFieldId: "",
+      historyTypeId: "",
+      notificationSchemaId: "",
+      historyNotificationRecipientId: "",
+      notificationChannelEventId: "",
+      twinValidatorSetId: "",
+      twinValidatorSetInvert: false,
+    },
+  });
 
   async function fetchNotifications(
     pagination: PaginationState,
@@ -163,6 +184,18 @@ export function NotificationsTable() {
         "An error occured while fetching history notifications: " + error
       );
     }
+  }
+
+  async function handleOnCreateSubmit(
+    formValues: z.infer<typeof NOTIFICATION_SCHEMA>
+  ) {
+    await createNotification({
+      body: {
+        historyNotifications: [formValues],
+      },
+    });
+
+    toast.success("Notification created successfully!");
   }
 
   return (
@@ -196,6 +229,11 @@ export function NotificationsTable() {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/notifications/${row.id}`)
       }
+      dialogForm={notificationForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <NotificationFormFields control={notificationForm.control} />
+      )}
     />
   );
 }
