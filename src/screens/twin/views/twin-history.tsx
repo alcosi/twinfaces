@@ -4,7 +4,6 @@ import { toast } from "sonner";
 
 import { useFetchHistoryV1 } from "@/entities/twin";
 import { HistoryV1 } from "@/entities/twin/server";
-import { User } from "@/entities/user";
 import { TwinContext } from "@/features/twin";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
@@ -19,9 +18,10 @@ const colDefs: Record<
     | "type"
     | "fieldName"
     | "changeDescription"
-    | "actorUserId"
     | "createdAt"
     | "batchId"
+    | "machineUser"
+    | "actorUser"
   >,
   ColumnDef<HistoryV1>
 > = {
@@ -50,11 +50,28 @@ const colDefs: Record<
     header: "Details",
   },
 
-  actorUserId: {
-    id: "actorUserId",
-    accessorKey: "actorUserId",
+  actorUser: {
+    id: "actorUser",
+    accessorKey: "actorUser",
     header: "Actor",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    cell: ({ row: { original } }) =>
+      original.actorUser && (
+        <div className="inline-flex max-w-48">
+          <UserResourceLink data={original.actorUser} withTooltip />
+        </div>
+      ),
+  },
+
+  machineUser: {
+    id: "machineUser",
+    accessorKey: "machineUser",
+    header: "Machine",
+    cell: ({ row: { original } }) =>
+      original.machineUser && (
+        <div className="inline-flex max-w-48">
+          <UserResourceLink data={original.machineUser} withTooltip />
+        </div>
+      ),
   },
 
   createdAt: {
@@ -105,7 +122,8 @@ export function TwinHistory() {
           colDefs.type!,
           colDefs.fieldName!,
           colDefs.changeDescription!,
-          colDefs.actorUserId!,
+          colDefs.actorUser,
+          colDefs.machineUser,
           colDefs.createdAt!,
           colDefs.batchId!,
         ]}
@@ -116,7 +134,8 @@ export function TwinHistory() {
           colDefs.type!,
           colDefs.fieldName!,
           colDefs.changeDescription!,
-          colDefs.actorUserId!,
+          colDefs.actorUser,
+          colDefs.machineUser,
           colDefs.createdAt!,
           colDefs.batchId!,
         ]}

@@ -14797,6 +14797,11 @@ export interface components {
              * @description history actor id
              */
             actorUserId?: string;
+            /**
+             * Format: uuid
+             * @description history machine user id (real executor)
+             */
+            machineUserId?: string;
             /** @enum {string} */
             type?: "twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown";
             /** @description Filled only if type = fieldChanged */
@@ -14805,6 +14810,8 @@ export interface components {
             twin?: components["schemas"]["TwinBaseV1"];
             /** @description actor */
             actorUser?: components["schemas"]["UserV1"];
+            /** @description machine user (real executor) */
+            machineUser?: components["schemas"]["UserV1"];
             /** @description Detailed description for history item. Contains markdown */
             changeDescription?: string;
             /** @description pagination data */
