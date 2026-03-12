@@ -1,8 +1,11 @@
+import { Featurer_DETAILED } from "@/entities/featurer";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { User } from "@/entities/user";
 import { ValidatorSet_DETAILED } from "@/entities/validator-set";
 import { components } from "@/shared/api/generated/schema";
+
+import { ExtendedFeaturerParam } from "../../../features/featurer/utils/helpers";
 
 export type Recipient = components["schemas"]["HistoryNotificationRecipientV1"];
 
@@ -55,3 +58,31 @@ export type HistoryNotificationFilters = Partial<
 
 export type NotificationUpdateRq =
   components["schemas"]["HistoryNotificationUpdateRequestV1"];
+
+export type HistoryNotificationRecipientCollectorSearchRq =
+  components["schemas"]["HistoryNotificationRecipientCollectorSearchV1"];
+
+export type HistoryNotificationRecipientCollector =
+  components["schemas"]["HistoryNotificationRecipientCollectorV1"];
+
+export type HistoryNotificationRecipientCollector_DETAILED = Omit<
+  HistoryNotificationRecipientCollector,
+  "recipientResolverParams"
+> & {
+  historyNotificationRecipient?: Recipient_DETAILED;
+  recipientResolverFeaturer?: Featurer_DETAILED;
+  recipientResolverParams?: ExtendedFeaturerParam[];
+};
+
+export type HistoryNotificationRecipientCollectorsFilterKeys =
+  | "idList"
+  | "recipientIdList"
+  | "recipientResolverFeaturerIdList"
+  | "exclude";
+
+export type HistoryNotificationRecipientCollectorsFilters = Partial<
+  Pick<
+    HistoryNotificationRecipientCollectorSearchRq,
+    HistoryNotificationRecipientCollectorsFilterKeys
+  >
+>;

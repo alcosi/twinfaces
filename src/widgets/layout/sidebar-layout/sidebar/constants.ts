@@ -5,6 +5,7 @@ import {
   BriefcaseBusiness,
   Eraser,
   Factory,
+  Inbox,
   Layers,
   Link2,
   Megaphone,
@@ -264,6 +265,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Recipients",
         url: `/${PlatformArea.core}/recipients`,
         icon: Megaphone,
+      },
+      {
+        title: "Recipient collectors",
+        url: `/${PlatformArea.core}/recipient-collectors`,
+        icon: Inbox,
       },
       {
         title: "Notifications",

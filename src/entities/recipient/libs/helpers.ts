@@ -1,11 +1,15 @@
+import { Featurer_DETAILED } from "@/entities/featurer";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { User } from "@/entities/user";
 import { ValidatorSet_DETAILED } from "@/entities/validator-set";
 
+import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { RelatedObjects } from "../../../shared/api/types";
 import {
   ChannelEvent,
+  HistoryNotificationRecipientCollector,
+  HistoryNotificationRecipientCollector_DETAILED,
   NotificationSchema,
   Notification_DETAILED,
   Recipient,
@@ -81,6 +85,37 @@ export const hydrateNotificationsFromMap = (
       .notificationChannelEventMap[
       dto.notificationChannelEventId
     ] as ChannelEvent;
+  }
+
+  return hydrated;
+};
+
+export const hydrateHistoryNotificationRecipientCollectorFromMap = (
+  dto: HistoryNotificationRecipientCollector,
+  relatedObjects?: RelatedObjects
+): HistoryNotificationRecipientCollector_DETAILED => {
+  const hydrated: HistoryNotificationRecipientCollector_DETAILED =
+    Object.assign({}, dto) as HistoryNotificationRecipientCollector_DETAILED;
+
+  if (dto.recipientId && relatedObjects?.historyNotificationRecipientMap) {
+    hydrated.historyNotificationRecipient = relatedObjects
+      .historyNotificationRecipientMap[dto.recipientId] as Recipient_DETAILED;
+  }
+
+  if (dto.recipientResolverFeaturerId && relatedObjects?.featurerMap) {
+    hydrated.recipientResolverFeaturer = relatedObjects.featurerMap[
+      dto.recipientResolverFeaturerId
+    ] as Featurer_DETAILED;
+  }
+
+  if (
+    hydrated.recipientResolverParams &&
+    hydrated.recipientResolverFeaturer?.params
+  ) {
+    hydrated.recipientResolverParams = extendFeaturerParams(
+      dto.recipientResolverParams,
+      hydrated.recipientResolverFeaturer.params
+    );
   }
 
   return hydrated;
