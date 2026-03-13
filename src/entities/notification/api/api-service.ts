@@ -12,7 +12,7 @@ import {
   RecipientUpdateRq,
 } from "./types";
 
-export function createRecipientApi(settings: ApiSettings) {
+export function createNotificationApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
@@ -161,4 +161,4 @@ export function createRecipientApi(settings: ApiSettings) {
   };
 }
 
-export type RecipientApi = ReturnType<typeof createRecipientApi>;
+export type NotificationApi = ReturnType<typeof createNotificationApi>;

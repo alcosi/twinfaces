@@ -9,7 +9,7 @@ export const useRecipientUpdate = () => {
 
   const updateRecipient = useCallback(
     async ({ body }: { body: RecipientUpdateRq }) => {
-      return await api.recipient.update({ body });
+      return await api.notification.update({ body });
     },
     [api]
   );

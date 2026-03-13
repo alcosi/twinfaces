@@ -24,7 +24,7 @@ export function useHistoryNotificationRecipientCollectorSearch() {
     > => {
       try {
         const { data, error } =
-          await api.recipient.searchHistoryNotificationRecipientCollector({
+          await api.notification.searchHistoryNotificationRecipientCollector({
             pagination,
             filters,
           });

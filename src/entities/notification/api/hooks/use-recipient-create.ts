@@ -10,7 +10,7 @@ export const useRecipientCreate = () => {
   const createRecipient = useCallback(
     async ({ body }: { body: RecipientCreateRq }) => {
       try {
-        const { error } = await api.recipient.create({ body });
+        const { error } = await api.notification.create({ body });
 
         if (error) {
           throw new Error("Failed to create recipient");

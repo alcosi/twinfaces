@@ -8,7 +8,7 @@ export function useUpdateNotification() {
   const api = useContext(PrivateApiContext);
 
   async function updateNotification({ body }: { body: NotificationUpdateRq }) {
-    const { error } = await api.recipient.updateHistoryNotification({
+    const { error } = await api.notification.updateHistoryNotification({
       body,
     });
 

@@ -14,7 +14,7 @@ export const useRecipientFetchByIdV1 = () => {
     async (id: string): Promise<Recipient_DETAILED> => {
       setLoading(true);
       try {
-        const { data, error } = await api.recipient.search({
+        const { data, error } = await api.notification.search({
           pagination: { pageIndex: 0, pageSize: 1 },
           filters: {
             idList: [id],
