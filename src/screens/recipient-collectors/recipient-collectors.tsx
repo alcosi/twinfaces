@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import {
   HistoryNotificationRecipientCollector_DETAILED,
+  useHistoryNotificationRecipientCollectorFilters,
   useHistoryNotificationRecipientCollectorSearch,
 } from "@/entities/notification";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
@@ -67,15 +68,22 @@ const colDefs: Record<
 export function RecipientCollectorsScreen() {
   const { searchHistoryNotificationRecipientCollector } =
     useHistoryNotificationRecipientCollectorSearch();
+  const { buildFilterFields, mapFiltersToPayload } =
+    useHistoryNotificationRecipientCollectorFilters({
+      enabledFilters: undefined,
+    });
 
   async function fetchHistoryNotificationRecipientCollector(
     pagination: PaginationState,
-    filters?: FiltersState
+    filters: FiltersState
   ): Promise<PagedResponse<HistoryNotificationRecipientCollector_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
     try {
       return await searchHistoryNotificationRecipientCollector({
         pagination,
-        filters: {},
+        filters: {
+          ..._filters,
+        },
       });
     } catch (error) {
       toast.error(
@@ -106,6 +114,7 @@ export function RecipientCollectorsScreen() {
         colDefs.exclude,
       ]}
       getRowId={(row) => row.id!}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }
