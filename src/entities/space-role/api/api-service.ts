@@ -22,6 +22,7 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
           showSpaceRoleMode: "DETAILED",
           showSpaceRole2TwinClassMode: "DETAILED",
           showTwinClassMode: "DETAILED",
+          showSpaceRole2BusinessAccountMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,

@@ -1,6 +1,6 @@
 import { VenetianMask } from "lucide-react";
 
-import { SpaceRole } from "@/entities/space-role";
+import { SpaceRole_DETAILED } from "@/entities/space-role";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
@@ -8,7 +8,7 @@ import { ResourceLinkTooltip } from "@/shared/ui";
 import { TwinClassResourceLink } from "../../../../features/twin-class/ui";
 
 type Props = {
-  data: SpaceRole;
+  data: SpaceRole_DETAILED;
   link: string;
 };
 
