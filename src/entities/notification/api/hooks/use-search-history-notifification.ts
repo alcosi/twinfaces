@@ -18,10 +18,11 @@ export function useHistoryNotificationSearch() {
       filters?: HistoryNotificationFilters;
     }): Promise<PagedResponse<Notification_DETAILED>> => {
       try {
-        const { data, error } = await api.recipient.searchHistoryNotification({
-          pagination,
-          filters,
-        });
+        const { data, error } =
+          await api.notification.searchHistoryNotification({
+            pagination,
+            filters,
+          });
 
         if (error) {
           throw new Error(

@@ -1,17 +1,27 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  RECIPIENT_SCHEMA,
   Recipient_DETAILED,
+  useRecipientCreate,
+  useRecipientFilters,
   useRecipientSearch,
 } from "@/entities/notification";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+
+import { RecipientFormFields } from "./form-fields";
 
 const colDefs: Record<
   "id" | "name" | "description" | "createdByUser" | "createdAt",
@@ -61,22 +71,59 @@ const colDefs: Record<
 };
 
 export function RecipientsScreen() {
+  const router = useRouter();
   const { searchRecipient } = useRecipientSearch();
+  const { createRecipient } = useRecipientCreate();
+  const { buildFilterFields, mapFiltersToPayload } = useRecipientFilters();
 
-  async function fetchRecipient(
+  const recipientForm = useForm<z.infer<typeof RECIPIENT_SCHEMA>>({
+    resolver: zodResolver(RECIPIENT_SCHEMA),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+  });
+
+  async function fetchRecipients(
     pagination: PaginationState,
-    filters?: FiltersState
+    filters: FiltersState
   ): Promise<PagedResponse<Recipient_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
+
     try {
       return await searchRecipient({
         pagination,
-        filters: {},
+        filters: _filters,
       });
     } catch (error) {
       toast.error("An error occured while fetching recipients: " + error);
       throw new Error("An error occured while fetching recipients: " + error);
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof RECIPIENT_SCHEMA>
+  ) => {
+    await createRecipient({
+      body: {
+        recipients: [
+          {
+            nameI18n: {
+              translationInCurrentLocale: formValues.name,
+              translations: {},
+            },
+            descriptionI18n: formValues.description
+              ? {
+                  translationInCurrentLocale: formValues.description,
+                  translations: {},
+                }
+              : undefined,
+          },
+        ],
+      },
+    });
+    toast.success("Recipient created successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -88,7 +135,11 @@ export function RecipientsScreen() {
         colDefs.createdByUser,
         colDefs.createdAt,
       ]}
-      fetcher={fetchRecipient}
+      fetcher={fetchRecipients}
+      getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/recipients/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,
@@ -96,7 +147,12 @@ export function RecipientsScreen() {
         colDefs.createdByUser,
         colDefs.createdAt,
       ]}
-      getRowId={(row) => row.id!}
+      filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={recipientForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <RecipientFormFields control={recipientForm.control} />
+      )}
     />
   );
 }

@@ -18,7 +18,7 @@ export function useRecipientSearch() {
       filters?: RecipientFilters;
     }): Promise<PagedResponse<Recipient_DETAILED>> => {
       try {
-        const { data, error } = await api.recipient.search({
+        const { data, error } = await api.notification.search({
           pagination,
           filters,
         });

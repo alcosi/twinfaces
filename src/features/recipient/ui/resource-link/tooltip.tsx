@@ -1,6 +1,6 @@
 import { Megaphone } from "lucide-react";
 
-import { Recipient } from "@/entities/notification/index";
+import { Recipient } from "@/entities/notification";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 

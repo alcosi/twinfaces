@@ -4,14 +4,23 @@ import z from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { useUpdateNotification } from "@/entities/notification/api/hooks/use-update";
 import {
   Recipient_DETAILED,
   useHistoryNotificztionRecipientSelectAdapter,
-} from "@/entities/notification/index";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
-import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
+  useUpdateNotification,
+} from "@/entities/notification";
+import {
+  TwinClass_DETAILED,
+  useTwinClassSelectAdapter,
+} from "@/entities/twin-class";
+import {
+  TwinClassField_DETAILED,
+  useTwinClassFieldSelectAdapter,
+} from "@/entities/twin-class-field";
+import {
+  ValidatorSet_DETAILED,
+  useValidatorSetSelectAdapter,
+} from "@/entities/validator-set";
 import { NotificationChannelEventResourceLink } from "@/features/channel-event/ui";
 import {
   InPlaceEdit,
@@ -31,10 +40,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/ui";
-
-import { TwinClassField_DETAILED } from "../../../entities/twin-class-field/api/types";
-import { TwinClass_DETAILED } from "../../../entities/twin-class/api/types";
-import { ValidatorSet_DETAILED } from "../../../entities/validator-set/api/types";
 
 export function NotificationGeneral() {
   const { notification, refresh } = useContext(NotificationContext);
