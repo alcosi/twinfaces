@@ -25,7 +25,7 @@ export function useHistoryNotificationRecipientCollectorFilters({
   HistoryNotificationRecipientCollectorsFilters
 > {
   const recipientSelectAdapter = useHistoryNotificztionRecipientSelectAdapter();
-  const recipientResolverSelectAdapter = useFeaturerSelectAdapter(47);
+  const featurerAdapter = useFeaturerSelectAdapter(47);
 
   const allFilters: Record<
     HistoryNotificationRecipientCollectorsFilterKeys,
@@ -33,13 +33,13 @@ export function useHistoryNotificationRecipientCollectorFilters({
   > = {
     idList: {
       type: AutoFormValueType.tag,
-      label: "Id",
+      label: "ID",
       schema: z.string().uuid("Please enter a valid UUID"),
       placeholder: "Enter UUID",
     },
     recipientIdList: {
       type: AutoFormValueType.combobox,
-      label: "Recipient",
+      label: "Notification recipient",
       multi: true,
       ...recipientSelectAdapter,
     },
@@ -47,7 +47,7 @@ export function useHistoryNotificationRecipientCollectorFilters({
       type: AutoFormValueType.combobox,
       label: "Recipient resolver featurer",
       multi: true,
-      ...recipientResolverSelectAdapter,
+      ...featurerAdapter,
     },
     exclude: {
       type: AutoFormValueType.boolean,
