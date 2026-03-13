@@ -4,6 +4,24 @@
  */
 
 export interface paths {
+    "/private/user_group/involve_assignee/{userGroupInvolveAssigneeId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** User group by assignee propagation update */
+        put: operations["userGroupInvolveAssigneeUpdateV1"];
+        post?: never;
+        /** Delete user group by assignee propagation by id */
+        delete: operations["userGroupInvolveAssigneeDeleteV1"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/user/{userId}/v1": {
         parameters: {
             query?: never;
@@ -368,6 +386,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/space_role/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update batch space role */
+        put: operations["spaceRoleUpdateV1"];
+        /** Create batch space role */
+        post: operations["spaceRoleCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/projection_type/v1": {
         parameters: {
             query?: never;
@@ -472,23 +508,6 @@ export interface paths {
         post?: never;
         /** Delete permission grant space role by id */
         delete: operations["permissionGrantSpaceRoleDeleteV1"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/private/permission_grant/assingee_propagation/{permissionGrantAssigneePropagationId}/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Permission grant assignee propagation update */
-        put: operations["permissionGrantAssigneePropagationUpdateV1"];
-        post?: never;
-        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -973,6 +992,40 @@ export interface paths {
         put?: never;
         /** Return a list of all user groups for the current domain */
         post: operations["userGroupSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/user_group/involve_assignee/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** user group by assignee propagation create add */
+        post: operations["userGroupInvolveAssigneeCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/user_group/involve_assignee/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** User group by assignee propagation search */
+        post: operations["userGroupInvolveAssigneeSearchV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2561,40 +2614,6 @@ export interface paths {
         put?: never;
         /** Permission grant space role search */
         post: operations["permissionGrantSpaceRoleSearchV1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/private/permission_grant/assignee_propagation/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** permission grantAssignee propagation create add */
-        post: operations["permissionGrantAssigneePropagationCreateV1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/private/permission_grant/assignee_propagation/search/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Permission grant assignee propagation search */
-        post: operations["permissionGrantAssigneePropagationSearchV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4203,8 +4222,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Permission grant assignee propagation view */
-        get: operations["permissionGrantAssigneePropagationViewV1"];
+        /** User group by assignee propagation view */
+        get: operations["userGroupInvolveAssigneeViewV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4846,23 +4865,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/private/permission_grant/assignee_propagation/{permissionGrantAssigneePropagationId}/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete permission grant assignee propagation by id */
-        delete: operations["permissionGrantAssigneePropagationDeleteV1"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/private/domain/{domainId}/user/{userId}/v1": {
         parameters: {
             query?: never;
@@ -4924,145 +4926,34 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        UserUpdateRqV1: {
-            /**
-             * @description fullName
-             * @example John Doe
-             */
-            fullName?: string;
-            /**
-             * @description email
-             * @example some@email.com
-             */
-            email?: string;
-            /**
-             * @description avatar url
-             * @example http://twins.org/a/avatar/carkikrefmkawfwfwg.png
-             */
-            avatar?: string;
+        UserGroupInvolveAssigneeUpdateRqV1: {
+            /** @description user group by assignee propagation */
+            userGroupInvolveAssignee?: components["schemas"]["UserGroupInvolveAssigneeUpdateV1"];
         };
-        Response: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-        };
-        I18nSaveV1: {
-            /**
-             * @description translation in current locale
-             * @example translation
-             */
-            translationInCurrentLocale?: string;
-            /**
-             * @description map (locale : translate)
-             * @example {
-             *       "en": "translation",
-             *       "pl": "tłumaczenie",
-             *       "ru": "перевод"
-             *     }
-             */
-            translations?: {
-                [key: string]: string;
-            };
-        };
-        TwinflowUpdateRqV1: {
-            /** @description I18n name */
-            nameI18n?: components["schemas"]["I18nSaveV1"];
-            /** @description I18n description */
-            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+        UserGroupInvolveAssigneeUpdateV1: {
             /**
              * Format: uuid
-             * @description initial status id
-             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+             * @description user group id
+             * @example e155e05b-f353-49ff-9869-da1e62aab1793
              */
-            initialStatusId?: string;
+            userGroupId?: string;
             /**
              * Format: uuid
-             * @description initial sketch status id
-             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
-             */
-            initialSketchStatusId?: string;
-        };
-        TwinflowBaseV1: {
-            /**
-             * Format: uuid
-             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
-             */
-            id?: string;
-            /**
-             * Format: uuid
+             * @description propagation by twin class id
              * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
-            twinClassId?: string;
-            /**
-             * @description name
-             * @example Project
-             */
-            name?: string;
-            /**
-             * @description description
-             * @example Projects business objects
-             */
-            description?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
+            propagationByTwinClassId?: string;
             /**
              * Format: uuid
-             * @description createdByUserId
+             * @description propagation by twin status id
+             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
              */
-            createdByUserId?: string;
+            propagationByTwinStatusId?: string;
             /**
-             * Format: uuid
-             * @description initialStatusId
+             * @description is space only
+             * @example true
              */
-            initialStatusId?: string;
-            /**
-             * Format: uuid
-             * @description initialSketchStatusId
-             */
-            initialSketchStatusId?: string;
-        };
-        TwinflowFactoryUpdateRqV1: {
-            /** @description Twinflow factory list */
-            twinflowFactories?: components["schemas"]["TwinflowFactoryUpdateV1"][];
-        };
-        TwinflowFactoryUpdateV1: {
-            /**
-             * Format: uuid
-             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
-             */
-            twinflowId?: string;
-            /**
-             * @example onSketchCreate
-             * @enum {string}
-             */
-            twinFactoryLauncherId?: "transition" | "factoryPipeline" | "targetDeletion" | "cascadeDeletion" | "onTwinCreate" | "onTwinUpdate" | "onSketchCreate" | "onSketchUpdate" | "onSketchFinalize" | "afterTwinCreate" | "afterTwinUpdate" | "afterSketchCreate" | "afterSketchUpdate" | "afterSketchFinalize" | "afterSketchFinalizeRestricted" | "afterTransitionPerform";
-            /**
-             * Format: uuid
-             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-             */
-            factoryId?: string;
-            /**
-             * Format: uuid
-             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-             */
-            id?: string;
+            inSpaceOnly?: boolean;
         };
         AttachmentRestrictionV1: {
             /**
@@ -5750,6 +5641,7 @@ export interface components {
             /**
              * Format: uuid
              * @description createdByUserId
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             createdByUserId?: string;
             /**
@@ -5757,6 +5649,12 @@ export interface components {
              * @description created at
              */
             createdAt?: string;
+        };
+        HistoryTypeV1: {
+            /** @description history type id */
+            id?: string;
+            /** @description snapshot message template */
+            snapshotMessageTemplate?: string;
         };
         I18nV1: {
             /**
@@ -6246,6 +6144,13 @@ export interface components {
             /** @description related notification channel event map */
             notificationChannelEventMap?: {
                 [key: string]: components["schemas"]["NotificationChannelEventV1"];
+            };
+            /**
+             * @description related history type map
+             * @example {history type map}
+             */
+            historyTypeMap?: {
+                [key: string]: components["schemas"]["HistoryTypeV1"];
             };
         };
         SchedulerV1: {
@@ -7416,49 +7321,48 @@ export interface components {
             /** @description invert */
             invert?: boolean;
         };
-        TwinflowFactoryUpdatesV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description results - twinflow factories */
-            twinflowFactories?: components["schemas"]["TwinflowFactoryV1"][];
-        };
-        TwinflowFactoryV1: {
-            /**
-             * Format: uuid
-             * @example 471a6baa-b215-40ae-8a7f-1a78e0925d76
-             */
-            id?: string;
+        TwinflowBaseV1: {
             /**
              * Format: uuid
              * @example 34618b09-e8dc-4712-a433-2e18915ee70d
              */
-            twinflowId?: string;
-            /**
-             * @example onSketchCreate
-             * @enum {string}
-             */
-            twinFactoryLauncherId?: "transition" | "factoryPipeline" | "targetDeletion" | "cascadeDeletion" | "onTwinCreate" | "onTwinUpdate" | "onSketchCreate" | "onSketchUpdate" | "onSketchFinalize" | "afterTwinCreate" | "afterTwinUpdate" | "afterSketchCreate" | "afterSketchUpdate" | "afterSketchFinalize" | "afterSketchFinalizeRestricted" | "afterTransitionPerform";
+            id?: string;
             /**
              * Format: uuid
-             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
-            factoryId?: string;
+            twinClassId?: string;
+            /**
+             * @description name
+             * @example Project
+             */
+            name?: string;
+            /**
+             * @description description
+             * @example Projects business objects
+             */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: uuid
+             * @description createdByUserId
+             */
+            createdByUserId?: string;
+            /**
+             * Format: uuid
+             * @description initialStatusId
+             */
+            initialStatusId?: string;
+            /**
+             * Format: uuid
+             * @description initialSketchStatusId
+             */
+            initialSketchStatusId?: string;
         };
         TwinflowSchemaV1: {
             /**
@@ -7526,6 +7430,66 @@ export interface components {
             allowAttachments?: boolean;
             allowLinks?: boolean;
         };
+        UserGroupInvolveAssigneeRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results -  user group by assignee propagation */
+            userGroupInvolveAssignee?: components["schemas"]["UserGroupInvolveAssigneeV1"];
+        };
+        UserGroupInvolveAssigneeV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example e155e05b-f353-49ff-9869-da1e62aab1793
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description user group id
+             * @example e155e05b-f353-49ff-9869-da1e62aab1793
+             */
+            userGroupId?: string;
+            /**
+             * Format: uuid
+             * @description propagation twin class id
+             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            propagationTwinClassId?: string;
+            /**
+             * Format: uuid
+             * @description twin status id
+             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+             */
+            propagationTwinStatusId?: string;
+            /**
+             * Format: uuid
+             * @description created by user id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            createdByUserId?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+        };
         UserGroupV1: {
             /**
              * Format: uuid
@@ -7579,6 +7543,147 @@ export interface components {
             avatar?: string;
             /** @description an ids of user groups */
             userGroupIds?: string[];
+        };
+        UserUpdateRqV1: {
+            /**
+             * @description fullName
+             * @example John Doe
+             */
+            fullName?: string;
+            /**
+             * @description email
+             * @example some@email.com
+             */
+            email?: string;
+            /**
+             * @description avatar url
+             * @example http://twins.org/a/avatar/carkikrefmkawfwfwg.png
+             */
+            avatar?: string;
+        };
+        Response: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+        };
+        I18nSaveV1: {
+            /**
+             * @description translation in current locale
+             * @example translation
+             */
+            translationInCurrentLocale?: string;
+            /**
+             * @description map (locale : translate)
+             * @example {
+             *       "en": "translation",
+             *       "pl": "tłumaczenie",
+             *       "ru": "перевод"
+             *     }
+             */
+            translations?: {
+                [key: string]: string;
+            };
+        };
+        TwinflowUpdateRqV1: {
+            /** @description I18n name */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description I18n description */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: uuid
+             * @description initial status id
+             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+             */
+            initialStatusId?: string;
+            /**
+             * Format: uuid
+             * @description initial sketch status id
+             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+             */
+            initialSketchStatusId?: string;
+        };
+        TwinflowFactoryUpdateRqV1: {
+            /** @description Twinflow factory list */
+            twinflowFactories?: components["schemas"]["TwinflowFactoryUpdateV1"][];
+        };
+        TwinflowFactoryUpdateV1: {
+            /**
+             * Format: uuid
+             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
+             */
+            twinflowId?: string;
+            /**
+             * @example onSketchCreate
+             * @enum {string}
+             */
+            twinFactoryLauncherId?: "transition" | "factoryPipeline" | "targetDeletion" | "cascadeDeletion" | "onTwinCreate" | "onTwinUpdate" | "onSketchCreate" | "onSketchUpdate" | "onSketchFinalize" | "afterTwinCreate" | "afterTwinUpdate" | "afterSketchCreate" | "afterSketchUpdate" | "afterSketchFinalize" | "afterSketchFinalizeRestricted" | "afterTransitionPerform";
+            /**
+             * Format: uuid
+             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+             */
+            factoryId?: string;
+            /**
+             * Format: uuid
+             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+             */
+            id?: string;
+        };
+        TwinflowFactoryUpdatesV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - twinflow factories */
+            twinflowFactories?: components["schemas"]["TwinflowFactoryV1"][];
+        };
+        TwinflowFactoryV1: {
+            /**
+             * Format: uuid
+             * @example 471a6baa-b215-40ae-8a7f-1a78e0925d76
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
+             */
+            twinflowId?: string;
+            /**
+             * @example onSketchCreate
+             * @enum {string}
+             */
+            twinFactoryLauncherId?: "transition" | "factoryPipeline" | "targetDeletion" | "cascadeDeletion" | "onTwinCreate" | "onTwinUpdate" | "onSketchCreate" | "onSketchUpdate" | "onSketchFinalize" | "afterTwinCreate" | "afterTwinUpdate" | "afterSketchCreate" | "afterSketchUpdate" | "afterSketchFinalize" | "afterSketchFinalizeRestricted" | "afterTransitionPerform";
+            /**
+             * Format: uuid
+             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+             */
+            factoryId?: string;
         };
         TwinValidatorSetUpdateRqV1: {
             /** @description twin validator set list */
@@ -8807,6 +8912,60 @@ export interface components {
             /** @description data lists option */
             option?: components["schemas"]["DataListOptionV1"];
         };
+        SpaceRoleUpdateRqV1: {
+            /** @description space roles */
+            spaceRoles?: components["schemas"]["SpaceRoleUpdateV1"][];
+        };
+        SpaceRoleUpdateV1: {
+            /**
+             * @description key
+             * @example Member
+             */
+            key?: string;
+            /** @description nameI18n */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description descriptionI18n */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: uuid
+             * @description twin class id
+             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            twinClassId?: string;
+            /**
+             * Format: uuid
+             * @description business account id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            businessAccountId?: string;
+            /**
+             * Format: uuid
+             * @description space role id
+             */
+            id?: string;
+        };
+        SpaceRoleListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description space roles */
+            spaceRoles?: components["schemas"]["SpaceRoleV1"][];
+        };
         ProjectionTypeUpdateRqV1: {
             /** @description Projection type list */
             projectionTypes?: components["schemas"]["ProjectionTypeUpdateV1"][];
@@ -9317,107 +9476,6 @@ export interface components {
              * @example creator
              */
             spaceRoleId?: string;
-            /**
-             * Format: uuid
-             * @description granted by user id
-             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            grantedByUserId?: string;
-            /**
-             * Format: date-time
-             * @description granted at
-             * @example 2023-09-13T09:32:08
-             */
-            grantedAt?: string;
-        };
-        PermissionGrantAssigneePropagationUpdateRqV1: {
-            /** @description permission grant assignee propagation update */
-            permissionGrantAssigneePropagation?: components["schemas"]["PermissionGrantAssigneePropagationUpdateV1"];
-        };
-        PermissionGrantAssigneePropagationUpdateV1: {
-            /**
-             * Format: uuid
-             * @description permission schema id
-             * @example af143656-9899-4e1f-8683-48795cdefeac
-             */
-            permissionSchemaId?: string;
-            /**
-             * Format: uuid
-             * @description permission id
-             * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-             */
-            permissionId?: string;
-            /**
-             * Format: uuid
-             * @description propagation by twin class id
-             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            propagationByTwinClassId?: string;
-            /**
-             * Format: uuid
-             * @description propagation by twin status id
-             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
-             */
-            propagationByTwinStatusId?: string;
-            /**
-             * @description is space only
-             * @example true
-             */
-            inSpaceOnly?: boolean;
-        };
-        PermissionGrantAssigneePropagationRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description results -  permission grant assignee propagation */
-            permissionGrantAssigneePropagation?: components["schemas"]["PermissionGrantAssigneePropagationV1"];
-        };
-        PermissionGrantAssigneePropagationV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example 9e8641f2-dda1-4a43-9a23-8786124cdb6b
-             */
-            id?: string;
-            /**
-             * Format: uuid
-             * @description permission schema id
-             * @example af143656-9899-4e1f-8683-48795cdefeac
-             */
-            permissionSchemaId?: string;
-            /**
-             * Format: uuid
-             * @description permission id
-             * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-             */
-            permissionId?: string;
-            /**
-             * Format: uuid
-             * @description propagation twin class id
-             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            propagationTwinClassId?: string;
-            /**
-             * Format: uuid
-             * @description twin status id
-             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
-             */
-            propagationTwinStatusId?: string;
             /**
              * Format: uuid
              * @description granted by user id
@@ -11558,6 +11616,81 @@ export interface components {
             /** @description business account */
             businessAccount?: components["schemas"]["BusinessAccountV1"];
         };
+        UserGroupInvolveAssigneeCreateRqV1: {
+            /** @description user group by assignee propagation create */
+            userGroupInvolveAssignee?: components["schemas"]["UserGroupInvolveAssigneeCreateV1"];
+        };
+        UserGroupInvolveAssigneeCreateV1: {
+            /**
+             * Format: uuid
+             * @description user group id
+             * @example e155e05b-f353-49ff-9869-da1e62aab1793
+             */
+            userGroupId?: string;
+            /**
+             * Format: uuid
+             * @description propagation by twin class id
+             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            propagationByTwinClassId?: string;
+            /**
+             * Format: uuid
+             * @description propagation by twin status id
+             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
+             */
+            propagationByTwinStatusId?: string;
+            /**
+             * @description is space only
+             * @example true
+             */
+            inSpaceOnly?: boolean;
+        };
+        UserGroupInvolveAssigneeSearchRqV1: {
+            /** @description id list */
+            idList?: string[];
+            /** @description id exclude list */
+            idExcludeList?: string[];
+            /** @description user group id list */
+            userGroupIdList?: string[];
+            /** @description user group id exclude list */
+            userGroupIdExcludeList?: string[];
+            /** @description propagation twin class id list */
+            propagationTwinClassIdList?: string[];
+            /** @description propagation twin class id exclude list */
+            propagationTwinClassIdExcludeList?: string[];
+            /** @description propagation twin status id list */
+            propagationTwinStatusIdList?: string[];
+            /** @description propagation twin status id exclude list */
+            propagationTwinStatusIdExcludeList?: string[];
+            /** @description created by user id list */
+            createdByUserIdList?: string[];
+            /** @description created by user id exclude list */
+            createdByUserIdExcludeList?: string[];
+        };
+        UserGroupInvolveAssigneeSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description results - user group by assignee propagation list */
+            userGroupInvolveAssignee?: components["schemas"]["UserGroupInvolveAssigneeV1"][];
+        };
         UserGroupMemberManageRqV1: {
             userGroupEnterList?: string[];
             userGroupExitList?: string[];
@@ -11674,6 +11807,78 @@ export interface components {
              */
             roleId?: string;
         };
+        TwinFieldClauseV1: {
+            /**
+             * @description List of conditions. Will be joined with OR operation
+             * @example {
+             *       "550e8400-e29b-41d4-a716-446655440000": {
+             *         "type": "TwinFieldSearchNumericV1",
+             *         "lessThen": "10",
+             *         "moreThen": "5",
+             *         "equals": "7"
+             *       },
+             *       "550e8400-e29b-41d4-a716-446655440001": {
+             *         "type": "TwinFieldSearchTextV1",
+             *         "valueLikeAllOfList": [
+             *           "test%"
+             *         ]
+             *       }
+             *     }
+             */
+            conditions?: components["schemas"]["TwinFieldConditionV1"][];
+        };
+        /**
+         * @description List of conditions. Will be joined with OR operation
+         * @example {
+         *       "550e8400-e29b-41d4-a716-446655440000": {
+         *         "type": "TwinFieldSearchNumericV1",
+         *         "lessThen": "10",
+         *         "moreThen": "5",
+         *         "equals": "7"
+         *       },
+         *       "550e8400-e29b-41d4-a716-446655440001": {
+         *         "type": "TwinFieldSearchTextV1",
+         *         "valueLikeAllOfList": [
+         *           "test%"
+         *         ]
+         *       }
+         *     }
+         */
+        TwinFieldConditionV1: {
+            /**
+             * Format: uuid
+             * @description twin class field id
+             */
+            twinClassFieldId?: string;
+            /** @description twinFieldSearch */
+            twinFieldSearch?: components["schemas"]["TwinFieldSearchDTOv1"];
+        } & {
+            [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
+        };
+        /** @description Search by last field change timestamp using explicit range */
+        TwinFieldLastChangeSearchRangeV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
+            /**
+             * Format: date-time
+             * @description Field last change time less then or equals given timestamp
+             */
+            lessThenOrEquals?: string;
+            /**
+             * Format: date-time
+             * @description Field last change time greater then or equals given timestamp
+             */
+            moreThenOrEquals?: string;
+            /**
+             * Format: date-time
+             * @description Field last change time equals to given timestamp
+             */
+            equals?: string;
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "TwinFieldLastChangeSearchRangeV1";
+        };
         TwinFieldSearchBooleanV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
             /** @description boolean value to search by (true/false) */
             value?: boolean;
@@ -11689,7 +11894,7 @@ export interface components {
         /** @description One of values */
         TwinFieldSearchDTOv1: {
             type: string;
-        } & (components["schemas"]["TwinFieldSearchTextV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumericV1"] | components["schemas"]["TwinFieldSearchListV1"] | components["schemas"]["TwinFieldSearchIdV1"] | components["schemas"]["TwinFieldSearchBooleanV1"] | components["schemas"]["TwinFieldSearchUserV1"] | components["schemas"]["TwinFieldSearchSpaceRoleUserV1"] | components["schemas"]["TwinFieldSearchTwinClassListV1"]);
+        } & (components["schemas"]["TwinFieldSearchTextV1"] | components["schemas"]["TwinFieldSearchDateV1"] | components["schemas"]["TwinFieldSearchNumericV1"] | components["schemas"]["TwinFieldSearchListV1"] | components["schemas"]["TwinFieldSearchIdV1"] | components["schemas"]["TwinFieldSearchBooleanV1"] | components["schemas"]["TwinFieldSearchUserV1"] | components["schemas"]["TwinFieldSearchSpaceRoleUserV1"] | components["schemas"]["TwinFieldSearchTwinClassListV1"] | components["schemas"]["TwinFieldLastChangeSearchRangeV1"]);
         /** @description (less & more connected with AND) and after connected to equals with OR and to emty with OR */
         TwinFieldSearchDateV1: Omit<components["schemas"]["TwinFieldSearchDTOv1"], "type"> & {
             /**
@@ -11819,6 +12024,10 @@ export interface components {
              */
             type: "TwinFieldSearchUserV1";
         };
+        TwinFieldsFilterV1: {
+            /** @description List of clauses. Will be joined by logic AND operation */
+            clauses?: components["schemas"]["TwinFieldClauseV1"][];
+        };
         TwinSearchByLinkV1: {
             /**
              * Format: uuid
@@ -11903,6 +12112,7 @@ export interface components {
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /**
+             * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
              * @example {
              *       "550e8400-e29b-41d4-a716-446655440000": {
@@ -11922,6 +12132,8 @@ export interface components {
             fields?: {
                 [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
             };
+            /** @description Twin field filter: AND of clauses, each clause is OR of (fieldId, search condition). */
+            fieldsFilter?: components["schemas"]["TwinFieldsFilterV1"];
             /** @description created at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description hierarchy children search */
@@ -14284,8 +14496,16 @@ export interface components {
             tags?: components["schemas"]["TwinTagAddV1"];
             /** @description external id */
             externalId?: string;
-            /** @description is sketch being created */
+            /**
+             * @deprecated
+             * @description is sketch being created
+             */
             isSketch?: boolean;
+            /**
+             * @description twin create strategy (isSketch flag replacement)
+             * @enum {string}
+             */
+            createStrategy?: "STRICT" | "SKETCH" | "AUTO";
             /** @description field attributes */
             fieldAttributes?: components["schemas"]["TwinFieldAttributeCreateV1"][];
         };
@@ -14474,6 +14694,7 @@ export interface components {
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /**
+             * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
              * @example {
              *       "550e8400-e29b-41d4-a716-446655440000": {
@@ -14493,6 +14714,8 @@ export interface components {
             fields?: {
                 [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
             };
+            /** @description Twin field filter: AND of clauses, each clause is OR of (fieldId, search condition). */
+            fieldsFilter?: components["schemas"]["TwinFieldsFilterV1"];
             /** @description created at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description hierarchy children search */
@@ -14610,6 +14833,7 @@ export interface components {
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /**
+             * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
              * @example {
              *       "550e8400-e29b-41d4-a716-446655440000": {
@@ -14629,6 +14853,8 @@ export interface components {
             fields?: {
                 [key: string]: components["schemas"]["TwinFieldSearchDTOv1"];
             };
+            /** @description Twin field filter: AND of clauses, each clause is OR of (fieldId, search condition). */
+            fieldsFilter?: components["schemas"]["TwinFieldsFilterV1"];
             /** @description created at */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description hierarchy children search */
@@ -15649,6 +15875,33 @@ export interface components {
             /** @description tiers */
             tiers?: components["schemas"]["TierV1"][];
         };
+        SpaceRoleCreateRqV1: {
+            /** @description space roles */
+            spaceRoles?: components["schemas"]["SpaceRoleCreateV1"][];
+        };
+        SpaceRoleCreateV1: {
+            /**
+             * @description key
+             * @example Member
+             */
+            key?: string;
+            /** @description nameI18n */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description descriptionI18n */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: uuid
+             * @description twin class id
+             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            twinClassId?: string;
+            /**
+             * Format: uuid
+             * @description business account id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            businessAccountId?: string;
+        };
         SpaceRoleSearchRqV1: {
             /** @description id list */
             idList?: string[];
@@ -15694,10 +15947,10 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description space roles */
+            spaceRoles?: components["schemas"]["SpaceRoleV1"][];
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
-            /** @description permission list */
-            spaceRoles?: components["schemas"]["SpaceRoleV1"][];
         };
         UserRefSpaceRoleSearchV1: {
             /**
@@ -16597,91 +16850,6 @@ export interface components {
             pagination?: components["schemas"]["PaginationV1"];
             /** @description results - permission grant space role list */
             permissionGrantSpaceRoles?: components["schemas"]["PermissionGrantSpaceRoleV1"][];
-        };
-        PermissionGrantAssigneePropagationCreateRqV1: {
-            /** @description permission grant assignee propagation create */
-            permissionGrantAssigneePropagation?: components["schemas"]["PermissionGrantAssigneePropagationCreateV1"];
-        };
-        PermissionGrantAssigneePropagationCreateV1: {
-            /**
-             * Format: uuid
-             * @description permission schema id
-             * @example af143656-9899-4e1f-8683-48795cdefeac
-             */
-            permissionSchemaId?: string;
-            /**
-             * Format: uuid
-             * @description permission id
-             * @example abdeef68-7d6d-4385-9906-e3b701d2c503
-             */
-            permissionId?: string;
-            /**
-             * Format: uuid
-             * @description propagation by twin class id
-             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            propagationByTwinClassId?: string;
-            /**
-             * Format: uuid
-             * @description propagation by twin status id
-             * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
-             */
-            propagationByTwinStatusId?: string;
-            /**
-             * @description is space only
-             * @example true
-             */
-            inSpaceOnly?: boolean;
-        };
-        PermissionGrantAssigneePropagationSearchRqV1: {
-            /** @description id list */
-            idList?: string[];
-            /** @description id exclude list */
-            idExcludeList?: string[];
-            /** @description permission schema id list */
-            permissionSchemaIdList?: string[];
-            /** @description permission schema id exclude list */
-            permissionSchemaIdExcludeList?: string[];
-            /** @description permission id list */
-            permissionIdList?: string[];
-            /** @description permission id exclude list */
-            permissionIdExcludeList?: string[];
-            /** @description propagation twin class id list */
-            propagationTwinClassIdList?: string[];
-            /** @description propagation twin class id exclude list */
-            propagationTwinClassIdExcludeList?: string[];
-            /** @description propagation twin status id list */
-            propagationTwinStatusIdList?: string[];
-            /** @description propagation twin status id exclude list */
-            propagationTwinStatusIdExcludeList?: string[];
-            /** @description granted by user id list */
-            grantedByUserIdList?: string[];
-            /** @description granted by user id exclude list */
-            grantedByUserIdExcludeList?: string[];
-        };
-        PermissionGrantAssigneePropagationSearchRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description results - related objects, if lazeRelation is false */
-            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description pagination data */
-            pagination?: components["schemas"]["PaginationV1"];
-            /** @description results - permission assignee propagation list */
-            permissionGrantAssigneePropagations?: components["schemas"]["PermissionGrantAssigneePropagationV1"][];
         };
         PermissionUpdateRqV1: {
             /**
@@ -18268,6 +18436,16 @@ export interface components {
             twinClassSchemaIdList?: string[];
             /** @description business account twin class schema id exclude list */
             twinClassSchemaIdExcludeList?: string[];
+            /** @description business account tier id list */
+            tierIdList?: string[];
+            /** @description business account tier id exclude list */
+            tierIdExcludeList?: string[];
+            /** @description used of storage size at range */
+            storageUsedSizeRange?: components["schemas"]["IntegerRangeV1"];
+            /** @description used of storage file count at range */
+            storageUsedCountRange?: components["schemas"]["IntegerRangeV1"];
+            /** @description created at range */
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
         };
         DomainBusinessAccountSearchRsV1: {
             /**
@@ -18319,6 +18497,30 @@ export interface components {
              * @example 8b9ea6ad-2b9b-4a4a-8ea9-1b17da4d603b
              */
             twinClassSchemaId?: string;
+            /**
+             * Format: uuid
+             * @description business account tier id
+             */
+            tierId?: string;
+            /** Format: uuid */
+            notificationSchemaId?: string;
+            /** Format: int64 */
+            attachmentsStorageUsedCount?: number;
+            /**
+             * Format: int64
+             * @description used Storage space by files
+             */
+            attachmentsStorageUsedSize?: number;
+            /**
+             * Format: int64
+             * @description count of twins, belong to given businessAccount
+             */
+            twinsCount?: number;
+            /**
+             * Format: int64
+             * @description count of active users
+             */
+            activeUsersCount?: number;
             /**
              * Format: date-time
              * @description created at
@@ -19741,7 +19943,7 @@ export interface components {
             /** @description result - permission grant space role */
             permissionGrantSpaceRole?: components["schemas"]["PermissionGrantSpaceRoleV1"];
         };
-        PermissionGrantAssigneePropagationViewRsV1: {
+        UserGroupInvolveAssigneeViewRsV1: {
             /**
              * Format: int32
              * @description request processing status (see ErrorCode enum)
@@ -19760,8 +19962,8 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description result - permission assignee propagation  */
-            permissionGrantAssigneePropagation?: components["schemas"]["PermissionGrantAssigneePropagationV1"];
+            /** @description result - user group by assignee propagation */
+            userGroupInvolveAssignee?: components["schemas"]["UserGroupInvolveAssigneeV1"];
         };
         PermissionViewRsV1: {
             /**
@@ -21473,6 +21675,173 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    userGroupInvolveAssigneeUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPropagationTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUserGroupInvolveAssignee2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssigneeMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example a7485d77-16bc-440e-a88e-1a576954a839 */
+                userGroupInvolveAssigneeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserGroupInvolveAssigneeUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description User group by assignee propagation update */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserGroupInvolveAssigneeRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    userGroupInvolveAssigneeDeleteV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example a7485d77-16bc-440e-a88e-1a576954a839 */
+                userGroupInvolveAssigneeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     userUpdateV1: {
         parameters: {
             query?: never;
@@ -24865,6 +25234,246 @@ export interface operations {
             };
         };
     };
+    spaceRoleUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpaceRoleUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description The space role batch was updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpaceRoleListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    spaceRoleCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showSpaceRole2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showSpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SpaceRoleCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description The space role batch was created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpaceRoleListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     projectionTypeUpdateV1: {
         parameters: {
             query?: {
@@ -26069,134 +26678,6 @@ export interface operations {
             };
         };
     };
-    permissionGrantAssigneePropagationUpdateV1: {
-        parameters: {
-            query?: {
-                lazyRelation?: unknown;
-                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachmentModificationMode?: "HIDE" | "SHOW";
-                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
-                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showCommentActionMode?: "HIDE" | "SHOW";
-                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showFeaturerParamMode?: "HIDE" | "SHOW";
-                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermissionGrantAssigneePropagation2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagationMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPropagationTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
-                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinActionMode?: "HIDE" | "SHOW";
-                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
-                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
-                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassSegmentMode?: "HIDE" | "SHOW";
-                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
-                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
-                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionMapMode?: "KEY" | "ID";
-                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinSegmentMode?: "HIDE" | "SHOW";
-                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
-            };
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path: {
-                /** @example a7485d77-16bc-440e-a88e-1a576954a839 */
-                permissionGrantAssigneePropagationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PermissionGrantAssigneePropagationUpdateRqV1"];
-            };
-        };
-        responses: {
-            /** @description Permission grant assignee propagation update */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PermissionGrantAssigneePropagationRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
     linkViewV1: {
         parameters: {
             query?: {
@@ -26488,9 +26969,11 @@ export interface operations {
             query?: {
                 lazyRelation?: unknown;
                 showFeaturerParamMode?: "HIDE" | "SHOW";
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollector2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollector2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollectorMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -26534,9 +27017,11 @@ export interface operations {
             query?: {
                 lazyRelation?: unknown;
                 showFeaturerParamMode?: "HIDE" | "SHOW";
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollector2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollector2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollectorMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -26579,7 +27064,9 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -26622,7 +27109,9 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -26678,11 +27167,15 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showHistoryNotification2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2HistoryTypeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2NotificationChannelEventMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2NotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showNotificationChannelEvent2NotificationChannelMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationContextMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26803,11 +27296,15 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showHistoryNotification2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2HistoryTypeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2NotificationChannelEventMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2NotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showNotificationChannelEvent2NotificationChannelMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationContextMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29410,6 +29907,259 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserGroupSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    userGroupInvolveAssigneeCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPropagationTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUserGroupInvolveAssignee2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssigneeMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserGroupInvolveAssigneeCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description user group by assignee propagation add */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserGroupInvolveAssigneeRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    userGroupInvolveAssigneeSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPropagationTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUserGroupInvolveAssignee2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssigneeMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserGroupInvolveAssigneeSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description User group by assignee propagation list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserGroupInvolveAssigneeSearchRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -38312,259 +39062,6 @@ export interface operations {
             };
         };
     };
-    permissionGrantAssigneePropagationCreateV1: {
-        parameters: {
-            query?: {
-                lazyRelation?: unknown;
-                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachmentModificationMode?: "HIDE" | "SHOW";
-                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
-                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showCommentActionMode?: "HIDE" | "SHOW";
-                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showFeaturerParamMode?: "HIDE" | "SHOW";
-                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermissionGrantAssigneePropagation2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagationMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPropagationTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
-                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinActionMode?: "HIDE" | "SHOW";
-                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
-                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
-                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassSegmentMode?: "HIDE" | "SHOW";
-                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
-                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
-                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionMapMode?: "KEY" | "ID";
-                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinSegmentMode?: "HIDE" | "SHOW";
-                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
-            };
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PermissionGrantAssigneePropagationCreateRqV1"];
-            };
-        };
-        responses: {
-            /** @description permission grant assignee propagation add */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PermissionGrantAssigneePropagationRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
-    permissionGrantAssigneePropagationSearchV1: {
-        parameters: {
-            query?: {
-                lazyRelation?: unknown;
-                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showAttachmentModificationMode?: "HIDE" | "SHOW";
-                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
-                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showCommentActionMode?: "HIDE" | "SHOW";
-                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showFeaturerParamMode?: "HIDE" | "SHOW";
-                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermissionGrantAssigneePropagation2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagationMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPropagationTwinStatus2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
-                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinActionMode?: "HIDE" | "SHOW";
-                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
-                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
-                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
-                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
-                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassSegmentMode?: "HIDE" | "SHOW";
-                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
-                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
-                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
-                showTwinFieldCollectionMapMode?: "KEY" | "ID";
-                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
-                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinSegmentMode?: "HIDE" | "SHOW";
-                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
-                offset?: unknown;
-                limit?: unknown;
-                sortAsc?: unknown;
-            };
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PermissionGrantAssigneePropagationSearchRqV1"];
-            };
-        };
-        responses: {
-            /** @description Permission grant assignee propagation list */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PermissionGrantAssigneePropagationSearchRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
     permissionViewV1: {
         parameters: {
             query?: {
@@ -39335,9 +39832,11 @@ export interface operations {
             query?: {
                 lazyRelation?: unknown;
                 showFeaturerParamMode?: "HIDE" | "SHOW";
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollector2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollector2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientCollectorMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -39383,7 +39882,9 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -39442,11 +39943,15 @@ export interface operations {
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showHistoryNotification2HistoryNotificationRecipientMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2HistoryTypeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2NotificationChannelEventMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2NotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotification2TwinValidatorSetMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotification2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationMode?: "HIDE" | "SHORT" | "DETAILED";
+                showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showNotificationChannelEvent2NotificationChannelMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationContextMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41443,7 +41948,20 @@ export interface operations {
             query?: {
                 lazyRelation?: unknown;
                 showDomainBusinessAccount2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2NotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TierMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainBusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinflowSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinflowSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -46092,7 +46610,7 @@ export interface operations {
             };
         };
     };
-    permissionGrantAssigneePropagationViewV1: {
+    userGroupInvolveAssigneeViewV1: {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
@@ -46110,11 +46628,6 @@ export interface operations {
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagation2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showPermissionGrantAssigneePropagation2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showPermissionGrantAssigneePropagationMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46179,6 +46692,11 @@ export interface operations {
                 showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUserGroupInvolveAssignee2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssignee2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUserGroupInvolveAssigneeMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -46196,13 +46714,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Permission grant assignee propagation */
+            /** @description User group by assignee propagation */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PermissionGrantAssigneePropagationViewRsV1"];
+                    "application/json": components["schemas"]["UserGroupInvolveAssigneeViewRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -48886,7 +49404,20 @@ export interface operations {
             query?: {
                 lazyRelation?: unknown;
                 showDomainBusinessAccount2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2NotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TierMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainBusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinflowSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinflowSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -49307,45 +49838,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DraftRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
-    permissionGrantAssigneePropagationDeleteV1: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path: {
-                /** @example a7485d77-16bc-440e-a88e-1a576954a839 */
-                permissionGrantAssigneePropagationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Response"];
                 };
             };
             /** @description Access is denied */

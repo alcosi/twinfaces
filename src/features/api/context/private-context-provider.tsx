@@ -2,10 +2,6 @@
 
 import React from "react";
 
-import {
-  PermissionAssigneePropagationApi,
-  createPermissionAssigneePropagationApi,
-} from "@/entities/assigneePropagation";
 import { AttachmentApi, createAttachmentApi } from "@/entities/attachment";
 import { CommentApi, createCommentApi } from "@/entities/comment";
 import { DatalistApi, createDatalistApi } from "@/entities/datalist";
@@ -133,7 +129,6 @@ export interface PrivateApiContextProps {
   datalist: DatalistApi;
   comment: CommentApi;
   twinRole: PermissionTwinRoleApi;
-  assigneePropagation: PermissionAssigneePropagationApi;
   factory: FactoryApi;
   factoryPipeline: FactoryPipelineApi;
   factoryBranch: FactoryBranchApi;
@@ -189,7 +184,6 @@ export function PrivateApiContextProvider({
         datalist: createDatalistApi(settings),
         comment: createCommentApi(settings),
         twinRole: createPermissionTwinRoleApi(settings),
-        assigneePropagation: createPermissionAssigneePropagationApi(settings),
         factory: createFactoryApi(settings),
         factoryPipeline: createFactoryPipelineApi(settings),
         factoryBranch: createFactoryBranchApi(settings),

@@ -4,7 +4,6 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   CreatePermissionRequestBody,
-  GrantAssigneePropagationPermissionPayload,
   GrantSpaceRolePermissionPayload,
   GrantTwinRolePermissionPayload,
   GrantUserGroupPermissionPayload,
@@ -129,22 +128,6 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  function grantAssigneePropagationPermission({
-    body,
-  }: {
-    body: GrantAssigneePropagationPermissionPayload;
-  }) {
-    return settings.client.POST(
-      `/private/permission_grant/assignee_propagation/v1`,
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-        },
-        body,
-      }
-    );
-  }
-
   return {
     search,
     create,
@@ -154,7 +137,6 @@ export function createPermissionApi(settings: ApiSettings) {
     grantUserGroupPermission,
     grantTwinRolePermission,
     grantSpaceRolePermission,
-    grantAssigneePropagationPermission,
   };
 }
 
