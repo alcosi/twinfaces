@@ -59,14 +59,14 @@ export type HistoryNotificationFilters = Partial<
 export type NotificationUpdateRq =
   components["schemas"]["HistoryNotificationUpdateRequestV1"];
 
-export type HistoryNotificationRecipientCollectorSearchRq =
+export type RecipientCollectorSearchRq =
   components["schemas"]["HistoryNotificationRecipientCollectorSearchV1"];
 
-export type HistoryNotificationRecipientCollector =
+export type RecipientCollector =
   components["schemas"]["HistoryNotificationRecipientCollectorV1"];
 
-export type HistoryNotificationRecipientCollector_DETAILED = Omit<
-  HistoryNotificationRecipientCollector,
+export type RecipientCollector_DETAILED = Omit<
+  RecipientCollector,
   "recipientResolverParams"
 > & {
   historyNotificationRecipient?: Recipient_DETAILED;
@@ -74,17 +74,14 @@ export type HistoryNotificationRecipientCollector_DETAILED = Omit<
   recipientResolverParams?: ExtendedFeaturerParam[];
 };
 
-export type HistoryNotificationRecipientCollectorsFilterKeys =
+export type RecipientCollectorsFilterKeys =
   | "idList"
   | "recipientIdList"
   | "recipientResolverFeaturerIdList"
   | "exclude";
 
-export type HistoryNotificationRecipientCollectorsFilters = Partial<
-  Pick<
-    HistoryNotificationRecipientCollectorSearchRq,
-    HistoryNotificationRecipientCollectorsFilterKeys
-  >
+export type RecipientCollectorsFilters = Partial<
+  Pick<RecipientCollectorSearchRq, RecipientCollectorsFilterKeys>
 >;
 export type NotificationCreateRq =
   components["schemas"]["HistoryNotificationCreateRqV1"];
@@ -97,3 +94,6 @@ export type RecipientUpdateRq =
   components["schemas"]["HistoryNotificationRecipientUpdateRqV1"];
 export type RecipientUpdateV1 =
   components["schemas"]["HistoryNotificationRecipientUpdateV1"];
+
+export type RecipientCollectorUpdateRq =
+  components["schemas"]["HistoryNotificationRecipientCollectorUpdateRqV1"];
