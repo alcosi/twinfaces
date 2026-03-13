@@ -4,9 +4,9 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
-  HistoryNotificationRecipientCollectorsFilterKeys,
-  HistoryNotificationRecipientCollectorsFilters,
-  useHistoryNotificztionRecipientSelectAdapter,
+  RecipientCollectorsFilterKeys,
+  RecipientCollectorsFilters,
+  useRecipientSelectAdapter,
 } from "@/entities/notification";
 import {
   FilterFeature,
@@ -16,21 +16,15 @@ import {
   toArrayOfString,
 } from "@/shared/libs";
 
-export function useHistoryNotificationRecipientCollectorFilters({
+export function useRecipientCollectorFilters({
   enabledFilters,
 }: {
-  enabledFilters?: HistoryNotificationRecipientCollectorsFilterKeys[];
-}): FilterFeature<
-  HistoryNotificationRecipientCollectorsFilterKeys,
-  HistoryNotificationRecipientCollectorsFilters
-> {
-  const recipientSelectAdapter = useHistoryNotificztionRecipientSelectAdapter();
+  enabledFilters?: RecipientCollectorsFilterKeys[];
+}): FilterFeature<RecipientCollectorsFilterKeys, RecipientCollectorsFilters> {
+  const recipientSelectAdapter = useRecipientSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(47);
 
-  const allFilters: Record<
-    HistoryNotificationRecipientCollectorsFilterKeys,
-    AutoFormValueInfo
-  > = {
+  const allFilters: Record<RecipientCollectorsFilterKeys, AutoFormValueInfo> = {
     idList: {
       type: AutoFormValueType.tag,
       label: "ID",
@@ -58,7 +52,7 @@ export function useHistoryNotificationRecipientCollectorFilters({
   };
 
   function buildFilterFields(): Record<
-    HistoryNotificationRecipientCollectorsFilterKeys,
+    RecipientCollectorsFilterKeys,
     AutoFormValueInfo
   > {
     return isPopulatedArray(enabledFilters)
@@ -67,8 +61,8 @@ export function useHistoryNotificationRecipientCollectorFilters({
   }
 
   function mapFiltersToPayload(
-    filters: Record<HistoryNotificationRecipientCollectorsFilterKeys, unknown>
-  ): HistoryNotificationRecipientCollectorsFilters {
+    filters: Record<RecipientCollectorsFilterKeys, unknown>
+  ): RecipientCollectorsFilters {
     return {
       idList: toArrayOfString(filters.idList),
       recipientIdList: toArrayOfString(filters.recipientIdList, "id"),

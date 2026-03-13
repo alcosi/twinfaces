@@ -4,9 +4,10 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   HistoryNotificationFilters,
-  HistoryNotificationRecipientCollectorsFilters,
   NotificationCreateRq,
   NotificationUpdateRq,
+  RecipientCollectorUpdateRq,
+  RecipientCollectorsFilters,
   RecipientCreateRq,
   RecipientFilters,
   RecipientUpdateRq,
@@ -100,12 +101,12 @@ export function createNotificationApi(settings: ApiSettings) {
     });
   }
 
-  function searchHistoryNotificationRecipientCollector({
+  function searchRecipientCollector({
     pagination,
     filters,
   }: {
     pagination: PaginationState;
-    filters: HistoryNotificationRecipientCollectorsFilters;
+    filters: RecipientCollectorsFilters;
   }) {
     return settings.client.POST(
       `/private/history_notification_recipient_collector/search/v1`,
@@ -150,14 +151,31 @@ export function createNotificationApi(settings: ApiSettings) {
     });
   }
 
+  function updateRecipientCollector({
+    body,
+  }: {
+    body: RecipientCollectorUpdateRq;
+  }) {
+    return settings.client.PUT(
+      `/private/history_notification_recipient_collector/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+        },
+        body,
+      }
+    );
+  }
+
   return {
     search,
     create,
     update,
     searchHistoryNotification,
     updateHistoryNotification,
-    searchHistoryNotificationRecipientCollector,
+    searchRecipientCollector,
     createHistoryNotification,
+    updateRecipientCollector,
   };
 }
 

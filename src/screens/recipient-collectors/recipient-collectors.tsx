@@ -5,9 +5,9 @@ import { Check } from "lucide-react";
 import { toast } from "sonner";
 
 import {
-  HistoryNotificationRecipientCollector_DETAILED,
-  useHistoryNotificationRecipientCollectorFilters,
-  useHistoryNotificationRecipientCollectorSearch,
+  RecipientCollector_DETAILED,
+  useRecipientCollectorFilters,
+  useRecipientCollectorSearch,
 } from "@/entities/notification";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { RecipientResourceLink } from "@/features/recipient/ui";
@@ -20,7 +20,7 @@ const colDefs: Record<
   | "historyNotificationRecipient"
   | "recipientResolverFeaturer"
   | "exclude",
-  ColumnDef<HistoryNotificationRecipientCollector_DETAILED>
+  ColumnDef<RecipientCollector_DETAILED>
 > = {
   id: {
     id: "id",
@@ -66,20 +66,19 @@ const colDefs: Record<
 };
 
 export function RecipientCollectorsScreen() {
-  const { searchHistoryNotificationRecipientCollector } =
-    useHistoryNotificationRecipientCollectorSearch();
+  const { searchRecipientCollector } = useRecipientCollectorSearch();
   const { buildFilterFields, mapFiltersToPayload } =
-    useHistoryNotificationRecipientCollectorFilters({
+    useRecipientCollectorFilters({
       enabledFilters: undefined,
     });
 
   async function fetchHistoryNotificationRecipientCollector(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<PagedResponse<HistoryNotificationRecipientCollector_DETAILED>> {
+  ): Promise<PagedResponse<RecipientCollector_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
     try {
-      return await searchHistoryNotificationRecipientCollector({
+      return await searchRecipientCollector({
         pagination,
         filters: {
           ..._filters,

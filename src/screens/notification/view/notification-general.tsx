@@ -6,7 +6,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 
 import {
   Recipient_DETAILED,
-  useHistoryNotificztionRecipientSelectAdapter,
+  useRecipientSelectAdapter,
   useUpdateNotification,
 } from "@/entities/notification";
 import {
@@ -48,8 +48,7 @@ export function NotificationGeneral() {
   const twinClassAdapter = useTwinClassSelectAdapter();
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
   const validatorSetAdapter = useValidatorSetSelectAdapter();
-  const notificationRecipientAdapter =
-    useHistoryNotificztionRecipientSelectAdapter();
+  const notificationRecipientAdapter = useRecipientSelectAdapter();
 
   const [editFieldDialogOpen, setEditFieldDialogOpen] =
     useState<boolean>(false);

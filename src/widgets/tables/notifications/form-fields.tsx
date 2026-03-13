@@ -9,8 +9,8 @@ import {
 
 import {
   NOTIFICATION_SCHEMA,
-  useHistoryNotificztionRecipientSelectAdapter,
-} from "@/entities/notification/index";
+  useRecipientSelectAdapter,
+} from "@/entities/notification";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
 import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
@@ -23,7 +23,7 @@ export function NotificationFormFields({
   const twinClassAdapter = useTwinClassSelectAdapter();
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
   const validatorSetAdapter = useValidatorSetSelectAdapter();
-  const recipientAdapter = useHistoryNotificztionRecipientSelectAdapter();
+  const recipientAdapter = useRecipientSelectAdapter();
 
   return (
     <>
