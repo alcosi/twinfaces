@@ -1,5 +1,4 @@
 export * from "./use-create";
-export * from "./use-create-permission-grant-assignee-propagation";
 export * from "./use-create-permission-grant-space-role";
 export * from "./use-create-permission-grant-twin-role";
 export * from "./use-create-permission-grant-user";

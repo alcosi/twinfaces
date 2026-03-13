@@ -34,6 +34,3 @@ export type GrantTwinRolePermissionPayload =
 
 export type GrantSpaceRolePermissionPayload =
   components["schemas"]["PermissionGrantSpaceRoleCreateRqV1"];
-
-export type GrantAssigneePropagationPermissionPayload =
-  components["schemas"]["PermissionGrantAssigneePropagationCreateRqV1"];
