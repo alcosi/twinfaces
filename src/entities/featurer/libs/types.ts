@@ -8,6 +8,7 @@ export const FeaturerTypes = {
   conditioner: 24,
   projector: 44,
   sorter: 41,
+  recipientResolver: 47,
   filler: 23,
   headHunter: 26,
   initializer: 53,
