@@ -15,15 +15,16 @@ export function useFetchNotificationById() {
       setLoading(true);
 
       try {
-        const { data, error } = await api.recipient.searchHistoryNotification({
-          pagination: {
-            pageIndex: 0,
-            pageSize: 1,
-          },
-          filters: {
-            idList: [id],
-          },
-        });
+        const { data, error } =
+          await api.notification.searchHistoryNotification({
+            pagination: {
+              pageIndex: 0,
+              pageSize: 1,
+            },
+            filters: {
+              idList: [id],
+            },
+          });
 
         if (error) {
           throw error;

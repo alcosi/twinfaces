@@ -10,7 +10,7 @@ export const useNotificationCreate = () => {
   const createNotification = useCallback(
     async ({ body }: { body: NotificationCreateRq }) => {
       try {
-        const { error } = await api.recipient.createHistoryNotification({
+        const { error } = await api.notification.createHistoryNotification({
           body,
         });
 

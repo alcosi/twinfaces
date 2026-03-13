@@ -49,7 +49,10 @@ import {
 } from "@/entities/factory-pipeline-step";
 import { FeaturerApi, createFeaturerApi } from "@/entities/featurer";
 import { LinkApi, createLinkApi } from "@/entities/link";
-import { RecipientApi, createRecipientApi } from "@/entities/notification";
+import {
+  NotificationApi,
+  createNotificationApi,
+} from "@/entities/notification";
 import { PermissionApi, createPermissionApi } from "@/entities/permission";
 import {
   PermissionGroupApi,
@@ -145,7 +148,7 @@ export interface PrivateApiContextProps {
   link: LinkApi;
   tier: TierApi;
   projection: ProjectionApi;
-  recipient: RecipientApi;
+  notification: NotificationApi;
   validatorSet: ValidatorSetApi;
 }
 
@@ -201,7 +204,7 @@ export function PrivateApiContextProvider({
         link: createLinkApi(settings),
         tier: createTierApi(settings),
         projection: createProjectionApi(settings),
-        recipient: createRecipientApi(settings),
+        notification: createNotificationApi(settings),
         validatorSet: createValidatorSetApi(settings),
       }
     : ({} as PrivateApiContextProps);
