@@ -1,6 +1,6 @@
 import { BellRing } from "lucide-react";
 
-import { NotificationSchema } from "@/entities/recipient/index";
+import { NotificationSchema } from "@/entities/notification/index";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 

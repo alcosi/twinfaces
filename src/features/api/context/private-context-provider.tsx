@@ -49,6 +49,7 @@ import {
 } from "@/entities/factory-pipeline-step";
 import { FeaturerApi, createFeaturerApi } from "@/entities/featurer";
 import { LinkApi, createLinkApi } from "@/entities/link";
+import { RecipientApi, createRecipientApi } from "@/entities/notification";
 import { PermissionApi, createPermissionApi } from "@/entities/permission";
 import {
   PermissionGroupApi,
@@ -59,7 +60,6 @@ import {
   createPermissionSchemaApi,
 } from "@/entities/permission-schema";
 import { ProjectionApi, createProjectionApi } from "@/entities/projection";
-import { RecipientApi, createRecipientApi } from "@/entities/recipient";
 import {
   PermissionSpaceRoleApi,
   createPermissionSpaceRoleApi,

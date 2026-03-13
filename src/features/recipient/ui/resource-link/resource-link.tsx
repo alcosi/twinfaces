@@ -1,6 +1,6 @@
 import { Megaphone } from "lucide-react";
 
-import { Recipient } from "@/entities/recipient/index";
+import { Recipient } from "@/entities/notification/index";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";

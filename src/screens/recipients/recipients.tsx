@@ -3,7 +3,10 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 
-import { Recipient_DETAILED, useRecipientSearch } from "@/entities/recipient";
+import {
+  Recipient_DETAILED,
+  useRecipientSearch,
+} from "@/entities/notification";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatIntlDate } from "@/shared/libs";

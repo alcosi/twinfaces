@@ -4,11 +4,11 @@ import z from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { useUpdateNotification } from "@/entities/recipient/api/hooks/use-update";
+import { useUpdateNotification } from "@/entities/notification/api/hooks/use-update";
 import {
   Recipient_DETAILED,
   useHistoryNotificztionRecipientSelectAdapter,
-} from "@/entities/recipient/index";
+} from "@/entities/notification/index";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
 import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
@@ -219,21 +219,18 @@ export function NotificationGeneral() {
               <GuidWithCopy value={notification.id} variant="long" />
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Twin class</TableCell>
             <TableCell>
               <InPlaceEdit {...twinClassSettings} />
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Twin class field</TableCell>
             <TableCell>
               <InPlaceEdit {...twinClassFieldSettings} />
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>History type</TableCell>
             <TableCell>
@@ -242,7 +239,6 @@ export function NotificationGeneral() {
               )}
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Notification schema</TableCell>
             <TableCell>
@@ -256,14 +252,12 @@ export function NotificationGeneral() {
               )}
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>History notification recipient</TableCell>
             <TableCell>
               <InPlaceEdit {...historyNotificationRecipientSettings} />
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Notification channel event</TableCell>
             <TableCell>
@@ -277,14 +271,12 @@ export function NotificationGeneral() {
               )}
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Twin validator set</TableCell>
             <TableCell>
               <InPlaceEdit {...twinValidatorSetSettings} />
             </TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Twin validator set invert</TableCell>
             <TableCell>
