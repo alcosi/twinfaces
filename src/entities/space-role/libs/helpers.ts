@@ -1,7 +1,9 @@
+import { BusinessAccount } from "@/entities/business-account";
 import {
   PermissionGrantSpaceRole,
   PermissionGrantSpaceRole_DETAILED,
   SpaceRole,
+  SpaceRole_DETAILED,
 } from "@/entities/space-role";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
@@ -35,12 +37,18 @@ export const hydrateSpaceRoleFromMap = (
   dto: SpaceRole,
   relatedObjects?: RelatedObjects
 ): SpaceRole => {
-  const hydrated: SpaceRole = Object.assign({}, dto) as SpaceRole;
+  const hydrated: SpaceRole_DETAILED = Object.assign({}, dto) as SpaceRole;
 
   if (dto.twinClassId && relatedObjects?.twinClassMap) {
     hydrated.twinClass = relatedObjects.twinClassMap[
       dto.twinClassId
     ] as TwinClass_DETAILED;
+  }
+
+  if (dto.businessAccountId && relatedObjects?.businessAccountMap) {
+    hydrated.businessAccount = relatedObjects.businessAccountMap[
+      dto.businessAccountId
+    ] as BusinessAccount;
   }
 
   return hydrated;
