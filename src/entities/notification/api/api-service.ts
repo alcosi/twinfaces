@@ -5,6 +5,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import {
   HistoryNotificationFilters,
   HistoryNotificationRecipientCollectorsFilters,
+  NotificationCreateRq,
   NotificationUpdateRq,
   RecipientFilters,
 } from "./types";
@@ -111,11 +112,21 @@ export function createRecipientApi(settings: ApiSettings) {
     });
   }
 
+  function createHistoryNotification({ body }: { body: NotificationCreateRq }) {
+    return settings.client.POST(`/private/history_notification/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
   return {
     search,
     searchHistoryNotification,
     updateHistoryNotification,
     searchHistoryNotificationRecipientCollector,
+    createHistoryNotification,
   };
 }
 

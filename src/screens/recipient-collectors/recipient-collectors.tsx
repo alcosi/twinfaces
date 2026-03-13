@@ -8,7 +8,7 @@ import {
   HistoryNotificationRecipientCollector_DETAILED,
   useHistoryNotificationRecipientCollectorFilters,
   useHistoryNotificationRecipientCollectorSearch,
-} from "@/entities/recipient";
+} from "@/entities/notification";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { RecipientResourceLink } from "@/features/recipient/ui";
 import { PagedResponse } from "@/shared/api";

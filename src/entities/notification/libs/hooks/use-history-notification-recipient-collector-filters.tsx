@@ -7,7 +7,7 @@ import {
   HistoryNotificationRecipientCollectorsFilterKeys,
   HistoryNotificationRecipientCollectorsFilters,
   useHistoryNotificztionRecipientSelectAdapter,
-} from "@/entities/recipient";
+} from "@/entities/notification";
 import {
   FilterFeature,
   extractEnabledFilters,
