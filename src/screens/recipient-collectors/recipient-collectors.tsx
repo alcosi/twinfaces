@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import {
   HistoryNotificationRecipientCollector_DETAILED,
   useHistoryNotificationRecipientCollectorSearch,
-} from "@/entities/recipient";
+} from "@/entities/notification";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { RecipientResourceLink } from "@/features/recipient/ui";
 import { PagedResponse } from "@/shared/api";

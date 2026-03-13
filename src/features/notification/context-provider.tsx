@@ -9,7 +9,7 @@ import {
 import {
   Notification_DETAILED,
   useFetchNotificationById,
-} from "@/entities/recipient";
+} from "@/entities/notification";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 

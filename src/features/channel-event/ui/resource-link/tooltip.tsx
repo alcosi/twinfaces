@@ -1,6 +1,6 @@
 import { Rss } from "lucide-react";
 
-import { ChannelEvent } from "@/entities/recipient/index";
+import { ChannelEvent } from "@/entities/notification/index";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
 

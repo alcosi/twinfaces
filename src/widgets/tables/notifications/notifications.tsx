@@ -14,7 +14,7 @@ import {
   useHistoryNotificationFilters,
   useHistoryNotificationSearch,
   useNotificationCreate,
-} from "@/entities/recipient";
+} from "@/entities/notification";
 import { NotificationChannelEventResourceLink } from "@/features/channel-event/ui";
 import { NotificationSchemaResourceLink } from "@/features/notification-schema/ui/index";
 import { RecipientResourceLink } from "@/features/recipient/ui/index";

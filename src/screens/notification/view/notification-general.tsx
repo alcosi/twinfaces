@@ -4,11 +4,11 @@ import z from "zod";
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
-import { useUpdateNotification } from "@/entities/recipient/api/hooks/use-update";
+import { useUpdateNotification } from "@/entities/notification/api/hooks/use-update";
 import {
   Recipient_DETAILED,
   useHistoryNotificztionRecipientSelectAdapter,
-} from "@/entities/recipient/index";
+} from "@/entities/notification/index";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
 import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
@@ -231,8 +231,6 @@ export function NotificationGeneral() {
               <InPlaceEdit {...twinClassFieldSettings} />
             </TableCell>
           </TableRow>
-          // TODO Replace by HistoryTypeResourceLink
-          https://alcosi.atlassian.net/browse/TWINFACES-778
           <TableRow>
             <TableCell>History type</TableCell>
             <TableCell>
@@ -241,7 +239,6 @@ export function NotificationGeneral() {
               )}
             </TableCell>
           </TableRow>
-          // TODO Replace by NotificationSchemaResourceLink
           <TableRow>
             <TableCell>Notification schema</TableCell>
             <TableCell>
@@ -261,7 +258,6 @@ export function NotificationGeneral() {
               <InPlaceEdit {...historyNotificationRecipientSettings} />
             </TableCell>
           </TableRow>
-          // TODO Replace by NotificationChannelEventResourceLink
           <TableRow>
             <TableCell>Notification channel event</TableCell>
             <TableCell>

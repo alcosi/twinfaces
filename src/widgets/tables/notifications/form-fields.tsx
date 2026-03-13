@@ -10,7 +10,7 @@ import {
 import {
   NOTIFICATION_SCHEMA,
   useHistoryNotificztionRecipientSelectAdapter,
-} from "@/entities/recipient/index";
+} from "@/entities/notification/index";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
 import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
 import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
