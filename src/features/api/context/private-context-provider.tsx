@@ -3,6 +3,10 @@
 import React from "react";
 
 import { AttachmentApi, createAttachmentApi } from "@/entities/attachment";
+import {
+  BusinessAccountApi,
+  createBusinessAccountApi,
+} from "@/entities/business-account";
 import { CommentApi, createCommentApi } from "@/entities/comment";
 import { DatalistApi, createDatalistApi } from "@/entities/datalist";
 import {
@@ -109,6 +113,7 @@ import { useAuthUser } from "../../auth";
 
 export interface PrivateApiContextProps {
   attachment: AttachmentApi;
+  businessAccount: BusinessAccountApi;
   domain: DomainApi;
   twinFlowSchema: TwinFlowSchemaApi;
   twinClassSchema: TwinClassSchemaApi;
@@ -164,6 +169,7 @@ export function PrivateApiContextProvider({
   const value = settings
     ? {
         attachment: createAttachmentApi(settings),
+        businessAccount: createBusinessAccountApi(settings),
         domain: createDomainApi(settings),
         twinFlowSchema: createTwinFlowSchemaApi(settings),
         twinClassSchema: createTwinClassSchemaApi(settings),
