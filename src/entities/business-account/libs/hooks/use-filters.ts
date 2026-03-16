@@ -1,9 +1,8 @@
-import { z } from "zod";
-
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useBusinessAccountSelectAdapter } from "@/entities/business-account";
 import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
+import { useTierSelectAdapter } from "@/entities/tier";
 import { useTwinClassSchemaSelectAdapter } from "@/entities/twin-class-schema";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import {
@@ -30,6 +29,7 @@ export function useBusinessAccountFilters({
   const twinflowSchemaAdapter = useTwinFlowSchemaSelectAdapter();
   const twinClassSchemaAdapter = useTwinClassSchemaSelectAdapter();
   const businessAccountAdapter = useBusinessAccountSelectAdapter();
+  const tierAdapter = useTierSelectAdapter();
 
   const allFilters: Record<DomainBusinessAccountFilterKeys, AutoFormValueInfo> =
     {
@@ -68,11 +68,9 @@ export function useBusinessAccountFilters({
       //   placeholder: "Enter UUID",
       // },
       tierIdList: {
-        // todo change when it will be unlocked https://alcosi.atlassian.net/browse/TWINFACES-833
-        type: AutoFormValueType.tag,
+        type: AutoFormValueType.combobox,
         label: "Tier",
-        schema: z.string().uuid("Please enter a valid UUID"),
-        placeholder: "Enter UUID",
+        ...tierAdapter,
       },
       storageUsedCountRange: {
         type: AutoFormValueType.numberRange,
