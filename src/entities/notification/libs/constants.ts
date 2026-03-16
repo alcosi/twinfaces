@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-import { FEATURER_ID_EXTRACTOR } from "@/entities/featurer";
+import {
+  FEATURER_ID_EXTRACTOR,
+  FEATURER_PARAMS_VALUE,
+} from "@/entities/featurer";
 import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const RECIPIENT_SCHEMA = z.object({
@@ -16,5 +19,6 @@ export const RECIPIENT_COLLECTOR_SCHEMA = z.object({
     .uuid("Recipient ID must be a valid UUID")
     .or(FIRST_ID_EXTRACTOR),
   recipientResolverFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
+  recipientResolverParams: FEATURER_PARAMS_VALUE,
   exclude: z.boolean(),
 });
