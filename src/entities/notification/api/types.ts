@@ -95,5 +95,7 @@ export type RecipientUpdateRq =
 export type RecipientUpdateV1 =
   components["schemas"]["HistoryNotificationRecipientUpdateV1"];
 
+export type RecipientCollectorCreateRq =
+  components["schemas"]["HistoryNotificationRecipientCollectorCreateRqV1"];
 export type RecipientCollectorUpdateRq =
   components["schemas"]["HistoryNotificationRecipientCollectorUpdateRqV1"];
