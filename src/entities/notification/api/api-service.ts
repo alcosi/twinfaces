@@ -6,6 +6,7 @@ import {
   HistoryNotificationFilters,
   NotificationCreateRq,
   NotificationUpdateRq,
+  RecipientCollectorCreateRq,
   RecipientCollectorUpdateRq,
   RecipientCollectorsFilters,
   RecipientCreateRq,
@@ -167,6 +168,22 @@ export function createNotificationApi(settings: ApiSettings) {
     );
   }
 
+  function createRecipientCollector({
+    body,
+  }: {
+    body: RecipientCollectorCreateRq;
+  }) {
+    return settings.client.POST(
+      `/private/history_notification_recipient_collector/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+        },
+        body,
+      }
+    );
+  }
+
   return {
     search,
     create,
@@ -176,6 +193,7 @@ export function createNotificationApi(settings: ApiSettings) {
     searchRecipientCollector,
     createHistoryNotification,
     updateRecipientCollector,
+    createRecipientCollector,
   };
 }
 

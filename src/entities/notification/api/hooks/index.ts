@@ -2,6 +2,7 @@ export * from "./use-create";
 export * from "./use-fetch-by-id";
 export * from "./use-fetch-recipient-by-id";
 export * from "./use-fetch-recipient-collector-by-id";
+export * from "./use-recipient-collector-create";
 export * from "./use-recipient-create";
 export * from "./use-search-history-notifification";
 export * from "./use-search-recipient-collector";
