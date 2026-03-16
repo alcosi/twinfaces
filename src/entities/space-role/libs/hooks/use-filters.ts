@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -18,7 +21,12 @@ export function useSpaceRoleFilters({
 }: {
   enabledFilters?: SpaceRoleFilterKeys[];
 } = {}): FilterFeature<SpaceRoleFilterKeys, SpaceRoleFilter> {
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   const allFilters: Record<SpaceRoleFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -33,9 +41,14 @@ export function useSpaceRoleFilters({
       placeholder: "Search by key...",
     },
     twinClassIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin class",
-      ...twinClassAdapter,
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
+      multi: true,
     },
     // todo change when it will be unlocked https://alcosi.atlassian.net/browse/TWINFACES-835
     businessAccountIdList: {
