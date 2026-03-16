@@ -1,6 +1,6 @@
 import { SelectAdapter } from "@/shared/libs";
 
-import { SpaceRole, useSpaceRoleSearch } from "../../api";
+import { SpaceRole, SpaceRole_DETAILED, useSpaceRoleSearch } from "../../api";
 
 export function useSpaceRoleSelectAdapter(): SelectAdapter<SpaceRole> {
   const { searchSpaceRole } = useSpaceRoleSearch();
@@ -17,7 +17,7 @@ export function useSpaceRoleSelectAdapter(): SelectAdapter<SpaceRole> {
     return response.data;
   }
 
-  function renderItem({ twinClass, key }: SpaceRole) {
+  function renderItem({ twinClass, key }: SpaceRole_DETAILED) {
     return twinClass ? `${twinClass.name} : ${key}` : key;
   }
 
