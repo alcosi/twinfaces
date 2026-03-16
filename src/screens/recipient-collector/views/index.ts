@@ -1,1 +1,1 @@
-export * from "./recipient-colletor-general";
+export * from "./recipient-collector-general";

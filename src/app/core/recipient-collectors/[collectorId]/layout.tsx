@@ -1,4 +1,6 @@
-import { ReactNode } from "react";
+"use client";
+
+import { ReactNode, use } from "react";
 
 import { RecipientCollectorContextProvider } from "@/features/recipient-collectors";
 
@@ -9,11 +11,13 @@ type RecipientCollectorsLayoutProps = {
   children: ReactNode;
 };
 
-export default async function RecipientCollectorsLayout(
+export default function RecipientCollectorsLayout(
   props: RecipientCollectorsLayoutProps
 ) {
-  const params = await props.params;
+  const params = use(props.params);
+
   const { collectorId } = params;
+
   const { children } = props;
 
   return (

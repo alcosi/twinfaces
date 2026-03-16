@@ -2,14 +2,14 @@
 
 import { Tab, TabsLayout } from "@/widgets/layout";
 
-import { RecipientColletorGeneral } from "./views";
+import { RecipientCollectorGeneral } from "./views";
 
 export function RecipientCollectorScreen() {
   const tabs: Tab[] = [
     {
       key: "general",
       label: "General",
-      content: <RecipientColletorGeneral />,
+      content: <RecipientCollectorGeneral />,
     },
   ];
 

@@ -26,7 +26,7 @@ import {
   TableRow,
 } from "@/shared/ui";
 
-export function RecipientColletorGeneral() {
+export function RecipientCollectorGeneral() {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);

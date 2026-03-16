@@ -24,12 +24,16 @@ export const useRecipientCollectorFetchById = () => {
         );
 
         if (error) {
-          throw new Error("Failed to fetch recipient due to API error");
+          throw new Error(
+            "Failed to fetch recipient collector due to API error"
+          );
         }
 
         const recipientCollectors = data.recipientCollectors ?? [];
         if (isUndefined(recipientCollectors[0])) {
-          throw new Error("Invalid response data while fetching recipient");
+          throw new Error(
+            "Invalid response data while fetching recipient collector"
+          );
         }
 
         const recipientCollector =
