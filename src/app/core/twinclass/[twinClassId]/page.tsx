@@ -11,6 +11,7 @@ import {
   TwinClassStatusesTable,
   TwinFlows,
 } from "@/widgets/tables";
+import { SpaceRolesTable } from "@/widgets/tables/space-roles";
 
 import { TwinClassGeneral } from "./views";
 
@@ -47,6 +48,11 @@ export default function TwinClassPage() {
       key: "dynamicMarkers",
       label: "Dynamic markers",
       content: <TwinClassDynamicMarkersTable twinClassId={twinClassId} />,
+    },
+    {
+      key: "spaceRoles",
+      label: "Space roles",
+      content: <SpaceRolesTable />,
     },
   ];
 

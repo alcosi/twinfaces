@@ -2,14 +2,17 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
 import { toast } from "sonner";
 
 import { SpaceRole_DETAILED, useSpaceRoleSearch } from "@/entities/space-role";
 import { useSpaceRoleFilters } from "@/entities/space-role/libs";
+import { TwinClassContext } from "@/entities/twin-class";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
+import { isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -71,7 +74,18 @@ const colDefs: Record<
 
 export function SpaceRolesTable({ title }: { title?: string }) {
   const { searchSpaceRole } = useSpaceRoleSearch();
-  const { buildFilterFields, mapFiltersToPayload } = useSpaceRoleFilters();
+  const { twinClass } = useContext(TwinClassContext);
+  const { buildFilterFields, mapFiltersToPayload } = useSpaceRoleFilters({
+    enabledFilters: isTruthy(twinClass?.id)
+      ? [
+          "idList",
+          "keyLikeList",
+          "businessAccountIdList",
+          "nameI18nLikeList",
+          "descriptionI18nLikeList",
+        ]
+      : undefined,
+  });
   const router = useRouter();
 
   async function fetchSpaceRoles(
@@ -81,7 +95,19 @@ export function SpaceRolesTable({ title }: { title?: string }) {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      return await searchSpaceRole({ pagination, filters: { ..._filters } });
+      const response = await searchSpaceRole({
+        pagination,
+        filters: {
+          ..._filters,
+          twinClassIdList: twinClass?.id
+            ? [twinClass?.id]
+            : _filters.twinClassIdList,
+        },
+      });
+      return {
+        data: response.data ?? [],
+        pagination: response.pagination ?? {},
+      };
     } catch (error) {
       toast.error("An error occured while fetching space roles: " + error);
       throw new Error("An error occured while fetching space roles: " + error);
