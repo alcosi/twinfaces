@@ -8,11 +8,11 @@ import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import { RelatedObjects } from "../../../shared/api/types";
 import {
   ChannelEvent,
-  HistoryNotificationRecipientCollector,
-  HistoryNotificationRecipientCollector_DETAILED,
   NotificationSchema,
   Notification_DETAILED,
   Recipient,
+  RecipientCollector,
+  RecipientCollector_DETAILED,
   Recipient_DETAILED,
 } from "../api/types";
 
@@ -91,11 +91,13 @@ export const hydrateNotificationsFromMap = (
 };
 
 export const hydrateHistoryNotificationRecipientCollectorFromMap = (
-  dto: HistoryNotificationRecipientCollector,
+  dto: RecipientCollector,
   relatedObjects?: RelatedObjects
-): HistoryNotificationRecipientCollector_DETAILED => {
-  const hydrated: HistoryNotificationRecipientCollector_DETAILED =
-    Object.assign({}, dto) as HistoryNotificationRecipientCollector_DETAILED;
+): RecipientCollector_DETAILED => {
+  const hydrated: RecipientCollector_DETAILED = Object.assign(
+    {},
+    dto
+  ) as RecipientCollector_DETAILED;
 
   if (dto.recipientId && relatedObjects?.historyNotificationRecipientMap) {
     hydrated.historyNotificationRecipient = relatedObjects

@@ -2,6 +2,7 @@ import z from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import { useRecipientSelectAdapter } from "@/entities/notification";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
@@ -23,7 +24,6 @@ import {
   HistoryNotificationFilterKeys,
   HistoryNotificationFilters,
 } from "../../api";
-import { useHistoryNotificztionRecipientSelectAdapter } from "./use-history-notification-recipient-select-adapter";
 
 export function useHistoryNotificationFilters({
   enabledFilters,
@@ -32,8 +32,7 @@ export function useHistoryNotificationFilters({
 }): FilterFeature<HistoryNotificationFilterKeys, HistoryNotificationFilters> {
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const twinClassFieldsAdapter = useTwinClassFieldSelectAdapterWithFilters();
-  const historyNotificationRecipientAdapter =
-    useHistoryNotificztionRecipientSelectAdapter();
+  const recipientAdapter = useRecipientSelectAdapter();
   const validatorSetAdapter = useValidatorSetSelectAdapter();
 
   const {
@@ -91,7 +90,7 @@ export function useHistoryNotificationFilters({
       type: AutoFormValueType.combobox,
       label: "History notification recipient",
       multi: true,
-      ...historyNotificationRecipientAdapter,
+      ...recipientAdapter,
     },
     // TODO Replace by https://alcosi.atlassian.net/browse/TWINFACES-789
     notificationChannelEventIdList: {
