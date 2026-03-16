@@ -1,5 +1,5 @@
-import { UnderConstructionScreen as UnderConstruction } from "@/screens/under-construction";
+import { BusinessAccountsScreen } from "@/screens/business-accounts";
 
-export default function BusinessAccountsPage() {
-  return <UnderConstruction />;
+export default function Page() {
+  return <BusinessAccountsScreen />;
 }
