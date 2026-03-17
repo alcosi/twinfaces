@@ -182,7 +182,7 @@ export function BusinessAccountsScreen() {
 
   return (
     <CrudDataTable
-      title="Busines accounts"
+      title="Domain business accounts"
       columns={[
         colDefs.id,
         colDefs.businessAccount,

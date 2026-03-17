@@ -33,7 +33,7 @@ export function useBusinessAccountFilters({
 
   const allFilters: Record<DomainBusinessAccountFilterKeys, AutoFormValueInfo> =
     {
-      //! not implemented in the API method
+      //! TODO not implemented in the API method
       // idList: {
       //   type: AutoFormValueType.tag,
       //   label: "Id",
@@ -60,7 +60,7 @@ export function useBusinessAccountFilters({
         label: "Class schema",
         ...twinClassSchemaAdapter,
       },
-      //! not implemented in the API method
+      //! TODO not implemented in the API method
       // notificationSchemeIdList: {
       //   type: AutoFormValueType.tag,
       //   label: "Notification scheme",
@@ -95,7 +95,10 @@ export function useBusinessAccountFilters({
     filters: Record<DomainBusinessAccountFilterKeys, unknown>
   ): DomainBusinessAccountFilters {
     return {
-      businessAccountIdList: toArrayOfString(filters.businessAccountIdList),
+      businessAccountIdList: toArrayOfString(
+        filters.businessAccountIdList,
+        "id"
+      ),
       permissionSchemaIdList: toArrayOfString(
         filters.permissionSchemaIdList,
         "id"
