@@ -56,6 +56,7 @@ export function useSpaceRoleFilters({
       type: AutoFormValueType.combobox,
       label: "Business account",
       ...businessAccountAdapter,
+      multi: true,
     },
     nameI18nLikeList: {
       type: AutoFormValueType.tag,
@@ -82,7 +83,10 @@ export function useSpaceRoleFilters({
       idList: toArrayOfString(filters.idList),
       keyLikeList: toArrayOfString(filters.keyLikeList).map(wrapWithPercent),
       twinClassIdList: toArrayOfString(filters.twinClassIdList, "id"),
-      businessAccountIdList: toArrayOfString(filters.businessAccountIdList),
+      businessAccountIdList: toArrayOfString(
+        filters.businessAccountIdList,
+        "id"
+      ),
       nameI18nLikeList: toArrayOfString(filters.nameI18nLikeList).map(
         wrapWithPercent
       ),
