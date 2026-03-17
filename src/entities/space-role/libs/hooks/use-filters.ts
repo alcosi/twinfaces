@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import { useBusinessAccountSelectAdapter } from "@/entities/business-account";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
@@ -22,6 +23,7 @@ export function useSpaceRoleFilters({
   enabledFilters?: SpaceRoleFilterKeys[];
 } = {}): FilterFeature<SpaceRoleFilterKeys, SpaceRoleFilter> {
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+  const businessAccountAdapter = useBusinessAccountSelectAdapter();
 
   const {
     buildFilterFields: buildTwinClassFilters,
@@ -50,12 +52,11 @@ export function useSpaceRoleFilters({
       selectPlaceholder: "Select...",
       multi: true,
     },
-    // todo change when it will be unlocked https://alcosi.atlassian.net/browse/TWINFACES-835
     businessAccountIdList: {
-      type: AutoFormValueType.tag,
+      type: AutoFormValueType.combobox,
       label: "Business account",
-      schema: z.string().uuid("Please enter a valid UUID"),
-      placeholder: "Enter UUID",
+      ...businessAccountAdapter,
+      multi: true,
     },
     nameI18nLikeList: {
       type: AutoFormValueType.tag,
@@ -82,7 +83,10 @@ export function useSpaceRoleFilters({
       idList: toArrayOfString(filters.idList),
       keyLikeList: toArrayOfString(filters.keyLikeList).map(wrapWithPercent),
       twinClassIdList: toArrayOfString(filters.twinClassIdList, "id"),
-      businessAccountIdList: toArrayOfString(filters.businessAccountIdList),
+      businessAccountIdList: toArrayOfString(
+        filters.businessAccountIdList,
+        "id"
+      ),
       nameI18nLikeList: toArrayOfString(filters.nameI18nLikeList).map(
         wrapWithPercent
       ),
