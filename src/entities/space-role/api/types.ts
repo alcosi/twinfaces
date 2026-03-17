@@ -35,3 +35,5 @@ export type SpaceRoleFilterKeys =
 export type SpaceRoleFilter = Partial<
   Pick<SpaceRoleFilters, SpaceRoleFilterKeys>
 >;
+
+export type SpaceRoleCreateRq = components["schemas"]["SpaceRoleCreateRqV1"];

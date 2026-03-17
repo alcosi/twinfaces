@@ -1,11 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
-import { SpaceRole_DETAILED, useSpaceRoleSearch } from "@/entities/space-role";
+import {
+  SPACE_ROLE_SHEMA,
+  SpaceRole_DETAILED,
+  useSpaceRoleCreate,
+  useSpaceRoleSearch,
+} from "@/entities/space-role";
 import { useSpaceRoleFilters } from "@/entities/space-role/libs";
 import { TwinClassContext } from "@/entities/twin-class";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
@@ -16,6 +24,7 @@ import { isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { SpaceRolesFormFields } from "./form-fields";
 
 const colDefs: Record<
   "id" | "key" | "twinClass" | "businessAccountId" | "name" | "description",
@@ -74,6 +83,7 @@ const colDefs: Record<
 
 export function SpaceRolesTable({ title }: { title?: string }) {
   const { searchSpaceRole } = useSpaceRoleSearch();
+  const { createSpaceRole } = useSpaceRoleCreate();
   const { twinClass } = useContext(TwinClassContext);
   const { buildFilterFields, mapFiltersToPayload } = useSpaceRoleFilters({
     enabledFilters: isTruthy(twinClass?.id)
@@ -87,6 +97,42 @@ export function SpaceRolesTable({ title }: { title?: string }) {
       : undefined,
   });
   const router = useRouter();
+
+  const spaceRoleForm = useForm<z.infer<typeof SPACE_ROLE_SHEMA>>({
+    resolver: zodResolver(SPACE_ROLE_SHEMA),
+    defaultValues: {
+      key: "",
+      name: "",
+      description: "",
+      twinClassId: "",
+      businessAccountId: "",
+      businessAccountParams: {},
+    },
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof SPACE_ROLE_SHEMA>
+  ) => {
+    await createSpaceRole({
+      body: {
+        spaceRoles: [
+          {
+            ...formValues,
+            nameI18n: {
+              translationInCurrentLocale: formValues.name,
+              translations: {},
+            },
+            descriptionI18n: {
+              translationInCurrentLocale: formValues.description,
+              translations: {},
+            },
+          },
+        ],
+      },
+    });
+
+    toast.success("Space role created successfully!");
+  };
 
   async function fetchSpaceRoles(
     pagination: PaginationState,
@@ -139,6 +185,11 @@ export function SpaceRolesTable({ title }: { title?: string }) {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/space-roles/${row.id}`)
       }
+      dialogForm={spaceRoleForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <SpaceRolesFormFields control={spaceRoleForm.control} />
+      )}
     />
   );
 }
