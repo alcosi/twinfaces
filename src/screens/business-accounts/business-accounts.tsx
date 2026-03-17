@@ -4,9 +4,11 @@ import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { toast } from "sonner";
 
 import {
+  DomainBusinessAccountFilterKeys,
   DomainBusinessAccount_DETAILED,
   useBusinessAccountSearch,
 } from "@/entities/business-account";
+import { useBusinessAccountFilters } from "@/entities/business-account/libs";
 import { TwinClassSchema_DETAILED } from "@/entities/twin-class-schema";
 import { TwinFlowSchema_DETAILED } from "@/entities/twinFlowSchema";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
@@ -154,15 +156,21 @@ const colDefs: Record<
 
 export function BusinessAccountsScreen() {
   const { searchBusinessAccount } = useBusinessAccountSearch();
+  const { buildFilterFields, mapFiltersToPayload } =
+    useBusinessAccountFilters();
 
   async function fetchBusinessAccounts(
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<DomainBusinessAccount_DETAILED>> {
+    const _filters = mapFiltersToPayload(
+      filters.filters as Record<DomainBusinessAccountFilterKeys, unknown>
+    );
+
     try {
       return await searchBusinessAccount({
         pagination,
-        filters: {},
+        filters: { ..._filters },
       });
     } catch (error) {
       toast.error("An error occured while fetching business accounts:" + error);
@@ -174,7 +182,7 @@ export function BusinessAccountsScreen() {
 
   return (
     <CrudDataTable
-      title="Busines accounts"
+      title="Domain business accounts"
       columns={[
         colDefs.id,
         colDefs.businessAccount,
@@ -205,6 +213,7 @@ export function BusinessAccountsScreen() {
         colDefs.activeUsersCount,
       ]}
       getRowId={(row) => row.id!}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }

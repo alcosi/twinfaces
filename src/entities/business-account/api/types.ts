@@ -22,7 +22,14 @@ export type DomainBusinessAccount_DETAILED = DomainBusinessAccount & {
 export type DomainBusinessAccountSearchRq =
   components["schemas"]["DomainBusinessAccountSearchRqV1"];
 
-export type DomainBusinessAccountFilterKeys = "businessAccountIdList";
+export type DomainBusinessAccountFilterKeys =
+  | "businessAccountIdList"
+  | "permissionSchemaIdList"
+  | "twinflowSchemaIdList"
+  | "twinClassSchemaIdList"
+  | "tierIdList"
+  | "storageUsedCountRange"
+  | "storageUsedSizeRange";
 
 export type DomainBusinessAccountFilters = Partial<
   Pick<DomainBusinessAccountSearchRq, DomainBusinessAccountFilterKeys>
