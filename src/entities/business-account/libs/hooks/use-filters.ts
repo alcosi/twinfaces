@@ -44,21 +44,25 @@ export function useBusinessAccountFilters({
         type: AutoFormValueType.combobox,
         label: "Business account",
         ...businessAccountAdapter,
+        multi: true,
       },
       permissionSchemaIdList: {
         type: AutoFormValueType.combobox,
         label: "Permission schema",
         ...permissionSchemaAdapter,
+        multi: true,
       },
       twinflowSchemaIdList: {
         type: AutoFormValueType.combobox,
         label: "Twinflow schema",
         ...twinflowSchemaAdapter,
+        multi: true,
       },
       twinClassSchemaIdList: {
         type: AutoFormValueType.combobox,
         label: "Class schema",
         ...twinClassSchemaAdapter,
+        multi: true,
       },
       //! TODO not implemented in the API method
       // notificationSchemeIdList: {
@@ -71,6 +75,7 @@ export function useBusinessAccountFilters({
         type: AutoFormValueType.combobox,
         label: "Tier",
         ...tierAdapter,
+        multi: true,
       },
       storageUsedCountRange: {
         type: AutoFormValueType.numberRange,
