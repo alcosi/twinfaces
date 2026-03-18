@@ -102,28 +102,27 @@ export function SpaceRolesTable({ title }: { title?: string }) {
     resolver: zodResolver(SPACE_ROLE_SHEMA),
     defaultValues: {
       key: "",
-      name: "",
-      description: "",
-      twinClassId: "",
+      twinClassId: twinClass?.id || "",
       businessAccountId: "",
-      businessAccountParams: {},
     },
   });
 
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof SPACE_ROLE_SHEMA>
   ) => {
+    const { name, description, ...rest } = formValues;
+
     await createSpaceRole({
       body: {
         spaceRoles: [
           {
-            ...formValues,
+            ...rest,
             nameI18n: {
-              translationInCurrentLocale: formValues.name,
+              translationInCurrentLocale: name,
               translations: {},
             },
             descriptionI18n: {
-              translationInCurrentLocale: formValues.description,
+              translationInCurrentLocale: description,
               translations: {},
             },
           },

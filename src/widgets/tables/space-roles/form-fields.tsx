@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -18,7 +19,7 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { isPopulatedString } from "@/shared/libs";
+import { isTruthy } from "@/shared/libs";
 
 export function SpaceRolesFormFields({
   control,
@@ -27,7 +28,8 @@ export function SpaceRolesFormFields({
 }) {
   const businessAccountAdapter = useBusinessAccountSelectAdapter();
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
-  const twinClassId = useWatch({ control, name: "twinClassId" });
+  const twinClassWatch = useWatch({ control, name: "twinClassId" });
+  const disabled = useRef(isTruthy(twinClassWatch)).current;
 
   const {
     buildFilterFields: buildTwinClassFilters,
@@ -43,7 +45,7 @@ export function SpaceRolesFormFields({
     searchPlaceholder: "Search...",
     selectPlaceholder: "Select twin class",
     multi: false,
-    disabled: isPopulatedString(twinClassId),
+    disabled: disabled,
   };
 
   return (

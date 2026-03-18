@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { FEATURER_PARAMS_VALUE } from "@/entities/featurer";
 import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const SPACE_ROLE_SHEMA = z.object({
@@ -11,10 +10,5 @@ export const SPACE_ROLE_SHEMA = z.object({
     .string()
     .uuid("Twin class ID must be a valid UUID")
     .or(FIRST_ID_EXTRACTOR),
-  businessAccountId: z
-    .string()
-    // .uuid("Business account ID must be a valid UUID")
-    .optional()
-    .or(FIRST_ID_EXTRACTOR),
-  businessAccountParams: FEATURER_PARAMS_VALUE,
+  businessAccountId: z.string().or(FIRST_ID_EXTRACTOR),
 });
