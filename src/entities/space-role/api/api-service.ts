@@ -2,6 +2,7 @@ import { PaginationState } from "@tanstack/table-core";
 
 import {
   PermissionGrantSpaceRoleFilters,
+  SpaceRoleCreateRq,
   SpaceRoleFilters,
 } from "@/entities/space-role";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
@@ -68,7 +69,17 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
     );
   }
 
+  async function create({ body }: { body: SpaceRoleCreateRq }) {
+    return settings.client.POST("/private/space_role/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
   return {
+    create,
     search,
     searchPermissionGranSpaceRole,
   };
