@@ -19,6 +19,7 @@ import {
   SquareAsterisk,
   Tags,
   TicketCheck,
+  TrendingUp,
   User,
   UsersRound,
   Workflow,
@@ -126,6 +127,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Options",
         url: `/${PlatformArea.core}/datalist-options`,
         icon: Option,
+      },
+      {
+        title: "Option projections",
+        url: `/${PlatformArea.core}/option-projections`,
+        icon: TrendingUp,
       },
       {
         title: "Subsets",

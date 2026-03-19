@@ -53,6 +53,10 @@ import {
   NotificationApi,
   createNotificationApi,
 } from "@/entities/notification";
+import {
+  OptionProjectionApi,
+  createOptionProjectionApi,
+} from "@/entities/option-projections";
 import { PermissionApi, createPermissionApi } from "@/entities/permission";
 import {
   PermissionGroupApi,
@@ -150,6 +154,7 @@ export interface PrivateApiContextProps {
   projection: ProjectionApi;
   notification: NotificationApi;
   validatorSet: ValidatorSetApi;
+  optionProjection: OptionProjectionApi;
 }
 
 export function PrivateApiContextProvider({
@@ -206,6 +211,7 @@ export function PrivateApiContextProvider({
         projection: createProjectionApi(settings),
         notification: createNotificationApi(settings),
         validatorSet: createValidatorSetApi(settings),
+        optionProjection: createOptionProjectionApi(settings),
       }
     : ({} as PrivateApiContextProps);
 
