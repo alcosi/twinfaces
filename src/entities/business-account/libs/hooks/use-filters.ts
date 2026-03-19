@@ -118,7 +118,7 @@ export function useBusinessAccountFilters({
       notificationSchemaIdList: toArrayOfString(
         filters.notificationSchemaIdList
       ),
-      tierIdList: toArrayOfString(filters.tierIdList),
+      tierIdList: toArrayOfString(filters.tierIdList, "id"),
       storageUsedCountRange: {
         from: (
           filters.storageUsedCountRange as {
