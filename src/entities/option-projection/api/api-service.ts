@@ -1,6 +1,6 @@
 import { PaginationState } from "@tanstack/react-table";
 
-import { optionProjectionFilters } from "@/entities/option-projections";
+import { OptionProjectionFilters } from "@/entities/option-projection";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createOptionProjectionApi(settings: ApiSettings) {
@@ -9,7 +9,7 @@ export function createOptionProjectionApi(settings: ApiSettings) {
     filters,
   }: {
     pagination: PaginationState;
-    filters?: optionProjectionFilters;
+    filters?: OptionProjectionFilters;
   }) {
     return settings.client.POST(
       `/private/data_list_option_projection/search/v1`,

@@ -56,7 +56,7 @@ import {
 import {
   OptionProjectionApi,
   createOptionProjectionApi,
-} from "@/entities/option-projections";
+} from "@/entities/option-projection";
 import { PermissionApi, createPermissionApi } from "@/entities/permission";
 import {
   PermissionGroupApi,

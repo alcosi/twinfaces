@@ -3,7 +3,7 @@ import { DataListOptionV1 } from "@/entities/datalist-option";
 import {
   OptionProjection,
   OptionProjection_DETAILED,
-} from "@/entities/option-projections";
+} from "@/entities/option-projection";
 import { ProjectionType } from "@/entities/projection";
 import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
@@ -29,7 +29,7 @@ export const hydrateOptionProjectionFromMap = (
     ] as DataListOptionV1;
   }
 
-  if (hydrated.srcDataListOption.dataListId && relatedObjects?.dataListsMap) {
+  if (hydrated?.srcDataListOption?.dataListId && relatedObjects?.dataListsMap) {
     hydrated.srcDataList = relatedObjects.dataListsMap[
       hydrated.srcDataListOption.dataListId
     ] as DataList;
@@ -41,7 +41,7 @@ export const hydrateOptionProjectionFromMap = (
     ] as DataListOptionV1;
   }
 
-  if (hydrated.dstDataListOption.dataListId && relatedObjects?.dataListsMap) {
+  if (hydrated?.dstDataListOption?.dataListId && relatedObjects?.dataListsMap) {
     hydrated.dstDataList = relatedObjects.dataListsMap[
       hydrated.dstDataListOption.dataListId
     ] as DataList;

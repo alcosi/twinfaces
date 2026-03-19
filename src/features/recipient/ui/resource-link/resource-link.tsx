@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function RecipientResourceLink({ data, disabled, withTooltip }: Props) {
-  const link = `/${PlatformArea.core}/recipient/${data.id}`;
+  const link = `/${PlatformArea.core}/recipients/${data.id}`;
 
   return (
     <ResourceLink

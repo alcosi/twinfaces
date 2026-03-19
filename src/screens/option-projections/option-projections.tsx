@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import {
   OptionProjection_DETAILED,
   useOptionProjectionSearch,
-} from "@/entities/option-projections";
+} from "@/entities/option-projection";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { DatalistResourceLink } from "@/features/datalist/ui";
 import { ProjectionTypeResourceLink } from "@/features/projection-type/ui";
@@ -20,12 +20,12 @@ const colDefs: Record<
   keyof Pick<
     OptionProjection_DETAILED,
     | "id"
-    | "projectionTypeId"
-    | "dstDataListOptionId"
-    | "dstDataListId"
-    | "srcDataListOptionId"
-    | "srcDataListId"
-    | "savedByUserId"
+    | "projectionType"
+    | "dstDataListOption"
+    | "dstDataList"
+    | "srcDataListOption"
+    | "srcDataList"
+    | "savedByUser"
     | "changedAt"
   >,
   ColumnDef<OptionProjection_DETAILED>
@@ -36,9 +36,9 @@ const colDefs: Record<
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
-  projectionTypeId: {
-    id: "projectionTypeId",
-    accessorKey: "projectionTypeId",
+  projectionType: {
+    id: "projectionType",
+    accessorKey: "projectionType",
     header: "Type",
     cell: ({ row: { original } }) =>
       original.projectionType && (
@@ -51,9 +51,9 @@ const colDefs: Record<
       ),
   },
 
-  dstDataListOptionId: {
-    id: "dstDataListOptionId",
-    accessorKey: "dstDataListOptionId",
+  dstDataListOption: {
+    id: "dstDataListOption",
+    accessorKey: "dstDataListOption",
     header: "Dst option",
     cell: ({ row: { original } }) =>
       original.dstDataListOption && (
@@ -66,21 +66,21 @@ const colDefs: Record<
       ),
   },
 
-  dstDataListId: {
-    id: "dstDataListId",
-    accessorKey: "dstDataListId",
+  dstDataList: {
+    id: "dstDataList",
+    accessorKey: "dstDataList",
     header: "Dsc data list",
     cell: ({ row: { original } }) =>
-      original.dstDataListOption && (
+      original.dstDataList && (
         <div className="inline-flex max-w-48">
-          <DatalistResourceLink data={original.dstDataListOption} withTooltip />
+          <DatalistResourceLink data={original.dstDataList} withTooltip />
         </div>
       ),
   },
 
-  srcDataListOptionId: {
-    id: "srcDataListOptionId",
-    accessorKey: "srcDataListOptionId",
+  srcDataListOption: {
+    id: "srcDataListOption",
+    accessorKey: "srcDataListOption",
     header: "Src option",
     cell: ({ row: { original } }) =>
       original.srcDataListOption && (
@@ -93,9 +93,9 @@ const colDefs: Record<
       ),
   },
 
-  srcDataListId: {
-    id: "srcDataListId",
-    accessorKey: "srcDataListId",
+  srcDataList: {
+    id: "srcDataList",
+    accessorKey: "srcDataList",
     header: "Src data list",
     cell: ({ row: { original } }) =>
       original.srcDataList && (
@@ -105,9 +105,9 @@ const colDefs: Record<
       ),
   },
 
-  savedByUserId: {
-    id: "savedByUserId",
-    accessorKey: "savedByUserId",
+  savedByUser: {
+    id: "savedByUser",
+    accessorKey: "savedByUser",
     header: "Saved by user",
     cell: ({ row: { original } }) =>
       original.savedByUser && (
@@ -152,24 +152,24 @@ export function OptionProjectionsScreen() {
       className="mx-auto mb-10 flex-col p-8 lg:flex lg:justify-center"
       columns={[
         colDefs.id,
-        colDefs.projectionTypeId,
-        colDefs.srcDataListId,
-        colDefs.srcDataListOptionId,
-        colDefs.dstDataListId,
-        colDefs.dstDataListOptionId,
-        colDefs.savedByUserId,
+        colDefs.projectionType,
+        colDefs.srcDataList,
+        colDefs.srcDataListOption,
+        colDefs.dstDataList,
+        colDefs.dstDataListOption,
+        colDefs.savedByUser,
         colDefs.changedAt,
       ]}
       fetcher={fetchOptionsProjection}
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
         colDefs.id,
-        colDefs.projectionTypeId,
-        colDefs.srcDataListId,
-        colDefs.srcDataListOptionId,
-        colDefs.dstDataListId,
-        colDefs.dstDataListOptionId,
-        colDefs.savedByUserId,
+        colDefs.projectionType,
+        colDefs.srcDataList,
+        colDefs.srcDataListOption,
+        colDefs.dstDataList,
+        colDefs.dstDataListOption,
+        colDefs.savedByUser,
         colDefs.changedAt,
       ]}
     />

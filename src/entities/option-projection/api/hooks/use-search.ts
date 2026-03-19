@@ -2,10 +2,10 @@ import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
 import {
+  OptionProjectionFilters,
   OptionProjection_DETAILED,
   hydrateOptionProjectionFromMap,
-  optionProjectionFilters,
-} from "@/entities/option-projections";
+} from "@/entities/option-projection";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export function useOptionProjectionSearch() {
@@ -17,7 +17,7 @@ export function useOptionProjectionSearch() {
       filters,
     }: {
       pagination: PaginationState;
-      filters?: optionProjectionFilters;
+      filters?: OptionProjectionFilters;
     }): Promise<PagedResponse<OptionProjection_DETAILED>> => {
       try {
         const { data, error } = await api.optionProjection.search({
