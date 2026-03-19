@@ -1,3 +1,5 @@
+import z from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useBusinessAccountSelectAdapter } from "@/entities/business-account";
@@ -33,13 +35,12 @@ export function useBusinessAccountFilters({
 
   const allFilters: Record<DomainBusinessAccountFilterKeys, AutoFormValueInfo> =
     {
-      //! TODO not implemented in the API method
-      // idList: {
-      //   type: AutoFormValueType.tag,
-      //   label: "Id",
-      //   schema: z.string().uuid("Please enter a valid UUID"),
-      //   placeholder: "Enter UUID",
-      // },
+      idList: {
+        type: AutoFormValueType.tag,
+        label: "Id",
+        schema: z.string().uuid("Please enter a valid UUID"),
+        placeholder: "Enter UUID",
+      },
       businessAccountIdList: {
         type: AutoFormValueType.combobox,
         label: "Business account",
@@ -64,13 +65,13 @@ export function useBusinessAccountFilters({
         ...twinClassSchemaAdapter,
         multi: true,
       },
-      //! TODO not implemented in the API method
-      // notificationSchemeIdList: {
-      //   type: AutoFormValueType.tag,
-      //   label: "Notification scheme",
-      //   schema: z.string().uuid("Please enter a valid UUID"),
-      //   placeholder: "Enter UUID",
-      // },
+      //todo upd to select
+      notificationSchemaIdList: {
+        type: AutoFormValueType.tag,
+        label: "Notification scheme",
+        schema: z.string().uuid("Please enter a valid UUID"),
+        placeholder: "Enter UUID",
+      },
       tierIdList: {
         type: AutoFormValueType.combobox,
         label: "Tier",
@@ -100,6 +101,7 @@ export function useBusinessAccountFilters({
     filters: Record<DomainBusinessAccountFilterKeys, unknown>
   ): DomainBusinessAccountFilters {
     return {
+      idList: toArrayOfString(filters.idList),
       businessAccountIdList: toArrayOfString(
         filters.businessAccountIdList,
         "id"
@@ -113,7 +115,10 @@ export function useBusinessAccountFilters({
         filters.twinClassSchemaIdList,
         "id"
       ),
-      tierIdList: toArrayOfString(filters.tierIdList),
+      notificationSchemaIdList: toArrayOfString(
+        filters.notificationSchemaIdList
+      ),
+      tierIdList: toArrayOfString(filters.tierIdList, "id"),
       storageUsedCountRange: {
         from: (
           filters.storageUsedCountRange as {

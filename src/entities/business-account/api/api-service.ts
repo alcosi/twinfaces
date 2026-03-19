@@ -29,7 +29,9 @@ export function createBusinessAccountApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: {
+          ...filters,
+        },
       },
     });
   }

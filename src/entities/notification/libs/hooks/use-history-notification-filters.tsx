@@ -4,6 +4,7 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useRecipientSelectAdapter } from "@/entities/notification";
 import {
+  TwinClass_DETAILED,
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
@@ -17,6 +18,8 @@ import {
   extractEnabledFilters,
   isPopulatedArray,
   mapToChoice,
+  reduceToObject,
+  toArray,
   toArrayOfString,
 } from "@/shared/libs";
 
@@ -52,7 +55,7 @@ export function useHistoryNotificationFilters({
       schema: z.string().uuid("Please enter a valid UUID"),
       placeholder: "Enter UUID",
     },
-    twinClassIdList: {
+    twinClassIdMap: {
       type: AutoFormValueType.complexCombobox,
       label: "Twin class",
       adapter: twinClassAdapter,
@@ -127,7 +130,10 @@ export function useHistoryNotificationFilters({
   ): HistoryNotificationFilters {
     return {
       idList: toArrayOfString(filters.idList),
-      twinClassIdList: toArrayOfString(filters.twinClassIdList, "id"),
+      twinClassIdMap: reduceToObject({
+        list: toArray(filters.twinClassIdMap) as TwinClass_DETAILED[],
+        defaultValue: true,
+      }),
       twinClassFieldIdList: toArrayOfString(filters.twinClassFieldIdList, "id"),
       historyTypeIdList: toArrayOfString(filters.historyTypeIdList),
       notificationSchemaIdList: toArrayOfString(

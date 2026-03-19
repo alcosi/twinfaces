@@ -43,7 +43,7 @@ export type HistoryNotificationSearchRq =
 
 export type HistoryNotificationFilterKeys =
   | "idList"
-  | "twinClassIdList"
+  | "twinClassIdMap"
   | "twinClassFieldIdList"
   | "historyNotificationRecipientIdList"
   | "historyTypeIdList"
