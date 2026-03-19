@@ -17290,10 +17290,14 @@ export interface components {
             historyTypeIdList?: string[];
             /** @description history type id exclude list */
             historyTypeIdExcludeList?: string[];
-            /** @description twin class id list */
-            twinClassIdList?: string[];
-            /** @description twin class id exclude list */
-            twinClassIdExcludeList?: string[];
+            /** @description twin class id map (key=classId, value=includeExtendsHierarchy) */
+            twinClassIdMap?: {
+                [key: string]: boolean;
+            };
+            /** @description twin class id exclude map (key=classId, value=includeExtendsHierarchy) */
+            twinClassIdExcludeMap?: {
+                [key: string]: boolean;
+            };
             /** @description twin class field id list */
             twinClassFieldIdList?: string[];
             /** @description twin class field id exclude list */
@@ -18415,7 +18419,11 @@ export interface components {
             /** @description Business account users. Will be filled only if lazyRelations mode is true */
             businessAccountUsers?: components["schemas"]["BusinessAccountUserV1"][];
         };
-        DomainBusinessAccountSearchRqV1: {
+        DomainBusinessAccountSearchDTOv1: {
+            /** @description id list */
+            idList?: string[];
+            /** @description id exclude list */
+            idExcludeList?: string[];
             /** @description business account id list */
             businessAccountIdList?: string[];
             /** @description business account id exclude list */
@@ -18428,6 +18436,10 @@ export interface components {
             permissionSchemaIdList?: string[];
             /** @description business account permission schema id exclude list */
             permissionSchemaIdExcludeList?: string[];
+            /** @description business account notification schema id list */
+            notificationSchemaIdList?: string[];
+            /** @description business account notification schema id exclude list */
+            notificationSchemaIdExcludeList?: string[];
             /** @description business account twinflow schema id list */
             twinflowSchemaIdList?: string[];
             /** @description business account twinflows chema id exclude list */
@@ -18446,6 +18458,10 @@ export interface components {
             storageUsedCountRange?: components["schemas"]["IntegerRangeV1"];
             /** @description created at range */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
+        };
+        DomainBusinessAccountSearchRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["DomainBusinessAccountSearchDTOv1"];
         };
         DomainBusinessAccountSearchRsV1: {
             /**
@@ -18466,10 +18482,10 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description pagination data */
-            pagination?: components["schemas"]["PaginationV1"];
             /** @description results - domain business account list */
             businessAccounts?: components["schemas"]["DomainBusinessAccountV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         DomainBusinessAccountV1: {
             /**

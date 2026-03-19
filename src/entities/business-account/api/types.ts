@@ -20,13 +20,15 @@ export type DomainBusinessAccount_DETAILED = DomainBusinessAccount & {
 };
 
 export type DomainBusinessAccountSearchRq =
-  components["schemas"]["DomainBusinessAccountSearchRqV1"];
+  components["schemas"]["DomainBusinessAccountSearchDTOv1"];
 
 export type DomainBusinessAccountFilterKeys =
+  | "idList"
   | "businessAccountIdList"
   | "permissionSchemaIdList"
   | "twinflowSchemaIdList"
   | "twinClassSchemaIdList"
+  | "notificationSchemaIdList"
   | "tierIdList"
   | "storageUsedCountRange"
   | "storageUsedSizeRange";
