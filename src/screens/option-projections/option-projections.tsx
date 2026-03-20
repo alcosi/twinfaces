@@ -1,10 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  OPTION_PROJECTION_SHEMA,
   OptionProjection_DETAILED,
+  useOptionProjectionCreate,
   useOptionProjectionSearch,
 } from "@/entities/option-projection";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
@@ -15,6 +20,8 @@ import { PagedResponse } from "@/shared/api";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+
+import { OptionsProjectionFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -129,6 +136,33 @@ const colDefs: Record<
 };
 export function OptionProjectionsScreen() {
   const { searchOptionProjection } = useOptionProjectionSearch();
+  const { createOptionProjection } = useOptionProjectionCreate();
+
+  const optionProjectionForm = useForm<z.infer<typeof OPTION_PROJECTION_SHEMA>>(
+    {
+      resolver: zodResolver(OPTION_PROJECTION_SHEMA),
+      defaultValues: {
+        dstDataListOptionId: "",
+        projectionTypeId: "",
+        srcDataListOptionId: "",
+      },
+    }
+  );
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof OPTION_PROJECTION_SHEMA>
+  ) => {
+    await createOptionProjection({
+      body: {
+        dataListOptionProjectionList: [
+          {
+            ...formValues,
+          },
+        ],
+      },
+    });
+    toast.success("Option projection created successfully!");
+  };
 
   async function fetchOptionsProjection(
     pagination: PaginationState,
@@ -172,6 +206,11 @@ export function OptionProjectionsScreen() {
         colDefs.savedByUser,
         colDefs.changedAt,
       ]}
+      dialogForm={optionProjectionForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <OptionsProjectionFormFields control={optionProjectionForm.control} />
+      )}
     />
   );
 }
