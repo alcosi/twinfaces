@@ -34,8 +34,10 @@ export function useProjectionTypeSelectAdapter(): SelectAdapter<ProjectionType> 
     return response.data;
   }
 
-  function renderItem({ name }: ProjectionType) {
-    return isPopulatedString(name) ? name : "N/A";
+  function renderItem({ name, key }: ProjectionType) {
+    return isPopulatedString(name)
+      ? [name, key].filter(isPopulatedString).join(" | ")
+      : "N/A";
   }
 
   return {
