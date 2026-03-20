@@ -17,7 +17,7 @@ import {
   useRecipientCollectorSearch,
 } from "@/entities/notification";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
-import { RecipientContext } from "@/features/recipient/context-provider";
+import { RecipientContext } from "@/features/recipient";
 import { RecipientResourceLink } from "@/features/recipient/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Control, useWatch } from "react-hook-form";
+import { Control } from "react-hook-form";
 import { z } from "zod";
 
 import { CheckboxFormField, ComboboxFormField } from "@/components/form-fields";
@@ -21,11 +21,7 @@ export function RecipientCollectorFormFields({
   recipientId?: string;
 }) {
   const notificationRecipientAdapter = useRecipientSelectAdapter();
-  const recipientWatch = useWatch({
-    control,
-    name: "recipientId",
-  });
-  const disabled = useRef(isTruthy(recipientId || recipientWatch)).current;
+  const disabled = useRef(isTruthy(recipientId)).current;
 
   return (
     <>
