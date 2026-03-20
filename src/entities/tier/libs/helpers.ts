@@ -13,9 +13,9 @@ export const hydrateTierFromMap = (
       relatedObjects.permissionSchemaMap[dto.permissionSchemaId]!;
   }
 
-  if (dto.twinflowSchemaId && relatedObjects?.twinflowMap) {
-    hydrated.twinClassSchema =
-      relatedObjects.twinflowMap[dto.twinflowSchemaId]!;
+  if (dto.twinflowSchemaId && relatedObjects?.twinflowSchemaMap) {
+    hydrated.twinflowSchema =
+      relatedObjects.twinflowSchemaMap[dto.twinflowSchemaId]!;
   }
 
   if (dto.twinClassSchemaId && relatedObjects?.twinClassSchemaMap) {

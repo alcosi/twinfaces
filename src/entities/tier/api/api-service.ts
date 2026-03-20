@@ -19,7 +19,7 @@ export function createTierApi(settings: ApiSettings) {
           lazyRelation: false,
           showTierMode: "DETAILED",
           showTier2PermissionSchemaMode: "DETAILED",
-          showTier2TwinclassSchemaMode: "DETAILED",
+          showTier2TwinClassSchemaMode: "DETAILED",
           showTier2TwinflowSchemaMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
