@@ -31,3 +31,6 @@ export type OptionProjectionFilterKeys =
 export type OptionProjectionFilters = Partial<
   Pick<OptionProjectionSearchRq, OptionProjectionFilterKeys>
 >;
+
+export type OptionProjectionCreateRq =
+  components["schemas"]["DataListOptionProjectionCreateRqV1"];
