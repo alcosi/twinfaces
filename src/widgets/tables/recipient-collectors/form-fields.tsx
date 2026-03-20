@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Control } from "react-hook-form";
 import { z } from "zod";
 
@@ -8,15 +9,19 @@ import {
   RECIPIENT_COLLECTOR_SCHEMA,
   useRecipientSelectAdapter,
 } from "@/entities/notification";
+import { isTruthy } from "@/shared/libs/index";
 
 import { FeaturerFormField } from "../../form-fields";
 
 export function RecipientCollectorFormFields({
   control,
+  recipientId,
 }: {
   control: Control<z.infer<typeof RECIPIENT_COLLECTOR_SCHEMA>>;
+  recipientId?: string;
 }) {
   const notificationRecipientAdapter = useRecipientSelectAdapter();
+  const disabled = useRef(isTruthy(recipientId)).current;
 
   return (
     <>
@@ -27,6 +32,7 @@ export function RecipientCollectorFormFields({
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
+        disabled={disabled}
         {...notificationRecipientAdapter}
       />
 
