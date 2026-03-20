@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -15,8 +17,16 @@ import {
   useRecipientCollectorSearch,
 } from "@/entities/notification";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
+import { RecipientContext } from "@/features/recipient/context-provider";
 import { RecipientResourceLink } from "@/features/recipient/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import {
+  isFalsy,
+  isTruthy,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs/index";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -73,11 +83,16 @@ const colDefs: Record<
 };
 
 export function RecipientCollectorsTable() {
+  const router = useRouter();
   const { searchRecipientCollector } = useRecipientCollectorSearch();
   const { createRecipientCollector } = useRecipientCollectorCreate();
+  const { recipient } = useContext(RecipientContext);
+  const recipientId = recipient?.id;
   const { buildFilterFields, mapFiltersToPayload } =
     useRecipientCollectorFilters({
-      enabledFilters: undefined,
+      enabledFilters: isTruthy(recipientId)
+        ? ["idList", "recipientResolverFeaturerIdList", "exclude"]
+        : undefined,
     });
 
   async function fetchHistoryNotificationRecipientCollector(
@@ -90,6 +105,9 @@ export function RecipientCollectorsTable() {
         pagination,
         filters: {
           ..._filters,
+          recipientIdList: recipientId
+            ? toArrayOfString(toArray(recipientId), "id")
+            : _filters.recipientIdList,
         },
       });
     } catch (error) {
@@ -109,7 +127,7 @@ export function RecipientCollectorsTable() {
   >({
     resolver: zodResolver(RECIPIENT_COLLECTOR_SCHEMA),
     defaultValues: {
-      recipientId: "",
+      recipientId: recipientId || "",
       recipientResolverFeaturerId: undefined,
       exclude: false,
     },
@@ -133,24 +151,28 @@ export function RecipientCollectorsTable() {
       title="Recipient collectors"
       columns={[
         colDefs.id,
-        colDefs.historyNotificationRecipient,
+        ...(isFalsy(recipientId) ? [colDefs.historyNotificationRecipient] : []),
         colDefs.recipientResolverFeaturer,
         colDefs.exclude,
       ]}
       fetcher={fetchHistoryNotificationRecipientCollector}
       defaultVisibleColumns={[
         colDefs.id,
-        colDefs.historyNotificationRecipient,
+        ...(isFalsy(recipientId) ? [colDefs.historyNotificationRecipient] : []),
         colDefs.recipientResolverFeaturer,
         colDefs.exclude,
       ]}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/recipient-collectors/${row.id}`)
+      }
       filters={{ filtersInfo: buildFilterFields() }}
       dialogForm={recipientCollectorForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
         <RecipientCollectorFormFields
           control={recipientCollectorForm.control}
+          recipientId={recipientId}
         />
       )}
     />
