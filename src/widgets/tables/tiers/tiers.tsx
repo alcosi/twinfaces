@@ -1,10 +1,19 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
 
-import { Tier_DETAILED, useTierFilters, useTierSearch } from "@/entities/tier";
+import {
+  Tier_DETAILED,
+  useTierCreate,
+  useTierFilters,
+  useTierSearch,
+} from "@/entities/tier";
+import { TIER_SCHEMA } from "@/entities/tier/libs";
 import { TwinClassSchema_DETAILED } from "@/entities/twin-class-schema";
 import { TwinFlowSchema_DETAILED } from "@/entities/twinFlowSchema";
 import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
@@ -20,6 +29,7 @@ import {
   DataTableHandle,
   FiltersState,
 } from "../../crud-data-table";
+import { TierFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -147,7 +157,23 @@ export function TiersTable() {
   const tableRef = useRef<DataTableHandle>(null);
   const router = useRouter();
   const { searchTiers } = useTierSearch();
+  const { createTier } = useTierCreate();
   const { buildFilterFields, mapFiltersToPayload } = useTierFilters();
+
+  const tierForm = useForm<z.infer<typeof TIER_SCHEMA>>({
+    resolver: zodResolver(TIER_SCHEMA),
+    defaultValues: {
+      name: "",
+      description: "",
+      custom: false,
+      permissionSchemaId: "",
+      twinflowSchemaId: "",
+      twinClassSchemaId: "",
+      attachmentsStorageQuotaSize: undefined,
+      attachmentsStorageQuotaCount: undefined,
+      userCountQuota: undefined,
+    },
+  });
 
   async function fetchTiers(
     pagination: PaginationState,
@@ -167,6 +193,31 @@ export function TiersTable() {
       return { data: [], pagination: {} };
     }
   }
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof TIER_SCHEMA>
+  ) => {
+    await createTier({
+      body: {
+        tier: {
+          name: formValues.name,
+          description: formValues.description,
+          custom: formValues.custom,
+          permissionSchemaId: formValues.permissionSchemaId || undefined,
+          twinflowSchemaId: formValues.twinflowSchemaId || undefined,
+          twinClassSchemaId: formValues.twinClassSchemaId || undefined,
+          attachmentsStorageQuotaSize:
+            formValues.attachmentsStorageQuotaSize ?? undefined,
+          attachmentsStorageQuotaCount:
+            formValues.attachmentsStorageQuotaCount ?? undefined,
+          userCountQuota: formValues.userCountQuota ?? undefined,
+        },
+      },
+    });
+
+    toast.success("Tier created successfully!");
+    tableRef.current?.refresh();
+  };
 
   return (
     <CrudDataTable
@@ -204,6 +255,9 @@ export function TiersTable() {
         colDefs.description,
         colDefs.createdAt,
       ]}
+      dialogForm={tierForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => <TierFormFields control={tierForm.control} />}
     />
   );
 }

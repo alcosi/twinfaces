@@ -25,3 +25,6 @@ export type TierFilterKeys =
 export type TierFilters = Partial<
   Pick<components["schemas"]["TierSearchRqV1"], TierFilterKeys>
 >;
+
+export type TierCreateRq = components["schemas"]["TierCreateRqV1"];
+export type TierCreate = components["schemas"]["TierCreateV1"];
