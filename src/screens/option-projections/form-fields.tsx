@@ -4,13 +4,18 @@ import { z } from "zod";
 import { ComboboxFormField } from "@/components/form-fields";
 
 import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
-import { OPTION_PROJECTION_SHEMA } from "@/entities/option-projection";
+import {
+  OPTION_PROJECTION_SHEMA,
+  TitleOptionProjections,
+} from "@/entities/option-projection";
 import { useProjectionTypeSelectAdapter } from "@/entities/projection/libs";
 
 export function OptionsProjectionFormFields({
   control,
+  title,
 }: {
   control: Control<z.infer<typeof OPTION_PROJECTION_SHEMA>>;
+  title?: TitleOptionProjections;
 }) {
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
   const dataListOptionAdapter = useDatalistOptionSelectAdapter();
@@ -27,25 +32,29 @@ export function OptionsProjectionFormFields({
         {...projectionTypeAdapter}
       />
 
-      <ComboboxFormField
-        control={control}
-        name="srcDataListOptionId"
-        label="Src option"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...dataListOptionAdapter}
-      />
+      {title !== "Outgoing" && (
+        <ComboboxFormField
+          control={control}
+          name="srcDataListOptionId"
+          label="Src option"
+          selectPlaceholder="Select..."
+          searchPlaceholder="Search..."
+          noItemsText="No data found"
+          {...dataListOptionAdapter}
+        />
+      )}
 
-      <ComboboxFormField
-        control={control}
-        name="dstDataListOptionId"
-        label="Dst option"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...dataListOptionAdapter}
-      />
+      {title !== "Incoming" && (
+        <ComboboxFormField
+          control={control}
+          name="dstDataListOptionId"
+          label="Dst option"
+          selectPlaceholder="Select..."
+          searchPlaceholder="Search..."
+          noItemsText="No data found"
+          {...dataListOptionAdapter}
+        />
+      )}
     </>
   );
 }
