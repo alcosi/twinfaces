@@ -32,29 +32,27 @@ export function OptionsProjectionFormFields({
         {...projectionTypeAdapter}
       />
 
-      {title !== "Outgoing" && (
-        <ComboboxFormField
-          control={control}
-          name="srcDataListOptionId"
-          label="Src option"
-          selectPlaceholder="Select..."
-          searchPlaceholder="Search..."
-          noItemsText="No data found"
-          {...dataListOptionAdapter}
-        />
-      )}
+      <ComboboxFormField
+        control={control}
+        name="srcDataListOptionId"
+        label="Src option"
+        selectPlaceholder="Select..."
+        searchPlaceholder="Search..."
+        noItemsText="No data found"
+        {...dataListOptionAdapter}
+        disabled={title === "Outgoing"}
+      />
 
-      {title !== "Incoming" && (
-        <ComboboxFormField
-          control={control}
-          name="dstDataListOptionId"
-          label="Dst option"
-          selectPlaceholder="Select..."
-          searchPlaceholder="Search..."
-          noItemsText="No data found"
-          {...dataListOptionAdapter}
-        />
-      )}
+      <ComboboxFormField
+        control={control}
+        name="dstDataListOptionId"
+        label="Dst option"
+        selectPlaceholder="Select..."
+        searchPlaceholder="Search..."
+        noItemsText="No data found"
+        {...dataListOptionAdapter}
+        disabled={title === "Incoming"}
+      />
     </>
   );
 }
