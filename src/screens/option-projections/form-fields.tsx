@@ -4,13 +4,18 @@ import { z } from "zod";
 import { ComboboxFormField } from "@/components/form-fields";
 
 import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
-import { OPTION_PROJECTION_SHEMA } from "@/entities/option-projection";
+import {
+  OPTION_PROJECTION_SHEMA,
+  TitleOptionProjections,
+} from "@/entities/option-projection";
 import { useProjectionTypeSelectAdapter } from "@/entities/projection/libs";
 
 export function OptionsProjectionFormFields({
   control,
+  title,
 }: {
   control: Control<z.infer<typeof OPTION_PROJECTION_SHEMA>>;
+  title?: TitleOptionProjections;
 }) {
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
   const dataListOptionAdapter = useDatalistOptionSelectAdapter();
@@ -35,6 +40,7 @@ export function OptionsProjectionFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         {...dataListOptionAdapter}
+        disabled={title === "Outgoing"}
       />
 
       <ComboboxFormField
@@ -45,6 +51,7 @@ export function OptionsProjectionFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         {...dataListOptionAdapter}
+        disabled={title === "Incoming"}
       />
     </>
   );

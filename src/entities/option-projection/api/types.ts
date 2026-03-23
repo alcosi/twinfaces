@@ -34,3 +34,5 @@ export type OptionProjectionFilters = Partial<
 
 export type OptionProjectionCreateRq =
   components["schemas"]["DataListOptionProjectionCreateRqV1"];
+
+export type TitleOptionProjections = "Incoming" | "Outgoing";

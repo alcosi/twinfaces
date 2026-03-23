@@ -9,6 +9,7 @@ import { z } from "zod";
 import {
   OPTION_PROJECTION_SHEMA,
   OptionProjection_DETAILED,
+  TitleOptionProjections,
   useOptionProjectionCreate,
   useOptionProjectionSearch,
 } from "@/entities/option-projection";
@@ -17,7 +18,12 @@ import { DatalistResourceLink } from "@/features/datalist/ui";
 import { ProjectionTypeResourceLink } from "@/features/projection-type/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { formatIntlDate } from "@/shared/libs";
+import {
+  formatIntlDate,
+  isFalsy,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -134,7 +140,13 @@ const colDefs: Record<
       formatIntlDate(original.changedAt, "datetime-local"),
   },
 };
-export function OptionProjectionsScreen() {
+export function OptionProjectionsScreen({
+  title,
+  optionId,
+}: {
+  title?: TitleOptionProjections;
+  optionId?: string;
+}) {
   const { searchOptionProjection } = useOptionProjectionSearch();
   const { createOptionProjection } = useOptionProjectionCreate();
 
@@ -142,9 +154,9 @@ export function OptionProjectionsScreen() {
     {
       resolver: zodResolver(OPTION_PROJECTION_SHEMA),
       defaultValues: {
-        dstDataListOptionId: "",
         projectionTypeId: "",
-        srcDataListOptionId: "",
+        srcDataListOptionId: optionId && title === "Outgoing" ? optionId : "",
+        dstDataListOptionId: optionId && title === "Incoming" ? optionId : "",
       },
     }
   );
@@ -171,7 +183,16 @@ export function OptionProjectionsScreen() {
     try {
       return await searchOptionProjection({
         pagination,
-        filters: {},
+        filters: {
+          dstDataListOptionIdList:
+            optionId && title === "Incoming"
+              ? toArrayOfString(toArray(optionId), "id")
+              : undefined,
+          srcDataListOptionIdList:
+            optionId && title === "Outgoing"
+              ? toArrayOfString(toArray(optionId), "id")
+              : undefined,
+        },
       });
     } catch (error) {
       toast.error(
@@ -182,15 +203,23 @@ export function OptionProjectionsScreen() {
   }
   return (
     <CrudDataTable
-      title="Option projections"
+      title={title ? title : "Option projections"}
       className="mx-auto mb-10 flex-col p-8 lg:flex lg:justify-center"
       columns={[
         colDefs.id,
         colDefs.projectionType,
-        colDefs.srcDataList,
-        colDefs.srcDataListOption,
-        colDefs.dstDataList,
-        colDefs.dstDataListOption,
+        ...(isFalsy(optionId && title !== "Incoming")
+          ? [colDefs.srcDataList]
+          : []),
+        ...(isFalsy(optionId && title !== "Incoming")
+          ? [colDefs.srcDataListOption]
+          : []),
+        ...(isFalsy(optionId && title !== "Outgoing")
+          ? [colDefs.dstDataList]
+          : []),
+        ...(isFalsy(optionId && title !== "Outgoing")
+          ? [colDefs.dstDataListOption]
+          : []),
         colDefs.savedByUser,
         colDefs.changedAt,
       ]}
@@ -199,17 +228,28 @@ export function OptionProjectionsScreen() {
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.projectionType,
-        colDefs.srcDataList,
-        colDefs.srcDataListOption,
-        colDefs.dstDataList,
-        colDefs.dstDataListOption,
+        ...(isFalsy(optionId && title !== "Incoming")
+          ? [colDefs.srcDataList]
+          : []),
+        ...(isFalsy(optionId && title !== "Incoming")
+          ? [colDefs.srcDataListOption]
+          : []),
+        ...(isFalsy(optionId && title !== "Outgoing")
+          ? [colDefs.dstDataList]
+          : []),
+        ...(isFalsy(optionId && title !== "Outgoing")
+          ? [colDefs.dstDataListOption]
+          : []),
         colDefs.savedByUser,
         colDefs.changedAt,
       ]}
       dialogForm={optionProjectionForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
-        <OptionsProjectionFormFields control={optionProjectionForm.control} />
+        <OptionsProjectionFormFields
+          control={optionProjectionForm.control}
+          title={title}
+        />
       )}
     />
   );
