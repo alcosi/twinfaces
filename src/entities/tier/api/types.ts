@@ -28,3 +28,6 @@ export type TierFilters = Partial<
 
 export type TierCreateRq = components["schemas"]["TierCreateRqV1"];
 export type TierCreate = components["schemas"]["TierCreateV1"];
+
+export type TierUpdateRq = components["schemas"]["TierUpdateRqV1"];
+export type TierUpdate = components["schemas"]["TierUpdateV1"];
