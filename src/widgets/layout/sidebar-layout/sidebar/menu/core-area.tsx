@@ -2,6 +2,12 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/shared/libs";
 import {
+  getCoreRouteSegment,
+  getPermissionKeysForCoreRouteAction,
+  hasAnyPermissionKey,
+  usePermissionsAccess,
+} from "@/shared/libs";
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -20,14 +26,42 @@ import { Group } from "./types";
 export function CoreAreaSidebarMenu() {
   const { open } = useSidebar();
   const pathname = usePathname() || "";
+  const { permissionKeys } = usePermissionsAccess();
+  const routeSegment = getCoreRouteSegment(pathname);
+
+  const filteredGroups = Object.values(SIDEBAR_GROUPS)
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => {
+        const manageKeys = getPermissionKeysForCoreRouteAction({
+          pathname: item.url,
+          action: "MANAGE",
+        });
+        if (manageKeys.length === 0) return true;
+
+        return hasAnyPermissionKey({
+          permissionKeys,
+          keysToCheck: manageKeys,
+        });
+      }),
+    }))
+    .filter((group) => group.items.length > 0);
+
+  if (filteredGroups.length === 0) {
+    return null;
+  }
 
   return (
     <SidebarMenu className={cn(!open && "p-2")}>
       {open ? (
-        <AccordionMenu pathname={pathname} />
+        <AccordionMenu
+          pathname={pathname}
+          groups={filteredGroups}
+          fallbackSegment={routeSegment}
+        />
       ) : (
         <CollapsedMenu
-          items={Object.values(SIDEBAR_GROUPS).flatMap((group) =>
+          items={filteredGroups.flatMap((group) =>
             group.items.map((item, index) => ({
               item,
               group,
@@ -54,20 +88,34 @@ export function CoreAreaSidebarMenu() {
   );
 }
 
-function AccordionMenu({ pathname }: { pathname: string }) {
+function AccordionMenu({
+  pathname,
+  groups,
+  fallbackSegment,
+}: {
+  pathname: string;
+  groups: Group[];
+  fallbackSegment?: string;
+}) {
   const activeGroup =
-    Object.values(SIDEBAR_GROUPS).find((group) =>
+    groups.find((group) =>
       group.items.some((item) => isItemActive(item.url, pathname))
-    ) ?? SIDEBAR_GROUPS.class;
+    ) ??
+    (fallbackSegment
+      ? groups.find((group) =>
+          group.items.some((item) => item.url.includes(`/${fallbackSegment}`))
+        )
+      : undefined) ??
+    groups[0];
 
   return (
     <Accordion
       type="single"
       collapsible
       className="w-full p-2"
-      defaultValue={activeGroup?.title.toLowerCase()}
+      defaultValue={activeGroup?.title.toLowerCase() ?? ""}
     >
-      {Object.values(SIDEBAR_GROUPS).map((group) => (
+      {groups.map((group) => (
         <AccordionGroup key={group.title} {...group} />
       ))}
     </Accordion>
@@ -80,7 +128,7 @@ function AccordionGroup({ title, items }: Group) {
       <AccordionTrigger className="py-0 text-sm hover:no-underline">
         <SidebarGroupLabel>{title}</SidebarGroupLabel>
       </AccordionTrigger>
-      <AccordionContent className="ml-2 list-none border-l border-border py-0 pl-2">
+      <AccordionContent className="border-border ml-2 list-none border-l py-0 pl-2">
         {items.map((item) => (
           <MenuItem
             key={item.url}

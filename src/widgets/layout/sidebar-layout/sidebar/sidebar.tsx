@@ -164,7 +164,7 @@ export function AppSidebar({
                           ) : (
                             <Globe className="h-4 w-4" />
                           )}
-                          <span>{domain.name}</span>
+                          <span>{domain.name ?? domain.key}</span>
                         </DropdownMenuItem>
 
                         {domain.id === currentDomain?.id && (
