@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
 
+import { usePermissionsAccess } from "@/shared/libs";
 import {
   Alert,
   Button,
@@ -36,14 +37,21 @@ export function AutoDialog({
   onOpenChange,
   settings,
 }: EditFieldDialogProps) {
+  const { canForCurrentRoute } = usePermissionsAccess();
+  const canUpdate = canForCurrentRoute("UPDATE");
+  const effectiveOpen = canUpdate ? open : false;
   const [error, setError] = useState<string | null>(null);
 
   function onOpenChangeInternal(newOpen: boolean) {
+    if (!canUpdate && newOpen) {
+      onOpenChange?.(false);
+      return;
+    }
     onOpenChange?.(newOpen);
   }
 
   useEffect(() => {
-    if (open) {
+    if (effectiveOpen) {
       if (settings?.value) {
         form.reset({
           ...settings.value,
@@ -52,7 +60,13 @@ export function AutoDialog({
         form.reset();
       }
     }
-  }, [open]);
+  }, [effectiveOpen, settings?.value]);
+
+  useEffect(() => {
+    if (!canUpdate && open) {
+      onOpenChange?.(false);
+    }
+  }, [canUpdate, onOpenChange, open]);
 
   const form = useForm({
     defaultValues: {
@@ -77,6 +91,7 @@ export function AutoDialog({
   }
 
   async function internalSubmit(newValue: object) {
+    if (!canUpdate) return;
     setError(null);
     try {
       await settings?.onSubmit(newValue);
@@ -88,7 +103,7 @@ export function AutoDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeInternal}>
+    <Dialog open={effectiveOpen} onOpenChange={onOpenChangeInternal}>
       <DialogContent
         className="max-h-[100%] sm:max-h-[80%] sm:max-w-md"
         aria-describedby={keys.join("-")}

@@ -18,7 +18,12 @@ import {
 import { UseFormReturn } from "react-hook-form";
 
 import { PagedResponse } from "@/shared/api";
-import { cn, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
+import {
+  cn,
+  fixedForwardRef,
+  isPopulatedArray,
+  usePermissionsAccess,
+} from "@/shared/libs";
 
 import { DEFAULT_PAGE_SIZES } from "./constans";
 import {
@@ -71,6 +76,8 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
 ) {
   const router = useRouter();
   const pathname = usePathname();
+  const { canForCurrentRoute } = usePermissionsAccess();
+  const canCreate = canForCurrentRoute("CREATE");
 
   const { viewSettings, updateViewSettings } = useViewSettings(
     props.defaultVisibleColumns,
@@ -124,9 +131,8 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     props.defaultVisibleColumns,
   ]);
 
-  const handleOnCreateClick = onCreateSubmit
-    ? () => dialogRef.current?.open()
-    : undefined;
+  const handleOnCreateClick =
+    onCreateSubmit && canCreate ? () => dialogRef.current?.open() : undefined;
 
   function handleOnRowClick(row: TData) {
     if (onRowClick) {

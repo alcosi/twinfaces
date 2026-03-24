@@ -9,7 +9,7 @@ import { z } from "zod";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
 
-import { cn, isFalsy } from "@/shared/libs";
+import { cn, isFalsy, usePermissionsAccess } from "@/shared/libs";
 import { Form } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import { LoadingSpinner } from "@/shared/ui/loading";
@@ -36,8 +36,10 @@ export function InPlaceEdit<T>({
   className,
 }: InPlaceEditProps<T>) {
   const context = useContext(InPlaceEditContext);
+  const { canForCurrentRoute } = usePermissionsAccess();
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const canUpdate = canForCurrentRoute("UPDATE");
   const form = useForm({
     defaultValues: {
       value: value,
@@ -65,6 +67,7 @@ export function InPlaceEdit<T>({
   }, []);
 
   function handleEdit() {
+    if (!canUpdate) return;
     setIsEdited(true);
     if (context) {
       context.setCurrent(id);
@@ -90,14 +93,15 @@ export function InPlaceEdit<T>({
     form.reset(undefined, { keepDefaultValues: true });
   }
 
-  if (isFalsy(isEdited)) {
+  if (isFalsy(isEdited) || !canUpdate) {
     return (
       <div
-        onClick={handleEdit}
+        onClick={canUpdate ? handleEdit : undefined}
         className={cn(
-          "border-border rounded-md border border-dashed",
+          "border-border rounded-md border border-none",
           // TODO: remove horizontal padding (e.g. px-3)
-          "hover:bg-muted/50 flex min-h-10 cursor-pointer flex-row items-center rounded-md px-3",
+          "flex min-h-10 flex-row items-center rounded-md px-3",
+          canUpdate && "hover:bg-muted/50 cursor-pointer border-dashed",
           className
         )}
       >

@@ -9,11 +9,12 @@ import {
 } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import {
+  getAuthPermissionSnapshot,
   getAuthenticatedUser,
   isAuthUserGranted,
 } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
-import { safe } from "@/shared/libs";
+import { PermissionsAccessProvider, safe } from "@/shared/libs";
 import { RenderOnClient, SidebarProvider } from "@/shared/ui";
 
 import { SidebarLayoutContent } from "./content";
@@ -23,20 +24,20 @@ type Props = PropsWithChildren<{}>;
 
 async function filterAccessibleMenuItems(
   items: FaceNB001MenuItem[],
-  userId: string
+  grantedPermissionIds: Set<string>
 ): Promise<FaceNB001MenuItem[]> {
   const result: FaceNB001MenuItem[] = [];
 
   for (const item of items) {
     const { guardedByPermissionId, children } = item;
     const hasAccess = guardedByPermissionId
-      ? await isAuthUserGranted({ permission: guardedByPermissionId })
+      ? grantedPermissionIds.has(guardedByPermissionId)
       : true;
 
     if (!hasAccess) continue;
 
     const filteredChildren = children
-      ? await filterAccessibleMenuItems(children, userId)
+      ? await filterAccessibleMenuItems(children, grantedPermissionIds)
       : [];
 
     result.push({ ...item, children: filteredChildren });
@@ -46,7 +47,8 @@ async function filterAccessibleMenuItems(
 }
 
 export async function SidebarLayout({ children }: Props) {
-  const { currentUserId } = await getAuthHeaders();
+  await getAuthHeaders();
+  const permissionSnapshot = await getAuthPermissionSnapshot();
 
   const result = await safe(withRedirectOnUnauthorized(fetchDomainsList));
   const domains = result.ok ? result.data.domains : [];
@@ -66,7 +68,7 @@ export async function SidebarLayout({ children }: Props) {
       ...sidebarFace,
       userAreaMenuItems: await filterAccessibleMenuItems(
         sidebarFace.userAreaMenuItems,
-        currentUserId
+        permissionSnapshot.ids
       ),
     };
   }
@@ -80,17 +82,19 @@ export async function SidebarLayout({ children }: Props) {
 
   return (
     <SidebarProvider>
-      <RenderOnClient>
-        <AppSidebar
-          face={sidebarFace}
-          mode={isAdmin ? "admin" : undefined}
-          currentAuthUser={authUser}
-          domainsList={domains?.map((dto) => hydrateDomainView(dto)) ?? []}
-        />
-        <div className="w-full">
-          <SidebarLayoutContent>{children}</SidebarLayoutContent>
-        </div>
-      </RenderOnClient>
+      <PermissionsAccessProvider permissionKeys={[...permissionSnapshot.keys]}>
+        <RenderOnClient>
+          <AppSidebar
+            face={sidebarFace}
+            mode={isAdmin ? "admin" : undefined}
+            currentAuthUser={authUser}
+            domainsList={domains?.map((dto) => hydrateDomainView(dto)) ?? []}
+          />
+          <div className="w-full">
+            <SidebarLayoutContent>{children}</SidebarLayoutContent>
+          </div>
+        </RenderOnClient>
+      </PermissionsAccessProvider>
     </SidebarProvider>
   );
 }

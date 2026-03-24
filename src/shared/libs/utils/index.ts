@@ -14,6 +14,7 @@ export * from "./event";
 export * from "./local-storage";
 export * from "./map-pattern-to-input-type";
 export * from "./mapping";
+export * from "./permissions";
 export * from "./platform";
 export * from "./safe";
 export * from "./string";
