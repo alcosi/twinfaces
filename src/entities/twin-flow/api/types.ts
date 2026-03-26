@@ -13,6 +13,7 @@ export type TwinFlow_DETAILED = RequireFields<
 > & {
   initialStatus: TwinStatus;
   createdByUser: User;
+  initialSketchStatus: TwinStatus;
 };
 
 export type TwinFlowFilterKeys =

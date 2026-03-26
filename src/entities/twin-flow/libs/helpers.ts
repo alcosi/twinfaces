@@ -26,5 +26,10 @@ export const hydrateTwinFlowFromMap = (
     ] as TwinClass_DETAILED;
   }
 
+  if (dto.initialSketchStatusId && relatedObjects?.statusMap) {
+    hydrated.initialSketchStatus =
+      relatedObjects.statusMap[dto.initialSketchStatusId]!;
+  }
+
   return hydrated;
 };

@@ -106,6 +106,37 @@ export function TwinFlowGeneral() {
     },
   };
 
+  const initialSketchStatusIdSettings: InPlaceEditProps<
+    typeof twinFlow.initialSketchStatusId
+  > = {
+    id: "initialSketchStatusId",
+    value: twinFlow.initialSketchStatusId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select status...",
+      ...twinStatusAdapter,
+      getItems: async (search: string) =>
+        twinStatusAdapter.getItems(search, {
+          twinClassIdMap: reduceToObject({
+            list: toArray(twinFlow.twinClassId),
+            defaultValue: true,
+          }),
+        }),
+    },
+    renderPreview: twinFlow.initialSketchStatus
+      ? () => (
+          <TwinClassStatusResourceLink
+            data={twinFlow.initialSketchStatus as TwinStatus}
+            twinClassId={twinFlow.twinClassId!}
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({ initialSketchStatusId: id });
+    },
+  };
+
   return (
     <InPlaceEditContextProvider>
       <Table>
@@ -147,6 +178,13 @@ export function TwinFlowGeneral() {
             <TableCell>Initial status</TableCell>
             <TableCell>
               <InPlaceEdit {...initialStatusIdSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Initial sketch status</TableCell>
+            <TableCell>
+              <InPlaceEdit {...initialSketchStatusIdSettings} />
             </TableCell>
           </TableRow>
 
