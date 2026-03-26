@@ -14,8 +14,6 @@ export type OptionProjection_DETAILED = OptionProjection & {
   srcDataList?: DataList;
   dstDataListOption?: DataListOptionV1;
   dstDataList?: DataList;
-  // dstDataListId?: string;
-  // srcDataListId?: string;
 };
 export type OptionProjectionSearchRq =
   components["schemas"]["DataListOptionProjectionSearchV1"];
