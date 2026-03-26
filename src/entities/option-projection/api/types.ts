@@ -26,10 +26,17 @@ export type OptionProjectionFilterKeys =
   | "srcDataListOptionIdList"
   | "dstDataListOptionIdList"
   | "savedByUserIdList"
-  | "changedAt";
+  | "changedAtFrom"
+  | "changedAtTo";
 
 export type OptionProjectionFilters = Partial<
-  Pick<OptionProjectionSearchRq, OptionProjectionFilterKeys>
+  Pick<
+    OptionProjectionSearchRq & {
+      changedAtFrom: string;
+      changedAtTo: string;
+    },
+    OptionProjectionFilterKeys
+  >
 >;
 
 export type OptionProjectionCreateRq =

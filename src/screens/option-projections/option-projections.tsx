@@ -11,6 +11,7 @@ import {
   OptionProjection_DETAILED,
   TitleOptionProjections,
   useOptionProjectionCreate,
+  useOptionProjectionFilters,
   useOptionProjectionSearch,
 } from "@/entities/option-projection";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
@@ -149,6 +150,30 @@ export function OptionProjectionsScreen({
 }) {
   const { searchOptionProjection } = useOptionProjectionSearch();
   const { createOptionProjection } = useOptionProjectionCreate();
+  const { buildFilterFields, mapFiltersToPayload } = useOptionProjectionFilters(
+    {
+      enabledFilters:
+        title === "Incoming"
+          ? [
+              "idList",
+              "projectionTypeIdList",
+              "srcDataListOptionIdList",
+              "savedByUserIdList",
+              "changedAtFrom",
+              "changedAtTo",
+            ]
+          : title === "Outgoing"
+            ? [
+                "idList",
+                "projectionTypeIdList",
+                "dstDataListOptionIdList",
+                "savedByUserIdList",
+                "changedAtFrom",
+                "changedAtTo",
+              ]
+            : undefined,
+    }
+  );
 
   const optionProjectionForm = useForm<z.infer<typeof OPTION_PROJECTION_SHEMA>>(
     {
@@ -180,18 +205,20 @@ export function OptionProjectionsScreen({
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<OptionProjection_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
     try {
       return await searchOptionProjection({
         pagination,
         filters: {
+          ..._filters,
           dstDataListOptionIdList:
             optionId && title === "Incoming"
               ? toArrayOfString(toArray(optionId), "id")
-              : undefined,
+              : _filters.dstDataListOptionIdList,
           srcDataListOptionIdList:
             optionId && title === "Outgoing"
               ? toArrayOfString(toArray(optionId), "id")
-              : undefined,
+              : _filters.srcDataListOptionIdList,
         },
       });
     } catch (error) {
@@ -243,6 +270,9 @@ export function OptionProjectionsScreen({
         colDefs.savedByUser,
         colDefs.changedAt,
       ]}
+      filters={{
+        filtersInfo: buildFilterFields(),
+      }}
       dialogForm={optionProjectionForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (
