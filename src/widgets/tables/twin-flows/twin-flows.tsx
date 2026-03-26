@@ -170,7 +170,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
       });
 
       return response;
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch twinflow");
       return { data: [], pagination: {} };
     }
