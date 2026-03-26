@@ -2,7 +2,7 @@ import { PaginationState } from "@tanstack/table-core";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { TierCreateRq, TierFilters } from "./types";
+import { TierCreateRq, TierFilters, TierUpdateRq } from "./types";
 
 export function createTierApi(settings: ApiSettings) {
   function search({
@@ -46,10 +46,24 @@ export function createTierApi(settings: ApiSettings) {
     });
   }
 
-  return {
-    search,
-    create,
-  };
+  function update({ tierId, body }: { tierId: string; body: TierUpdateRq }) {
+    return settings.client.PUT("/private/tier/{tierId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { tierId },
+        query: {
+          lazyRelation: false,
+          showTierMode: "DETAILED",
+          showTier2PermissionSchemaMode: "DETAILED",
+          showTier2TwinClassSchemaMode: "DETAILED",
+          showTier2TwinflowSchemaMode: "DETAILED",
+        },
+      },
+      body,
+    });
+  }
+
+  return { search, create, update };
 }
 
 export type TierApi = ReturnType<typeof createTierApi>;
