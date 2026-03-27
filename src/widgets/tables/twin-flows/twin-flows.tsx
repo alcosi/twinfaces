@@ -45,6 +45,7 @@ const columnsMap: Record<
     | "name"
     | "description"
     | "initialStatusId"
+    | "initialSketchStatusId"
     | "createdByUserId"
     | "createdAt"
   >,
@@ -85,6 +86,20 @@ const columnsMap: Record<
         <div className="inline-flex max-w-48">
           <TwinClassStatusResourceLink
             data={original.initialStatus}
+            twinClassId={original.twinClassId!}
+            withTooltip
+          />
+        </div>
+      ),
+  },
+  initialSketchStatusId: {
+    accessorKey: "initialSketchStatus",
+    header: "Initial sketch status",
+    cell: ({ row: { original } }) =>
+      original.initialSketchStatus && (
+        <div className="inline-flex max-w-48">
+          <TwinClassStatusResourceLink
+            data={original.initialSketchStatus}
             twinClassId={original.twinClassId!}
             withTooltip
           />
@@ -155,7 +170,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
       });
 
       return response;
-    } catch (e) {
+    } catch {
       toast.error("Failed to fetch twinflow");
       return { data: [], pagination: {} };
     }
@@ -191,6 +206,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
         columnsMap.name,
         columnsMap.description,
         columnsMap.initialStatusId,
+        columnsMap.initialSketchStatusId,
         columnsMap.createdByUserId,
         columnsMap.createdAt,
       ]}
@@ -208,6 +224,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
         columnsMap.name,
         columnsMap.description,
         columnsMap.initialStatusId,
+        columnsMap.initialSketchStatusId,
         columnsMap.createdByUserId,
         columnsMap.createdAt,
       ]}
