@@ -127,7 +127,7 @@ export function TwinFlowGeneral() {
       ? () => (
           <TwinClassStatusResourceLink
             data={twinFlow.initialSketchStatus as TwinStatus}
-            twinClassId={twinFlow.twinClassId!}
+            twinClassId={twinFlow.twinClassId}
           />
         )
       : undefined,
