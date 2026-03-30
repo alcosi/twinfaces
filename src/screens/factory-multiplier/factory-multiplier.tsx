@@ -2,13 +2,18 @@
 
 import { Tab, TabsLayout } from "@/widgets/layout";
 
-import { FactoryMultiplierGeneral } from "./views";
+import { FactoryMultiplierFilters, FactoryMultiplierGeneral } from "./views";
 
 const tabs: Tab[] = [
   {
     key: "general",
     label: "General",
     content: <FactoryMultiplierGeneral />,
+  },
+  {
+    key: "filters",
+    label: "Filters",
+    content: <FactoryMultiplierFilters />,
   },
 ];
 

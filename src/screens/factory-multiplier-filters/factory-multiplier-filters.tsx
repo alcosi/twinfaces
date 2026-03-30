@@ -16,6 +16,7 @@ import { FactoryMultiplierResourceLink } from "@/features/factory-multiplier/ui"
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
+import { isFalsy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
@@ -114,10 +115,26 @@ const colDefs: Record<
   },
 };
 
-export function FactoryMultiplierFiltersScreen() {
+export function FactoryMultiplierFiltersScreen({
+  factoryMultiplierId,
+}: {
+  factoryMultiplierId?: string;
+}) {
   const { searchFactoryMultiplierFilters } = useFactoryMultiplierFilterSearch();
   const { buildFilterFields, mapFiltersToPayload } =
-    useFactoryMultiplierFilterFilters();
+    useFactoryMultiplierFilterFilters({
+      enabledFilters: factoryMultiplierId
+        ? [
+            "idList",
+            "factoryIdList",
+            "inputTwinClassIdList",
+            "factoryConditionSetIdList",
+            "active",
+            "descriptionLikeList",
+            "factoryConditionInvert",
+          ]
+        : undefined,
+    });
 
   async function fetchFactoryMultiplierFilter(
     pagination: PaginationState,
@@ -128,7 +145,12 @@ export function FactoryMultiplierFiltersScreen() {
     try {
       return await searchFactoryMultiplierFilters({
         pagination,
-        filters: _filters,
+        filters: {
+          ..._filters,
+          factoryMultiplierIdList: factoryMultiplierId
+            ? toArrayOfString(toArray(factoryMultiplierId), "id")
+            : _filters.factoryMultiplierIdList,
+        },
       });
     } catch (error) {
       toast.error(
@@ -145,7 +167,7 @@ export function FactoryMultiplierFiltersScreen() {
       columns={[
         colDefs.id,
         colDefs.factory,
-        colDefs.multiplier,
+        ...(isFalsy(factoryMultiplierId) ? [colDefs.multiplier] : []),
         colDefs.inputTwinClass,
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
@@ -156,7 +178,7 @@ export function FactoryMultiplierFiltersScreen() {
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.factory,
-        colDefs.multiplier,
+        ...(isFalsy(factoryMultiplierId) ? [colDefs.multiplier] : []),
         colDefs.inputTwinClass,
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
