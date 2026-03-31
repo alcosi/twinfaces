@@ -1,13 +1,14 @@
-import React, { useContext } from "react";
+import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { DataList } from "@/entities/datalist";
 import {
   DATALIST_OPTION_STATUS_TYPES,
-  DataListOptionUpdateRqV1,
+  DataListOptionUpdateV1,
   useUpdateDatalistOption,
 } from "@/entities/datalist-option";
 import { DataListOptionContext } from "@/features/datalist-option";
@@ -18,7 +19,7 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { createFixedSelectAdapter } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import { ColorPicker, GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function DatalistOptionGeneral() {
@@ -28,15 +29,39 @@ export function DatalistOptionGeneral() {
   const { updateDatalistOption } = useUpdateDatalistOption();
   const attributeKeys = Object.keys(datalistOption.attributes ?? {});
 
-  async function update(newDatalistOption: DataListOptionUpdateRqV1) {
+  const [editStatusDialogOpen, setEditStatusDialogOpen] = useState(false);
+
+  const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
+    useState<AutoEditDialogSettings | undefined>(undefined);
+
+  const [backgroundColor, setBackgroundColor] = useState(
+    datalistOption.backgroundColor
+  );
+  const [fontColor, setFontColor] = useState(datalistOption.fontColor);
+
+  function openWithSettings(settings: AutoEditDialogSettings) {
+    setCurrentAutoEditDialogSettings(settings);
+    setEditStatusDialogOpen(true);
+  }
+
+  async function update(
+    fields: Omit<DataListOptionUpdateV1, "id" | "dataListId">
+  ) {
     try {
       await updateDatalistOption({
-        dataListOptionId: optionId,
-        body: newDatalistOption,
+        body: {
+          dataListOptions: [
+            {
+              id: optionId,
+              dataListId: datalistOption.dataList?.id,
+              ...fields,
+            },
+          ],
+        },
       });
-      toast.success("Datalist option created successfully!");
+      toast.success("Datalist option updated successfully!");
       refresh?.();
-    } catch (e) {
+    } catch {
       toast.error("Failed to update datalist option");
     }
   }
@@ -94,6 +119,36 @@ export function DatalistOptionGeneral() {
       }),
   });
 
+  const backgroundColorAutoDialogSettings: AutoEditDialogSettings = {
+    value: { backgroundColor: datalistOption.backgroundColor },
+    title: "Update background color",
+    onSubmit: (values) => {
+      setBackgroundColor(values.backgroundColor);
+      return update({ backgroundColor: values.backgroundColor });
+    },
+    valuesInfo: {
+      backgroundColor: {
+        type: AutoFormValueType.color,
+        label: "Background Color",
+      },
+    },
+  };
+
+  const fontColorAutoDialogSettings: AutoEditDialogSettings = {
+    value: { fontColor: datalistOption.fontColor },
+    title: "Update font Color",
+    onSubmit: (values) => {
+      setFontColor(values.fontColor);
+      return update({ fontColor: values.fontColor });
+    },
+    valuesInfo: {
+      fontColor: {
+        type: AutoFormValueType.color,
+        label: "Font Color",
+      },
+    },
+  };
+
   return (
     <InPlaceEditContextProvider>
       <Table>
@@ -144,8 +199,42 @@ export function DatalistOptionGeneral() {
               </TableCell>
             </TableRow>
           ))}
+
+          {/* <TableRow>  //todo unlock when it appears in schematics
+            <TableCell>Created At</TableCell>
+            <TableCell>
+              {datalistOption.createdAt &&
+                formatIntlDate(datalistOption.createdAt, "datetime-local")}
+            </TableCell>
+          </TableRow> */}
+
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(backgroundColorAutoDialogSettings)}
+          >
+            <TableCell>Background Color</TableCell>
+            <TableCell>
+              <ColorPicker color={backgroundColor} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow
+            className="cursor-pointer"
+            onClick={() => openWithSettings(fontColorAutoDialogSettings)}
+          >
+            <TableCell>Font Color</TableCell>
+            <TableCell>
+              <ColorPicker color={fontColor} />
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
+
+      <AutoDialog
+        open={editStatusDialogOpen}
+        onOpenChange={setEditStatusDialogOpen}
+        settings={currentAutoEditDialogSettings}
+      />
     </InPlaceEditContextProvider>
   );
 }

@@ -1,3 +1,4 @@
+import { DataList } from "@/entities/datalist";
 import { RelatedObjects } from "@/shared/api";
 
 import { DataListOptionV1, DataListOption_DETAILED } from "../api";
@@ -12,7 +13,7 @@ export function hydrateDatalistOptionFromMap(
   ) as DataListOption_DETAILED;
 
   if (dto.dataListId && relatedObjects?.dataListsMap) {
-    hydrate.dataList = relatedObjects.dataListsMap[dto.dataListId]!;
+    hydrate.dataList = relatedObjects.dataListsMap[dto.dataListId] as DataList;
   }
 
   return hydrate;
