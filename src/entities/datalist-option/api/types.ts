@@ -11,6 +11,11 @@ export type DataListOptionCreateRqDV1 =
 export type DataListOptionUpdateRqV1 =
   components["schemas"]["DataListOptionUpdateRqV1"];
 
+export type DataListOptionUpdateRqV2 =
+  components["schemas"]["DataListOptionUpdateRqV2"];
+export type DataListOptionUpdateV1 =
+  components["schemas"]["DataListOptionUpdateV1"];
+
 export type DataListOptionFilterKeys =
   | "idList"
   | "dataListIdList"
