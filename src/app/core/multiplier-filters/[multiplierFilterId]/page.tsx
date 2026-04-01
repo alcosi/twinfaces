@@ -1,5 +1,5 @@
 import { FactoryMultiplierFilterScreen } from "@/screens/factory-multiplier-filter";
 
-export default async function Page() {
+export default function Page() {
   return <FactoryMultiplierFilterScreen />;
 }
