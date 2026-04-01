@@ -1,7 +1,7 @@
 import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { components } from "@/shared/api/generated/schema";
+import { components, operations } from "@/shared/api/generated/schema";
 
 export type FactoryMultiplierFilter =
   components["schemas"]["FactoryMultiplierFilterV1"];
@@ -14,6 +14,8 @@ export type FactoryMultiplierFilter_DETAILED = FactoryMultiplierFilter & {
 
 export type FactoryMultiplierFilterSearchRq =
   components["schemas"]["FactoryMultiplierFilterSearchRqV1"];
+export type FactoryMultiplierFilterViewQuery =
+  operations["factoryMultiplierFilterViewV1"]["parameters"]["query"];
 
 export type FactoryMultiplierFilterFilterKeys =
   | "idList"

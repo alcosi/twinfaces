@@ -2,7 +2,10 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { FactoryMultiplierFilterFilters } from "./types";
+import {
+  FactoryMultiplierFilterFilters,
+  FactoryMultiplierFilterViewQuery,
+} from "./types";
 
 export function createFactoryMultiplierFilterApi(settings: ApiSettings) {
   function search({
@@ -36,7 +39,26 @@ export function createFactoryMultiplierFilterApi(settings: ApiSettings) {
     );
   }
 
-  return { search };
+  function getById({
+    id,
+    query = {},
+  }: {
+    id: string;
+    query?: FactoryMultiplierFilterViewQuery;
+  }) {
+    return settings.client.GET(
+      "/private/factory_multiplier_filter/{multiplierId}/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          path: { multiplierId: id },
+          query: query,
+        },
+      }
+    );
+  }
+
+  return { getById, search };
 }
 
 export type FactoryMultiplierFilterApi = ReturnType<

@@ -26,13 +26,9 @@ export const hydrateFactoryMultiplierFilterFromMap = (
     ] as FactoryConditionSet;
   }
 
-  if (
-    dto.multiplier?.factoryId &&
-    hydrated.multiplier &&
-    relatedObjects?.factoryMap
-  ) {
+  if (hydrated.multiplier?.factoryId && relatedObjects?.factoryMap) {
     hydrated.multiplier.factory =
-      relatedObjects.factoryMap[dto.multiplier.factoryId];
+      relatedObjects.factoryMap[hydrated.multiplier.factoryId];
   }
 
   if (dto.inputTwinClassId && relatedObjects?.twinClassMap) {

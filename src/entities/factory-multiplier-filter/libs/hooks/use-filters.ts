@@ -11,6 +11,8 @@ import {
 } from "@/entities/twin-class";
 import {
   FilterFeature,
+  extractEnabledFilters,
+  isPopulatedArray,
   mapToChoice,
   toArray,
   toArrayOfString,
@@ -22,7 +24,11 @@ import {
   FactoryMultiplierFilterFilters,
 } from "../../api";
 
-export function useFactoryMultiplierFilterFilters(): FilterFeature<
+export function useFactoryMultiplierFilterFilters({
+  enabledFilters,
+}: {
+  enabledFilters?: FactoryMultiplierFilterFilterKeys[];
+}): FilterFeature<
   FactoryMultiplierFilterFilterKeys,
   FactoryMultiplierFilterFilters
 > {
@@ -36,62 +42,69 @@ export function useFactoryMultiplierFilterFilters(): FilterFeature<
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
 
+  const allFilters: Record<
+    FactoryMultiplierFilterFilterKeys,
+    AutoFormValueInfo
+  > = {
+    idList: {
+      type: AutoFormValueType.tag,
+      label: "Id",
+      schema: z.string().uuid("Please enter a valid UUID"),
+      placeholder: "Enter UUID",
+    },
+    factoryIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Factory",
+      multi: true,
+      ...factoryAdapter,
+    },
+    factoryMultiplierIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Multiplier",
+      multi: true,
+      ...factoryMultiplierAdapter,
+    },
+    inputTwinClassIdList: {
+      type: AutoFormValueType.complexCombobox,
+      label: "Input class",
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
+      multi: true,
+    },
+    factoryConditionSetIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Condition set",
+      multi: true,
+      ...factoryConditionSetAdapter,
+    },
+    factoryConditionInvert: {
+      type: AutoFormValueType.boolean,
+      label: "Condition invert",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+    active: {
+      type: AutoFormValueType.boolean,
+      label: "Active",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+    descriptionLikeList: {
+      type: AutoFormValueType.tag,
+      label: "Description",
+    },
+  };
+
   function buildFilterFields(): Record<
     FactoryMultiplierFilterFilterKeys,
     AutoFormValueInfo
   > {
-    return {
-      idList: {
-        type: AutoFormValueType.tag,
-        label: "Id",
-        schema: z.string().uuid("Please enter a valid UUID"),
-        placeholder: "Enter UUID",
-      },
-      factoryIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Factory",
-        multi: true,
-        ...factoryAdapter,
-      },
-      factoryMultiplierIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Multiplier",
-        multi: true,
-        ...factoryMultiplierAdapter,
-      },
-      inputTwinClassIdList: {
-        type: AutoFormValueType.complexCombobox,
-        label: "Input class",
-        adapter: twinClassAdapter,
-        extraFilters: buildTwinClassFilters(),
-        mapExtraFilters: (filters) => mapTwinClassFilters(filters),
-        searchPlaceholder: "Search...",
-        selectPlaceholder: "Select...",
-        multi: true,
-      },
-      factoryConditionSetIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Condition set",
-        multi: true,
-        ...factoryConditionSetAdapter,
-      },
-      factoryConditionInvert: {
-        type: AutoFormValueType.boolean,
-        label: "Condition invert",
-        hasIndeterminate: true,
-        defaultValue: "indeterminate",
-      },
-      active: {
-        type: AutoFormValueType.boolean,
-        label: "Active",
-        hasIndeterminate: true,
-        defaultValue: "indeterminate",
-      },
-      descriptionLikeList: {
-        type: AutoFormValueType.tag,
-        label: "Description",
-      },
-    };
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(
