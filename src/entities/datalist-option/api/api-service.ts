@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/table-core";
 import {
   DataListOptionCreateRqDV1,
   DataListOptionFilters,
+  DataListOptionUpdateRqV2,
 } from "@/entities/datalist-option";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
@@ -58,23 +59,13 @@ export function createDatalistOptionApi(settings: ApiSettings) {
     });
   }
 
-  function update({
-    dataListOptionId,
-    body,
-  }: {
-    dataListOptionId: string;
-    body: DataListOptionCreateRqDV1;
-  }) {
-    return settings.client.PUT(
-      "/private/data_list_option/{dataListOptionId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { dataListOptionId },
-        },
-        body,
-      }
-    );
+  function update({ body }: { body: DataListOptionUpdateRqV2 }) {
+    return settings.client.PUT("/private/data_list_option/v2", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
   }
 
   return { search, getById, create, update };
