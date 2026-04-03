@@ -1,5 +1,5 @@
 import { FilterIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
@@ -16,10 +16,15 @@ import {
 
 interface FiltersPopoverProps {
   filtersInfo: { [key: string]: AutoFormValueInfo };
+  filters: { [key: string]: any };
   onChange: (values: { [key: string]: any }) => Promise<any>;
 }
 
-export function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
+export function FiltersPopover({
+  filtersInfo,
+  filters,
+  onChange,
+}: FiltersPopoverProps) {
   const [open, setOpen] = useState(false);
 
   const keys: string[] = [];
@@ -34,6 +39,13 @@ export function FiltersPopover({ filtersInfo, onChange }: FiltersPopoverProps) {
       keys.map((key) => [key, filtersInfo[key]!.defaultValue ?? ""])
     ),
   });
+
+  // Reset form with current filters when popover opens or filters change
+  useEffect(() => {
+    if (open) {
+      form.reset(filters);
+    }
+  }, [open, filters, form]);
 
   async function internalSubmit(newValue: object) {
     try {

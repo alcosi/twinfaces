@@ -135,6 +135,7 @@ function CrudDataTableHeaderComponent<
         {filters && (
           <FiltersPopover
             filtersInfo={filters.filtersInfo}
+            filters={viewSettings.filters}
             onChange={async (filters) => debouncedUpdate({ filters })}
           />
         )}
