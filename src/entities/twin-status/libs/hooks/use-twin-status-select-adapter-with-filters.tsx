@@ -23,19 +23,28 @@ export function useTwinStatusSelectAdapterWithFilters(): SelectAdapterWithFilter
   const { fetchTwinStatusById } = useFetchTwinStatusById();
   const { searchTwinStatuses } = useTwinStatusSearchV1();
 
-  const [filters, setFilters] = useState<TwinStatusFilters>();
-  const versionRef = useRef(0);
+  const filtersRef = useRef<TwinStatusFilters>({});
+  const [version, setVersion] = useState(0);
+
+  function setFilters(filters: TwinStatusFilters) {
+    filtersRef.current = filters;
+  }
 
   const invalidate = () => {
-    versionRef.current += 1;
+    setVersion((v) => v + 1);
   };
 
   async function getItems(search: string) {
     try {
+      const keyLikeList = [
+        ...(search ? [wrapWithPercent(search)] : []),
+        ...(filtersRef.current.keyLikeList ?? []),
+      ];
+
       const response = await searchTwinStatuses({
         filters: {
-          keyLikeList: search ? [wrapWithPercent(search)] : [],
-          ...filters,
+          ...filtersRef.current,
+          keyLikeList,
         },
       });
 
@@ -68,6 +77,6 @@ export function useTwinStatusSelectAdapterWithFilters(): SelectAdapterWithFilter
     renderItem,
     setFilters,
     invalidate,
-    version: versionRef.current,
+    version,
   };
 }

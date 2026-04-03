@@ -1,9 +1,16 @@
 import { css } from "@emotion/css";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
 
 import { cn, isFalsy } from "@/shared/libs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import {
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/ui/tooltip";
+
+import { RESOURCE_LINK_TOOLTIP_DELAY_MS } from "./tooltip";
 
 type ResourceLinkContentProps = {
   IconComponent: ElementType;
@@ -125,12 +132,17 @@ export function ResourceLink<T>({
   );
 
   return renderTooltip ? (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <span className="inline-flex max-w-full">{ResourceLinkWrapper}</span>
-      </TooltipTrigger>
-      <TooltipContent className="p-0">{renderTooltip(data)}</TooltipContent>
-    </Tooltip>
+    <TooltipProvider
+      delayDuration={RESOURCE_LINK_TOOLTIP_DELAY_MS}
+      skipDelayDuration={0}
+    >
+      <TooltipPrimitive.Root>
+        <TooltipTrigger asChild>
+          <span className="inline-flex max-w-full">{ResourceLinkWrapper}</span>
+        </TooltipTrigger>
+        <TooltipContent className="p-0">{renderTooltip(data)}</TooltipContent>
+      </TooltipPrimitive.Root>
+    </TooltipProvider>
   ) : (
     <span className="inline-flex max-w-full">{ResourceLinkWrapper}</span>
   );
