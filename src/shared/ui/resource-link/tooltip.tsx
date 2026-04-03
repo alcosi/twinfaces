@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { cn, isElementType, stopPropagation } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
 
+export const RESOURCE_LINK_TOOLTIP_DELAY_MS = 500;
+
 export type ResourceLinkTooltipProps = PropsWithChildren<{
   uuid: string;
   link?: string;

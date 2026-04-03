@@ -26,11 +26,9 @@ export function useTwinClassFieldSelectAdapterWithFilters(): SelectAdapterWithFi
     setVersion((v) => v + 1);
   }
 
-  const hasAdvancedFilters = Object.keys(filtersRef.current ?? {}).length > 0;
-
   async function getItems(search: string) {
     const res = await searchByFilters({
-      search: hasAdvancedFilters ? undefined : search,
+      search,
       filters: filtersRef.current,
     });
 

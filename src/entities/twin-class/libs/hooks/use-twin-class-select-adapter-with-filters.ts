@@ -28,8 +28,6 @@ export function useTwinClassSelectAdapterWithFilters(
     setVersion((v) => v + 1);
   }
 
-  const hasAdvancedFilters = Object.keys(filtersRef.current ?? {}).length > 0;
-
   async function getById(id: string) {
     return await fetchTwinClassById({ id });
   }
@@ -48,7 +46,7 @@ export function useTwinClassSelectAdapterWithFilters(
       : {};
 
     const res = await searchByFilters({
-      search: hasAdvancedFilters ? undefined : search,
+      search,
       filters: {
         ...baseFilters,
         ...filtersRef.current,
