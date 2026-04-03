@@ -14,7 +14,8 @@ export type GroupKeys =
   | "misc"
   | "projection"
   | "notification"
-  | "validator";
+  | "validator"
+  | "triggers";
 
 export type Group = {
   title: string;
