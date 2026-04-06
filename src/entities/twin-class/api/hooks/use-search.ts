@@ -41,7 +41,7 @@ export const useTwinClassSearch = () => {
   const searchByFilters = useCallback(
     async ({
       search,
-      pagination = { pageIndex: 0, pageSize: 10 },
+      pagination = { pageIndex: 0, pageSize: 20 },
       filters = {},
     }: {
       search?: string;

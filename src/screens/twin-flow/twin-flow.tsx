@@ -7,7 +7,7 @@ import { Tab, TabsLayout } from "@/widgets/layout";
 import { TwinFlowTransitionsTable } from "@/widgets/tables";
 import { TwinFlowFactoriesTable } from "@/widgets/tables/twinflow-factories";
 
-import { TwinFlowGeneral } from "./views";
+import { TwinFlowFlow, TwinFlowGeneral } from "./views";
 
 export function TwinFlowScreen() {
   const { twinFlow } = useContext(TwinFlowContext);
@@ -22,6 +22,11 @@ export function TwinFlowScreen() {
       key: "transitions",
       label: "Transitions",
       content: <TwinFlowTransitionsTable twinflow={twinFlow} />,
+    },
+    {
+      key: "flow",
+      label: "Flow",
+      content: <TwinFlowFlow twinFlow={twinFlow} />,
     },
     {
       key: "twinflowFactories",
