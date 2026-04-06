@@ -29,14 +29,14 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
 
   //? NOTE Factory menu
   factories: ["FACTORY"],
-  multipliers: ["MULTIPLIER"],
-  "multiplier-filters": ["MULTIPLIER"],
-  pipelines: ["PIPELINE"],
-  "pipeline-steps": ["PIPELINE_STEP"],
-  branches: ["BRANCH"],
-  erasers: ["ERASER"],
-  conditions: ["CONDITION_SET"],
-  "condition-sets": ["CONDITION_SET"],
+  multipliers: ["FACTORY_MULTIPLIER"],
+  "multiplier-filters": ["FACTORY_MULTIPLIER"],
+  pipelines: ["FACTORY_PIPELINE"],
+  "pipeline-steps": ["FACTORY_PIPELINE_STEP"],
+  branches: ["FACTORY_BRANCH"],
+  erasers: ["FACTORY_ERASER"],
+  conditions: ["FACTORY_CONDITION_SET"],
+  "condition-sets": ["FACTORY_CONDITION_SET"],
 
   //? NOTE Transition menu
   transitions: ["TRANSITION"],
