@@ -5,7 +5,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -35,14 +35,10 @@ import {
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
+import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { TwinClassFormFields } from "./form-fields";
-import {
-  TwinClassesExtendsTreeView,
-  TwinClassesHeadTreeView,
-  TwinClassesView,
-  ViewSwitcher,
-} from "./view";
+import { TwinClassesExtendsTreeView, TwinClassesHeadTreeView } from "./view";
 
 function ThemeIconCell({ data }: { data: TwinClass_DETAILED }) {
   const { resolvedTheme } = useTheme();
@@ -331,7 +327,6 @@ export function TwinClasses({ type }: { type?: string }) {
   const tableRef = useRef<DataTableHandle>(null);
   const { searchByFilters, simplifiedSearchByFilters } = useTwinClassSearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
-  const [view, setView] = useState<TwinClassesView>("table");
 
   async function fetchTwinClassesHeadTreePage(
     params: FetchTreePageParams
@@ -557,11 +552,11 @@ export function TwinClasses({ type }: { type?: string }) {
     }
   };
 
-  return (
-    <div className="flex flex-col pt-4">
-      <ViewSwitcher value={view} onChange={setView} />
-
-      {view === "table" && (
+  const tabs: Tab[] = [
+    {
+      key: "list",
+      label: "List",
+      content: (
         <CrudDataTable
           ref={tableRef}
           fetcher={fetchTwinClasses}
@@ -623,14 +618,26 @@ export function TwinClasses({ type }: { type?: string }) {
           )}
           title={type || ""}
         />
-      )}
-
-      {view === "extendsTree" && (
+      ),
+    },
+    {
+      key: "extendsTree",
+      label: "Extends tree",
+      content: (
         <TwinClassesExtendsTreeView fetchTreePage={fetchTwinClassesTreePage} />
-      )}
-      {view === "headTree" && (
+      ),
+    },
+    {
+      key: "headTree",
+      label: "Head tree",
+      content: (
         <TwinClassesHeadTreeView fetchTreePage={fetchTwinClassesHeadTreePage} />
-      )}
+      ),
+    },
+  ];
+  return (
+    <div className="flex flex-col pt-4">
+      <TabsLayout tabs={tabs} />
     </div>
   );
 }
