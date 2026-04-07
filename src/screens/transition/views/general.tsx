@@ -62,7 +62,7 @@ export function TwinflowTransitionGeneral() {
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ alias: string }>)[0]?.alias;
       return update({
-        transitions: [{ alias: id }],
+        transitions: [{ alias: id, id: transitionId }],
       });
     },
   };
@@ -80,7 +80,9 @@ export function TwinflowTransitionGeneral() {
     schema: z.string().min(3),
     onSubmit: (value) => {
       return update({
-        transitions: [{ nameI18n: { translationInCurrentLocale: value } }],
+        transitions: [
+          { nameI18n: { translationInCurrentLocale: value }, id: transitionId },
+        ],
       });
     },
   };
@@ -101,6 +103,7 @@ export function TwinflowTransitionGeneral() {
         transitions: [
           {
             descriptionI18n: { translationInCurrentLocale: value },
+            id: transitionId,
           },
         ],
       });
@@ -135,7 +138,7 @@ export function TwinflowTransitionGeneral() {
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({
-        transitions: [{ srcStatusId: id }],
+        transitions: [{ srcStatusId: id, id: transitionId }],
       });
     },
   };
@@ -168,7 +171,7 @@ export function TwinflowTransitionGeneral() {
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({
-        transitions: [{ dstStatusId: id }],
+        transitions: [{ dstStatusId: id, id: transitionId }],
       });
     },
   };
@@ -187,7 +190,7 @@ export function TwinflowTransitionGeneral() {
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({
-        transitions: [{ permissionId: id }],
+        transitions: [{ permissionId: id, id: transitionId }],
       });
     },
   };
@@ -213,7 +216,7 @@ export function TwinflowTransitionGeneral() {
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({
-        transitions: [{ inbuiltTwinFactoryId: id }],
+        transitions: [{ inbuiltTwinFactoryId: id, id: transitionId }],
       });
     },
   };
