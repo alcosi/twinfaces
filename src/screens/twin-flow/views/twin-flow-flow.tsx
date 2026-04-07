@@ -63,11 +63,19 @@ const EDGE_COLOR = "#475569";
 const EDGE_ACTIVE_COLOR = "#2563eb";
 const START_EDGE_COLOR = "#64748b";
 const EDGE_BORDER_RADIUS = 18;
+const EDGE_START_INSET = -10;
+const EDGE_END_INSET = -5;
+const TRANSITION_ARROW_LENGTH = 9;
+const TRANSITION_ARROW_WIDTH = 5;
 const PORT_SIZE = 12;
 const NODE_CONTENT_WIDTH = NODE_WIDTH - 40;
 const SELF_TRANSITION_SECTION_HEIGHT = 60;
 const SELF_TRANSITION_CHIP_HEIGHT = 26;
 const SELF_TRANSITION_ROW_GAP = 6;
+const ANY_STATUS_ID = "__any_status__";
+const ANY_STATUS_COLOR = "#94a3b8";
+const EDGE_LABEL_STACK_STEP = 26;
+const NODE_PORT_PADDING = 22;
 
 type LayoutDirection = "horizontal" | "vertical";
 type LabelVisibilityMode = "all" | "selection" | "hidden";
@@ -80,6 +88,7 @@ type GraphNode = {
   width: number;
   height: number;
   status: FlowStatus;
+  isWildcard: boolean;
   incomingCount: number;
   outgoingCount: number;
   selfTransitions: TwinFlowTransition_DETAILED[];
@@ -439,12 +448,6 @@ export function TwinFlowFlow({ twinFlow }: { twinFlow: TwinFlow_DETAILED }) {
       target: item.edge.dstNode.id,
       type: "transition",
       selectable: true,
-      markerEnd: {
-        type: MarkerType.ArrowClosed,
-        color: EDGE_COLOR,
-        width: 18,
-        height: 18,
-      },
       data: {
         edge: item.edge,
         isLabelVisible: item.isLabelVisible,
@@ -819,18 +822,22 @@ async function buildGraphModel(
   layoutDirection: LayoutDirection
 ): Promise<GraphModel> {
   const statusesMap = new Map<string, FlowStatus>();
+  const anyStatus = createAnyStatus(twinFlow);
 
   if (twinFlow.initialStatus?.id) {
     statusesMap.set(twinFlow.initialStatus.id, twinFlow.initialStatus);
   }
 
   transitions.forEach((transition) => {
-    if (transition.srcTwinStatus?.id) {
-      statusesMap.set(transition.srcTwinStatus.id, transition.srcTwinStatus);
+    const srcStatus = getTransitionSrcStatus(transition, anyStatus);
+    const dstStatus = getTransitionDstStatus(transition);
+
+    if (srcStatus?.id) {
+      statusesMap.set(srcStatus.id, srcStatus);
     }
 
-    if (transition.dstTwinStatus?.id) {
-      statusesMap.set(transition.dstTwinStatus.id, transition.dstTwinStatus);
+    if (dstStatus?.id) {
+      statusesMap.set(dstStatus.id, dstStatus);
     }
   });
 
@@ -848,8 +855,8 @@ async function buildGraphModel(
   });
 
   transitions.forEach((transition) => {
-    const srcId = transition.srcTwinStatus?.id;
-    const dstId = transition.dstTwinStatus?.id;
+    const srcId = getTransitionSrcStatus(transition, anyStatus)?.id;
+    const dstId = getTransitionDstStatus(transition)?.id;
 
     if (!srcId || !dstId) return;
 
@@ -879,10 +886,92 @@ async function buildGraphModel(
   }
 
   const nonSelfTransitions = transitions.filter((transition) => {
-    const srcId = transition.srcTwinStatus?.id;
-    const dstId = transition.dstTwinStatus?.id;
+    const srcId = getTransitionSrcStatus(transition, anyStatus)?.id;
+    const dstId = getTransitionDstStatus(transition)?.id;
 
     return Boolean(srcId && dstId && srcId !== dstId);
+  });
+  const nodeHeightById = new Map(
+    orderedStatuses.map((status) => {
+      const id = status.id!;
+
+      return [
+        id,
+        estimateNodeHeight(selfTransitionsByStatus.get(id) ?? []),
+      ] as const;
+    })
+  );
+  const incomingTransitionsByStatus = new Map<
+    string,
+    TwinFlowTransition_DETAILED[]
+  >();
+  const outgoingTransitionsByStatus = new Map<
+    string,
+    TwinFlowTransition_DETAILED[]
+  >();
+
+  orderedStatuses.forEach((status) => {
+    incomingTransitionsByStatus.set(status.id!, []);
+    outgoingTransitionsByStatus.set(status.id!, []);
+  });
+
+  nonSelfTransitions.forEach((transition) => {
+    const srcId = getTransitionSrcStatus(transition, anyStatus)?.id;
+    const dstId = getTransitionDstStatus(transition)?.id;
+
+    if (!srcId || !dstId) return;
+
+    outgoingTransitionsByStatus.set(srcId, [
+      ...(outgoingTransitionsByStatus.get(srcId) ?? []),
+      transition,
+    ]);
+    incomingTransitionsByStatus.set(dstId, [
+      ...(incomingTransitionsByStatus.get(dstId) ?? []),
+      transition,
+    ]);
+  });
+
+  const compareTransitions = (
+    left: TwinFlowTransition_DETAILED,
+    right: TwinFlowTransition_DETAILED
+  ) =>
+    getTransitionDisplayName(left).localeCompare(
+      getTransitionDisplayName(right)
+    ) || left.id!.localeCompare(right.id!);
+
+  incomingTransitionsByStatus.forEach((items, statusId) => {
+    incomingTransitionsByStatus.set(
+      statusId,
+      [...items].sort(compareTransitions)
+    );
+  });
+
+  outgoingTransitionsByStatus.forEach((items, statusId) => {
+    outgoingTransitionsByStatus.set(
+      statusId,
+      [...items].sort(compareTransitions)
+    );
+  });
+
+  const sourcePortIdByTransitionId = new Map<string, string>();
+  const targetPortIdByTransitionId = new Map<string, string>();
+
+  outgoingTransitionsByStatus.forEach((items, statusId) => {
+    items.forEach((transition, index) => {
+      sourcePortIdByTransitionId.set(
+        transition.id!,
+        getTransitionPortId(statusId, "outgoing", index)
+      );
+    });
+  });
+
+  incomingTransitionsByStatus.forEach((items, statusId) => {
+    items.forEach((transition, index) => {
+      targetPortIdByTransitionId.set(
+        transition.id!,
+        getTransitionPortId(statusId, "incoming", index)
+      );
+    });
   });
 
   const elkGraph: ElkLayoutNode = {
@@ -905,43 +994,49 @@ async function buildGraphModel(
     children: orderedStatuses.map((status) => {
       const id = status.id!;
       const selfTransitions = selfTransitionsByStatus.get(id) ?? [];
+      const nodeHeight =
+        nodeHeightById.get(id) ?? estimateNodeHeight(selfTransitions);
+      const incomingTransitions = incomingTransitionsByStatus.get(id) ?? [];
+      const outgoingTransitions = outgoingTransitionsByStatus.get(id) ?? [];
 
       return {
         id,
         width: NODE_WIDTH,
-        height: estimateNodeHeight(selfTransitions),
+        height: nodeHeight,
         layoutOptions: {
-          "elk.portConstraints": "FIXED_SIDE",
+          "elk.portConstraints": "FIXED_POS",
           ...(id === twinFlow.initialStatusId
             ? { "elk.layered.layering.layerConstraint": "FIRST" }
             : {}),
         },
         ports: [
-          {
-            id: getPortId(id, "incoming"),
-            width: PORT_SIZE,
-            height: PORT_SIZE,
-            layoutOptions: {
-              "elk.port.side":
-                layoutDirection === "horizontal" ? "WEST" : "NORTH",
-            },
-          },
-          {
-            id: getPortId(id, "outgoing"),
-            width: PORT_SIZE,
-            height: PORT_SIZE,
-            layoutOptions: {
-              "elk.port.side":
-                layoutDirection === "horizontal" ? "EAST" : "SOUTH",
-            },
-          },
+          ...incomingTransitions.map((_transition, index) =>
+            createElkPort({
+              nodeId: id,
+              nodeHeight,
+              index,
+              count: incomingTransitions.length,
+              direction: "incoming",
+              layoutDirection,
+            })
+          ),
+          ...outgoingTransitions.map((_transition, index) =>
+            createElkPort({
+              nodeId: id,
+              nodeHeight,
+              index,
+              count: outgoingTransitions.length,
+              direction: "outgoing",
+              layoutDirection,
+            })
+          ),
         ],
       };
     }),
     edges: nonSelfTransitions.map((transition) => ({
       id: transition.id!,
-      sources: [getPortId(transition.srcTwinStatus!.id!, "outgoing")],
-      targets: [getPortId(transition.dstTwinStatus!.id!, "incoming")],
+      sources: [sourcePortIdByTransitionId.get(transition.id!)!],
+      targets: [targetPortIdByTransitionId.get(transition.id!)!],
     })),
   };
 
@@ -968,6 +1063,7 @@ async function buildGraphModel(
           layoutNode.height ??
           estimateNodeHeight(selfTransitionsByStatus.get(id) ?? []),
         status,
+        isWildcard: id === ANY_STATUS_ID,
         incomingCount: incomingCounts.get(id) ?? 0,
         outgoingCount: outgoingCounts.get(id) ?? 0,
         selfTransitions: selfTransitionsByStatus.get(id) ?? [],
@@ -988,8 +1084,8 @@ async function buildGraphModel(
 
       if (!transition) return undefined;
 
-      const srcId = transition.srcTwinStatus?.id;
-      const dstId = transition.dstTwinStatus?.id;
+      const srcId = getTransitionSrcStatus(transition, anyStatus)?.id;
+      const dstId = getTransitionDstStatus(transition)?.id;
 
       if (!srcId || !dstId) return undefined;
 
@@ -1051,7 +1147,7 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
     outgoingSelected,
     onToggleDirection,
   } = data;
-  const statusColor = node.status.backgroundColor || "#94a3b8";
+  const statusColor = node.status.backgroundColor || ANY_STATUS_COLOR;
   const isHighlighted =
     isActive || isRelatedToActiveEdge || isRelatedToSelectedNode || selected;
   const accentColor = isHighlighted ? EDGE_ACTIVE_COLOR : statusColor;
@@ -1080,7 +1176,7 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
           layoutDirection === "horizontal" ? Position.Left : Position.Top
         }
         isConnectable={false}
-        className="!border-background !h-3.5 !w-3.5 !border-2"
+        className="!border-background !pointer-events-none !h-3.5 !w-3.5 !border-2 !opacity-0"
         style={{ backgroundColor: accentColor }}
       />
       <Handle
@@ -1089,7 +1185,7 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
           layoutDirection === "horizontal" ? Position.Right : Position.Bottom
         }
         isConnectable={false}
-        className="!border-background !h-3.5 !w-3.5 !border-2"
+        className="!border-background !pointer-events-none !h-3.5 !w-3.5 !border-2 !opacity-0"
         style={{ backgroundColor: accentColor }}
       />
 
@@ -1112,13 +1208,19 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
               </span>
             </div>
 
-            <div className="min-w-0">
-              <TwinClassStatusResourceLink
-                data={node.status}
-                twinClassId={node.status.twinClassId}
-                withTooltip
-              />
-            </div>
+            {node.isWildcard ? (
+              <div className="inline-flex max-w-full items-center rounded-full border border-dashed px-2.5 py-1 text-sm font-medium">
+                Any
+              </div>
+            ) : (
+              <div className="min-w-0">
+                <TwinClassStatusResourceLink
+                  data={node.status}
+                  twinClassId={node.status.twinClassId}
+                  withTooltip
+                />
+              </div>
+            )}
 
             {isPopulatedString(node.status.key) && (
               <div className="text-muted-foreground truncate text-xs">
@@ -1131,7 +1233,7 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
                 <div className="text-muted-foreground text-[10px] font-semibold tracking-[0.22em] uppercase">
                   Self transitions
                 </div>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-col items-start gap-1.5">
                   {node.selfTransitions.map((transition) => (
                     <TwinFlowTransitionResourceLink
                       key={transition.id}
@@ -1247,7 +1349,9 @@ function TransitionEdge(props: EdgeProps<TransitionFlowEdge>) {
   if (!graphEdge) return null;
 
   const points = getEdgePathPoints(graphEdge);
-  const path = createRoundedPath(points, EDGE_BORDER_RADIUS);
+  const renderPoints = getRenderableEdgePoints(points);
+  const path = createRoundedPath(renderPoints, EDGE_BORDER_RADIUS);
+  const arrowHead = getArrowHead(renderPoints);
   const labelCluster = props.data?.labelCluster;
   const clusterData = labelCluster ?? {
     index: 0,
@@ -1258,14 +1362,12 @@ function TransitionEdge(props: EdgeProps<TransitionFlowEdge>) {
   const labelX = clusterData.x;
   const labelY = clusterData.y;
   const isClusterRepresentative = clusterData.index === 0;
-  const isClustered = clusterData.size > 1;
 
   return (
     <>
       <BaseEdge
         id={props.id}
         path={path}
-        markerEnd={props.markerEnd}
         interactionWidth={10}
         style={{
           opacity: props.data?.isDimmed ? 0.15 : 1,
@@ -1280,103 +1382,56 @@ function TransitionEdge(props: EdgeProps<TransitionFlowEdge>) {
           strokeLinecap: "round",
         }}
       />
+      {arrowHead && (
+        <path
+          d={arrowHead.path}
+          style={{
+            opacity: props.data?.isDimmed ? 0.15 : 1,
+            fill:
+              props.data?.isActive || props.data?.isNodeRelatedActive
+                ? EDGE_ACTIVE_COLOR
+                : props.data?.isEmphasized === false
+                  ? `${EDGE_COLOR}55`
+                  : EDGE_COLOR,
+          }}
+        />
+      )}
 
       {props.data?.isLabelVisible && isClusterRepresentative && (
         <EdgeLabelRenderer>
-          <div
-            className="nodrag nopan pointer-events-none absolute z-10"
-            style={{
-              transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-            }}
-          >
-            {isClustered ? (
-              <div className="group pointer-events-auto relative">
-                <div
-                  className="bg-background/95 flex max-w-52 items-center gap-2 rounded-xl border px-2 py-1 shadow-lg backdrop-blur-sm"
-                  style={{
-                    opacity: props.data?.isDimmed ? 0.15 : 1,
-                    borderColor:
-                      props.data?.isActive || props.data?.isNodeRelatedActive
-                        ? EDGE_ACTIVE_COLOR
-                        : undefined,
-                    boxShadow:
-                      props.data?.isActive || props.data?.isNodeRelatedActive
-                        ? `0 0 0 1px ${EDGE_ACTIVE_COLOR}`
-                        : undefined,
-                  }}
-                >
-                  <div className="min-w-0 flex-1">
-                    <TwinFlowTransitionResourceLink
-                      data={graphEdge.transition}
-                      withTooltip
-                    />
-                  </div>
-                  <span className="text-muted-foreground shrink-0 text-[11px] font-medium">
-                    +{clusterData.size - 1}
-                  </span>
-                </div>
-
-                <div className="absolute top-full left-1/2 z-20 h-3 w-full -translate-x-1/2" />
-                <div className="pointer-events-none invisible absolute top-full left-1/2 z-20 w-64 -translate-x-1/2 pt-2 opacity-0 transition-all duration-150 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100">
-                  <div
-                    className="bg-background/98 pointer-events-auto max-h-56 overflow-auto rounded-xl border p-2 shadow-xl backdrop-blur-sm"
-                    style={{
-                      borderColor:
-                        props.data?.isActive || props.data?.isNodeRelatedActive
-                          ? EDGE_ACTIVE_COLOR
-                          : undefined,
-                      boxShadow:
-                        props.data?.isActive || props.data?.isNodeRelatedActive
-                          ? `0 0 0 1px ${EDGE_ACTIVE_COLOR}`
-                          : undefined,
-                    }}
-                  >
-                    <div className="flex flex-col gap-1.5">
-                      {clusterData.items.map((edge) => (
-                        <div
-                          key={edge.id}
-                          className="rounded-lg border px-2 py-1"
-                        >
-                          <TwinFlowTransitionResourceLink
-                            data={edge.transition}
-                            withTooltip
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
+          <>
+            {clusterData.items.map((edge, index) => (
               <div
-                className="bg-background/95 pointer-events-auto max-w-44 rounded-xl border px-2 py-1 shadow-lg backdrop-blur-sm"
+                key={edge.id}
+                className="nodrag nopan pointer-events-auto absolute max-w-56"
                 style={{
-                  opacity: props.data?.isDimmed ? 0.15 : 1,
-                  borderColor:
-                    props.data?.isActive || props.data?.isNodeRelatedActive
-                      ? EDGE_ACTIVE_COLOR
-                      : undefined,
-                  boxShadow:
-                    props.data?.isActive || props.data?.isNodeRelatedActive
-                      ? `0 0 0 1px ${EDGE_ACTIVE_COLOR}`
-                      : undefined,
+                  zIndex: 50,
+                  transform: `translate(-50%, -50%) translate(${labelX}px, ${
+                    labelY + index * EDGE_LABEL_STACK_STEP
+                  }px)`,
                 }}
               >
-                <TwinFlowTransitionResourceLink
-                  data={graphEdge.transition}
-                  withTooltip
-                />
+                <div className="bg-background inline-flex rounded-lg">
+                  <TwinFlowTransitionResourceLink
+                    data={edge.transition}
+                    withTooltip
+                  />
+                </div>
               </div>
-            )}
-          </div>
+            ))}
+          </>
         </EdgeLabelRenderer>
       )}
     </>
   );
 }
 
-function getPortId(nodeId: string, direction: "incoming" | "outgoing") {
-  return `${nodeId}__${direction}`;
+function getTransitionPortId(
+  nodeId: string,
+  direction: "incoming" | "outgoing",
+  index: number
+) {
+  return `${nodeId}__${direction}__${index}`;
 }
 
 function estimateNodeHeight(selfTransitions: TwinFlowTransition_DETAILED[]) {
@@ -1392,6 +1447,88 @@ function estimateNodeHeight(selfTransitions: TwinFlowTransition_DETAILED[]) {
     SELF_TRANSITION_SECTION_HEIGHT +
     extraRows * (SELF_TRANSITION_CHIP_HEIGHT + SELF_TRANSITION_ROW_GAP)
   );
+}
+
+function createElkPort({
+  nodeId,
+  nodeHeight,
+  index,
+  count,
+  direction,
+  layoutDirection,
+}: {
+  nodeId: string;
+  nodeHeight: number;
+  index: number;
+  count: number;
+  direction: "incoming" | "outgoing";
+  layoutDirection: LayoutDirection;
+}) {
+  const position = getDistributedPortPosition({
+    index,
+    count,
+    nodeHeight,
+    layoutDirection,
+    direction,
+  });
+
+  return {
+    id: getTransitionPortId(nodeId, direction, index),
+    width: PORT_SIZE,
+    height: PORT_SIZE,
+    x: position.x,
+    y: position.y,
+    layoutOptions: {
+      "elk.port.side":
+        layoutDirection === "horizontal"
+          ? direction === "incoming"
+            ? "WEST"
+            : "EAST"
+          : direction === "incoming"
+            ? "NORTH"
+            : "SOUTH",
+    },
+  };
+}
+
+function getDistributedPortPosition({
+  index,
+  count,
+  nodeHeight,
+  layoutDirection,
+  direction,
+}: {
+  index: number;
+  count: number;
+  nodeHeight: number;
+  layoutDirection: LayoutDirection;
+  direction: "incoming" | "outgoing";
+}) {
+  if (layoutDirection === "horizontal") {
+    const availableHeight = Math.max(
+      nodeHeight - NODE_PORT_PADDING * 2 - PORT_SIZE,
+      0
+    );
+    const step = count <= 1 ? 0 : availableHeight / (count - 1);
+    const y = NODE_PORT_PADDING + step * index;
+
+    return {
+      x: direction === "incoming" ? 0 : NODE_WIDTH - PORT_SIZE,
+      y,
+    };
+  }
+
+  const availableWidth = Math.max(
+    NODE_WIDTH - NODE_PORT_PADDING * 2 - PORT_SIZE,
+    0
+  );
+  const step = count <= 1 ? 0 : availableWidth / (count - 1);
+  const x = NODE_PORT_PADDING + step * index;
+
+  return {
+    x,
+    y: direction === "incoming" ? 0 : nodeHeight - PORT_SIZE,
+  };
 }
 
 function normalizeEdgeSection(
@@ -1463,13 +1600,99 @@ function getEdgePathPoints(edge: GraphEdge): Array<[number, number]> {
   return points;
 }
 
+function getRenderableEdgePoints(points: Array<[number, number]>) {
+  if (points.length < 2) {
+    return points;
+  }
+
+  const nextPoints = [...points];
+  nextPoints[0] = offsetPointTowards(
+    nextPoints[0]!,
+    nextPoints[1]!,
+    EDGE_START_INSET
+  );
+  nextPoints[nextPoints.length - 1] = offsetPointTowards(
+    nextPoints[nextPoints.length - 1]!,
+    nextPoints[nextPoints.length - 2]!,
+    EDGE_END_INSET
+  );
+
+  return nextPoints;
+}
+
+function getArrowHead(points: Array<[number, number]>) {
+  if (points.length < 2) {
+    return null;
+  }
+
+  const tip = points[points.length - 1]!;
+  let prev = points[points.length - 2]!;
+
+  for (let index = points.length - 2; index >= 0; index -= 1) {
+    const candidate = points[index]!;
+
+    if (candidate[0] !== tip[0] || candidate[1] !== tip[1]) {
+      prev = candidate;
+      break;
+    }
+  }
+
+  const dx = tip[0] - prev[0];
+  const dy = tip[1] - prev[1];
+  const length = Math.hypot(dx, dy);
+
+  if (length === 0) {
+    return null;
+  }
+
+  const ux = dx / length;
+  const uy = dy / length;
+  const px = -uy;
+  const py = ux;
+  const baseX = tip[0] - ux * TRANSITION_ARROW_LENGTH;
+  const baseY = tip[1] - uy * TRANSITION_ARROW_LENGTH;
+  const leftX = baseX + px * TRANSITION_ARROW_WIDTH;
+  const leftY = baseY + py * TRANSITION_ARROW_WIDTH;
+  const rightX = baseX - px * TRANSITION_ARROW_WIDTH;
+  const rightY = baseY - py * TRANSITION_ARROW_WIDTH;
+
+  return {
+    path: `M ${tip[0]} ${tip[1]} L ${leftX} ${leftY} L ${rightX} ${rightY} Z`,
+  };
+}
+
+function offsetPointTowards(
+  point: [number, number],
+  target: [number, number],
+  distance: number
+): [number, number] {
+  const dx = target[0] - point[0];
+  const dy = target[1] - point[1];
+  const length = Math.hypot(dx, dy);
+
+  if (length === 0) {
+    return point;
+  }
+
+  const maxDistance = length * 0.5;
+  const appliedDistance =
+    distance >= 0
+      ? Math.min(distance, maxDistance)
+      : Math.max(distance, -maxDistance);
+
+  return [
+    point[0] + (dx / length) * appliedDistance,
+    point[1] + (dy / length) * appliedDistance,
+  ];
+}
+
 function getLabelPosition(points: Array<[number, number]>) {
   if (points.length === 0) {
     return { x: 0, y: 0 };
   }
 
   if (points.length === 1) {
-    return { x: points[0]![0], y: points[0]![1] - 18 };
+    return { x: points[0]![0], y: points[0]![1] };
   }
 
   const segments = points.slice(0, -1).map((point, index) => {
@@ -1489,7 +1712,7 @@ function getLabelPosition(points: Array<[number, number]>) {
   );
 
   if (totalLength === 0) {
-    return { x: points[0]![0], y: points[0]![1] - 18 };
+    return { x: points[0]![0], y: points[0]![1] };
   }
 
   let traversed = 0;
@@ -1502,7 +1725,7 @@ function getLabelPosition(points: Array<[number, number]>) {
       const x = segment.start[0] + (segment.end[0] - segment.start[0]) * ratio;
       const y = segment.start[1] + (segment.end[1] - segment.start[1]) * ratio;
 
-      return { x, y: y - 18 };
+      return { x, y };
     }
 
     traversed += segment.length;
@@ -1510,7 +1733,7 @@ function getLabelPosition(points: Array<[number, number]>) {
 
   const lastPoint = points.at(-1)!;
 
-  return { x: lastPoint[0], y: lastPoint[1] - 18 };
+  return { x: lastPoint[0], y: lastPoint[1] };
 }
 
 function isEdgeVisibleForSelectedNode(
@@ -1577,6 +1800,28 @@ function createRoundedPath(points: Array<[number, number]>, radius: number) {
 
 function getStatusDisplayName(status: FlowStatus) {
   return isPopulatedString(status.name) ? status.name : (status.id ?? "Status");
+}
+
+function createAnyStatus(twinFlow: TwinFlow_DETAILED): FlowStatus {
+  return {
+    id: ANY_STATUS_ID,
+    name: "Any",
+    key: "any",
+    backgroundColor: ANY_STATUS_COLOR,
+    twinClassId:
+      twinFlow.initialStatus?.twinClassId ?? twinFlow.twinClassId ?? "",
+  } as FlowStatus;
+}
+
+function getTransitionSrcStatus(
+  transition: TwinFlowTransition_DETAILED,
+  anyStatus: FlowStatus
+) {
+  return transition.srcTwinStatus ?? anyStatus;
+}
+
+function getTransitionDstStatus(transition: TwinFlowTransition_DETAILED) {
+  return transition.dstTwinStatus;
 }
 
 function getTransitionDisplayName(transition: TwinFlowTransition_DETAILED) {
@@ -1664,15 +1909,20 @@ function buildLabelClusters(edges: GraphEdge[]) {
   >();
 
   clusters.forEach((cluster) => {
-    const sortedCluster = [...cluster].sort((left, right) =>
-      left.edge.transition.id!.localeCompare(right.edge.transition.id!)
-    );
-    const x =
-      sortedCluster.reduce((sum, item) => sum + item.x, 0) /
-      sortedCluster.length;
-    const y =
-      sortedCluster.reduce((sum, item) => sum + item.y, 0) /
-      sortedCluster.length;
+    const sortedCluster = [...cluster].sort((left, right) => {
+      if (left.y !== right.y) {
+        return left.y - right.y;
+      }
+
+      if (left.x !== right.x) {
+        return left.x - right.x;
+      }
+
+      return left.edge.transition.id!.localeCompare(right.edge.transition.id!);
+    });
+    const anchorPoint = sortedCluster[0]!;
+    const x = anchorPoint.x;
+    const y = anchorPoint.y;
 
     sortedCluster.forEach((item, index) => {
       clusterMap.set(item.edge.id, {
