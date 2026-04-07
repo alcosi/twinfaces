@@ -28,7 +28,7 @@ export function TriggersFormFields({
 
   return (
     <>
-      <ComboboxFormField   //?
+      <ComboboxFormField
         control={control}
         name="twinflowTransitionId"
         label="Transition"
