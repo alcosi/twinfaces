@@ -61,7 +61,9 @@ export function TwinflowTransitionGeneral() {
     renderPreview: transition.alias ? () => transition.alias : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ alias: string }>)[0]?.alias;
-      return update({ alias: id });
+      return update({
+        transitions: [{ alias: id }],
+      });
     },
   };
 
@@ -78,7 +80,7 @@ export function TwinflowTransitionGeneral() {
     schema: z.string().min(3),
     onSubmit: (value) => {
       return update({
-        nameI18n: { translationInCurrentLocale: value },
+        transitions: [{ nameI18n: { translationInCurrentLocale: value } }],
       });
     },
   };
@@ -96,7 +98,11 @@ export function TwinflowTransitionGeneral() {
     schema: z.string().min(3),
     onSubmit: (value) => {
       return update({
-        descriptionI18n: { translationInCurrentLocale: value },
+        transitions: [
+          {
+            descriptionI18n: { translationInCurrentLocale: value },
+          },
+        ],
       });
     },
   };
@@ -128,7 +134,9 @@ export function TwinflowTransitionGeneral() {
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return update({ srcStatusId: id });
+      return update({
+        transitions: [{ srcStatusId: id }],
+      });
     },
   };
 
@@ -159,7 +167,9 @@ export function TwinflowTransitionGeneral() {
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return update({ dstStatusId: id });
+      return update({
+        transitions: [{ dstStatusId: id }],
+      });
     },
   };
 
@@ -176,7 +186,9 @@ export function TwinflowTransitionGeneral() {
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return update({ permissionId: id });
+      return update({
+        transitions: [{ permissionId: id }],
+      });
     },
   };
 
@@ -200,7 +212,9 @@ export function TwinflowTransitionGeneral() {
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return update({ inbuiltTwinFactoryId: id });
+      return update({
+        transitions: [{ inbuiltTwinFactoryId: id }],
+      });
     },
   };
 

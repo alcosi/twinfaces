@@ -9,13 +9,12 @@ export const useUpdateTwinFlowTransition = () => {
 
   const updateTwinFlowTransition = useCallback(
     async ({
-      transitionId,
       body,
     }: {
       transitionId: string;
       body: TwinFlowTransitionUpdateRq;
     }) => {
-      return await api.twinFlowTransition.update({ transitionId, body });
+      return await api.twinFlowTransition.update({ body });
     },
     [api]
   );

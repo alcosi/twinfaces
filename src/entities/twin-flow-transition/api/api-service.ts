@@ -64,36 +64,19 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     });
   }
 
-  function create({
-    twinFlowId,
-    body,
-  }: {
-    twinFlowId: string;
-    body: TwinFlowTransitionCreateRq;
-  }) {
-    return settings.client.POST(
-      "/private/twinflow/{twinflowId}/transition/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { twinflowId: twinFlowId },
-        },
-        body,
-      }
-    );
-  }
-
-  function update({
-    transitionId,
-    body,
-  }: {
-    transitionId: string;
-    body: TwinFlowTransitionUpdateRq;
-  }) {
-    return settings.client.POST("/private/transition/{transitionId}/v1", {
+  function create({ body }: { body: TwinFlowTransitionCreateRq }) {
+    return settings.client.POST("/private/transition/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { transitionId },
+      },
+      body,
+    });
+  }
+
+  function update({ body }: { body: TwinFlowTransitionUpdateRq }) {
+    return settings.client.PUT("/private/transition/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
       },
       body,
     });
