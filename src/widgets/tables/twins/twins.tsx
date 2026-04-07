@@ -59,6 +59,7 @@ type Props = {
   resourceNavigationEnabled?: boolean;
   // === start === NOTE: Filtering criteria for retrieving related twins
   baseTwinClassId?: string;
+  baseTwinClassIdList?: string[];
   targetHeadTwinId?: string;
   searchId?: string;
   searchParams?: Record<string, string>;
@@ -71,6 +72,7 @@ export function TwinsTable({
   title,
   enabledColumns,
   baseTwinClassId,
+  baseTwinClassIdList,
   targetHeadTwinId,
   showCreateButton = true,
   resourceNavigationEnabled = true,
@@ -320,9 +322,11 @@ export function TwinsTable({
   }) {
     const _baseFilters = mapFiltersToPayload(filters.filters);
     const _override = {
-      twinClassExtendsHierarchyContainsIdList: baseTwinClassId
-        ? [baseTwinClassId]
-        : _baseFilters.twinClassExtendsHierarchyContainsIdList,
+      twinClassExtendsHierarchyContainsIdList: baseTwinClassIdList
+        ? baseTwinClassIdList
+        : baseTwinClassId
+          ? [baseTwinClassId]
+          : _baseFilters.twinClassExtendsHierarchyContainsIdList,
       headTwinIdList: targetHeadTwinId
         ? [targetHeadTwinId]
         : _baseFilters.headTwinIdList,
