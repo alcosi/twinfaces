@@ -1,16 +1,22 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { toast } from "sonner";
-import { isUndefined } from "util";
 
 import {
-  TwinFlowTransitionTrigger_DETAILED,
+  TransitionTrigger_DETAILED,
   useFetchTransitionTriggerById,
-} from "@/entities/twin-flow-transition";
+} from "@/entities/transition-trigger";
+import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 
 type TransitionTriggerContextType = {
   id: string;
-  transitionTrigger: TwinFlowTransitionTrigger_DETAILED;
+  transitionTrigger: TransitionTrigger_DETAILED;
   refresh: () => Promise<void>;
 };
 
@@ -26,15 +32,13 @@ export function TransitionTriggerProvider({
   id: string;
   children: ReactNode;
 }) {
-  useEffect(() => {
-    refresh();
-  }, [id]);
-  const { fetchTransitionTriggerById, loading } =
+  const { fetchTransitionTriggerById, isLoading } =
     useFetchTransitionTriggerById();
   const [transitionTrigger, setTransitionTrigger] = useState<
-    TwinFlowTransitionTrigger_DETAILED | undefined
+    TransitionTrigger_DETAILED | undefined
   >(undefined);
-  async function refresh() {
+
+  const refresh = useCallback(async () => {
     try {
       const response = await fetchTransitionTriggerById(id);
 
@@ -42,19 +46,19 @@ export function TransitionTriggerProvider({
         setTransitionTrigger(response);
       }
     } catch {
-      toast.error("Failed to fetch transition trigger:");
+      toast.error("Failed to fetch transition trigger");
     }
-  }
+  }, [id, fetchTransitionTriggerById]);
 
-  if (isUndefined(transitionTrigger) || loading) return <LoadingOverlay />;
+  useEffect(() => {
+    refresh();
+  }, [id, refresh]);
+
+  if (isUndefined(transitionTrigger) || isLoading) return <LoadingOverlay />;
 
   return (
     <TransitionTriggerContext.Provider
-      value={{
-        id,
-        transitionTrigger,
-        refresh,
-      }}
+      value={{ id, transitionTrigger, refresh }}
     >
       {children}
     </TransitionTriggerContext.Provider>

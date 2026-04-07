@@ -1,6 +1,7 @@
 import {
   Activity,
   Asterisk,
+  BellElectric,
   BellRing,
   BriefcaseBusiness,
   Eraser,
@@ -308,6 +309,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Twin triggers",
         url: `/${PlatformArea.core}/twin-triggers`,
         icon: Wand,
+      },
+      {
+        title: "Transition triggers",
+        url: `/${PlatformArea.core}/transition-triggers`,
+        icon: BellElectric,
       },
     ],
   },

@@ -90,12 +90,5 @@ export const hydrateTwinFlowTransitionTriggerFromMap = (
     ] as Featurer_DETAILED;
   }
 
-  // if (hydrated.transitionTriggerParams && hydrated.triggerFeaturer?.params) {
-  //   hydrated.transitionTriggerDetailedParams = extendFeaturerParams(
-  //     hydrated.transitionTriggerParams,
-  //     hydrated.triggerFeaturer.params
-  //   );
-  // }
-
   return hydrated;
 };

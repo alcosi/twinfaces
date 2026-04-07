@@ -1,9 +1,8 @@
 "use client";
 
 import { Tab, TabsLayout } from "@/widgets/layout";
+import { TransitionTriggersTable } from "@/widgets/tables/transition-triggers/transition-triggers";
 
-import { TwinflowTransitionValidatorRules } from "../transitionValidators";
-import { TwinflowTransitionTriggers } from "../twinclassTriggers";
 import { TwinflowTransitionGeneral } from "./views";
 
 export function TransitionScreen() {
@@ -16,12 +15,7 @@ export function TransitionScreen() {
     {
       key: "triggers",
       label: "Triggers",
-      content: <TwinflowTransitionTriggers />,
-    },
-    {
-      key: "validators",
-      label: "Validators",
-      content: <TwinflowTransitionValidatorRules />,
+      content: <TransitionTriggersTable />,
     },
   ];
 

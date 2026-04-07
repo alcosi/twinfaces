@@ -4,13 +4,10 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   TransitionAliasFilters,
-  TransitionTriggersFilters,
   TwinFlowTransitionCreateRq,
   TwinFlowTransitionFilters,
   TwinFlowTransitionUpdateRq,
   TwinTransitionPerformRq,
-  TwinTransitionTriggerCreate,
-  TwinTransitionTriggerUpdate,
 } from "./types";
 
 export function createTwinFlowTransitionApi(settings: ApiSettings) {
@@ -142,57 +139,6 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     });
   }
 
-  function searchTriggers({
-    pagination,
-    filters,
-  }: {
-    pagination: PaginationState;
-    filters?: TransitionTriggersFilters;
-  }) {
-    return settings.client.POST("/private/transition_trigger/search/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        query: {
-          lazyRelation: false,
-          showTransitionTriggerMode: "DETAILED",
-          showTransitionTrigger2TransitionMode: "DETAILED",
-          showTransitionTrigger2FeaturerMode: "DETAILED",
-          showFeaturerParamMode: "SHOW",
-          showTwinClassMode: "DETAILED",
-          offset: pagination.pageIndex * pagination.pageSize,
-          limit: pagination.pageSize,
-          sortAsc: false,
-        },
-      },
-      body: {
-        search: filters,
-      },
-    });
-  }
-
-  function createTrigger({ body }: { body: TwinTransitionTriggerCreate }) {
-    return settings.client.POST("/private/transition_trigger/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-      },
-      body,
-    });
-  }
-
-  function updateTrigger({
-    body,
-  }: {
-    triggerId: string;
-    body: TwinTransitionTriggerUpdate;
-  }) {
-    return settings.client.PUT("/private/transition_trigger/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-      },
-      body,
-    });
-  }
-
   return {
     search,
     fetchById,
@@ -200,9 +146,6 @@ export function createTwinFlowTransitionApi(settings: ApiSettings) {
     update,
     performTransition,
     searchAlias,
-    searchTriggers,
-    createTrigger,
-    updateTrigger,
   };
 }
 
