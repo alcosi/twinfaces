@@ -8,12 +8,12 @@ import {
   TextFormField,
 } from "@/components/form-fields";
 
-import { TRIGGER_SCHEMA_IMPORT } from "@/entities/transition-trigger/libs/constants";
+import { TRANSITION_TRIGGER_SCHEMA } from "@/entities/transition-trigger";
 import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger/libs";
+import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
 import { isTruthy } from "@/shared/libs";
 
-type TriggersFormValues = z.infer<typeof TRIGGER_SCHEMA_IMPORT>;
+type TriggersFormValues = z.infer<typeof TRANSITION_TRIGGER_SCHEMA>;
 
 export function TriggersFormFields({
   control,

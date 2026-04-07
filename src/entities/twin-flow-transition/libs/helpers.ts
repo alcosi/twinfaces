@@ -68,27 +68,3 @@ export const hydrateTwinFlowTransitionFromMap = (
 
   return hydrated;
 };
-
-export const hydrateTwinFlowTransitionTriggerFromMap = (
-  dto: TwinFlowTransitionTrigger,
-  relatedObjects?: RelatedObjects
-): TwinFlowTransitionTrigger_DETAILED => {
-  const hydrated: TwinFlowTransitionTrigger_DETAILED = Object.assign(
-    {},
-    dto
-  ) as TwinFlowTransition_DETAILED;
-
-  if (dto.twinflowTransitionId && relatedObjects?.transitionsMap) {
-    hydrated.twinflowTransition = relatedObjects.transitionsMap[
-      dto.twinflowTransitionId
-    ] as TwinFlowTransition_DETAILED;
-  }
-
-  if (dto.twinTriggerId && relatedObjects?.featurerMap) {
-    hydrated.triggerFeaturer = relatedObjects.featurerMap[
-      dto.twinTriggerId
-    ] as Featurer_DETAILED;
-  }
-
-  return hydrated;
-};

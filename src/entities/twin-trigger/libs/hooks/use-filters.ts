@@ -64,10 +64,9 @@ export function useTwinTriggerFilters({
         "id"
       ).map(Number),
       active: mapToChoice(filters.active),
-      nameLikeList: toArrayOfString(
-        toArray(filters.nameLikeList),
-        "description"
-      ).map(wrapWithPercent),
+      nameLikeList: toArrayOfString(toArray(filters.nameLikeList), "name").map(
+        wrapWithPercent
+      ),
     };
   }
 

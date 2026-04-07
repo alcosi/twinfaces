@@ -1,5 +1,5 @@
 import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
-import { TwinTrigger_DETAILED } from "@/entities/twin-trigger/index";
+import { TwinTrigger_DETAILED } from "@/entities/twin-trigger";
 import { RelatedObjects } from "@/shared/api";
 
 import { TransitionTrigger, TransitionTrigger_DETAILED } from "../api/types";

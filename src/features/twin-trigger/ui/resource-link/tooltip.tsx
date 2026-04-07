@@ -1,4 +1,4 @@
-import { BellRing } from "lucide-react";
+import { Wand } from "lucide-react";
 
 import { TwinTrigger } from "@/entities/twin-trigger";
 import { isPopulatedString } from "@/shared/libs";
@@ -14,7 +14,7 @@ export function TwinTriggerResourceTooltip({ data, link }: Props) {
     <ResourceLinkTooltip uuid={data.id!} link={link}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
-        iconSource={BellRing}
+        iconSource={Wand}
       />
 
       <ResourceLinkTooltip.Main>

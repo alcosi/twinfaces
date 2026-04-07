@@ -10,12 +10,12 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import {
+  TRANSITION_TRIGGER_SCHEMA,
   TransitionTrigger_DETAILED,
   useTransitionTriggerCreate,
   useTransitionTriggerSearch,
 } from "@/entities/transition-trigger";
-import { TRIGGER_SCHEMA_IMPORT } from "@/entities/transition-trigger/libs";
-import { TwinFlowTransitionContext } from "@/features/twin-flow-transition/context-provider";
+import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
 import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
 import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
 import { PlatformArea } from "@/shared/config";
@@ -25,7 +25,7 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, DataTableHandle } from "../../crud-data-table";
 import { TriggersFormFields } from "./form-fields";
 
-type TriggersFormValues = z.infer<typeof TRIGGER_SCHEMA_IMPORT>;
+type TriggersFormValues = z.infer<typeof TRANSITION_TRIGGER_SCHEMA>;
 
 const colDefs: Record<
   keyof Pick<
@@ -106,7 +106,7 @@ export function TransitionTriggersTable() {
   }
 
   const triggersForm = useForm<TriggersFormValues>({
-    resolver: zodResolver(TRIGGER_SCHEMA_IMPORT),
+    resolver: zodResolver(TRANSITION_TRIGGER_SCHEMA),
     defaultValues: {
       ...(transitionId ? { twinflowTransitionId: transitionId } : {}),
       order: 0,
@@ -134,9 +134,9 @@ export function TransitionTriggersTable() {
       });
 
       tableRef.current?.refresh();
-      toast.success("Trigger created successfully");
+      toast.success("Transition trigger created successfully");
     } catch (e) {
-      toast.error("Failed to create trigger");
+      toast.error("Failed to create transition trigger");
       throw e;
     }
   }

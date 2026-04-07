@@ -1,7 +1,7 @@
 "use client";
 
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { TransitionTriggersTable } from "@/widgets/tables/transition-triggers/transition-triggers";
+import { TransitionTriggersTable } from "@/widgets/tables/transition-triggers";
 
 import { TwinflowTransitionGeneral } from "./views";
 

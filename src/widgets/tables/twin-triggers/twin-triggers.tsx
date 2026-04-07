@@ -6,9 +6,9 @@ import { toast } from "sonner";
 import { Featurer_DETAILED } from "@/entities/featurer";
 import {
   TwinTrigger_DETAILED,
+  useTwinTriggerFilters,
   useTwinTriggerSearch,
 } from "@/entities/twin-trigger";
-import { useTwinTriggerFilters } from "@/entities/twin-trigger/libs";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";

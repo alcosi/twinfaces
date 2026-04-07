@@ -2,7 +2,7 @@ import { Featurer_DETAILED } from "@/entities/featurer";
 import { RelatedObjects } from "@/shared/api";
 
 import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
-import { TwinTrigger, TwinTrigger_DETAILED } from "../api/types";
+import { TwinTrigger, TwinTrigger_DETAILED } from "../api";
 
 export const hydrateTwinTriggerFromMap = (
   dto: TwinTrigger,

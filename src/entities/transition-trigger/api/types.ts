@@ -1,4 +1,4 @@
-import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition/index";
+import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
 import { TwinTrigger_DETAILED } from "@/entities/twin-trigger";
 import { components } from "@/shared/api/generated/schema";
 

@@ -5,7 +5,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 
 import { useTransitionTriggerUpdate } from "@/entities/transition-trigger";
 import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger/libs";
+import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,

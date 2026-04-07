@@ -1,4 +1,4 @@
-import { BellRing } from "lucide-react";
+import { Wand } from "lucide-react";
 
 import { TwinTrigger } from "@/entities/twin-trigger/index";
 import { PlatformArea } from "@/shared/config";
@@ -22,7 +22,7 @@ export function TwinTriggerResourceLink({
 
   return (
     <ResourceLink
-      IconComponent={BellRing}
+      IconComponent={Wand}
       data={data}
       disabled={disabled}
       renderTooltip={
