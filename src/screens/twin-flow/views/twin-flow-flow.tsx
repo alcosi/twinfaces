@@ -27,7 +27,7 @@ import type {
   ElkPoint,
 } from "elkjs/lib/elk-api";
 import ELK from "elkjs/lib/elk.bundled.js";
-import { ArrowRight, CircleDot, GitBranch, MoveDiagonal2 } from "lucide-react";
+import { CircleDot, GitBranch, MoveDiagonal2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -55,24 +55,27 @@ const NODE_WIDTH = 280;
 const NODE_HEIGHT = 124;
 const START_NODE_WIDTH = 144;
 const START_NODE_HEIGHT = 52;
+const START_NODE_GAP = 40;
 const COLUMN_GAP = 320;
 const ROW_GAP = 220;
 const CANVAS_PADDING_X = 96;
 const CANVAS_PADDING_Y = 96;
 const EDGE_COLOR = "#475569";
 const EDGE_ACTIVE_COLOR = "#2563eb";
+const NODE_SELECTED_COLOR = "#16a34a";
 const START_EDGE_COLOR = "#64748b";
 const EDGE_BORDER_RADIUS = 18;
-const EDGE_START_INSET = -10;
-const EDGE_END_INSET = -5;
+const EDGE_START_INSET = -8;
+const EDGE_END_INSET = -9;
 const TRANSITION_ARROW_LENGTH = 9;
 const TRANSITION_ARROW_WIDTH = 5;
 const PORT_SIZE = 12;
-const NODE_CONTENT_WIDTH = NODE_WIDTH - 40;
-const SELF_TRANSITION_SECTION_HEIGHT = 60;
-const SELF_TRANSITION_CHIP_HEIGHT = 26;
+const ANY_SOURCE_BADGE_ROW_HEIGHT = 24;
+const ANY_SOURCE_BADGE_SECTION_GAP = 16;
+const SELF_TRANSITION_SECTION_HEIGHT = 24;
+const SELF_TRANSITION_ITEM_HEIGHT = 24;
+const SELF_TRANSITION_SECTION_GAP = 16;
 const SELF_TRANSITION_ROW_GAP = 6;
-const ANY_STATUS_ID = "__any_status__";
 const ANY_STATUS_COLOR = "#94a3b8";
 const EDGE_LABEL_STACK_STEP = 26;
 const NODE_PORT_PADDING = 22;
@@ -88,9 +91,9 @@ type GraphNode = {
   width: number;
   height: number;
   status: FlowStatus;
-  isWildcard: boolean;
   incomingCount: number;
   outgoingCount: number;
+  incomingAnySourceTransitions: TwinFlowTransition_DETAILED[];
   selfTransitions: TwinFlowTransition_DETAILED[];
 };
 
@@ -292,6 +295,10 @@ export function TwinFlowFlow({ twinFlow }: { twinFlow: TwinFlow_DETAILED }) {
     const initialNode = twinFlow.initialStatusId
       ? graph.nodes.find((node) => node.id === twinFlow.initialStatusId)
       : undefined;
+    const leftmostNodeX =
+      graph.nodes.length > 0
+        ? Math.min(...graph.nodes.map((node) => node.x))
+        : CANVAS_PADDING_X + START_NODE_WIDTH;
 
     const activeEdge = selectedEdgeId
       ? graph.edges.find((edge) => edge.id === selectedEdgeId)
@@ -349,18 +356,21 @@ export function TwinFlowFlow({ twinFlow }: { twinFlow: TwinFlow_DETAILED }) {
     }));
 
     if (initialNode) {
+      const startX =
+        layoutDirection === "horizontal"
+          ? Math.max(leftmostNodeX - START_NODE_WIDTH - START_NODE_GAP, 0)
+          : initialNode.x + initialNode.width / 2 - START_NODE_WIDTH / 2;
+      const startY =
+        layoutDirection === "horizontal"
+          ? initialNode.y + initialNode.height / 2 - START_NODE_HEIGHT / 2
+          : Math.max(initialNode.y - ROW_GAP + 24, 0);
+
       nodes.unshift({
         id: "start",
         type: "start",
         position: {
-          x:
-            layoutDirection === "horizontal"
-              ? Math.max(initialNode.x - COLUMN_GAP + 16, 0)
-              : initialNode.x + initialNode.width / 2 - START_NODE_WIDTH / 2,
-          y:
-            layoutDirection === "horizontal"
-              ? initialNode.y + initialNode.height / 2 - START_NODE_HEIGHT / 2
-              : Math.max(initialNode.y - ROW_GAP + 24, 0),
+          x: startX,
+          y: startY,
         },
         draggable: false,
         selectable: false,
@@ -822,14 +832,13 @@ async function buildGraphModel(
   layoutDirection: LayoutDirection
 ): Promise<GraphModel> {
   const statusesMap = new Map<string, FlowStatus>();
-  const anyStatus = createAnyStatus(twinFlow);
 
   if (twinFlow.initialStatus?.id) {
     statusesMap.set(twinFlow.initialStatus.id, twinFlow.initialStatus);
   }
 
   transitions.forEach((transition) => {
-    const srcStatus = getTransitionSrcStatus(transition, anyStatus);
+    const srcStatus = getTransitionSrcStatus(transition);
     const dstStatus = getTransitionDstStatus(transition);
 
     if (srcStatus?.id) {
@@ -847,18 +856,32 @@ async function buildGraphModel(
     string,
     TwinFlowTransition_DETAILED[]
   >();
+  const incomingAnySourceTransitionsByStatus = new Map<
+    string,
+    TwinFlowTransition_DETAILED[]
+  >();
 
   statusesMap.forEach((_, id) => {
     incomingCounts.set(id, 0);
     outgoingCounts.set(id, 0);
     selfTransitionsByStatus.set(id, []);
+    incomingAnySourceTransitionsByStatus.set(id, []);
   });
 
   transitions.forEach((transition) => {
-    const srcId = getTransitionSrcStatus(transition, anyStatus)?.id;
+    const srcId = getTransitionSrcStatus(transition)?.id;
     const dstId = getTransitionDstStatus(transition)?.id;
 
-    if (!srcId || !dstId) return;
+    if (!dstId) return;
+
+    if (!srcId) {
+      incomingCounts.set(dstId, (incomingCounts.get(dstId) ?? 0) + 1);
+      incomingAnySourceTransitionsByStatus.set(dstId, [
+        ...(incomingAnySourceTransitionsByStatus.get(dstId) ?? []),
+        transition,
+      ]);
+      return;
+    }
 
     if (srcId === dstId) {
       selfTransitionsByStatus.set(srcId, [
@@ -886,7 +909,7 @@ async function buildGraphModel(
   }
 
   const nonSelfTransitions = transitions.filter((transition) => {
-    const srcId = getTransitionSrcStatus(transition, anyStatus)?.id;
+    const srcId = getTransitionSrcStatus(transition)?.id;
     const dstId = getTransitionDstStatus(transition)?.id;
 
     return Boolean(srcId && dstId && srcId !== dstId);
@@ -897,7 +920,11 @@ async function buildGraphModel(
 
       return [
         id,
-        estimateNodeHeight(selfTransitionsByStatus.get(id) ?? []),
+        estimateNodeHeight({
+          selfTransitions: selfTransitionsByStatus.get(id) ?? [],
+          hasAnySourceTransitions:
+            (incomingAnySourceTransitionsByStatus.get(id) ?? []).length > 0,
+        }),
       ] as const;
     })
   );
@@ -916,7 +943,7 @@ async function buildGraphModel(
   });
 
   nonSelfTransitions.forEach((transition) => {
-    const srcId = getTransitionSrcStatus(transition, anyStatus)?.id;
+    const srcId = getTransitionSrcStatus(transition)?.id;
     const dstId = getTransitionDstStatus(transition)?.id;
 
     if (!srcId || !dstId) return;
@@ -994,8 +1021,14 @@ async function buildGraphModel(
     children: orderedStatuses.map((status) => {
       const id = status.id!;
       const selfTransitions = selfTransitionsByStatus.get(id) ?? [];
+      const hasAnySourceTransitions =
+        (incomingAnySourceTransitionsByStatus.get(id) ?? []).length > 0;
       const nodeHeight =
-        nodeHeightById.get(id) ?? estimateNodeHeight(selfTransitions);
+        nodeHeightById.get(id) ??
+        estimateNodeHeight({
+          selfTransitions,
+          hasAnySourceTransitions,
+        });
       const incomingTransitions = incomingTransitionsByStatus.get(id) ?? [];
       const outgoingTransitions = outgoingTransitionsByStatus.get(id) ?? [];
 
@@ -1061,11 +1094,16 @@ async function buildGraphModel(
         width: layoutNode.width ?? NODE_WIDTH,
         height:
           layoutNode.height ??
-          estimateNodeHeight(selfTransitionsByStatus.get(id) ?? []),
+          estimateNodeHeight({
+            selfTransitions: selfTransitionsByStatus.get(id) ?? [],
+            hasAnySourceTransitions:
+              (incomingAnySourceTransitionsByStatus.get(id) ?? []).length > 0,
+          }),
         status,
-        isWildcard: id === ANY_STATUS_ID,
         incomingCount: incomingCounts.get(id) ?? 0,
         outgoingCount: outgoingCounts.get(id) ?? 0,
+        incomingAnySourceTransitions:
+          incomingAnySourceTransitionsByStatus.get(id) ?? [],
         selfTransitions: selfTransitionsByStatus.get(id) ?? [],
       },
     ];
@@ -1084,7 +1122,7 @@ async function buildGraphModel(
 
       if (!transition) return undefined;
 
-      const srcId = getTransitionSrcStatus(transition, anyStatus)?.id;
+      const srcId = getTransitionSrcStatus(transition)?.id;
       const dstId = getTransitionDstStatus(transition)?.id;
 
       if (!srcId || !dstId) return undefined;
@@ -1148,9 +1186,14 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
     onToggleDirection,
   } = data;
   const statusColor = node.status.backgroundColor || ANY_STATUS_COLOR;
+  const hasAnySourceTransitions = node.incomingAnySourceTransitions.length > 0;
   const isHighlighted =
     isActive || isRelatedToActiveEdge || isRelatedToSelectedNode || selected;
-  const accentColor = isHighlighted ? EDGE_ACTIVE_COLOR : statusColor;
+  const accentColor = isActive
+    ? NODE_SELECTED_COLOR
+    : isHighlighted
+      ? EDGE_ACTIVE_COLOR
+      : statusColor;
 
   return (
     <div
@@ -1162,9 +1205,9 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
         width: `${NODE_WIDTH}px`,
         minHeight: `${node.height}px`,
         opacity: isDimmed ? 0.15 : 1,
-        borderColor: isHighlighted ? EDGE_ACTIVE_COLOR : `${statusColor}80`,
+        borderColor: isHighlighted ? accentColor : `${statusColor}80`,
         boxShadow: isHighlighted
-          ? `0 0 0 2px ${EDGE_ACTIVE_COLOR}, 0 16px 42px -26px ${EDGE_ACTIVE_COLOR}`
+          ? `0 0 0 2px ${accentColor}, 0 16px 42px -26px ${accentColor}`
           : isInitial
             ? `0 0 0 1px ${statusColor} inset, 0 10px 36px -24px ${statusColor}`
             : undefined,
@@ -1195,61 +1238,63 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
       />
 
       <div className="flex h-full flex-col gap-4 p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              {isInitial && (
-                <span className="text-muted-foreground rounded-full border px-2 py-0.5 text-[10px] font-semibold tracking-[0.22em] uppercase">
-                  Initial
-                </span>
-              )}
-              <span className="text-muted-foreground text-[10px] font-semibold tracking-[0.22em] uppercase">
-                Status
+        {hasAnySourceTransitions && (
+          <div className="flex flex-wrap gap-2">
+            <Badge
+              variant="outline"
+              className="bg-background text-[10px] tracking-[0.18em] uppercase"
+              style={{
+                borderColor: `${ANY_STATUS_COLOR}66`,
+                color: ANY_STATUS_COLOR,
+              }}
+            >
+              From any
+            </Badge>
+          </div>
+        )}
+
+        <div className="min-w-0 space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {isInitial && (
+              <span className="text-muted-foreground rounded-full border px-2 py-0.5 text-[10px] font-semibold tracking-[0.22em] uppercase">
+                Initial
               </span>
-            </div>
-
-            {node.isWildcard ? (
-              <div className="inline-flex max-w-full items-center rounded-full border border-dashed px-2.5 py-1 text-sm font-medium">
-                Any
-              </div>
-            ) : (
-              <div className="min-w-0">
-                <TwinClassStatusResourceLink
-                  data={node.status}
-                  twinClassId={node.status.twinClassId}
-                  withTooltip
-                />
-              </div>
             )}
-
-            {isPopulatedString(node.status.key) && (
-              <div className="text-muted-foreground truncate text-xs">
-                Key: {node.status.key}
-              </div>
-            )}
-
-            {node.selfTransitions.length > 0 && (
-              <div className="space-y-2">
-                <div className="text-muted-foreground text-[10px] font-semibold tracking-[0.22em] uppercase">
-                  Self transitions
-                </div>
-                <div className="flex flex-col items-start gap-1.5">
-                  {node.selfTransitions.map((transition) => (
-                    <TwinFlowTransitionResourceLink
-                      key={transition.id}
-                      data={transition}
-                      withTooltip
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
+            <span className="text-muted-foreground text-[10px] font-semibold tracking-[0.22em] uppercase">
+              Status
+            </span>
           </div>
 
-          <span
-            className="ring-background mt-0.5 inline-flex h-3.5 w-3.5 shrink-0 rounded-full ring-4"
-            style={{ backgroundColor: accentColor }}
-          />
+          <div className="min-w-0">
+            <TwinClassStatusResourceLink
+              data={node.status}
+              twinClassId={node.status.twinClassId}
+              withTooltip
+            />
+          </div>
+
+          {isPopulatedString(node.status.key) && (
+            <div className="text-muted-foreground truncate text-xs">
+              Key: {node.status.key}
+            </div>
+          )}
+
+          {node.selfTransitions.length > 0 && (
+            <div className="space-y-2">
+              <div className="text-muted-foreground text-[10px] font-semibold tracking-[0.22em] uppercase">
+                Self transitions
+              </div>
+              <div className="flex flex-col items-start gap-1.5">
+                {node.selfTransitions.map((transition) => (
+                  <TwinFlowTransitionResourceLink
+                    key={transition.id}
+                    data={transition}
+                    withTooltip
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-auto flex items-center justify-between gap-3">
@@ -1266,7 +1311,9 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
               style={
                 incomingSelected
                   ? ({
-                      "--accent-color": EDGE_ACTIVE_COLOR,
+                      "--accent-color": isActive
+                        ? NODE_SELECTED_COLOR
+                        : EDGE_ACTIVE_COLOR,
                     } as React.CSSProperties)
                   : undefined
               }
@@ -1290,7 +1337,9 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
               style={
                 outgoingSelected
                   ? ({
-                      "--accent-color": EDGE_ACTIVE_COLOR,
+                      "--accent-color": isActive
+                        ? NODE_SELECTED_COLOR
+                        : EDGE_ACTIVE_COLOR,
                     } as React.CSSProperties)
                   : undefined
               }
@@ -1303,8 +1352,6 @@ function StatusNode({ data, selected }: NodeProps<StatusFlowNode>) {
               {node.outgoingCount} out
             </Button>
           </div>
-
-          <ArrowRight className="text-muted-foreground h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </div>
       </div>
     </div>
@@ -1434,19 +1481,27 @@ function getTransitionPortId(
   return `${nodeId}__${direction}__${index}`;
 }
 
-function estimateNodeHeight(selfTransitions: TwinFlowTransition_DETAILED[]) {
-  if (selfTransitions.length === 0) {
-    return NODE_HEIGHT;
+function estimateNodeHeight({
+  selfTransitions,
+  hasAnySourceTransitions,
+}: {
+  selfTransitions: TwinFlowTransition_DETAILED[];
+  hasAnySourceTransitions: boolean;
+}) {
+  let height = NODE_HEIGHT;
+
+  if (hasAnySourceTransitions) {
+    height += ANY_SOURCE_BADGE_ROW_HEIGHT + ANY_SOURCE_BADGE_SECTION_GAP;
   }
 
-  const rowCount = estimateSelfTransitionRows(selfTransitions);
-  const extraRows = Math.max(rowCount - 1, 0);
+  if (selfTransitions.length > 0) {
+    height += SELF_TRANSITION_SECTION_HEIGHT;
+    height += selfTransitions.length * SELF_TRANSITION_ITEM_HEIGHT;
+    height += Math.max(selfTransitions.length - 1, 0) * SELF_TRANSITION_ROW_GAP;
+    height += SELF_TRANSITION_SECTION_GAP;
+  }
 
-  return (
-    NODE_HEIGHT +
-    SELF_TRANSITION_SECTION_HEIGHT +
-    extraRows * (SELF_TRANSITION_CHIP_HEIGHT + SELF_TRANSITION_ROW_GAP)
-  );
+  return height;
 }
 
 function createElkPort({
@@ -1802,22 +1857,8 @@ function getStatusDisplayName(status: FlowStatus) {
   return isPopulatedString(status.name) ? status.name : (status.id ?? "Status");
 }
 
-function createAnyStatus(twinFlow: TwinFlow_DETAILED): FlowStatus {
-  return {
-    id: ANY_STATUS_ID,
-    name: "Any",
-    key: "any",
-    backgroundColor: ANY_STATUS_COLOR,
-    twinClassId:
-      twinFlow.initialStatus?.twinClassId ?? twinFlow.twinClassId ?? "",
-  } as FlowStatus;
-}
-
-function getTransitionSrcStatus(
-  transition: TwinFlowTransition_DETAILED,
-  anyStatus: FlowStatus
-) {
-  return transition.srcTwinStatus ?? anyStatus;
+function getTransitionSrcStatus(transition: TwinFlowTransition_DETAILED) {
+  return transition.srcTwinStatus;
 }
 
 function getTransitionDstStatus(transition: TwinFlowTransition_DETAILED) {
@@ -1828,38 +1869,6 @@ function getTransitionDisplayName(transition: TwinFlowTransition_DETAILED) {
   return isPopulatedString(transition.name)
     ? transition.name
     : (transition.id ?? "Transition");
-}
-
-function estimateSelfTransitionRows(
-  selfTransitions: TwinFlowTransition_DETAILED[]
-) {
-  let rows = 1;
-  let currentRowWidth = 0;
-
-  for (const transition of selfTransitions) {
-    const label = getTransitionDisplayName(transition);
-    const estimatedChipWidth = Math.min(
-      NODE_CONTENT_WIDTH,
-      34 + label.length * 7.2
-    );
-
-    if (currentRowWidth === 0) {
-      currentRowWidth = estimatedChipWidth;
-      continue;
-    }
-
-    const nextRowWidth = currentRowWidth + 6 + estimatedChipWidth;
-
-    if (nextRowWidth > NODE_CONTENT_WIDTH) {
-      rows += 1;
-      currentRowWidth = estimatedChipWidth;
-      continue;
-    }
-
-    currentRowWidth = nextRowWidth;
-  }
-
-  return rows;
 }
 
 function matchesStatusSearch(status: FlowStatus, query: string) {
