@@ -51,13 +51,12 @@ export function AppSidebar({
 
   const router = useRouter();
   const pathname = usePathname();
-
-  // NOTE: Quick fix: infer sidebar area from URL prefix
-  // * Doesn't support routes like `/design-system`
-  // TODO: Persist area via localStorage or context
-  const initialArea: keyof typeof PlatformArea = pathname?.startsWith("/core")
-    ? PlatformArea.core
-    : PlatformArea.workspace;
+  const initialArea: keyof typeof PlatformArea =
+    mode === "admin"
+      ? PlatformArea.core
+      : pathname?.startsWith("/core")
+        ? PlatformArea.core
+        : PlatformArea.workspace;
   const [area, setArea] = useState<keyof typeof PlatformArea>(initialArea);
 
   function onDomainSwitch(domain: DomainView_SHORT) {
