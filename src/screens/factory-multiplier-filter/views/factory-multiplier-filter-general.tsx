@@ -39,7 +39,8 @@ export function FactoryMultiplierFilterGeneral() {
               <TableCell>Factory</TableCell>
               <TableCell>
                 <FactoryResourceLink
-                  data={factoryMultiplierFilter.multiplier?.factory!}
+                  data={factoryMultiplierFilter.multiplier.factory}
+                  withTooltip
                 />
               </TableCell>
             </TableRow>
@@ -72,7 +73,7 @@ export function FactoryMultiplierFilterGeneral() {
           )}
 
           <TableRow>
-            <TableCell>Input class</TableCell>
+            <TableCell>Condition set</TableCell>
             <TableCell>
               <FactoryConditionSetResourceLink
                 data={
