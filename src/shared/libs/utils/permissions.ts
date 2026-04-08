@@ -62,6 +62,10 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
   //? NOTE Validator menu
   "validator-sets": ["TWIN_VALIDATOR_SET"],
 
+  //? NOTE Triggers menu
+  "twin-triggers": ["TWIN_TRIGGER"],
+  "transition-triggers": ["TWIN_TRIGGER"],
+
   //? OTHERS
 };
 

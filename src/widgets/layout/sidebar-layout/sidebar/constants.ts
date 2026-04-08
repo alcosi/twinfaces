@@ -1,6 +1,7 @@
 import {
   Activity,
   Asterisk,
+  BellElectric,
   BellRing,
   BriefcaseBusiness,
   Eraser,
@@ -22,6 +23,7 @@ import {
   TrendingUp,
   User,
   UsersRound,
+  Wand,
   Workflow,
 } from "lucide-react";
 
@@ -297,6 +299,21 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Validator sets",
         url: `/${PlatformArea.core}/validator-sets`,
         icon: TicketCheck,
+      },
+    ],
+  },
+  triggers: {
+    title: "Triggers",
+    items: [
+      {
+        title: "Twin triggers",
+        url: `/${PlatformArea.core}/twin-triggers`,
+        icon: Wand,
+      },
+      {
+        title: "Transition triggers",
+        url: `/${PlatformArea.core}/transition-triggers`,
+        icon: BellElectric,
       },
     ],
   },

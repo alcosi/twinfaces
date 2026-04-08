@@ -2,8 +2,8 @@
 
 import { use } from "react";
 
-import { TransitionTriggerProvider } from "@/features/twin-transition-trigger";
-import { TransitionTriggerScreen } from "@/screens/twinclassTrigger";
+import { TransitionTriggerProvider } from "@/features/transition-trigger";
+import { TransitionTriggerScreen } from "@/screens/transition-trigger";
 
 type Props = {
   params: Promise<{

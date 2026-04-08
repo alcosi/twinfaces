@@ -72,6 +72,10 @@ import {
   createPermissionSpaceRoleApi,
 } from "@/entities/space-role";
 import { TierApi, createTierApi } from "@/entities/tier";
+import {
+  TransitionTriggerApi,
+  createTransitionTriggerApi,
+} from "@/entities/transition-trigger";
 import { TwinApi, createTwinApi } from "@/entities/twin";
 import { TwinClassApi, createTwinClassApi } from "@/entities/twin-class";
 import {
@@ -96,6 +100,7 @@ import {
   createPermissionTwinRoleApi,
 } from "@/entities/twin-role";
 import { TwinStatusApi, createTwinStatusApi } from "@/entities/twin-status";
+import { TwinTriggerApi, createTwinTriggerApi } from "@/entities/twin-trigger";
 import {
   TwinFlowSchemaApi,
   createTwinFlowSchemaApi,
@@ -155,6 +160,8 @@ export interface PrivateApiContextProps {
   notification: NotificationApi;
   validatorSet: ValidatorSetApi;
   optionProjection: OptionProjectionApi;
+  twinTrigger: TwinTriggerApi;
+  transitionTrigger: TransitionTriggerApi;
 }
 
 export function PrivateApiContextProvider({
@@ -212,6 +219,8 @@ export function PrivateApiContextProvider({
         notification: createNotificationApi(settings),
         validatorSet: createValidatorSetApi(settings),
         optionProjection: createOptionProjectionApi(settings),
+        twinTrigger: createTwinTriggerApi(settings),
+        transitionTrigger: createTransitionTriggerApi(settings),
       }
     : ({} as PrivateApiContextProps);
 

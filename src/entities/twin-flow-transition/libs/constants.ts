@@ -86,8 +86,3 @@ export const TRIGGER_SCHEMA = z.object({
   triggerFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
   triggerParams: FEATURER_PARAMS_VALUE,
 });
-
-export const VALIDATOR_RULES_SCHEMA = z.object({
-  order: z.number().min(0, "Order must be at least 0").default(0),
-  active: z.boolean().default(false),
-});

@@ -39,6 +39,11 @@ export type TwinFlowTransitionUpdateRq =
 export type TwinTransitionPerformRq =
   components["schemas"]["TwinTransitionPerformRqV1"];
 
+export type TwinFlowTransitionCreate =
+  components["schemas"]["TransitionCreateV1"];
+export type TwinFlowTransitionUpdate =
+  components["schemas"]["TransitionUpdateV1"];
+
 export type FaceWT001ButtonV1 = components["schemas"]["FaceWT001ColumnV1"];
 
 export type TwinFlowTransitionFilterKeys =
@@ -68,18 +73,6 @@ export type TwinFlowTransitionTrigger_DETAILED =
     triggerFeaturer?: Featurer_DETAILED;
     transitionTriggerDetailedParams?: ExtendedFeaturerParam[];
   };
-export type TwinFlowTransitionTriggerCud =
-  components["schemas"]["TriggerCudV1"];
-export type TwinFlowTransitionTriggerUpdate =
-  components["schemas"]["TriggerUpdateV1"];
-export type TwinFlowTransitionValidator =
-  components["schemas"]["TransitionValidatorRuleBaseV1"];
-export type TwinFlowTransitionValidatorCud =
-  components["schemas"]["ValidatorCudV1"];
-export type TwinFlowTransitionValidatorCreate =
-  components["schemas"]["ValidatorCreateV1"];
-export type TwinFlowTransitionValidatorUpdate =
-  components["schemas"]["ValidatorUpdateV1"];
 
 export type TwinTransitionTriggerUpdate =
   components["schemas"]["TransitionTriggerUpdateRqV1"];
@@ -98,21 +91,5 @@ export type TransitionAliasFilters = Partial<
   Pick<
     components["schemas"]["TransitionAliasSearchRqV1"],
     TransitionAliasFiltersKeys
-  >
->;
-
-export type TransitionTriggersFiltersKeys =
-  | "idList"
-  | "idExcludeList"
-  | "twinflowTransitionIdList"
-  | "twinflowTransitionIdExcludeList"
-  | "transitionTriggerFeaturerIdList"
-  | "transitionTriggerFeaturerIdExcludeList"
-  | "active";
-
-export type TransitionTriggersFilters = Partial<
-  Pick<
-    components["schemas"]["TransitionTriggerSearchV1"],
-    TransitionTriggersFiltersKeys
   >
 >;

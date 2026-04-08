@@ -8,7 +8,6 @@ export const useCreateTwinFlowTransition = () => {
 
   const createTwinFlowTransition = useCallback(
     async ({
-      twinFlowId,
       body,
     }: {
       twinFlowId: string;
@@ -16,13 +15,12 @@ export const useCreateTwinFlowTransition = () => {
     }) => {
       try {
         const result = await api.twinFlowTransition.create({
-          twinFlowId,
           body,
         });
         if (result.error) {
           throw new Error("Failed to create transition");
         }
-      } catch (error) {
+      } catch {
         throw new Error("An error occurred while create transition");
       }
     },

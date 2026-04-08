@@ -241,24 +241,28 @@ export function TwinFlowTransitionsTable({
     formValues: z.infer<typeof TWIN_FLOW_TRANSITION_SCHEMA>
   ) {
     const body: TwinFlowTransitionCreateRq = {
-      alias: formValues.alias,
-      nameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      descriptionI18n: formValues.description
-        ? {
+      transitions: [
+        {
+          alias: formValues.alias,
+          nameI18n: {
             translations: {
-              en: formValues.description,
+              en: formValues.name,
             },
-          }
-        : undefined,
-      inbuiltTwinFactoryId: formValues.factory,
-      srcStatusId: formValues.srcTwinStatusId,
-      dstStatusId: formValues.dstTwinStatusId,
-      permissionId: formValues.permissionId,
-      twinflowTransitionTypeId: formValues.twinflowTransitionTypeId,
+          },
+          descriptionI18n: formValues.description
+            ? {
+                translations: {
+                  en: formValues.description,
+                },
+              }
+            : undefined,
+          inbuiltTwinFactoryId: formValues.factory,
+          srcStatusId: formValues.srcTwinStatusId,
+          dstStatusId: formValues.dstTwinStatusId,
+          permissionId: formValues.permissionId,
+          twinflowTransitionTypeId: formValues.twinflowTransitionTypeId,
+        },
+      ],
     };
 
     await createTwinFlowTransition({
