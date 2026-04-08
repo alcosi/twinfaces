@@ -101,7 +101,7 @@ export function TwinLinks() {
       const { data } = response;
 
       return { data, pagination: {} };
-    } catch (e) {
+    } catch {
       toast.error(`Failed to fetch twin ${type} links`);
       return { data: [], pagination: {} };
     }
