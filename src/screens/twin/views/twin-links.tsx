@@ -1,17 +1,21 @@
 import { ColumnDef } from "@tanstack/table-core";
+import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 
 import { TwinLinkView } from "@/entities/link";
 import { useFetchTwinLinks } from "@/entities/twin";
+import { Twin_DETAILED } from "@/entities/twin/server";
 import { LinkResourceLink } from "@/features/link/ui";
 import { TwinContext } from "@/features/twin";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
+import { TwinsTable } from "@/widgets/tables";
 
 const colDefs: Record<
   keyof Pick<
@@ -74,10 +78,15 @@ const colDefs: Record<
 };
 
 export function TwinLinks() {
+  const router = useRouter();
   const { twin } = useContext(TwinContext);
   const tableRefForward = useRef<DataTableHandle>(null);
   const tableRefBackward = useRef<DataTableHandle>(null);
   const { fetchTwinLinksById } = useFetchTwinLinks();
+
+  function handleRowClick(row: Twin_DETAILED) {
+    router.push(`/${PlatformArea.core}/twins/${row.id}`);
+  }
 
   async function fetchLinks(
     type: "forward" | "backward"
@@ -92,7 +101,7 @@ export function TwinLinks() {
       const { data } = response;
 
       return { data, pagination: {} };
-    } catch (e) {
+    } catch {
       toast.error(`Failed to fetch twin ${type} links`);
       return { data: [], pagination: {} };
     }
@@ -143,6 +152,14 @@ export function TwinLinks() {
           colDefs.createdAt,
         ]}
       />
+      {twin.subordinates && (
+        <TwinsTable
+          title="Children"
+          baseTwinClassIdList={twin.subordinates.map((el) => el.id)}
+          targetHeadTwinId={twin.id}
+          onRowClick={handleRowClick}
+        />
+      )}
     </>
   );
 }
