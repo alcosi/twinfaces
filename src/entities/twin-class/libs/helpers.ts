@@ -22,15 +22,15 @@ export const hydrateTwinClassFromMap = (
     dto
   ) as TwinClass_DETAILED;
 
-  if (!relatedObjects?.twinClassMap) return hydrated;
+  if (!relatedObjects) return hydrated;
 
-  if (dto.headClassId) {
+  if (dto.headClassId && relatedObjects.twinClassMap) {
     hydrated.headClass = relatedObjects.twinClassMap[
       dto.headClassId
     ] as TwinClassBaseV1;
   }
 
-  if (dto.extendsClassId) {
+  if (dto.extendsClassId && relatedObjects.twinClassMap) {
     hydrated.extendsClass = relatedObjects.twinClassMap[dto.extendsClassId];
   }
 
@@ -83,6 +83,18 @@ export const hydrateTwinClassFromMap = (
 
       return acc;
     }, []);
+  }
+
+  if (dto.statusIds && relatedObjects.statusMap) {
+    hydrated.statuses = dto.statusIds.reduce(
+      (acc, id) => {
+        const status = relatedObjects.statusMap?.[id];
+        if (status) acc.push(status);
+
+        return acc;
+      },
+      [] as NonNullable<TwinClass["statuses"]>
+    );
   }
 
   if (hydrated.headHunterParams && hydrated.headHunterFeaturer?.params) {
