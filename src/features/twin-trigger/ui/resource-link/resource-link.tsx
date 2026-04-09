@@ -18,7 +18,7 @@ export function TwinTriggerResourceLink({
   disabled,
   withTooltip,
 }: Props) {
-  const link = `/${PlatformArea.core}/notification-schema/${data.id}`;
+  const link = `/${PlatformArea.core}/twin-triggers/${data.id}`;
 
   return (
     <ResourceLink
