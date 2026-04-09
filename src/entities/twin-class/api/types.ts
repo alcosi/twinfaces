@@ -12,6 +12,7 @@ export type TwinClass = components["schemas"]["TwinClassV1"] & {
   extendsClass?: TwinClass;
   headHunterFeaturer?: Featurer;
   fields?: TwinClassField[];
+  statuses?: components["schemas"]["TwinStatusV1"][];
 };
 
 export type TwinClassBaseV1 = components["schemas"]["TwinClassV1"];
