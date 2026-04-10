@@ -18,8 +18,10 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -33,6 +35,7 @@ export function FactoryConditionGeneral() {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
+  const { confirm } = useActionDialogs();
 
   const conditionerFeaturerSettings: AutoEditDialogSettings = {
     value: {
@@ -93,51 +96,49 @@ export function FactoryConditionGeneral() {
     },
   };
 
-  const activeSettings: InPlaceEditProps<typeof factoryCondition.active> = {
-    id: "active",
-    value: factoryCondition.active,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateFactoryCondition({
-        body: {
-          conditions: [
-            {
-              id: factoryCondition.id,
-              active: value,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
+  function switchActive() {
+    const action = factoryCondition.active ? "disable" : "enable";
+    const status = factoryCondition.active ? "Disable" : "Enable";
 
-  const invertSettings: InPlaceEditProps<typeof factoryCondition.invert> = {
-    id: "invert",
-    value: factoryCondition.invert,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateFactoryCondition({
-        body: {
-          conditions: [
-            {
-              id: factoryCondition.id,
-              invert: value,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
+    confirm({
+      title: `${status} Active`,
+      body: `Are you sure you want to ${action} action for this condition?`,
+      onSuccess: () => {
+        return updateFactoryCondition({
+          body: {
+            conditions: [
+              {
+                id: factoryCondition.id,
+                active: !factoryCondition.active,
+              },
+            ],
+          },
+        }).then(refresh);
+      },
+    });
+  }
+
+  function switchInvert() {
+    const action = factoryCondition.invert ? "disable" : "enable";
+    const status = factoryCondition.invert ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Invert`,
+      body: `Are you sure you want to ${action} action for this condition?`,
+      onSuccess: () => {
+        return updateFactoryCondition({
+          body: {
+            conditions: [
+              {
+                id: factoryCondition.id,
+                invert: !factoryCondition.invert,
+              },
+            ],
+          },
+        }).then(refresh);
+      },
+    });
+  }
 
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
@@ -197,14 +198,20 @@ export function FactoryConditionGeneral() {
           <TableRow>
             <TableCell>Active</TableCell>
             <TableCell>
-              <InPlaceEdit {...activeSettings} />
+              <Switch
+                checked={factoryCondition.active ?? false}
+                onCheckedChange={switchActive}
+              />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Invert</TableCell>
             <TableCell>
-              <InPlaceEdit {...invertSettings} />
+              <Switch
+                checked={factoryCondition.invert ?? false}
+                onCheckedChange={switchInvert}
+              />
             </TableCell>
           </TableRow>
         </TableBody>

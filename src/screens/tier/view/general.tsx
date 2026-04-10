@@ -18,9 +18,11 @@ import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
 import { TierContext } from "@/features/tier";
 import { TwinClassSchemaResourceLink } from "@/features/twin-class-schema/ui";
 import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { formatIntlDate } from "@/shared/libs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -30,6 +32,7 @@ import {
 export function TierGeneral() {
   const { tierId, tier, refresh } = useContext(TierContext);
   const { updateTier } = useUpdateTier();
+  const { confirm } = useActionDialogs();
 
   const permissionSchemaAdapter = usePermissionSchemaSelectAdapter();
   const twinflowSchemaAdapter = useTwinFlowSchemaSelectAdapter();
@@ -65,22 +68,21 @@ export function TierGeneral() {
     },
   };
 
-  const customSettings: InPlaceEditProps<typeof tier.custom> = {
-    id: "custom",
-    value: tier.custom,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "Custom",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateTier({
-        tierId,
-        body: { tier: { custom: value as boolean } },
-      }).then(refresh);
-    },
-  };
+  function switchCustom() {
+    const action = tier.custom ? "disable" : "enable";
+    const status = tier.custom ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Active`,
+      body: `Are you sure you want to ${action} action for this tier?`,
+      onSuccess: () => {
+        return updateTier({
+          tierId,
+          body: { tier: { custom: !tier.custom } },
+        }).then(refresh);
+      },
+    });
+  }
 
   const permissionSchemaSettings: InPlaceEditProps<
     typeof tier.permissionSchemaId
@@ -219,7 +221,10 @@ export function TierGeneral() {
           <TableRow>
             <TableCell>Custom</TableCell>
             <TableCell>
-              <InPlaceEdit {...customSettings} />
+              <Switch
+                checked={tier.custom ?? false}
+                onCheckedChange={switchCustom}
+              />
             </TableCell>
           </TableRow>
 

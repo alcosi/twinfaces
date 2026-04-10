@@ -14,8 +14,10 @@ import {
 import { TransitionTriggerContext } from "@/features/transition-trigger";
 import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
 import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -25,6 +27,7 @@ import {
 export function TransitionTriggerGeneral() {
   const { transitionTrigger, refresh } = useContext(TransitionTriggerContext);
   const { updateTransitionTrigger } = useTransitionTriggerUpdate();
+  const { confirm } = useActionDialogs();
   const twinTriggerAdapter = useTwinTriggerSelectAdapter();
   const transitionAdapter = useTransitionSelectAdapter();
 
@@ -116,51 +119,49 @@ export function TransitionTriggerGeneral() {
     },
   };
 
-  const activeSettings: InPlaceEditProps<typeof transitionTrigger.active> = {
-    id: "active",
-    value: transitionTrigger.active,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateTransitionTrigger({
-        body: {
-          transitionTriggers: [
-            {
-              id: transitionTrigger.id,
-              active: value as boolean,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
+  function switchActive() {
+    const action = transitionTrigger.active ? "disable" : "enable";
+    const status = transitionTrigger.active ? "Disable" : "Enable";
 
-  const asyncSettings: InPlaceEditProps<typeof transitionTrigger.async> = {
-    id: "async",
-    value: transitionTrigger.async,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateTransitionTrigger({
-        body: {
-          transitionTriggers: [
-            {
-              id: transitionTrigger.id,
-              async: value as boolean,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
+    confirm({
+      title: `${status} Active`,
+      body: `Are you sure you want to ${action} action for this transition trigger?`,
+      onSuccess: () => {
+        return updateTransitionTrigger({
+          body: {
+            transitionTriggers: [
+              {
+                id: transitionTrigger.id,
+                active: !transitionTrigger.active,
+              },
+            ],
+          },
+        }).then(refresh);
+      },
+    });
+  }
+
+  function switchAsync() {
+    const action = transitionTrigger.async ? "disable" : "enable";
+    const status = transitionTrigger.async ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Async`,
+      body: `Are you sure you want to ${action} action for this transition trigger?`,
+      onSuccess: () => {
+        return updateTransitionTrigger({
+          body: {
+            transitionTriggers: [
+              {
+                id: transitionTrigger.id,
+                async: !transitionTrigger.async,
+              },
+            ],
+          },
+        }).then(refresh);
+      },
+    });
+  }
 
   return (
     <InPlaceEditContextProvider>
@@ -190,7 +191,10 @@ export function TransitionTriggerGeneral() {
           <TableRow>
             <TableCell>Active</TableCell>
             <TableCell>
-              <InPlaceEdit {...activeSettings} />
+              <Switch
+                checked={transitionTrigger.active ?? false}
+                onCheckedChange={switchActive}
+              />
             </TableCell>
           </TableRow>
 
@@ -204,7 +208,10 @@ export function TransitionTriggerGeneral() {
           <TableRow>
             <TableCell>Async</TableCell>
             <TableCell>
-              <InPlaceEdit {...asyncSettings} />
+              <Switch
+                checked={transitionTrigger.async ?? false}
+                onCheckedChange={switchAsync}
+              />
             </TableCell>
           </TableRow>
         </TableBody>
