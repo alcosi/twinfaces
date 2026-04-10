@@ -23,7 +23,8 @@ import {
 } from "@/features/inPlaceEdit";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { GuidWithCopy } from "@/shared/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
+import { GuidWithCopy, Switch } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
 export function TwinFieldGeneral({
@@ -38,6 +39,7 @@ export function TwinFieldGeneral({
     useState<AutoEditDialogSettings | undefined>(undefined);
   const { updateField } = useFieldUpdate();
   const router = useRouter();
+  const { confirm } = useActionDialogs();
   const permissionAdapter = usePermissionSelectAdapter();
   const fieldTyperFeaturerAdapter = useFeaturerSelectAdapter(13);
   const twinSorterFeaturerAdapter = useFeaturerSelectAdapter(41);
@@ -103,33 +105,31 @@ export function TwinFieldGeneral({
     },
   };
 
-  const requiredSettings: InPlaceEditProps<typeof twinField.required> = {
-    id: "abstract",
-    value: twinField.required,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: (value) => {
-      return update({ required: value });
-    },
-  };
+  function switchRequired() {
+    const action = twinField.required ? "disable" : "enable";
+    const status = twinField.required ? "Disable" : "Enable";
 
-  const systemSettings: InPlaceEditProps<typeof twinField.system> = {
-    id: "abstract",
-    value: twinField.system,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: (value) => {
-      return update({ system: value });
-    },
-  };
+    confirm({
+      title: `${status} Required`,
+      body: `Are you sure you want to ${action} action for this twin field?`,
+      onSuccess: () => {
+        return update({ required: !twinField.required });
+      },
+    });
+  }
+
+  function switchSystem() {
+    const action = twinField.system ? "disable" : "enable";
+    const status = twinField.system ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} System`,
+      body: `Are you sure you want to ${action} action for this twin field?`,
+      onSuccess: () => {
+        return update({ system: !twinField.system });
+      },
+    });
+  }
 
   const viewPermissionSettings: InPlaceEditProps<
     typeof twinField.viewPermissionId
@@ -339,14 +339,20 @@ export function TwinFieldGeneral({
           <TableRow className="cursor-pointer">
             <TableCell>Required</TableCell>
             <TableCell>
-              <InPlaceEdit {...requiredSettings} />
+              <Switch
+                checked={twinField.required ?? false}
+                onCheckedChange={switchRequired}
+              />
             </TableCell>
           </TableRow>
 
           <TableRow className="cursor-pointer">
             <TableCell>System</TableCell>
             <TableCell>
-              <InPlaceEdit {...systemSettings} />
+              <Switch
+                checked={twinField.system ?? false}
+                onCheckedChange={switchSystem}
+              />
             </TableCell>
           </TableRow>
 

@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import z from "zod";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
@@ -32,9 +31,11 @@ import { NotificationSchemaResourceLink } from "@/features/notification-schema/u
 import { RecipientResourceLink } from "@/features/recipient/ui";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { ValidatorSetResourceLink } from "@/features/validator-set/ui";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -49,6 +50,7 @@ export function NotificationGeneral() {
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
   const validatorSetAdapter = useValidatorSetSelectAdapter();
   const notificationRecipientAdapter = useRecipientSelectAdapter();
+  const { confirm } = useActionDialogs();
 
   const [editFieldDialogOpen, setEditFieldDialogOpen] =
     useState<boolean>(false);
@@ -188,30 +190,27 @@ export function NotificationGeneral() {
     },
   };
 
-  const twinValidatorSetInvertSettings: InPlaceEditProps<
-    typeof notification.twinValidatorSetInvert
-  > = {
-    id: "twinValidatorSetInvert",
-    value: notification.twinValidatorSetInvert,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateNotification({
-        body: {
-          historyNotifications: [
-            {
-              id: notification.id,
-              twinValidatorSetInvert: value as boolean,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
+  function switchInvert() {
+    const action = notification.twinValidatorSetInvert ? "disable" : "enable";
+    const status = notification.twinValidatorSetInvert ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Invert`,
+      body: `Are you sure you want to ${action} action for this notification?`,
+      onSuccess: () => {
+        return updateNotification({
+          body: {
+            historyNotifications: [
+              {
+                id: notification.id,
+                twinValidatorSetInvert: !notification.twinValidatorSetInvert,
+              },
+            ],
+          },
+        }).then(refresh);
+      },
+    });
+  }
 
   return (
     <InPlaceEditContextProvider>
@@ -284,7 +283,10 @@ export function NotificationGeneral() {
           <TableRow>
             <TableCell>Twin validator set invert</TableCell>
             <TableCell>
-              <InPlaceEdit {...twinValidatorSetInvertSettings} />
+              <Switch
+                checked={notification.twinValidatorSetInvert ?? false}
+                onCheckedChange={switchInvert}
+              />
             </TableCell>
           </TableRow>
         </TableBody>

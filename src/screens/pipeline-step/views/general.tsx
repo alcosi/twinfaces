@@ -25,8 +25,10 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { PipelineStepContext } from "@/features/pipeline-step";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -39,6 +41,7 @@ export function PipelineStepGeneral() {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
+  const { confirm } = useActionDialogs();
 
   const { updateFactoryPipelineStep } = useFactoryPipelineStepUpdate();
   const fCAdapter = useFactoryConditionSetSelectAdapter();
@@ -82,43 +85,39 @@ export function PipelineStepGeneral() {
     },
   };
 
-  const factoryConditionSetInvertSettings: InPlaceEditProps<
-    typeof step.factoryConditionInvert
-  > = {
-    id: "factoryConditionInvert",
-    value: step.factoryConditionInvert,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: (value) => {
-      return update({
-        factoryPipelineStep: {
-          factoryConditionSetInvert: value,
-        },
-      });
-    },
-  };
+  function switchInvert() {
+    const action = step.factoryConditionInvert ? "disable" : "enable";
+    const status = step.factoryConditionInvert ? "Disable" : "Enable";
 
-  const activeSettings: InPlaceEditProps<typeof step.active> = {
-    id: "active",
-    value: step.active,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: (value) => {
-      return update({
-        factoryPipelineStep: {
-          active: value,
-        },
-      });
-    },
-  };
+    confirm({
+      title: `${status} Invert`,
+      body: `Are you sure you want to ${action} action for this step?`,
+      onSuccess: () => {
+        return update({
+          factoryPipelineStep: {
+            factoryConditionSetInvert: !step.factoryConditionInvert,
+          },
+        });
+      },
+    });
+  }
+
+  function switchActive() {
+    const action = step.active ? "disable" : "enable";
+    const status = step.active ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Active`,
+      body: `Are you sure you want to ${action} action for this step?`,
+      onSuccess: () => {
+        return update({
+          factoryPipelineStep: {
+            active: !step.active,
+          },
+        });
+      },
+    });
+  }
 
   const fillerFeaturerSettings: AutoEditDialogSettings = {
     value: {
@@ -215,14 +214,20 @@ export function PipelineStepGeneral() {
           <TableRow>
             <TableCell>Condition invert</TableCell>
             <TableCell>
-              <InPlaceEdit {...factoryConditionSetInvertSettings} />
+              <Switch
+                checked={step.factoryConditionInvert ?? false}
+                onCheckedChange={switchInvert}
+              />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Active</TableCell>
             <TableCell>
-              <InPlaceEdit {...activeSettings} />
+              <Switch
+                checked={step.active ?? false}
+                onCheckedChange={switchActive}
+              />
             </TableCell>
           </TableRow>
 
