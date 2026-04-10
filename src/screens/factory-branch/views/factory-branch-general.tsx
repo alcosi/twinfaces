@@ -14,8 +14,10 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -27,6 +29,7 @@ export function FactoryBranchGeneral() {
   const fAdapter = useFactorySelectAdapter();
   const fcsAdapter = useFactoryConditionSetSelectAdapter();
   const { updateFactoryBranch } = useUpdateFactoryBranch();
+  const { confirm } = useActionDialogs();
 
   const nextFactorySettings: InPlaceEditProps<any> = {
     id: "nextFactoryId",
@@ -79,45 +82,45 @@ export function FactoryBranchGeneral() {
     },
   };
 
-  const activeSettings: InPlaceEditProps<typeof factoryBranch.active> = {
-    id: "active",
-    value: factoryBranch.active,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateFactoryBranch({
-        factoryBranchId: factoryBranch.id,
-        body: {
-          active: value,
-        },
-      }).then(refresh);
-    },
-  };
+  function switchActive() {
+    const action = factoryBranch.active ? "disable" : "enable";
+    const status = factoryBranch.active ? "Disable" : "Enable";
 
-  const factoryConditionSetInvertSettings: InPlaceEditProps<
-    typeof factoryBranch.factoryConditionSetInvert
-  > = {
-    id: "factoryConditionSetInvert",
-    value: factoryBranch.factoryConditionSetInvert,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateFactoryBranch({
-        factoryBranchId: factoryBranch.id,
-        body: {
-          factoryConditionSetInvert: value,
-        },
-      }).then(refresh);
-    },
-  };
+    confirm({
+      title: `${status} Active`,
+      body: `Are you sure you want to ${action} action for this branch?`,
+      onSuccess: () => {
+        return updateFactoryBranch({
+          factoryBranchId: factoryBranch.id,
+          body: {
+            active: factoryBranch.active!,
+          },
+        }).then(refresh);
+      },
+    });
+  }
+
+  function switchInvert() {
+    const action = factoryBranch.factoryConditionSetInvert
+      ? "disable"
+      : "enable";
+    const status = factoryBranch.factoryConditionSetInvert
+      ? "Disable"
+      : "Enable";
+
+    confirm({
+      title: `${status} Invert`,
+      body: `Are you sure you want to ${action} action for this branch?`,
+      onSuccess: () => {
+        return updateFactoryBranch({
+          factoryBranchId: factoryBranch.id,
+          body: {
+            factoryConditionSetInvert: factoryBranch.factoryConditionSetInvert!,
+          },
+        }).then(refresh);
+      },
+    });
+  }
 
   const descriptionSettings: InPlaceEditProps<
     typeof factoryBranch.description
@@ -172,14 +175,20 @@ export function FactoryBranchGeneral() {
           <TableRow>
             <TableCell>Condition invert</TableCell>
             <TableCell>
-              <InPlaceEdit {...factoryConditionSetInvertSettings} />
+              <Switch
+                checked={factoryBranch.factoryConditionSetInvert ?? false}
+                onCheckedChange={switchInvert}
+              />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Active</TableCell>
             <TableCell>
-              <InPlaceEdit {...activeSettings} />
+              <Switch
+                checked={factoryBranch.active ?? false}
+                onCheckedChange={switchActive}
+              />
             </TableCell>
           </TableRow>
 

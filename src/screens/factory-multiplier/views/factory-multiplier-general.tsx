@@ -23,8 +23,10 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -39,6 +41,7 @@ export function FactoryMultiplierGeneral() {
   const [editFieldDialogOpen, setEditFieldDialogOpen] = useState(false);
   const [currentAutoEditDialogSettings, setCurrentAutoEditDialogSettings] =
     useState<AutoEditDialogSettings | undefined>(undefined);
+  const { confirm } = useActionDialogs();
 
   const inputClassSettings: InPlaceEditProps<
     typeof factoryMultiplier.inputTwinClassId
@@ -101,26 +104,25 @@ export function FactoryMultiplierGeneral() {
     },
   };
 
-  const activeSettings: InPlaceEditProps<typeof factoryMultiplier.active> = {
-    id: "active",
-    value: factoryMultiplier.active,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateFactoryMultiplier({
-        factoryMultiplierId: factoryMultiplier.id,
-        body: {
-          factoryMultiplier: {
-            active: value,
+  function switchActive() {
+    const action = factoryMultiplier.active ? "disable" : "enable";
+    const status = factoryMultiplier.active ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Active`,
+      body: `Are you sure you want to ${action} action for this multiplier?`,
+      onSuccess: () => {
+        return updateFactoryMultiplier({
+          factoryMultiplierId: factoryMultiplier.id,
+          body: {
+            factoryMultiplier: {
+              active: !factoryMultiplier.active,
+            },
           },
-        },
-      }).then(refresh);
-    },
-  };
+        }).then(refresh);
+      },
+    });
+  }
 
   const descriptionSettings: InPlaceEditProps<
     typeof factoryMultiplier.description
@@ -198,7 +200,10 @@ export function FactoryMultiplierGeneral() {
           <TableRow>
             <TableCell>Active</TableCell>
             <TableCell>
-              <InPlaceEdit {...activeSettings} />
+              <Switch
+                checked={factoryMultiplier.active ?? false}
+                onCheckedChange={switchActive}
+              />
             </TableCell>
           </TableRow>
 

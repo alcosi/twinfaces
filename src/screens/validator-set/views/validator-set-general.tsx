@@ -9,9 +9,11 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { ValidatorSetContext } from "@/features/validator-set";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -21,6 +23,7 @@ import {
 export function ValidatorSetGeneral() {
   const { validatorSet, refresh } = useContext(ValidatorSetContext);
   const { updateValidatorSet } = useUpdateValidatorSet();
+  const { confirm } = useActionDialogs();
 
   const nameSettings: InPlaceEditProps<typeof validatorSet.name> = {
     id: "name",
@@ -72,28 +75,27 @@ export function ValidatorSetGeneral() {
       },
     };
 
-  const invertSettings: InPlaceEditProps<typeof validatorSet.invert> = {
-    id: "invert",
-    value: validatorSet.invert,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateValidatorSet({
-        body: {
-          validatorSets: [
-            {
-              id: validatorSet.id,
-              invert: value,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
+  function switchInvert() {
+    const action = validatorSet.invert ? "disable" : "enable";
+    const status = validatorSet.invert ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Invert`,
+      body: `Are you sure you want to ${action} action for this validator set?`,
+      onSuccess: () => {
+        return updateValidatorSet({
+          body: {
+            validatorSets: [
+              {
+                id: validatorSet.id,
+                invert: !validatorSet.invert,
+              },
+            ],
+          },
+        }).then(refresh);
+      },
+    });
+  }
   return (
     <InPlaceEditContextProvider>
       <Table className="mt-8">
@@ -121,7 +123,10 @@ export function ValidatorSetGeneral() {
           <TableRow>
             <TableCell>Invert</TableCell>
             <TableCell>
-              <InPlaceEdit {...invertSettings} />
+              <Switch
+                checked={validatorSet.invert ?? false}
+                onCheckedChange={switchInvert}
+              />
             </TableCell>
           </TableRow>
         </TableBody>

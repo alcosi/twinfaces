@@ -25,9 +25,11 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import { createFixedSelectAdapter } from "@/shared/libs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -39,6 +41,7 @@ export function FactoryEraserGeneral() {
   const { updateFactoryEraser } = useFactoryEraserUpdate();
   const twinClassAdapter = useTwinClassSelectAdapter();
   const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const { confirm } = useActionDialogs();
 
   async function update(body: FactoryEraserUpdate) {
     try {
@@ -108,43 +111,39 @@ export function FactoryEraserGeneral() {
     },
   };
 
-  const factoryConditionSetInvertSettings: InPlaceEditProps<
-    typeof eraser.factoryConditionSetInvert
-  > = {
-    id: "factoryConditionSetInvert",
-    value: eraser.factoryConditionSetInvert,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: (value) => {
-      return update({
-        eraser: {
-          twinFactoryConditionInvert: value,
-        },
-      });
-    },
-  };
+  function switchInvert() {
+    const action = eraser.factoryConditionSetInvert ? "disable" : "enable";
+    const status = eraser.factoryConditionSetInvert ? "Disable" : "Enable";
 
-  const activeSettings: InPlaceEditProps<typeof eraser.active> = {
-    id: "active",
-    value: eraser.active,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: (value) => {
-      return update({
-        eraser: {
-          active: value,
-        },
-      });
-    },
-  };
+    confirm({
+      title: `${status} Invert`,
+      body: `Are you sure you want to ${action} action for this eraser?`,
+      onSuccess: () => {
+        return update({
+          eraser: {
+            twinFactoryConditionInvert: !eraser.factoryConditionSetInvert,
+          },
+        }).then(refresh);
+      },
+    });
+  }
+
+  function switchActive() {
+    const action = eraser.active ? "disable" : "enable";
+    const status = eraser.active ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Active`,
+      body: `Are you sure you want to ${action} action for this eraser?`,
+      onSuccess: () => {
+        return update({
+          eraser: {
+            active: !eraser.active,
+          },
+        }).then(refresh);
+      },
+    });
+  }
 
   const eraseActionSettings: InPlaceEditProps<typeof eraser.action> = {
     id: "action",
@@ -219,14 +218,20 @@ export function FactoryEraserGeneral() {
           <TableRow>
             <TableCell>Condition invert</TableCell>
             <TableCell>
-              <InPlaceEdit {...factoryConditionSetInvertSettings} />
+              <Switch
+                checked={eraser.factoryConditionSetInvert ?? false}
+                onCheckedChange={switchInvert}
+              />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Active</TableCell>
             <TableCell>
-              <InPlaceEdit {...activeSettings} />
+              <Switch
+                checked={eraser.active ?? false}
+                onCheckedChange={switchActive}
+              />
             </TableCell>
           </TableRow>
 
