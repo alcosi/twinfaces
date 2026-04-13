@@ -3,7 +3,10 @@
 import { useContext } from "react";
 
 import { TwinClassContext } from "@/entities/twin-class";
-import { TwinClassRelations } from "@/screens/twin-class-relations";
+import {
+  TwinClassRelations,
+  TwinClassRelationsGraph,
+} from "@/screens/twin-class-relations";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import {
   TwinClassDynamicMarkersTable,
@@ -43,6 +46,11 @@ export default function TwinClassPage() {
       key: "relations",
       label: "Relations",
       content: <TwinClassRelations />,
+    },
+    {
+      key: "graph",
+      label: "Graph",
+      content: <TwinClassRelationsGraph />,
     },
     {
       key: "dynamicMarkers",
