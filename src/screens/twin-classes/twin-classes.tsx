@@ -5,7 +5,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -29,13 +29,13 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
+import { cn } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
   DataTableHandle,
   FiltersState,
 } from "@/widgets/crud-data-table";
-import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { TwinClassFormFields } from "./form-fields";
 import { TwinClassesExtendsTreeView, TwinClassesHeadTreeView } from "./view";
@@ -325,6 +325,7 @@ export function TwinClasses({ type }: { type?: string }) {
   const router = useRouter();
   const { twinClass } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
+  const [activeTab, setActiveTab] = useState("list");
   const { searchByFilters, simplifiedSearchByFilters } = useTwinClassSearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
 
@@ -552,7 +553,7 @@ export function TwinClasses({ type }: { type?: string }) {
     }
   };
 
-  const tabs: Tab[] = [
+  const tabs = [
     {
       key: "list",
       label: "List",
@@ -635,9 +636,31 @@ export function TwinClasses({ type }: { type?: string }) {
       ),
     },
   ];
+  const activeTabContent =
+    tabs.find((tab) => tab.key === activeTab)?.content ?? tabs[0]?.content;
+
   return (
     <div className="flex flex-col pt-4">
-      <TabsLayout tabs={tabs} />
+      <nav className="border-border bg-background sticky top-0 z-10 flex w-full overflow-x-auto border-b">
+        <div className="min-w-max">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActiveTab(tab.key)}
+              className={cn(
+                "border-b-2 border-transparent px-3 py-4 transition-colors duration-200",
+                "hover:border-b-primary hover:bg-secondary",
+                activeTab === tab.key && "border-b-link-enabled"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      <div>{activeTabContent}</div>
     </div>
   );
 }
