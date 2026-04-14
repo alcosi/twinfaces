@@ -18,6 +18,7 @@ import {
   Shapes,
   SquareActivity,
   SquareAsterisk,
+  SwatchBook,
   Tags,
   TicketCheck,
   TrendingUp,
@@ -315,6 +316,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Transition triggers",
         url: `/${PlatformArea.core}/transition-triggers`,
         icon: BellElectric,
+      },
+      {
+        title: "Status triggers",
+        url: `/${PlatformArea.core}/status-triggers`,
+        icon: SwatchBook,
       },
       {
         title: "Factory triggers",

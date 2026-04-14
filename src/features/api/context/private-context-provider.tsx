@@ -75,6 +75,10 @@ import {
   PermissionSpaceRoleApi,
   createPermissionSpaceRoleApi,
 } from "@/entities/space-role";
+import {
+  StatusTriggerApi,
+  createStatusTriggerApi,
+} from "@/entities/status-trigger";
 import { TierApi, createTierApi } from "@/entities/tier";
 import {
   TransitionTriggerApi,
@@ -118,7 +122,7 @@ import { UserGroupApi, createUserGroupApi } from "@/entities/user-group";
 import {
   ValidatorSetApi,
   createValidatorSetApi,
-} from "@/entities/validator-set/index";
+} from "@/entities/validator-set";
 import { ApiSettings, PrivateApiContext, TwinsAPI } from "@/shared/api";
 import { LoadingOverlay } from "@/shared/ui";
 
@@ -167,6 +171,7 @@ export interface PrivateApiContextProps {
   optionProjection: OptionProjectionApi;
   twinTrigger: TwinTriggerApi;
   transitionTrigger: TransitionTriggerApi;
+  statusTrigger: StatusTriggerApi;
 }
 
 export function PrivateApiContextProvider({
@@ -227,6 +232,7 @@ export function PrivateApiContextProvider({
         optionProjection: createOptionProjectionApi(settings),
         twinTrigger: createTwinTriggerApi(settings),
         transitionTrigger: createTransitionTriggerApi(settings),
+        statusTrigger: createStatusTriggerApi(settings),
       }
     : ({} as PrivateApiContextProps);
 
