@@ -51,7 +51,7 @@ export function FactoryPipelineGeneral() {
       ...tcAdapter,
     },
     renderPreview: pipeline.inputTwinClass
-      ? (_) => (
+      ? () => (
           <TwinClassResourceLink
             data={pipeline.inputTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -82,7 +82,7 @@ export function FactoryPipelineGeneral() {
       ...fcsAdapter,
     },
     renderPreview: pipeline.factoryConditionSet
-      ? (_) => (
+      ? () => (
           <FactoryConditionSetResourceLink
             data={pipeline.factoryConditionSet}
             withTooltip
@@ -153,7 +153,7 @@ export function FactoryPipelineGeneral() {
       ...tsAdapter,
     },
     renderPreview: pipeline.outputTwinStatus
-      ? (_) => (
+      ? () => (
           <TwinClassStatusResourceLink
             data={pipeline.outputTwinStatus}
             twinClassId={pipeline.inputTwinClassId}
@@ -183,7 +183,7 @@ export function FactoryPipelineGeneral() {
       ...fAdapter,
     },
     renderPreview: pipeline.nextFactory
-      ? (_) => <FactoryResourceLink data={pipeline.nextFactory} withTooltip />
+      ? () => <FactoryResourceLink data={pipeline.nextFactory} withTooltip />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;

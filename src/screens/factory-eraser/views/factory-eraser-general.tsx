@@ -64,7 +64,7 @@ export function FactoryEraserGeneral() {
       ...twinClassAdapter,
     },
     renderPreview: eraser.inputTwinClassId
-      ? (_) => (
+      ? () => (
           <TwinClassResourceLink
             data={eraser.inputTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -93,7 +93,7 @@ export function FactoryEraserGeneral() {
       ...factoryConditionSetAdapter,
     },
     renderPreview: eraser.factoryConditionSetId
-      ? (_) => (
+      ? () => (
           <FactoryConditionSetResourceLink
             data={eraser.factoryConditionSet}
             withTooltip

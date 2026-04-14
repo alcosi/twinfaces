@@ -40,7 +40,7 @@ export function FactoryBranchGeneral() {
       ...fAdapter,
     },
     renderPreview: factoryBranch.nextFactory
-      ? (_) => (
+      ? () => (
           <FactoryResourceLink data={factoryBranch.nextFactory} withTooltip />
         )
       : undefined,
@@ -64,7 +64,7 @@ export function FactoryBranchGeneral() {
       ...fcsAdapter,
     },
     renderPreview: factoryBranch.factoryConditionSet
-      ? (_) => (
+      ? () => (
           <FactoryConditionSetResourceLink
             data={factoryBranch.factoryConditionSet}
             withTooltip
