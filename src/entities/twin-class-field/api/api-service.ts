@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   TwinClassFieldCreateRq,
+  TwinClassFieldDuplicateRq,
   TwinClassFieldSearchFilters,
   TwinClassFieldUpdateRq,
 } from "./types";
@@ -125,6 +126,15 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     });
   }
 
+  function duplicate({ body }: { body: TwinClassFieldDuplicateRq }) {
+    return settings.client.POST("/private/twin_class_field/duplicate/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
   return {
     search,
     // getFields,
@@ -132,6 +142,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
     create,
     update,
     searchBySearchId,
+    duplicate,
   };
 }
 

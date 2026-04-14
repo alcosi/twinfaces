@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check, Unplug } from "lucide-react";
+import { Check, Copy, EllipsisVertical, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
@@ -30,7 +30,14 @@ import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { cn } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 import {
   CrudDataTable,
   DataTableHandle,
@@ -38,6 +45,10 @@ import {
 } from "@/widgets/crud-data-table";
 
 import { TwinClassFormFields } from "./form-fields";
+import {
+  TwinClassDuplicateDialog,
+  TwinClassDuplicateDialogRef,
+} from "./twin-class-duplicate-dialog";
 import { TwinClassesExtendsTreeView, TwinClassesHeadTreeView } from "./view";
 
 function ThemeIconCell({ data }: { data: TwinClass_DETAILED }) {
@@ -325,6 +336,7 @@ export function TwinClasses({ type }: { type?: string }) {
   const router = useRouter();
   const { twinClass } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
+  const duplicateDialogRef = useRef<TwinClassDuplicateDialogRef>(null);
   const [activeTab, setActiveTab] = useState("list");
   const { searchByFilters, simplifiedSearchByFilters } = useTwinClassSearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
@@ -553,6 +565,42 @@ export function TwinClasses({ type }: { type?: string }) {
     }
   };
 
+  const actionsCol: ColumnDef<TwinClass_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
+
   const tabs = [
     {
       key: "list",
@@ -588,6 +636,7 @@ export function TwinClasses({ type }: { type?: string }) {
             colDefs.twinClassFreezeId,
             colDefs.uniqueName,
             colDefs.twinCounter,
+            actionsCol,
           ]}
           getRowId={(row) => row.id!}
           onRowClick={(row) =>
@@ -611,6 +660,7 @@ export function TwinClasses({ type }: { type?: string }) {
             colDefs.hasSegment,
             colDefs.twinClassFreezeId,
             colDefs.twinCounter,
+            actionsCol,
           ]}
           dialogForm={twinClassesForm}
           onCreateSubmit={!type ? handleOnCreateSubmit : undefined}
@@ -661,6 +711,11 @@ export function TwinClasses({ type }: { type?: string }) {
       </nav>
 
       <div>{activeTabContent}</div>
+
+      <TwinClassDuplicateDialog
+        ref={duplicateDialogRef}
+        onSuccess={() => tableRef.current?.refresh()}
+      />
     </div>
   );
 }

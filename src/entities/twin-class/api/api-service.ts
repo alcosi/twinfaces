@@ -7,6 +7,7 @@ import { operations } from "@/shared/api/generated/schema";
 import {
   TagSearchFilters,
   TwinClassCreateRq,
+  TwinClassDuplicateRq,
   TwinClassDynamicMarkerCreateRq,
   TwinClassDynamicMarkerFilters,
   TwinClassDynamicMarkerUpdateRq,
@@ -337,6 +338,15 @@ export function createTwinClassApi(settings: ApiSettings) {
     });
   }
 
+  function duplicate({ body }: { body: TwinClassDuplicateRq }) {
+    return settings.client.POST("/private/twin_class/duplicate/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
   return {
     search,
     getByKey,
@@ -352,6 +362,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     searchDynamicMarkers,
     updateDynamicMarkers,
     createDynamicMarkers,
+    duplicate,
   };
 }
 

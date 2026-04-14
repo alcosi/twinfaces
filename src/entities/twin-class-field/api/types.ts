@@ -25,6 +25,8 @@ export type TwinClassFieldCreateRq =
   components["schemas"]["TwinClassFieldCreateRqV2"];
 export type TwinClassFieldUpdateRq =
   components["schemas"]["TwinClassFieldUpdateRqV2"];
+export type TwinClassFieldDuplicateRq =
+  components["schemas"]["TwinClassFieldDuplicateRqV1"];
 
 export type TwinClassFieldV1_DETAILED = Required<TwinClassField> & {
   twinClass: TwinClass_DETAILED;
