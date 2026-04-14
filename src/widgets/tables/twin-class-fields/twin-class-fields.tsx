@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check } from "lucide-react";
+import { Check, Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -18,6 +18,13 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -27,6 +34,10 @@ import {
 } from "../../crud-data-table";
 import { TWIN_CLASS_FIELD_SCHEMA } from "./constants";
 import { TwinClassFieldFormFields } from "./form-fields";
+import {
+  TwinClassFieldDuplicateDialog,
+  TwinClassFieldDuplicateDialogRef,
+} from "./twin-class-field-duplicate-dialog";
 import { TwinClassFieldFormValues } from "./types";
 
 const colDefs: Record<
@@ -206,6 +217,7 @@ export function TwinClassFieldsTable({
   twinClassId?: string;
 }) {
   const tableRef = useRef<DataTableHandle>(null);
+  const duplicateDialogRef = useRef<TwinClassFieldDuplicateDialogRef>(null);
   const router = useRouter();
   const api = useContext(PrivateApiContext);
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters({
@@ -311,60 +323,105 @@ export function TwinClassFieldsTable({
     toast.success("Class field created successfully!");
   };
 
+  const actionsCol: ColumnDef<TwinClassFieldV1_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
+
   return (
-    <CrudDataTable
-      title="Fields"
-      ref={tableRef}
-      columns={[
-        colDefs.id,
-        colDefs.twinClassId,
-        colDefs.key,
-        colDefs.name,
-        colDefs.description,
-        colDefs.fieldTyperFeaturerId,
-        colDefs.twinSorterFeaturerId,
-        colDefs.viewPermissionId,
-        colDefs.editPermissionId,
-        colDefs.required,
-        colDefs.system,
-        colDefs.externalId,
-        colDefs.dependent,
-        colDefs.hasDependentFields,
-        colDefs.projectionField,
-        colDefs.hasProjectedFields,
-        colDefs.fieldInitializerFeaturerId,
-      ]}
-      getRowId={(row) => row.id}
-      fetcher={fetchFields}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/fields/${row.id}`)
-      }
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
-      defaultVisibleColumns={[
-        colDefs.id,
-        colDefs.twinClassId,
-        colDefs.key,
-        colDefs.name,
-        colDefs.description,
-        colDefs.fieldTyperFeaturerId,
-        colDefs.twinSorterFeaturerId,
-        colDefs.viewPermissionId,
-        colDefs.editPermissionId,
-        colDefs.required,
-        colDefs.system,
-        colDefs.externalId,
-        colDefs.dependent,
-        colDefs.hasDependentFields,
-        colDefs.projectionField,
-        colDefs.hasProjectedFields,
-      ]}
-      dialogForm={form}
-      onCreateSubmit={handleOnCreateSubmit}
-      renderFormFields={() => (
-        <TwinClassFieldFormFields control={form.control} />
-      )}
-    />
+    <>
+      <CrudDataTable
+        title="Fields"
+        ref={tableRef}
+        columns={[
+          colDefs.id,
+          colDefs.twinClassId,
+          colDefs.key,
+          colDefs.name,
+          colDefs.description,
+          colDefs.fieldTyperFeaturerId,
+          colDefs.twinSorterFeaturerId,
+          colDefs.viewPermissionId,
+          colDefs.editPermissionId,
+          colDefs.required,
+          colDefs.system,
+          colDefs.externalId,
+          colDefs.dependent,
+          colDefs.hasDependentFields,
+          colDefs.projectionField,
+          colDefs.hasProjectedFields,
+          colDefs.fieldInitializerFeaturerId,
+          actionsCol,
+        ]}
+        getRowId={(row) => row.id}
+        fetcher={fetchFields}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/fields/${row.id}`)
+        }
+        filters={{
+          filtersInfo: buildFilterFields(),
+        }}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.twinClassId,
+          colDefs.key,
+          colDefs.name,
+          colDefs.description,
+          colDefs.fieldTyperFeaturerId,
+          colDefs.twinSorterFeaturerId,
+          colDefs.viewPermissionId,
+          colDefs.editPermissionId,
+          colDefs.required,
+          colDefs.system,
+          colDefs.externalId,
+          colDefs.dependent,
+          colDefs.hasDependentFields,
+          colDefs.projectionField,
+          colDefs.hasProjectedFields,
+          actionsCol,
+        ]}
+        dialogForm={form}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <TwinClassFieldFormFields control={form.control} />
+        )}
+      />
+
+      <TwinClassFieldDuplicateDialog
+        ref={duplicateDialogRef}
+        onSuccess={() => tableRef.current?.refresh()}
+      />
+    </>
   );
 }

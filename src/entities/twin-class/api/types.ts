@@ -77,6 +77,8 @@ export type FetchTreePageResult = {
 
 export type TwinClassCreateRq = components["schemas"]["TwinClassCreateRqV2"];
 export type TwinClassUpdateRq = components["schemas"]["TwinClassUpdateRqV1"];
+export type TwinClassDuplicateRq =
+  components["schemas"]["TwinClassDuplicateRqV1"];
 
 export type TwinClassValidHeadQuery =
   operations["validHeadV1"]["parameters"]["query"];
