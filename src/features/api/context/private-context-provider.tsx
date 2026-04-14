@@ -47,6 +47,10 @@ import {
   PipelineStepApi,
   createPipelineStepApi,
 } from "@/entities/factory-pipeline-step";
+import {
+  FactoryTriggerApi,
+  createFactoryTriggerApi,
+} from "@/entities/factory-trigger";
 import { FeaturerApi, createFeaturerApi } from "@/entities/featurer";
 import { LinkApi, createLinkApi } from "@/entities/link";
 import {
@@ -151,6 +155,7 @@ export interface PrivateApiContextProps {
   factoryMultiplier: FactoryMultiplierApi;
   factoryMultiplierFilter: FactoryMultiplierFilterApi;
   factoryEraser: FactoryEraserApi;
+  factoryTrigger: FactoryTriggerApi;
   pipelineStep: PipelineStepApi;
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
@@ -210,6 +215,7 @@ export function PrivateApiContextProvider({
         factoryMultiplier: createFactoryMultiplierApi(settings),
         factoryMultiplierFilter: createFactoryMultiplierFilterApi(settings),
         factoryEraser: createFactoryEraserApi(settings),
+        factoryTrigger: createFactoryTriggerApi(settings),
         pipelineStep: createPipelineStepApi(settings),
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
