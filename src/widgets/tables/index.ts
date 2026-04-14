@@ -4,6 +4,7 @@ export * from "./factory-branches";
 export * from "./factory-conditions";
 export * from "./factory-multipliers";
 export * from "./factory-pipelines";
+export * from "./factory-triggers";
 export * from "./permission-groups";
 export * from "./permissions";
 export * from "./pipeline-steps";

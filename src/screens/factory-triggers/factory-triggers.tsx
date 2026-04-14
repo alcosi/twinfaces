@@ -1,6 +1,6 @@
 "use client";
 
-import { FactoryTriggersTable } from "@/widgets/tables/factory-triggers";
+import { FactoryTriggersTable } from "@/widgets/tables";
 
 export function FactoryTriggersScreen() {
   return <FactoryTriggersTable />;
