@@ -1,12 +1,24 @@
 "use client";
 
-import { useContext } from "react";
+import { Copy, EllipsisVertical } from "lucide-react";
+import { useContext, useRef } from "react";
 
 import { TwinClassContext } from "@/entities/twin-class";
 import {
   TwinClassRelations,
   TwinClassRelationsGraph,
 } from "@/screens/twin-class-relations";
+import {
+  TwinClassDuplicateDialog,
+  TwinClassDuplicateDialogRef,
+} from "@/screens/twin-classes/twin-class-duplicate-dialog";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/ui";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import {
   TwinClassDynamicMarkersTable,
@@ -19,7 +31,8 @@ import { SpaceRolesTable } from "@/widgets/tables/space-roles";
 import { TwinClassGeneral } from "./views";
 
 export default function TwinClassPage() {
-  const { twinClassId } = useContext(TwinClassContext);
+  const { twinClassId, twinClass } = useContext(TwinClassContext);
+  const duplicateDialogRef = useRef<TwinClassDuplicateDialogRef>(null);
 
   const tabs: Tab[] = [
     {
@@ -64,5 +77,36 @@ export default function TwinClassPage() {
     },
   ];
 
-  return <TabsLayout tabs={tabs} />;
+  return (
+    <>
+      <TabsLayout
+        tabs={tabs}
+        rightSlot={
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-primary hover:text-foreground hover:bg-transparent"
+              >
+                <EllipsisVertical className="h-6 w-6" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => duplicateDialogRef.current?.open(twinClass)}
+                className="cursor-pointer"
+              >
+                <Copy className="mr-2 h-5 w-5" />
+                Duplicate
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        }
+      />
+
+      <TwinClassDuplicateDialog ref={duplicateDialogRef} />
+    </>
+  );
 }
