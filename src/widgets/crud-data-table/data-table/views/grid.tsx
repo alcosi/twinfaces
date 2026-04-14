@@ -25,6 +25,15 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
   table: ReturnType<typeof useReactTable<TData>>;
   onRowClick?: (row: TData) => void;
 }) {
+  function getStickyActionsClass(columnId: string, type: "head" | "cell") {
+    if (columnId !== "actions") return undefined;
+
+    return cn(
+      "sticky right-0 border-l border-border bg-background",
+      type === "head" ? "z-30" : "z-20"
+    );
+  }
+
   // Render a single, non-grouped row
   function renderRow(row: Row<TData>) {
     return (
@@ -33,10 +42,18 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
         key={row.id}
         data-state={row.getIsSelected() ? "selected" : undefined}
         onClick={() => onRowClick?.(row.original)}
-        className={cn(onRowClick && "cursor-pointer")}
+        className={cn(onRowClick && "cursor-pointer", "group")}
       >
         {row.getVisibleCells().map((cell) => (
-          <TableCell key={cell.id}>
+          <TableCell
+            key={cell.id}
+            className={cn(
+              getStickyActionsClass(cell.column.id, "cell"),
+              cell.column.id === "actions" &&
+                onRowClick &&
+                "group-hover:bg-muted/50"
+            )}
+          >
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </TableCell>
         ))}
@@ -95,7 +112,10 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <TableHead key={header.id}>
+              <TableHead
+                key={header.id}
+                className={getStickyActionsClass(header.column.id, "head")}
+              >
                 {!header.isPlaceholder &&
                   flexRender(
                     header.column.columnDef.header,

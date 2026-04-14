@@ -14,9 +14,10 @@ export type Tab = {
 
 type Props = {
   tabs: Tab[];
+  rightSlot?: ReactNode;
 };
 
-export function TabsLayout({ tabs }: Props) {
+export function TabsLayout({ tabs, rightSlot }: Props) {
   const hashKey = window.location.hash.slice(1);
   const defaultActiveTab = isPopulatedString(hashKey) ? hashKey : tabs[0]?.key;
 
@@ -43,23 +44,28 @@ export function TabsLayout({ tabs }: Props) {
 
   return (
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
-      <nav className="border-border bg-background sticky top-0 z-10 flex w-full overflow-x-auto border-b">
-        <TabsList className="min-w-max">
-          {tabs.map((tab) => (
-            <Link href={`#${tab.key}`} key={tab.key}>
-              <TabsTrigger
-                value={tab.key}
-                className={cn(
-                  "border-b-2 border-transparent px-3 py-4 transition-colors duration-200",
-                  "hover:border-b-primary hover:bg-secondary",
-                  "data-[state=active]:border-b-link-enabled"
-                )}
-              >
-                {tab.label}
-              </TabsTrigger>
-            </Link>
-          ))}
-        </TabsList>
+      <nav className="border-border bg-background sticky top-0 z-10 flex w-full border-b">
+        <div className="min-w-0 flex-1 overflow-x-auto">
+          <TabsList className="min-w-max">
+            {tabs.map((tab) => (
+              <Link href={`#${tab.key}`} key={tab.key}>
+                <TabsTrigger
+                  value={tab.key}
+                  className={cn(
+                    "border-b-2 border-transparent px-3 py-4 transition-colors duration-200",
+                    "hover:border-b-primary hover:bg-secondary",
+                    "data-[state=active]:border-b-link-enabled"
+                  )}
+                >
+                  {tab.label}
+                </TabsTrigger>
+              </Link>
+            ))}
+          </TabsList>
+        </div>
+        {rightSlot ? (
+          <div className="bg-background shrink-0 px-3 py-2">{rightSlot}</div>
+        ) : null}
       </nav>
       {tabs.map((tab) => (
         <TabsContent key={tab.key} value={tab.key}>
