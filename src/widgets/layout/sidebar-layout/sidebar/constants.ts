@@ -25,6 +25,7 @@ import {
   UsersRound,
   Wand,
   Workflow,
+  Zap,
 } from "lucide-react";
 
 import { DatalistIcon } from "@/features/datalist/ui";
@@ -314,6 +315,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Transition triggers",
         url: `/${PlatformArea.core}/transition-triggers`,
         icon: BellElectric,
+      },
+      {
+        title: "Factory triggers",
+        url: `/${PlatformArea.core}/factory-triggers`,
+        icon: Zap,
       },
     ],
   },
