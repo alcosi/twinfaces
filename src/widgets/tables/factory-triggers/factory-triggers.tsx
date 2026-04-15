@@ -38,7 +38,7 @@ const colDefs: Record<
   factory: {
     id: "factory",
     accessorKey: "factory",
-    header: "Factory",
+    header: "Twin factory",
     cell: ({ row: { original } }) =>
       original.factory && (
         <div className="inline-flex max-w-48">
@@ -49,7 +49,7 @@ const colDefs: Record<
   inputTwinClass: {
     id: "inputTwinClass",
     accessorKey: "inputTwinClass",
-    header: "Input class",
+    header: "Input twin class",
     cell: ({ row: { original } }) =>
       original.inputTwinClass && (
         <div className="inline-flex max-w-48">
@@ -63,7 +63,7 @@ const colDefs: Record<
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
-    header: "Condition set",
+    header: "Twin factory condition set",
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
         <div className="inline-flex max-w-48">
