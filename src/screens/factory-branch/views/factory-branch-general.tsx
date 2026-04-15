@@ -93,7 +93,7 @@ export function FactoryBranchGeneral() {
         return updateFactoryBranch({
           factoryBranchId: factoryBranch.id,
           body: {
-            active: factoryBranch.active!,
+            active: !factoryBranch.active,
           },
         }).then(refresh);
       },
@@ -115,7 +115,7 @@ export function FactoryBranchGeneral() {
         return updateFactoryBranch({
           factoryBranchId: factoryBranch.id,
           body: {
-            factoryConditionSetInvert: factoryBranch.factoryConditionSetInvert!,
+            factoryConditionSetInvert: !factoryBranch.factoryConditionSetInvert,
           },
         }).then(refresh);
       },
