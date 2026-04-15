@@ -1,7 +1,5 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ColumnDef } from "@tanstack/table-core";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
@@ -15,14 +13,20 @@ import {
   useTransitionTriggerCreate,
   useTransitionTriggerSearch,
 } from "@/entities/transition-trigger";
+import { useTransitionTriggerFilters } from "@/entities/transition-trigger/libs";
 import { TwinFlowTransitionContext } from "@/features/twin-flow-transition";
 import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
 import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
+import { PagedResponse } from "@/shared/api/types";
 import { PlatformArea } from "@/shared/config";
-import { isFalsy } from "@/shared/libs/index";
+import { isFalsy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
-import { CrudDataTable, DataTableHandle } from "../../crud-data-table";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "../../crud-data-table";
 import { TriggersFormFields } from "./form-fields";
 
 type TriggersFormValues = z.infer<typeof TRANSITION_TRIGGER_SCHEMA>;
@@ -95,14 +99,41 @@ export function TransitionTriggersTable() {
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTransitionTriggers } = useTransitionTriggerSearch();
   const { createTransitionTrigger } = useTransitionTriggerCreate();
-
-  async function fetchData() {
-    return searchTransitionTriggers({
-      pagination: { pageIndex: 0, pageSize: 100 },
-      filters: {
-        ...(transitionId ? { twinflowTransitionIdList: [transitionId] } : {}),
-      },
+  const { buildFilterFields, mapFiltersToPayload } =
+    useTransitionTriggerFilters({
+      enabledFilters: transitionId
+        ? ["idList", "twinTriggerIdList", "active", "async"]
+        : [
+            "idList",
+            "twinflowTransitionIdList",
+            "twinTriggerIdList",
+            "active",
+            "async",
+          ],
     });
+
+  async function fetchData(
+    pagination: PaginationState,
+    filters: FiltersState
+  ): Promise<PagedResponse<TransitionTrigger_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
+
+    try {
+      return await searchTransitionTriggers({
+        pagination,
+        filters: {
+          ..._filters,
+          ...(transitionId ? { twinflowTransitionIdList: [transitionId] } : {}),
+        },
+      });
+    } catch (error) {
+      toast.error(
+        "An error occured while fetching transition triggers: " + error
+      );
+      throw new Error(
+        "An error occured while fetching transition triggers: " + error
+      );
+    }
   }
 
   const triggersForm = useForm<TriggersFormValues>({
@@ -144,8 +175,7 @@ export function TransitionTriggersTable() {
   return (
     <CrudDataTable
       ref={tableRef}
-      className="mt-4"
-      title="Triggers"
+      title="Transition triggers"
       columns={[
         colDefs.id,
         ...(isFalsy(transitionId) ? [colDefs.twinflowTransitionId] : []),
@@ -159,7 +189,6 @@ export function TransitionTriggersTable() {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/transition-triggers/${row.id}`)
       }
-      disablePagination={true}
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(transitionId) ? [colDefs.twinflowTransitionId] : []),
@@ -168,6 +197,7 @@ export function TransitionTriggersTable() {
         colDefs.async,
         colDefs.active,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
       dialogForm={triggersForm}
       onCreateSubmit={createTrigger}
       renderFormFields={() => (
