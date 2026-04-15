@@ -20,6 +20,7 @@ export function createFactoryTriggerApi(settings: ApiSettings) {
           showTwinFactoryTrigger2TwinTriggerMode: "DETAILED",
           showTwinFactoryTrigger2TwinClassMode: "DETAILED",
           showTwinFactoryTriggerMode: "DETAILED",
+          showTwinFactoryTrigger2FactoryConditionSetMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
