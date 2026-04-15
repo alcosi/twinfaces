@@ -17,7 +17,8 @@ export type StatusTriggerFilterKeys =
   | "twinStatusIdList"
   | "twinTriggerIdList"
   | "active"
-  | "async";
+  | "async"
+  | "incomingElseOutgoing";
 
 export type StatusTriggerFilters = Partial<
   Pick<

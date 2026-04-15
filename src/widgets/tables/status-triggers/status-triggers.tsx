@@ -3,7 +3,9 @@ import { Check } from "lucide-react";
 import { toast } from "sonner";
 
 import {
+  StatusTriggerFilterKeys,
   StatusTrigger_DETAILED,
+  useStatusTriggerFilters,
   useStatusTriggerSearch,
 } from "@/entities/status-trigger";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
@@ -11,7 +13,7 @@ import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
 
-import { CrudDataTable } from "../../crud-data-table";
+import { CrudDataTable, FiltersState } from "../../crud-data-table";
 
 const colDefs: Record<
   keyof Pick<
@@ -85,14 +87,31 @@ export function StatusTriggersTable({
   twinStatusId?: string;
 }) {
   const { searchStatusTriggers } = useStatusTriggerSearch();
+  const { buildFilterFields, mapFiltersToPayload } = useStatusTriggerFilters({
+    enabledFilters: twinStatusId
+      ? [
+          "idList",
+          "incomingElseOutgoing",
+          "twinTriggerIdList",
+          "active",
+          "async",
+        ]
+      : undefined,
+  });
 
   async function fetchStatusTriggers(
-    pagination: PaginationState
+    pagination: PaginationState,
+    filters: FiltersState
   ): Promise<PagedResponse<StatusTrigger_DETAILED>> {
+    const _filters = mapFiltersToPayload(
+      filters.filters as Record<StatusTriggerFilterKeys, unknown>
+    );
+
     try {
       return await searchStatusTriggers({
         pagination,
         filters: {
+          ..._filters,
           ...(twinStatusId ? { twinStatusIdList: [twinStatusId] } : {}),
         },
       });
@@ -127,6 +146,7 @@ export function StatusTriggersTable({
         colDefs.async,
         colDefs.active,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }
