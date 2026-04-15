@@ -25,6 +25,7 @@ import {
 } from "@/entities/twin-class";
 import { TwinClassFieldV1_DETAILED } from "@/entities/twin-class-field";
 import { PrivateApiContext } from "@/shared/api";
+import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -40,7 +41,10 @@ export const TWIN_CLASS_FIELD_DUPLICATE_SCHEMA = z.object({
   originalTwinClassFieldId: z
     .string()
     .uuid("Original twin class field id is required"),
-  newTwinClassId: z.string().uuid("New twin class is required"),
+  newTwinClassId: z
+    .string()
+    .uuid("New twin class is required")
+    .or(FIRST_ID_EXTRACTOR),
   newKey: z.string().trim().min(1, "Key is required"),
   duplicateRules: z.boolean(),
 });
