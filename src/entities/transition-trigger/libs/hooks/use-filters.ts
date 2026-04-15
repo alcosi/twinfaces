@@ -1,7 +1,9 @@
+import z from "zod";
+
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition/libs";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger/libs";
+import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
+import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -28,6 +30,7 @@ export function useTransitionTriggerFilters({
     idList: {
       type: AutoFormValueType.tag,
       label: "ID",
+      schema: z.string().uuid("Please enter a valid UUID"),
     },
     twinflowTransitionIdList: {
       type: AutoFormValueType.combobox,
