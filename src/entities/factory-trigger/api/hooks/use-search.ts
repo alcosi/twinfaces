@@ -17,7 +17,7 @@ export function useFactoryTriggerSearch() {
       filters = {},
     }: {
       pagination: PaginationState;
-      filters?: FactoryTriggerFilters;
+      filters: FactoryTriggerFilters;
     }): Promise<PagedResponse<FactoryTrigger_DETAILED>> => {
       try {
         const { data, error } = await api.factoryTrigger.search({
