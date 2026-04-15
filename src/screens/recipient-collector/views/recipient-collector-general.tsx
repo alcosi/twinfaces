@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import { z } from "zod";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
@@ -18,8 +17,10 @@ import {
 } from "@/features/inPlaceEdit";
 import { RecipientCollectorContext } from "@/features/recipient-collectors";
 import { RecipientResourceLink } from "@/features/recipient/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -33,6 +34,7 @@ export function RecipientCollectorGeneral() {
 
   const { recipientCollector, refresh } = useContext(RecipientCollectorContext);
   const { updateRecipientCollector } = useRecipientCollectorUpdate();
+  const { confirm } = useActionDialogs();
 
   const notificationRecipientAdapter = useRecipientSelectAdapter();
   const featurerAdapter = useFeaturerSelectAdapter(47);
@@ -106,28 +108,27 @@ export function RecipientCollectorGeneral() {
     },
   };
 
-  const excludeSettings: InPlaceEditProps<typeof recipientCollector.exclude> = {
-    id: "exclude",
-    value: recipientCollector.exclude,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateRecipientCollector({
-        body: {
-          historyNotificationRecipients: [
-            {
-              id: recipientCollector.id,
-              exclude: value,
-            },
-          ],
-        },
-      }).then(refresh);
-    },
-  };
+  function switchExclude() {
+    const action = recipientCollector.exclude ? "disable" : "enable";
+    const status = recipientCollector.exclude ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Exclude`,
+      body: `Are you sure you want to ${action} action for this collector?`,
+      onSuccess: () => {
+        return updateRecipientCollector({
+          body: {
+            historyNotificationRecipients: [
+              {
+                id: recipientCollector.id,
+                exclude: !recipientCollector.exclude,
+              },
+            ],
+          },
+        }).then(refresh);
+      },
+    });
+  }
 
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
@@ -170,7 +171,10 @@ export function RecipientCollectorGeneral() {
           <TableRow>
             <TableCell>Exclude</TableCell>
             <TableCell>
-              <InPlaceEdit {...excludeSettings} />
+              <Switch
+                checked={recipientCollector.exclude ?? false}
+                onCheckedChange={switchExclude}
+              />
             </TableCell>
           </TableRow>
         </TableBody>

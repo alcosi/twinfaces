@@ -21,8 +21,10 @@ import {
 } from "@/features/inPlaceEdit";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { useActionDialogs } from "@/features/ui/action-dialogs";
 import {
   GuidWithCopy,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -36,6 +38,7 @@ export function FactoryPipelineGeneral() {
   const fcsAdapter = useFactoryConditionSetSelectAdapter();
   const tsAdapter = useTwinStatusSelectAdapter();
   const { updateFactoryPipeline } = useUpdateFactoryPipeline();
+  const { confirm } = useActionDialogs();
 
   const inputTwinClassSettings: InPlaceEditProps<
     typeof pipeline.inputTwinClassId
@@ -48,7 +51,7 @@ export function FactoryPipelineGeneral() {
       ...tcAdapter,
     },
     renderPreview: pipeline.inputTwinClass
-      ? (_) => (
+      ? () => (
           <TwinClassResourceLink
             data={pipeline.inputTwinClass as TwinClass_DETAILED}
             withTooltip
@@ -79,7 +82,7 @@ export function FactoryPipelineGeneral() {
       ...fcsAdapter,
     },
     renderPreview: pipeline.factoryConditionSet
-      ? (_) => (
+      ? () => (
           <FactoryConditionSetResourceLink
             data={pipeline.factoryConditionSet}
             withTooltip
@@ -99,49 +102,45 @@ export function FactoryPipelineGeneral() {
     },
   };
 
-  const factoryConditionSetInvertSettings: InPlaceEditProps<
-    typeof pipeline.factoryConditionSetInvert
-  > = {
-    id: "factoryConditionSetInvert",
-    value: pipeline.factoryConditionSetInvert,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateFactoryPipeline({
-        factoryPipelineId: pipeline.id,
-        body: {
-          factoryPipeline: {
-            factoryConditionSetInvert: value,
-          },
-        },
-      }).then(refresh);
-    },
-  };
+  function switchInvert() {
+    const action = pipeline.factoryConditionSetInvert ? "disable" : "enable";
+    const status = pipeline.factoryConditionSetInvert ? "Disable" : "Enable";
 
-  const activeSettings: InPlaceEditProps<typeof pipeline.active> = {
-    id: "active",
-    value: pipeline.active,
-    valueInfo: {
-      type: AutoFormValueType.boolean,
-      label: "",
-    },
-    schema: z.boolean(),
-    renderPreview: (value) => (value ? "Yes" : "No"),
-    onSubmit: async (value) => {
-      return updateFactoryPipeline({
-        factoryPipelineId: pipeline.id,
-        body: {
-          factoryPipeline: {
-            active: value,
+    confirm({
+      title: `${status} Invert`,
+      body: `Are you sure you want to ${action} action for this pipeline?`,
+      onSuccess: () => {
+        return updateFactoryPipeline({
+          factoryPipelineId: pipeline.id,
+          body: {
+            factoryPipeline: {
+              factoryConditionSetInvert: !pipeline.factoryConditionSetInvert,
+            },
           },
-        },
-      }).then(refresh);
-    },
-  };
+        }).then(refresh);
+      },
+    });
+  }
+
+  function switchActive() {
+    const action = pipeline.active ? "disable" : "enable";
+    const status = pipeline.active ? "Disable" : "Enable";
+
+    confirm({
+      title: `${status} Active`,
+      body: `Are you sure you want to ${action} action for this pipeline?`,
+      onSuccess: () => {
+        return updateFactoryPipeline({
+          factoryPipelineId: pipeline.id,
+          body: {
+            factoryPipeline: {
+              active: !pipeline.active,
+            },
+          },
+        }).then(refresh);
+      },
+    });
+  }
 
   const outputTwinStatusSettings: InPlaceEditProps<
     typeof pipeline.outputTwinStatusId
@@ -154,7 +153,7 @@ export function FactoryPipelineGeneral() {
       ...tsAdapter,
     },
     renderPreview: pipeline.outputTwinStatus
-      ? (_) => (
+      ? () => (
           <TwinClassStatusResourceLink
             data={pipeline.outputTwinStatus}
             twinClassId={pipeline.inputTwinClassId}
@@ -184,7 +183,7 @@ export function FactoryPipelineGeneral() {
       ...fAdapter,
     },
     renderPreview: pipeline.nextFactory
-      ? (_) => <FactoryResourceLink data={pipeline.nextFactory} withTooltip />
+      ? () => <FactoryResourceLink data={pipeline.nextFactory} withTooltip />
       : undefined,
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
@@ -257,14 +256,20 @@ export function FactoryPipelineGeneral() {
           <TableRow>
             <TableCell>Condition invert</TableCell>
             <TableCell>
-              <InPlaceEdit {...factoryConditionSetInvertSettings} />
+              <Switch
+                checked={pipeline.factoryConditionSetInvert ?? false}
+                onCheckedChange={switchInvert}
+              />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>Active</TableCell>
             <TableCell>
-              <InPlaceEdit {...activeSettings} />
+              <Switch
+                checked={pipeline.active ?? false}
+                onCheckedChange={switchActive}
+              />
             </TableCell>
           </TableRow>
 
