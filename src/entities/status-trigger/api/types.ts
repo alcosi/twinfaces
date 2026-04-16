@@ -26,3 +26,13 @@ export type StatusTriggerFilters = Partial<
     StatusTriggerFilterKeys
   >
 >;
+
+export type StatusTriggerCreateRq =
+  components["schemas"]["TwinStatusTriggerCreateRqV1"];
+export type StatusTriggerCreate =
+  components["schemas"]["TwinStatusTriggerCreateV1"];
+
+export type StatusTriggerUpdateRq =
+  components["schemas"]["TwinStatusTriggerUpdateRqV1"];
+export type StatusTriggerUpdate =
+  components["schemas"]["TwinStatusTriggerUpdateV1"];
