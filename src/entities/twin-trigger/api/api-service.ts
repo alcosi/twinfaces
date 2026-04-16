@@ -20,6 +20,8 @@ export function createTwinTriggerApi(settings: ApiSettings) {
           showTwinTriggerMode: "DETAILED",
           showTwinTrigger2FeaturerMode: "DETAILED",
           showFeaturerParamMode: "SHOW",
+          showTwinTrigger2TwinClassMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

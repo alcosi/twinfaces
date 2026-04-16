@@ -1,4 +1,5 @@
 import { Featurer_DETAILED } from "@/entities/featurer";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
 import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
@@ -24,6 +25,12 @@ export const hydrateTwinTriggerFromMap = (
       hydrated.triggerParams,
       hydrated.triggerFeaturer.params
     );
+  }
+
+  if (dto.jobTwinClassId && relatedObjects?.twinClassMap) {
+    hydrated.jobTwinClass = relatedObjects.twinClassMap[
+      dto.jobTwinClassId
+    ] as TwinClass_DETAILED;
   }
 
   return hydrated;
