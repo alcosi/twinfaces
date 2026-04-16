@@ -2,6 +2,10 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { FeaturerTypes, useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
+import {
   TwinTriggerFilterKeys,
   TwinTriggerFilters,
 } from "@/entities/twin-trigger";
@@ -21,6 +25,12 @@ export function useTwinTriggerFilters({
   enabledFilters?: TwinTriggerFilterKeys[];
 }): FilterFeature<TwinTriggerFilterKeys, TwinTriggerFilters> {
   const featurerAdapter = useFeaturerSelectAdapter(FeaturerTypes.trigger);
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
 
   const allFilters: Record<TwinTriggerFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -32,6 +42,16 @@ export function useTwinTriggerFilters({
       label: "Trigger featurer",
       multi: true,
       ...featurerAdapter,
+    },
+    jobTwinClassIdList: {
+      type: AutoFormValueType.complexCombobox,
+      label: "Job class",
+      multi: true,
+      adapter: twinClassAdapter,
+      extraFilters: buildTwinClassFilters(),
+      mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
     },
     active: {
       type: AutoFormValueType.boolean,
@@ -63,6 +83,10 @@ export function useTwinTriggerFilters({
         toArray(filters.triggerFeaturerIdList),
         "id"
       ).map(Number),
+      jobTwinClassIdList: toArrayOfString(
+        toArray(filters.jobTwinClassIdList),
+        "id"
+      ),
       active: mapToChoice(filters.active),
       nameLikeList: toArrayOfString(toArray(filters.nameLikeList), "name").map(
         wrapWithPercent

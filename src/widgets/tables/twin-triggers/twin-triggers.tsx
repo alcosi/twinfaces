@@ -10,6 +10,7 @@ import {
   useTwinTriggerSearch,
 } from "@/entities/twin-trigger";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
@@ -19,7 +20,12 @@ import { CrudDataTable, FiltersState } from "../../crud-data-table";
 const colDefs: Record<
   keyof Pick<
     TwinTrigger_DETAILED,
-    "id" | "triggerFeaturer" | "active" | "name" | "description"
+    | "id"
+    | "triggerFeaturer"
+    | "active"
+    | "name"
+    | "description"
+    | "jobTwinClass"
   >,
   ColumnDef<TwinTrigger_DETAILED>
 > = {
@@ -41,6 +47,17 @@ const colDefs: Record<
             params={original.triggerDetailedParams}
             withTooltip
           />
+        </div>
+      ),
+  },
+  jobTwinClass: {
+    id: "jobTwinClass",
+    accessorKey: "jobTwinClass",
+    header: "Job class",
+    cell: ({ row: { original } }) =>
+      original.jobTwinClass && (
+        <div className="inline-flex max-w-48">
+          <TwinClassResourceLink data={original.jobTwinClass} withTooltip />
         </div>
       ),
   },
@@ -98,6 +115,7 @@ export function TwinTriggersTable() {
       columns={[
         colDefs.id,
         colDefs.triggerFeaturer,
+        colDefs.jobTwinClass,
         colDefs.active,
         colDefs.name,
         colDefs.description,
@@ -110,6 +128,7 @@ export function TwinTriggersTable() {
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.triggerFeaturer,
+        colDefs.jobTwinClass,
         colDefs.active,
         colDefs.name,
         colDefs.description,
