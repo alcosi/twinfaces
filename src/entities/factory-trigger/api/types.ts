@@ -16,6 +16,9 @@ export type FactoryTrigger_DETAILED = Required<FactoryTrigger> & {
 export type FactoryTriggerSearchRq =
   components["schemas"]["TwinFactoryTriggerSearchV1"];
 
+export type FactoryTriggerUpdateRq =
+  components["schemas"]["TwinFactoryTriggerUpdateRqV1"];
+
 export type FactoryTriggerFilterKeys =
   | "idList"
   | "twinFactoryIdList"
