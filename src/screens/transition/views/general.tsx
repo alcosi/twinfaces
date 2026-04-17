@@ -8,8 +8,10 @@ import { useFactorySelectAdapter } from "@/entities/factory";
 import { usePermissionSelectAdapter } from "@/entities/permission";
 import { TwinFlow_DETAILED } from "@/entities/twin-flow";
 import {
+  TransitionType,
   TwinFlowTransitionUpdateRq,
   useTransitionAliasSelectAdapter,
+  useTransitionSelectTypeAdapter,
   useUpdateTwinFlowTransition,
 } from "@/entities/twin-flow-transition";
 import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twin-status";
@@ -36,6 +38,7 @@ export function TwinflowTransitionGeneral() {
   const permissionAdapter = usePermissionSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
   const transitionAliasAdapter = useTransitionAliasSelectAdapter();
+  const transitionSelectTypeAdapter = useTransitionSelectTypeAdapter();
 
   async function update(newTransition: TwinFlowTransitionUpdateRq) {
     try {
@@ -103,6 +106,28 @@ export function TwinflowTransitionGeneral() {
         transitions: [
           {
             descriptionI18n: { translationInCurrentLocale: value },
+            id: transitionId,
+          },
+        ],
+      });
+    },
+  };
+
+  const typeSettings: InPlaceEditProps<typeof transition.type> = {
+    id: "type",
+    value: transition.type,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select type...",
+      ...transitionSelectTypeAdapter,
+    },
+    renderPreview: transition.type ? () => transition.type : undefined,
+    onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return update({
+        transitions: [
+          {
+            twinflowTransitionTypeId: id as TransitionType,
             id: transitionId,
           },
         ],
@@ -262,6 +287,13 @@ export function TwinflowTransitionGeneral() {
             <TableCell>Description</TableCell>
             <TableCell>
               <InPlaceEdit {...descriptionSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Type</TableCell>
+            <TableCell>
+              <InPlaceEdit {...typeSettings} />
             </TableCell>
           </TableRow>
 

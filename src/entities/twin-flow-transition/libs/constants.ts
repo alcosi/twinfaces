@@ -23,6 +23,7 @@ export const TRANSITION_TYPES_ENUM: Array<{
 }> = [
   { id: TransitionTypesEnum.MARKETING, label: "Marketing" },
   { id: TransitionTypesEnum.OPERATION, label: "Operation" },
+  { id: TransitionTypesEnum.OPERATION_DISABLE, label: "Operation disable" },
   { id: TransitionTypesEnum.STATUS_CHANGE, label: "Status change" },
   {
     id: TransitionTypesEnum.STATUS_CHANGE_MARKETING,
@@ -71,6 +72,7 @@ export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
       [
         TransitionTypesEnum.MARKETING,
         TransitionTypesEnum.OPERATION,
+        TransitionTypesEnum.OPERATION_DISABLE,
         TransitionTypesEnum.STATUS_CHANGE,
         TransitionTypesEnum.STATUS_CHANGE_MARKETING,
       ],
