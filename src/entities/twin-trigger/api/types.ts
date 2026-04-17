@@ -14,6 +14,8 @@ export type TwinTrigger_DETAILED = Required<TwinTrigger> & {
 
 export type TwinTriggerSearchRq =
   components["schemas"]["TwinTriggerSearchRqV1"];
+export type TwinTriggerCreateRq =
+  components["schemas"]["TwinTriggerCreateRqV1"];
 
 export type TwinTriggerFilterKeys =
   | "idList"
