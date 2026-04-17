@@ -13,6 +13,7 @@ import {
   BreadcrumbSeparator,
 } from "@/shared/ui";
 
+import { DropCacheButton } from "../drop-cache-button";
 import { ThemeToggle } from "../theme-toggle";
 
 export function UrlBreadcrumbHeader() {
@@ -55,7 +56,10 @@ export function UrlBreadcrumbHeader() {
         </Breadcrumb>
       </div>
 
-      <ThemeToggle />
+      <div className="flex gap-6">
+        <DropCacheButton />
+        <ThemeToggle />
+      </div>
     </header>
   );
 }
