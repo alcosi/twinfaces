@@ -79,6 +79,7 @@ import {
   StatusTriggerApi,
   createStatusTriggerApi,
 } from "@/entities/status-trigger";
+import { SystemApi, createSystemApi } from "@/entities/system";
 import { TierApi, createTierApi } from "@/entities/tier";
 import {
   TransitionTriggerApi,
@@ -172,6 +173,7 @@ export interface PrivateApiContextProps {
   twinTrigger: TwinTriggerApi;
   transitionTrigger: TransitionTriggerApi;
   statusTrigger: StatusTriggerApi;
+  system: SystemApi;
 }
 
 export function PrivateApiContextProvider({
@@ -233,6 +235,7 @@ export function PrivateApiContextProvider({
         twinTrigger: createTwinTriggerApi(settings),
         transitionTrigger: createTransitionTriggerApi(settings),
         statusTrigger: createStatusTriggerApi(settings),
+        system: createSystemApi(settings),
       }
     : ({} as PrivateApiContextProps);
 
