@@ -1,11 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
 
 import { Featurer_DETAILED } from "@/entities/featurer";
 import {
+  TWIN_TRIGGER_SCHEMA,
   TwinTrigger_DETAILED,
+  useTwinTriggerCreate,
   useTwinTriggerFilters,
   useTwinTriggerSearch,
 } from "@/entities/twin-trigger";
@@ -16,6 +21,7 @@ import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { TwinTriggerFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -88,6 +94,7 @@ const colDefs: Record<
 export function TwinTriggersTable() {
   const router = useRouter();
   const { searchTwinTriggers } = useTwinTriggerSearch();
+  const { createTwinTrigger } = useTwinTriggerCreate();
   const { buildFilterFields, mapFiltersToPayload } = useTwinTriggerFilters({});
 
   async function fetchTwinTriggers(
@@ -108,6 +115,22 @@ export function TwinTriggersTable() {
       );
     }
   }
+
+  const twinTriggerForm = useForm<z.infer<typeof TWIN_TRIGGER_SCHEMA>>({
+    resolver: zodResolver(TWIN_TRIGGER_SCHEMA),
+  });
+
+  const handleOnCreateSubmit = async (
+    formValues: z.infer<typeof TWIN_TRIGGER_SCHEMA>
+  ) => {
+    const { ...body } = formValues;
+
+    await createTwinTrigger({
+      body: { triggers: [body] },
+    });
+
+    toast.success("Twin trigger created successfully!");
+  };
 
   return (
     <CrudDataTable
@@ -134,6 +157,11 @@ export function TwinTriggersTable() {
         colDefs.description,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={twinTriggerForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <TwinTriggerFormFields control={twinTriggerForm.control} />
+      )}
     />
   );
 }
