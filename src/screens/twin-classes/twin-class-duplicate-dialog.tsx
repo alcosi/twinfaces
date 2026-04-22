@@ -13,7 +13,7 @@ import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { CheckboxFormField, TextFormField } from "@/components/form-fields";
+import { SwitchFormField, TextFormField } from "@/components/form-fields";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { PrivateApiContext } from "@/shared/api";
@@ -145,12 +145,12 @@ function Component(
                 name="newKey"
                 label="New key"
               />
-              <CheckboxFormField
+              <SwitchFormField
                 control={form.control}
                 name="duplicateFields"
                 label="Duplicate fields"
               />
-              <CheckboxFormField
+              <SwitchFormField
                 control={form.control}
                 name="duplicateStatuses"
                 label="Duplicate statuses"

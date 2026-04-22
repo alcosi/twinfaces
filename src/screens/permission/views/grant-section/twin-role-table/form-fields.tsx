@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { CheckboxFormField, ComboboxFormField } from "@/components/form-fields";
+import { ComboboxFormField, SwitchFormField } from "@/components/form-fields";
 
 import {
   PERMISSION_GRANT_TWIN_ROLE_SCHEMA,
@@ -70,25 +70,25 @@ export function TwinRoleTableFormFields({
       {/*  {...createFixedSelectAdapter(TWIN_ROLE)}*/}
       {/*/>*/}
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="grantedToAssignee"
         label="Is assignee"
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="grantedToCreator"
         label="Is creator"
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="grantedToSpaceAssignee"
         label="Is space assignee"
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="grantedToSpaceCreator"
         label="Is space creator"

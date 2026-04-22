@@ -73,6 +73,7 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   deletePermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   autoCreateTwinflow: z.boolean(),
   autoCreatePermissions: z.boolean(),
+  space: z.boolean(),
   uniqueName: z.boolean(),
 });
 

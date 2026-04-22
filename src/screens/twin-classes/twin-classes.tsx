@@ -467,6 +467,7 @@ export function TwinClasses({ type }: { type?: string }) {
       twinClassSchemaSpace: false,
       aliasSpace: false,
       autoCreatePermissions: true,
+      space: false,
     },
   });
 

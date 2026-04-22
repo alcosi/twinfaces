@@ -3,8 +3,8 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
@@ -59,7 +59,7 @@ export function PipelineStepFormFields({
         {...factoryConditionSetAdapter}
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="factoryConditionSetInvert"
         label="Condition invert"
@@ -73,9 +73,9 @@ export function PipelineStepFormFields({
         paramsFieldName="fillerParams"
       />
 
-      <CheckboxFormField control={control} name="optional" label="Optional" />
+      <SwitchFormField control={control} name="optional" label="Optional" />
 
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
 
       <TextAreaFormField
         control={control}

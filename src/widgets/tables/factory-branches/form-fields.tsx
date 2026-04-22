@@ -3,8 +3,8 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
 } from "@/components/form-fields";
 
@@ -46,7 +46,7 @@ export function FactoryBranchFormFields({
         {...factoryConditionSetAdapter}
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="factoryConditionSetInvert"
         label="Condition set invert"
@@ -58,7 +58,7 @@ export function FactoryBranchFormFields({
         label="Description"
       />
 
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
 
       <ComboboxFormField
         control={control}

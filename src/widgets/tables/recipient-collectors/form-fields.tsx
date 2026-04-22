@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Control } from "react-hook-form";
 import { z } from "zod";
 
-import { CheckboxFormField, ComboboxFormField } from "@/components/form-fields";
+import { ComboboxFormField, SwitchFormField } from "@/components/form-fields";
 
 import { FeaturerTypes } from "@/entities/featurer";
 import {
@@ -43,7 +43,7 @@ export function RecipientCollectorFormFields({
         name="recipientResolverFeaturerId"
         paramsFieldName="recipientResolverParams"
       />
-      <CheckboxFormField control={control} name="exclude" label="Exclude" />
+      <SwitchFormField control={control} name="exclude" label="Exclude" />
     </>
   );
 }

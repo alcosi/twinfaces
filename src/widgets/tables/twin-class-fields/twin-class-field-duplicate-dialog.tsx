@@ -17,7 +17,7 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import { CheckboxFormField, TextFormField } from "@/components/form-fields";
+import { SwitchFormField, TextFormField } from "@/components/form-fields";
 
 import {
   useTwinClassFilters,
@@ -179,7 +179,7 @@ function Component(
                 name="newKey"
                 label="New key"
               />
-              <CheckboxFormField
+              <SwitchFormField
                 control={form.control}
                 name="duplicateRules"
                 label="Duplicate rules"

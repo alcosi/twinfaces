@@ -3,8 +3,8 @@ import { Control } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextFormField,
 } from "@/components/form-fields";
 
@@ -45,7 +45,7 @@ export function TriggersFormFields({
         label="Order"
         type="number"
       />
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
       <ComboboxFormField
         control={control}
         name="twinTriggerId"
@@ -56,7 +56,7 @@ export function TriggersFormFields({
         {...twinTriggerAdapter}
         required
       />
-      <CheckboxFormField control={control} name="async" label="Async" />
+      <SwitchFormField control={control} name="async" label="Async" />
     </>
   );
 }

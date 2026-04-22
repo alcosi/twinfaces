@@ -7,7 +7,7 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import { CheckboxFormField, ComboboxFormField } from "@/components/form-fields";
+import { ComboboxFormField, SwitchFormField } from "@/components/form-fields";
 
 import { FeaturerTypes } from "@/entities/featurer";
 import {
@@ -125,7 +125,7 @@ export function ProjectionFormFields({
         info={dstFieldInfo}
       />
 
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
 
       <FeaturerFormField
         typeId={FeaturerTypes.projector}
