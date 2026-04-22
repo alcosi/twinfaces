@@ -112,7 +112,7 @@ export function FactoryTriggerGeneral() {
     value: factoryTrigger.twinFactoryConditionSetId,
     valueInfo: {
       type: AutoFormValueType.combobox,
-      selectPlaceholder: "Select Factory...",
+      selectPlaceholder: "Select Factory condition set...",
       ...factoryConditionSetAdapter,
     },
     renderPreview: factoryTrigger.twinFactoryConditionSetId
