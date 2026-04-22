@@ -1,5 +1,7 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { toast } from "sonner";
 
 import {
@@ -11,9 +13,14 @@ import {
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "../../crud-data-table";
 
 const colDefs: Record<
   keyof Pick<
@@ -86,6 +93,8 @@ export function StatusTriggersTable({
 }: {
   twinStatusId?: string;
 }) {
+  const router = useRouter();
+  const tableRef = useRef<DataTableHandle>(null);
   const { searchStatusTriggers } = useStatusTriggerSearch();
   const { buildFilterFields, mapFiltersToPayload } = useStatusTriggerFilters({
     enabledFilters: twinStatusId
@@ -125,10 +134,11 @@ export function StatusTriggersTable({
 
   return (
     <CrudDataTable
+      ref={tableRef}
       title="Status triggers"
       columns={[
         colDefs.id,
-        colDefs.twinStatusId,
+        ...(twinStatusId ? [] : [colDefs.twinStatusId]),
         colDefs.incomingElseOutgoing,
         colDefs.order,
         colDefs.twinTriggerId,
@@ -137,9 +147,12 @@ export function StatusTriggersTable({
       ]}
       fetcher={fetchStatusTriggers}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/status-triggers/${row.id}`)
+      }
       defaultVisibleColumns={[
         colDefs.id,
-        colDefs.twinStatusId,
+        ...(twinStatusId ? [] : [colDefs.twinStatusId]),
         colDefs.incomingElseOutgoing,
         colDefs.order,
         colDefs.twinTriggerId,

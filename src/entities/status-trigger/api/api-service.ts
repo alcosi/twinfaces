@@ -2,7 +2,11 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { StatusTriggerFilters } from "./types";
+import {
+  StatusTriggerCreateRq,
+  StatusTriggerFilters,
+  StatusTriggerUpdateRq,
+} from "./types";
 
 export function createStatusTriggerApi(settings: ApiSettings) {
   function search({
@@ -34,7 +38,25 @@ export function createStatusTriggerApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function create({ body }: { body: StatusTriggerCreateRq }) {
+    return settings.client.POST("/private/twin_status/trigger/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  function update({ body }: { body: StatusTriggerUpdateRq }) {
+    return settings.client.PUT("/private/twin_status/trigger/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, create, update };
 }
 
 export type StatusTriggerApi = ReturnType<typeof createStatusTriggerApi>;
