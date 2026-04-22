@@ -30,3 +30,6 @@ export type FactoryTriggerFilterKeys =
 export type FactoryTriggerFilters = Partial<
   Pick<FactoryTriggerSearchRq, FactoryTriggerFilterKeys>
 >;
+
+export type FactoryTriggerCreateRq =
+  components["schemas"]["TwinFactoryTriggerCreateRqV1"];

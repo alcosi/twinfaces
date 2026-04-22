@@ -1,6 +1,7 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import {
+  FactoryTriggerCreateRq,
   FactoryTriggerFilters,
   FactoryTriggerUpdateRq,
 } from "@/entities/factory-trigger";
@@ -45,7 +46,16 @@ export function createFactoryTriggerApi(settings: ApiSettings) {
     });
   }
 
-  return { search, update };
+  function create({ body }: { body: FactoryTriggerCreateRq }) {
+    return settings.client.POST("/private/twin_factory/trigger/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, update, create };
 }
 
 export type FactoryTriggerApi = ReturnType<typeof createFactoryTriggerApi>;
