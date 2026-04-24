@@ -2,7 +2,11 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { TwinTriggerCreateRq, TwinTriggerFilters } from "./types";
+import {
+  TwinTriggerCreateRq,
+  TwinTriggerFilters,
+  TwinTriggerUpdateRq,
+} from "./types";
 
 export function createTwinTriggerApi(settings: ApiSettings) {
   function search({
@@ -43,7 +47,16 @@ export function createTwinTriggerApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create };
+  function update({ body }: { body: TwinTriggerUpdateRq }) {
+    return settings.client.PUT("/private/twin_trigger/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
+  return { search, create, update };
 }
 
 export type TwinTriggerApi = ReturnType<typeof createTwinTriggerApi>;
