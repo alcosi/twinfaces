@@ -7445,6 +7445,12 @@ export interface components {
         TwinLinkViewV1: {
             /**
              * Format: uuid
+             * @description id
+             * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+             */
+            id?: string;
+            /**
+             * Format: uuid
              * @description Link id
              * @example f6606fa2-c047-4ba9-a92c-84051df681ab
              */
@@ -7455,12 +7461,6 @@ export interface components {
              * @example 1b2091e3-971a-41bc-b343-1f980227d02f
              */
             dstTwinId?: string;
-            /**
-             * Format: uuid
-             * @description id
-             * @example f6606fa2-c047-4ba9-a92c-84051df681ab
-             */
-            id?: string;
             /**
              * Format: date-time
              * @description created at
@@ -15782,14 +15782,18 @@ export interface components {
         };
         TwinCreateRqV2: {
             /**
+             * @description Temporary identifier for this twin within the batch request. Used to reference this twin in headTwinId, fields, or links of other twins in the same batch.
+             * @example PROJECT-1
+             */
+            temporalId?: string;
+            /**
              * Format: uuid
              * @description class Id
              * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             classId?: string;
             /**
-             * Format: uuid
-             * @description head twin id, if selected class had to be linked to some head twin
+             * @description head twin id (can be UUID or temporalId:XXX reference)
              * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
              */
             headTwinId?: string;
@@ -15815,8 +15819,8 @@ export interface components {
             };
             /** @description attachments */
             attachments?: components["schemas"]["AttachmentCreateV1"][];
-            /** @description links list */
-            links?: components["schemas"]["TwinLinkAddV1"][];
+            /** @description links list (with temporalId support) */
+            links?: components["schemas"]["TwinLinkAddV2"][];
             /** @description tags list */
             tags?: components["schemas"]["TwinTagAddV1"];
             /** @description external id */
@@ -15833,6 +15837,19 @@ export interface components {
             createStrategy?: "STRICT" | "SKETCH" | "AUTO";
             /** @description field attributes */
             fieldAttributes?: components["schemas"]["TwinFieldAttributeCreateV1"][];
+        };
+        TwinLinkAddV2: {
+            /**
+             * Format: uuid
+             * @description Link id
+             * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+             */
+            linkId?: string;
+            /**
+             * @description Destination twin id (can be UUID or temporalId:XXX reference)
+             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+             */
+            dstTwinId?: string;
         };
         TwinTagAddV1: {
             /**
@@ -16478,6 +16495,10 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description twin list */
             twinList?: components["schemas"]["TwinV2"][];
+            /** @description Mapping of temporalId to generated UUID */
+            temporalIdMap?: {
+                [key: string]: string;
+            };
             /** @description Invalid twin field id list */
             invalidTwinFieldErrors?: {
                 [key: string]: {
@@ -33376,18 +33397,15 @@ export interface operations {
                 showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
-                showBusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
                 showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33443,7 +33461,6 @@ export interface operations {
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinSegmentMode?: "HIDE" | "SHOW";
@@ -33451,9 +33468,13 @@ export interface operations {
                 showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinTrigger2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
-                showTwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinTriggerTask2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinTriggerTask2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinTriggerTask2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinTriggerTask2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinTriggerTask2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinTriggerTaskMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
-                showUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
