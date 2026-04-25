@@ -67,6 +67,7 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
   "transition-triggers": ["TWIN_TRIGGER"],
   "status-triggers": ["TWIN_TRIGGER"],
   "factory-triggers": ["TWIN_TRIGGER"],
+  "trigger-tasks": ["TWIN_TRIGGER"],
 
   //? OTHERS
 };
