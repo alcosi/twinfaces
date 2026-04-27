@@ -85,6 +85,7 @@ import {
   TransitionTriggerApi,
   createTransitionTriggerApi,
 } from "@/entities/transition-trigger";
+import { TriggerTaskApi, createTriggerTaskApi } from "@/entities/trigger-tasks";
 import { TwinApi, createTwinApi } from "@/entities/twin";
 import { TwinClassApi, createTwinClassApi } from "@/entities/twin-class";
 import {
@@ -172,6 +173,7 @@ export interface PrivateApiContextProps {
   optionProjection: OptionProjectionApi;
   twinTrigger: TwinTriggerApi;
   transitionTrigger: TransitionTriggerApi;
+  triggerTask: TriggerTaskApi;
   statusTrigger: StatusTriggerApi;
   system: SystemApi;
 }
@@ -234,6 +236,7 @@ export function PrivateApiContextProvider({
         optionProjection: createOptionProjectionApi(settings),
         twinTrigger: createTwinTriggerApi(settings),
         transitionTrigger: createTransitionTriggerApi(settings),
+        triggerTask: createTriggerTaskApi(settings),
         statusTrigger: createStatusTriggerApi(settings),
         system: createSystemApi(settings),
       }
