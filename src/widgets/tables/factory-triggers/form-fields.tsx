@@ -7,8 +7,8 @@ import {
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox/complex-combobox-form-field";
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
 } from "@/components/form-fields";
 
@@ -76,12 +76,12 @@ export function TriggersFormFields({
         {...factoryConditionSetAdapter}
         required
       />
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="twinFactoryConditionInvert"
         label="Twin factory condition invert"
       />
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
 
       <TextAreaFormField
         control={control}
@@ -98,7 +98,7 @@ export function TriggersFormFields({
         {...twinTriggerAdapter}
         required
       />
-      <CheckboxFormField control={control} name="async" label="Async" />
+      <SwitchFormField control={control} name="async" label="Async" />
     </>
   );
 }
