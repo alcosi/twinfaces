@@ -2,8 +2,8 @@ import { Control } from "react-hook-form";
 import z from "zod";
 
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextFormField,
 } from "@/components/form-fields";
 
@@ -89,7 +89,7 @@ export function NotificationFormFields({
         noItemsText="No data found"
         {...validatorSetAdapter}
       />
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="twinValidatorSetInvert"
         label="Twin validator set invert"

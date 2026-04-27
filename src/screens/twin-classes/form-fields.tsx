@@ -2,9 +2,8 @@ import { useState } from "react";
 import { Control, useWatch } from "react-hook-form";
 
 import {
-  CheckboxFormField,
-  CheckboxFormItem,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
@@ -67,15 +66,15 @@ export function TwinClassFormFields({
         {...twinClassOwnerTypeAdapter}
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="abstractClass"
         label="Is abstract"
       />
 
-      <CheckboxFormField control={control} name="segment" label="Is segment" />
+      <SwitchFormField control={control} name="segment" label="Is segment" />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="assigneeRequired"
         label="Is assignee required"
@@ -133,19 +132,19 @@ export function TwinClassFormFields({
         {...dlAdapter}
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="autoCreateTwinflow"
         label="Auto create Twinflow"
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="uniqueName"
         label="Unique name"
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="autoCreatePermissions"
         label="Auto create permissions"
@@ -197,35 +196,35 @@ export function TwinClassFormFields({
         </fieldset>
       )}
 
-      <CheckboxFormItem
-        fieldValue={isSpaceChecked}
-        label="Space"
+      <SwitchFormField
+        control={control}
         name="space"
+        label="Space"
         onClick={() => setIsSpaceChecked((prev) => !prev)}
       />
 
       {isSpaceChecked && (
         <fieldset className="flex flex-col gap-4 rounded-md border border-dashed px-1.5 py-2.5">
           <legend className="text-sm font-medium italic">Spaces</legend>
-          <CheckboxFormField
+          <SwitchFormField
             control={control}
             name="permissionSchemaSpace"
             label="Permission schema space"
           />
 
-          <CheckboxFormField
+          <SwitchFormField
             control={control}
             name="twinflowSchemaSpace"
             label="Twinflow schema space"
           />
 
-          <CheckboxFormField
+          <SwitchFormField
             control={control}
             name="twinClassSchemaSpace"
             label="Twin class schema space"
           />
 
-          <CheckboxFormField
+          <SwitchFormField
             control={control}
             name="aliasSpace"
             label="Alias space"

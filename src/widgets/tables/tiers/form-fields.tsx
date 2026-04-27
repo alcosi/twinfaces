@@ -2,8 +2,8 @@ import { Control } from "react-hook-form";
 import z from "zod";
 
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
@@ -32,7 +32,7 @@ export function TierFormFields({
         label="Description"
       />
 
-      <CheckboxFormField control={control} name="custom" label="Custom" />
+      <SwitchFormField control={control} name="custom" label="Custom" />
 
       <ComboboxFormField
         control={control}

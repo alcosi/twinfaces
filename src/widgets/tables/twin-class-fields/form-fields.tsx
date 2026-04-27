@@ -6,8 +6,8 @@ import {
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
@@ -67,9 +67,9 @@ export function TwinClassFieldFormFields({
         label="Description"
       />
 
-      <CheckboxFormField control={control} name="required" label="Required" />
+      <SwitchFormField control={control} name="required" label="Required" />
 
-      <CheckboxFormField control={control} name="system" label="System" />
+      <SwitchFormField control={control} name="system" label="System" />
 
       <FeaturerFormField
         typeId={FeaturerTypes.fieldTyper}

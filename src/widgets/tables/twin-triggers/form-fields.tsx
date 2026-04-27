@@ -6,11 +6,8 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import {
-  CheckboxFormField,
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields";
+import { TextAreaFormField, TextFormField } from "@/components/form-fields";
+import { SwitchFormField } from "@/components/form-fields";
 
 import { FeaturerTypes } from "@/entities/featurer";
 import {
@@ -60,7 +57,7 @@ export function TwinTriggerFormFields({
         info={jobClassInfo}
       />
 
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
 
       <TextFormField control={control} name="name" label="Name" />
 

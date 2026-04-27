@@ -3,8 +3,8 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
 } from "@/components/form-fields";
 
@@ -57,9 +57,9 @@ export function FactoryConditionFormFields({
         label="Description"
       />
 
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
 
-      <CheckboxFormField control={control} name="invert" label="Invert" />
+      <SwitchFormField control={control} name="invert" label="Invert" />
     </>
   );
 }

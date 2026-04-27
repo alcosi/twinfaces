@@ -2,7 +2,7 @@ import { Control } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  CheckboxFormField,
+  SwitchFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
@@ -22,7 +22,7 @@ export function ValidatorSetFormFields({
         name="description"
         label="Description"
       />
-      <CheckboxFormField control={control} name="invert" label="Invert" />
+      <SwitchFormField control={control} name="invert" label="Invert" />
     </>
   );
 }

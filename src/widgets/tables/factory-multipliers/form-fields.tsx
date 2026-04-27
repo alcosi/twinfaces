@@ -8,8 +8,8 @@ import {
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
 } from "@/components/form-fields";
 
@@ -77,7 +77,7 @@ export function FactoryMultiplierFormFields({
         paramsFieldName="multiplierParams"
       />
 
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
 
       <TextAreaFormField
         control={control}

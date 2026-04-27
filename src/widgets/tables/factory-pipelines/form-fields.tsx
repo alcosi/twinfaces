@@ -8,8 +8,8 @@ import {
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import {
-  CheckboxFormField,
   ComboboxFormField,
+  SwitchFormField,
   TextAreaFormField,
 } from "@/components/form-fields";
 
@@ -120,13 +120,13 @@ export function FactoryPipelineFormFields({
         {...factoryConditionSetAdapter}
       />
 
-      <CheckboxFormField
+      <SwitchFormField
         control={control}
         name="factoryConditionSetInvert"
         label="Condition set invert"
       />
 
-      <CheckboxFormField control={control} name="active" label="Active" />
+      <SwitchFormField control={control} name="active" label="Active" />
 
       <ComplexComboboxFormField
         control={control}
