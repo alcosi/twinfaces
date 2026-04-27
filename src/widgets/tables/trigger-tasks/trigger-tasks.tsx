@@ -137,7 +137,7 @@ const colDefs: Record<
   },
 };
 
-export function TriggerTasksTable() {
+export function TriggerTasksTable({ twinId }: { twinId?: string }) {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTriggerTasks } = useTriggerTaskSearch();
@@ -149,6 +149,9 @@ export function TriggerTasksTable() {
     try {
       return await searchTriggerTasks({
         pagination,
+        filters: {
+          ...(twinId ? { twinIdList: [twinId] } : {}),
+        },
       });
     } catch (error) {
       toast.error("An error occured while fetching trigger tasks: " + error);
@@ -164,7 +167,7 @@ export function TriggerTasksTable() {
       title="Twin trigger tasks"
       columns={[
         colDefs.id,
-        colDefs.twinId,
+        ...(twinId ? [] : [colDefs.twinId]),
         colDefs.twinTriggerId,
         colDefs.previousTwinStatusId,
         colDefs.createdByUserId,
@@ -178,7 +181,7 @@ export function TriggerTasksTable() {
       fetcher={fetchData}
       defaultVisibleColumns={[
         colDefs.id,
-        colDefs.twinId,
+        ...(twinId ? [] : [colDefs.twinId]),
         colDefs.twinTriggerId,
         colDefs.previousTwinStatusId,
         colDefs.createdByUserId,
