@@ -5,7 +5,7 @@ import {
   AutoFormComplexComboboxValueInfo,
   AutoFormValueType,
 } from "@/components/auto-field";
-import { ComplexComboboxFormField } from "@/components/complex-combobox/complex-combobox-form-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import {
   ComboboxFormField,
   SwitchFormField,
@@ -14,7 +14,7 @@ import {
 
 import { useFactorySelectAdapter } from "@/entities/factory";
 import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
-import { FACTORY_TRIGGER_SCHEMA } from "@/entities/factory-trigger/libs";
+import { FACTORY_TRIGGER_SCHEMA } from "@/entities/factory-trigger";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
@@ -39,12 +39,12 @@ export function TriggersFormFields({
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
-    label: "Input class",
+    label: "Input twin class",
     adapter: twinClassAdapter,
     extraFilters: buildTwinClassFilters(),
     mapExtraFilters: (filters) => mapTwinClassFilters(filters),
     searchPlaceholder: "Search...",
-    selectPlaceholder: "Select twin class",
+    selectPlaceholder: "Select...",
     multi: false,
   };
 
@@ -53,7 +53,7 @@ export function TriggersFormFields({
       <ComboboxFormField
         control={control}
         name="twinFactoryId"
-        label="Factory"
+        label="Twin factory"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."
         noItemsText="No data found"
