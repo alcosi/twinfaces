@@ -1,9 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  FACTORY_TRIGGER_SCHEMA,
   FactoryTrigger_DETAILED,
+  useFactoryTriggerCreate,
   useFactoryTriggerFilters,
   useFactoryTriggerSearch,
 } from "@/entities/factory-trigger";
@@ -16,6 +21,9 @@ import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { TriggersFormFields } from "./form-fields";
+
+type TriggersFormValues = z.infer<typeof FACTORY_TRIGGER_SCHEMA>;
 
 const colDefs: Record<
   | "id"
@@ -121,6 +129,7 @@ export function FactoryTriggersTable() {
   const { buildFilterFields, mapFiltersToPayload } = useFactoryTriggerFilters({
     enabledFilters: undefined,
   });
+  const { createFactoryTrigger } = useFactoryTriggerCreate();
   async function fetchFactoryTriggers(
     pagination: PaginationState,
     filters: FiltersState
@@ -138,6 +147,42 @@ export function FactoryTriggersTable() {
       );
     }
   }
+
+  const triggersForm = useForm<TriggersFormValues>({
+    resolver: zodResolver(FACTORY_TRIGGER_SCHEMA),
+    defaultValues: {
+      twinFactoryConditionInvert: false,
+      active: false,
+      async: false,
+    },
+  });
+
+  const handleOnCreateSubmit = async (formValues: TriggersFormValues) => {
+    console.log("🚀 ~ handleOnCreateSubmit ~ formValues:", formValues);
+    try {
+      await createFactoryTrigger({
+        body: {
+          twinFactoryTriggers: [
+            {
+              twinFactoryId: formValues.twinFactoryId,
+              inputTwinClassId: formValues.inputTwinClassId,
+              twinFactoryConditionSetId: formValues.twinFactoryConditionSetId,
+              twinFactoryConditionInvert: formValues.twinFactoryConditionInvert,
+              active: formValues.active,
+              description: formValues.description,
+              twinTriggerId: formValues.twinTriggerId,
+              async: formValues.async,
+            },
+          ],
+        },
+      });
+
+      toast.success("Factory trigger created successfully");
+    } catch {
+      toast.error("Failed to create factory trigger");
+    }
+  };
+
   return (
     <CrudDataTable
       title="Factory triggers"
@@ -166,6 +211,11 @@ export function FactoryTriggersTable() {
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
       getRowId={(row) => row.id!}
+      dialogForm={triggersForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <TriggersFormFields control={triggersForm.control} />
+      )}
     />
   );
 }
