@@ -1,12 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  STATUS_TRIGGER_SCHEMA,
   StatusTriggerFilterKeys,
   StatusTrigger_DETAILED,
+  useStatusTriggerCreate,
   useStatusTriggerFilters,
   useStatusTriggerSearch,
 } from "@/entities/status-trigger";
@@ -16,11 +20,10 @@ import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 
-import {
-  CrudDataTable,
-  DataTableHandle,
-  FiltersState,
-} from "../../crud-data-table";
+import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import { StatusTriggerFormFields } from "./form-fields";
+
+type StatusTriggerFormValues = z.infer<typeof STATUS_TRIGGER_SCHEMA>;
 
 const colDefs: Record<
   keyof Pick<
@@ -94,8 +97,8 @@ export function StatusTriggersTable({
   twinStatusId?: string;
 }) {
   const router = useRouter();
-  const tableRef = useRef<DataTableHandle>(null);
   const { searchStatusTriggers } = useStatusTriggerSearch();
+  const { createStatusTrigger } = useStatusTriggerCreate();
   const { buildFilterFields, mapFiltersToPayload } = useStatusTriggerFilters({
     enabledFilters: twinStatusId
       ? [
@@ -106,6 +109,16 @@ export function StatusTriggersTable({
           "async",
         ]
       : undefined,
+  });
+
+  const statusTriggerForm = useForm<StatusTriggerFormValues>({
+    resolver: zodResolver(STATUS_TRIGGER_SCHEMA),
+    defaultValues: {
+      incomingElseOutgoing: false,
+      order: 0,
+      active: false,
+      async: false,
+    },
   });
 
   async function fetchStatusTriggers(
@@ -132,9 +145,31 @@ export function StatusTriggersTable({
     }
   }
 
+  async function handleCreateSubmit(formValues: StatusTriggerFormValues) {
+    try {
+      await createStatusTrigger({
+        body: {
+          twinStatusTriggers: [
+            {
+              twinStatusId: formValues.twinStatusId,
+              incomingElseOutgoing: formValues.incomingElseOutgoing,
+              order: formValues.order,
+              twinTriggerId: formValues.twinTriggerId,
+              async: formValues.async,
+              active: formValues.active,
+            },
+          ],
+        },
+      });
+
+      toast.success("Status trigger created successfully");
+    } catch {
+      toast.error("Failed to create status trigger");
+    }
+  }
+
   return (
     <CrudDataTable
-      ref={tableRef}
       title="Status triggers"
       columns={[
         colDefs.id,
@@ -160,6 +195,11 @@ export function StatusTriggersTable({
         colDefs.active,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      dialogForm={statusTriggerForm}
+      onCreateSubmit={handleCreateSubmit}
+      renderFormFields={() => (
+        <StatusTriggerFormFields control={statusTriggerForm.control} />
+      )}
     />
   );
 }
