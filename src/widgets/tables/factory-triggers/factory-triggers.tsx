@@ -178,7 +178,7 @@ export function FactoryTriggersTable() {
       });
 
       toast.success("Factory trigger created successfully");
-    } catch (e) {
+    } catch {
       toast.error("Failed to create factory trigger");
     }
   };
