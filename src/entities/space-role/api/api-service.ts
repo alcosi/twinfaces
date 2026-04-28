@@ -4,6 +4,7 @@ import {
   PermissionGrantSpaceRoleFilters,
   SpaceRoleCreateRq,
   SpaceRoleFilters,
+  SpaceRoleUpdateRq,
 } from "@/entities/space-role";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
@@ -78,7 +79,17 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
     });
   }
 
+  function update({ body }: { body: SpaceRoleUpdateRq }) {
+    return settings.client.PUT("/private/space_role/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
+  }
+
   return {
+    update,
     create,
     search,
     searchPermissionGranSpaceRole,

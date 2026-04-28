@@ -13,7 +13,7 @@ export const useSpaceRoleCreate = () => {
         if (error) {
           throw new Error("Failed to create space role");
         }
-      } catch (error) {
+      } catch {
         throw new Error("An error occured while creating space role");
       }
     },
