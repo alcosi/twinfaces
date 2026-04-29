@@ -9,6 +9,7 @@ import {
   TwinGeneral,
   TwinHistory,
   TwinLinks,
+  TwinTriggerTasks,
 } from "./views";
 
 const DEFAULT_TABS = [
@@ -41,6 +42,11 @@ const DEFAULT_TABS = [
     key: "history",
     label: "History",
     content: <TwinHistory />,
+  },
+  {
+    key: "triggerTask",
+    label: "Trigger task",
+    content: <TwinTriggerTasks />,
   },
 ];
 

@@ -4,9 +4,11 @@ import { useRef } from "react";
 import { toast } from "sonner";
 
 import {
+  TriggerTaskFilterKeys,
   TriggerTask_DETAILED,
+  useTriggerTaskFilters,
   useTriggerTaskSearch,
-} from "@/entities/trigger-tasks";
+} from "@/entities/trigger-task";
 import { TwinStatus } from "@/entities/twin-status";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
@@ -137,18 +139,38 @@ const colDefs: Record<
   },
 };
 
-export function TriggerTasksTable() {
+export function TriggerTasksTable({ twinId }: { twinId?: string }) {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTriggerTasks } = useTriggerTaskSearch();
+  const { buildFilterFields, mapFiltersToPayload } = useTriggerTaskFilters({
+    enabledFilters: twinId
+      ? [
+          "idList",
+          "twinTriggerIdList",
+          "previousTwinStatusIdList",
+          "createdByUserIdList",
+          "businessAccountIdList",
+          "statusIdList",
+        ]
+      : undefined,
+  });
 
   async function fetchData(
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<TriggerTask_DETAILED>> {
+    const _filters = mapFiltersToPayload(
+      filters.filters as Record<TriggerTaskFilterKeys, unknown>
+    );
+
     try {
       return await searchTriggerTasks({
         pagination,
+        filters: {
+          ..._filters,
+          ...(twinId ? { twinIdList: [twinId] } : {}),
+        },
       });
     } catch (error) {
       toast.error("An error occured while fetching trigger tasks: " + error);
@@ -164,7 +186,7 @@ export function TriggerTasksTable() {
       title="Twin trigger tasks"
       columns={[
         colDefs.id,
-        colDefs.twinId,
+        ...(twinId ? [] : [colDefs.twinId]),
         colDefs.twinTriggerId,
         colDefs.previousTwinStatusId,
         colDefs.createdByUserId,
@@ -178,7 +200,7 @@ export function TriggerTasksTable() {
       fetcher={fetchData}
       defaultVisibleColumns={[
         colDefs.id,
-        colDefs.twinId,
+        ...(twinId ? [] : [colDefs.twinId]),
         colDefs.twinTriggerId,
         colDefs.previousTwinStatusId,
         colDefs.createdByUserId,
@@ -188,6 +210,7 @@ export function TriggerTasksTable() {
         colDefs.createdAt,
         colDefs.doneAt,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/trigger-tasks/${row.id}`)
       }

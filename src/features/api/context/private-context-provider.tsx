@@ -85,7 +85,7 @@ import {
   TransitionTriggerApi,
   createTransitionTriggerApi,
 } from "@/entities/transition-trigger";
-import { TriggerTaskApi, createTriggerTaskApi } from "@/entities/trigger-tasks";
+import { TriggerTaskApi, createTriggerTaskApi } from "@/entities/trigger-task";
 import { TwinApi, createTwinApi } from "@/entities/twin";
 import { TwinClassApi, createTwinClassApi } from "@/entities/twin-class";
 import {
