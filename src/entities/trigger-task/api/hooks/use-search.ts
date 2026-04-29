@@ -5,7 +5,7 @@ import {
   TriggerTaskFilters,
   TriggerTask_DETAILED,
   hydrateTriggerTaskFromMap,
-} from "@/entities/trigger-tasks";
+} from "@/entities/trigger-task";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 export function useTriggerTaskSearch() {

@@ -4,9 +4,11 @@ import { useRef } from "react";
 import { toast } from "sonner";
 
 import {
+  TriggerTaskFilterKeys,
   TriggerTask_DETAILED,
+  useTriggerTaskFilters,
   useTriggerTaskSearch,
-} from "@/entities/trigger-tasks";
+} from "@/entities/trigger-task";
 import { TwinStatus } from "@/entities/twin-status";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
@@ -141,15 +143,32 @@ export function TriggerTasksTable({ twinId }: { twinId?: string }) {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchTriggerTasks } = useTriggerTaskSearch();
+  const { buildFilterFields, mapFiltersToPayload } = useTriggerTaskFilters({
+    enabledFilters: twinId
+      ? [
+          "idList",
+          "twinTriggerIdList",
+          "previousTwinStatusIdList",
+          "createdByUserIdList",
+          "businessAccountIdList",
+          "statusIdList",
+        ]
+      : undefined,
+  });
 
   async function fetchData(
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<TriggerTask_DETAILED>> {
+    const _filters = mapFiltersToPayload(
+      filters.filters as Record<TriggerTaskFilterKeys, unknown>
+    );
+
     try {
       return await searchTriggerTasks({
         pagination,
         filters: {
+          ..._filters,
           ...(twinId ? { twinIdList: [twinId] } : {}),
         },
       });
@@ -191,6 +210,7 @@ export function TriggerTasksTable({ twinId }: { twinId?: string }) {
         colDefs.createdAt,
         colDefs.doneAt,
       ]}
+      filters={{ filtersInfo: buildFilterFields() }}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/trigger-tasks/${row.id}`)
       }

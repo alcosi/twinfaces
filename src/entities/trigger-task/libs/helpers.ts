@@ -1,5 +1,5 @@
 import { BusinessAccount } from "@/entities/business-account";
-import { TriggerTask, TriggerTask_DETAILED } from "@/entities/trigger-tasks";
+import { TriggerTask, TriggerTask_DETAILED } from "@/entities/trigger-task";
 import { TwinStatus } from "@/entities/twin-status";
 import { TwinTrigger_DETAILED } from "@/entities/twin-trigger";
 import { Twin_DETAILED } from "@/entities/twin/server";

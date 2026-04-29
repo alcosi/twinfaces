@@ -1,6 +1,6 @@
 import { PaginationState } from "@tanstack/react-table";
 
-import { TriggerTaskFilters } from "@/entities/trigger-tasks";
+import { TriggerTaskFilters } from "@/entities/trigger-task";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 export function createTriggerTaskApi(settings: ApiSettings) {
