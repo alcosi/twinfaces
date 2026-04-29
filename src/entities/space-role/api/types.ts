@@ -37,3 +37,4 @@ export type SpaceRoleFilter = Partial<
 >;
 
 export type SpaceRoleCreateRq = components["schemas"]["SpaceRoleCreateRqV1"];
+export type SpaceRoleUpdateRq = components["schemas"]["SpaceRoleUpdateRqV1"];
