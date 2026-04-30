@@ -1,6 +1,7 @@
 import { PaginationState } from "@tanstack/table-core";
 
 import {
+  HistoryFilters,
   TwinCreateRq,
   TwinFilters,
   TwinFiltersBySearchId,
@@ -145,23 +146,28 @@ export function createTwinApi(settings: ApiSettings) {
   }
 
   function getHistory({
-    twinId,
     pagination,
+    filters = {},
   }: {
-    twinId: string;
     pagination: PaginationState;
+    filters?: HistoryFilters;
   }) {
-    return settings.client.GET("/private/twin/{twinId}/history/list/v1", {
+    return settings.client.POST("/private/twin_history/search/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { twinId },
         query: {
           lazyRelation: false,
+          showHistoryMode: "DETAILED",
           showHistory2TwinMode: "DETAILED",
-          showTwin2UserMode: "DETAILED",
           showHistory2UserMode: "DETAILED",
+          showTwin2UserMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
+        },
+      },
+      body: {
+        search: {
+          ...filters,
         },
       },
     });

@@ -66,6 +66,61 @@ export type TwinTagManageV1 = TwinUpdateRq["tagsUpdate"];
 
 export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];
 export type HistoryV1 = components["schemas"]["HistoryV1"];
+export type History_DETAILED = HistoryV1 & {
+  actorUser?: User;
+  machineUser?: User;
+};
+export type HistoryFilterKeys =
+  | "idList"
+  | "twinIdList"
+  | "twinClassFieldIdList"
+  | "actorUserIdList"
+  | "typeList"
+  | "createdAtFrom"
+  | "createdAtTo";
+export type HistoryFilters = Partial<
+  Pick<
+    components["schemas"]["HistorySearchV1"] & {
+      createdAtFrom: string;
+      createdAtTo: string;
+    },
+    HistoryFilterKeys
+  >
+>;
+export type HistoryType = NonNullable<HistoryV1["type"]>;
+export const HISTORY_TYPES: HistoryType[] = [
+  "twinCreated",
+  "headChanged",
+  "statusChanged",
+  "nameChanged",
+  "descriptionChanged",
+  "createdByChanged",
+  "assigneeChanged",
+  "assigneeUnassigned",
+  "ownerChanged",
+  "externalIdChanged",
+  "fieldCreated",
+  "fieldCreatedOnCreate",
+  "fieldChanged",
+  "fieldDeleted",
+  "markerChanged",
+  "tagChanged",
+  "attachmentCreate",
+  "attachmentCreateOnCreate",
+  "attachmentDelete",
+  "attachmentUpdate",
+  "commentCreate",
+  "linkCreated",
+  "linkCreatedOnCreate",
+  "linkUpdated",
+  "linkDeleted",
+  "twinDeleted",
+  "spaceRoleUserAdded",
+  "spaceRoleUserAddedOnCreate",
+  "spaceRoleUserRemoved",
+  "unknown",
+] as const;
+
 export type TwinAttachmentCreateRq =
   components["schemas"]["AttachmentCreateRqV1"];
 

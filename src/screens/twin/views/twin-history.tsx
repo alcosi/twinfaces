@@ -3,27 +3,36 @@ import { useContext, useRef } from "react";
 import { toast } from "sonner";
 
 import { useFetchHistoryV1 } from "@/entities/twin";
-import { HistoryV1 } from "@/entities/twin/server";
+import { useHistoryFilters } from "@/entities/twin/libs";
+import {
+  HistoryFilterKeys,
+  HistoryV1,
+  History_DETAILED,
+} from "@/entities/twin/server";
 import { TwinContext } from "@/features/twin";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
-import { formatIntlDate } from "@/shared/libs";
+import { formatIntlDate, isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
-import { CrudDataTable, DataTableHandle } from "@/widgets/crud-data-table";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
 
 const colDefs: Record<
   keyof Pick<
-    HistoryV1,
+    History_DETAILED,
     | "id"
     | "type"
-    | "fieldName"
+    | "twinClassFieldId"
     | "changeDescription"
     | "createdAt"
     | "batchId"
-    | "machineUser"
-    | "actorUser"
+    | "actorUserId"
+    | "machineUserId"
   >,
-  ColumnDef<HistoryV1>
+  ColumnDef<History_DETAILED>
 > = {
   id: {
     id: "id",
@@ -38,10 +47,11 @@ const colDefs: Record<
     header: "Change type",
   },
 
-  fieldName: {
-    id: "fieldName",
-    accessorKey: "fieldName",
+  twinClassFieldId: {
+    id: "twinClassFieldId",
+    accessorKey: "twinClassFieldId",
     header: "Field",
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
 
   changeDescription: {
@@ -50,9 +60,9 @@ const colDefs: Record<
     header: "Details",
   },
 
-  actorUser: {
-    id: "actorUser",
-    accessorKey: "actorUser",
+  actorUserId: {
+    id: "actorUserId",
+    accessorKey: "actorUserId",
     header: "Actor",
     cell: ({ row: { original } }) =>
       original.actorUser && (
@@ -62,9 +72,9 @@ const colDefs: Record<
       ),
   },
 
-  machineUser: {
-    id: "machineUser",
-    accessorKey: "machineUser",
+  machineUserId: {
+    id: "machineUserId",
+    accessorKey: "machineUserId",
     header: "Machine",
     cell: ({ row: { original } }) =>
       original.machineUser && (
@@ -95,17 +105,33 @@ export function TwinHistory() {
   const { twinId } = useContext(TwinContext);
   const { fetchHistoryByTwinId } = useFetchHistoryV1();
   const tableRef = useRef<DataTableHandle>(null);
+  const { buildFilterFields, mapFiltersToPayload } = useHistoryFilters({
+    enabledFilters: isTruthy(twinId)
+      ? [
+          "idList",
+          "twinClassFieldIdList",
+          "actorUserIdList",
+          "typeList",
+          "createdAtFrom",
+          "createdAtTo",
+        ]
+      : undefined,
+  });
 
   async function fetchHistory(
-    pagination: PaginationState
+    pagination: PaginationState,
+    filters: FiltersState
   ): Promise<PagedResponse<HistoryV1>> {
+    const _filters = mapFiltersToPayload(
+      filters.filters as Record<HistoryFilterKeys, unknown>
+    );
+
     try {
-      const response = await fetchHistoryByTwinId({
+      return await fetchHistoryByTwinId({
         twinId,
         pagination,
+        filters: _filters,
       });
-
-      return response;
     } catch {
       toast.error("Failed to fetch twin history");
       return { data: [], pagination: {} };
@@ -118,27 +144,28 @@ export function TwinHistory() {
         title="History"
         ref={tableRef}
         columns={[
-          colDefs.id!,
-          colDefs.type!,
-          colDefs.fieldName!,
-          colDefs.changeDescription!,
-          colDefs.actorUser,
-          colDefs.machineUser,
-          colDefs.createdAt!,
-          colDefs.batchId!,
+          colDefs.id,
+          colDefs.type,
+          colDefs.twinClassFieldId,
+          colDefs.changeDescription,
+          colDefs.actorUserId,
+          colDefs.machineUserId,
+          colDefs.createdAt,
+          colDefs.batchId,
         ]}
         getRowId={(row) => row.id!}
         fetcher={fetchHistory}
         defaultVisibleColumns={[
-          colDefs.id!,
-          colDefs.type!,
-          colDefs.fieldName!,
-          colDefs.changeDescription!,
-          colDefs.actorUser,
-          colDefs.machineUser,
-          colDefs.createdAt!,
-          colDefs.batchId!,
+          colDefs.id,
+          colDefs.type,
+          colDefs.twinClassFieldId,
+          colDefs.changeDescription,
+          colDefs.actorUserId,
+          colDefs.machineUserId,
+          colDefs.createdAt,
+          colDefs.batchId,
         ]}
+        filters={{ filtersInfo: buildFilterFields() }}
       />
     </div>
   );

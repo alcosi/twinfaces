@@ -1,10 +1,10 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { Twin } from "@/entities/twin/server";
 import { PagedResponse, PrivateApiContext } from "@/shared/api";
 
 import { hydrateTwinHistoryFromMap } from "../../libs";
+import { HistoryFilters, HistoryV1 } from "../../server";
 
 export const useFetchHistoryV1 = () => {
   const api = useContext(PrivateApiContext);
@@ -13,14 +13,19 @@ export const useFetchHistoryV1 = () => {
     async ({
       twinId,
       pagination = { pageIndex: 0, pageSize: 10 },
+      filters = {},
     }: {
-      twinId: string;
+      twinId?: string;
       pagination?: PaginationState;
-    }): Promise<PagedResponse<Twin>> => {
+      filters?: HistoryFilters;
+    }): Promise<PagedResponse<HistoryV1>> => {
       try {
         const { data, error } = await api.twin.getHistory({
-          twinId,
           pagination,
+          filters: {
+            ...filters,
+            ...(twinId ? { twinIdList: [twinId] } : {}),
+          },
         });
 
         if (error) {

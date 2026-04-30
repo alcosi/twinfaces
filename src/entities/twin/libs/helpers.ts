@@ -1,5 +1,10 @@
 import { DataListOptionV1 } from "@/entities/datalist-option";
-import { HistoryV1, Twin, TwinTagManageV1 } from "@/entities/twin/server";
+import {
+  HistoryV1,
+  History_DETAILED,
+  Twin,
+  TwinTagManageV1,
+} from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 import {
@@ -73,15 +78,15 @@ export function transformToTwinTags(
 export const hydrateTwinHistoryFromMap = (
   dto: HistoryV1,
   relatedObjects?: RelatedObjects
-): HistoryV1 => {
-  const hydrated: HistoryV1 = Object.assign({}, dto) as HistoryV1;
+): History_DETAILED => {
+  const hydrated: History_DETAILED = Object.assign({}, dto) as History_DETAILED;
 
   if (dto.machineUserId && relatedObjects?.userMap) {
     hydrated.machineUser = relatedObjects.userMap[dto.machineUserId] as User;
   }
 
   if (dto.actorUserId && relatedObjects?.userMap) {
-    hydrated.actorUser = relatedObjects.userMap[dto.actorUserId];
+    hydrated.actorUser = relatedObjects.userMap[dto.actorUserId] as User;
   }
 
   return hydrated;
