@@ -31,7 +31,11 @@ export const TWIN_CLASSES_SCHEMA = z.object({
       REGEX_PATTERNS.TWIN_CLASS_KEY,
       "Letters, numbers, underscores, and spaces allowed"
     ),
-  name: z.string().min(1).max(100),
+  name: z
+    .string()
+    .max(100)
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
   description: z
     .string()
     .optional()
@@ -47,11 +51,10 @@ export const TWIN_CLASSES_SCHEMA = z.object({
       isPopulatedArray<{ id: TwinClass["ownerType"] }>(arr)
         ? arr[0].id
         : undefined
-    )
-    .optional(),
-  abstractClass: z.boolean(),
-  segment: z.boolean(),
-  assigneeRequired: z.boolean(),
+    ),
+  abstractClass: z.boolean().default(false),
+  segment: z.boolean().default(false),
+  assigneeRequired: z.boolean().default(false),
   headTwinClass: z.array(z.object({ id: z.string().uuid() })).nullable(),
   headHunterFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR).optional(),
   headHunterParams: FEATURER_PARAMS_VALUE,
@@ -61,20 +64,20 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .url()
     .optional()
     .or(z.literal("").transform(() => undefined)),
-  permissionSchemaSpace: z.boolean(),
-  twinflowSchemaSpace: z.boolean(),
-  twinClassSchemaSpace: z.boolean(),
-  aliasSpace: z.boolean(),
+  permissionSchemaSpace: z.boolean().default(false),
+  twinflowSchemaSpace: z.boolean().default(false),
+  twinClassSchemaSpace: z.boolean().default(false),
+  aliasSpace: z.boolean().default(false),
   markerDataListId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   tagDataListId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   viewPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   createPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   editPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   deletePermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
-  autoCreateTwinflow: z.boolean(),
-  autoCreatePermissions: z.boolean(),
-  space: z.boolean(),
-  uniqueName: z.boolean(),
+  autoCreateTwinflow: z.boolean().default(false),
+  autoCreatePermissions: z.boolean().default(true),
+  space: z.boolean().default(false),
+  uniqueName: z.boolean().default(false),
 });
 
 export const TWIN_CLASS_DYNAMIC_MARKER_SCHEMA = z.object({

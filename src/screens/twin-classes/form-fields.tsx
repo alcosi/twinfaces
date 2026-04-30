@@ -46,6 +46,7 @@ export function TwinClassFormFields({
         name="key"
         label="Key"
         autoFocus={true}
+        required
       />
 
       <TextFormField control={control} name="name" label="Name" />
@@ -63,6 +64,7 @@ export function TwinClassFormFields({
         selectPlaceholder="Select owner type"
         searchPlaceholder="Search owner type..."
         noItemsText="No owner type found"
+        required
         {...twinClassOwnerTypeAdapter}
       />
 

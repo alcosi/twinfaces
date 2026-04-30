@@ -457,6 +457,8 @@ export function TwinClasses({ type }: { type?: string }) {
       name: "",
       description: "",
       abstractClass: false,
+      segment: false,
+      assigneeRequired: false,
       headTwinClass: null,
       headHunterFeaturerId: undefined,
       headHunterParams: {},
@@ -466,8 +468,10 @@ export function TwinClasses({ type }: { type?: string }) {
       twinflowSchemaSpace: false,
       twinClassSchemaSpace: false,
       aliasSpace: false,
+      autoCreateTwinflow: false,
       autoCreatePermissions: true,
       space: false,
+      uniqueName: false,
     },
   });
 
@@ -505,10 +509,12 @@ export function TwinClasses({ type }: { type?: string }) {
       twinClassCreates: [
         {
           key,
-          nameI18n: {
-            translationInCurrentLocale: name,
-            translations: {},
-          },
+          nameI18n: name
+            ? {
+                translationInCurrentLocale: name,
+                translations: {},
+              }
+            : undefined,
           descriptionI18n: description
             ? {
                 translationInCurrentLocale: description,
