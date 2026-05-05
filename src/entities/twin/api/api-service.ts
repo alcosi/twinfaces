@@ -90,16 +90,6 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  // function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
-  //   return settings.client.GET("/private/twin/{twinId}/v2", {
-  //     params: {
-  //       header: getApiDomainHeaders(settings),
-  //       path: { twinId: id },
-  //       query: query,
-  //     },
-  //   });
-  // }
-
   function create({ body }: { body: TwinCreateRq }) {
     return settings.client.POST("/private/twin/v2", {
       params: {
@@ -139,29 +129,6 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2UserMode: "DETAILED",
           showTwinByLinkMode: "GREEN",
           showTwin2TwinLinkMode: "SHORT",
-        },
-      },
-    });
-  }
-
-  function getHistory({
-    twinId,
-    pagination,
-  }: {
-    twinId: string;
-    pagination: PaginationState;
-  }) {
-    return settings.client.GET("/private/twin/{twinId}/history/list/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { twinId },
-        query: {
-          lazyRelation: false,
-          showHistory2TwinMode: "DETAILED",
-          showTwin2UserMode: "DETAILED",
-          showHistory2UserMode: "DETAILED",
-          limit: pagination.pageSize,
-          offset: pagination.pageIndex * pagination.pageSize,
         },
       },
     });
@@ -235,11 +202,9 @@ export function createTwinApi(settings: ApiSettings) {
   return {
     search,
     searchBySearchId,
-    // getById,
     create,
     update,
     getFieldsById,
-    getHistory,
     getLinks,
     upsertField,
     getValidTwinsForLink,

@@ -52,6 +52,7 @@ import {
   createFactoryTriggerApi,
 } from "@/entities/factory-trigger";
 import { FeaturerApi, createFeaturerApi } from "@/entities/featurer";
+import { HistoryApi, createHistoryApi } from "@/entities/history";
 import { LinkApi, createLinkApi } from "@/entities/link";
 import {
   NotificationApi,
@@ -176,6 +177,7 @@ export interface PrivateApiContextProps {
   triggerTask: TriggerTaskApi;
   statusTrigger: StatusTriggerApi;
   system: SystemApi;
+  history: HistoryApi;
 }
 
 export function PrivateApiContextProvider({
@@ -239,6 +241,7 @@ export function PrivateApiContextProvider({
         triggerTask: createTriggerTaskApi(settings),
         statusTrigger: createStatusTriggerApi(settings),
         system: createSystemApi(settings),
+        history: createHistoryApi(settings),
       }
     : ({} as PrivateApiContextProps);
 

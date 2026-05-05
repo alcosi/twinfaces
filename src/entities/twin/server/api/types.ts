@@ -65,7 +65,7 @@ export type TwinViewQuery = operations["twinViewV2"]["parameters"]["query"];
 export type TwinTagManageV1 = TwinUpdateRq["tagsUpdate"];
 
 export type TwinLinkAddRqV1 = components["schemas"]["TwinLinkAddRqV1"];
-export type HistoryV1 = components["schemas"]["HistoryV1"];
+
 export type TwinAttachmentCreateRq =
   components["schemas"]["AttachmentCreateRqV1"];
 
