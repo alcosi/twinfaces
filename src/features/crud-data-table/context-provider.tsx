@@ -28,8 +28,7 @@ export function CrudDataTableProvider({ children }: { children: ReactNode }) {
     updates: TableViewStateUpdate
   ): Partial<TableViewState> => {
     if (updates.filters === null) {
-      const { filters, ...rest } = updates;
-      return { ...current, ...rest, filters: {} } as Partial<TableViewState>;
+      return { ...current, ...updates, filters: {} } as Partial<TableViewState>;
     }
     return { ...current, ...updates } as Partial<TableViewState>;
   };
