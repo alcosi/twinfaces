@@ -1,13 +1,13 @@
 "use client";
 
 import { TabsLayout } from "@/widgets/layout";
+import { HistoryesTable } from "@/widgets/tables";
 
 import {
   TwinAttachments,
   TwinComments,
   TwinFields,
   TwinGeneral,
-  TwinHistory,
   TwinLinks,
   TwinTriggerTasks,
 } from "./views";
@@ -41,7 +41,7 @@ const DEFAULT_TABS = [
   {
     key: "history",
     label: "History",
-    content: <TwinHistory />,
+    content: <HistoryesTable />,
   },
   {
     key: "triggerTask",

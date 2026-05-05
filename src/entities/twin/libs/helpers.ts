@@ -5,6 +5,7 @@ import {
   History_DETAILED,
   Twin,
   TwinTagManageV1,
+  Twin_DETAILED,
 } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
@@ -94,6 +95,10 @@ export const hydrateTwinHistoryFromMap = (
     hydrated.twinClassField = relatedObjects.twinClassFieldMap[
       dto.twinClassFieldId
     ] as TwinClassField_DETAILED;
+  }
+
+  if (dto.twinId && relatedObjects?.twinMap) {
+    hydrated.twin = relatedObjects.twinMap[dto.twinId] as Twin_DETAILED;
   }
 
   return hydrated;

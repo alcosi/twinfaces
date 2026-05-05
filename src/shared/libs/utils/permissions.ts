@@ -11,6 +11,7 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
   twins: ["TWIN"],
   comments: ["COMMENT"],
   attachments: ["ATTACHMENT"],
+  historyes: ["TWIN"],
 
   //? NOTE User menu
   users: ["USER"],

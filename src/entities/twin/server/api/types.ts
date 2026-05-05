@@ -71,6 +71,7 @@ export type History_DETAILED = HistoryV1 & {
   actorUser?: User;
   machineUser?: User;
   twinClassField?: TwinClassField_DETAILED;
+  twin?: Twin_DETAILED;
 };
 export type HistoryFilterKeys =
   | "idList"
