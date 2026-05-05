@@ -4,8 +4,7 @@ import {
   useTwinClassFieldFilters,
   useTwinClassFieldSelectAdapterWithFilters,
 } from "@/entities/twin-class-field";
-import { useTwinSelectAdapter } from "@/entities/twin/libs";
-import { useUserSelectAdapter } from "@/entities/user/libs";
+import { useUserSelectAdapter } from "@/entities/user";
 import { DataTimeRangeV1 } from "@/shared/api/types";
 import {
   type FilterFeature,
@@ -17,6 +16,7 @@ import {
 } from "@/shared/libs";
 
 import { HISTORY_TYPES, HistoryFilterKeys, HistoryFilters } from "../../server";
+import { useTwinSelectAdapter } from "./use-select-adapter";
 
 export function useHistoryFilters({
   enabledFilters,

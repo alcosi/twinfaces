@@ -1,5 +1,6 @@
 import { DataListOptionV1 } from "@/entities/datalist-option";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
 import { TwinStatus } from "@/entities/twin-status";
 import { TwinFieldUI } from "@/entities/twinField";
@@ -69,6 +70,7 @@ export type HistoryV1 = components["schemas"]["HistoryV1"];
 export type History_DETAILED = HistoryV1 & {
   actorUser?: User;
   machineUser?: User;
+  twinClassField?: TwinClassField_DETAILED;
 };
 export type HistoryFilterKeys =
   | "idList"

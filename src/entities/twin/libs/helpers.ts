@@ -1,4 +1,5 @@
 import { DataListOptionV1 } from "@/entities/datalist-option";
+import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import {
   HistoryV1,
   History_DETAILED,
@@ -87,6 +88,12 @@ export const hydrateTwinHistoryFromMap = (
 
   if (dto.actorUserId && relatedObjects?.userMap) {
     hydrated.actorUser = relatedObjects.userMap[dto.actorUserId] as User;
+  }
+
+  if (dto.twinClassFieldId && relatedObjects?.twinClassFieldMap) {
+    hydrated.twinClassField = relatedObjects.twinClassFieldMap[
+      dto.twinClassFieldId
+    ] as TwinClassField_DETAILED;
   }
 
   return hydrated;

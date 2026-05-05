@@ -2,14 +2,14 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 
-import { useFetchHistoryV1 } from "@/entities/twin";
-import { useHistoryFilters } from "@/entities/twin/libs";
+import { useFetchHistoryV1, useHistoryFilters } from "@/entities/twin";
 import {
   HistoryFilterKeys,
   HistoryV1,
   History_DETAILED,
 } from "@/entities/twin/server";
 import { TwinContext } from "@/features/twin";
+import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatIntlDate, isTruthy } from "@/shared/libs";
@@ -25,7 +25,7 @@ const colDefs: Record<
     History_DETAILED,
     | "id"
     | "type"
-    | "twinClassFieldId"
+    | "twinClassField"
     | "changeDescription"
     | "createdAt"
     | "batchId"
@@ -47,11 +47,19 @@ const colDefs: Record<
     header: "Change type",
   },
 
-  twinClassFieldId: {
-    id: "twinClassFieldId",
-    accessorKey: "twinClassFieldId",
+  twinClassField: {
+    id: "twinClassField",
+    accessorKey: "twinClassField",
     header: "Field",
-    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+    cell: ({ row: { original } }) =>
+      original.twinClassField && (
+        <div className="inline-flex max-w-48">
+          <TwinClassFieldResourceLink
+            data={original.twinClassField}
+            withTooltip
+          />
+        </div>
+      ),
   },
 
   changeDescription: {
@@ -146,7 +154,7 @@ export function TwinHistory() {
         columns={[
           colDefs.id,
           colDefs.type,
-          colDefs.twinClassFieldId,
+          colDefs.twinClassField,
           colDefs.changeDescription,
           colDefs.actorUserId,
           colDefs.machineUserId,
@@ -158,7 +166,7 @@ export function TwinHistory() {
         defaultVisibleColumns={[
           colDefs.id,
           colDefs.type,
-          colDefs.twinClassFieldId,
+          colDefs.twinClassField,
           colDefs.changeDescription,
           colDefs.actorUserId,
           colDefs.machineUserId,
