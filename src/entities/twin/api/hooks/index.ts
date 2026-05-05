@@ -5,4 +5,3 @@ export * from "./use-fetch-valid-head-twins-v1";
 export * from "./use-search";
 export * from "./use-update-v1";
 export * from "./use-valid-twins-for-link";
-export * from "./useFetchHistoryV1";

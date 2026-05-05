@@ -1,7 +1,6 @@
 import { PaginationState } from "@tanstack/table-core";
 
 import {
-  HistoryFilters,
   TwinCreateRq,
   TwinFilters,
   TwinFiltersBySearchId,
@@ -91,16 +90,6 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  // function getById({ id, query = {} }: { id: string; query?: TwinViewQuery }) {
-  //   return settings.client.GET("/private/twin/{twinId}/v2", {
-  //     params: {
-  //       header: getApiDomainHeaders(settings),
-  //       path: { twinId: id },
-  //       query: query,
-  //     },
-  //   });
-  // }
-
   function create({ body }: { body: TwinCreateRq }) {
     return settings.client.POST("/private/twin/v2", {
       params: {
@@ -140,38 +129,6 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2UserMode: "DETAILED",
           showTwinByLinkMode: "GREEN",
           showTwin2TwinLinkMode: "SHORT",
-        },
-      },
-    });
-  }
-
-  function getHistory({
-    pagination,
-    filters = {},
-  }: {
-    pagination: PaginationState;
-    filters?: HistoryFilters;
-  }) {
-    return settings.client.POST("/private/twin_history/search/v1", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        query: {
-          lazyRelation: false,
-          showHistoryMode: "DETAILED",
-          showHistory2TwinMode: "DETAILED",
-          showHistory2UserMode: "DETAILED",
-          showTwin2UserMode: "DETAILED",
-          showTwinClassFieldCollectionMode: "SHOW",
-          showTwinFieldCollectionMode: "SHOW",
-          showTwinClass2TwinClassFieldMode: "DETAILED",
-          showTwin2TwinClassMode: "DETAILED",
-          limit: pagination.pageSize,
-          offset: pagination.pageIndex * pagination.pageSize,
-        },
-      },
-      body: {
-        search: {
-          ...filters,
         },
       },
     });
@@ -245,11 +202,9 @@ export function createTwinApi(settings: ApiSettings) {
   return {
     search,
     searchBySearchId,
-    // getById,
     create,
     update,
     getFieldsById,
-    getHistory,
     getLinks,
     upsertField,
     getValidTwinsForLink,

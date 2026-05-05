@@ -2,12 +2,13 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useContext, useRef } from "react";
 import { toast } from "sonner";
 
-import { useFetchHistoryV1, useHistoryFilters } from "@/entities/twin";
 import {
+  History,
   HistoryFilterKeys,
-  HistoryV1,
   History_DETAILED,
-} from "@/entities/twin/server";
+  useFetchHistoryById,
+  useHistoryFilters,
+} from "@/entities/history";
 import { TwinContext } from "@/features/twin";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinResourceLink } from "@/features/twin/ui";
@@ -126,7 +127,7 @@ const colDefs: Record<
 
 export function HistoryesTable() {
   const { twinId } = useContext(TwinContext);
-  const { fetchHistoryByTwinId } = useFetchHistoryV1();
+  const { fetchHistoryById } = useFetchHistoryById();
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } = useHistoryFilters({
     enabledFilters: isTruthy(twinId)
@@ -144,13 +145,13 @@ export function HistoryesTable() {
   async function fetchHistory(
     pagination: PaginationState,
     filters: FiltersState
-  ): Promise<PagedResponse<HistoryV1>> {
+  ): Promise<PagedResponse<History>> {
     const _filters = mapFiltersToPayload(
       filters.filters as Record<HistoryFilterKeys, unknown>
     );
 
     try {
-      return await fetchHistoryByTwinId({
+      return await fetchHistoryById({
         twinId,
         pagination,
         filters: _filters,
