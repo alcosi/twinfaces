@@ -2,13 +2,18 @@
 
 import { Tab, TabsLayout } from "@/widgets/layout";
 
-import { TwinTriggerGeneral } from "./views";
+import { TwinTriggerGeneral, TwinTriggerUsages } from "./views";
 
 const tabs: Tab[] = [
   {
     key: "general",
     label: "General",
     content: <TwinTriggerGeneral />,
+  },
+  {
+    key: "usages",
+    label: "Usages",
+    content: <TwinTriggerUsages />,
   },
 ];
 

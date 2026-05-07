@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -18,6 +19,8 @@ import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
 import { PagedResponse } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
+import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -124,10 +127,24 @@ const colDefs: Record<
   },
 };
 
-export function FactoryTriggersTable() {
+export function FactoryTriggersTable({
+  twinTriggerId,
+}: {
+  twinTriggerId?: string;
+}) {
+  const router = useRouter();
   const { searchFactoryTrigger } = useFactoryTriggerSearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryTriggerFilters({
-    enabledFilters: undefined,
+    enabledFilters: isTruthy(twinTriggerId)
+      ? [
+          "idList",
+          "twinFactoryIdList",
+          "inputTwinClassIdList",
+          "idList",
+          "active",
+          "async",
+        ]
+      : undefined,
   });
   const { createFactoryTrigger } = useFactoryTriggerCreate();
   async function fetchFactoryTriggers(
@@ -138,7 +155,12 @@ export function FactoryTriggersTable() {
     try {
       return await searchFactoryTrigger({
         pagination,
-        filters: _filters,
+        filters: {
+          ..._filters,
+          twinTriggerIdList: twinTriggerId
+            ? toArrayOfString(toArray(twinTriggerId), "id")
+            : _filters.twinTriggerIdList,
+        },
       });
     } catch (error) {
       toast.error("An error occured while fetching factory triggers:" + error);
@@ -151,6 +173,7 @@ export function FactoryTriggersTable() {
   const triggersForm = useForm<TriggersFormValues>({
     resolver: zodResolver(FACTORY_TRIGGER_SCHEMA),
     defaultValues: {
+      twinTriggerId: twinTriggerId || "",
       twinFactoryConditionInvert: false,
       active: false,
       async: false,
@@ -194,7 +217,7 @@ export function FactoryTriggersTable() {
         colDefs.twinFactoryConditionInvert,
         colDefs.active,
         colDefs.description,
-        colDefs.twinTrigger,
+        ...(twinTriggerId ? [] : [colDefs.twinTrigger]),
         colDefs.async,
       ]}
       fetcher={fetchFactoryTriggers}
@@ -206,11 +229,14 @@ export function FactoryTriggersTable() {
         colDefs.twinFactoryConditionInvert,
         colDefs.active,
         colDefs.description,
-        colDefs.twinTrigger,
+        ...(twinTriggerId ? [] : [colDefs.twinTrigger]),
         colDefs.async,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
       getRowId={(row) => row.id!}
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/factory-triggers/${row.id}`)
+      }
       dialogForm={triggersForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

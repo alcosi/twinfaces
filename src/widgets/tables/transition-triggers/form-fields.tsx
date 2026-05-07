@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Control } from "react-hook-form";
+import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
@@ -23,6 +23,8 @@ export function TriggersFormFields({
   transitionId?: string;
 }) {
   const twinTriggerAdapter = useTwinTriggerSelectAdapter();
+  const twinTriggerWatch = useWatch({ control, name: "twinTriggerId" });
+  const disabledTwinTrigger = useRef(isTruthy(twinTriggerWatch)).current;
   const transitionAdapter = useTransitionSelectAdapter();
   const disabled = useRef(isTruthy(transitionId)).current;
 
@@ -55,6 +57,7 @@ export function TriggersFormFields({
         noItemsText="No data found"
         {...twinTriggerAdapter}
         required
+        disabled={disabledTwinTrigger}
       />
       <SwitchFormField control={control} name="async" label="Async" />
     </>
