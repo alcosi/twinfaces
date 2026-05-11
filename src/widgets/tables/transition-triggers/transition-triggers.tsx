@@ -9,6 +9,7 @@ import { z } from "zod";
 
 import {
   TRANSITION_TRIGGER_SCHEMA,
+  TransitionTriggerFilterKeys,
   TransitionTrigger_DETAILED,
   useTransitionTriggerCreate,
   useTransitionTriggerSearch,
@@ -19,7 +20,13 @@ import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/
 import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
 import { PagedResponse } from "@/shared/api/types";
 import { PlatformArea } from "@/shared/config";
-import { isFalsy } from "@/shared/libs";
+import {
+  isFalsy,
+  isTruthy,
+  isUndefined,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -93,7 +100,11 @@ const colDefs: Record<
   },
 };
 
-export function TransitionTriggersTable() {
+export function TransitionTriggersTable({
+  twinTriggerId,
+}: {
+  twinTriggerId?: string;
+}) {
   const router = useRouter();
   const { transitionId } = useContext(TwinFlowTransitionContext);
   const tableRef = useRef<DataTableHandle>(null);
@@ -101,15 +112,17 @@ export function TransitionTriggersTable() {
   const { createTransitionTrigger } = useTransitionTriggerCreate();
   const { buildFilterFields, mapFiltersToPayload } =
     useTransitionTriggerFilters({
-      enabledFilters: transitionId
-        ? ["idList", "twinTriggerIdList", "active", "async"]
-        : [
-            "idList",
-            "twinflowTransitionIdList",
-            "twinTriggerIdList",
-            "active",
-            "async",
-          ],
+      enabledFilters:
+        isTruthy(transitionId) || isTruthy(twinTriggerId)
+          ? ([
+              "idList",
+              isUndefined(transitionId) && "twinflowTransitionIdList",
+              "incomingElseOutgoing",
+              isUndefined(twinTriggerId) && "twinTriggerIdList",
+              "active",
+              "async",
+            ].filter(Boolean) as TransitionTriggerFilterKeys[])
+          : undefined,
     });
 
   async function fetchData(
@@ -123,7 +136,12 @@ export function TransitionTriggersTable() {
         pagination,
         filters: {
           ..._filters,
-          ...(transitionId ? { twinflowTransitionIdList: [transitionId] } : {}),
+          twinflowTransitionIdList: transitionId
+            ? toArrayOfString(toArray(transitionId), "id")
+            : _filters.twinflowTransitionIdList,
+          twinTriggerIdList: twinTriggerId
+            ? toArrayOfString(toArray(twinTriggerId), "id")
+            : _filters.twinTriggerIdList,
         },
       });
     } catch (error) {
@@ -139,7 +157,8 @@ export function TransitionTriggersTable() {
   const triggersForm = useForm<TriggersFormValues>({
     resolver: zodResolver(TRANSITION_TRIGGER_SCHEMA),
     defaultValues: {
-      ...(transitionId ? { twinflowTransitionId: transitionId } : {}),
+      twinflowTransitionId: transitionId || "",
+      twinTriggerId: twinTriggerId || "",
       order: 0,
       active: true,
       async: false,
@@ -180,7 +199,7 @@ export function TransitionTriggersTable() {
         colDefs.id,
         ...(isFalsy(transitionId) ? [colDefs.twinflowTransitionId] : []),
         colDefs.order,
-        colDefs.twinTriggerId,
+        ...(twinTriggerId ? [] : [colDefs.twinTriggerId]),
         colDefs.async,
         colDefs.active,
       ]}
@@ -193,7 +212,7 @@ export function TransitionTriggersTable() {
         colDefs.id,
         ...(isFalsy(transitionId) ? [colDefs.twinflowTransitionId] : []),
         colDefs.order,
-        colDefs.twinTriggerId,
+        ...(twinTriggerId ? [] : [colDefs.twinTriggerId]),
         colDefs.async,
         colDefs.active,
       ]}

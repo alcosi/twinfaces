@@ -1,4 +1,5 @@
-import { Control } from "react-hook-form";
+import { useRef } from "react";
+import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
@@ -20,6 +21,7 @@ import {
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
+import { isTruthy } from "@/shared/libs";
 
 type TriggersFormValues = z.infer<typeof FACTORY_TRIGGER_SCHEMA>;
 
@@ -36,6 +38,8 @@ export function TriggersFormFields({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const twinTriggerWatch = useWatch({ control, name: "twinTriggerId" });
+  const disabled = useRef(isTruthy(twinTriggerWatch)).current;
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -97,6 +101,7 @@ export function TriggersFormFields({
         noItemsText="No data found"
         {...twinTriggerAdapter}
         required
+        disabled={disabled}
       />
       <SwitchFormField control={control} name="async" label="Async" />
     </>

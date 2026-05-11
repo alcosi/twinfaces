@@ -18,6 +18,7 @@ import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
+import { isTruthy, isUndefined, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
@@ -93,27 +94,32 @@ const colDefs: Record<
 
 export function StatusTriggersTable({
   twinStatusId,
+  twinTriggerId,
 }: {
   twinStatusId?: string;
+  twinTriggerId?: string;
 }) {
   const router = useRouter();
   const { searchStatusTriggers } = useStatusTriggerSearch();
   const { createStatusTrigger } = useStatusTriggerCreate();
   const { buildFilterFields, mapFiltersToPayload } = useStatusTriggerFilters({
-    enabledFilters: twinStatusId
-      ? [
-          "idList",
-          "incomingElseOutgoing",
-          "twinTriggerIdList",
-          "active",
-          "async",
-        ]
-      : undefined,
+    enabledFilters:
+      isTruthy(twinStatusId) || isTruthy(twinTriggerId)
+        ? ([
+            "idList",
+            isUndefined(twinStatusId) && "twinStatusIdList",
+            "incomingElseOutgoing",
+            isUndefined(twinTriggerId) && "twinTriggerIdList",
+            "active",
+            "async",
+          ].filter(Boolean) as StatusTriggerFilterKeys[])
+        : undefined,
   });
 
   const statusTriggerForm = useForm<StatusTriggerFormValues>({
     resolver: zodResolver(STATUS_TRIGGER_SCHEMA),
     defaultValues: {
+      twinTriggerId: twinTriggerId || "",
       incomingElseOutgoing: false,
       order: 0,
       active: false,
@@ -134,7 +140,12 @@ export function StatusTriggersTable({
         pagination,
         filters: {
           ..._filters,
-          ...(twinStatusId ? { twinStatusIdList: [twinStatusId] } : {}),
+          twinStatusIdList: twinStatusId
+            ? toArrayOfString(toArray(twinStatusId), "id")
+            : _filters.twinStatusIdList,
+          twinTriggerIdList: twinTriggerId
+            ? toArrayOfString(toArray(twinTriggerId), "id")
+            : _filters.twinTriggerIdList,
         },
       });
     } catch (error) {
@@ -176,7 +187,7 @@ export function StatusTriggersTable({
         ...(twinStatusId ? [] : [colDefs.twinStatusId]),
         colDefs.incomingElseOutgoing,
         colDefs.order,
-        colDefs.twinTriggerId,
+        ...(twinTriggerId ? [] : [colDefs.twinTriggerId]),
         colDefs.async,
         colDefs.active,
       ]}
@@ -190,7 +201,7 @@ export function StatusTriggersTable({
         ...(twinStatusId ? [] : [colDefs.twinStatusId]),
         colDefs.incomingElseOutgoing,
         colDefs.order,
-        colDefs.twinTriggerId,
+        ...(twinTriggerId ? [] : [colDefs.twinTriggerId]),
         colDefs.async,
         colDefs.active,
       ]}

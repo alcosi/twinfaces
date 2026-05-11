@@ -1,4 +1,5 @@
-import { Control } from "react-hook-form";
+import { useRef } from "react";
+import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
@@ -10,6 +11,7 @@ import {
 import { STATUS_TRIGGER_SCHEMA } from "@/entities/status-trigger";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
+import { isTruthy } from "@/shared/libs";
 
 type TriggersFormValues = z.infer<typeof STATUS_TRIGGER_SCHEMA>;
 
@@ -20,6 +22,8 @@ export function StatusTriggerFormFields({
 }) {
   const twinStatusAdapter = useTwinStatusSelectAdapter();
   const twinTriggerAdapter = useTwinTriggerSelectAdapter();
+  const twinTriggerWatch = useWatch({ control, name: "twinTriggerId" });
+  const disabled = useRef(isTruthy(twinTriggerWatch)).current;
 
   return (
     <>
@@ -53,6 +57,7 @@ export function StatusTriggerFormFields({
         noItemsText="No data found"
         {...twinTriggerAdapter}
         required
+        disabled={disabled}
       />
       <SwitchFormField control={control} name="async" label="Async" />
       <SwitchFormField control={control} name="active" label="Active" />

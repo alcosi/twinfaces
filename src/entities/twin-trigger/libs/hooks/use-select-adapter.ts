@@ -1,4 +1,8 @@
-import { SelectAdapter, isPopulatedString } from "@/shared/libs";
+import {
+  SelectAdapter,
+  isPopulatedString,
+  wrapWithPercent,
+} from "@/shared/libs";
 
 import { useTwinTriggerSearch } from "../../api/hooks";
 import { TwinTrigger_DETAILED } from "../../api/types";
@@ -16,8 +20,13 @@ export function useTwinTriggerSelectAdapter(): SelectAdapter<TwinTrigger_DETAILE
 
   async function getItems(search: string) {
     const response = await searchTwinTriggers({
-      pagination: { pageIndex: 0, pageSize: 20 },
-      filters: { nameLikeList: search ? [search] : undefined },
+      pagination: {
+        pageIndex: 0,
+        pageSize: 10,
+      },
+      filters: {
+        nameLikeList: search ? [wrapWithPercent(search)] : undefined,
+      },
     });
     return response.data;
   }
