@@ -1,4 +1,5 @@
 import { ForwardedRef } from "react";
+
 import { DataTableHandle, DataTableRow } from "./data-table";
 
 export function getColumnKey(column: any): string {
@@ -13,6 +14,12 @@ export function getColumnKey(column: any): string {
 export function safeRefresh(ref: ForwardedRef<DataTableHandle>) {
   if (ref && "current" in ref && ref.current) {
     ref.current.refresh();
+  }
+}
+
+export function safeResetPage(ref: ForwardedRef<DataTableHandle>) {
+  if (ref && "current" in ref && ref.current) {
+    ref.current.resetPage();
   }
 }
 

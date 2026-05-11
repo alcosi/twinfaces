@@ -98,7 +98,13 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
   useImperativeHandle(ref, () => {
     return {
       resetPage() {
-        table.firstPage();
+        setPagination((prev) => ({
+          ...prev,
+          tanstask: {
+            ...prev.tanstask,
+            pageIndex: 0,
+          },
+        }));
       },
 
       refresh() {

@@ -81,16 +81,33 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
 
   const { viewSettings, updateViewSettings } = useViewSettings(
     props.defaultVisibleColumns,
-    props.orderedColumns
+    props.orderedColumns,
+    props.columns
   );
   const tableRef = useRef<DataTableHandle>(null);
   const dialogRef = useRef<CrudDataTableDialogRef>(null);
+  const isFirstViewSettingsSync = useRef(true);
+  const isFirstGroupBySync = useRef(true);
 
   useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
   useEffect(() => {
+    if (isFirstViewSettingsSync.current) {
+      isFirstViewSettingsSync.current = false;
+      return;
+    }
+
+    tableRef.current?.resetPage();
+  }, [viewSettings.query, viewSettings.filters]);
+
+  useEffect(() => {
+    if (isFirstGroupBySync.current) {
+      isFirstGroupBySync.current = false;
+      return;
+    }
+
     tableRef.current?.refresh();
-  }, [viewSettings]);
+  }, [viewSettings.groupByKey]);
 
   const fetchWrapper = async (pagination: PaginationState) => {
     try {

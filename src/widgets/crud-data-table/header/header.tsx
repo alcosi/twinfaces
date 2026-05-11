@@ -9,7 +9,7 @@ import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 
 import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";
-import { getColumnKey, safeRefresh } from "../helpers";
+import { getColumnKey, safeRefresh, safeResetPage } from "../helpers";
 import { useViewSettings } from "../hooks";
 import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersPopover } from "./filters-popover";
@@ -72,7 +72,8 @@ function CrudDataTableHeaderComponent<
 ) {
   const { viewSettings, updateViewSettings } = useViewSettings(
     defaultVisibleColumns,
-    orderedColumns
+    orderedColumns,
+    columns
   );
 
   const debouncedUpdate = useCallback(
@@ -89,7 +90,7 @@ function CrudDataTableHeaderComponent<
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    safeRefresh(tableRef);
+    safeResetPage(tableRef);
   };
 
   const visibleOrderedColumns = columns

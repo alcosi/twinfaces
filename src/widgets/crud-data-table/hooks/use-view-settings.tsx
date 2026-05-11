@@ -3,10 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useReducer } from "react";
 
-import {
-  useCrudDataTableState,
-  useCrudDataTableStore,
-} from "@/features/crud-data-table";
+import { useCrudDataTableStore } from "@/features/crud-data-table";
 
 import { DataTableProps, DataTableRow } from "../data-table";
 import { TableViewState, TableViewStateUpdate } from "../header";
@@ -27,6 +24,24 @@ function getParentPath(pathname: string): string {
 
 function getStorageKey(pathname: string): string {
   return isDetailPage(pathname) ? getParentPath(pathname) : pathname;
+}
+
+function getTableStorageKey<TData extends DataTableRow<TData>, TValue>(
+  baseStorageKey: string,
+  defaultVisibleColumns: DataTableProps<TData, TValue>["columns"],
+  orderedColumns: DataTableProps<TData, TValue>["columns"],
+  columns: DataTableProps<TData, TValue>["columns"]
+): string {
+  const storageColumns = defaultVisibleColumns.length
+    ? defaultVisibleColumns
+    : columns.length
+      ? columns
+      : orderedColumns;
+  const columnSignature = storageColumns.map(getColumnKey).join("|");
+
+  return columnSignature
+    ? `${baseStorageKey}::${columnSignature}`
+    : baseStorageKey;
 }
 
 function getInitialState<TData extends DataTableRow<TData>, TValue>(
@@ -56,19 +71,24 @@ function getInitialState<TData extends DataTableRow<TData>, TValue>(
 
 export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
   defaultVisibleColumns: DataTableProps<TData, TValue>["columns"] = [],
-  orderedColumns: DataTableProps<TData, TValue>["columns"] = []
+  orderedColumns: DataTableProps<TData, TValue>["columns"] = [],
+  columns: DataTableProps<TData, TValue>["columns"] = []
 ) {
-  const { getState, setState, getLastBasePath, setLastBasePath } =
-    useCrudDataTableState();
   const store = useCrudDataTableStore();
   const pathname = usePathname();
 
   const storageKey = getStorageKey(pathname);
-  const lastStorageKey = getLastBasePath();
+  const tableStorageKey = getTableStorageKey(
+    storageKey,
+    defaultVisibleColumns,
+    orderedColumns,
+    columns
+  );
+  const lastStorageKey = store.getLastBasePath();
   const hasNavigatedToNewPage = Boolean(
     lastStorageKey && lastStorageKey !== storageKey
   );
-  const savedState = hasNavigatedToNewPage ? null : getState();
+  const savedState = hasNavigatedToNewPage ? null : store.get(tableStorageKey);
 
   const [viewSettings, updateViewSettings] = useReducer(
     (state: TableViewState, updates: TableViewStateUpdate): TableViewState => {
@@ -77,7 +97,7 @@ export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
         ...updates,
         ...(updates.filters === null ? { filters: {} } : {}),
       } as TableViewState;
-      setState(updates);
+      store.set(tableStorageKey, updates);
       return result;
     },
     getInitialState(
@@ -92,14 +112,8 @@ export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
     if (hasNavigatedToNewPage && lastStorageKey) {
       store.clearByPrefix(lastStorageKey);
     }
-    setLastBasePath(storageKey);
-  }, [
-    storageKey,
-    hasNavigatedToNewPage,
-    lastStorageKey,
-    setLastBasePath,
-    store,
-  ]);
+    store.setLastBasePath(storageKey);
+  }, [storageKey, hasNavigatedToNewPage, lastStorageKey, store]);
 
   useEffect(() => {
     if (

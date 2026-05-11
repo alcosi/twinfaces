@@ -48,7 +48,11 @@ export function CrudDataTableProvider({ children }: { children: ReactNode }) {
     clearByPrefix: (prefix) => {
       const keysToDelete: string[] = [];
       storeRef.current.forEach((_, key) => {
-        if (key === prefix || key.startsWith(`${prefix}/`)) {
+        if (
+          key === prefix ||
+          key.startsWith(`${prefix}/`) ||
+          key.startsWith(`${prefix}::`)
+        ) {
           keysToDelete.push(key);
         }
       });
