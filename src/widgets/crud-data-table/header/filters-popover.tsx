@@ -1,5 +1,5 @@
 import { FilterIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
@@ -15,9 +15,9 @@ import {
 } from "@/shared/ui";
 
 interface FiltersPopoverProps {
-  filtersInfo: { [key: string]: AutoFormValueInfo };
-  filters: { [key: string]: any };
-  onChange: (values: { [key: string]: any }) => Promise<any>;
+  filtersInfo: Record<string, AutoFormValueInfo>;
+  filters: Record<string, unknown>;
+  onChange: (values: Record<string, unknown> | null) => Promise<void>;
 }
 
 export function FiltersPopover({
@@ -27,80 +27,61 @@ export function FiltersPopover({
 }: FiltersPopoverProps) {
   const [open, setOpen] = useState(false);
 
-  const keys: string[] = [];
-  for (const key in filtersInfo) {
-    if (isTruthy(filtersInfo[key])) {
-      keys.push(key);
-    }
-  }
+  const keys = useMemo(
+    () => Object.keys(filtersInfo).filter((key) => isTruthy(filtersInfo[key])),
+    [filtersInfo]
+  );
 
-  const form = useForm({
-    defaultValues: Object.fromEntries(
-      keys.map((key) => [key, filtersInfo[key]!.defaultValue ?? ""])
-    ),
-  });
+  const defaultValues = useMemo(
+    () =>
+      Object.fromEntries(
+        keys.map((key) => [key, filtersInfo[key]!.defaultValue ?? ""])
+      ),
+    [keys, filtersInfo]
+  );
 
-  // Reset form with current filters when popover opens or filters change
+  const form = useForm({ defaultValues });
+
   useEffect(() => {
-    if (open) {
-      form.reset(filters);
-    }
+    if (open) form.reset(filters);
   }, [open, filters, form]);
 
-  async function internalSubmit(newValue: object) {
-    try {
-      await onChange(newValue);
-      setOpen(false);
-    } catch (e) {
-      console.error("Failed to update FiltersPopover", e);
-    }
-  }
+  const handleSubmit = async (values: Record<string, unknown>) => {
+    await onChange(values);
+    setOpen(false);
+  };
 
-  async function onReset() {
-    form.reset(undefined, { keepDefaultValues: true });
-
-    try {
-      await onChange({});
-      setOpen(false);
-    } catch (e) {
-      console.error("Failed to reset FiltersPopover", e);
-    }
-  }
+  const handleReset = async () => {
+    form.reset(defaultValues);
+    await onChange(null);
+    setOpen(false);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          type="button"
-          className={cn("block")}
-          onClick={() => {
-            setOpen(true);
-          }}
-          variant="default"
-        >
+        <Button className={cn("block")} variant="default">
           <FilterIcon />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(internalSubmit)}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
             <div className="max-h-[60vh] space-y-4 overflow-y-auto p-4">
-              {keys.map((filterKey) => {
-                return (
-                  <AutoField
-                    key={filterKey}
-                    info={filtersInfo[filterKey]!}
-                    name={filterKey}
-                    control={form.control}
-                  />
-                );
-              })}
+              {keys.map((filterKey) => (
+                <AutoField
+                  key={filterKey}
+                  info={filtersInfo[filterKey]!}
+                  name={filterKey}
+                  control={form.control}
+                />
+              ))}
             </div>
 
             <PopoverFooter>
               <Button
-                onClick={onReset}
-                type="reset"
+                onClick={handleReset}
+                type="button"
                 variant="outline"
                 loading={form.formState.isSubmitting}
               >

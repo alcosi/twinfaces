@@ -3,61 +3,72 @@
 import { usePathname } from "next/navigation";
 import { ReactNode, createContext, useContext, useRef } from "react";
 
-import { TableViewState } from "../../widgets/crud-data-table/header";
+import {
+  TableViewState,
+  TableViewStateUpdate,
+} from "../../widgets/crud-data-table/header";
 
 type CrudDataTableStore = {
   get: (pathname: string) => TableViewState | null;
-  set: (pathname: string, state: Partial<TableViewState>) => void;
+  set: (pathname: string, state: TableViewStateUpdate) => void;
   clear: (pathname: string) => void;
   clearByPrefix: (prefix: string) => void;
   getLastBasePath: () => string | null;
   setLastBasePath: (basePath: string) => void;
 };
 
-const ContextProvider = createContext<CrudDataTableStore | null>(null);
+const Context = createContext<CrudDataTableStore | null>(null);
 
 export function CrudDataTableProvider({ children }: { children: ReactNode }) {
   const storeRef = useRef<Map<string, Partial<TableViewState>>>(new Map());
   const lastBasePathRef = useRef<string | null>(null);
 
+  const mergeState = (
+    current: Partial<TableViewState>,
+    updates: TableViewStateUpdate
+  ): Partial<TableViewState> => {
+    if (updates.filters === null) {
+      return { ...current, ...updates, filters: {} } as Partial<TableViewState>;
+    }
+    return { ...current, ...updates } as Partial<TableViewState>;
+  };
+
   const store: CrudDataTableStore = {
-    get: (pathname: string) => {
+    get: (pathname) => {
       const state = storeRef.current.get(pathname);
-      if (!state) return null;
-      return state as TableViewState;
+      return state as TableViewState | null;
     },
-    set: (pathname: string, updates: Partial<TableViewState>) => {
-      const current = storeRef.current.get(pathname) || {};
-      storeRef.current.set(pathname, { ...current, ...updates });
+    set: (pathname, updates) => {
+      const current = storeRef.current.get(pathname) ?? {};
+      storeRef.current.set(pathname, mergeState(current, updates));
     },
-    clear: (pathname: string) => {
+    clear: (pathname) => {
       storeRef.current.delete(pathname);
     },
-    clearByPrefix: (prefix: string) => {
+    clearByPrefix: (prefix) => {
       const keysToDelete: string[] = [];
       storeRef.current.forEach((_, key) => {
-        // Check if key starts with the prefix (exact match or child path)
-        if (key === prefix || key.startsWith(`${prefix}/`)) {
+        if (
+          key === prefix ||
+          key.startsWith(`${prefix}/`) ||
+          key.startsWith(`${prefix}::`)
+        ) {
           keysToDelete.push(key);
         }
       });
       keysToDelete.forEach((key) => storeRef.current.delete(key));
     },
     getLastBasePath: () => lastBasePathRef.current,
-    setLastBasePath: (basePath: string) => {
+    setLastBasePath: (basePath) => {
       lastBasePathRef.current = basePath;
     },
   };
 
-  return (
-    <ContextProvider.Provider value={store}>
-      {children}
-    </ContextProvider.Provider>
-  );
+  return <Context.Provider value={store}>{children}</Context.Provider>;
 }
 
-export function useCrudDataTableStore() {
-  const context = useContext(ContextProvider);
+export function useCrudDataTableStore(): CrudDataTableStore {
+  const context = useContext(Context);
   if (!context) {
     throw new Error(
       "useCrudDataTableStore must be used within CrudDataTableProvider"
@@ -72,8 +83,7 @@ export function useCrudDataTableState() {
 
   return {
     getState: () => store.get(pathname),
-    setState: (updates: Partial<TableViewState>) =>
-      store.set(pathname, updates),
+    setState: (updates: TableViewStateUpdate) => store.set(pathname, updates),
     clearState: () => store.clear(pathname),
     getLastBasePath: () => store.getLastBasePath(),
     setLastBasePath: (basePath: string) => store.setLastBasePath(basePath),

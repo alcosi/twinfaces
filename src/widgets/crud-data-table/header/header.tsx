@@ -1,5 +1,5 @@
 import { Plus, RefreshCw, Search } from "lucide-react";
-import React, { ForwardedRef, useCallback, useEffect } from "react";
+import { ForwardedRef, useCallback, useEffect } from "react";
 
 import { AutoFormValueInfo } from "@/components/auto-field";
 
@@ -9,7 +9,7 @@ import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 
 import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";
-import { getColumnKey, safeRefresh } from "../helpers";
+import { getColumnKey, safeRefresh, safeResetPage } from "../helpers";
 import { useViewSettings } from "../hooks";
 import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersPopover } from "./filters-popover";
@@ -17,11 +17,15 @@ import { GroupByButton } from "./group-by-button";
 
 export type TableViewState = {
   query: string;
-  filters: Record<string, any>;
+  filters: Record<string, unknown>;
   visibleKeys: string[];
   orderKeys: string[];
-  groupByKey: string | undefined;
+  groupByKey?: string;
   layoutMode: "grid" | "list";
+};
+
+export type TableViewStateUpdate = Partial<Omit<TableViewState, "filters">> & {
+  filters?: Record<string, unknown> | null;
 };
 
 export type CrudDataTableHeaderProps = {
@@ -31,7 +35,7 @@ export type CrudDataTableHeaderProps = {
     placeholder?: string;
   };
   filters?: {
-    filtersInfo: { [key: string]: AutoFormValueInfo };
+    filtersInfo: Record<string, AutoFormValueInfo>;
   };
   hideRefresh?: boolean;
   onCreateClick?: () => void;
@@ -68,12 +72,13 @@ function CrudDataTableHeaderComponent<
 ) {
   const { viewSettings, updateViewSettings } = useViewSettings(
     defaultVisibleColumns,
-    orderedColumns
+    orderedColumns,
+    columns
   );
 
   const debouncedUpdate = useCallback(
     debounce(
-      (updates: Partial<TableViewState>) => updateViewSettings(updates),
+      (updates: TableViewStateUpdate) => updateViewSettings(updates),
       150
     ),
     []
@@ -83,19 +88,17 @@ function CrudDataTableHeaderComponent<
     onViewSettingsChange?.(viewSettings);
   }, [viewSettings, onViewSettingsChange]);
 
-  function handleOnSearch(e: React.FormEvent<HTMLFormElement>) {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    safeRefresh(tableRef);
-  }
+    safeResetPage(tableRef);
+  };
 
   const visibleOrderedColumns = columns
-    .map((column) => {
-      return {
-        id: getColumnKey(column),
-        name: column.header as string,
-        visible: viewSettings.visibleKeys.includes(getColumnKey(column)),
-      };
-    })
+    .map((column) => ({
+      id: getColumnKey(column),
+      name: column.header as string,
+      visible: viewSettings.visibleKeys.includes(getColumnKey(column)),
+    }))
     .sort(
       (a, b) =>
         viewSettings.orderKeys.indexOf(a.id) -
@@ -107,9 +110,9 @@ function CrudDataTableHeaderComponent<
       <div className="flex items-center">
         {title && <div className="text-lg">{title}</div>}
         {search?.enabled && (
-          <form className="flex flex-row space-x-1" onSubmit={handleOnSearch}>
+          <form className="flex flex-row space-x-1" onSubmit={handleSearch}>
             <Input
-              placeholder={search?.placeholder ?? "Search..."}
+              placeholder={search.placeholder ?? "Search..."}
               value={viewSettings.query}
               onChange={(e) => debouncedUpdate({ query: e.target.value })}
               className="max-w-sm"
@@ -122,12 +125,7 @@ function CrudDataTableHeaderComponent<
       </div>
       <div className="flex space-x-4">
         {!hideRefresh && (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              safeRefresh(tableRef);
-            }}
-          >
+          <Button variant="ghost" onClick={() => safeRefresh(tableRef)}>
             <RefreshCw />
           </Button>
         )}
@@ -136,7 +134,7 @@ function CrudDataTableHeaderComponent<
           <FiltersPopover
             filtersInfo={filters.filtersInfo}
             filters={viewSettings.filters}
-            onChange={async (filters) => debouncedUpdate({ filters })}
+            onChange={async (values) => debouncedUpdate({ filters: values })}
           />
         )}
 
