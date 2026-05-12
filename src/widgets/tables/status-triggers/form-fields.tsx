@@ -24,7 +24,8 @@ export function StatusTriggerFormFields({
   const twinTriggerAdapter = useTwinTriggerSelectAdapter();
   const twinTriggerWatch = useWatch({ control, name: "twinTriggerId" });
   const disabled = useRef(isTruthy(twinTriggerWatch)).current;
-
+  const statusWatch = useWatch({ control, name: "twinStatusId" });
+  const disabledStatus = useRef(isTruthy(statusWatch)).current;
   return (
     <>
       <ComboboxFormField
@@ -36,6 +37,7 @@ export function StatusTriggerFormFields({
         noItemsText="No data found"
         {...twinStatusAdapter}
         required
+        disabled={disabledStatus}
       />
       <SwitchFormField
         control={control}

@@ -1,6 +1,6 @@
 import { Tab, TabsLayout } from "@/widgets/layout";
 
-import { TwinStatusGeneral } from "./views";
+import { TwinStatusGeneral, TwinStatusTriggers } from "./views";
 
 export function StatusScreen() {
   const tabs: Tab[] = [
@@ -8,6 +8,11 @@ export function StatusScreen() {
       key: "general",
       label: "General",
       content: <TwinStatusGeneral />,
+    },
+    {
+      key: "triggers",
+      label: "Triggers",
+      content: <TwinStatusTriggers />,
     },
   ];
 
