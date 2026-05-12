@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, EllipsisVertical } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useContext, useRef } from "react";
 
 import { TwinClassContext } from "@/entities/twin-class";
@@ -11,7 +11,9 @@ import {
 import {
   TwinClassDuplicateDialog,
   TwinClassDuplicateDialogRef,
-} from "@/screens/twin-classes/twin-class-duplicate-dialog";
+  TwinClassExportSqlDialog,
+  TwinClassExportSqlDialogRef,
+} from "@/screens/twin-classes";
 import {
   Button,
   DropdownMenu,
@@ -21,18 +23,19 @@ import {
 } from "@/shared/ui";
 import { Tab, TabsLayout } from "@/widgets/layout";
 import {
+  SpaceRolesTable,
   TwinClassDynamicMarkersTable,
   TwinClassFieldsTable,
   TwinClassStatusesTable,
   TwinFlows,
 } from "@/widgets/tables";
-import { SpaceRolesTable } from "@/widgets/tables/space-roles";
 
 import { TwinClassGeneral } from "./views";
 
 export default function TwinClassPage() {
   const { twinClassId, twinClass } = useContext(TwinClassContext);
   const duplicateDialogRef = useRef<TwinClassDuplicateDialogRef>(null);
+  const exportSqlDialogRef = useRef<TwinClassExportSqlDialogRef>(null);
 
   const tabs: Tab[] = [
     {
@@ -101,12 +104,21 @@ export default function TwinClassPage() {
                 <Copy className="mr-2 h-5 w-5" />
                 Duplicate
               </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => exportSqlDialogRef.current?.open(twinClass)}
+                className="cursor-pointer"
+              >
+                <FolderUp className="mr-2 h-5 w-5" />
+                Export sql
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         }
       />
 
       <TwinClassDuplicateDialog ref={duplicateDialogRef} />
+      <TwinClassExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );
 }
