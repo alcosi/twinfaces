@@ -11,6 +11,7 @@ import {
   TwinClassDynamicMarkerCreateRq,
   TwinClassDynamicMarkerFilters,
   TwinClassDynamicMarkerUpdateRq,
+  TwinClassExportSql,
   TwinClassFilters,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
@@ -347,6 +348,15 @@ export function createTwinClassApi(settings: ApiSettings) {
     });
   }
 
+  function exportSql({ body }: { body: TwinClassExportSql }) {
+    return settings.client.POST("/private/twin_class/export/sql/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
   return {
     search,
     getByKey,
@@ -363,6 +373,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     updateDynamicMarkers,
     createDynamicMarkers,
     duplicate,
+    exportSql,
   };
 }
 

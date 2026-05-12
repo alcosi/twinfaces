@@ -1802,6 +1802,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/twin_class/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports twin class as SQL INSERT statements */
+        post: operations["twinClassExportSqlV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin_class/duplicate/v1": {
         parameters: {
             query?: never;
@@ -5933,6 +5950,8 @@ export interface components {
              * @example Serial number
              */
             name?: string;
+            /** @description is inheritable */
+            inheritable?: boolean;
             /**
              * @description Ling strength id
              * @example OPTIONAL
@@ -7098,6 +7117,8 @@ export interface components {
             externalId?: string;
             /** @description is system field */
             system?: boolean;
+            /** @description is inheritable */
+            inheritable?: boolean;
             /** @description is dependent field */
             dependent?: boolean;
             /** @description  has dependent fields */
@@ -7467,6 +7488,8 @@ export interface components {
              * @example #ff00ff
              */
             fontColor?: string;
+            /** @description is inheritable */
+            inheritable?: boolean;
             /**
              * Format: uuid
              * @description twin class
@@ -7661,6 +7684,8 @@ export interface components {
              * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             twinClassId?: string;
+            /** @description is inheritable */
+            inheritable?: boolean;
             /**
              * @description name
              * @example Project
@@ -8050,6 +8075,8 @@ export interface components {
              * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
              */
             initialSketchStatusId?: string;
+            /** @description inheritable */
+            inheritable?: boolean;
         };
         TwinflowFactoryUpdateRqV1: {
             /** @description Twinflow factory list */
@@ -8261,6 +8288,8 @@ export interface components {
              * @enum {string}
              */
             type?: "BASIC" | "SKETCH";
+            /** @description [optional] inheritable */
+            inheritable?: boolean;
         };
         TwinStatusUpdateRsV1: {
             /**
@@ -8586,6 +8615,11 @@ export interface components {
              * @example true
              */
             system?: boolean;
+            /**
+             * @description Inheritable field
+             * @example true
+             */
+            inheritable?: boolean;
             /** @description external id */
             externalId?: string;
             /** @description external properties */
@@ -8687,6 +8721,11 @@ export interface components {
              * @example true
              */
             system?: boolean;
+            /**
+             * @description Inheritable field
+             * @example true
+             */
+            inheritable?: boolean;
             /** @description external id */
             externalId?: string;
             /** @description external properties */
@@ -8816,6 +8855,8 @@ export interface components {
              * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             twinClassId?: string;
+            /** @description is inheritable */
+            inheritable?: boolean;
             /**
              * Format: uuid
              * @description twin validator set id
@@ -10385,6 +10426,10 @@ export interface components {
             linkerParams?: {
                 [key: string]: string;
             };
+            /** @description [optional] source twin class inheritable */
+            srcTwinClassInheritable?: boolean;
+            /** @description [optional] destination twin class inheritable */
+            dstTwinClassInheritable?: boolean;
             /** @description [optional] should be filled on change source twin class id of link */
             srcTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
             /** @description [optional] should be filled on change destination twin class id of link */
@@ -10429,6 +10474,8 @@ export interface components {
              * @example Serial number
              */
             name?: string;
+            /** @description is inheritable */
+            inheritable?: boolean;
             /**
              * @description Ling strength id
              * @example OPTIONAL
@@ -13247,6 +13294,12 @@ export interface components {
             twinClassIdExcludeMap?: {
                 [key: string]: boolean;
             };
+            /**
+             * @description inheritable
+             * @example ANY
+             * @enum {string}
+             */
+            inheritable?: "ONLY" | "ONLY_NOT" | "ANY";
             /** @description name i18n keyword list(AND) */
             nameI18nLikeList?: string[];
             /** @description name i18n keyword exclude list(OR) */
@@ -13774,6 +13827,12 @@ export interface components {
             twinClassIdExcludeMap?: {
                 [key: string]: boolean;
             };
+            /**
+             * @description inheritable
+             * @example ANY
+             * @enum {string}
+             */
+            inheritable?: "ONLY" | "ONLY_NOT" | "ANY";
             /** @description key like list */
             keyLikeList?: string[];
             /** @description key not like list */
@@ -14219,6 +14278,12 @@ export interface components {
             twinClassIdExcludeMap?: {
                 [key: string]: boolean;
             };
+            /**
+             * @description inheritable
+             * @example ANY
+             * @enum {string}
+             */
+            inheritable?: "ONLY" | "ONLY_NOT" | "ANY";
             /** @description key like list */
             keyLikeList?: string[];
             /** @description key not like list */
@@ -14569,6 +14634,11 @@ export interface components {
              * @example true
              */
             system?: boolean;
+            /**
+             * @description Inheritable field
+             * @example true
+             */
+            inheritable?: boolean;
             /** @description external id */
             externalId?: string;
             /** @description external properties */
@@ -14736,6 +14806,12 @@ export interface components {
             twinClassIdExcludeMap?: {
                 [key: string]: boolean;
             };
+            /**
+             * @description inheritable
+             * @example ANY
+             * @enum {string}
+             */
+            inheritable?: "ONLY" | "ONLY_NOT" | "ANY";
             /** @description twin validator set id list */
             twinValidatorSetIdList?: string[];
             /** @description twin validator set id exclude list */
@@ -14816,6 +14892,8 @@ export interface components {
              * @example a1178c4a-b974-449b-b51b-9a2bc54c5ea5
              */
             initialSketchStatusId?: string;
+            /** @description inheritable */
+            inheritable?: boolean;
         };
         TwinflowCreateRsV1: {
             /**
@@ -14864,6 +14942,8 @@ export interface components {
              * @enum {string}
              */
             type?: "BASIC" | "SKETCH";
+            /** @description [optional] inheritable */
+            inheritable?: boolean;
         };
         TwinStatusCreateRsV1: {
             /**
@@ -14955,6 +15035,11 @@ export interface components {
              * @example true
              */
             system?: boolean;
+            /**
+             * @description Inheritable field
+             * @example true
+             */
+            inheritable?: boolean;
             /** @description external id */
             externalId?: string;
             /** @description external properties */
@@ -15549,6 +15634,16 @@ export interface components {
             externalIdLikeList?: string[];
             /** @description external id not like list */
             externalIdNotLikeList?: string[];
+        };
+        TwinClassExportSqlRqV1: {
+            /** @description twin class ids to export SQL for */
+            twinClassIds?: string[];
+            /** @description include twin class fields in export */
+            includeFields?: boolean;
+            /** @description include twin class statuses in export */
+            includeStatuses?: boolean;
+            /** @description include twinflow in export */
+            includeTwinflow?: boolean;
         };
         TwinClassDuplicateRqV1: {
             /** @description duplicates list */
@@ -18096,6 +18191,10 @@ export interface components {
             linkerParams?: {
                 [key: string]: string;
             };
+            /** @description [optional] source twin class inheritable */
+            srcTwinClassInheritable?: boolean;
+            /** @description [optional] destination twin class inheritable */
+            dstTwinClassInheritable?: boolean;
             /**
              * Format: uuid
              * @description Source twin class id
@@ -18138,10 +18237,22 @@ export interface components {
             srcTwinClassIdList?: string[];
             /** @description src twin class id exclude list */
             srcTwinClassIdExcludeList?: string[];
+            /**
+             * @description src twin class inheritable
+             * @example ANY
+             * @enum {string}
+             */
+            srcTwinClassInheritable?: "ONLY" | "ONLY_NOT" | "ANY";
             /** @description dst twin class id list */
             dstTwinClassIdList?: string[];
             /** @description dst twin class id exclude list */
             dstTwinClassIdExcludeList?: string[];
+            /**
+             * @description dst twin class inheritable
+             * @example ANY
+             * @enum {string}
+             */
+            dstTwinClassInheritable?: "ONLY" | "ONLY_NOT" | "ANY";
             /** @description src or dst twin class id list */
             srcOrDstTwinClassIdList?: string[];
             /** @description src or dst twin class id exclude list */
@@ -36422,6 +36533,46 @@ export interface operations {
                 };
                 content: {
                     "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
                 };
             };
         };

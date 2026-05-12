@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check, Copy, EllipsisVertical, Unplug } from "lucide-react";
+import { Check, Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useContext, useRef, useState } from "react";
@@ -49,6 +49,10 @@ import {
   TwinClassDuplicateDialog,
   TwinClassDuplicateDialogRef,
 } from "./twin-class-duplicate-dialog";
+import {
+  TwinClassExportSqlDialog,
+  TwinClassExportSqlDialogRef,
+} from "./twin-class-export-sql-dialog";
 import { TwinClassesExtendsTreeView, TwinClassesHeadTreeView } from "./view";
 
 function ThemeIconCell({ data }: { data: TwinClass_DETAILED }) {
@@ -337,6 +341,7 @@ export function TwinClasses({ type }: { type?: string }) {
   const { twinClass } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
   const duplicateDialogRef = useRef<TwinClassDuplicateDialogRef>(null);
+  const exportSqlDialogRef = useRef<TwinClassExportSqlDialogRef>(null);
   const [activeTab, setActiveTab] = useState("list");
   const { searchByFilters, simplifiedSearchByFilters } = useTwinClassSearch();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
@@ -602,6 +607,17 @@ export function TwinClasses({ type }: { type?: string }) {
               <Copy className="mr-2 h-4 w-4" />
               Duplicate
             </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                exportSqlDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <FolderUp className="mr-2 h-4 w-4" />
+              Export sql
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -721,6 +737,11 @@ export function TwinClasses({ type }: { type?: string }) {
 
       <TwinClassDuplicateDialog
         ref={duplicateDialogRef}
+        onSuccess={() => tableRef.current?.refresh()}
+      />
+
+      <TwinClassExportSqlDialog
+        ref={exportSqlDialogRef}
         onSuccess={() => tableRef.current?.refresh()}
       />
     </div>
