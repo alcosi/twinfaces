@@ -1,4 +1,5 @@
 import { useTheme } from "next-themes";
+import { ReactNode } from "react";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { formatIntlDate, isPopulatedString } from "@/shared/libs";
@@ -9,9 +10,10 @@ import { TwinClassIcon } from "../twin-class-icon";
 type Props = {
   data: TwinClass_DETAILED;
   link: string;
+  actions?: ReactNode;
 };
 
-export function TwinClassResourceTooltip({ data, link }: Props) {
+export function TwinClassResourceTooltip({ data, link, actions }: Props) {
   const { resolvedTheme } = useTheme();
 
   const themeIcon =
@@ -22,7 +24,7 @@ export function TwinClassResourceTooltip({ data, link }: Props) {
         : null;
 
   return (
-    <ResourceLinkTooltip uuid={data.id} link={link}>
+    <ResourceLinkTooltip uuid={data.id} link={link} actions={actions}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}

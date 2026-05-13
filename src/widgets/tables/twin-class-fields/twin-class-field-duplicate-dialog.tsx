@@ -23,7 +23,7 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { TwinClassFieldV1_DETAILED } from "@/entities/twin-class-field";
+import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { PrivateApiContext } from "@/shared/api";
 import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
 import {
@@ -54,7 +54,7 @@ export type TwinClassFieldDuplicateFieldValues = z.infer<
 >;
 
 export type TwinClassFieldDuplicateDialogRef = {
-  open: (field: TwinClassFieldV1_DETAILED) => void;
+  open: (field: TwinClassField_DETAILED) => void;
 };
 
 type Props = {
@@ -96,7 +96,7 @@ function Component(
   >(undefined);
 
   useImperativeHandle(ref, () => ({
-    open: (field: TwinClassFieldV1_DETAILED) => {
+    open: (field: TwinClassField_DETAILED) => {
       setSelectedFieldName(field.name || field.key);
       form.reset({
         originalTwinClassFieldId: field.id,
