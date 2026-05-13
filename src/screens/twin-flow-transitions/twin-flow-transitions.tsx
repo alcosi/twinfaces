@@ -3,5 +3,5 @@
 import { TwinFlowTransitionsTable } from "@/widgets/tables";
 
 export function TransitionsScreen() {
-  return <TwinFlowTransitionsTable />;
+  return <TwinFlowTransitionsTable title="Transitions" />;
 }
