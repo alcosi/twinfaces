@@ -120,6 +120,7 @@ export function StatusTriggersTable({
     resolver: zodResolver(STATUS_TRIGGER_SCHEMA),
     defaultValues: {
       twinTriggerId: twinTriggerId || "",
+      twinStatusId: twinStatusId || "",
       incomingElseOutgoing: false,
       order: 0,
       active: false,
