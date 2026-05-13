@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { isPopulatedString } from "@/shared/libs";
 import { GuidWithCopy, ResourceLinkTooltip } from "@/shared/ui";
@@ -7,11 +9,12 @@ import { FieldIcon } from "../field-icon";
 type Props = {
   data: TwinClassField_DETAILED;
   link: string;
+  actions?: ReactNode;
 };
 
-export const TwinClassFieldResourceTooltip = ({ data, link }: Props) => {
+export function TwinClassFieldResourceTooltip({ data, link, actions }: Props) {
   return (
-    <ResourceLinkTooltip uuid={data.id} link={link}>
+    <ResourceLinkTooltip uuid={data.id} link={link} actions={actions}>
       <ResourceLinkTooltip.Header
         title={isPopulatedString(data.name) ? data.name : "N/A"}
         subTitle={data.key}
@@ -29,4 +32,4 @@ export const TwinClassFieldResourceTooltip = ({ data, link }: Props) => {
       </ResourceLinkTooltip.Main>
     </ResourceLinkTooltip>
   );
-};
+}

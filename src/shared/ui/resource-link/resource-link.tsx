@@ -140,7 +140,9 @@ export function ResourceLink<T>({
         <TooltipTrigger asChild>
           <span className="inline-flex max-w-full">{ResourceLinkWrapper}</span>
         </TooltipTrigger>
-        <TooltipContent className="p-0">{renderTooltip(data)}</TooltipContent>
+        <TooltipContent className="overflow-visible p-0">
+          {renderTooltip(data)}
+        </TooltipContent>
       </TooltipPrimitive.Root>
     </TooltipProvider>
   ) : (

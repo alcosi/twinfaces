@@ -17,6 +17,7 @@ export const RESOURCE_LINK_TOOLTIP_DELAY_MS = 500;
 export type ResourceLinkTooltipProps = PropsWithChildren<{
   uuid: string;
   link?: string;
+  actions?: ReactNode;
 }>;
 
 const brandGradient = css`
@@ -31,6 +32,7 @@ const brandGradient = css`
 export function ResourceLinkTooltip({
   uuid,
   link,
+  actions,
   children,
 }: ResourceLinkTooltipProps) {
   function handleCopyUUID(e: React.MouseEvent) {
@@ -61,7 +63,7 @@ export function ResourceLinkTooltip({
         <Button
           variant="outline"
           size="xs"
-          className="hover:bg-secondary flex w-full flex-row items-center gap-1 p-0.5"
+          className="hover:bg-secondary flex min-w-0 flex-1 flex-row items-center gap-1 p-0.5"
           onClick={handleCopyUUID}
         >
           <Copy className="h-3.5 w-3.5" />
@@ -70,13 +72,14 @@ export function ResourceLinkTooltip({
         <Button
           variant="outline"
           size="xs"
-          className="hover:bg-secondary flex w-full flex-row items-center gap-1 p-0.5"
+          className="hover:bg-secondary flex min-w-0 flex-1 flex-row items-center gap-1 p-0.5"
           onClick={handleCopyLink}
           disabled={!link}
         >
           <Link className="h-3.5 w-3.5" />
           Copy Link
         </Button>
+        {actions}
       </footer>
     </div>
   );
