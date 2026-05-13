@@ -15,13 +15,18 @@ import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
   isFalsy,
   isPopulatedArray,
+  isTruthy,
   reduceToObject,
   toArray,
 } from "@/shared/libs";
 
 export function TwinFlowTransitionFormFields({
+  type,
+  twinStatusId,
   control,
 }: {
+  twinStatusId?: string;
+  type?: string;
   control: Control<TwinFlowTransitionFormValues>;
 }) {
   const twinFlowWatch = useWatch({ control, name: "twinflow" });
@@ -29,6 +34,9 @@ export function TwinFlowTransitionFormFields({
 
   const twinClassId = twinFlowWatch[0]?.twinClassId;
   const disabledStatus = isFalsy(twinClassId);
+
+  const disabledSrcStatus = isTruthy(twinStatusId) && type === "Incoming";
+  const disabledDstStatus = isTruthy(twinStatusId) && type === "Outgoing";
 
   const twinFlowAdapter = useTwinFlowSelectAdapter();
   const permissionAdapter = usePermissionSelectAdapter();
@@ -89,7 +97,7 @@ export function TwinFlowTransitionFormFields({
         selectPlaceholder="Select status"
         searchPlaceholder="Search status..."
         noItemsText="No status found"
-        disabled={disabledStatus}
+        disabled={disabledStatus || disabledSrcStatus}
         {...twinStatusAdapter}
         getItems={async (search: string) => {
           return twinStatusAdapter.getItems(search, {
@@ -109,7 +117,7 @@ export function TwinFlowTransitionFormFields({
         searchPlaceholder="Search status..."
         noItemsText="No status found"
         required={true}
-        disabled={disabledStatus}
+        disabled={disabledStatus || disabledDstStatus}
         {...twinStatusAdapter}
         getItems={async (search: string) => {
           return twinStatusAdapter.getItems(search, {

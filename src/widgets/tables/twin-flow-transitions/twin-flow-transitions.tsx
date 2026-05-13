@@ -11,6 +11,7 @@ import {
   TWIN_FLOW_TRANSITION_SCHEMA,
   TwinFlowTransition,
   TwinFlowTransitionCreateRq,
+  TwinFlowTransitionFilterKeys,
   TwinFlowTransitionFormValues,
   TwinFlowTransition_DETAILED,
   useCreateTwinFlowTransition,
@@ -174,26 +175,31 @@ const colDefs: Record<
 
 export function TwinFlowTransitionsTable({
   twinflow,
+  title,
+  twinStatusId,
 }: {
+  twinStatusId?: string;
+  title?: string;
   twinflow?: TwinFlow;
 }) {
   const router = useRouter();
   const { buildFilterFields, mapFiltersToPayload } =
     useTwinFlowTransitionFilters({
       twinClassId: twinflow?.twinClassId,
-      enabledFilters: isTruthy(twinflow?.id)
-        ? [
-            "idList",
-            "aliasLikeList",
-            "nameLikeList",
-            "twinflowTransitionTypeList",
-            "descriptionLikeList",
-            "srcStatusIdList",
-            "dstStatusIdList",
-            "permissionIdList",
-            "inbuiltTwinFactoryIdList",
-          ]
-        : undefined,
+      enabledFilters:
+        isTruthy(twinflow?.id) || isTruthy(twinStatusId)
+          ? ([
+              "idList",
+              "aliasLikeList",
+              "nameLikeList",
+              "twinflowTransitionTypeList",
+              "descriptionLikeList",
+              title !== "Incoming" && "srcStatusIdList",
+              title !== "Outgoing" && "dstStatusIdList",
+              "permissionIdList",
+              "inbuiltTwinFactoryIdList",
+            ].filter(Boolean) as TwinFlowTransitionFilterKeys[])
+          : undefined,
     });
   const { searchTwinFlowTransitions } = useTwinFlowTransitionSearchV1();
   const { createTwinFlowTransition } = useCreateTwinFlowTransition();
@@ -204,8 +210,8 @@ export function TwinFlowTransitionsTable({
       twinflow: twinflow ? [twinflow] : [],
       name: "",
       description: "",
-      srcTwinStatusId: undefined,
-      dstTwinStatusId: "",
+      srcTwinStatusId: twinStatusId && title === "Incoming" ? twinStatusId : "",
+      dstTwinStatusId: twinStatusId && title === "Outgoing" ? twinStatusId : "",
       permissionId: undefined,
     },
   });
@@ -225,6 +231,14 @@ export function TwinFlowTransitionsTable({
             twinflowIdList: twinflow?.id
               ? toArrayOfString(toArray(twinflow?.id), "id")
               : _filters.twinflowIdList,
+            srcStatusIdList:
+              twinStatusId && title === "Incoming"
+                ? toArrayOfString(toArray(twinStatusId), "id")
+                : _filters.srcStatusIdList,
+            dstStatusIdList:
+              twinStatusId && title === "Outgoing"
+                ? toArrayOfString(toArray(twinStatusId), "id")
+                : _filters.dstStatusIdList,
           },
         });
 
@@ -274,7 +288,7 @@ export function TwinFlowTransitionsTable({
 
   return (
     <CrudDataTable
-      title="Transitions"
+      title={title}
       className="mx-auto mb-10 flex-col p-8 lg:flex lg:justify-center"
       columns={[
         colDefs.id,
@@ -282,8 +296,8 @@ export function TwinFlowTransitionsTable({
         colDefs.name,
         colDefs.type,
         colDefs.alias,
-        colDefs.srcTwinStatusId,
-        colDefs.dstTwinStatusId,
+        ...(title !== "Incoming" ? [colDefs.srcTwinStatusId] : []),
+        ...(title !== "Outgoing" ? [colDefs.dstTwinStatusId] : []),
         colDefs.permissionId,
         colDefs.inbuiltTwinFactoryId,
         colDefs.description,
@@ -314,7 +328,11 @@ export function TwinFlowTransitionsTable({
       dialogForm={form}
       onCreateSubmit={handleCreate}
       renderFormFields={() => (
-        <TwinFlowTransitionFormFields control={form.control} />
+        <TwinFlowTransitionFormFields
+          type={title}
+          twinStatusId={twinStatusId}
+          control={form.control}
+        />
       )}
     />
   );
