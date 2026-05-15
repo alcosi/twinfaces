@@ -275,12 +275,12 @@ export function TwinFlowTransitionsTable({
           dstStatusId: formValues.dstTwinStatusId,
           permissionId: formValues.permissionId,
           twinflowTransitionTypeId: formValues.twinflowTransitionTypeId,
+          twinflowId: formValues.twinflow[0]?.id!,
         },
       ],
     };
 
     await createTwinFlowTransition({
-      twinFlowId: formValues.twinflow[0]?.id!,
       body,
     });
     toast.success("Transition created successfully!");
