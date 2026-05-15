@@ -9650,6 +9650,12 @@ export interface components {
             twinflowTransitionTypeId?: "OPERATION" | "OPERATION_DISABLE" | "STATUS_CHANGE" | "STATUS_CHANGE_MARKETING" | "MARKETING";
             /**
              * Format: uuid
+             * @description twinflow id
+             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
+             */
+            twinflowId?: string;
+            /**
+             * Format: uuid
              * @description transition id
              * @example f6606fa2-c047-4ba9-a92c-84051df681ab
              */
@@ -16842,6 +16848,12 @@ export interface components {
              * @enum {string}
              */
             twinflowTransitionTypeId?: "OPERATION" | "OPERATION_DISABLE" | "STATUS_CHANGE" | "STATUS_CHANGE_MARKETING" | "MARKETING";
+            /**
+             * Format: uuid
+             * @description twinflow id
+             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
+             */
+            twinflowId?: string;
         };
         TransitionSearchRqV1: {
             /** @description id list */
