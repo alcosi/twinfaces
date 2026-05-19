@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Unplug } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
@@ -21,7 +21,14 @@ import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
-import { ColorTile } from "@/shared/ui";
+import {
+  Button,
+  ColorTile,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
@@ -31,6 +38,14 @@ import {
   FiltersState,
 } from "../../crud-data-table";
 import { TwinClassStatusFormFields } from "./form-fields";
+import {
+  TwinClassStatusesDuplicateDialog,
+  TwinClassStatusesDuplicateDialogRef,
+} from "./twin-class-statuses-duplicate-dialog";
+import {
+  TwinClassStatusExportSqlDialogRef,
+  TwinClassStatusesExportSqlDialog,
+} from "./twin-class-statuses-export-sql";
 
 function ThemeIconCell({ data }: { data: TwinStatus_DETAILED }) {
   const { resolvedTheme } = useTheme();
@@ -158,6 +173,8 @@ export function TwinClassStatusesTable({
 }) {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
+  const duplicateDialogRef = useRef<TwinClassStatusesDuplicateDialogRef>(null);
+  const exportSqlDialogRef = useRef<TwinClassStatusExportSqlDialogRef>(null);
   const { searchTwinStatuses } = useTwinStatusSearchV1();
   const { createStatus } = useStatusCreate();
   const { buildFilterFields, mapFiltersToPayload } = useStatusFilters({
@@ -231,42 +248,103 @@ export function TwinClassStatusesTable({
     fetchStatuses({ pageIndex: 0, pageSize: 10 }, { filters: {} });
   }
 
+  const actionsCol: ColumnDef<TwinStatus_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                exportSqlDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <FolderUp className="mr-2 h-4 w-4" />
+              Export sql
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
+
   return (
-    <CrudDataTable
-      title="Statuses"
-      ref={tableRef}
-      columns={[
-        colDefs.iconLight,
-        colDefs.id,
-        colDefs.twinClassId,
-        colDefs.key,
-        colDefs.name,
-        colDefs.description,
-        colDefs.backgroundColor,
-        colDefs.fontColor,
-      ]}
-      getRowId={(row) => row.id!}
-      fetcher={fetchStatuses}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/statuses/${row.id}`)
-      }
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
-      defaultVisibleColumns={[
-        colDefs.id,
-        colDefs.twinClassId,
-        colDefs.key,
-        colDefs.name,
-        colDefs.description,
-        colDefs.backgroundColor,
-        colDefs.fontColor,
-      ]}
-      dialogForm={form}
-      onCreateSubmit={handleCreate}
-      renderFormFields={() => (
-        <TwinClassStatusFormFields control={form.control} />
-      )}
-    />
+    <>
+      <CrudDataTable
+        title="Statuses"
+        ref={tableRef}
+        columns={[
+          colDefs.iconLight,
+          colDefs.id,
+          colDefs.twinClassId,
+          colDefs.key,
+          colDefs.name,
+          colDefs.description,
+          colDefs.backgroundColor,
+          colDefs.fontColor,
+          actionsCol,
+        ]}
+        getRowId={(row) => row.id!}
+        fetcher={fetchStatuses}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/statuses/${row.id}`)
+        }
+        filters={{
+          filtersInfo: buildFilterFields(),
+        }}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.twinClassId,
+          colDefs.key,
+          colDefs.name,
+          colDefs.description,
+          colDefs.backgroundColor,
+          colDefs.fontColor,
+          actionsCol,
+        ]}
+        dialogForm={form}
+        onCreateSubmit={handleCreate}
+        renderFormFields={() => (
+          <TwinClassStatusFormFields control={form.control} />
+        )}
+      />
+
+      <TwinClassStatusesDuplicateDialog
+        ref={duplicateDialogRef}
+        onSuccess={() => tableRef.current?.refresh()}
+      />
+
+      <TwinClassStatusesExportSqlDialog
+        ref={exportSqlDialogRef}
+        onSuccess={() => tableRef.current?.refresh()}
+      />
+    </>
   );
 }

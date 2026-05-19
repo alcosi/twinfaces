@@ -4,6 +4,8 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   TwinStatusCreateRq,
+  TwinStatusDuplicateRq,
+  TwinStatusExportSqlRq,
   TwinStatusFilters,
   TwinStatusUpdateRq,
 } from "./types";
@@ -82,7 +84,25 @@ export function createTwinStatusApi(settings: ApiSettings) {
     });
   }
 
-  return { create, update, getById, search };
+  function duplicate({ body }: { body: TwinStatusDuplicateRq }) {
+    return settings.client.POST("/private/twin_status/duplicate/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  function exportSql({ body }: { body: TwinStatusExportSqlRq }) {
+    return settings.client.POST("/private/twin_status/export/sql/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
+  return { create, update, getById, search, duplicate, exportSql };
 }
 
 export type TwinStatusApi = ReturnType<typeof createTwinStatusApi>;
