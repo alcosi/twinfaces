@@ -86,7 +86,6 @@ export function useHistoryNotificationFilters({
       schema: z.string(),
       placeholder: "Enter UUID",
     },
-    // TODO Replace by https://alcosi.atlassian.net/browse/TWINFACES-787
     notificationSchemaIdList: {
       type: AutoFormValueType.combobox,
       label: "Notification schema",
