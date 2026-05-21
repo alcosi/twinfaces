@@ -4,7 +4,9 @@ import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import {
+  NotificationSchema,
   Recipient_DETAILED,
+  useNotificationSchemaSelectAdapter,
   useRecipientSelectAdapter,
   useUpdateNotification,
 } from "@/entities/notification";
@@ -50,6 +52,7 @@ export function NotificationGeneral() {
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
   const validatorSetAdapter = useValidatorSetSelectAdapter();
   const notificationRecipientAdapter = useRecipientSelectAdapter();
+  const notificationSchemaAdapter = useNotificationSchemaSelectAdapter();
   const { confirm } = useActionDialogs();
 
   const [editFieldDialogOpen, setEditFieldDialogOpen] =
@@ -115,6 +118,39 @@ export function NotificationGeneral() {
             {
               id: notification.id,
               twinClassFieldId: id,
+            },
+          ],
+        },
+      }).then(refresh);
+    },
+  };
+
+  const notificationSchemaSettings: InPlaceEditProps<
+    typeof notification.notificationSchemaId
+  > = {
+    id: "notificationSchemaId",
+    value: notification.notificationSchemaId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select notification schema...",
+      ...notificationSchemaAdapter,
+    },
+    renderPreview: notification.notificationSchema
+      ? () => (
+          <NotificationSchemaResourceLink
+            data={notification.notificationSchema as NotificationSchema}
+            withTooltip
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return updateNotification({
+        body: {
+          historyNotifications: [
+            {
+              id: notification.id,
+              notificationSchemaId: id,
             },
           ],
         },
@@ -245,14 +281,7 @@ export function NotificationGeneral() {
           <TableRow>
             <TableCell>Notification schema</TableCell>
             <TableCell>
-              {notification.notificationSchema && (
-                <div className="inline-flex max-w-48">
-                  <NotificationSchemaResourceLink
-                    data={notification.notificationSchema}
-                    withTooltip
-                  />
-                </div>
-              )}
+              <InPlaceEdit {...notificationSchemaSettings} />
             </TableCell>
           </TableRow>
           <TableRow>

@@ -9,6 +9,7 @@ import {
 
 import {
   NOTIFICATION_SCHEMA,
+  useNotificationSchemaSelectAdapter,
   useRecipientSelectAdapter,
 } from "@/entities/notification";
 import { useTwinClassSelectAdapter } from "@/entities/twin-class";
@@ -24,6 +25,7 @@ export function NotificationFormFields({
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
   const validatorSetAdapter = useValidatorSetSelectAdapter();
   const recipientAdapter = useRecipientSelectAdapter();
+  const notificationSchemaAdapter = useNotificationSchemaSelectAdapter();
 
   return (
     <>
@@ -54,13 +56,15 @@ export function NotificationFormFields({
         label="History type"
         required
       />
-      // TODO Replace by [input field] notification schema
-      https://alcosi.atlassian.net/browse/TWINFACES-786
-      <TextFormField
+      <ComboboxFormField
         control={control}
         name="notificationSchemaId"
         label="Notification schema"
+        selectPlaceholder="Select notification schema..."
+        searchPlaceholder="Search..."
+        noItemsText="No data found"
         required
+        {...notificationSchemaAdapter}
       />
       <ComboboxFormField
         control={control}
