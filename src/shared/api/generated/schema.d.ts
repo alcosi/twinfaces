@@ -254,6 +254,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/twin_class_field_condition/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update twin class field conditions */
+        put: operations["twinClassFieldConditionUpdateV1"];
+        /** Create new conditions for twin class rule */
+        post: operations["twinClassFieldConditionCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin_class_field/{twinClassFieldId}/v1": {
         parameters: {
             query?: never;
@@ -616,6 +634,24 @@ export interface paths {
         post?: never;
         /** Delete permission grant space role by id */
         delete: operations["permissionGrantSpaceRoleDeleteV1"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/notification_schema/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update notification schema */
+        put: operations["notificationSchemaUpdateV1"];
+        /** Create notification schema */
+        post: operations["notificationSchemaCreateV1"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1399,6 +1435,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/twin_status/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports twin statuses as SQL INSERT statements */
+        post: operations["twinStatusExportSqlV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin_status/duplicate/v1": {
         parameters: {
             query?: never;
@@ -1555,7 +1608,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/private/twin_class_field_condition/v1": {
+    "/private/twin_class_field_rule/search/v1": {
         parameters: {
             query?: never;
             header?: never;
@@ -1564,8 +1617,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create new conditions for twin class rule */
-        post: operations["twinClassFieldConditionCreateV1"];
+        /** Returns twin class field rules */
+        post: operations["twinClassFieldRuleSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin_class_field_condition/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns twin class field conditions */
+        post: operations["twinClassFieldConditionSearchV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2876,6 +2946,23 @@ export interface paths {
         put?: never;
         /** Return a list of all permissions for the current domain */
         post: operations["permissionSearchListV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/notification_schema/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return a list of all notification schemas for the current domain */
+        post: operations["notificationSchemaSearchV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -6041,14 +6128,15 @@ export interface components {
             description?: string;
             /**
              * Format: uuid
-             * @description name i18n id
+             * @description created by user id
              */
-            nameI18nId?: string;
+            createdByUserId?: string;
             /**
-             * Format: uuid
-             * @description description i18n id
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
              */
-            descriptionI18nId?: string;
+            createdAt?: string;
         };
         PermissionGroupV1: {
             /**
@@ -8585,6 +8673,73 @@ export interface components {
             /** @description twin class freeze list */
             twinClassFreezes?: components["schemas"]["TwinClassFreezeV1"][];
         };
+        TwinClassFieldConditionUpdateRqV1: {
+            /** @description conditions */
+            conditions?: components["schemas"]["TwinClassFieldConditionUpdateV1"][];
+        };
+        TwinClassFieldConditionUpdateV1: {
+            /**
+             * Format: uuid
+             * @description base (source) twin class field id
+             */
+            baseTwinClassFieldId?: string;
+            /**
+             * Format: int32
+             * @description order of the condition inside the rule
+             */
+            conditionOrder?: number;
+            /**
+             * Format: int32
+             * @description Condition evaluator featurer ID
+             * @example 1
+             */
+            conditionEvaluatorFeaturerId?: number;
+            /**
+             * @description Condition evaluator parameters
+             * @example {}
+             */
+            conditionEvaluatorParams?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: uuid
+             * @description parent condition id
+             */
+            parentTwinClassFieldConditionId?: string;
+            /**
+             * @description logic operator
+             * @example AND
+             * @enum {string}
+             */
+            logicOperator?: "AND" | "OR" | "LEAF";
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+        };
+        TwinClassFieldConditionRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description conditions */
+            conditions?: components["schemas"]["TwinClassFieldConditionV1"][];
+        };
         TwinClassFieldUpdateRqV1: {
             /**
              * @description unique key within the class
@@ -9650,6 +9805,12 @@ export interface components {
             twinflowTransitionTypeId?: "OPERATION" | "OPERATION_DISABLE" | "STATUS_CHANGE" | "STATUS_CHANGE_MARKETING" | "MARKETING";
             /**
              * Format: uuid
+             * @description twinflow id
+             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
+             */
+            twinflowId?: string;
+            /**
+             * Format: uuid
              * @description transition id
              * @example f6606fa2-c047-4ba9-a92c-84051df681ab
              */
@@ -10401,6 +10562,44 @@ export interface components {
              * @example 2023-09-13T09:32:08
              */
             grantedAt?: string;
+        };
+        NotificationSchemaUpdateRqV1: {
+            /** @description notification schema list */
+            notificationSchemas?: components["schemas"]["NotificationSchemaUpdateV1"][];
+        };
+        NotificationSchemaUpdateV1: {
+            /** @description name i18n */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description description i18n */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: uuid
+             * @description notification schema id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+        };
+        NotificationSchemaListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description notification schema list */
+            notificationSchemas?: components["schemas"]["NotificationSchemaV1"][];
         };
         LinkUpdateV1: {
             /** @description Forward name i18n (if target twin-class as src) */
@@ -13870,6 +14069,10 @@ export interface components {
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
         };
+        TwinStatusExportSqlRqV1: {
+            /** @description twin status ids to export SQL for */
+            statusIds?: string[];
+        };
         TwinStatusDuplicateRqV1: {
             /** @description duplicates list */
             duplicates?: components["schemas"]["TwinStatusDuplicateV1"][];
@@ -14538,6 +14741,48 @@ export interface components {
             /** @description created rules */
             rules?: components["schemas"]["TwinClassFieldRuleV1"][];
         };
+        TwinClassFieldRuleSearchRqV1: {
+            /** @description search data */
+            search?: components["schemas"]["TwinClassFieldRuleSearchV1"];
+        };
+        TwinClassFieldRuleSearchV1: {
+            /** @description id list */
+            idList?: string[];
+            /** @description id exclude list */
+            idExcludeList?: string[];
+            /** @description twin class field id list */
+            twinClassFieldIdList?: string[];
+            /** @description twin class field id exclude list */
+            twinClassFieldIdExcludeList?: string[];
+            /** @description field overwriter featurer id list */
+            fieldOverwriterFeaturerIdList?: number[];
+            /** @description field overwriter featurer id exclude list */
+            fieldOverwriterFeaturerIdExcludeList?: number[];
+        };
+        TwinClassFieldRuleSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description twin class field rule list */
+            fieldRules?: components["schemas"]["TwinClassFieldRuleV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+        };
         TwinClassFieldConditionCreateRqV1: {
             /** @description conditions */
             conditions?: components["schemas"]["TwinClassFieldConditionCreateV1"][];
@@ -14578,7 +14823,37 @@ export interface components {
              */
             logicOperator?: "AND" | "OR" | "LEAF";
         };
-        TwinClassFieldConditionRsV1: {
+        TwinClassFieldConditionSearchRqV1: {
+            /** @description search data */
+            search?: components["schemas"]["TwinClassFieldConditionSearchV1"];
+        };
+        TwinClassFieldConditionSearchV1: {
+            /** @description id list */
+            idList?: string[];
+            /** @description id exclude list */
+            idExcludeList?: string[];
+            /** @description twin class field rule id list */
+            twinClassFieldRuleIdList?: string[];
+            /** @description twin class field rule id exclude list */
+            twinClassFieldRuleIdExcludeList?: string[];
+            /** @description base twin class field id list */
+            baseTwinClassFieldIdList?: string[];
+            /** @description base twin class field id exclude list */
+            baseTwinClassFieldIdExcludeList?: string[];
+            /** @description parent twin class field condition id list */
+            parentTwinClassFieldConditionIdList?: string[];
+            /** @description parent twin class field condition id exclude list */
+            parentTwinClassFieldConditionIdExcludeList?: string[];
+            /** @description logic operator id list */
+            logicOperatorIdList?: ("AND" | "OR" | "LEAF")[];
+            /** @description logic operator id exclude list */
+            logicOperatorIdExcludeList?: ("AND" | "OR" | "LEAF")[];
+            /** @description condition evaluator featurer id list */
+            conditionEvaluatorFeaturerIdList?: number[];
+            /** @description condition evaluator featurer id exclude list */
+            conditionEvaluatorFeaturerIdExcludeList?: number[];
+        };
+        TwinClassFieldConditionSearchRsV1: {
             /**
              * Format: int32
              * @description request processing status (see ErrorCode enum)
@@ -14597,8 +14872,10 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description conditions */
-            conditions?: components["schemas"]["TwinClassFieldConditionV1"][];
+            /** @description twin class field condition list */
+            fieldConditions?: components["schemas"]["TwinClassFieldConditionV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         TwinClassFieldCreateRqV2: {
             /** @description twin class field list */
@@ -16842,6 +17119,12 @@ export interface components {
              * @enum {string}
              */
             twinflowTransitionTypeId?: "OPERATION" | "OPERATION_DISABLE" | "STATUS_CHANGE" | "STATUS_CHANGE_MARKETING" | "MARKETING";
+            /**
+             * Format: uuid
+             * @description twinflow id
+             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
+             */
+            twinflowId?: string;
         };
         TransitionSearchRqV1: {
             /** @description id list */
@@ -18166,6 +18449,58 @@ export interface components {
             pagination?: components["schemas"]["PaginationV1"];
             /** @description permission list */
             permissions?: components["schemas"]["PermissionV1"][];
+        };
+        NotificationSchemaCreateRqV1: {
+            /** @description notification schema list */
+            notificationSchemas?: components["schemas"]["NotificationSchemaCreateV1"][];
+        };
+        NotificationSchemaCreateV1: {
+            /** @description name i18n */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description description i18n */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+        };
+        NotificationSchemaSearchRqV1: {
+            /** @description search */
+            search?: components["schemas"]["NotificationSchemaSearchV1"];
+        };
+        NotificationSchemaSearchV1: {
+            /** @description id list */
+            idList?: string[];
+            /** @description id exclude list */
+            idExcludeList?: string[];
+            /** @description name like list */
+            nameLikeList?: string[];
+            /** @description name not like list */
+            nameNotLikeList?: string[];
+            /** @description created by user id list */
+            createdByUserIdList?: string[];
+            /** @description created by user id exclude list */
+            createdByUserIdExcludeList?: string[];
+        };
+        NotificationSchemaSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description notification schema list */
+            notificationSchemas?: components["schemas"]["NotificationSchemaV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         LinkCreateV1: {
             /** @description Forward name i18n (if target twin-class as src) */
@@ -25385,6 +25720,244 @@ export interface operations {
             };
         };
     };
+    twinClassFieldConditionUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldConditionUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Conditions successfully updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassFieldConditionRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassFieldConditionCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldConditionCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Conditions successfully created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassFieldConditionRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     twinClassFieldViewV1: {
         parameters: {
             query?: {
@@ -29194,6 +29767,92 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Response"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    notificationSchemaUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showNotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationSchemaUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Notification schema updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSchemaListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    notificationSchemaCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showNotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationSchemaCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Notification schema created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSchemaListRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -33845,6 +34504,46 @@ export interface operations {
             };
         };
     };
+    twinStatusExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinStatusExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+        };
+    };
     twinStatusDuplicateV1: {
         parameters: {
             query?: {
@@ -34884,7 +35583,129 @@ export interface operations {
             };
         };
     };
-    twinClassFieldConditionCreateV1: {
+    twinClassFieldRuleSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldRuleSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin class field rules list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassFieldRuleSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassFieldConditionSearchV1: {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
@@ -34965,6 +35786,9 @@ export interface operations {
                 showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -34979,17 +35803,17 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TwinClassFieldConditionCreateRqV1"];
+                "application/json": components["schemas"]["TwinClassFieldConditionSearchRqV1"];
             };
         };
         responses: {
-            /** @description Conditions successfully created */
+            /** @description Twin class field conditions list */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TwinClassFieldConditionRsV1"];
+                    "application/json": components["schemas"]["TwinClassFieldConditionSearchRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -42534,6 +43358,52 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PermissionSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    notificationSchemaSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showNotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationSchemaSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationSchemaSearchRsV1"];
                 };
             };
             /** @description Access is denied */

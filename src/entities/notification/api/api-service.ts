@@ -5,6 +5,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import {
   HistoryNotificationFilters,
   NotificationCreateRq,
+  NotificationSchemaFilters,
   NotificationUpdateRq,
   RecipientCollectorCreateRq,
   RecipientCollectorUpdateRq,
@@ -134,6 +135,31 @@ export function createNotificationApi(settings: ApiSettings) {
     );
   }
 
+  function searchNotificationSchema({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: NotificationSchemaFilters;
+  }) {
+    return settings.client.POST(`/private/notification_schema/search/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showNotificationSchemaMode: "DETAILED",
+          limit: pagination.pageSize,
+          offset: pagination.pageIndex * pagination.pageSize,
+        },
+      },
+      body: {
+        search: {
+          ...filters,
+        },
+      },
+    });
+  }
+
   function updateHistoryNotification({ body }: { body: NotificationUpdateRq }) {
     return settings.client.PUT(`/private/history_notification/v1`, {
       params: {
@@ -194,6 +220,7 @@ export function createNotificationApi(settings: ApiSettings) {
     createHistoryNotification,
     updateRecipientCollector,
     createRecipientCollector,
+    searchNotificationSchema,
   };
 }
 
