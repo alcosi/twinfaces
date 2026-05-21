@@ -25,7 +25,9 @@ export function useNotificationSchemaSearch() {
         );
 
         if (error) {
-          throw new Error("Failed to fetch recipients due to API error");
+          throw new Error(
+            "Failed to fetch notification schemas due to API error"
+          );
         }
 
         return {
@@ -33,7 +35,7 @@ export function useNotificationSchemaSearch() {
           pagination: data.pagination ?? {},
         };
       } catch {
-        throw new Error("An error occured while fetching recipients");
+        throw new Error("An error occured while fetching notification schemas");
       }
     },
     [api]
