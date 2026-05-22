@@ -15,7 +15,7 @@ import { Tab, TabsLayout } from "@/widgets/layout";
 import {
   TwinClassFieldDuplicateDialog,
   TwinClassFieldDuplicateDialogRef,
-} from "@/widgets/tables/twin-class-fields/twin-class-field-duplicate-dialog";
+} from "@/widgets/tables";
 
 import { TwinFieldGeneral } from "./views";
 import { TwinFieldProjections } from "./views/twin-field-projections";

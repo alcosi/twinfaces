@@ -70,7 +70,7 @@ export function TwinClassResourceLink({ data, disabled, withTooltip }: Props) {
                           type="button"
                           variant="outline"
                           size="xs"
-                          className="hover:bg-secondary h-6 w-7 shrink-0 p-0.5"
+                          className="hover:bg-secondary h-7 w-7 shrink-0 p-0.5"
                           onClick={(event) => event.stopPropagation()}
                         >
                           <EllipsisVertical className="h-3.5 w-3.5" />

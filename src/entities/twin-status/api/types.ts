@@ -8,6 +8,10 @@ export type TwinStatus_DETAILED = Required<TwinStatus> & {
 
 export type TwinStatusCreateRq = components["schemas"]["TwinStatusCreateRqV1"];
 export type TwinStatusUpdateRq = components["schemas"]["TwinStatusUpdateRqV1"];
+export type TwinStatusDuplicateRq =
+  components["schemas"]["TwinStatusDuplicateRqV1"];
+export type TwinStatusExportSqlRq =
+  components["schemas"]["TwinStatusExportSqlRqV1"];
 
 export type TwinStatusFilterKeys =
   | "idList"

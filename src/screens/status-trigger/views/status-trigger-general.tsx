@@ -188,7 +188,7 @@ export function StatusTriggerGeneral() {
           </TableRow>
 
           <TableRow>
-            <TableCell>Incoming else outgoing</TableCell>
+            <TableCell>Direction</TableCell>
             <TableCell>
               <Switch
                 checked={statusTrigger.incomingElseOutgoing ?? false}

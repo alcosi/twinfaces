@@ -15,6 +15,8 @@ export * from "./status-triggers";
 export * from "./trigger-tasks";
 export * from "./twin-class-dynamic-markers";
 export * from "./twin-class-fields";
+export * from "./twin-class-fields";
+export * from "./twin-class-statuses";
 export * from "./twin-class-statuses";
 export * from "./twin-flow-transitions";
 export * from "./twin-flows";

@@ -10,9 +10,7 @@ import { UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-import { SwitchFormField } from "@/components/form-fields";
-
-import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinStatus_DETAILED } from "@/entities/twin-status";
 import { PrivateApiContext } from "@/shared/api";
 import {
   Button,
@@ -25,55 +23,47 @@ import {
   Form,
 } from "@/shared/ui";
 
-export const TWIN_CLASS_EXPORT_SQL_SCHEMA = z.object({
-  twinClassIds: z.array(z.string().uuid()).min(1, "Twin class ID is required"),
-  includeFields: z.boolean(),
-  includeStatuses: z.boolean(),
-  includeTwinflow: z.boolean(),
+export const TWIN_CLASS_STATUS_EXPORT_SQL_SCHEMA = z.object({
+  statusIds: z.array(z.string().uuid()).min(1, "Twin status ID is required"),
 });
 
-export type TwinClassExportSqlValues = z.infer<
-  typeof TWIN_CLASS_EXPORT_SQL_SCHEMA
+export type TwinClassStatusExportSqlValues = z.infer<
+  typeof TWIN_CLASS_STATUS_EXPORT_SQL_SCHEMA
 >;
 
-export type TwinClassExportSqlDialogRef = {
-  open: (twinClassItem: TwinClass_DETAILED) => void;
+export type TwinClassStatusExportSqlDialogRef = {
+  open: (twinStatusItem: TwinStatus_DETAILED) => void;
 };
 
 type Props = {
   onSuccess?: () => void;
 };
 
-export const TwinClassExportSqlDialog = forwardRef(Component);
+export const TwinClassStatusesExportSqlDialog = forwardRef(Component);
 
 function Component(
   { onSuccess }: Props,
-  ref: ForwardedRef<TwinClassExportSqlDialogRef>
+  ref: ForwardedRef<TwinClassStatusExportSqlDialogRef>
 ) {
   const api = useContext(PrivateApiContext);
   const [open, setOpen] = useState(false);
-  const [selectedTwinClassName, setSelectedTwinClassName] = useState<
+  const [selectTwinStatusName, setSelectedTwinStatusName] = useState<
     string | undefined
   >(undefined);
-  const form: UseFormReturn<TwinClassExportSqlValues> =
-    useForm<TwinClassExportSqlValues>({
-      resolver: zodResolver(TWIN_CLASS_EXPORT_SQL_SCHEMA),
+
+  const form: UseFormReturn<TwinClassStatusExportSqlValues> =
+    useForm<TwinClassStatusExportSqlValues>({
+      resolver: zodResolver(TWIN_CLASS_STATUS_EXPORT_SQL_SCHEMA),
       defaultValues: {
-        twinClassIds: [],
-        includeFields: true,
-        includeStatuses: true,
-        includeTwinflow: true,
+        statusIds: [],
       },
     });
 
   useImperativeHandle(ref, () => ({
-    open: (twinClassItem: TwinClass_DETAILED) => {
-      setSelectedTwinClassName(twinClassItem.name);
+    open: (twinStatusItem: TwinStatus_DETAILED) => {
+      setSelectedTwinStatusName(twinStatusItem.name);
       form.reset({
-        twinClassIds: [twinClassItem.id],
-        includeFields: true,
-        includeStatuses: true,
-        includeTwinflow: true,
+        statusIds: [twinStatusItem.id],
       });
       setOpen(true);
     },
@@ -81,7 +71,7 @@ function Component(
 
   function closeDialog() {
     setOpen(false);
-    setSelectedTwinClassName(undefined);
+    setSelectedTwinStatusName(undefined);
     form.reset();
   }
 
@@ -98,9 +88,9 @@ function Component(
     setOpen(nextOpen);
   }
 
-  async function handleOnSubmit(formValues: TwinClassExportSqlValues) {
+  async function handleOnSubmit(formValues: TwinClassStatusExportSqlValues) {
     try {
-      const { error } = await api.twinClass.exportSql({
+      const { error } = await api.twinStatus.exportSql({
         body: formValues,
       });
 
@@ -124,33 +114,15 @@ function Component(
         <DialogHeader className="h-auto py-4">
           <DialogTitle>Export sql</DialogTitle>
           <DialogDescription className="pt-1">
-            {selectedTwinClassName
-              ? `Export sql for "${selectedTwinClassName}".`
+            {selectTwinStatusName
+              ? `Export sql for "${selectTwinStatusName}".`
               : "Create a export sql."}
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleOnSubmit)}>
-            <input type="hidden" {...form.register("twinClassIds")} />
-
-            <div className="max-h-[60vh] space-y-8 overflow-y-auto px-8 py-6">
-              <SwitchFormField
-                control={form.control}
-                name="includeFields"
-                label="Export fields"
-              />
-              <SwitchFormField
-                control={form.control}
-                name="includeStatuses"
-                label="Export statuses"
-              />
-              <SwitchFormField
-                control={form.control}
-                name="includeTwinflow"
-                label="Export twinflow"
-              />
-            </div>
+            <input type="hidden" {...form.register("statusIds")} />
 
             <DialogFooter className="bg-background rounded-b-md p-6 sm:justify-end">
               <Button type="submit" loading={form.formState.isSubmitting}>

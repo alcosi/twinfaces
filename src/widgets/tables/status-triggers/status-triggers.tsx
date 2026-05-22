@@ -59,7 +59,7 @@ const colDefs: Record<
   incomingElseOutgoing: {
     id: "incomingElseOutgoing",
     accessorKey: "incomingElseOutgoing",
-    header: "Incoming else outgoing",
+    header: "Direction",
     cell: (data) => (data.getValue() ? "Incoming" : "Outgoing"),
   },
   order: {

@@ -157,15 +157,16 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<TwinFlow_DETAILED>> {
+    const _filters = mapFiltersToPayload(filters.filters);
+
     try {
       const response = await searchTwinFlows({
         pagination,
         filters: {
-          ...mapFiltersToPayload(filters.filters),
-          twinClassIdMap: reduceToObject({
-            list: toArray(twinClassId),
-            defaultValue: true,
-          }),
+          ..._filters,
+          twinClassIdMap: twinClassId
+            ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
+            : _filters.twinClassIdMap,
         },
       });
 
