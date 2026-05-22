@@ -99,3 +99,12 @@ export type RecipientCollectorCreateRq =
   components["schemas"]["HistoryNotificationRecipientCollectorCreateRqV1"];
 export type RecipientCollectorUpdateRq =
   components["schemas"]["HistoryNotificationRecipientCollectorUpdateRqV1"];
+
+export type NotificationSchemaSearchRq =
+  components["schemas"]["NotificationSchemaSearchV1"];
+
+export type NotificationSchemaFilterKeys = "idList" | "nameLikeList";
+
+export type NotificationSchemaFilters = Partial<
+  Pick<NotificationSchemaSearchRq, NotificationSchemaFilterKeys>
+>;

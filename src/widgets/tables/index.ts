@@ -9,6 +9,7 @@ export * from "./historyes";
 export * from "./permission-groups";
 export * from "./permissions";
 export * from "./pipeline-steps";
+export * from "./recipient-collectors";
 export * from "./space-roles";
 export * from "./status-triggers";
 export * from "./trigger-tasks";

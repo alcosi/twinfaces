@@ -3,6 +3,7 @@ import z from "zod";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useBusinessAccountSelectAdapter } from "@/entities/business-account";
+import { useNotificationSchemaSelectAdapter } from "@/entities/notification";
 import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import { useTierSelectAdapter } from "@/entities/tier";
 import { useTwinClassSchemaSelectAdapter } from "@/entities/twin-class-schema";
@@ -32,6 +33,7 @@ export function useBusinessAccountFilters({
   const twinClassSchemaAdapter = useTwinClassSchemaSelectAdapter();
   const businessAccountAdapter = useBusinessAccountSelectAdapter();
   const tierAdapter = useTierSelectAdapter();
+  const notificationSchemaAdapter = useNotificationSchemaSelectAdapter();
 
   const allFilters: Record<DomainBusinessAccountFilterKeys, AutoFormValueInfo> =
     {
@@ -65,12 +67,11 @@ export function useBusinessAccountFilters({
         ...twinClassSchemaAdapter,
         multi: true,
       },
-      //todo upd to select
       notificationSchemaIdList: {
-        type: AutoFormValueType.tag,
+        type: AutoFormValueType.combobox,
         label: "Notification scheme",
-        schema: z.string().uuid("Please enter a valid UUID"),
-        placeholder: "Enter UUID",
+        multi: true,
+        ...notificationSchemaAdapter,
       },
       tierIdList: {
         type: AutoFormValueType.combobox,
@@ -116,7 +117,8 @@ export function useBusinessAccountFilters({
         "id"
       ),
       notificationSchemaIdList: toArrayOfString(
-        filters.notificationSchemaIdList
+        filters.notificationSchemaIdList,
+        "id"
       ),
       tierIdList: toArrayOfString(filters.tierIdList, "id"),
       storageUsedCountRange: {

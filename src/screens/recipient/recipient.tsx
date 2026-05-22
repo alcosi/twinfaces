@@ -1,7 +1,7 @@
 "use client";
 
 import { Tab, TabsLayout } from "@/widgets/layout";
-import { RecipientCollectorsTable } from "@/widgets/tables/recipient-collectors";
+import { RecipientCollectorsTable } from "@/widgets/tables";
 
 import { RecipientGeneral } from "../recipient/view/recipient-general";
 

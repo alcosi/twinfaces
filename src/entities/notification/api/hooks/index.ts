@@ -5,6 +5,7 @@ export * from "./use-fetch-recipient-collector-by-id";
 export * from "./use-recipient-collector-create";
 export * from "./use-recipient-create";
 export * from "./use-search-history-notifification";
+export * from "./use-search-notification-schema";
 export * from "./use-search-recipient-collector";
 export * from "./use-search-v1";
 export * from "./use-update";

@@ -2,7 +2,10 @@ import z from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useRecipientSelectAdapter } from "@/entities/notification";
+import {
+  useNotificationSchemaSelectAdapter,
+  useRecipientSelectAdapter,
+} from "@/entities/notification";
 import {
   TwinClass_DETAILED,
   useTwinClassFilters,
@@ -37,6 +40,7 @@ export function useHistoryNotificationFilters({
   const twinClassFieldsAdapter = useTwinClassFieldSelectAdapterWithFilters();
   const recipientAdapter = useRecipientSelectAdapter();
   const validatorSetAdapter = useValidatorSetSelectAdapter();
+  const notificationSchemaAdapter = useNotificationSchemaSelectAdapter();
 
   const {
     buildFilterFields: buildTwinClassFilters,
@@ -82,12 +86,11 @@ export function useHistoryNotificationFilters({
       schema: z.string(),
       placeholder: "Enter UUID",
     },
-    // TODO Replace by https://alcosi.atlassian.net/browse/TWINFACES-787
     notificationSchemaIdList: {
-      type: AutoFormValueType.tag,
+      type: AutoFormValueType.combobox,
       label: "Notification schema",
-      schema: z.string(),
-      placeholder: "Enter UUID",
+      multi: true,
+      ...notificationSchemaAdapter,
     },
     historyNotificationRecipientIdList: {
       type: AutoFormValueType.combobox,
@@ -137,7 +140,8 @@ export function useHistoryNotificationFilters({
       twinClassFieldIdList: toArrayOfString(filters.twinClassFieldIdList, "id"),
       historyTypeIdList: toArrayOfString(filters.historyTypeIdList),
       notificationSchemaIdList: toArrayOfString(
-        filters.notificationSchemaIdList
+        filters.notificationSchemaIdList,
+        "id"
       ),
       historyNotificationRecipientIdList: toArrayOfString(
         filters.historyNotificationRecipientIdList,
