@@ -21,7 +21,9 @@ export function TwinFlowScreen() {
     {
       key: "transitions",
       label: "Transitions",
-      content: <TwinFlowTransitionsTable twinflow={twinFlow} />,
+      content: (
+        <TwinFlowTransitionsTable twinflow={twinFlow} title="Transitions" />
+      ),
     },
     {
       key: "flow",

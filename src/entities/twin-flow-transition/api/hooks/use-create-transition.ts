@@ -7,12 +7,7 @@ export const useCreateTwinFlowTransition = () => {
   const api = useContext(PrivateApiContext);
 
   const createTwinFlowTransition = useCallback(
-    async ({
-      body,
-    }: {
-      twinFlowId: string;
-      body: TwinFlowTransitionCreateRq;
-    }) => {
+    async ({ body }: { body: TwinFlowTransitionCreateRq }) => {
       try {
         const result = await api.twinFlowTransition.create({
           body,
