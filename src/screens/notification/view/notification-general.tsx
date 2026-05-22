@@ -1,3 +1,5 @@
+"use client";
+
 import { useContext, useState } from "react";
 
 import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
