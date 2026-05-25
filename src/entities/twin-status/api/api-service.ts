@@ -99,6 +99,7 @@ export function createTwinStatusApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
       },
       body: body,
+      parseAs: "text",
     });
   }
 

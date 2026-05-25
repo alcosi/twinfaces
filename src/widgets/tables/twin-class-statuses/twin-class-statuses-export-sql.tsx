@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, Copy } from "lucide-react";
 import {
   ForwardedRef,
   forwardRef,
@@ -51,6 +52,9 @@ function Component(
     string | undefined
   >(undefined);
 
+  const [exportedSql, setExportedSql] = useState<string | undefined>();
+  const [copied, setCopied] = useState(false);
+
   const form: UseFormReturn<TwinClassStatusExportSqlValues> =
     useForm<TwinClassStatusExportSqlValues>({
       resolver: zodResolver(TWIN_CLASS_STATUS_EXPORT_SQL_SCHEMA),
@@ -70,6 +74,8 @@ function Component(
   }));
 
   function closeDialog() {
+    setExportedSql(undefined);
+    setCopied(false);
     setOpen(false);
     setSelectedTwinStatusName(undefined);
     form.reset();
@@ -86,11 +92,13 @@ function Component(
     }
 
     setOpen(nextOpen);
+    setExportedSql(undefined);
+    setCopied(false);
   }
 
   async function handleOnSubmit(formValues: TwinClassStatusExportSqlValues) {
     try {
-      const { error } = await api.twinStatus.exportSql({
+      const { data, error } = await api.twinStatus.exportSql({
         body: formValues,
       });
 
@@ -99,18 +107,37 @@ function Component(
         throw error;
       }
 
+      if (!data || typeof data !== "string") {
+        toast.error("Export sql response is empty");
+        return;
+      }
+
+      setExportedSql(data);
+      setCopied(false);
+
       toast.success("Export sql successfully!");
-      closeDialog();
       onSuccess?.();
     } catch (error) {
       console.error("Export sql error:", error);
+      toast.error("Failed to export sql");
+
       throw error;
     }
   }
 
+  async function handleCopySql() {
+    if (!exportedSql) return;
+
+    await navigator.clipboard.writeText(exportedSql);
+    setCopied(true);
+    toast.success("SQL copied");
+
+    setTimeout(() => setCopied(false), 1500);
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[100%] sm:max-h-[80%] sm:max-w-md">
+      <DialogContent className="flex max-h-[80vh] w-[min(500px,calc(100vw-32px))] max-w-none flex-col overflow-hidden">
         <DialogHeader className="h-auto py-4">
           <DialogTitle>Export sql</DialogTitle>
           <DialogDescription className="pt-1">
@@ -121,8 +148,48 @@ function Component(
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleOnSubmit)}>
+          <form
+            className="flex min-h-0 min-w-0 flex-col"
+            onSubmit={form.handleSubmit(handleOnSubmit)}
+          >
             <input type="hidden" {...form.register("statusIds")} />
+
+            <div className="min-h-0 max-w-full min-w-0 space-y-6 overflow-y-auto px-8 py-6">
+              {exportedSql && (
+                <div className="max-w-full min-w-0 space-y-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-sm font-medium">Generated SQL</span>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCopySql}
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="mr-2 h-4 w-4" />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="mr-2 h-4 w-4" />
+                          Copy
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  <div className="bg-muted w-full min-w-0 overflow-hidden rounded-md border">
+                    <pre className="block max-h-[260px] w-full min-w-0 overflow-auto p-4 text-xs leading-5">
+                      <code className="block w-max min-w-full whitespace-pre">
+                        {exportedSql}
+                      </code>
+                    </pre>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <DialogFooter className="bg-background rounded-b-md p-6 sm:justify-end">
               <Button type="submit" loading={form.formState.isSubmitting}>

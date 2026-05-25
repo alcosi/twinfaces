@@ -354,6 +354,7 @@ export function createTwinClassApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
       },
       body: body,
+      parseAs: "text",
     });
   }
 
