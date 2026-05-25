@@ -32,7 +32,7 @@ export function useNotificationSchemaSelectAdapter(): SelectAdapter<Notification
   }
 
   function renderItem({ id, name }: NotificationSchema) {
-    return isPopulatedString(name) ? `${name} : ${id}` : id;
+    return isPopulatedString(name) ? `${name}` : id;
   }
 
   return {
