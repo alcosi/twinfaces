@@ -2,7 +2,10 @@ import { PaginationState } from "@tanstack/react-table";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { DomainBusinessAccountFilters } from "./types";
+import {
+  DomainBusinessAccountFilters,
+  DomainBusinessAccountUserFilters,
+} from "./types";
 
 export function createBusinessAccountApi(settings: ApiSettings) {
   function search({
@@ -36,7 +39,39 @@ export function createBusinessAccountApi(settings: ApiSettings) {
     });
   }
 
-  return { search };
+  function searchDomainBusinessAccountUser({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: DomainBusinessAccountUserFilters;
+  }) {
+    return settings.client.POST(
+      `/private/domain/business_account_user/search/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          query: {
+            lazyRelation: false,
+            showDomainBusinessAccountUser2BusinessAccountMode: "DETAILED",
+            showDomainBusinessAccountUser2UserGroupMode: "DETAILED",
+            showDomainBusinessAccountUser2UserMode: "DETAILED",
+            showDomainBusinessAccountUserMode: "DETAILED",
+            showUser2UserGroupMode: "DETAILED",
+            limit: pagination.pageSize,
+            offset: pagination.pageIndex * pagination.pageSize,
+          },
+        },
+        body: {
+          search: {
+            ...filters,
+          },
+        },
+      }
+    );
+  }
+
+  return { search, searchDomainBusinessAccountUser };
 }
 
 export type BusinessAccountApi = ReturnType<typeof createBusinessAccountApi>;

@@ -66,6 +66,7 @@ type Props = {
   // === end ===
   modalCreateData?: FaceTC001ViewRs;
   onRowClick?: (row: Twin_DETAILED) => void;
+  businessAccountId?: string;
 };
 
 export function TwinsTable({
@@ -80,6 +81,7 @@ export function TwinsTable({
   onRowClick,
   searchId,
   searchParams = {},
+  businessAccountId,
 }: Props) {
   const tableRef = useRef<DataTableHandle>(null);
   const [twinClassFields, setTwinClassFields] = useState<
@@ -330,6 +332,9 @@ export function TwinsTable({
       headTwinIdList: targetHeadTwinId
         ? [targetHeadTwinId]
         : _baseFilters.headTwinIdList,
+      ownerBusinessAccountIdList: businessAccountId
+        ? [businessAccountId]
+        : undefined,
     };
 
     const searchData = searchId
