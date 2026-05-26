@@ -45,8 +45,9 @@ const colDefs: Record<
     id: "businessAccount",
     accessorKey: "businessAccount",
     header: "Domain business account",
-    cell: ({ row: { original } }) => {
-      original.businessAccount && original.domainBusinessAccountId && (
+    cell: ({ row: { original } }) =>
+      original.businessAccount &&
+      original.domainBusinessAccountId && (
         <div className="inline-flex max-w-48">
           <BusinessAccountResourceLink
             domainBusinessAccountId={original.domainBusinessAccountId}
@@ -54,8 +55,7 @@ const colDefs: Record<
             withTooltip
           />
         </div>
-      );
-    },
+      ),
   },
   userGroups: {
     id: "userGroups",
