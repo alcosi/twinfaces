@@ -3,6 +3,8 @@ import { PermissionSchema } from "@/entities/permission-schema";
 import { Tier } from "@/entities/tier";
 import { TwinClassSchema } from "@/entities/twin-class-schema";
 import { TwinFlowSchema } from "@/entities/twinFlowSchema";
+import { User_DETAILED } from "@/entities/user";
+import { UserGroup_DETAILED } from "@/entities/user-group";
 import { components } from "@/shared/api/generated/schema";
 
 export type BusinessAccount = components["schemas"]["BusinessAccountV1"];
@@ -35,4 +37,37 @@ export type DomainBusinessAccountFilterKeys =
 
 export type DomainBusinessAccountFilters = Partial<
   Pick<DomainBusinessAccountSearchRq, DomainBusinessAccountFilterKeys>
+>;
+
+export type DomainBusinessAccountUser =
+  components["schemas"]["DomainBusinessAccountUserV1"];
+
+export type DomainBusinessAccountUser_DETAILED = DomainBusinessAccountUser & {
+  user: User_DETAILED;
+  businessAccount: DomainBusinessAccount_DETAILED;
+  userGroups: UserGroup_DETAILED[];
+};
+
+export type DomainBusinessAccountUserSearchRq =
+  components["schemas"]["DomainBusinessAccountUserSearchDTOv1"];
+
+export type DomainBusinessAccountUserFilterKeys =
+  | "businessAccountIdList"
+  | "userIdList"
+  | "userGroupIdList"
+  | "createdAtFrom"
+  | "createdAtTo"
+  | "lastActivityAtFrom"
+  | "lastActivityAtTo";
+
+export type DomainBusinessAccountUserFilters = Partial<
+  Pick<
+    DomainBusinessAccountUserSearchRq & {
+      createdAtFrom: string;
+      createdAtTo: string;
+      lastActivityAtFrom: string;
+      lastActivityAtTo: string;
+    },
+    DomainBusinessAccountUserFilterKeys
+  >
 >;

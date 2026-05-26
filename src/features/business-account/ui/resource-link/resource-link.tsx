@@ -11,15 +11,19 @@ type Props = {
   data: BusinessAccount;
   disabled?: boolean;
   withTooltip?: boolean;
+  route?: string;
+  domainBusinessAccountId?: string;
 };
 
 export function BusinessAccountResourceLink({
   data,
   disabled,
   withTooltip,
+  route = "business-accounts",
+  domainBusinessAccountId,
 }: Props) {
   const title = isPopulatedString(data.name) ? data.name : "N/A";
-  const link = `/${PlatformArea.core}/business-account/${data.id}`;
+  const link = `/${PlatformArea.core}/${route}/${domainBusinessAccountId ?? data.id}`;
 
   return (
     <ResourceLink

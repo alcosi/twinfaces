@@ -3422,6 +3422,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/domain/business_account_user/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return a list of domain business account users by search criteria */
+        post: operations["domainBusinessAccountUserSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/domain/business_account/search/v1": {
         parameters: {
             query?: never;
@@ -3571,7 +3588,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Returns comment list by twin id */
+        /**
+         * Returns comment list by twin id
+         * @deprecated
+         */
         get: operations["twinCommentListV1"];
         put?: never;
         /** Add comment and it's attachments by twin */
@@ -5470,6 +5490,12 @@ export interface components {
              * @example be44e826-ce24-4881-a227-f3f72d915a20
              */
             id?: string;
+            /**
+             * Format: uuid
+             * @description twin id
+             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+             */
+            twinId?: string;
             text?: string;
             /**
              * Format: uuid
@@ -5567,6 +5593,12 @@ export interface components {
              * @example true
              */
             custom?: boolean;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
         };
         DataListV1: {
             /**
@@ -10747,8 +10779,6 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description pagination */
-            pagination?: components["schemas"]["PaginationV1"];
             /** @description result - i18n */
             translation?: components["schemas"]["I18nTranslationV1"][];
         };
@@ -10769,26 +10799,6 @@ export interface components {
              * @example translation
              */
             translation?: string;
-        };
-        PaginationV1: {
-            /**
-             * Format: int32
-             * @description record number from which data sampling begins
-             * @example 25
-             */
-            offset?: number;
-            /**
-             * Format: int32
-             * @description number of records in the query result
-             * @example 10
-             */
-            limit?: number;
-            /**
-             * Format: int64
-             * @description total results count
-             * @example 100
-             */
-            total?: number;
         };
         HistoryNotificationRecipientCollectorUpdateRqV1: {
             /** @description history notification recipient collector list */
@@ -12474,6 +12484,26 @@ export interface components {
             iconLight?: string;
             /** @description domain name */
             name?: string;
+        };
+        PaginationV1: {
+            /**
+             * Format: int32
+             * @description record number from which data sampling begins
+             * @example 25
+             */
+            offset?: number;
+            /**
+             * Format: int32
+             * @description number of records in the query result
+             * @example 10
+             */
+            limit?: number;
+            /**
+             * Format: int64
+             * @description total results count
+             * @example 100
+             */
+            total?: number;
         };
         DataListOptionSearchRqV1: {
             /** @description id list */
@@ -18633,6 +18663,10 @@ export interface components {
             /** @description results - link list */
             links?: components["schemas"]["LinkV2"][];
         };
+        I18nTranslationSearchRqV1: {
+            /** @description i18n basic search */
+            search?: components["schemas"]["I18nTranslationSearchV1"];
+        };
         I18nTranslationSearchV1: {
             /** @description i18n id list */
             i18nIdList?: string[];
@@ -18654,6 +18688,30 @@ export interface components {
             from?: number;
             /** Format: int64 */
             to?: number;
+        };
+        I18nTranslationSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description result - i18n */
+            translation?: components["schemas"]["I18nTranslationV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         HistoryNotificationRecipientCollectorCreateRqV1: {
             /** @description history notification recipient collectors */
@@ -19876,31 +19934,6 @@ export interface components {
             /** @description business account id exclude list */
             businessAccountIdExcludeList?: string[];
         };
-        BusinessAccountUserV1: {
-            /**
-             * Format: uuid
-             * @description id
-             */
-            id?: string;
-            /**
-             * Format: uuid
-             * @description user id
-             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            userId?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /**
-             * Format: uuid
-             * @description business account id
-             * @example 9a3f6075-f175-41cd-a804-934201ec969c
-             */
-            businessAccountId?: string;
-        };
         DomainUserSearchRsV1: {
             /**
              * Format: int32
@@ -19920,10 +19953,10 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description pagination data */
-            pagination?: components["schemas"]["PaginationV1"];
             /** @description user list */
             users?: components["schemas"]["DomainUserV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
         };
         DomainUserV1: {
             /**
@@ -19949,10 +19982,115 @@ export interface components {
              * @example 2023-09-13T09:32:08
              */
             createdAt?: string;
-            /** @description Business account id list. Will be filled only in lazyRelations mode is false */
-            businessAccountUserIdList?: string[];
-            /** @description Business account users. Will be filled only if lazyRelations mode is true */
-            businessAccountUsers?: components["schemas"]["BusinessAccountUserV1"][];
+            /**
+             * Format: date-time
+             * @description last activity at
+             * @example 2023-09-13T09:32:08
+             */
+            lastActivityAt?: string;
+        };
+        DomainBusinessAccountUserSearchDTOv1: {
+            /** @description user id list */
+            userIdList?: string[];
+            /** @description user id exclude list */
+            userIdExcludeList?: string[];
+            /** @description business account id list */
+            businessAccountIdList?: string[];
+            /** @description business account id exclude list */
+            businessAccountIdExcludeList?: string[];
+            /** @description user group id list */
+            userGroupIdList?: string[];
+            /** @description user group id exclude list */
+            userGroupIdExcludeList?: string[];
+            /** @description last activity at range */
+            lastActivityAt?: components["schemas"]["DataTimeRangeV1"];
+            /** @description created at range */
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
+            /** @description sort options */
+            sort?: components["schemas"]["SortV1"];
+        };
+        DomainBusinessAccountUserSearchRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["DomainBusinessAccountUserSearchDTOv1"];
+        };
+        SortV1: {
+            /** @description sort field name */
+            field?: string;
+            /**
+             * @description sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            direction?: "ASC" | "DESC";
+        };
+        DomainBusinessAccountUserSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description domain business account user list */
+            domainBusinessAccountUsers?: components["schemas"]["DomainBusinessAccountUserV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+        };
+        DomainBusinessAccountUserV1: {
+            /**
+             * Format: uuid
+             * @description user id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            userId?: string;
+            /**
+             * Format: uuid
+             * @description business account id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            businessAccountId?: string;
+            /**
+             * Format: uuid
+             * @description domain business account id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            domainBusinessAccountId?: string;
+            /**
+             * Format: uuid
+             * @description domain user id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            domainUserId?: string;
+            /**
+             * Format: uuid
+             * @description business account user id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            businessAccountUserId?: string;
+            /**
+             * Format: date-time
+             * @description last activity at
+             * @example 2023-09-13T09:32:08
+             */
+            lastActivityAt?: string;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /** @description an ids of user groups */
+            userGroupIds?: string[];
         };
         DomainBusinessAccountSearchDTOv1: {
             /** @description id list */
@@ -20377,10 +20515,10 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description comment data */
+            comments?: components["schemas"]["CommentV1"][];
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
-            /** @description results - comment list */
-            comments?: components["schemas"]["CommentV1"][];
         };
         BusinessAccountUserAddRqV1: {
             /**
@@ -23108,8 +23246,6 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
-            /** @description pagination data */
-            pagination?: components["schemas"]["PaginationV1"];
             /** @description comment data */
             comments?: components["schemas"]["CommentV1"][];
         };
@@ -23307,6 +23443,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23433,6 +23570,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23762,6 +23900,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23883,6 +24022,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24008,6 +24148,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24138,6 +24279,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24354,6 +24496,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24475,6 +24618,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24596,6 +24740,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24731,6 +24876,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24849,6 +24995,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24971,6 +25118,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25094,6 +25242,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25217,6 +25366,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -25355,6 +25505,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -25493,6 +25644,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25612,6 +25764,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25731,6 +25884,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25850,6 +26004,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25969,6 +26124,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26087,6 +26243,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26249,6 +26406,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26368,6 +26526,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26490,6 +26649,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26612,6 +26772,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26729,6 +26890,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26903,6 +27065,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27034,6 +27197,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27243,6 +27407,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27364,6 +27529,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27486,6 +27652,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27608,6 +27775,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27730,6 +27898,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27853,6 +28022,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27976,6 +28146,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28110,6 +28281,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28337,6 +28509,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28458,6 +28631,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28579,6 +28753,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28700,6 +28875,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28821,6 +28997,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28946,6 +29123,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29111,6 +29289,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29278,6 +29457,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -29455,6 +29635,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29622,6 +29803,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29877,6 +30059,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29997,6 +30180,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30351,6 +30535,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30481,6 +30666,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30611,6 +30797,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -30751,6 +30938,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31339,6 +31527,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -31482,6 +31671,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -31664,6 +31854,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31863,6 +32054,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32036,6 +32228,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32160,6 +32353,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32552,6 +32746,7 @@ export interface operations {
                 showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32671,6 +32866,7 @@ export interface operations {
                 showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33219,6 +33415,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33710,6 +33907,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33835,6 +34033,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34014,6 +34213,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34143,6 +34343,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34267,6 +34468,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34393,6 +34595,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34555,6 +34758,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34674,6 +34878,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34798,6 +35003,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -34984,6 +35190,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35106,6 +35313,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35231,6 +35439,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35353,6 +35562,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35475,6 +35685,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35594,6 +35805,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35716,6 +35928,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35838,6 +36051,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35957,6 +36171,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36082,6 +36297,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36207,6 +36423,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36332,6 +36549,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36467,6 +36685,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36639,6 +36858,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36766,6 +36986,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36888,6 +37109,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37006,6 +37228,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37130,6 +37353,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37251,6 +37475,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37412,6 +37637,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37573,6 +37799,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37698,6 +37925,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37829,6 +38057,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37999,6 +38228,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38164,6 +38394,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38496,6 +38727,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38619,6 +38851,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38784,6 +39017,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38909,6 +39143,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39031,6 +39266,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39283,6 +39519,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39409,6 +39646,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39537,6 +39775,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39660,6 +39899,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39788,6 +40028,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40050,6 +40291,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40178,6 +40420,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40301,6 +40544,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40429,6 +40673,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40646,6 +40891,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40888,6 +41134,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41012,6 +41259,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41332,6 +41580,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41456,6 +41705,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41633,6 +41883,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41755,6 +42006,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41880,6 +42132,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42008,6 +42261,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42131,6 +42385,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -42266,6 +42521,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42393,6 +42649,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42518,6 +42775,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42646,6 +42904,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42773,6 +43032,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42903,6 +43163,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43020,6 +43281,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43141,6 +43403,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43260,6 +43523,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43428,6 +43692,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43549,6 +43814,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43685,7 +43951,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["I18nTranslationSearchV1"];
+                "application/json": components["schemas"]["I18nTranslationSearchRqV1"];
             };
         };
         responses: {
@@ -43695,7 +43961,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["I18nTranslationListRsV1"];
+                    "application/json": components["schemas"]["I18nTranslationSearchRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -43819,6 +44085,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43999,6 +44266,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -44142,6 +44410,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -44282,6 +44551,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -44424,6 +44694,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44556,6 +44827,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -44879,6 +45151,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -45019,6 +45292,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45151,6 +45425,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -45493,6 +45768,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -45787,10 +46063,7 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
-                showBusinessAccountUser2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showBusinessAccountUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showBusinessAccountUserCollectionMode?: "HIDE" | "SHOW";
-                showDomainUser2BusinessAccountUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45822,6 +46095,56 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DomainUserSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    domainBusinessAccountUserSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDomainBusinessAccountUser2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountUserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DomainBusinessAccountUserSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainBusinessAccountUserSearchRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -45906,6 +46229,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46310,6 +46634,7 @@ export interface operations {
                 showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46479,6 +46804,7 @@ export interface operations {
                 showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46644,6 +46970,7 @@ export interface operations {
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showAttachmentValidateProblemsMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46814,6 +47141,7 @@ export interface operations {
                 showAttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47680,6 +48008,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47798,6 +48127,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47916,6 +48246,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48031,6 +48362,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48182,6 +48514,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48310,6 +48643,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48427,6 +48761,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48547,6 +48882,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48665,6 +49001,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48783,6 +49120,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48900,6 +49238,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49018,6 +49357,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49136,6 +49476,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49531,6 +49872,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49654,6 +49996,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49867,6 +50210,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49985,6 +50329,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50103,6 +50448,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50227,6 +50573,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50351,6 +50698,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50477,6 +50825,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50602,6 +50951,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50761,6 +51111,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -50900,6 +51251,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -51036,6 +51388,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -51174,6 +51527,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51302,6 +51656,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryBranchUsagesCountMode?: "HIDE" | "SHOW";
@@ -51626,6 +51981,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51747,6 +52103,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51867,6 +52224,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51987,6 +52345,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52108,6 +52467,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52229,6 +52589,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52350,6 +52711,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52471,6 +52833,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52726,6 +53089,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52891,6 +53255,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53016,10 +53381,7 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
-                showBusinessAccountUser2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showBusinessAccountUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showBusinessAccountUserCollectionMode?: "HIDE" | "SHOW";
-                showDomainUser2BusinessAccountUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53064,10 +53426,7 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
-                showBusinessAccountUser2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
-                showBusinessAccountUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showBusinessAccountUserCollectionMode?: "HIDE" | "SHOW";
-                showDomainUser2BusinessAccountUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53116,6 +53475,7 @@ export interface operations {
                 showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53387,6 +53747,7 @@ export interface operations {
                 showAttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
                 showAttachmentModificationMode?: "HIDE" | "SHOW";
                 showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
