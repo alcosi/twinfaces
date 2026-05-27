@@ -27,6 +27,7 @@ export function ComplexComboboxFormField<TFormValues extends FieldValues>({
           info={info}
           inForm
           required={required}
+          filterKey={name as string}
         />
       )}
     />

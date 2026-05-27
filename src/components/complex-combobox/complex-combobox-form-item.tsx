@@ -1,5 +1,12 @@
-import { ChevronDown, ChevronUp, FilterX } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  ChevronDown,
+  ChevronUp,
+  FilterX,
+  SlidersHorizontal,
+} from "lucide-react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+
+import { AdvancedFiltersContext } from "@/components/advanced-filters-context";
 
 import { cn, isPopulatedString } from "@/shared/libs";
 
@@ -17,13 +24,18 @@ export function ComplexComboboxFormItem({
   info,
   inForm,
   required,
+  filterKey,
 }: {
   value?: any;
   onChange?: (v: any) => void;
   info: AutoFormComplexComboboxValueInfo;
   inForm?: boolean;
   required?: boolean;
+  filterKey?: string;
 }) {
+  const sidebarCtx = useContext(AdvancedFiltersContext);
+  const useSidebar = sidebarCtx !== null && filterKey !== undefined;
+
   const [open, setOpen] = useState(false);
   const [filtersVersion, setFiltersVersion] = useState(0);
 
@@ -97,25 +109,52 @@ export function ComplexComboboxFormItem({
   return (
     <div
       className={cn(
-        "space-y-2 transition-colors",
-        open && "border-border bg-card rounded-md border p-3"
+        "transition-colors",
+        !useSidebar && "space-y-2",
+        !useSidebar && open && "border-border bg-card rounded-md border p-3"
       )}
     >
-      <ComboboxFormItem
-        key={info.adapter.version}
-        label={info.label}
-        {...info.adapter}
-        fieldValue={value}
-        onSelect={onChange}
-        inForm={inForm}
-        selectPlaceholder={info.selectPlaceholder}
-        searchPlaceholder={info.searchPlaceholder}
-        multi={info.multi}
-        disabled={info.disabled}
-        required={required}
-      />
+      <div className={cn(useSidebar && "flex items-end gap-1.5")}>
+        <div className={cn(useSidebar && "min-w-0 flex-1")}>
+          <ComboboxFormItem
+            key={info.adapter.version}
+            label={info.label}
+            {...info.adapter}
+            fieldValue={value}
+            onSelect={onChange}
+            inForm={inForm}
+            selectPlaceholder={info.selectPlaceholder}
+            searchPlaceholder={info.searchPlaceholder}
+            multi={info.multi}
+            disabled={info.disabled}
+            required={required}
+          />
+        </div>
 
-      {!info.disabled && (
+        {!info.disabled && useSidebar && (
+          <button
+            type="button"
+            className={cn(
+              "mb-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md transition-colors",
+              hasFilters
+                ? "text-link-enabled"
+                : "text-muted-foreground hover:bg-muted hover:text-primary"
+            )}
+            onClick={() => sidebarCtx.openAdvancedFilters(filterKey!, info)}
+          >
+            <div className="relative">
+              <SlidersHorizontal size={16} />
+              {hasFilters && (
+                <span className="bg-ons-blue-100 text-ons-blue-700 absolute -top-1 -right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-medium">
+                  ●
+                </span>
+              )}
+            </div>
+          </button>
+        )}
+      </div>
+
+      {!info.disabled && !useSidebar && (
         <button
           type="button"
           className={cn(
@@ -127,7 +166,6 @@ export function ComplexComboboxFormItem({
         >
           {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           {open ? "Hide advanced filters" : "Advanced filters"}
-
           {hasFilters && (
             <span className="bg-ons-blue-100 text-ons-blue-700 ml-1 rounded-full px-1.5 text-[10px] font-medium">
               ●
@@ -136,7 +174,7 @@ export function ComplexComboboxFormItem({
         </button>
       )}
 
-      {open && (
+      {!useSidebar && open && (
         <>
           <div className="border-border my-2 border-t border-dashed" />
 

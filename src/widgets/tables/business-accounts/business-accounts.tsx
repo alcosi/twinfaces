@@ -56,6 +56,7 @@ const colDefs: Record<
           <BusinessAccountResourceLink
             data={original.businessAccount}
             withTooltip
+            disabled
           />
         </div>
       ),
