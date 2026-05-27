@@ -18,7 +18,7 @@ import {
   InPlaceEditContextProvider,
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
-import { createFixedSelectAdapter } from "@/shared/libs";
+import { createFixedSelectAdapter, formatIntlDate } from "@/shared/libs";
 import { ColorPicker, GuidWithCopy } from "@/shared/ui";
 import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
 
@@ -200,13 +200,13 @@ export function DatalistOptionGeneral() {
             </TableRow>
           ))}
 
-          {/* <TableRow>  //todo unlock when it appears in schematics
+          <TableRow>
             <TableCell>Created At</TableCell>
             <TableCell>
               {datalistOption.createdAt &&
                 formatIntlDate(datalistOption.createdAt, "datetime-local")}
             </TableCell>
-          </TableRow> */}
+          </TableRow>
 
           <TableRow
             className="cursor-pointer"
