@@ -13360,6 +13360,8 @@ export interface components {
             touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+            /** @description Owner business account id list */
+            ownerBusinessAccountIdList?: string[];
             /**
              * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
@@ -16508,6 +16510,8 @@ export interface components {
             touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+            /** @description Owner business account id list */
+            ownerBusinessAccountIdList?: string[];
             /**
              * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
@@ -16647,6 +16651,8 @@ export interface components {
             touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+            /** @description Owner business account id list */
+            ownerBusinessAccountIdList?: string[];
             /**
              * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
