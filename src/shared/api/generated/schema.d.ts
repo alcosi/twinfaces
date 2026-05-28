@@ -76,6 +76,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/user/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update current user */
+        put: operations["currentUserUpdateV1"];
+        /**
+         * Smart endpoint for adding new user. It will also add user to domain and businessAccount if specified. If given businessAccount is not registered in domain, it will register it
+         * @deprecated
+         */
+        post: operations["userAddV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/user/locale/{localeName}/v1": {
         parameters: {
             query?: never;
@@ -1239,26 +1260,6 @@ export interface paths {
         put?: never;
         /** User add protected API for clients with M2M tokens */
         post: operations["userAddV2"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/private/user/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Smart endpoint for adding new user. It will also add user to domain and businessAccount if specified. If given businessAccount is not registered in domain, it will register it
-         * @deprecated
-         */
-        post: operations["userAddV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -13360,6 +13361,8 @@ export interface components {
             touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+            /** @description Owner business account id list */
+            ownerBusinessAccountIdList?: string[];
             /**
              * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
@@ -16508,6 +16511,8 @@ export interface components {
             touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+            /** @description Owner business account id list */
+            ownerBusinessAccountIdList?: string[];
             /**
              * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
@@ -16647,6 +16652,8 @@ export interface components {
             touchList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
             /** @description Twin touch exclude list ids */
             touchExcludeList?: ("WATCHED" | "STARRED" | "REVIEWED")[];
+            /** @description Owner business account id list */
+            ownerBusinessAccountIdList?: string[];
             /**
              * @deprecated
              * @description Twin Field Search. Key TwinClassField id.
@@ -20006,21 +20013,20 @@ export interface components {
             lastActivityAt?: components["schemas"]["DataTimeRangeV1"];
             /** @description created at range */
             createdAt?: components["schemas"]["DataTimeRangeV1"];
-            /** @description sort options */
-            sort?: components["schemas"]["SortV1"];
         };
         DomainBusinessAccountUserSearchRqV1: {
             /** @description search params */
             search?: components["schemas"]["DomainBusinessAccountUserSearchDTOv1"];
-        };
-        SortV1: {
-            /** @description sort field name */
-            field?: string;
             /**
-             * @description sort direction: ASC or DESC. Default: ASC
+             * @description Sort field. Default: createdAt
              * @enum {string}
              */
-            direction?: "ASC" | "DESC";
+            sortField?: "createdAt" | "lastActivityAt" | "userName" | "businessAccountName";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
         };
         DomainBusinessAccountUserSearchRsV1: {
             /**
@@ -23780,6 +23786,10 @@ export interface operations {
         parameters: {
             query?: never;
             header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
                 /** @example WEB */
                 Channel: string;
             };
@@ -23829,6 +23839,82 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description User was added */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    currentUserUpdateV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Current user was updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    userAddV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserAddRqV1"];
+            };
+        };
         responses: {
             /** @description User was added */
             200: {
@@ -33682,42 +33768,6 @@ export interface operations {
                 DomainId: string;
                 /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
                 AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UserAddRqV1"];
-            };
-        };
-        responses: {
-            /** @description User was added */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Response"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": Record<string, never>;
-                };
-            };
-        };
-    };
-    userAddV1: {
-        parameters: {
-            query?: never;
-            header: {
                 /** @example WEB */
                 Channel: string;
             };

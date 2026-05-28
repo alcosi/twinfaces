@@ -5,4 +5,5 @@ export type {
   DataTableProps,
   DataTableRow,
 } from "./data-table";
+export { SortableHeader } from "./data-table";
 export * from "./types";

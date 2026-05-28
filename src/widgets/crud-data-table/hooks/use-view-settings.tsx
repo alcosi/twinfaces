@@ -66,6 +66,7 @@ function getInitialState<TData extends DataTableRow<TData>, TValue>(
     layoutMode: hasNavigatedToNewPage
       ? "grid"
       : (savedState?.layoutMode ?? "grid"),
+    sort: hasNavigatedToNewPage ? undefined : savedState?.sort,
   };
 }
 

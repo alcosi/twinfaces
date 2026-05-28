@@ -12,7 +12,7 @@ import { BusinessAccountContext } from "@/features/business-account";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
 import { UserGroupResourceLink } from "@/features/user-group/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import {
   formatIntlDate,
   isFalsy,
@@ -21,7 +21,11 @@ import {
   toArrayOfString,
 } from "@/shared/libs";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+} from "../../crud-data-table";
 
 const colDefs: Record<
   keyof Pick<
@@ -33,7 +37,7 @@ const colDefs: Record<
   user: {
     id: "user",
     accessorKey: "user",
-    header: "User",
+    header: () => <SortableHeader title="User" sortField="userName" />,
     cell: ({ row: { original } }) =>
       original.user && (
         <div className="inline-flex max-w-48">
@@ -44,7 +48,12 @@ const colDefs: Record<
   businessAccount: {
     id: "businessAccount",
     accessorKey: "businessAccount",
-    header: "Domain business account",
+    header: () => (
+      <SortableHeader
+        title="Domain business account"
+        sortField="businessAccountName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.businessAccount &&
       original.domainBusinessAccountId && (
@@ -73,7 +82,7 @@ const colDefs: Record<
   createdAt: {
     id: "createdAt",
     accessorKey: "createdAt",
-    header: "Created at",
+    header: () => <SortableHeader title="Created at" sortField="createdAt" />,
     cell: ({ row: { original } }) =>
       original.createdAt &&
       formatIntlDate(original.createdAt, "datetime-local"),
@@ -81,7 +90,9 @@ const colDefs: Record<
   lastActivityAt: {
     id: "lastActivityAt",
     accessorKey: "lastActivityAt",
-    header: "Last activity at",
+    header: () => (
+      <SortableHeader title="Last activity at" sortField="lastActivityAt" />
+    ),
     cell: ({ row: { original } }) =>
       original.lastActivityAt &&
       formatIntlDate(original.lastActivityAt, "datetime-local"),
@@ -124,7 +135,8 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
 
   async function fetchBusinesAccountUsers(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<DomainBusinessAccountUser_DETAILED>> {
     const _filters = mapFiltersToPayload(
       filters.filters as Record<DomainBusinessAccountUserFilterKeys, unknown>
@@ -142,6 +154,7 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
             ? toArrayOfString(toArray(businessAccountId), "id")
             : _filters.businessAccountIdList,
         },
+        sort,
       });
     } catch (error) {
       toast.error(

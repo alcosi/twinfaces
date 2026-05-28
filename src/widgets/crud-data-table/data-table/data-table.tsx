@@ -28,6 +28,7 @@ import {
 } from "@/shared/libs";
 
 import { DataTablePagination } from "./data-table-pagination";
+import { SortProvider } from "./sort-context";
 import { DataTableHandle, DataTableProps, DataTableRow } from "./types";
 import { DataTableGrid, DataTableList } from "./views";
 
@@ -43,6 +44,8 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onFetchError,
     onRowClick,
     layoutMode = "grid",
+    sort,
+    onSortChange,
   }: DataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
@@ -144,7 +147,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }
 
   return (
-    <>
+    <SortProvider sort={sort} onSortChange={onSortChange ?? (() => {})}>
       <div
         className={cn(
           "force-scrollbar-x relative mb-2",
@@ -173,6 +176,6 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
           pageState={pagination.api}
         />
       )}
-    </>
+    </SortProvider>
   );
 }

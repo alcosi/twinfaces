@@ -1,6 +1,6 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { Identifiable } from "@/shared/libs";
 
 export type DataTableHandle = {
@@ -24,4 +24,6 @@ export type DataTableProps<TData extends DataTableRow<TData>, TValue> = {
   onFetchError?: (e: Error) => void;
   onRowClick?: (row: TData) => void;
   layoutMode?: "grid" | "list";
+  sort?: SortV1;
+  onSortChange?: (sort: SortV1 | undefined) => void;
 };

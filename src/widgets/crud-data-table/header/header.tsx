@@ -3,6 +3,7 @@ import { ForwardedRef, useCallback, useEffect } from "react";
 
 import { AutoFormValueInfo } from "@/components/auto-field";
 
+import { SortV1 } from "@/shared/api";
 import { debounce, fixedForwardRef, isPopulatedArray } from "@/shared/libs";
 import { GridIcon, Input, RowsIcon } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
@@ -22,6 +23,7 @@ export type TableViewState = {
   orderKeys: string[];
   groupByKey?: string;
   layoutMode: "grid" | "list";
+  sort?: SortV1;
 };
 
 export type TableViewStateUpdate = Partial<Omit<TableViewState, "filters">> & {

@@ -17,7 +17,7 @@ import {
 } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import {
   cn,
   fixedForwardRef,
@@ -52,7 +52,8 @@ type CrudDataTableProps<
     // === Overridden ===
     fetcher: (
       pagination: PaginationState,
-      filters: { search?: string; filters: { [key: string]: any } }
+      filters: { search?: string; filters: { [key: string]: any } },
+      sort?: SortV1
     ) => Promise<PagedResponse<TData>>;
     getRowId: (row: TData) => string;
     modalTitle?: string;
@@ -88,6 +89,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   const dialogRef = useRef<CrudDataTableDialogRef>(null);
   const isFirstViewSettingsSync = useRef(true);
   const isFirstGroupBySync = useRef(true);
+  const isFirstSortSync = useRef(true);
 
   useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
@@ -109,12 +111,25 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     tableRef.current?.refresh();
   }, [viewSettings.groupByKey]);
 
+  useEffect(() => {
+    if (isFirstSortSync.current) {
+      isFirstSortSync.current = false;
+      return;
+    }
+
+    tableRef.current?.resetPage();
+  }, [viewSettings.sort]);
+
   const fetchWrapper = async (pagination: PaginationState) => {
     try {
-      const response = await fetcher(pagination, {
-        search: viewSettings.query,
-        filters: viewSettings.filters,
-      });
+      const response = await fetcher(
+        pagination,
+        {
+          search: viewSettings.query,
+          filters: viewSettings.filters,
+        },
+        viewSettings.sort
+      );
 
       if (viewSettings.groupByKey) {
         response.data = groupDataByKey(response.data, viewSettings.groupByKey);
@@ -186,6 +201,8 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         pageSizes={pageSizes}
         onRowClick={handleOnRowClick}
         layoutMode={viewSettings.layoutMode}
+        sort={viewSettings.sort}
+        onSortChange={(s) => updateViewSettings({ sort: s })}
       />
 
       <CrudDataTableDialog
