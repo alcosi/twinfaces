@@ -42,9 +42,17 @@ export function createBusinessAccountApi(settings: ApiSettings) {
   function searchDomainBusinessAccountUser({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: DomainBusinessAccountUserFilters;
+    sortField?:
+      | "createdAt"
+      | "lastActivityAt"
+      | "userName"
+      | "businessAccountName";
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST(
       `/private/domain/business_account_user/search/v1`,
@@ -66,6 +74,8 @@ export function createBusinessAccountApi(settings: ApiSettings) {
           search: {
             ...filters,
           },
+          sortField,
+          sortDirection,
         },
       }
     );

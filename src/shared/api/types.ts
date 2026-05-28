@@ -9,6 +9,11 @@ export type RelatedObjects = components["schemas"]["RelatedObjectsV1"];
 export type PaginationV1 = components["schemas"]["PaginationV1"];
 export type DataTimeRangeV1 = components["schemas"]["DataTimeRangeV1"];
 
+export type SortV1 = {
+  field?: string;
+  direction?: "ASC" | "DESC";
+};
+
 // Misc
 export type Result<T, E = unknown> =
   | { ok: true; data: T }
