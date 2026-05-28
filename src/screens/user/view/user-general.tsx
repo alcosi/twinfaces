@@ -10,7 +10,11 @@ import {
   InPlaceEditProps,
 } from "@/features/inPlaceEdit";
 import { UserContext } from "@/features/user";
-import { formatIntlDate } from "@/shared/libs";
+import {
+  clientCookies,
+  formatIntlDate,
+  usePermissionsAccess,
+} from "@/shared/libs";
 import {
   Avatar,
   GuidWithCopy,
@@ -23,6 +27,11 @@ import {
 export function UserGeneral() {
   const { user, refresh } = useContext(UserContext);
   const { updateUser } = useUpdateUser();
+  const { canForCurrentRoute } = usePermissionsAccess();
+
+  const authUserId = clientCookies.get("userId");
+  const isSelfUser = user.userId === authUserId;
+  const canUpdate = canForCurrentRoute("UPDATE") || isSelfUser;
 
   const nameSettings: InPlaceEditProps<string | undefined> = {
     id: "fullName",
@@ -80,7 +89,7 @@ export function UserGeneral() {
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>
-              <InPlaceEdit {...nameSettings} />
+              <InPlaceEdit {...nameSettings} canUpdate={canUpdate} />
             </TableCell>
           </TableRow>
 
@@ -92,7 +101,7 @@ export function UserGeneral() {
           <TableRow>
             <TableCell>Email</TableCell>
             <TableCell>
-              <InPlaceEdit {...emailSettings} />
+              <InPlaceEdit {...emailSettings} canUpdate={canUpdate} />
             </TableCell>
           </TableRow>
 

@@ -142,9 +142,17 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     }
   };
 
+  const columnsWithoutActions = useMemo(
+    () =>
+      canCreate
+        ? props.columns
+        : props.columns.filter((col) => col.id !== "actions"),
+    [props.columns, canCreate]
+  );
+
   const visibleColumns = useMemo(() => {
     if (isPopulatedArray(props.defaultVisibleColumns)) {
-      return props.columns
+      return columnsWithoutActions
         .filter((column) =>
           viewSettings.visibleKeys.includes(getColumnKey(column))
         )
@@ -155,11 +163,11 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         );
     }
 
-    return props.columns;
+    return columnsWithoutActions;
   }, [
     viewSettings.visibleKeys,
     viewSettings.orderKeys,
-    props.columns,
+    columnsWithoutActions,
     props.defaultVisibleColumns,
   ]);
 
