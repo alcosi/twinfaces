@@ -24,6 +24,7 @@ export interface InPlaceEditProps<T = unknown> {
   onSubmit: (value: T) => Promise<void>;
   schema?: z.ZodType<any, any>;
   className?: string;
+  canUpdate?: boolean;
 }
 
 export function InPlaceEdit<T>({
@@ -34,12 +35,13 @@ export function InPlaceEdit<T>({
   onSubmit,
   schema,
   className,
+  canUpdate: canUpdateProp,
 }: InPlaceEditProps<T>) {
   const context = useContext(InPlaceEditContext);
   const { canForCurrentRoute } = usePermissionsAccess();
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const canUpdate = canForCurrentRoute("UPDATE");
+  const canUpdate = canUpdateProp ?? canForCurrentRoute("UPDATE");
   const form = useForm({
     defaultValues: {
       value: value,
