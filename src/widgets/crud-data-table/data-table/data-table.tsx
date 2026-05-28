@@ -147,9 +147,14 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     <>
       <div
         className={cn(
-          "relative mb-2",
+          "force-scrollbar-x relative mb-2",
           layoutMode === "grid" && "border-border rounded-md border"
         )}
+        style={{
+          maxHeight: "calc(100vh - var(--header-height, 64px) - 180px)",
+          overflowY: "auto",
+          overflowX: "auto",
+        }}
       >
         {isEmptyArray(table.getRowModel().rows) ? (
           <div className="text-muted-foreground rounded-md p-4 text-center">

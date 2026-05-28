@@ -5,7 +5,6 @@ import React from "react";
 
 import { cn, isPopulatedArray } from "@/shared/libs";
 import {
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -107,8 +106,8 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
   }
 
   return (
-    <Table>
-      <TableHeader>
+    <table className="w-full caption-bottom text-sm">
+      <TableHeader className="[&_tr]:bg-background sticky top-0 z-10">
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
@@ -127,6 +126,6 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
         ))}
       </TableHeader>
       <TableBody>{renderTableBodyRows()}</TableBody>
-    </Table>
+    </table>
   );
 }

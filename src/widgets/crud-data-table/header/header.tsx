@@ -12,7 +12,7 @@ import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";
 import { getColumnKey, safeRefresh, safeResetPage } from "../helpers";
 import { useViewSettings } from "../hooks";
 import { ColumnManagerPopover } from "./column-manger-popover";
-import { FiltersPopover } from "./filters-popover";
+import { FiltersSidebar } from "./filters-sidebar";
 import { GroupByButton } from "./group-by-button";
 
 export type TableViewState = {
@@ -131,7 +131,7 @@ function CrudDataTableHeaderComponent<
         )}
 
         {filters && (
-          <FiltersPopover
+          <FiltersSidebar
             filtersInfo={filters.filtersInfo}
             filters={viewSettings.filters}
             onChange={async (values) => debouncedUpdate({ filters: values })}

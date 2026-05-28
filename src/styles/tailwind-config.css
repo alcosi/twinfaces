@@ -1,5 +1,95 @@
 @import "./color-palette.css";
 
+/* Tailwind Animate — slide/fade utilities used by Sheet, Dialog, etc. */
+@keyframes enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(
+        var(--tw-enter-translate-x, 0),
+        var(--tw-enter-translate-y, 0),
+        0
+      )
+      scale3d(var(--tw-enter-scale-x, 1), var(--tw-enter-scale-y, 1), 0);
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(
+        var(--tw-exit-translate-x, 0),
+        var(--tw-exit-translate-y, 0),
+        0
+      )
+      scale3d(var(--tw-exit-scale-x, 1), var(--tw-exit-scale-y, 1), 0);
+  }
+}
+
+@utility animate-in {
+  animation-name: enter;
+  animation-duration: var(--tw-animate-duration, 300ms);
+  --tw-enter-opacity: initial;
+  --tw-enter-scale-x: initial;
+  --tw-enter-scale-y: initial;
+  --tw-enter-translate-x: initial;
+  --tw-enter-translate-y: initial;
+}
+
+@utility animate-out {
+  animation-name: exit;
+  animation-duration: var(--tw-animate-duration, 200ms);
+  --tw-exit-opacity: initial;
+  --tw-exit-scale-x: initial;
+  --tw-exit-scale-y: initial;
+  --tw-exit-translate-x: initial;
+  --tw-exit-translate-y: initial;
+}
+
+@utility slide-in-from-top {
+  --tw-enter-translate-y: -100%;
+}
+@utility slide-in-from-bottom {
+  --tw-enter-translate-y: 100%;
+}
+@utility slide-in-from-left {
+  --tw-enter-translate-x: -100%;
+}
+@utility slide-in-from-right {
+  --tw-enter-translate-x: 100%;
+}
+@utility slide-out-to-top {
+  --tw-exit-translate-y: -100%;
+}
+@utility slide-out-to-bottom {
+  --tw-exit-translate-y: 100%;
+}
+@utility slide-out-to-left {
+  --tw-exit-translate-x: -100%;
+}
+@utility slide-out-to-right {
+  --tw-exit-translate-x: 100%;
+}
+@utility fade-in {
+  --tw-enter-opacity: 0;
+}
+@utility fade-out {
+  --tw-exit-opacity: 0;
+}
+@utility fade-in-0 {
+  --tw-enter-opacity: 0;
+}
+@utility fade-out-0 {
+  --tw-exit-opacity: 0;
+}
+@utility zoom-in-95 {
+  --tw-enter-scale-x: 0.95;
+  --tw-enter-scale-y: 0.95;
+}
+@utility zoom-out-95 {
+  --tw-exit-scale-x: 0.95;
+  --tw-exit-scale-y: 0.95;
+}
+
 /* Tailwind-compatible variable remapping based on semantic color system */
 @theme {
   /* Brand Colors */

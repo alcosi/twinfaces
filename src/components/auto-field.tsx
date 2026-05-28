@@ -167,6 +167,7 @@ export function AutoField({
             value={value}
             onChange={onChange}
             info={info}
+            filterKey={name}
           />
         );
 

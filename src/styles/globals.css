@@ -14,6 +14,23 @@
   }
 }
 
+/* Force scrollbars always visible (macOS overlay fix) */
+.force-scrollbar-x::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.force-scrollbar-x::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.force-scrollbar-x::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+.force-scrollbar-x::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
 input[type="date"],
 input[type="datetime-local"],
 input[type="time"],
