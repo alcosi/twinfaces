@@ -33,10 +33,18 @@ export type DomainBusinessAccountFilterKeys =
   | "notificationSchemaIdList"
   | "tierIdList"
   | "storageUsedCountRange"
-  | "storageUsedSizeRange";
+  | "storageUsedSizeRange"
+  | "createdAtFrom"
+  | "createdAtTo";
 
 export type DomainBusinessAccountFilters = Partial<
-  Pick<DomainBusinessAccountSearchRq, DomainBusinessAccountFilterKeys>
+  Pick<
+    DomainBusinessAccountSearchRq & {
+      createdAtFrom: string;
+      createdAtTo: string;
+    },
+    DomainBusinessAccountFilterKeys
+  >
 >;
 
 export type DomainBusinessAccountUser =

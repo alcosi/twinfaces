@@ -171,3 +171,14 @@ export type TwinClassDynamicMarkerCreateRq =
   components["schemas"]["TwinClassDynamicMarkerCreateRqV1"];
 export type TwinClassDynamicMarkerCreateV1 =
   components["schemas"]["TwinClassDynamicMarkerCreateV1"];
+
+// Twin class field rules
+export type Rule = components["schemas"]["TwinClassFieldRuleV1"];
+
+export type Rule_DETAILED = Rule & {};
+
+export type RuleSearchRq = components["schemas"]["TwinClassFieldRuleSearchV1"];
+
+export type RuleFilterKeys = "idList";
+
+export type RuleFilters = Partial<Pick<RuleSearchRq, RuleFilterKeys>>;

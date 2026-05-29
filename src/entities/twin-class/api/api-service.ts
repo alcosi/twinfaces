@@ -5,6 +5,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { operations } from "@/shared/api/generated/schema";
 
 import {
+  RuleFilters,
   TagSearchFilters,
   TwinClassCreateRq,
   TwinClassDuplicateRq,
@@ -358,6 +359,30 @@ export function createTwinClassApi(settings: ApiSettings) {
     });
   }
 
+  function searchRules({
+    pagination,
+    filters,
+  }: {
+    pagination: PaginationState;
+    filters: RuleFilters;
+  }) {
+    return settings.client.POST(`/private/twin_class_field_rule/search/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          limit: pagination.pageSize,
+          offset: pagination.pageIndex * pagination.pageSize,
+        },
+      },
+      body: {
+        search: {
+          ...filters,
+        },
+      },
+    });
+  }
+
   return {
     search,
     getByKey,
@@ -375,6 +400,7 @@ export function createTwinClassApi(settings: ApiSettings) {
     createDynamicMarkers,
     duplicate,
     exportSql,
+    searchRules,
   };
 }
 

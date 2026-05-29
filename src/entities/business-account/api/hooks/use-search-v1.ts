@@ -1,7 +1,7 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 import { hydrateBusinessAccountFromMap } from "../../libs";
 import {
@@ -16,14 +16,28 @@ export function useBusinessAccountSearch() {
     async ({
       pagination,
       filters = {},
+      sort,
     }: {
       pagination: PaginationState;
       filters?: DomainBusinessAccountFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<DomainBusinessAccount_DETAILED>> => {
       try {
         const { data, error } = await api.businessAccount.search({
           pagination,
           filters,
+          sortField: sort?.field as
+            | "createdAt"
+            | "businessAccountName"
+            | "permissionSchemaName"
+            | "twinClassSchemaName"
+            | "twinflowSchemaName"
+            | "notificationSchemaName"
+            | "tierName"
+            | "attachmentsStorageUsedCount"
+            | "attachmentsStorageUsedSize"
+            | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

@@ -20141,6 +20141,16 @@ export interface components {
         DomainBusinessAccountSearchRqV1: {
             /** @description search params */
             search?: components["schemas"]["DomainBusinessAccountSearchDTOv1"];
+            /**
+             * @description Sort field. Default: createdAt
+             * @enum {string}
+             */
+            sortField?: "createdAt" | "businessAccountName" | "permissionSchemaName" | "twinClassSchemaName" | "twinflowSchemaName" | "notificationSchemaName" | "tierName" | "attachmentsStorageUsedCount" | "attachmentsStorageUsedSize";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
         };
         DomainBusinessAccountSearchRsV1: {
             /**

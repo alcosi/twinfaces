@@ -11,9 +11,22 @@ export function createBusinessAccountApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: DomainBusinessAccountFilters;
+    sortField?:
+      | "createdAt"
+      | "businessAccountName"
+      | "permissionSchemaName"
+      | "twinClassSchemaName"
+      | "twinflowSchemaName"
+      | "notificationSchemaName"
+      | "tierName"
+      | "attachmentsStorageUsedCount"
+      | "attachmentsStorageUsedSize";
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST(`/private/domain/business_account/search/v1`, {
       params: {
@@ -35,6 +48,8 @@ export function createBusinessAccountApi(settings: ApiSettings) {
         search: {
           ...filters,
         },
+        sortField,
+        sortDirection,
       },
     });
   }
