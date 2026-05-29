@@ -8,6 +8,7 @@ import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import { useTierSelectAdapter } from "@/entities/tier";
 import { useTwinClassSchemaSelectAdapter } from "@/entities/twin-class-schema";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
+import { DataTimeRangeV1 } from "@/shared/api";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -69,7 +70,7 @@ export function useBusinessAccountFilters({
       },
       notificationSchemaIdList: {
         type: AutoFormValueType.combobox,
-        label: "Notification scheme",
+        label: "Notification schema",
         multi: true,
         ...notificationSchemaAdapter,
       },
@@ -87,6 +88,16 @@ export function useBusinessAccountFilters({
         type: AutoFormValueType.numberRange,
         label: "Attachments storage used size",
       },
+      createdAtFrom: {
+        type: AutoFormValueType.string,
+        label: "Created from",
+        input_props: { type: "date" },
+      },
+      createdAtTo: {
+        type: AutoFormValueType.string,
+        label: "Created to",
+        input_props: { type: "date" },
+      },
     };
 
   function buildFilterFields(): Record<
@@ -101,7 +112,9 @@ export function useBusinessAccountFilters({
   function mapFiltersToPayload(
     filters: Record<DomainBusinessAccountFilterKeys, unknown>
   ): DomainBusinessAccountFilters {
-    return {
+    const result: DomainBusinessAccountFilters & {
+      createdAt: DataTimeRangeV1;
+    } = {
       idList: toArrayOfString(filters.idList),
       businessAccountIdList: toArrayOfString(
         filters.businessAccountIdList,
@@ -145,7 +158,13 @@ export function useBusinessAccountFilters({
           }
         )?.to,
       },
+      createdAt: {
+        from: filters.createdAtFrom ? `${filters.createdAtFrom}T00:00:00` : "",
+        to: filters.createdAtTo ? `${filters.createdAtTo}T00:00:00` : "",
+      },
     };
+
+    return result;
   }
 
   return { buildFilterFields, mapFiltersToPayload };

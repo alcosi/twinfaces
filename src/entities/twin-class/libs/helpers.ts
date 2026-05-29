@@ -6,6 +6,7 @@ import { RelatedObjects } from "@/shared/api";
 
 import { extendFeaturerParams } from "../../../features/featurer/utils/helpers";
 import {
+  Rule_DETAILED,
   TwinClass,
   TwinClassBaseV1,
   TwinClassDynamicMarker,
@@ -135,6 +136,15 @@ export const hydrateTwinClassDynamicMarkerFromMap = (
     hydrated.twinValidatorSet =
       relatedObjects.twinValidatorSetMap[dto.twinValidatorSetId];
   }
+
+  return hydrated;
+};
+
+export const hydrateRuleFromMap = (
+  dto: Rule_DETAILED,
+  relatedObjects?: RelatedObjects
+): Rule_DETAILED => {
+  const hydrated: Rule_DETAILED = Object.assign({}, dto) as Rule_DETAILED;
 
   return hydrated;
 };

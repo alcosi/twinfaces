@@ -22,10 +22,11 @@ export type Group = {
   items: GroupItem[];
 };
 
-type GroupItem = {
+export type GroupItem = {
   title: string;
   url: string;
   icon: ElementType;
+  children?: GroupItem[];
 };
 
 type MenuItemBase = {

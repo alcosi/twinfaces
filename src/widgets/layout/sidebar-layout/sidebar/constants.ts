@@ -17,6 +17,7 @@ import {
   Paperclip,
   Play,
   Shapes,
+  Shield,
   Sparkles,
   SquareActivity,
   SquareAsterisk,
@@ -63,6 +64,13 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Fields",
         url: `/${PlatformArea.core}/fields`,
         icon: FieldIcon,
+        children: [
+          {
+            title: "Rules",
+            url: `/${PlatformArea.core}/rules`,
+            icon: Shield,
+          },
+        ],
       },
       {
         title: "Statuses",

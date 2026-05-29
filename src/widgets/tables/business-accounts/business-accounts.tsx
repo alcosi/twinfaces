@@ -18,12 +18,16 @@ import { PermissionSchemaResourceLink } from "@/features/permission-schema/ui";
 import { TierResourceLink } from "@/features/tier/ui";
 import { TwinClassSchemaResourceLink } from "@/features/twin-class-schema/ui";
 import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config/constants";
 import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+} from "../../crud-data-table";
 
 const colDefs: Record<
   | "id"
@@ -49,7 +53,12 @@ const colDefs: Record<
   businessAccount: {
     id: "businessAccount",
     accessorKey: "businessAccount",
-    header: "Business account",
+    header: () => (
+      <SortableHeader
+        title="Business account"
+        sortField="businessAccountName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.businessAccount && (
         <div className="inline-flex max-w-48">
@@ -64,7 +73,12 @@ const colDefs: Record<
   permissionSchema: {
     id: "permissionSchema",
     accessorKey: "permissionSchema",
-    header: "Permission scheme",
+    header: () => (
+      <SortableHeader
+        title="Permission schema"
+        sortField="permissionSchemaName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.permissionSchema && (
         <div className="inline-flex max-w-48">
@@ -78,7 +92,9 @@ const colDefs: Record<
   twinflowSchema: {
     id: "twinflowSchema",
     accessorKey: "twinflowSchema",
-    header: "Twinflow scheme",
+    header: () => (
+      <SortableHeader title="Twinflow schema" sortField="twinflowSchemaName" />
+    ),
     cell: ({ row: { original } }) =>
       original.twinflowSchema && (
         <div className="inline-flex max-w-48">
@@ -92,7 +108,12 @@ const colDefs: Record<
   twinClassSchema: {
     id: "twinClassSchema",
     accessorKey: "twinClassSchema",
-    header: "Twinclass scheme",
+    header: () => (
+      <SortableHeader
+        title="Twinclass schema"
+        sortField="twinClassSchemaName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.twinClassSchema && (
         <div className="inline-flex max-w-48">
@@ -106,7 +127,12 @@ const colDefs: Record<
   notificationSchema: {
     id: "notificationSchema",
     accessorKey: "notificationSchema",
-    header: "Notification scheme",
+    header: () => (
+      <SortableHeader
+        title="Notification schema"
+        sortField="notificationSchemaName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.notificationSchema && (
         <div className="inline-flex max-w-48">
@@ -120,7 +146,7 @@ const colDefs: Record<
   tier: {
     id: "tier",
     accessorKey: "tier",
-    header: "Tier",
+    header: () => <SortableHeader title="Tier" sortField="tierName" />,
     cell: ({ row: { original } }) =>
       original.tier && (
         <div className="inline-flex max-w-48">
@@ -131,7 +157,7 @@ const colDefs: Record<
   createdAt: {
     id: "createdAt",
     accessorKey: "createdAt",
-    header: "Created at",
+    header: () => <SortableHeader title="Created at" sortField="createdAt" />,
     cell: ({ row: { original } }) =>
       original.createdAt &&
       formatIntlDate(original.createdAt, "datetime-local"),
@@ -139,12 +165,22 @@ const colDefs: Record<
   attachmentsStorageUsedCount: {
     id: "attachmentsStorageUsedCount",
     accessorKey: "attachmentsStorageUsedCount",
-    header: "Attachments storage used count",
+    header: () => (
+      <SortableHeader
+        title="Attachments storage used count"
+        sortField="attachmentsStorageUsedCount"
+      />
+    ),
   },
   attachmentsStorageUsedSize: {
     id: "attachmentsStorageUsedSize",
     accessorKey: "attachmentsStorageUsedSize",
-    header: "Attachments storage used size",
+    header: () => (
+      <SortableHeader
+        title="Attachments storage used size"
+        sortField="attachmentsStorageUsedSize"
+      />
+    ),
   },
   twinsCount: {
     id: "twinsCount",
@@ -166,7 +202,8 @@ export function BusinessAccountsTable() {
 
   async function fetchBusinessAccounts(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<DomainBusinessAccount_DETAILED>> {
     const _filters = mapFiltersToPayload(
       filters.filters as Record<DomainBusinessAccountFilterKeys, unknown>
@@ -176,6 +213,7 @@ export function BusinessAccountsTable() {
       return await searchBusinessAccount({
         pagination,
         filters: { ..._filters },
+        sort,
       });
     } catch (error) {
       toast.error("An error occured while fetching business accounts:" + error);

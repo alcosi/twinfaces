@@ -21,7 +21,7 @@ import { SIDEBAR_GROUPS } from "../constants";
 import { CollapsedMenu } from "./collapsed-menu";
 import { isItemActive } from "./helpers";
 import { MenuItem } from "./menu-item";
-import { Group } from "./types";
+import { Group, GroupItem } from "./types";
 
 export function CoreAreaSidebarMenu() {
   const { open } = useSidebar();
@@ -29,20 +29,29 @@ export function CoreAreaSidebarMenu() {
   const { permissionKeys } = usePermissionsAccess();
   const routeSegment = getCoreRouteSegment(pathname);
 
+  const filterItemByPermission = (item: { url: string }): boolean => {
+    const manageKeys = getPermissionKeysForCoreRouteAction({
+      pathname: item.url,
+      action: "MANAGE",
+    });
+    if (manageKeys.length === 0) return true;
+
+    return hasAnyPermissionKey({
+      permissionKeys,
+      keysToCheck: manageKeys,
+    });
+  };
+
   const filteredGroups = Object.values(SIDEBAR_GROUPS)
     .map((group) => ({
       ...group,
-      items: group.items.filter((item) => {
-        const manageKeys = getPermissionKeysForCoreRouteAction({
-          pathname: item.url,
-          action: "MANAGE",
-        });
-        if (manageKeys.length === 0) return true;
+      items: group.items.filter(filterItemByPermission).map((item) => {
+        if (!item.children) return item;
 
-        return hasAnyPermissionKey({
-          permissionKeys,
-          keysToCheck: manageKeys,
-        });
+        const filteredChildren = item.children.filter(filterItemByPermission);
+        return filteredChildren.length > 0
+          ? { ...item, children: filteredChildren }
+          : { ...item, children: undefined };
       }),
     }))
     .filter((group) => group.items.length > 0);
@@ -62,16 +71,24 @@ export function CoreAreaSidebarMenu() {
       ) : (
         <CollapsedMenu
           items={filteredGroups.flatMap((group) =>
-            group.items.map((item, index) => ({
-              item,
-              group,
-              index,
-            }))
+            group.items.flatMap((item, index) => {
+              const flatItems = [
+                { item, group, index },
+                ...(item.children?.map((child) => ({
+                  item: child,
+                  group,
+                  index,
+                })) ?? []),
+              ];
+              return flatItems;
+            })
           )}
           getItemProps={({ item, group, index }) => {
-            const isGroupActive = group.items.some((item) =>
-              isItemActive(item.url, pathname)
-            );
+            const isGroupActive =
+              group.items.some((i) => isItemActive(i.url, pathname)) ||
+              group.items.some((i) =>
+                i.children?.some((c) => isItemActive(c.url, pathname))
+              );
 
             return {
               key: item.url,
@@ -99,7 +116,11 @@ function AccordionMenu({
 }) {
   const activeGroup =
     groups.find((group) =>
-      group.items.some((item) => isItemActive(item.url, pathname))
+      group.items.some(
+        (item) =>
+          isItemActive(item.url, pathname) ||
+          item.children?.some((child) => isItemActive(child.url, pathname))
+      )
     ) ??
     (fallbackSegment
       ? groups.find((group) =>
@@ -123,21 +144,58 @@ function AccordionMenu({
 }
 
 function AccordionGroup({ title, items }: Group) {
+  const pathname = usePathname() || "";
+
   return (
     <AccordionItem value={title.toLowerCase()} className="border-b-0 px-0">
       <AccordionTrigger className="py-0 text-sm hover:no-underline">
         <SidebarGroupLabel>{title}</SidebarGroupLabel>
       </AccordionTrigger>
       <AccordionContent className="border-border ml-2 list-none border-l py-0 pl-2">
-        {items.map((item) => (
-          <MenuItem
-            key={item.url}
-            label={item.title}
-            url={item.url}
-            Icon={item.icon}
-          />
-        ))}
+        {items.map((item) =>
+          item.children ? (
+            <NestedItem key={item.url} item={item} pathname={pathname} />
+          ) : (
+            <MenuItem
+              key={item.url}
+              label={item.title}
+              url={item.url}
+              Icon={item.icon}
+            />
+          )
+        )}
       </AccordionContent>
     </AccordionItem>
+  );
+}
+
+function NestedItem({ item, pathname }: { item: GroupItem; pathname: string }) {
+  const hasActiveChild = item.children!.some((child) =>
+    isItemActive(child.url, pathname)
+  );
+
+  return (
+    <Accordion
+      type="single"
+      collapsible
+      defaultValue={hasActiveChild ? item.url : undefined}
+      className="border-b-0"
+    >
+      <AccordionItem value={item.url} className="border-b-0">
+        <AccordionTrigger className="py-0 text-sm hover:no-underline">
+          <MenuItem label={item.title} url={item.url} Icon={item.icon} />
+        </AccordionTrigger>
+        <AccordionContent className="border-border ml-2 list-none border-l py-0 pl-2">
+          {item.children!.map((child) => (
+            <MenuItem
+              key={child.url}
+              label={child.title}
+              url={child.url}
+              Icon={child.icon}
+            />
+          ))}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
