@@ -4,14 +4,20 @@ import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 
+import { Featurer_DETAILED } from "@/entities/featurer";
 import { Rule_DETAILED, useRuleSearch } from "@/entities/twin-class";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
 
 const colDefs: Record<
-  "id" | "overwrittenValue" | "overwrittenRequired" | "rulePriority",
+  | "id"
+  | "overwrittenValue"
+  | "overwrittenRequired"
+  | "rulePriority"
+  | "fieldOverwriterFeaturer",
   ColumnDef<Rule_DETAILED>
 > = {
   id: {
@@ -30,6 +36,21 @@ const colDefs: Record<
     accessorKey: "overwrittenRequired",
     header: "Overwritten required",
     cell: (data) => data.getValue() && <Check />,
+  },
+  fieldOverwriterFeaturer: {
+    id: "fieldOverwriterFeaturer",
+    accessorKey: "fieldOverwriterFeaturer",
+    header: "Field overwriter",
+    cell: ({ row: { original } }) =>
+      original.fieldOverwriterFeaturer && (
+        <div className="inline-flex max-w-48">
+          <FeaturerResourceLink
+            data={original.fieldOverwriterFeaturer as Featurer_DETAILED}
+            params={original.fieldOverwriterDetailedParams}
+            withTooltip
+          />
+        </div>
+      ),
   },
   rulePriority: {
     id: "rulePriority",
@@ -63,12 +84,14 @@ export function RulesTable() {
         colDefs.id,
         colDefs.overwrittenValue,
         colDefs.overwrittenRequired,
+        colDefs.fieldOverwriterFeaturer,
         colDefs.rulePriority,
       ]}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.overwrittenValue,
         colDefs.overwrittenRequired,
+        colDefs.fieldOverwriterFeaturer,
         colDefs.rulePriority,
       ]}
       fetcher={fetchRules}

@@ -3440,6 +3440,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/domain/business_account_user/count/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return count of domain business account users grouped by specified fields */
+        post: operations["domainBusinessAccountUserCountV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/domain/business_account/search/v1": {
         parameters: {
             query?: never;
@@ -3451,6 +3468,23 @@ export interface paths {
         put?: never;
         /** Returns domain business account search result */
         post: operations["domainBusinessAccountSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/domain/business_account/count/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return count of domain business account grouped by specified fields */
+        post: operations["domainBusinessAccountCountV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -7149,6 +7183,15 @@ export interface components {
              * @description priority – lower value means the rule will be evaluated earlier
              */
             rulePriority?: number;
+            /**
+             * Format: int32
+             * @description field overwriter featurer id
+             */
+            fieldOverwriterFeaturerId?: number;
+            /** @description field overwriter params */
+            fieldOverwriterParams?: {
+                [key: string]: string;
+            };
             /** @description rule overwritten field descriptor */
             overwrittenDescriptor?: components["schemas"]["TwinClassFieldDescriptorDTO"];
             /** @description list of atomic conditions that make up the rule */
@@ -20098,6 +20141,53 @@ export interface components {
             /** @description an ids of user groups */
             userGroupIds?: string[];
         };
+        DomainBusinessAccountUserCountRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["DomainBusinessAccountUserSearchDTOv1"];
+            /** @description Group by fields */
+            groupFields?: ("userId" | "businessAccountId")[];
+        };
+        DomainBusinessAccountUserCountRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description count results grouped by requested fields */
+            counts?: components["schemas"]["DomainBusinessAccountUserCountV1"][];
+        };
+        DomainBusinessAccountUserCountV1: {
+            /**
+             * Format: int64
+             * @description count of records in this group
+             */
+            count?: number;
+            /**
+             * Format: uuid
+             * @description user id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            userId?: string;
+            /**
+             * Format: uuid
+             * @description business account id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            businessAccountId?: string;
+        };
         DomainBusinessAccountSearchDTOv1: {
             /** @description id list */
             idList?: string[];
@@ -20232,6 +20322,12 @@ export interface components {
              * @example 2023-09-13T09:32:08
              */
             createdAt?: string;
+        };
+        DomainBusinessAccountCountRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["DomainBusinessAccountSearchDTOv1"];
+            /** @description Group by fields */
+            groupFields?: ("permissionSchemaId" | "twinClassSchemaId" | "twinflowSchemaId" | "notificationSchemaId" | "tierId")[];
         };
         DataListOptionProjectionCreateRqV1: {
             /** @description data list option projection list */
@@ -23496,7 +23592,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -23505,6 +23601,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -23623,7 +23720,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -23632,6 +23729,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24030,7 +24128,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -24039,6 +24137,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24152,7 +24251,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -24161,6 +24260,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24284,7 +24384,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -24293,6 +24393,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24415,7 +24516,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -24424,6 +24525,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24626,7 +24728,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -24635,6 +24737,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24748,7 +24851,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -24757,6 +24860,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -24871,7 +24975,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -24880,6 +24984,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25007,7 +25112,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -25016,6 +25121,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25126,7 +25232,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -25135,6 +25241,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25248,7 +25355,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -25257,6 +25364,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25372,7 +25480,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -25381,6 +25489,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25509,7 +25618,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -25518,6 +25627,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25648,7 +25758,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -25657,6 +25767,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -25774,7 +25885,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -25783,6 +25894,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -25894,7 +26006,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -25903,6 +26015,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -26014,7 +26127,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -26024,6 +26137,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26134,7 +26248,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -26144,6 +26258,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26254,7 +26369,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -26264,6 +26379,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26373,7 +26489,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -26383,6 +26499,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26536,7 +26653,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -26546,6 +26663,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26660,7 +26778,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -26669,6 +26787,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26783,7 +26902,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -26792,6 +26911,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26902,7 +27022,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -26911,6 +27031,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27020,7 +27141,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -27029,6 +27150,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27195,7 +27317,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -27204,6 +27326,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27327,7 +27450,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -27336,6 +27459,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27539,7 +27663,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -27548,6 +27672,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27659,7 +27784,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -27668,6 +27793,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27782,7 +27908,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -27791,6 +27917,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27905,7 +28032,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -27914,6 +28041,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28031,7 +28159,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -28040,6 +28168,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28155,7 +28284,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -28164,6 +28293,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28289,7 +28419,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -28298,6 +28428,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28424,7 +28555,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -28433,6 +28564,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28642,7 +28774,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -28651,6 +28783,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28764,7 +28897,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -28773,6 +28906,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28886,7 +29020,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -28895,6 +29029,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29008,7 +29143,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -29017,6 +29152,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29134,7 +29270,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -29143,6 +29279,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29260,7 +29397,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -29269,6 +29406,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29426,7 +29564,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -29435,6 +29573,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29604,7 +29743,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -29613,6 +29752,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29772,7 +29912,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -29781,6 +29921,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29942,7 +30083,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -29951,6 +30092,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30192,7 +30334,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -30201,6 +30343,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30313,7 +30456,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -30322,6 +30465,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30677,7 +30821,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -30686,6 +30830,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30808,7 +30953,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -30817,6 +30962,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30946,7 +31092,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -30955,6 +31101,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31079,7 +31226,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -31088,6 +31235,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31679,7 +31827,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -31688,6 +31836,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31818,7 +31967,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -31827,6 +31976,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31997,7 +32147,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -32006,6 +32156,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32197,7 +32348,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -32206,6 +32357,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32364,7 +32516,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -32373,6 +32525,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32489,7 +32642,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -32498,6 +32651,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32878,7 +33032,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -32887,6 +33041,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32998,7 +33153,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -33007,6 +33162,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33548,7 +33704,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -33557,6 +33713,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34001,7 +34158,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -34010,6 +34167,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34133,7 +34291,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -34142,6 +34300,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34307,7 +34466,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -34316,6 +34475,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34437,7 +34597,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -34446,6 +34606,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34562,7 +34723,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -34571,6 +34732,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34690,7 +34852,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -34699,6 +34861,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34853,7 +35016,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -34862,6 +35025,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34975,7 +35139,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -34984,6 +35148,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35110,7 +35275,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -35119,6 +35284,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35284,7 +35450,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -35293,6 +35459,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -35407,7 +35574,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -35417,6 +35584,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35533,7 +35701,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -35543,6 +35711,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35656,7 +35825,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -35666,6 +35835,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35779,7 +35949,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -35788,7 +35958,8 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35899,7 +36070,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -35908,7 +36079,8 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36022,7 +36194,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -36032,6 +36204,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36145,7 +36318,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -36155,6 +36328,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36269,7 +36443,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -36278,6 +36452,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36391,7 +36566,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -36400,6 +36575,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36517,7 +36693,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -36526,6 +36702,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36644,7 +36821,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -36653,6 +36830,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36780,7 +36958,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -36789,6 +36967,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36952,7 +37131,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -36961,6 +37140,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37080,7 +37260,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -37090,6 +37270,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37203,7 +37384,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -37212,6 +37393,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37322,7 +37504,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -37331,6 +37513,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37447,7 +37630,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -37456,6 +37639,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37569,7 +37753,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -37578,6 +37762,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37731,7 +37916,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -37740,6 +37925,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37893,7 +38079,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -37902,6 +38088,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38029,7 +38216,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -38038,6 +38225,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38151,7 +38339,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -38160,6 +38348,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38322,7 +38511,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -38331,6 +38520,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38488,7 +38678,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -38497,6 +38687,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38823,7 +39014,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -38832,6 +39023,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38945,7 +39137,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -38954,6 +39146,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39111,7 +39304,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -39120,6 +39313,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39237,7 +39431,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -39246,6 +39440,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39360,7 +39555,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -39369,6 +39564,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39616,7 +39812,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -39625,6 +39821,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39743,7 +39940,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -39752,6 +39949,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39870,7 +40068,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -39879,6 +40077,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39996,7 +40195,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -40005,6 +40204,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40123,7 +40323,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -40132,6 +40332,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40388,7 +40589,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -40397,6 +40598,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40515,7 +40717,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -40524,6 +40726,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40641,7 +40844,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -40650,6 +40853,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40768,7 +40972,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -40777,6 +40981,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40998,7 +41203,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -41007,6 +41212,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41231,7 +41437,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -41240,6 +41446,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41357,7 +41564,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -41366,6 +41573,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41677,7 +41885,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -41686,6 +41894,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41806,7 +42015,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -41815,6 +42024,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41978,7 +42188,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -41987,6 +42197,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42107,7 +42318,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -42116,6 +42327,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42233,7 +42445,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -42242,6 +42454,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42361,7 +42574,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -42370,6 +42583,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42496,7 +42710,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -42505,6 +42719,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42621,7 +42836,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -42630,6 +42845,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42750,7 +42966,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -42759,6 +42975,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42876,7 +43093,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -42885,6 +43102,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43007,7 +43225,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -43016,6 +43234,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43135,7 +43354,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -43144,6 +43363,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43258,7 +43478,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -43267,6 +43487,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43376,7 +43597,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -43385,6 +43606,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43498,7 +43720,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -43507,6 +43729,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43618,7 +43841,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -43627,6 +43850,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43789,7 +44013,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -43798,6 +44022,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43911,7 +44136,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -43920,6 +44145,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44191,7 +44417,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -44200,6 +44426,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44382,7 +44609,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -44391,6 +44618,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44523,7 +44751,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -44532,6 +44760,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44666,7 +44895,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -44675,6 +44904,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44799,7 +45029,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -44808,6 +45038,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44938,7 +45169,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -44947,6 +45178,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45264,7 +45496,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -45273,6 +45505,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45397,7 +45630,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -45406,6 +45639,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45536,7 +45770,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -45545,6 +45779,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45884,7 +46119,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -45893,6 +46128,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46218,6 +46454,53 @@ export interface operations {
             };
         };
     };
+    domainBusinessAccountUserCountV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDomainBusinessAccountUser2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountUserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DomainBusinessAccountUserCountRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainBusinessAccountUserCountRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     domainBusinessAccountSearchV1: {
         parameters: {
             query?: {
@@ -46255,6 +46538,66 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["DomainBusinessAccountSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Domain business account list prepared */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainBusinessAccountSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    domainBusinessAccountCountV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDomainBusinessAccount2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2NotificationSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TierMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccount2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTier2TwinflowSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinflowSchema2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinflowSchema2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DomainBusinessAccountCountRqV1"];
             };
         };
         responses: {
@@ -46329,7 +46672,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -46338,6 +46681,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46730,7 +47074,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -46739,6 +47083,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46900,7 +47245,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -46909,6 +47254,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47065,7 +47411,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -47074,6 +47420,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47236,7 +47583,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -47245,6 +47592,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48103,7 +48451,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -48112,6 +48460,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48222,7 +48571,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -48231,6 +48580,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48341,7 +48691,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -48350,6 +48700,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48457,7 +48808,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -48466,6 +48817,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48614,7 +48966,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -48623,6 +48975,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48737,7 +49090,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -48746,6 +49099,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48855,7 +49209,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -48865,6 +49219,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48977,7 +49332,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -48986,6 +49341,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49095,7 +49451,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -49105,6 +49461,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49214,7 +49571,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -49223,6 +49580,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49332,7 +49690,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -49341,6 +49699,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49451,7 +49810,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -49460,6 +49819,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49583,7 +49943,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -49592,6 +49952,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49970,7 +50331,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -49979,6 +50340,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50094,7 +50456,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -50103,6 +50465,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50305,7 +50668,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -50314,6 +50677,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50424,7 +50788,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -50433,6 +50797,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50549,7 +50914,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -50558,6 +50923,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50674,7 +51040,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -50683,6 +51049,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50801,7 +51168,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -50810,6 +51177,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50922,7 +51290,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -50931,6 +51299,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51046,7 +51415,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -51055,6 +51424,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51227,7 +51597,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -51236,6 +51606,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51364,7 +51735,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -51373,6 +51744,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51503,7 +51875,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -51512,6 +51884,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51632,7 +52005,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -51641,6 +52014,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51767,7 +52141,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -51776,6 +52150,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52078,7 +52453,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -52087,6 +52462,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52199,7 +52575,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -52208,6 +52584,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52320,7 +52697,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -52329,6 +52706,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52442,7 +52820,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -52451,6 +52829,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52564,7 +52943,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -52573,6 +52952,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52686,7 +53066,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -52695,6 +53075,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52808,7 +53189,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -52817,6 +53198,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52931,7 +53313,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -52940,6 +53322,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53188,7 +53571,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -53197,6 +53580,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53362,7 +53746,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -53371,6 +53755,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53582,7 +53967,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -53591,6 +53976,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53842,7 +54228,7 @@ export interface operations {
                 showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
-                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
@@ -53851,6 +54237,7 @@ export interface operations {
                 showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";

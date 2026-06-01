@@ -146,5 +146,20 @@ export const hydrateRuleFromMap = (
 ): Rule_DETAILED => {
   const hydrated: Rule_DETAILED = Object.assign({}, dto) as Rule_DETAILED;
 
+  if (dto.fieldOverwriterFeaturerId && relatedObjects?.featurerMap) {
+    hydrated.fieldOverwriterFeaturer =
+      relatedObjects.featurerMap[dto.fieldOverwriterFeaturerId];
+  }
+
+  if (
+    hydrated.fieldOverwriterParams &&
+    hydrated.fieldOverwriterFeaturer?.params
+  ) {
+    hydrated.fieldOverwriterDetailedParams = extendFeaturerParams(
+      hydrated.fieldOverwriterParams,
+      hydrated.fieldOverwriterFeaturer.params
+    );
+  }
+
   return hydrated;
 };

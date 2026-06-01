@@ -16,16 +16,9 @@ export type HistoryFilterKeys =
   | "twinClassFieldIdList"
   | "actorUserIdList"
   | "typeList"
-  | "createdAtFrom"
-  | "createdAtTo";
+  | "createdAt";
 export type HistoryFilters = Partial<
-  Pick<
-    components["schemas"]["HistorySearchV1"] & {
-      createdAtFrom: string;
-      createdAtTo: string;
-    },
-    HistoryFilterKeys
-  >
+  Pick<components["schemas"]["HistorySearchV1"], HistoryFilterKeys>
 >;
 export type HistoryType = NonNullable<History["type"]>;
 export const HISTORY_TYPES: HistoryType[] = [

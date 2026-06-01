@@ -203,8 +203,7 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
           "descriptionLikeList",
           "viewPermissionIdList",
           "twinClassFieldIdList",
-          "createdAtFrom",
-          "createdAtTo",
+          "createdAt",
         ]
       : undefined,
   });

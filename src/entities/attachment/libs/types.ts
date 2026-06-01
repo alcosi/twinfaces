@@ -35,15 +35,8 @@ export type AttachmentFilterKeys =
   | "descriptionLikeList"
   | "viewPermissionIdList"
   | "twinClassFieldIdList"
-  | "createdAtFrom"
-  | "createdAtTo";
+  | "createdAt";
 
 export type AttachmentFilters = Partial<
-  Pick<
-    components["schemas"]["AttachmentSearchRqV1"] & {
-      createdAtFrom: string;
-      createdAtTo: string;
-    },
-    AttachmentFilterKeys
-  >
+  Pick<components["schemas"]["AttachmentSearchRqV1"], AttachmentFilterKeys>
 >;

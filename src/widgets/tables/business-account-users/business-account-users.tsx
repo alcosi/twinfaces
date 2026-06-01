@@ -113,21 +113,12 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
   const { buildFilterFields, mapFiltersToPayload } =
     useBusinessAccountUserFilters({
       enabledFilters: hasBusinessAccountId
-        ? [
-            "userIdList",
-            "createdAtFrom",
-            "createdAtTo",
-            "lastActivityAtFrom",
-            "lastActivityAtTo",
-            "userGroupIdList",
-          ]
+        ? ["userIdList", "createdAt", "lastActivityAt", "userGroupIdList"]
         : hasUserId
           ? [
               "businessAccountIdList",
-              "createdAtFrom",
-              "createdAtTo",
-              "lastActivityAtFrom",
-              "lastActivityAtTo",
+              "createdAt",
+              "lastActivityAt",
               "userGroupIdList",
             ]
           : undefined,

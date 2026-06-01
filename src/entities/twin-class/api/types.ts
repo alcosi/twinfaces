@@ -175,7 +175,10 @@ export type TwinClassDynamicMarkerCreateV1 =
 // Twin class field rules
 export type Rule = components["schemas"]["TwinClassFieldRuleV1"];
 
-export type Rule_DETAILED = Rule & {};
+export type Rule_DETAILED = Rule & {
+  fieldOverwriterFeaturer?: Featurer;
+  fieldOverwriterDetailedParams?: ExtendedFeaturerParam[];
+};
 
 export type RuleSearchRq = components["schemas"]["TwinClassFieldRuleSearchV1"];
 

@@ -9,7 +9,6 @@ import {
 } from "@/entities/option-projection";
 import { useProjectionTypeSelectAdapter } from "@/entities/projection/libs";
 import { useUserSelectAdapter } from "@/entities/user";
-import { DataTimeRangeV1 } from "@/shared/api";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -58,15 +57,9 @@ export function useOptionProjectionFilters({
       multi: true,
       ...savedByUserAdapter,
     },
-    changedAtFrom: {
-      type: AutoFormValueType.string,
-      label: "Change from",
-      input_props: { type: "date" },
-    },
-    changedAtTo: {
-      type: AutoFormValueType.string,
-      label: "Change to",
-      input_props: { type: "date" },
+    changedAt: {
+      type: AutoFormValueType.dateRange,
+      label: "Changed",
     },
   };
   function buildFilterFields(): Record<
@@ -81,7 +74,8 @@ export function useOptionProjectionFilters({
   function mapFiltersToPayload(
     filters: Record<OptionProjectionFilterKeys, unknown>
   ): OptionProjectionFilters {
-    const result: OptionProjectionFilters & { changedAt: DataTimeRangeV1 } = {
+    const changedAt = filters.changedAt as { from?: string; to?: string };
+    const result: OptionProjectionFilters = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
       projectionTypeIdList: toArrayOfString(
         toArray(filters.projectionTypeIdList),
@@ -100,8 +94,8 @@ export function useOptionProjectionFilters({
         "userId"
       ),
       changedAt: {
-        from: filters.changedAtFrom ? `${filters.changedAtFrom}T00:00:00` : "",
-        to: filters.changedAtTo ? `${filters.changedAtTo}T00:00:00` : "",
+        from: changedAt?.from ? `${changedAt.from}T00:00:00` : "",
+        to: changedAt?.to ? `${changedAt.to}T00:00:00` : "",
       },
     };
     return result;
