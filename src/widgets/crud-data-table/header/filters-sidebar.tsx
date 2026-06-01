@@ -26,23 +26,18 @@ interface FiltersSidebarProps {
   onChange: (values: Record<string, unknown> | null) => Promise<void>;
 }
 
+interface AdvancedFilterLevel {
+  key: string;
+  info: AutoFormComplexComboboxValueInfo;
+}
+
 export function FiltersSidebar({
   filtersInfo,
   filters,
   onChange,
 }: FiltersSidebarProps) {
   const [open, setOpen] = useState(false);
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [activeFilterInfo, setActiveFilterInfo] =
-    useState<AutoFormComplexComboboxValueInfo | null>(null);
-  const [advancedFilterValues, setAdvancedFilterValues] = useState<
-    Record<string, any>
-  >({});
-  const [touchedFilters, setTouchedFilters] = useState<Record<string, boolean>>(
-    {}
-  );
-
-  const prevAppliedRef = useRef<string | null>(null);
+  const [levels, setLevels] = useState<AdvancedFilterLevel[]>([]);
 
   const keys = useMemo(
     () => Object.keys(filtersInfo).filter((key) => isTruthy(filtersInfo[key])),
@@ -63,27 +58,6 @@ export function FiltersSidebar({
     if (open) form.reset(filters);
   }, [open, filters, form]);
 
-  // Apply advanced filters to adapter in real-time
-  useEffect(() => {
-    if (!advancedOpen || !activeFilterInfo) return;
-
-    const mapped = activeFilterInfo.mapExtraFilters
-      ? activeFilterInfo.mapExtraFilters(advancedFilterValues)
-      : advancedFilterValues;
-    const sanitized = stripIndeterminateFilters(
-      mapped,
-      activeFilterInfo.extraFilters,
-      touchedFilters
-    );
-
-    const serialized = JSON.stringify(sanitized);
-    if (prevAppliedRef.current === serialized) return;
-    prevAppliedRef.current = serialized;
-
-    activeFilterInfo.adapter.setFilters?.(sanitized);
-    activeFilterInfo.adapter.invalidate?.();
-  }, [advancedFilterValues, touchedFilters, activeFilterInfo, advancedOpen]);
-
   const handleSubmit = async (values: Record<string, unknown>) => {
     await onChange(values);
     setOpen(false);
@@ -96,63 +70,20 @@ export function FiltersSidebar({
   };
 
   function openAdvancedFilters(
-    _filterKey: string,
+    filterKey: string,
     info: AutoFormComplexComboboxValueInfo
   ) {
-    setActiveFilterInfo(info);
-    prevAppliedRef.current = null;
-
-    const initial = Object.fromEntries(
-      Object.entries(info.extraFilters)
-        .filter(([, f]) => f !== undefined)
-        .map(([k, f]) => [
-          k,
-          f!.type === AutoFormValueType.tag
-            ? []
-            : f!.type === AutoFormValueType.boolean && f!.hasIndeterminate
-              ? "indeterminate"
-              : "",
-        ])
-    );
-    setAdvancedFilterValues(initial);
-    setTouchedFilters({});
-    setAdvancedOpen(true);
-  }
-
-  function closeAdvancedFilters() {
-    setAdvancedOpen(false);
-    setActiveFilterInfo(null);
-    prevAppliedRef.current = null;
+    setLevels((prev) => [...prev, { key: filterKey, info }]);
   }
 
   function handleOpenChange(value: boolean) {
-    if (!value && advancedOpen) {
-      closeAdvancedFilters();
+    if (!value) {
+      setLevels([]);
     }
     setOpen(value);
   }
 
-  function resetAdvancedFilters() {
-    if (!activeFilterInfo) return;
-
-    const cleared = Object.fromEntries(
-      Object.entries(activeFilterInfo.extraFilters)
-        .filter(([, f]) => f !== undefined)
-        .map(([k, f]) => [
-          k,
-          f!.type === AutoFormValueType.tag
-            ? []
-            : f!.type === AutoFormValueType.boolean && f!.hasIndeterminate
-              ? "indeterminate"
-              : "",
-        ])
-    );
-    setAdvancedFilterValues(cleared);
-    setTouchedFilters({});
-    prevAppliedRef.current = null;
-    activeFilterInfo.adapter.setFilters?.({});
-    activeFilterInfo.adapter.invalidate?.();
-  }
+  const sidebarWidth = 400 * (1 + levels.length);
 
   return (
     <>
@@ -166,13 +97,13 @@ export function FiltersSidebar({
 
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
-          className={cn(
-            "flex gap-0 overflow-hidden p-0",
-            advancedOpen
-              ? "w-[800px] sm:max-w-[800px]"
-              : "w-[400px] sm:max-w-[400px]"
-          )}
-          style={{ transitionProperty: "width", transitionDuration: "300ms" }}
+          className={cn("flex gap-0 overflow-hidden p-0")}
+          style={{
+            width: `${sidebarWidth}px`,
+            maxWidth: `${sidebarWidth}px`,
+            transitionProperty: "width",
+            transitionDuration: "300ms",
+          }}
         >
           <Form {...form}>
             {/* Main filters panel */}
@@ -214,51 +145,15 @@ export function FiltersSidebar({
               </div>
             </form>
 
-            {/* Advanced filters panel */}
-            {activeFilterInfo && (
-              <div
-                className={cn(
-                  "flex w-[400px] shrink-0 flex-col",
-                  "transition-all duration-500 ease-in-out",
-                  advancedOpen
-                    ? "translate-x-0 opacity-100"
-                    : "pointer-events-none translate-x-[400px] opacity-0"
-                )}
-              >
-                <div className="flex items-center gap-2 px-6 py-4">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 w-7 p-0"
-                    onClick={closeAdvancedFilters}
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                  </Button>
-                  <span className="text-base font-semibold">
-                    {activeFilterInfo.label ?? "Advanced Filters"}
-                  </span>
-                </div>
-
-                <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-                  <AdvancedFiltersPanel
-                    info={activeFilterInfo}
-                    values={advancedFilterValues}
-                    onChange={(key, value) => {
-                      setTouchedFilters((prev) => ({ ...prev, [key]: true }));
-                      setAdvancedFilterValues((prev) => ({
-                        ...prev,
-                        [key]: normalizeFilterValue(
-                          value,
-                          activeFilterInfo.extraFilters[key]!
-                        ),
-                      }));
-                    }}
-                    onReset={resetAdvancedFilters}
-                  />
-                </div>
-              </div>
-            )}
+            {/* Advanced filter panels (stack-based, supports N levels) */}
+            {levels.map((level, index) => (
+              <AdvancedFilterPanel
+                key={`${level.key}-${index}`}
+                level={level}
+                onOpenNext={openAdvancedFilters}
+                onClose={() => setLevels((prev) => prev.slice(0, index))}
+              />
+            ))}
           </Form>
         </SheetContent>
       </Sheet>
@@ -266,48 +161,125 @@ export function FiltersSidebar({
   );
 }
 
-function AdvancedFiltersPanel({
-  info,
-  values,
-  onChange,
-  onReset,
+function AdvancedFilterPanel({
+  level,
+  onOpenNext,
+  onClose,
 }: {
-  info: AutoFormComplexComboboxValueInfo;
-  values: Record<string, any>;
-  onChange: (key: string, value: any) => void;
-  onReset: () => void;
+  level: AdvancedFilterLevel;
+  onOpenNext: (key: string, info: AutoFormComplexComboboxValueInfo) => void;
+  onClose: () => void;
 }) {
-  const hasFilters = hasActiveFilters(values);
+  const { info } = level;
+  const [filterValues, setFilterValues] = useState<Record<string, any>>(() =>
+    buildInitialFilterValues(info.extraFilters)
+  );
+  const [touchedFilters, setTouchedFilters] = useState<Record<string, boolean>>(
+    {}
+  );
+  const prevAppliedRef = useRef<string | null>(null);
+
+  // Apply filters to adapter in real-time
+  useEffect(() => {
+    const mapped = info.mapExtraFilters
+      ? info.mapExtraFilters(filterValues)
+      : filterValues;
+    const sanitized = stripIndeterminateFilters(
+      mapped,
+      info.extraFilters,
+      touchedFilters
+    );
+
+    const serialized = JSON.stringify(sanitized);
+    if (prevAppliedRef.current === serialized) return;
+    prevAppliedRef.current = serialized;
+
+    info.adapter.setFilters?.(sanitized);
+    info.adapter.invalidate?.();
+  }, [filterValues, touchedFilters, info]);
+
+  function handleReset() {
+    setFilterValues(buildInitialFilterValues(info.extraFilters));
+    setTouchedFilters({});
+    prevAppliedRef.current = null;
+    info.adapter.setFilters?.({});
+    info.adapter.invalidate?.();
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="text-muted-foreground text-xs">
-        Filters for&nbsp;
-        <span className="text-foreground font-medium">{info.label}</span>
+    <div className="flex w-[400px] shrink-0 flex-col">
+      <div className="flex items-center gap-2 px-6 py-4">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0"
+          onClick={onClose}
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <span className="text-base font-semibold">
+          {info.label ?? "Advanced Filters"}
+        </span>
       </div>
 
-      {Object.entries(info.extraFilters)
-        .filter(([, filterInfo]) => filterInfo !== undefined)
-        .map(([key, filterInfo]) => (
-          <AutoField
-            key={key}
-            info={filterInfo!}
-            value={values[key]}
-            onChange={(v) => onChange(key, v)}
-          />
-        ))}
-
-      <div className="flex items-center justify-end gap-2 pt-2">
-        <button
-          type="button"
-          className="text-muted-foreground hover:bg-muted inline-flex items-center gap-1 rounded px-2 py-1 text-xs"
-          onClick={onReset}
-          disabled={!hasFilters}
+      <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
+        <AdvancedFiltersContext.Provider
+          value={{ openAdvancedFilters: onOpenNext }}
         >
-          Reset
-        </button>
+          <div className="text-muted-foreground text-xs">
+            Filters for&nbsp;
+            <span className="text-foreground font-medium">{info.label}</span>
+          </div>
+
+          {Object.entries(info.extraFilters)
+            .filter(([, filterInfo]) => filterInfo !== undefined)
+            .map(([key, filterInfo]) => (
+              <AutoField
+                key={key}
+                info={filterInfo!}
+                name={key}
+                value={filterValues[key]}
+                onChange={(v) => {
+                  setTouchedFilters((prev) => ({ ...prev, [key]: true }));
+                  setFilterValues((prev) => ({
+                    ...prev,
+                    [key]: normalizeFilterValue(v, filterInfo!),
+                  }));
+                }}
+              />
+            ))}
+
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <button
+              type="button"
+              className="text-muted-foreground hover:bg-muted inline-flex items-center gap-1 rounded px-2 py-1 text-xs"
+              onClick={handleReset}
+              disabled={!hasActiveFilters(filterValues)}
+            >
+              Reset
+            </button>
+          </div>
+        </AdvancedFiltersContext.Provider>
       </div>
     </div>
+  );
+}
+
+function buildInitialFilterValues(
+  extraFilters: Record<string, AutoFormValueInfo>
+): Record<string, any> {
+  return Object.fromEntries(
+    Object.entries(extraFilters)
+      .filter(([, f]) => f !== undefined)
+      .map(([k, f]) => [
+        k,
+        f!.type === AutoFormValueType.tag
+          ? []
+          : f!.type === AutoFormValueType.boolean && f!.hasIndeterminate
+            ? "indeterminate"
+            : "",
+      ])
   );
 }
 
