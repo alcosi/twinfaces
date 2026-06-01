@@ -159,8 +159,7 @@ export function OptionProjectionsScreen({
               "projectionTypeIdList",
               "srcDataListOptionIdList",
               "savedByUserIdList",
-              "changedAtFrom",
-              "changedAtTo",
+              "changedAt",
             ]
           : title === "Outgoing"
             ? [
@@ -168,8 +167,7 @@ export function OptionProjectionsScreen({
                 "projectionTypeIdList",
                 "dstDataListOptionIdList",
                 "savedByUserIdList",
-                "changedAtFrom",
-                "changedAtTo",
+                "changedAt",
               ]
             : undefined,
     }

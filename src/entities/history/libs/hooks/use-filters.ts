@@ -6,7 +6,6 @@ import {
   useTwinClassFieldSelectAdapterWithFilters,
 } from "@/entities/twin-class-field";
 import { useUserSelectAdapter } from "@/entities/user";
-import { DataTimeRangeV1 } from "@/shared/api/types";
 import {
   type FilterFeature,
   createFixedSelectAdapter,
@@ -64,15 +63,9 @@ export function useHistoryFilters({
       ...createFixedSelectAdapter(HISTORY_TYPES),
       multi: true,
     },
-    createdAtFrom: {
-      type: AutoFormValueType.string,
-      label: "Created from",
-      input_props: { type: "date" },
-    },
-    createdAtTo: {
-      type: AutoFormValueType.string,
-      label: "Created to",
-      input_props: { type: "date" },
+    createdAt: {
+      type: AutoFormValueType.dateRange,
+      label: "Created",
     },
   };
 
@@ -85,9 +78,8 @@ export function useHistoryFilters({
   function mapFiltersToPayload(
     filters: Record<string, unknown>
   ): HistoryFilters {
-    const result: HistoryFilters & {
-      createdAt: DataTimeRangeV1;
-    } = {
+    const createdAt = filters.createdAt as { from?: string; to?: string };
+    const result: HistoryFilters = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
       twinIdList: toArrayOfString(toArray(filters.twinIdList), "id"),
 
@@ -101,8 +93,8 @@ export function useHistoryFilters({
       ),
       typeList: toArray(filters.typeList as HistoryFilters["typeList"]),
       createdAt: {
-        from: filters.createdAtFrom ? `${filters.createdAtFrom}T00:00:00` : "",
-        to: filters.createdAtTo ? `${filters.createdAtTo}T00:00:00` : "",
+        from: createdAt?.from ? `${createdAt.from}T00:00:00` : "",
+        to: createdAt?.to ? `${createdAt.to}T00:00:00` : "",
       },
     };
     return result;

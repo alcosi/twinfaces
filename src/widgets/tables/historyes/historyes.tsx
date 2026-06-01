@@ -136,8 +136,7 @@ export function HistoryesTable() {
           "twinClassFieldIdList",
           "actorUserIdList",
           "typeList",
-          "createdAtFrom",
-          "createdAtTo",
+          "createdAt",
         ]
       : undefined,
   });

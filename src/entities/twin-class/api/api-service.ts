@@ -371,7 +371,10 @@ export function createTwinClassApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
-          showTwinClassFieldRuleMode: "DETAILED",
+          showTwinClassFieldRuleMode: "MANAGED",
+          showTwinClass2FeaturerMode: "DETAILED",
+          showTwinClassField2FeaturerMode: "DETAILED",
+          showTwinClassFieldRule2FeaturerMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },

@@ -10,7 +10,6 @@ import {
 } from "@/entities/twin-class-field";
 import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
 import { useUserSelectAdapter } from "@/entities/user";
-import { DataTimeRangeV1 } from "@/shared/api";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -96,15 +95,9 @@ export function useAttachmentFilters({
       selectPlaceholder: "Select...",
       multi: true,
     },
-    createdAtFrom: {
-      type: AutoFormValueType.string,
-      label: "Created from",
-      input_props: { type: "date" },
-    },
-    createdAtTo: {
-      type: AutoFormValueType.string,
-      label: "Created to",
-      input_props: { type: "date" },
+    createdAt: {
+      type: AutoFormValueType.dateRange,
+      label: "Created",
     },
   };
 
@@ -120,9 +113,8 @@ export function useAttachmentFilters({
   function mapFiltersToPayload(
     filters: Record<AttachmentFilterKeys, unknown>
   ): AttachmentFilters {
-    const result: AttachmentFilters & {
-      createdAt: DataTimeRangeV1;
-    } = {
+    const createdAt = filters.createdAt as { from?: string; to?: string };
+    const result: AttachmentFilters = {
       idList: toArrayOfString(toArray(filters.idList), "id"),
       twinIdList: toArrayOfString(toArray(filters.twinIdList), "id"),
       externalIdLikeList: toArrayOfString(
@@ -157,8 +149,8 @@ export function useAttachmentFilters({
         "id"
       ),
       createdAt: {
-        from: filters.createdAtFrom ? `${filters.createdAtFrom}T00:00:00` : "",
-        to: filters.createdAtTo ? `${filters.createdAtTo}T00:00:00` : "",
+        from: createdAt?.from ? `${createdAt.from}T00:00:00` : "",
+        to: createdAt?.to ? `${createdAt.to}T00:00:00` : "",
       },
     };
     return result;

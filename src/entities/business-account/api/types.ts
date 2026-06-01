@@ -34,17 +34,10 @@ export type DomainBusinessAccountFilterKeys =
   | "tierIdList"
   | "storageUsedCountRange"
   | "storageUsedSizeRange"
-  | "createdAtFrom"
-  | "createdAtTo";
+  | "createdAt";
 
 export type DomainBusinessAccountFilters = Partial<
-  Pick<
-    DomainBusinessAccountSearchRq & {
-      createdAtFrom: string;
-      createdAtTo: string;
-    },
-    DomainBusinessAccountFilterKeys
-  >
+  Pick<DomainBusinessAccountSearchRq, DomainBusinessAccountFilterKeys>
 >;
 
 export type DomainBusinessAccountUser =
@@ -63,19 +56,9 @@ export type DomainBusinessAccountUserFilterKeys =
   | "businessAccountIdList"
   | "userIdList"
   | "userGroupIdList"
-  | "createdAtFrom"
-  | "createdAtTo"
-  | "lastActivityAtFrom"
-  | "lastActivityAtTo";
+  | "createdAt"
+  | "lastActivityAt";
 
 export type DomainBusinessAccountUserFilters = Partial<
-  Pick<
-    DomainBusinessAccountUserSearchRq & {
-      createdAtFrom: string;
-      createdAtTo: string;
-      lastActivityAtFrom: string;
-      lastActivityAtTo: string;
-    },
-    DomainBusinessAccountUserFilterKeys
-  >
+  Pick<DomainBusinessAccountUserSearchRq, DomainBusinessAccountUserFilterKeys>
 >;

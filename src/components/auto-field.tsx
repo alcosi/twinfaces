@@ -21,6 +21,7 @@ import {
   ColorPickerFormItem,
   ComboboxFormField,
   ComboboxFormItem,
+  DateRangeFormField,
   NumberRangeFormField,
   TagsFormField,
   TagsFormItem,
@@ -39,6 +40,7 @@ export enum AutoFormValueType {
   tag = "tag",
   twinField = "twinField",
   numberRange = "numberRange",
+  dateRange = "dateRange",
   complexCombobox = "complexCombobox",
 }
 
@@ -66,6 +68,7 @@ export type AutoFormValueInfo = AutoFormCommonInfo &
     | AutoFormFeaturerValueInfo
     | AutoFormColorValueInfo
     | AutoFormNumberRangeValueInfo
+    | AutoFormDateRangeValueInfo
     | AutoFormComplexComboboxValueInfo
   );
 
@@ -123,6 +126,12 @@ export interface AutoFormColorValueInfo {
 
 export interface AutoFormNumberRangeValueInfo {
   type: AutoFormValueType.numberRange;
+  placeholderFrom?: string;
+  placeholderTo?: string;
+}
+
+export interface AutoFormDateRangeValueInfo {
+  type: AutoFormValueType.dateRange;
   placeholderFrom?: string;
   placeholderTo?: string;
 }
@@ -222,6 +231,11 @@ export function AutoField({
       case AutoFormValueType.numberRange:
         return name && control ? (
           <NumberRangeFormField name={name} control={control} {...info} />
+        ) : null;
+
+      case AutoFormValueType.dateRange:
+        return name && control ? (
+          <DateRangeFormField name={name} control={control} {...info} />
         ) : null;
 
       case AutoFormValueType.string:

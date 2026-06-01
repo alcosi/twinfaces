@@ -8,7 +8,6 @@ import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
 import { useTierSelectAdapter } from "@/entities/tier";
 import { useTwinClassSchemaSelectAdapter } from "@/entities/twin-class-schema";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
-import { DataTimeRangeV1 } from "@/shared/api";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -88,15 +87,9 @@ export function useBusinessAccountFilters({
         type: AutoFormValueType.numberRange,
         label: "Attachments storage used size",
       },
-      createdAtFrom: {
-        type: AutoFormValueType.string,
-        label: "Created from",
-        input_props: { type: "date" },
-      },
-      createdAtTo: {
-        type: AutoFormValueType.string,
-        label: "Created to",
-        input_props: { type: "date" },
+      createdAt: {
+        type: AutoFormValueType.dateRange,
+        label: "Created",
       },
     };
 
@@ -112,9 +105,8 @@ export function useBusinessAccountFilters({
   function mapFiltersToPayload(
     filters: Record<DomainBusinessAccountFilterKeys, unknown>
   ): DomainBusinessAccountFilters {
-    const result: DomainBusinessAccountFilters & {
-      createdAt: DataTimeRangeV1;
-    } = {
+    const createdAt = filters.createdAt as { from?: string; to?: string };
+    const result: DomainBusinessAccountFilters = {
       idList: toArrayOfString(filters.idList),
       businessAccountIdList: toArrayOfString(
         filters.businessAccountIdList,
@@ -159,8 +151,8 @@ export function useBusinessAccountFilters({
         )?.to,
       },
       createdAt: {
-        from: filters.createdAtFrom ? `${filters.createdAtFrom}T00:00:00` : "",
-        to: filters.createdAtTo ? `${filters.createdAtTo}T00:00:00` : "",
+        from: createdAt?.from ? `${createdAt.from}T00:00:00` : "",
+        to: createdAt?.to ? `${createdAt.to}T00:00:00` : "",
       },
     };
 

@@ -2,7 +2,6 @@ import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useUserSelectAdapter } from "@/entities/user";
 import { useUserGroupSelectAdapter } from "@/entities/user-group";
-import { DataTimeRangeV1 } from "@/shared/api";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -51,25 +50,13 @@ export function useBusinessAccountUserFilters({
       multi: true,
       ...userGroupAdapter,
     },
-    createdAtFrom: {
-      type: AutoFormValueType.string,
-      label: "Created from",
-      input_props: { type: "date" },
+    createdAt: {
+      type: AutoFormValueType.dateRange,
+      label: "Created",
     },
-    createdAtTo: {
-      type: AutoFormValueType.string,
-      label: "Created to",
-      input_props: { type: "date" },
-    },
-    lastActivityAtFrom: {
-      type: AutoFormValueType.string,
-      label: "Last activity from",
-      input_props: { type: "date" },
-    },
-    lastActivityAtTo: {
-      type: AutoFormValueType.string,
-      label: "Last activity to",
-      input_props: { type: "date" },
+    lastActivityAt: {
+      type: AutoFormValueType.dateRange,
+      label: "Last activity",
     },
   };
 
@@ -85,10 +72,12 @@ export function useBusinessAccountUserFilters({
   function mapFiltersToPayload(
     filters: Record<string, unknown>
   ): DomainBusinessAccountUserFilters {
-    const result: DomainBusinessAccountUserFilters & {
-      createdAt: DataTimeRangeV1;
-      lastActivityAt: DataTimeRangeV1;
-    } = {
+    const createdAt = filters.createdAt as { from?: string; to?: string };
+    const lastActivityAt = filters.lastActivityAt as {
+      from?: string;
+      to?: string;
+    };
+    const result: DomainBusinessAccountUserFilters = {
       businessAccountIdList: toArrayOfString(
         toArray(filters.businessAccountIdList),
         "id"
@@ -96,16 +85,12 @@ export function useBusinessAccountUserFilters({
       userIdList: toArrayOfString(toArray(filters.userIdList), "userId"),
       userGroupIdList: toArrayOfString(toArray(filters.userGroupIdList), "id"),
       createdAt: {
-        from: filters.createdAtFrom ? `${filters.createdAtFrom}T00:00:00` : "",
-        to: filters.createdAtTo ? `${filters.createdAtTo}T00:00:00` : "",
+        from: createdAt?.from ? `${createdAt.from}T00:00:00` : "",
+        to: createdAt?.to ? `${createdAt.to}T00:00:00` : "",
       },
       lastActivityAt: {
-        from: filters.lastActivityAtFrom
-          ? `${filters.lastActivityAtFrom}T00:00:00`
-          : "",
-        to: filters.lastActivityAtTo
-          ? `${filters.lastActivityAtTo}T00:00:00`
-          : "",
+        from: lastActivityAt?.from ? `${lastActivityAt.from}T00:00:00` : "",
+        to: lastActivityAt?.to ? `${lastActivityAt.to}T00:00:00` : "",
       },
     };
 
