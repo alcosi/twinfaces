@@ -36,8 +36,21 @@ export function FiltersSidebar({
   filters,
   onChange,
 }: FiltersSidebarProps) {
+  const TRANSITION_MS = 300;
   const [open, setOpen] = useState(false);
   const [levels, setLevels] = useState<AdvancedFilterLevel[]>([]);
+  const [renderedLevels, setRenderedLevels] = useState<AdvancedFilterLevel[]>(
+    []
+  );
+
+  useEffect(() => {
+    if (levels.length >= renderedLevels.length) {
+      setRenderedLevels(levels);
+    } else {
+      const t = setTimeout(() => setRenderedLevels(levels), TRANSITION_MS);
+      return () => clearTimeout(t);
+    }
+  }, [levels]);
 
   const keys = useMemo(
     () => Object.keys(filtersInfo).filter((key) => isTruthy(filtersInfo[key])),
@@ -73,12 +86,29 @@ export function FiltersSidebar({
     filterKey: string,
     info: AutoFormComplexComboboxValueInfo
   ) {
-    setLevels((prev) => [...prev, { key: filterKey, info }]);
+    setLevels((prev) => {
+      const existingIndex = prev.findIndex((level) => level.key === filterKey);
+      if (existingIndex !== -1) return prev.slice(0, existingIndex + 1);
+      return [{ key: filterKey, info }];
+    });
+  }
+
+  function openAdvancedFiltersFromLevel(parentIndex: number) {
+    return (filterKey: string, info: AutoFormComplexComboboxValueInfo) => {
+      setLevels((prev) => {
+        const existingIndex = prev.findIndex(
+          (level) => level.key === filterKey
+        );
+        if (existingIndex !== -1) return prev.slice(0, existingIndex + 1);
+        return [...prev.slice(0, parentIndex + 1), { key: filterKey, info }];
+      });
+    };
   }
 
   function handleOpenChange(value: boolean) {
     if (!value) {
       setLevels([]);
+      setRenderedLevels([]);
     }
     setOpen(value);
   }
@@ -101,7 +131,7 @@ export function FiltersSidebar({
           style={{
             width: `${sidebarWidth}px`,
             maxWidth: `${sidebarWidth}px`,
-            transitionProperty: "width",
+            transitionProperty: "width, max-width",
             transitionDuration: "300ms",
           }}
         >
@@ -146,11 +176,11 @@ export function FiltersSidebar({
             </form>
 
             {/* Advanced filter panels (stack-based, supports N levels) */}
-            {levels.map((level, index) => (
+            {renderedLevels.map((level, index) => (
               <AdvancedFilterPanel
                 key={`${level.key}-${index}`}
                 level={level}
-                onOpenNext={openAdvancedFilters}
+                onOpenNext={openAdvancedFiltersFromLevel(index)}
                 onClose={() => setLevels((prev) => prev.slice(0, index))}
               />
             ))}
