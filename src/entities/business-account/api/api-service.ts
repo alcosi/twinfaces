@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  DomainBusinessAccountCountGroupField,
   DomainBusinessAccountFilters,
   DomainBusinessAccountUserCountGroupField,
   DomainBusinessAccountUserFilters,
@@ -128,10 +129,41 @@ export function createBusinessAccountApi(settings: ApiSettings) {
     );
   }
 
+  function countDomainBusinessAccount({
+    filters,
+    groupFields,
+  }: {
+    filters: DomainBusinessAccountFilters;
+    groupFields: DomainBusinessAccountCountGroupField[];
+  }) {
+    return settings.client.POST(`/private/domain/business_account/count/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showDomainBusinessAccountMode: "DETAILED",
+          showDomainBusinessAccount2BusinessAccountMode: "DETAILED",
+          showDomainBusinessAccount2PermissionSchemaMode: "DETAILED",
+          showDomainBusinessAccount2TwinflowSchemaMode: "DETAILED",
+          showDomainBusinessAccount2TwinClassSchemaMode: "DETAILED",
+          showDomainBusinessAccount2NotificationSchemaMode: "DETAILED",
+          showDomainBusinessAccount2TierMode: "DETAILED",
+        },
+      },
+      body: {
+        search: {
+          ...filters,
+        },
+        groupFields,
+      },
+    });
+  }
+
   return {
     search,
     searchDomainBusinessAccountUser,
     countDomainBusinessAccountUser,
+    countDomainBusinessAccount,
   };
 }
 

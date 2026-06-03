@@ -10,6 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   ForwardedRef,
   ReactNode,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -40,8 +41,13 @@ import {
   DataTableRow,
 } from "./data-table";
 import { CrudDataTableDialog, CrudDataTableDialogRef } from "./dialog";
-import { CrudDataTableHeader, CrudDataTableHeaderProps } from "./header";
-import { getColumnKey, groupDataByKey } from "./helpers";
+import {
+  CrudDataTableHeader,
+  CrudDataTableHeaderProps,
+  TableViewState,
+} from "./header";
+import { ColumnManagerPopover } from "./header/column-manger-popover";
+import { getColumnKey, getColumnLabel, groupDataByKey } from "./helpers";
 import { useViewSettings } from "./hooks";
 
 /** Active query/filters/sort, forwarded to server-side chart grouping builders. */
@@ -110,6 +116,25 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     props.orderedColumns,
     props.columns
   );
+
+  // Stable identity: the header pushes its state through this on every change,
+  // and it is a dependency of the header's effect — an inline function here
+  // would retrigger that effect every render and loop indefinitely.
+  const handleHeaderViewSettingsChange = useCallback(
+    (settings: TableViewState) =>
+      // Column visibility/order is owned here (driven by the column manager in
+      // the actions header), so only adopt the header-owned fields and never
+      // let the header overwrite the column selection.
+      updateViewSettings({
+        query: settings.query,
+        filters: settings.filters,
+        groupByKey: settings.groupByKey,
+        layoutMode: settings.layoutMode,
+        sort: settings.sort,
+      }),
+    [updateViewSettings]
+  );
+
   const tableRef = useRef<DataTableHandle>(null);
   const dialogRef = useRef<CrudDataTableDialogRef>(null);
   const isFirstViewSettingsSync = useRef(true);
@@ -223,32 +248,96 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     }
   };
 
-  const columnsWithoutActions = useMemo(
-    () =>
-      canCreate
-        ? props.columns
-        : props.columns.filter((col) => col.id !== "actions"),
-    [props.columns, canCreate]
+  // The actions column is handled separately from the data ("content")
+  // columns: it always sits last (sticky), it is never user-hidden, and it
+  // hosts the Jira-style column-visibility control in its header.
+  const contentColumns = useMemo(
+    () => props.columns.filter((col) => col.id !== "actions"),
+    [props.columns]
   );
 
-  const visibleColumns = useMemo(() => {
-    if (isPopulatedArray(props.defaultVisibleColumns)) {
-      return columnsWithoutActions
-        .filter((column) =>
-          viewSettings.visibleKeys.includes(getColumnKey(column))
-        )
-        .sort(
-          (a, b) =>
-            viewSettings.orderKeys.indexOf(getColumnKey(a)) -
-            viewSettings.orderKeys.indexOf(getColumnKey(b))
-        );
-    }
+  const actionsColumn = useMemo(
+    () => props.columns.find((col) => col.id === "actions"),
+    [props.columns]
+  );
 
-    return columnsWithoutActions;
+  // The column manager is offered whenever the table opts into configurable
+  // columns. It is independent of permissions — it only toggles visibility.
+  const hasColumnManager = isPopulatedArray(props.defaultVisibleColumns);
+
+  const columnManager = useMemo(() => {
+    if (!hasColumnManager) return undefined;
+
+    return (
+      <ColumnManagerPopover
+        columns={contentColumns
+          .map((column) => ({
+            id: getColumnKey(column),
+            name: getColumnLabel(column),
+            visible: viewSettings.visibleKeys.includes(getColumnKey(column)),
+          }))
+          .sort(
+            (a, b) =>
+              viewSettings.orderKeys.indexOf(a.id) -
+              viewSettings.orderKeys.indexOf(b.id)
+          )}
+        sortKeys={viewSettings.orderKeys}
+        onVisibleChange={(visibleKeys) => updateViewSettings({ visibleKeys })}
+        onSortChange={(orderKeys) => updateViewSettings({ orderKeys })}
+        onReset={() =>
+          updateViewSettings({
+            visibleKeys: props.defaultVisibleColumns!.map(getColumnKey),
+          })
+        }
+      />
+    );
+  }, [
+    hasColumnManager,
+    contentColumns,
+    viewSettings.visibleKeys,
+    viewSettings.orderKeys,
+    props.defaultVisibleColumns,
+    updateViewSettings,
+  ]);
+
+  // Keep the actions column when it carries an action menu the user may use,
+  // or when it needs to host the column manager. The menu cell itself is
+  // permission-gated (rendered empty without CREATE), while the header (and
+  // thus the column manager) is always shown.
+  const enhancedActionsColumn = useMemo(() => {
+    const needsActionsColumn =
+      hasColumnManager || (Boolean(actionsColumn) && canCreate);
+    if (!needsActionsColumn) return undefined;
+
+    const base = actionsColumn ?? { id: "actions", header: "" };
+    return {
+      ...base,
+      id: "actions",
+      cell: canCreate && actionsColumn?.cell ? actionsColumn.cell : () => null,
+    } as (typeof props.columns)[number];
+  }, [hasColumnManager, actionsColumn, canCreate]);
+
+  const visibleColumns = useMemo(() => {
+    const visibleContentColumns = isPopulatedArray(props.defaultVisibleColumns)
+      ? contentColumns
+          .filter((column) =>
+            viewSettings.visibleKeys.includes(getColumnKey(column))
+          )
+          .sort(
+            (a, b) =>
+              viewSettings.orderKeys.indexOf(getColumnKey(a)) -
+              viewSettings.orderKeys.indexOf(getColumnKey(b))
+          )
+      : contentColumns;
+
+    return enhancedActionsColumn
+      ? [...visibleContentColumns, enhancedActionsColumn]
+      : visibleContentColumns;
   }, [
     viewSettings.visibleKeys,
     viewSettings.orderKeys,
-    columnsWithoutActions,
+    contentColumns,
+    enhancedActionsColumn,
     props.defaultVisibleColumns,
   ]);
 
@@ -283,7 +372,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         onChartModeChange={setChartMode}
         onChartRefresh={() => setChartRefreshSignal((prev) => prev + 1)}
         onCreateClick={handleOnCreateClick}
-        onViewSettingsChange={updateViewSettings}
+        onViewSettingsChange={handleHeaderViewSettingsChange}
       />
 
       {chartMode && hasChartView ? (
@@ -302,6 +391,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
           layoutMode={viewSettings.layoutMode}
           sort={viewSettings.sort}
           onSortChange={(s) => updateViewSettings({ sort: s })}
+          columnManager={columnManager}
         />
       )}
 

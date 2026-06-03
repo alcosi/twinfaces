@@ -5,12 +5,10 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { EyeIcon, GripVertical } from "lucide-react";
-import { useState } from "react";
+import { Columns3, GripVertical } from "lucide-react";
 
 import { CheckboxFormItem } from "@/components/form-fields";
 
-import { cn } from "@/shared/libs";
 import { Label } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import {
@@ -19,6 +17,7 @@ import {
   PopoverFooter,
   PopoverTrigger,
 } from "@/shared/ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 interface Column {
   id: string;
@@ -40,8 +39,6 @@ export function ColumnManagerPopover({
   onSortChange,
   onReset,
 }: Props) {
-  const [open, setOpen] = useState(false);
-
   function onColumnSwitch(columnKey: string) {
     const newColumns = columns.map((column) =>
       column.id === columnKey
@@ -77,20 +74,29 @@ export function ColumnManagerPopover({
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          className={cn("block")}
-          onClick={() => {
-            setOpen(true);
-          }}
-          variant="ghost"
-        >
-          <EyeIcon />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="p-0">
+    <Popover>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              aria-label="Configure columns"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <Columns3 className="h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Configure columns</TooltipContent>
+      </Tooltip>
+
+      <PopoverContent
+        align="end"
+        className="p-0"
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="max-h-[60vh] space-y-4 overflow-y-auto p-4 pb-0">
           <DndContext onDragEnd={handleDragEnd}>
             <SortableContext

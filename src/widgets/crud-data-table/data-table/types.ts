@@ -1,4 +1,5 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { ReactNode } from "react";
 
 import { PagedResponse, SortV1 } from "@/shared/api";
 import { Identifiable } from "@/shared/libs";
@@ -26,4 +27,10 @@ export type DataTableProps<TData extends DataTableRow<TData>, TValue> = {
   layoutMode?: "grid" | "list";
   sort?: SortV1;
   onSortChange?: (sort: SortV1 | undefined) => void;
+  /**
+   * Jira-style column-visibility control rendered inside the sticky actions
+   * column header (grid view only). When omitted, the actions header falls
+   * back to its normal label.
+   */
+  columnManager?: ReactNode;
 };

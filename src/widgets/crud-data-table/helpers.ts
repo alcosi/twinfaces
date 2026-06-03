@@ -11,6 +11,40 @@ export function getColumnKey(column: any): string {
   return column.id as string;
 }
 
+function humanizeKey(key: string): string {
+  const spaced = key
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z\d])([A-Z])/g, "$1 $2")
+    .trim();
+  if (!spaced) return key;
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
+/**
+ * Resolves a human-readable label for a column, used by the column-visibility
+ * manager. A column's `header` may be a plain string, or a render function
+ * (e.g. one returning `<SortableHeader title="..." />`). Rendering that
+ * function here is unsafe — it relies on table-only context — so we read the
+ * `title` prop off the returned element and fall back to a humanized key.
+ */
+export function getColumnLabel(column: any): string {
+  const header = column.header;
+
+  if (typeof header === "string") return header;
+
+  if (typeof header === "function") {
+    try {
+      const node = header({ column });
+      const title = node?.props?.title;
+      if (typeof title === "string") return title;
+    } catch {
+      // Header relies on render-time context; fall back to the key.
+    }
+  }
+
+  return humanizeKey(getColumnKey(column));
+}
+
 export function safeRefresh(ref: ForwardedRef<DataTableHandle>) {
   if (ref && "current" in ref && ref.current) {
     ref.current.refresh();
