@@ -20,7 +20,7 @@ export function GroupByButton<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button type="button" variant="default">
+        <Button type="button" variant="ghost">
           <AlignJustify />
         </Button>
       </PopoverTrigger>

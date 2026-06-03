@@ -14,6 +14,7 @@ import {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { UseFormReturn } from "react-hook-form";
 
@@ -25,7 +26,13 @@ import {
   usePermissionsAccess,
 } from "@/shared/libs";
 
-import { DEFAULT_PAGE_SIZES } from "./constans";
+import {
+  ChartGrouping,
+  GroupableField,
+  TableChartView,
+  buildChartData,
+} from "./chart-view";
+import { CHART_FETCH_LIMIT, DEFAULT_PAGE_SIZES } from "./constans";
 import {
   DataTable,
   DataTableHandle,
@@ -37,6 +44,13 @@ import { CrudDataTableHeader, CrudDataTableHeaderProps } from "./header";
 import { getColumnKey, groupDataByKey } from "./helpers";
 import { useViewSettings } from "./hooks";
 
+/** Active query/filters/sort, forwarded to server-side chart grouping builders. */
+export type ChartDataContext = {
+  search?: string;
+  filters: Record<string, unknown>;
+  sort?: SortV1;
+};
+
 type CrudDataTableProps<
   TData extends DataTableRow<TData>,
   TValue,
@@ -46,6 +60,17 @@ type CrudDataTableProps<
     defaultVisibleColumns?: DataTableProps<TData, TValue>["columns"];
     orderedColumns?: DataTableProps<TData, TValue>["columns"];
     groupableColumns?: DataTableProps<TData, TValue>["columns"];
+    /**
+     * Client-side pie-chart breakdown: fields are grouped over the fetched
+     * dataset. Enables the chart toggle.
+     */
+    groupableFields?: GroupableField<TData>[];
+    /**
+     * Server-side pie-chart breakdown: builds groupings from the active
+     * filters (e.g. via a dedicated "count" endpoint). Enables the chart
+     * toggle. Takes precedence over `groupableFields` when provided.
+     */
+    chartGroupings?: (context: ChartDataContext) => ChartGrouping[];
     dialogForm?: UseFormReturn<any>;
     onCreateSubmit?: (values: any) => Promise<void>;
     renderFormFields?: () => ReactNode;
@@ -90,6 +115,62 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   const isFirstViewSettingsSync = useRef(true);
   const isFirstGroupBySync = useRef(true);
   const isFirstSortSync = useRef(true);
+
+  const [chartMode, setChartMode] = useState(false);
+  const [chartRefreshSignal, setChartRefreshSignal] = useState(0);
+
+  // Loads the full filtered dataset once and shares the in-flight promise
+  // across all client-side groupings. A fresh cache is created whenever the
+  // active query/filters/sort (or a manual refresh) change.
+  const loadRowsOnce = useMemo(() => {
+    let promise: Promise<TData[]> | null = null;
+    return () => {
+      if (!promise) {
+        promise = fetcher(
+          { pageIndex: 0, pageSize: CHART_FETCH_LIMIT },
+          { search: viewSettings.query, filters: viewSettings.filters },
+          viewSettings.sort
+        ).then((response) => response.data);
+      }
+      return promise;
+    };
+  }, [
+    fetcher,
+    viewSettings.query,
+    viewSettings.filters,
+    viewSettings.sort,
+    chartRefreshSignal,
+  ]);
+
+  // Unify the two breakdown modes into a single list of chart groupings.
+  const chartGroupings = useMemo<ChartGrouping[]>(() => {
+    if (props.chartGroupings) {
+      return props.chartGroupings({
+        search: viewSettings.query,
+        filters: viewSettings.filters,
+        sort: viewSettings.sort,
+      });
+    }
+
+    if (isPopulatedArray(props.groupableFields)) {
+      return props.groupableFields.map((field) => ({
+        key: field.key,
+        label: field.label,
+        load: async () => buildChartData(await loadRowsOnce(), field),
+      }));
+    }
+
+    return [];
+  }, [
+    props.chartGroupings,
+    props.groupableFields,
+    loadRowsOnce,
+    viewSettings.query,
+    viewSettings.filters,
+    viewSettings.sort,
+  ]);
+
+  const hasChartView = isPopulatedArray(chartGroupings);
 
   useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
@@ -197,21 +278,32 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         orderedColumns={props.orderedColumns}
         groupableColumns={props.groupableColumns}
         filters={props.filters}
+        chartViewEnabled={hasChartView}
+        chartMode={chartMode}
+        onChartModeChange={setChartMode}
+        onChartRefresh={() => setChartRefreshSignal((prev) => prev + 1)}
         onCreateClick={handleOnCreateClick}
         onViewSettingsChange={updateViewSettings}
       />
 
-      <DataTable
-        ref={tableRef}
-        {...props}
-        columns={visibleColumns}
-        fetcher={fetchWrapper}
-        pageSizes={pageSizes}
-        onRowClick={handleOnRowClick}
-        layoutMode={viewSettings.layoutMode}
-        sort={viewSettings.sort}
-        onSortChange={(s) => updateViewSettings({ sort: s })}
-      />
+      {chartMode && hasChartView ? (
+        <TableChartView
+          groupings={chartGroupings}
+          refreshSignal={chartRefreshSignal}
+        />
+      ) : (
+        <DataTable
+          ref={tableRef}
+          {...props}
+          columns={visibleColumns}
+          fetcher={fetchWrapper}
+          pageSizes={pageSizes}
+          onRowClick={handleOnRowClick}
+          layoutMode={viewSettings.layoutMode}
+          sort={viewSettings.sort}
+          onSortChange={(s) => updateViewSettings({ sort: s })}
+        />
+      )}
 
       <CrudDataTableDialog
         ref={dialogRef}

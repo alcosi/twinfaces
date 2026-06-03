@@ -1,3 +1,4 @@
+export type { ChartGrouping, GroupableField } from "./chart-view";
 export * from "./constans";
 export * from "./crud-data-table";
 export type {

@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   DomainBusinessAccountFilters,
+  DomainBusinessAccountUserCountGroupField,
   DomainBusinessAccountUserFilters,
 } from "./types";
 
@@ -96,7 +97,42 @@ export function createBusinessAccountApi(settings: ApiSettings) {
     );
   }
 
-  return { search, searchDomainBusinessAccountUser };
+  function countDomainBusinessAccountUser({
+    filters,
+    groupFields,
+  }: {
+    filters: DomainBusinessAccountUserFilters;
+    groupFields: DomainBusinessAccountUserCountGroupField[];
+  }) {
+    return settings.client.POST(
+      `/private/domain/business_account_user/count/v1`,
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+          query: {
+            lazyRelation: false,
+            showDomainBusinessAccountUser2BusinessAccountMode: "DETAILED",
+            showDomainBusinessAccountUser2UserGroupMode: "DETAILED",
+            showDomainBusinessAccountUser2UserMode: "DETAILED",
+            showDomainBusinessAccountUserMode: "DETAILED",
+            showUser2UserGroupMode: "DETAILED",
+          },
+        },
+        body: {
+          search: {
+            ...filters,
+          },
+          groupFields,
+        },
+      }
+    );
+  }
+
+  return {
+    search,
+    searchDomainBusinessAccountUser,
+    countDomainBusinessAccountUser,
+  };
 }
 
 export type BusinessAccountApi = ReturnType<typeof createBusinessAccountApi>;
