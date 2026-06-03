@@ -62,3 +62,13 @@ export type DomainBusinessAccountUserFilterKeys =
 export type DomainBusinessAccountUserFilters = Partial<
   Pick<DomainBusinessAccountUserSearchRq, DomainBusinessAccountUserFilterKeys>
 >;
+
+export type DomainBusinessAccountUserCountRq =
+  components["schemas"]["DomainBusinessAccountUserCountRqV1"];
+
+export type DomainBusinessAccountUserCountGroupField = NonNullable<
+  DomainBusinessAccountUserCountRq["groupFields"]
+>[number];
+
+export type DomainBusinessAccountUserCount =
+  components["schemas"]["DomainBusinessAccountUserCountV1"];

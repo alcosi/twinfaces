@@ -85,7 +85,7 @@ export function ColumnManagerPopover({
           onClick={() => {
             setOpen(true);
           }}
-          variant="default"
+          variant="ghost"
         >
           <EyeIcon />
         </Button>

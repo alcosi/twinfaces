@@ -1,10 +1,14 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useContext } from "react";
+import { ReactNode, useCallback, useContext } from "react";
 import { toast } from "sonner";
 
 import {
+  BusinessAccount,
+  DomainBusinessAccountUserCountGroup,
   DomainBusinessAccountUserFilterKeys,
+  DomainBusinessAccountUserFilters,
   DomainBusinessAccountUser_DETAILED,
+  useBusinessAccountUserCount,
   useBusinessAccountUserFilters,
   useBusinessAccountUserSearch,
 } from "@/entities/business-account";
@@ -20,12 +24,36 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs";
+import { PieChartDatum, getPieChartColor } from "@/shared/ui";
 
 import {
+  CHART_FETCH_LIMIT,
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
 } from "../../crud-data-table";
+
+const UNSET_GROUP_LABEL = "— Not set —";
+
+/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
+function mapCountToSlices(
+  groups: DomainBusinessAccountUserCountGroup[],
+  getId: (group: DomainBusinessAccountUserCountGroup) => string | undefined,
+  getLabel: (group: DomainBusinessAccountUserCountGroup) => string | undefined,
+  renderLabel: (group: DomainBusinessAccountUserCountGroup) => ReactNode
+): PieChartDatum[] {
+  return groups
+    .slice()
+    .sort((a, b) => b.count - a.count)
+    .map((group, index) => ({
+      label: getLabel(group) ?? getId(group) ?? "— Not set —",
+      value: group.count,
+      color: getPieChartColor(index),
+      legendContent: renderLabel(group),
+    }));
+}
 
 const colDefs: Record<
   keyof Pick<
@@ -102,6 +130,7 @@ const colDefs: Record<
 export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
   const { businessAccount } = useContext(BusinessAccountContext);
   const { searchBusinessAccountUser } = useBusinessAccountUserSearch();
+  const { countBusinessAccountUser } = useBusinessAccountUserCount();
   const businessAccountId = businessAccount?.businessAccountId;
 
   const hasUserId = isTruthy(userId);
@@ -124,27 +153,41 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
           : undefined,
     });
 
+  // Maps the table filter values to the API payload and injects the
+  // contextual user/business-account constraints. Shared by the table fetcher
+  // and the pie-chart count requests so both honour the active filters.
+  const resolveFilters = useCallback(
+    (
+      rawFilters: Record<DomainBusinessAccountUserFilterKeys, unknown>
+    ): DomainBusinessAccountUserFilters => {
+      const mapped = mapFiltersToPayload(rawFilters);
+      return {
+        ...mapped,
+        userIdList: userId
+          ? toArrayOfString(toArray(userId), "id")
+          : mapped.userIdList,
+        businessAccountIdList: businessAccountId
+          ? toArrayOfString(toArray(businessAccountId), "id")
+          : mapped.businessAccountIdList,
+      };
+    },
+    [mapFiltersToPayload, userId, businessAccountId]
+  );
+
   async function fetchBusinesAccountUsers(
     pagination: PaginationState,
     filters: FiltersState,
     sort?: SortV1
   ): Promise<PagedResponse<DomainBusinessAccountUser_DETAILED>> {
-    const _filters = mapFiltersToPayload(
-      filters.filters as Record<DomainBusinessAccountUserFilterKeys, unknown>
-    );
-
     try {
       return await searchBusinessAccountUser({
         pagination,
-        filters: {
-          ..._filters,
-          userIdList: userId
-            ? toArrayOfString(toArray(userId), "id")
-            : _filters.userIdList,
-          businessAccountIdList: businessAccountId
-            ? toArrayOfString(toArray(businessAccountId), "id")
-            : _filters.businessAccountIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<
+            DomainBusinessAccountUserFilterKeys,
+            unknown
+          >
+        ),
         sort,
       });
     } catch (error) {
@@ -156,6 +199,91 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
       );
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/domain/business_account_user/count/v1), bound to active filters.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveFilters(
+        filters as Record<DomainBusinessAccountUserFilterKeys, unknown>
+      );
+      const groupings: ChartGrouping[] = [];
+
+      if (showUserColumn) {
+        groupings.push({
+          key: "user",
+          label: "User",
+          load: async () => {
+            const groups = await countBusinessAccountUser({
+              filters: resolved,
+              groupField: "userId",
+            });
+            return mapCountToSlices(
+              groups,
+              (g) => g.userId,
+              (g) => g.user?.fullName,
+              (g) => g.user && <UserResourceLink data={g.user} withTooltip />
+            );
+          },
+        });
+      }
+
+      if (showBusinessAccountColumn) {
+        groupings.push({
+          key: "businessAccount",
+          // The count endpoint only returns businessAccountId, but the resource
+          // link needs domainBusinessAccountId (as in the table column). So we
+          // aggregate the search results, which carry both ids.
+          label: "Domain business account",
+          load: async () => {
+            const { data } = await searchBusinessAccountUser({
+              pagination: { pageIndex: 0, pageSize: CHART_FETCH_LIMIT },
+              filters: resolved,
+            });
+
+            const groups = new Map<
+              string,
+              { count: number; row: DomainBusinessAccountUser_DETAILED }
+            >();
+            for (const row of data) {
+              const id = row.businessAccountId ?? UNSET_GROUP_LABEL;
+              const existing = groups.get(id);
+              if (existing) existing.count += 1;
+              else groups.set(id, { count: 1, row });
+            }
+
+            return Array.from(groups.values())
+              .sort((a, b) => b.count - a.count)
+              .map(({ count, row }, index) => ({
+                label:
+                  (row.businessAccount as unknown as BusinessAccount)?.name ??
+                  row.businessAccountId ??
+                  UNSET_GROUP_LABEL,
+                value: count,
+                color: getPieChartColor(index),
+                legendContent:
+                  row.businessAccount && row.domainBusinessAccountId ? (
+                    <BusinessAccountResourceLink
+                      domainBusinessAccountId={row.domainBusinessAccountId}
+                      data={row.businessAccount}
+                      withTooltip
+                    />
+                  ) : undefined,
+              }));
+          },
+        });
+      }
+
+      return groupings;
+    },
+    [
+      resolveFilters,
+      countBusinessAccountUser,
+      searchBusinessAccountUser,
+      showUserColumn,
+      showBusinessAccountColumn,
+    ]
+  );
 
   return (
     <CrudDataTable
@@ -176,6 +304,7 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
       ]}
       fetcher={fetchBusinesAccountUsers}
       filters={{ filtersInfo: buildFilterFields() }}
+      chartGroupings={buildChartGroupings}
       getRowId={(row) =>
         `${row.userId}-${row.businessAccountId}-${row.createdAt ?? ""}`
       }

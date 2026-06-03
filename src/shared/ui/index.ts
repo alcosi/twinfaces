@@ -8,6 +8,7 @@ export * from "./button";
 export * from "./caption";
 export * from "./card";
 export * from "./carousel";
+export * from "./charts";
 export * from "./collapsible";
 export * from "./command";
 export * from "./copy-button";

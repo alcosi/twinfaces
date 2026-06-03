@@ -1,4 +1,4 @@
-import { Plus, RefreshCw, Search } from "lucide-react";
+import { ChartPie, Plus, RefreshCw, Search, Table2 } from "lucide-react";
 import { ForwardedRef, useCallback, useEffect } from "react";
 
 import { AutoFormValueInfo } from "@/components/auto-field";
@@ -40,6 +40,13 @@ export type CrudDataTableHeaderProps = {
     filtersInfo: Record<string, AutoFormValueInfo>;
   };
   hideRefresh?: boolean;
+  /** Whether the table/pie-chart view toggle is available. */
+  chartViewEnabled?: boolean;
+  /** Whether the pie-chart breakdown view is currently active. */
+  chartMode?: boolean;
+  onChartModeChange?: (mode: boolean) => void;
+  /** Re-fetch the chart dataset (used by the refresh button while in chart mode). */
+  onChartRefresh?: () => void;
   onCreateClick?: () => void;
   onViewSettingsChange?: (data: TableViewState) => void;
 };
@@ -67,6 +74,10 @@ function CrudDataTableHeaderComponent<
     defaultVisibleColumns,
     orderedColumns,
     groupableColumns,
+    chartViewEnabled,
+    chartMode,
+    onChartModeChange,
+    onChartRefresh,
     onCreateClick,
     onViewSettingsChange,
   }: Props<TData, TValue>,
@@ -127,7 +138,12 @@ function CrudDataTableHeaderComponent<
       </div>
       <div className="flex space-x-4">
         {!hideRefresh && (
-          <Button variant="ghost" onClick={() => safeRefresh(tableRef)}>
+          <Button
+            variant="ghost"
+            onClick={() =>
+              chartMode ? onChartRefresh?.() : safeRefresh(tableRef)
+            }
+          >
             <RefreshCw />
           </Button>
         )}
@@ -140,7 +156,18 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {isPopulatedArray(defaultVisibleColumns) && (
+        {chartViewEnabled && (
+          <Button
+            variant={chartMode ? "secondary" : "ghost"}
+            title={chartMode ? "Show table" : "Show pie charts"}
+            onClick={() => onChartModeChange?.(!chartMode)}
+          >
+            {chartMode ? <Table2 /> : <ChartPie />}
+          </Button>
+        )}
+
+        {/* Table-only controls are hidden while the chart breakdown is active */}
+        {!chartMode && isPopulatedArray(defaultVisibleColumns) && (
           <ColumnManagerPopover
             columns={visibleOrderedColumns}
             sortKeys={viewSettings.orderKeys}
@@ -156,30 +183,34 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {isPopulatedArray(groupableColumns) && (
+        {!chartMode && isPopulatedArray(groupableColumns) && (
           <GroupByButton
             columns={groupableColumns}
             onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
           />
         )}
 
-        <Button
-          IconComponent={
-            viewSettings.layoutMode === "grid"
-              ? () => <GridIcon className="h-6 w-6" />
-              : () => <RowsIcon className="h-6 w-6" />
-          }
-          onClick={() =>
-            updateViewSettings({
-              layoutMode: viewSettings.layoutMode === "grid" ? "list" : "grid",
-            })
-          }
-        />
+        {!chartMode && (
+          <Button
+            variant="ghost"
+            IconComponent={
+              viewSettings.layoutMode === "grid"
+                ? () => <GridIcon className="h-6 w-6" />
+                : () => <RowsIcon className="h-6 w-6" />
+            }
+            onClick={() =>
+              updateViewSettings({
+                layoutMode:
+                  viewSettings.layoutMode === "grid" ? "list" : "grid",
+              })
+            }
+          />
+        )}
 
         {onCreateClick && (
           <>
             <Separator orientation="vertical" />
-            <Button onClick={onCreateClick}>
+            <Button variant="ghost" onClick={onCreateClick}>
               <Plus />
             </Button>
           </>

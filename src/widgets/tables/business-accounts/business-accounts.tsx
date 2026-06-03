@@ -26,6 +26,7 @@ import { GuidWithCopy } from "@/shared/ui";
 import {
   CrudDataTable,
   FiltersState,
+  GroupableField,
   SortableHeader,
 } from "../../crud-data-table";
 
@@ -194,6 +195,74 @@ const colDefs: Record<
   },
 };
 
+const groupableFields: GroupableField<DomainBusinessAccount_DETAILED>[] = [
+  {
+    key: "tier",
+    label: "Tier",
+    getGroup: (r) => r.tier?.name,
+    renderLabel: (r) =>
+      r.tier && <TierResourceLink data={r.tier} withTooltip />,
+  },
+  {
+    key: "permissionSchema",
+    label: "Permission schema",
+    getGroup: (r) => r.permissionSchema?.name,
+    renderLabel: (r) =>
+      r.permissionSchema && (
+        <PermissionSchemaResourceLink data={r.permissionSchema} withTooltip />
+      ),
+  },
+  {
+    key: "twinflowSchema",
+    label: "Twinflow schema",
+    getGroup: (r) => r.twinflowSchema?.name,
+    renderLabel: (r) =>
+      r.twinflowSchema && (
+        <TwinFlowSchemaResourceLink
+          data={r.twinflowSchema as TwinFlowSchema_DETAILED}
+          withTooltip
+        />
+      ),
+  },
+  {
+    key: "twinClassSchema",
+    label: "Twinclass schema",
+    getGroup: (r) => r.twinClassSchema?.name,
+    renderLabel: (r) =>
+      r.twinClassSchema && (
+        <TwinClassSchemaResourceLink
+          data={r.twinClassSchema as TwinClassSchema_DETAILED}
+          withTooltip
+        />
+      ),
+  },
+  {
+    key: "notificationSchema",
+    label: "Notification schema",
+    getGroup: (r) => r.notificationSchema?.name,
+    renderLabel: (r) =>
+      r.notificationSchema && (
+        <NotificationSchemaResourceLink
+          data={r.notificationSchema}
+          withTooltip
+        />
+      ),
+  },
+  {
+    key: "businessAccount",
+    label: "Business account",
+    getGroup: (r) => r.businessAccount?.name,
+    renderLabel: (r) =>
+      r.businessAccount && (
+        <BusinessAccountResourceLink
+          data={r.businessAccount}
+          withTooltip
+          disabled
+        />
+      ),
+  },
+];
+
 export function BusinessAccountsTable() {
   const { searchBusinessAccount } = useBusinessAccountSearch();
   const { buildFilterFields, mapFiltersToPayload } =
@@ -257,6 +326,7 @@ export function BusinessAccountsTable() {
       ]}
       getRowId={(row) => row.id!}
       filters={{ filtersInfo: buildFilterFields() }}
+      groupableFields={groupableFields}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/business-accounts/${row.id}`)
       }

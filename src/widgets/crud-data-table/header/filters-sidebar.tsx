@@ -119,7 +119,7 @@ export function FiltersSidebar({
     <>
       <Button
         className={cn("block")}
-        variant="default"
+        variant="ghost"
         onClick={() => setOpen(true)}
       >
         <FilterIcon />
