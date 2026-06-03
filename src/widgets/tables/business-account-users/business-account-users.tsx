@@ -48,7 +48,7 @@ function mapCountToSlices(
     .slice()
     .sort((a, b) => b.count - a.count)
     .map((group, index) => ({
-      label: getLabel(group) ?? getId(group) ?? "— Not set —",
+      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
       value: group.count,
       color: getPieChartColor(index),
       legendContent: renderLabel(group),
