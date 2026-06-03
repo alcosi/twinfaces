@@ -1,4 +1,4 @@
-import { ChartPie, Plus, RefreshCw, Search, Table2 } from "lucide-react";
+import { ChartPie, Plus, RefreshCw, Search } from "lucide-react";
 import { ForwardedRef, useCallback, useEffect } from "react";
 
 import { AutoFormValueInfo } from "@/components/auto-field";
@@ -15,6 +15,7 @@ import { useViewSettings } from "../hooks";
 import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersSidebar } from "./filters-sidebar";
 import { GroupByButton } from "./group-by-button";
+import { ViewMode, ViewModeOption, ViewModeToggle } from "./view-mode-toggle";
 
 export type TableViewState = {
   query: string;
@@ -118,6 +119,29 @@ function CrudDataTableHeaderComponent<
         viewSettings.orderKeys.indexOf(b.id)
     );
 
+  // Table / card / pie-chart switcher. The chart segment only appears when a
+  // chart breakdown is configured for this table.
+  const viewModeOptions: ViewModeOption[] = [
+    { value: "grid", label: "Table view", icon: GridIcon },
+    { value: "list", label: "Card view", icon: RowsIcon },
+    ...(chartViewEnabled
+      ? [{ value: "chart" as const, label: "Pie charts", icon: ChartPie }]
+      : []),
+  ];
+
+  const currentViewMode: ViewMode = chartMode
+    ? "chart"
+    : viewSettings.layoutMode;
+
+  const handleViewModeChange = (mode: ViewMode) => {
+    if (mode === "chart") {
+      onChartModeChange?.(true);
+      return;
+    }
+    if (chartMode) onChartModeChange?.(false);
+    updateViewSettings({ layoutMode: mode });
+  };
+
   return (
     <div className="mb-2 flex justify-between">
       <div className="flex items-center">
@@ -156,16 +180,6 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {chartViewEnabled && (
-          <Button
-            variant={chartMode ? "secondary" : "ghost"}
-            title={chartMode ? "Show table" : "Show pie charts"}
-            onClick={() => onChartModeChange?.(!chartMode)}
-          >
-            {chartMode ? <Table2 /> : <ChartPie />}
-          </Button>
-        )}
-
         {/* Table-only controls are hidden while the chart breakdown is active */}
         {!chartMode && isPopulatedArray(defaultVisibleColumns) && (
           <ColumnManagerPopover
@@ -190,22 +204,11 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {!chartMode && (
-          <Button
-            variant="ghost"
-            IconComponent={
-              viewSettings.layoutMode === "grid"
-                ? () => <GridIcon className="h-6 w-6" />
-                : () => <RowsIcon className="h-6 w-6" />
-            }
-            onClick={() =>
-              updateViewSettings({
-                layoutMode:
-                  viewSettings.layoutMode === "grid" ? "list" : "grid",
-              })
-            }
-          />
-        )}
+        <ViewModeToggle
+          value={currentViewMode}
+          options={viewModeOptions}
+          onChange={handleViewModeChange}
+        />
 
         {onCreateClick && (
           <>
