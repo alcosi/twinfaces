@@ -46,6 +46,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     layoutMode = "grid",
     sort,
     onSortChange,
+    columnManager,
   }: DataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
@@ -159,12 +160,18 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
           overflowX: "auto",
         }}
       >
-        {isEmptyArray(table.getRowModel().rows) ? (
+        {layoutMode === "grid" ? (
+          // Grid keeps its header (and the column-manager control) mounted even
+          // when there are no rows, so column visibility stays configurable.
+          <DataTableGrid
+            table={table}
+            onRowClick={onRowClick}
+            columnManager={columnManager}
+          />
+        ) : isEmptyArray(table.getRowModel().rows) ? (
           <div className="text-muted-foreground rounded-md p-4 text-center">
             No results.
           </div>
-        ) : layoutMode === "grid" ? (
-          <DataTableGrid table={table} onRowClick={onRowClick} />
         ) : (
           <DataTableList table={table} onRowClick={onRowClick} />
         )}

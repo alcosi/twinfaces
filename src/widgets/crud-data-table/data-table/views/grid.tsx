@@ -1,9 +1,9 @@
 import { flexRender, useReactTable } from "@tanstack/react-table";
 import { Row } from "@tanstack/table-core";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import React from "react";
+import React, { ReactNode } from "react";
 
-import { cn, isPopulatedArray } from "@/shared/libs";
+import { cn, isEmptyArray, isPopulatedArray } from "@/shared/libs";
 import {
   TableBody,
   TableCell,
@@ -20,9 +20,11 @@ import { DataTableRow } from "../types";
 export function DataTableGrid<TData extends DataTableRow<TData>>({
   table,
   onRowClick,
+  columnManager,
 }: {
   table: ReturnType<typeof useReactTable<TData>>;
   onRowClick?: (row: TData) => void;
+  columnManager?: ReactNode;
 }) {
   function getStickyActionsClass(columnId: string, type: "head" | "cell") {
     if (columnId !== "actions") return undefined;
@@ -94,15 +96,28 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
 
   // Builds the full list of <TableRow> (including expandable or normal)
   function renderTableBodyRows() {
-    return table
-      .getRowModel()
-      .rows.map((row) =>
-        isPopulatedArray(row.subRows) ? (
-          renderExpandableRows(row)
-        ) : (
-          <React.Fragment key={row.id}>{renderRow(row)}</React.Fragment>
-        )
+    const rows = table.getRowModel().rows;
+
+    if (isEmptyArray(rows)) {
+      return (
+        <TableRow>
+          <TableCell
+            colSpan={table.getVisibleLeafColumns().length}
+            className="text-muted-foreground h-24 text-center"
+          >
+            No results.
+          </TableCell>
+        </TableRow>
       );
+    }
+
+    return rows.map((row) =>
+      isPopulatedArray(row.subRows) ? (
+        renderExpandableRows(row)
+      ) : (
+        <React.Fragment key={row.id}>{renderRow(row)}</React.Fragment>
+      )
+    );
   }
 
   return (
@@ -110,18 +125,28 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
       <TableHeader className="[&_tr]:bg-background sticky top-0 z-10">
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <TableHead
-                key={header.id}
-                className={getStickyActionsClass(header.column.id, "head")}
-              >
-                {!header.isPlaceholder &&
-                  flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
+            {headerGroup.headers.map((header) => {
+              const isActions = header.column.id === "actions";
+
+              return (
+                <TableHead
+                  key={header.id}
+                  className={getStickyActionsClass(header.column.id, "head")}
+                >
+                  {isActions && columnManager ? (
+                    // Jira-style: the actions column header hosts the
+                    // column-visibility control instead of a text label.
+                    <div className="flex justify-end">{columnManager}</div>
+                  ) : (
+                    !header.isPlaceholder &&
+                    flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )
                   )}
-              </TableHead>
-            ))}
+                </TableHead>
+              );
+            })}
           </TableRow>
         ))}
       </TableHeader>

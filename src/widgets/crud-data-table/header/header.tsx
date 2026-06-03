@@ -10,9 +10,8 @@ import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 
 import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";
-import { getColumnKey, safeRefresh, safeResetPage } from "../helpers";
+import { safeRefresh, safeResetPage } from "../helpers";
 import { useViewSettings } from "../hooks";
-import { ColumnManagerPopover } from "./column-manger-popover";
 import { FiltersSidebar } from "./filters-sidebar";
 import { GroupByButton } from "./group-by-button";
 import { ViewMode, ViewModeOption, ViewModeToggle } from "./view-mode-toggle";
@@ -107,18 +106,6 @@ function CrudDataTableHeaderComponent<
     safeResetPage(tableRef);
   };
 
-  const visibleOrderedColumns = columns
-    .map((column) => ({
-      id: getColumnKey(column),
-      name: column.header as string,
-      visible: viewSettings.visibleKeys.includes(getColumnKey(column)),
-    }))
-    .sort(
-      (a, b) =>
-        viewSettings.orderKeys.indexOf(a.id) -
-        viewSettings.orderKeys.indexOf(b.id)
-    );
-
   // Table / card / pie-chart switcher. The chart segment only appears when a
   // chart breakdown is configured for this table.
   const viewModeOptions: ViewModeOption[] = [
@@ -181,22 +168,6 @@ function CrudDataTableHeaderComponent<
         )}
 
         {/* Table-only controls are hidden while the chart breakdown is active */}
-        {!chartMode && isPopulatedArray(defaultVisibleColumns) && (
-          <ColumnManagerPopover
-            columns={visibleOrderedColumns}
-            sortKeys={viewSettings.orderKeys}
-            onVisibleChange={(visibleKeys) =>
-              updateViewSettings({ visibleKeys })
-            }
-            onSortChange={(orderKeys) => debouncedUpdate({ orderKeys })}
-            onReset={() =>
-              updateViewSettings({
-                visibleKeys: defaultVisibleColumns.map(getColumnKey),
-              })
-            }
-          />
-        )}
-
         {!chartMode && isPopulatedArray(groupableColumns) && (
           <GroupByButton
             columns={groupableColumns}

@@ -2,11 +2,14 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
+import { ReactNode, useCallback } from "react";
 import { toast } from "sonner";
 
 import {
+  DomainBusinessAccountCountGroup,
   DomainBusinessAccountFilterKeys,
   DomainBusinessAccount_DETAILED,
+  useBusinessAccountCount,
   useBusinessAccountSearch,
 } from "@/entities/business-account";
 import { useBusinessAccountFilters } from "@/entities/business-account/libs";
@@ -21,14 +24,35 @@ import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
 import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config/constants";
 import { formatIntlDate } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import { GuidWithCopy, PieChartDatum, getPieChartColor } from "@/shared/ui";
 
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   FiltersState,
-  GroupableField,
   SortableHeader,
 } from "../../crud-data-table";
+
+const UNSET_GROUP_LABEL = "— Not set —";
+
+/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
+function mapCountToSlices(
+  groups: DomainBusinessAccountCountGroup[],
+  getId: (group: DomainBusinessAccountCountGroup) => string | undefined,
+  getLabel: (group: DomainBusinessAccountCountGroup) => string | undefined,
+  renderLabel: (group: DomainBusinessAccountCountGroup) => ReactNode
+): PieChartDatum[] {
+  return groups
+    .slice()
+    .sort((a, b) => b.count - a.count)
+    .map((group, index) => ({
+      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
+      value: group.count,
+      color: getPieChartColor(index),
+      legendContent: renderLabel(group),
+    }));
+}
 
 const colDefs: Record<
   | "id"
@@ -195,76 +219,9 @@ const colDefs: Record<
   },
 };
 
-const groupableFields: GroupableField<DomainBusinessAccount_DETAILED>[] = [
-  {
-    key: "tier",
-    label: "Tier",
-    getGroup: (r) => r.tier?.name,
-    renderLabel: (r) =>
-      r.tier && <TierResourceLink data={r.tier} withTooltip />,
-  },
-  {
-    key: "permissionSchema",
-    label: "Permission schema",
-    getGroup: (r) => r.permissionSchema?.name,
-    renderLabel: (r) =>
-      r.permissionSchema && (
-        <PermissionSchemaResourceLink data={r.permissionSchema} withTooltip />
-      ),
-  },
-  {
-    key: "twinflowSchema",
-    label: "Twinflow schema",
-    getGroup: (r) => r.twinflowSchema?.name,
-    renderLabel: (r) =>
-      r.twinflowSchema && (
-        <TwinFlowSchemaResourceLink
-          data={r.twinflowSchema as TwinFlowSchema_DETAILED}
-          withTooltip
-        />
-      ),
-  },
-  {
-    key: "twinClassSchema",
-    label: "Twinclass schema",
-    getGroup: (r) => r.twinClassSchema?.name,
-    renderLabel: (r) =>
-      r.twinClassSchema && (
-        <TwinClassSchemaResourceLink
-          data={r.twinClassSchema as TwinClassSchema_DETAILED}
-          withTooltip
-        />
-      ),
-  },
-  {
-    key: "notificationSchema",
-    label: "Notification schema",
-    getGroup: (r) => r.notificationSchema?.name,
-    renderLabel: (r) =>
-      r.notificationSchema && (
-        <NotificationSchemaResourceLink
-          data={r.notificationSchema}
-          withTooltip
-        />
-      ),
-  },
-  {
-    key: "businessAccount",
-    label: "Business account",
-    getGroup: (r) => r.businessAccount?.name,
-    renderLabel: (r) =>
-      r.businessAccount && (
-        <BusinessAccountResourceLink
-          data={r.businessAccount}
-          withTooltip
-          disabled
-        />
-      ),
-  },
-];
-
 export function BusinessAccountsTable() {
   const { searchBusinessAccount } = useBusinessAccountSearch();
+  const { countBusinessAccount } = useBusinessAccountCount();
   const { buildFilterFields, mapFiltersToPayload } =
     useBusinessAccountFilters();
   const router = useRouter();
@@ -291,6 +248,116 @@ export function BusinessAccountsTable() {
       );
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/domain/business_account/count/v1), bound to the active filters.
+  // Only the fields the endpoint can group by are offered — business account
+  // itself is intentionally excluded, since it is not a groupable field.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(
+        filters as Record<DomainBusinessAccountFilterKeys, unknown>
+      );
+
+      return [
+        {
+          key: "tier",
+          label: "Tier",
+          load: async () =>
+            mapCountToSlices(
+              await countBusinessAccount({
+                filters: resolved,
+                groupField: "tierId",
+              }),
+              (g) => g.tierId,
+              (g) => g.tier?.name,
+              (g) => g.tier && <TierResourceLink data={g.tier} withTooltip />
+            ),
+        },
+        {
+          key: "permissionSchema",
+          label: "Permission schema",
+          load: async () =>
+            mapCountToSlices(
+              await countBusinessAccount({
+                filters: resolved,
+                groupField: "permissionSchemaId",
+              }),
+              (g) => g.permissionSchemaId,
+              (g) => g.permissionSchema?.name,
+              (g) =>
+                g.permissionSchema && (
+                  <PermissionSchemaResourceLink
+                    data={g.permissionSchema}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "twinflowSchema",
+          label: "Twinflow schema",
+          load: async () =>
+            mapCountToSlices(
+              await countBusinessAccount({
+                filters: resolved,
+                groupField: "twinflowSchemaId",
+              }),
+              (g) => g.twinflowSchemaId,
+              (g) => g.twinflowSchema?.name,
+              (g) =>
+                g.twinflowSchema && (
+                  <TwinFlowSchemaResourceLink
+                    data={g.twinflowSchema as TwinFlowSchema_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "twinClassSchema",
+          label: "Twinclass schema",
+          load: async () =>
+            mapCountToSlices(
+              await countBusinessAccount({
+                filters: resolved,
+                groupField: "twinClassSchemaId",
+              }),
+              (g) => g.twinClassSchemaId,
+              (g) => g.twinClassSchema?.name,
+              (g) =>
+                g.twinClassSchema && (
+                  <TwinClassSchemaResourceLink
+                    data={g.twinClassSchema as TwinClassSchema_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "notificationSchema",
+          label: "Notification schema",
+          load: async () =>
+            mapCountToSlices(
+              await countBusinessAccount({
+                filters: resolved,
+                groupField: "notificationSchemaId",
+              }),
+              (g) => g.notificationSchemaId,
+              (g) => g.notificationSchema?.name,
+              (g) =>
+                g.notificationSchema && (
+                  <NotificationSchemaResourceLink
+                    data={g.notificationSchema}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+      ];
+    },
+    [countBusinessAccount, mapFiltersToPayload]
+  );
 
   return (
     <CrudDataTable
@@ -326,7 +393,7 @@ export function BusinessAccountsTable() {
       ]}
       getRowId={(row) => row.id!}
       filters={{ filtersInfo: buildFilterFields() }}
-      groupableFields={groupableFields}
+      chartGroupings={buildChartGroupings}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/business-accounts/${row.id}`)
       }
