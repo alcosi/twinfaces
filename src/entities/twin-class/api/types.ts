@@ -127,6 +127,19 @@ export type TwinClassFilters = Partial<
 
 export type TwinClassListRs = components["schemas"]["TwinClassListRsV1"];
 
+export type TwinClassFreeze = components["schemas"]["TwinClassFreezeV1"];
+
+export type TwinClassSortField = NonNullable<
+  components["schemas"]["TwinClassSearchRqV2"]["sortField"]
+>;
+
+export type TwinClassCountRq = components["schemas"]["TwinClassCountRqV1"];
+export type TwinClassCountRsV1 = components["schemas"]["TwinClassCountRsV1"];
+export type TwinClassCountV1 = components["schemas"]["TwinClassCountV1"];
+export type TwinClassCountGroupField = NonNullable<
+  TwinClassCountRq["groupFields"]
+>[number];
+
 export type TagSearchFilterKeys =
   | "idList"
   | "idExcludeList"

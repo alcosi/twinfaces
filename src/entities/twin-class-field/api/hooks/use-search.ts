@@ -1,13 +1,14 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext, useState } from "react";
 
-import { PrivateApiContext } from "@/shared/api";
+import { PrivateApiContext, SortV1 } from "@/shared/api";
 import { wrapWithPercent } from "@/shared/libs";
 
 import { hydrateTwinClassFieldFromMap } from "../../libs";
 import {
   TwinClassFieldSearchFilters,
   TwinClassFieldSearchRsV1,
+  TwinClassFieldSortField,
 } from "../types";
 
 export const useTwinClassFieldSearch = () => {
@@ -40,10 +41,12 @@ export const useTwinClassFieldSearch = () => {
       search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters,
+      sort,
     }: {
       search?: string;
       pagination?: PaginationState;
       filters?: TwinClassFieldSearchFilters;
+      sort?: SortV1;
     }) => {
       setLoading(true);
 
@@ -58,6 +61,8 @@ export const useTwinClassFieldSearch = () => {
         const { data, error } = await api.twinClassField.search({
           pagination,
           filters: payload,
+          sortField: sort?.field as TwinClassFieldSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) throw error;

@@ -3,9 +3,11 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  TwinClassFieldCountGroupField,
   TwinClassFieldCreateRq,
   TwinClassFieldDuplicateRq,
   TwinClassFieldSearchFilters,
+  TwinClassFieldSortField,
   TwinClassFieldUpdateRq,
 } from "./types";
 
@@ -13,9 +15,13 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: TwinClassFieldSearchFilters;
+    sortField?: TwinClassFieldSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/twin_class_fields/search/v2", {
       params: {
@@ -29,11 +35,37 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
           showFeaturerParamMode: "SHOW",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
-          sortAsc: false,
         },
       },
       body: {
         search: filters,
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+  }: {
+    filters: TwinClassFieldSearchFilters;
+    groupFields: TwinClassFieldCountGroupField[];
+  }) {
+    return settings.client.POST("/private/twin_class_fields/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinClassFieldMode: "DETAILED",
+          showTwinClassField2TwinClassMode: "DETAILED",
+          showTwinClassField2PermissionMode: "DETAILED",
+          showTwinClassField2FeaturerMode: "DETAILED",
+        },
+      },
+      body: {
+        search: filters,
+        groupFields,
       },
     });
   }
@@ -137,6 +169,7 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
 
   return {
     search,
+    count,
     // getFields,
     getById,
     create,
