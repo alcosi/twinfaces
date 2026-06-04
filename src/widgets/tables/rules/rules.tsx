@@ -5,7 +5,12 @@ import { Check } from "lucide-react";
 import { toast } from "sonner";
 
 import { Featurer_DETAILED } from "@/entities/featurer";
-import { Rule_DETAILED, useRuleSearch } from "@/entities/twin-class";
+import {
+  RuleFilterKeys,
+  Rule_DETAILED,
+  useRuleSearch,
+  useRulesFilters,
+} from "@/entities/twin-class";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
@@ -61,15 +66,22 @@ const colDefs: Record<
 
 export function RulesTable() {
   const { searchRule } = useRuleSearch();
+  const { buildFilterFields, mapFiltersToPayload } = useRulesFilters({});
 
   async function fetchRules(
     pagination: PaginationState,
     filters: FiltersState
   ): Promise<PagedResponse<Rule_DETAILED>> {
+    const _filters = mapFiltersToPayload(
+      filters.filters as Record<RuleFilterKeys, unknown>
+    );
+
     try {
       return await searchRule({
         pagination,
-        filters: {},
+        filters: {
+          ..._filters,
+        },
       });
     } catch (error) {
       toast.error("An error occured while fetching rules:" + error);
@@ -96,6 +108,7 @@ export function RulesTable() {
       ]}
       fetcher={fetchRules}
       getRowId={(row) => row.id!}
+      filters={{ filtersInfo: buildFilterFields() }}
     />
   );
 }
