@@ -5,29 +5,36 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useContext, useRef, useState } from "react";
+import { ReactNode, useCallback, useContext, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { DataList } from "@/entities/datalist";
+import { Featurer_DETAILED } from "@/entities/featurer";
+import { Permission_DETAILED } from "@/entities/permission";
 import {
   FetchTreePageParams,
   FetchTreePageResult,
   TWIN_CLASSES_SCHEMA,
   TwinClassContext,
+  TwinClassCountGroup,
   TwinClassCreateRq,
   TwinClassFieldValues,
+  TwinClassFilterKeys,
   TwinClassFiltersHierarchyOverride,
   TwinClass_DETAILED,
+  useTwinClassCount,
   useTwinClassFilters,
   useTwinClassSearch,
 } from "@/entities/twin-class";
 import { DatalistResourceLink } from "@/features/datalist/ui";
+import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassFreezeResourceLink } from "@/features/twin-class-freeze/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { cn } from "@/shared/libs";
 import {
@@ -37,11 +44,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   GuidWithCopy,
+  PieChartDatum,
+  getPieChartColor,
 } from "@/shared/ui";
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
+  SortableHeader,
 } from "@/widgets/crud-data-table";
 
 import { TwinClassFormFields } from "./form-fields";
@@ -124,17 +136,19 @@ const colDefs: Record<
   key: {
     id: "key",
     accessorKey: "key",
-    header: "Key",
+    header: () => <SortableHeader title="Key" sortField="key" />,
   },
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
   },
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -145,7 +159,7 @@ const colDefs: Record<
   headClassId: {
     id: "headClassId",
     accessorKey: "headClassId",
-    header: "Head",
+    header: () => <SortableHeader title="Head" sortField="headTwinClassName" />,
     cell: ({ row: { original } }) =>
       original.headClass ? (
         <div className="inline-flex max-w-48">
@@ -159,7 +173,9 @@ const colDefs: Record<
   extendsClassId: {
     id: "extendsClass.id",
     accessorKey: "extendsClass.id",
-    header: "Extends",
+    header: () => (
+      <SortableHeader title="Extends" sortField="extendsTwinClassName" />
+    ),
     cell: ({ row: { original } }) =>
       original.extendsClass ? (
         <div className="inline-flex max-w-48">
@@ -173,21 +189,23 @@ const colDefs: Record<
   abstractClass: {
     id: "abstractClass",
     accessorKey: "abstractClass",
-    header: "Abstract",
+    header: () => <SortableHeader title="Abstract" sortField="abstractt" />,
     cell: (data) => data.getValue() && <Check />,
   },
 
   assigneeRequired: {
     id: "assigneeRequired",
     accessorKey: "assigneeRequired",
-    header: "Assignee required",
+    header: () => (
+      <SortableHeader title="Assignee required" sortField="assigneeRequired" />
+    ),
     cell: (data) => data.getValue() && <Check />,
   },
 
   ownerType: {
     id: "ownerType",
     accessorKey: "ownerType",
-    header: "Owner type",
+    header: () => <SortableHeader title="Owner type" sortField="ownerType" />,
   },
   permissionSchemaSpace: {
     id: "permissionSchemaSpace",
@@ -198,25 +216,34 @@ const colDefs: Record<
   twinflowSchemaSpace: {
     id: "twinflowSchemaSpace",
     accessorKey: "twinflowSchemaSpace",
-    header: "Twinflow schema",
+    header: () => (
+      <SortableHeader title="Twinflow schema" sortField="twinflowSchemaSpace" />
+    ),
     cell: (data) => data.getValue() && <Check />,
   },
   twinClassSchemaSpace: {
     id: "twinClassSchemaSpace",
     accessorKey: "twinClassSchemaSpace",
-    header: "Twinclass schema",
+    header: () => (
+      <SortableHeader
+        title="Twinclass schema"
+        sortField="twinClassSchemaSpace"
+      />
+    ),
     cell: (data) => data.getValue() && <Check />,
   },
   aliasSpace: {
     id: "aliasSpace",
     accessorKey: "aliasSpace",
-    header: "Alias space",
+    header: () => <SortableHeader title="Alias space" sortField="aliasSpace" />,
     cell: (data) => data.getValue() && <Check />,
   },
   markersDataListId: {
     id: "markersDataListId",
     accessorKey: "markersDataListId",
-    header: "Markers list",
+    header: () => (
+      <SortableHeader title="Markers list" sortField="markerDataListName" />
+    ),
     cell: ({ row: { original } }) =>
       original.markerMap ? (
         <div className="inline-flex max-w-48">
@@ -227,7 +254,9 @@ const colDefs: Record<
   tagsDataListId: {
     id: "tagsDataListId",
     accessorKey: "tagsDataListId",
-    header: "Tags list",
+    header: () => (
+      <SortableHeader title="Tags list" sortField="tagDataListName" />
+    ),
     cell: ({ row: { original } }) =>
       original.tagMap ? (
         <div className="inline-flex max-w-48">
@@ -238,7 +267,9 @@ const colDefs: Record<
   viewPermissionId: {
     id: "viewPermissionId",
     accessorKey: "viewPermissionId",
-    header: "View permission",
+    header: () => (
+      <SortableHeader title="View permission" sortField="viewPermissionName" />
+    ),
     cell: ({ row: { original } }) =>
       original.viewPermission && (
         <div className="column-flex max-w-48 space-y-2">
@@ -263,7 +294,9 @@ const colDefs: Record<
   editPermissionId: {
     id: "editPermissionId",
     accessorKey: "editPermissionId",
-    header: "Edit permission",
+    header: () => (
+      <SortableHeader title="Edit permission" sortField="editPermissionName" />
+    ),
     cell: ({ row: { original } }) =>
       original.editPermission && (
         <div className="column-flex max-w-48 space-y-2">
@@ -274,7 +307,12 @@ const colDefs: Record<
   deletePermissionId: {
     id: "deletePermissionId",
     accessorKey: "deletePermissionId",
-    header: "Delete permission",
+    header: () => (
+      <SortableHeader
+        title="Delete permission"
+        sortField="deletePermissionName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.deletePermission && (
         <div className="column-flex max-w-48 space-y-2">
@@ -289,13 +327,13 @@ const colDefs: Record<
   externalId: {
     id: "externalId",
     accessorKey: "externalId",
-    header: "External Id",
+    header: () => <SortableHeader title="External Id" sortField="externalId" />,
   },
 
   segment: {
     id: "segment",
     accessorKey: "segment",
-    header: "Segment",
+    header: () => <SortableHeader title="Segment" sortField="segment" />,
     cell: (data) => data.getValue() && <Check />,
   },
 
@@ -324,16 +362,47 @@ const colDefs: Record<
   uniqueName: {
     id: "uniqueName",
     accessorKey: "uniqueName",
-    header: "Unique name",
+    header: () => <SortableHeader title="Unique name" sortField="uniqueName" />,
     cell: (data) => data.getValue() && <Check />,
   },
 
   twinCounter: {
     id: "twinCounter",
     accessorKey: "twinCounter",
-    header: "Twins count",
+    header: () => (
+      <SortableHeader title="Twins count" sortField="twinCounter" />
+    ),
   },
 };
+
+const UNSET_GROUP_LABEL = "— Not set —";
+
+/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
+function mapCountToSlices(
+  groups: TwinClassCountGroup[],
+  getId: (group: TwinClassCountGroup) => string | undefined,
+  getLabel: (group: TwinClassCountGroup) => string | undefined,
+  renderLabel?: (group: TwinClassCountGroup) => ReactNode
+): PieChartDatum[] {
+  return groups
+    .slice()
+    .sort((a, b) => b.count - a.count)
+    .map((group, index) => ({
+      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
+      value: group.count,
+      color: getPieChartColor(index),
+      legendContent: renderLabel?.(group),
+    }));
+}
+
+/** Renders a tri-state boolean group label, leaving unset groups to fall back. */
+function boolLabel(
+  value: boolean | undefined,
+  yes: string,
+  no: string
+): string | undefined {
+  return value == null ? undefined : value ? yes : no;
+}
 
 export function TwinClasses({ type }: { type?: string }) {
   const api = useContext(PrivateApiContext);
@@ -344,6 +413,7 @@ export function TwinClasses({ type }: { type?: string }) {
   const exportSqlDialogRef = useRef<TwinClassExportSqlDialogRef>(null);
   const [activeTab, setActiveTab] = useState("list");
   const { searchByFilters, simplifiedSearchByFilters } = useTwinClassSearch();
+  const { countTwinClass } = useTwinClassCount();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFilters();
 
   async function fetchTwinClassesHeadTreePage(
@@ -414,46 +484,390 @@ export function TwinClasses({ type }: { type?: string }) {
     };
   }
 
+  function buildOverrideFilters():
+    | Record<string, TwinClassFiltersHierarchyOverride>
+    | undefined {
+    if (!twinClass) return undefined;
+
+    if (type === "Heads") {
+      return {
+        headHierarchyParentsForTwinClassSearch: {
+          idList: [twinClass.id],
+          depth: 1,
+        },
+      };
+    }
+
+    if (type === "Childs") {
+      return {
+        headHierarchyChildsForTwinClassSearch: {
+          idList: [twinClass.id],
+          depth: 1,
+        },
+      };
+    }
+
+    return undefined;
+  }
+
   async function fetchTwinClasses(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<TwinClass_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
-
-    let _override:
-      | Record<string, TwinClassFiltersHierarchyOverride>
-      | undefined;
-
-    if (twinClass) {
-      if (type === "Heads") {
-        _override = {
-          headHierarchyParentsForTwinClassSearch: {
-            idList: [twinClass.id],
-            depth: 1,
-          },
-        };
-      }
-
-      if (type === "Childs") {
-        _override = {
-          headHierarchyChildsForTwinClassSearch: {
-            idList: [twinClass.id],
-            depth: 1,
-          },
-        };
-      }
-    }
+    const _override = buildOverrideFilters();
 
     try {
       return await searchByFilters({
         pagination,
         filters: { ..._filters, ...(_override || {}) },
+        sort,
       });
     } catch {
       toast.error("Failed to fetch twin classes");
       return { data: [], pagination: {} };
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/twin_class/count/v1), bound to the active filters and the
+  // (optional) head/extends hierarchy scope of this view.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(
+        filters as Record<TwinClassFilterKeys, unknown>
+      );
+      const scopedFilters = {
+        ...resolved,
+        ...(buildOverrideFilters() || {}),
+      };
+
+      return [
+        {
+          key: "ownerType",
+          label: "Owner type",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "ownerType",
+              }),
+              (g) => g.ownerType,
+              (g) => g.ownerType
+            ),
+        },
+        {
+          key: "headClass",
+          label: "Head",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "headTwinClassId",
+              }),
+              (g) => g.headTwinClassId,
+              (g) => g.headTwinClass?.name,
+              (g) =>
+                g.headTwinClass && (
+                  <TwinClassResourceLink
+                    data={g.headTwinClass as TwinClass_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "extendsClass",
+          label: "Extends",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "extendsTwinClassId",
+              }),
+              (g) => g.extendsTwinClassId,
+              (g) => g.extendsTwinClass?.name,
+              (g) =>
+                g.extendsTwinClass && (
+                  <TwinClassResourceLink
+                    data={g.extendsTwinClass as TwinClass_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "markerDataList",
+          label: "Markers list",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "markerDataListId",
+              }),
+              (g) => g.markerDataListId,
+              (g) => g.markerDataList?.name,
+              (g) =>
+                g.markerDataList && (
+                  <DatalistResourceLink
+                    data={g.markerDataList as DataList}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "tagDataList",
+          label: "Tags list",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "tagDataListId",
+              }),
+              (g) => g.tagDataListId,
+              (g) => g.tagDataList?.name,
+              (g) =>
+                g.tagDataList && (
+                  <DatalistResourceLink
+                    data={g.tagDataList as DataList}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "headHunterFeaturer",
+          label: "Head hunter",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "headHunterFeaturerId",
+              }),
+              (g) =>
+                g.headHunterFeaturerId != null
+                  ? String(g.headHunterFeaturerId)
+                  : undefined,
+              (g) => g.headHunterFeaturer?.name,
+              (g) =>
+                g.headHunterFeaturer && (
+                  <FeaturerResourceLink
+                    data={g.headHunterFeaturer as Featurer_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "viewPermission",
+          label: "View permission",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "viewPermissionId",
+              }),
+              (g) => g.viewPermissionId,
+              (g) => g.viewPermission?.name,
+              (g) =>
+                g.viewPermission && (
+                  <PermissionResourceLink
+                    data={g.viewPermission as Permission_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "editPermission",
+          label: "Edit permission",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "editPermissionId",
+              }),
+              (g) => g.editPermissionId,
+              (g) => g.editPermission?.name,
+              (g) =>
+                g.editPermission && (
+                  <PermissionResourceLink
+                    data={g.editPermission as Permission_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "deletePermission",
+          label: "Delete permission",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "deletePermissionId",
+              }),
+              (g) => g.deletePermissionId,
+              (g) => g.deletePermission?.name,
+              (g) =>
+                g.deletePermission && (
+                  <PermissionResourceLink
+                    data={g.deletePermission as Permission_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "abstract",
+          label: "Abstract",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "abstractt",
+              }),
+              (g) =>
+                g.abstractt == null
+                  ? undefined
+                  : g.abstractt
+                    ? "Abstract"
+                    : "Not abstract",
+              (g) =>
+                g.abstractt == null
+                  ? undefined
+                  : g.abstractt
+                    ? "Abstract"
+                    : "Not abstract"
+            ),
+        },
+        {
+          key: "assigneeRequired",
+          label: "Assignee required",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "assigneeRequired",
+              }),
+              (g) =>
+                g.assigneeRequired == null
+                  ? undefined
+                  : g.assigneeRequired
+                    ? "Required"
+                    : "Not required",
+              (g) =>
+                g.assigneeRequired == null
+                  ? undefined
+                  : g.assigneeRequired
+                    ? "Required"
+                    : "Not required"
+            ),
+        },
+        {
+          key: "segment",
+          label: "Segment",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "segment",
+              }),
+              (g) => boolLabel(g.segment, "Segment", "Not segment"),
+              (g) => boolLabel(g.segment, "Segment", "Not segment")
+            ),
+        },
+        {
+          key: "twinClassFreeze",
+          label: "Freeze",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "twinClassFreezeId",
+              }),
+              (g) => g.twinClassFreezeId,
+              (g) => g.twinClassFreeze?.name,
+              (g) =>
+                g.twinClassFreeze && (
+                  <TwinClassFreezeResourceLink
+                    data={g.twinClassFreeze as TwinClass_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "twinflowSchemaSpace",
+          label: "Twinflow schema",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "twinflowSchemaSpace",
+              }),
+              (g) => boolLabel(g.twinflowSchemaSpace, "Yes", "No"),
+              (g) => boolLabel(g.twinflowSchemaSpace, "Yes", "No")
+            ),
+        },
+        {
+          key: "twinClassSchemaSpace",
+          label: "Twinclass schema",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "twinClassSchemaSpace",
+              }),
+              (g) => boolLabel(g.twinClassSchemaSpace, "Yes", "No"),
+              (g) => boolLabel(g.twinClassSchemaSpace, "Yes", "No")
+            ),
+        },
+        {
+          key: "aliasSpace",
+          label: "Alias space",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "aliasSpace",
+              }),
+              (g) => boolLabel(g.aliasSpace, "Yes", "No"),
+              (g) => boolLabel(g.aliasSpace, "Yes", "No")
+            ),
+        },
+        {
+          key: "uniqueName",
+          label: "Unique name",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "uniqueName",
+              }),
+              (g) => boolLabel(g.uniqueName, "Yes", "No"),
+              (g) => boolLabel(g.uniqueName, "Yes", "No")
+            ),
+        },
+        {
+          key: "hasDynamicMarkers",
+          label: "Has dynamic markers",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinClass({
+                filters: scopedFilters,
+                groupField: "hasDynamicMarkers",
+              }),
+              (g) => boolLabel(g.hasDynamicMarkers, "Yes", "No"),
+              (g) => boolLabel(g.hasDynamicMarkers, "Yes", "No")
+            ),
+        },
+      ];
+    },
+    [countTwinClass, mapFiltersToPayload, twinClass, type]
+  );
 
   const twinClassesForm = useForm<TwinClassFieldValues>({
     resolver: zodResolver(TWIN_CLASSES_SCHEMA),
@@ -662,6 +1076,7 @@ export function TwinClasses({ type }: { type?: string }) {
             actionsCol,
           ]}
           getRowId={(row) => row.id!}
+          chartGroupings={buildChartGroupings}
           onRowClick={(row) =>
             router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
           }

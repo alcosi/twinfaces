@@ -66,3 +66,17 @@ export type TwinClassFieldV2Filters = Partial<
 
 export type TwinClassFieldSearchRsV1 =
   components["schemas"]["TwinClassFieldSearchRsV1"];
+
+export type TwinClassFieldSortField = NonNullable<
+  components["schemas"]["TwinClassFieldSearchRqV2"]["sortField"]
+>;
+
+export type TwinClassFieldCountRq =
+  components["schemas"]["TwinClassFieldCountRqV1"];
+export type TwinClassFieldCountRsV1 =
+  components["schemas"]["TwinClassFieldCountRsV1"];
+export type TwinClassFieldCountV1 =
+  components["schemas"]["TwinClassFieldCountV1"];
+export type TwinClassFieldCountGroupField = NonNullable<
+  TwinClassFieldCountRq["groupFields"]
+>[number];

@@ -70,7 +70,7 @@ type Props = {
 };
 
 export function TwinsTable({
-  title,
+  title = "Twins",
   enabledColumns,
   baseTwinClassId,
   baseTwinClassIdList,

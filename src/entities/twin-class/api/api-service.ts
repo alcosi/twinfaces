@@ -7,6 +7,7 @@ import { operations } from "@/shared/api/generated/schema";
 import {
   RuleFilters,
   TagSearchFilters,
+  TwinClassCountGroupField,
   TwinClassCreateRq,
   TwinClassDuplicateRq,
   TwinClassDynamicMarkerCreateRq,
@@ -14,6 +15,7 @@ import {
   TwinClassDynamicMarkerUpdateRq,
   TwinClassExportSql,
   TwinClassFilters,
+  TwinClassSortField,
   TwinClassUpdateRq,
   TwinClassValidHeadFilters,
   TwinClassValidHeadQuery,
@@ -24,10 +26,14 @@ export function createTwinClassApi(settings: ApiSettings) {
     pagination,
     search,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     search?: string;
     filters: TwinClassFilters;
+    sortField?: TwinClassSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/twin_class/search/v2", {
       params: {
@@ -58,6 +64,39 @@ export function createTwinClassApi(settings: ApiSettings) {
             ? ["%" + search + "%"]
             : filters.nameI18nLikeList,
         },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+  }: {
+    filters: TwinClassFilters;
+    groupFields: TwinClassCountGroupField[];
+  }) {
+    return settings.client.POST("/private/twin_class/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinClassMode: "DETAILED",
+          showTwinClassHead2TwinClassMode: "DETAILED",
+          showTwinClassExtends2TwinClassMode: "DETAILED",
+          showTwinClassMarker2DataListOptionMode: "DETAILED",
+          showTwinClassTag2DataListOptionMode: "DETAILED",
+          showTwinClass2PermissionMode: "DETAILED",
+          showTwinClass2FeaturerMode: "DETAILED",
+          showTwinClassFreezeMode: "DETAILED",
+        },
+      },
+      body: {
+        search: {
+          ...filters,
+        },
+        groupFields,
       },
     });
   }
@@ -389,6 +428,7 @@ export function createTwinClassApi(settings: ApiSettings) {
 
   return {
     search,
+    count,
     getByKey,
     getById,
     create,
