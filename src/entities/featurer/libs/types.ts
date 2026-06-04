@@ -12,6 +12,7 @@ export const FeaturerTypes = {
   filler: 23,
   headHunter: 26,
   initializer: 53,
+  fieldOverwriter: 46,
 } as const;
 
 export type FeaturerTypeId = (typeof FeaturerTypes)[keyof typeof FeaturerTypes];

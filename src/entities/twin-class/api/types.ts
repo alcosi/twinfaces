@@ -195,6 +195,9 @@ export type Rule_DETAILED = Rule & {
 
 export type RuleSearchRq = components["schemas"]["TwinClassFieldRuleSearchV1"];
 
-export type RuleFilterKeys = "idList";
+export type RuleFilterKeys =
+  | "idList"
+  | "twinClassFieldIdList"
+  | "fieldOverwriterFeaturerIdList";
 
 export type RuleFilters = Partial<Pick<RuleSearchRq, RuleFilterKeys>>;
