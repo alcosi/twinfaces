@@ -22,8 +22,16 @@ export function useDatalistOptionSelectAdapter(): SelectAdapter<DataListOptionV1
     return response.data[0];
   }
 
-  async function getItems(search: string, filters?: DataListOptionFilters) {
+  async function getItems(
+    search: string,
+    filters?: DataListOptionFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     const response = await searchDatalistOptions({
+      pagination,
       filters: {
         optionI18nLikeList: isPopulatedString(search)
           ? [wrapWithPercent(search)]
@@ -47,6 +55,8 @@ export function useDatalistOptionSelectAdapter(): SelectAdapter<DataListOptionV1
     getById,
     getItems: (search, options) =>
       getItems(search, options as DataListOptionFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

@@ -1,13 +1,13 @@
-import { SelectAdapter } from "@/shared/libs";
 import {
-  Link_MANAGED,
   LINK_STRENGTH_ENUM,
   LINK_TYPES_ENUM,
   LinkStrength,
   LinkType,
+  Link_MANAGED,
   useLinkFetchById,
   useLinkSearch,
 } from "@/entities/link";
+import { SelectAdapter } from "@/shared/libs";
 
 export function useLinkTypeSelectAdapter(): SelectAdapter<{
   id: LinkType;
@@ -68,9 +68,16 @@ export function useLinkSelectAdapter(): SelectAdapter<Link_MANAGED> {
     });
   }
 
-  async function getItems(search: string) {
-    const response = await searchLinks({ search });
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchLinks({ search, pagination });
     return response.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ srcTwinClass, dstTwinClass, name }: Link_MANAGED) {
@@ -80,6 +87,7 @@ export function useLinkSelectAdapter(): SelectAdapter<Link_MANAGED> {
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

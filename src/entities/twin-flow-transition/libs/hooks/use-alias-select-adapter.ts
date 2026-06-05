@@ -9,9 +9,16 @@ export function useTransitionAliasSelectAdapter(): SelectAdapter<TransitionAlias
     return { id };
   }
 
-  async function getItems(search: string) {
-    const response = await searchTransitionAlias({ search });
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchTransitionAlias({ search, pagination });
     return response.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem(value: TransitionAliasV1) {
@@ -24,6 +31,7 @@ export function useTransitionAliasSelectAdapter(): SelectAdapter<TransitionAlias
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

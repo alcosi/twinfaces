@@ -2,8 +2,14 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -21,8 +27,19 @@ export function useFactoryBranchFilters({
 }: {
   enabledFilters?: FactoryBranchFilterKeys[];
 }): FilterFeature<FactoryBranchFilterKeys, FactoryBranchFilters> {
-  const factoryAdapter = useFactorySelectAdapter();
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
+  const nextFactoryAdapter = useFactorySelectAdapterWithFilters();
+  const factoryConditionSetAdapter =
+    useFactoryConditionSetSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
 
   const allFilters: Record<FactoryBranchFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -32,16 +49,24 @@ export function useFactoryBranchFilters({
       placeholder: "Enter UUID",
     },
     factoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Factory",
+      adapter: factoryAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryAdapter,
     },
     factoryConditionSetIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Condition set",
+      adapter: factoryConditionSetAdapter,
+      extraFilters: buildFactoryConditionSetFilters(),
+      mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryConditionSetAdapter,
     },
     conditionInvert: {
       type: AutoFormValueType.boolean,
@@ -56,10 +81,14 @@ export function useFactoryBranchFilters({
       defaultValue: "indeterminate",
     },
     nextFactoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Next Factory",
+      adapter: nextFactoryAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryAdapter,
     },
     descriptionLikeList: {
       type: AutoFormValueType.tag,

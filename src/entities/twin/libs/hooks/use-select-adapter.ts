@@ -32,8 +32,16 @@ export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
     return data as Twin_DETAILED;
   }
 
-  async function getItems(search: string, filters?: TwinFilters) {
+  async function getItems(
+    search: string,
+    filters?: TwinFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     const response = await searchTwins({
+      pagination,
       filters: {
         twinNameLikeList: isPopulatedString(search)
           ? [wrapWithPercent(search)]
@@ -57,6 +65,8 @@ export function useTwinSelectAdapter(): SelectAdapter<Twin_DETAILED> {
   return {
     getById,
     getItems: (search, options) => getItems(search, options as TwinFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

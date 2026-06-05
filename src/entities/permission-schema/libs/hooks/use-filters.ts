@@ -6,7 +6,10 @@ import {
   PermissionSchemaFilterKeys,
   PermissionSchemaFilters,
 } from "@/entities/permission-schema";
-import { useUserSelectAdapter } from "@/entities/user";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import {
   type FilterFeature,
   toArray,
@@ -18,7 +21,11 @@ export function usePermissionSchemaFilters(): FilterFeature<
   PermissionSchemaFilterKeys,
   PermissionSchemaFilters
 > {
-  const uAdapter = useUserSelectAdapter();
+  const uAdapter = useUserSelectAdapterWithFilters();
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
 
   function buildFilterFields(): Record<
     PermissionSchemaFilterKeys,
@@ -43,10 +50,14 @@ export function usePermissionSchemaFilters(): FilterFeature<
       },
 
       createdByUserIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Created By",
+        adapter: uAdapter,
+        extraFilters: buildUserFilters(),
+        mapExtraFilters: (filters) => mapUserFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...uAdapter,
       },
     };
   }

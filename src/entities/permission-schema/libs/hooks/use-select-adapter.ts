@@ -20,9 +20,16 @@ export function usePermissionSchemaSelectAdapter(): SelectAdapter<PermissionSche
     });
   }
 
-  async function getItems(search: string) {
-    const response = await searchPermissionSchemas({ search });
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchPermissionSchemas({ search, pagination });
     return response.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ name }: PermissionSchema) {
@@ -32,6 +39,7 @@ export function usePermissionSchemaSelectAdapter(): SelectAdapter<PermissionSche
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

@@ -19,12 +19,16 @@ export function useProjectionTypeSelectAdapter(): SelectAdapter<ProjectionType> 
     return await fetchProjectionTypeById(id);
   }
 
-  async function getItems(search: string, filters?: ProjectionTypeFilters) {
+  async function getItems(
+    search: string,
+    filters?: ProjectionTypeFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     const response = await searchProjectionTypes({
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
+      pagination,
       filters: {
         nameLikeList: [wrapWithPercent(search)],
         ...filters,
@@ -44,6 +48,8 @@ export function useProjectionTypeSelectAdapter(): SelectAdapter<ProjectionType> 
     getById,
     getItems: (search, options) =>
       getItems(search, options as ProjectionTypeFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

@@ -2,6 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
   FilterFeature,
@@ -13,15 +17,19 @@ import {
 } from "@/shared/libs";
 
 import { FactoryConditionFilterKeys, FactoryConditionFilters } from "../../api";
-import { useFactoryConditionSelectAdapter } from "./use-select-adapter";
 
 export function useFactoryConditionFilters({
   enabledFilters,
 }: {
   enabledFilters?: FactoryConditionFilterKeys[];
 }): FilterFeature<FactoryConditionFilterKeys, FactoryConditionFilters> {
-  const conditionSetAdapter = useFactoryConditionSelectAdapter();
+  const conditionSetAdapter = useFactoryConditionSetSelectAdapterWithFilters();
   const featurerAdapter = useFeaturerSelectAdapter(24);
+
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
 
   const allFilters: Record<FactoryConditionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -31,10 +39,14 @@ export function useFactoryConditionFilters({
       placeholder: "Enter UUID",
     },
     factoryConditionSetIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Condition set",
+      adapter: conditionSetAdapter,
+      extraFilters: buildFactoryConditionSetFilters(),
+      mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...conditionSetAdapter,
     },
     conditionerFeaturerIdList: {
       type: AutoFormValueType.combobox,

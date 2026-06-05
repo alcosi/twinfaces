@@ -2,8 +2,14 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
 import {
   ERASE_ACTION_TYPES,
   FactoryEraserFilterKeys,
@@ -26,14 +32,23 @@ export function useFactoryEraserFilters(): FilterFeature<
   FactoryEraserFilterKeys,
   FactoryEraserFilters
 > {
-  const factoryAdapter = useFactorySelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const factoryConditionSetAdapter =
+    useFactoryConditionSetSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
 
   function buildFilterFields(): Record<
     FactoryEraserFilterKeys,
@@ -48,10 +63,14 @@ export function useFactoryEraserFilters(): FilterFeature<
       },
 
       factoryIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Factory",
+        adapter: factoryAdapter,
+        extraFilters: buildFactoryFilters(),
+        mapExtraFilters: (filters) => mapFactoryFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...factoryAdapter,
       },
 
       inputTwinClassIdList: {
@@ -66,10 +85,14 @@ export function useFactoryEraserFilters(): FilterFeature<
       },
 
       factoryConditionSetIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Condition set",
+        adapter: factoryConditionSetAdapter,
+        extraFilters: buildFactoryConditionSetFilters(),
+        mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...factoryConditionSetAdapter,
       },
 
       conditionInvert: {

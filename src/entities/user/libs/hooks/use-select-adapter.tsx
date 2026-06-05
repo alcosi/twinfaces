@@ -1,13 +1,15 @@
+import { UserIcon } from "lucide-react";
+
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   wrapWithPercent,
 } from "@/shared/libs";
 import { Avatar } from "@/shared/ui";
-import { UserIcon } from "lucide-react";
+
 import {
-  DomainUser_DETAILED,
   DomainUserFilters,
+  DomainUser_DETAILED,
   useDomainUserSearchV1,
 } from "../../api";
 
@@ -27,9 +29,16 @@ export function useUserSelectAdapter(): SelectAdapter<DomainUser_DETAILED> {
     return data[0];
   }
 
-  async function getItems(search: string, filters?: DomainUserFilters) {
+  async function getItems(
+    search: string,
+    filters?: DomainUserFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     const { data } = await searchUsers({
-      pagination: { pageIndex: 0, pageSize: 10 },
+      pagination,
       filters: {
         nameLikeList: isPopulatedString(search)
           ? [wrapWithPercent(search)]
@@ -62,6 +71,8 @@ export function useUserSelectAdapter(): SelectAdapter<DomainUser_DETAILED> {
     getById,
     getItems: (search, options) =>
       getItems(search, options as DomainUserFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

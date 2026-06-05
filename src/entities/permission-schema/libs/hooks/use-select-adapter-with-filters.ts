@@ -1,0 +1,69 @@
+import { useRef, useState } from "react";
+
+import { SelectAdapterWithFilters, isPopulatedString } from "@/shared/libs";
+
+import {
+  PermissionSchema,
+  PermissionSchemaSearchFilters,
+  useFetchPermissionSchemaById,
+  usePermissionSchemaSearchV1,
+} from "../../api";
+
+export function usePermissionSchemaSelectAdapterWithFilters(): SelectAdapterWithFilters<
+  PermissionSchema,
+  PermissionSchemaSearchFilters
+> {
+  const { searchPermissionSchemas } = usePermissionSchemaSearchV1();
+  const { fetchPermissionSchemaById } = useFetchPermissionSchemaById();
+
+  const filtersRef = useRef<PermissionSchemaSearchFilters>({});
+  const [version, setVersion] = useState(0);
+
+  function setFilters(filters: PermissionSchemaSearchFilters) {
+    filtersRef.current = filters;
+  }
+
+  function invalidate() {
+    setVersion((v) => v + 1);
+  }
+
+  async function getById(id: string) {
+    return fetchPermissionSchemaById({
+      schemaId: id,
+      query: {
+        lazyRelation: false,
+        showPermissionSchemaMode: "DETAILED",
+      },
+    });
+  }
+
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchPermissionSchemas({
+      search,
+      pagination,
+      filters: filtersRef.current,
+    });
+    return response.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
+  }
+
+  function renderItem({ name }: PermissionSchema) {
+    return isPopulatedString(name) ? name : "N/A";
+  }
+
+  return {
+    getById,
+    getItems,
+    getItemsPaginated,
+    renderItem,
+    setFilters,
+    invalidate,
+    version,
+  };
+}

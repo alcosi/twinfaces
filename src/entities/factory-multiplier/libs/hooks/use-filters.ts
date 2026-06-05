@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
   useTwinClassFilters,
@@ -28,7 +31,7 @@ export function useFactoryMultiplierFilters({
 }: {
   enabledFilters?: FactoryMultiplierFilterKeys[];
 }): FilterFeature<FactoryMultiplierFilterKeys, FactoryMultiplierFilters> {
-  const factoryAdapter = useFactorySelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const featurerAdapter = useFeaturerSelectAdapter(22);
 
@@ -36,6 +39,10 @@ export function useFactoryMultiplierFilters({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
 
   const allFilters: Record<FactoryMultiplierFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -45,10 +52,14 @@ export function useFactoryMultiplierFilters({
       placeholder: "Enter UUID",
     },
     factoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Factory",
+      adapter: factoryAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryAdapter,
     },
     inputTwinClassIdList: {
       type: AutoFormValueType.complexCombobox,

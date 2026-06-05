@@ -23,9 +23,17 @@ export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatus> {
     return fetchTwinStatusById(id);
   }
 
-  async function getItems(search: string, filters?: TwinStatusFilters) {
+  async function getItems(
+    search: string,
+    filters?: TwinStatusFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     try {
       const response = await searchTwinStatuses({
+        pagination,
         filters: {
           keyLikeList: search ? [wrapWithPercent(search)] : [],
           ...filters,
@@ -58,6 +66,8 @@ export function useTwinStatusSelectAdapter(): SelectAdapter<TwinStatus> {
     getById,
     getItems: (search, options) =>
       getItems(search, options as TwinStatusFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

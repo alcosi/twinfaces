@@ -2,14 +2,26 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { usePermissionSelectAdapter } from "@/entities/permission";
-import { useTwinSelectAdapter } from "@/entities/twin";
+import {
+  usePermissionFilters,
+  usePermissionSelectAdapterWithFilters,
+} from "@/entities/permission";
+import {
+  useTwinFilters,
+  useTwinSelectAdapterWithFilters,
+} from "@/entities/twin";
 import {
   useTwinClassFieldFilters,
   useTwinClassFieldSelectAdapterWithFilters,
 } from "@/entities/twin-class-field";
-import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
-import { useUserSelectAdapter } from "@/entities/user";
+import {
+  useTransitionSelectAdapterWithFilters,
+  useTwinFlowTransitionFilters,
+} from "@/entities/twin-flow-transition";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -26,15 +38,31 @@ export function useAttachmentFilters({
 }: {
   enabledFilters?: AttachmentFilterKeys[];
 }): FilterFeature<AttachmentFilterKeys, AttachmentFilters> {
-  const twinAdapter = useTwinSelectAdapter();
-  const transitionAdapter = useTransitionSelectAdapter();
-  const userAdapter = useUserSelectAdapter();
-  const permissionAdapter = usePermissionSelectAdapter();
+  const twinAdapter = useTwinSelectAdapterWithFilters();
+  const transitionAdapter = useTransitionSelectAdapterWithFilters();
+  const userAdapter = useUserSelectAdapterWithFilters();
+  const permissionAdapter = usePermissionSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFieldFilters,
     mapFiltersToPayload: mapTwinClassFieldFilters,
   } = useTwinClassFieldFilters({});
+  const {
+    buildFilterFields: buildTwinFilters,
+    mapFiltersToPayload: mapTwinFilters,
+  } = useTwinFilters({});
+  const {
+    buildFilterFields: buildTransitionFilters,
+    mapFiltersToPayload: mapTransitionFilters,
+  } = useTwinFlowTransitionFilters({});
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
+  const {
+    buildFilterFields: buildPermissionFilters,
+    mapFiltersToPayload: mapPermissionFilters,
+  } = usePermissionFilters();
 
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
 
@@ -46,30 +74,42 @@ export function useAttachmentFilters({
       placeholder: "Enter UUID",
     },
     twinIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin",
+      adapter: twinAdapter,
+      extraFilters: buildTwinFilters(),
+      mapExtraFilters: (filters) => mapTwinFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinAdapter,
     },
     externalIdLikeList: {
       type: AutoFormValueType.tag,
       label: "External Id",
     },
     twinflowTransitionIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Transition",
+      adapter: transitionAdapter,
+      extraFilters: buildTransitionFilters(),
+      mapExtraFilters: (filters) => mapTransitionFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...transitionAdapter,
     },
     storageLinkLikeList: {
       type: AutoFormValueType.tag,
       label: "Link",
     },
     createdByUserIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Author",
+      adapter: userAdapter,
+      extraFilters: buildUserFilters(),
+      mapExtraFilters: (filters) => mapUserFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...userAdapter,
     },
     titleLikeList: {
       type: AutoFormValueType.tag,
@@ -80,10 +120,14 @@ export function useAttachmentFilters({
       label: "Description",
     },
     viewPermissionIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "View permission",
+      adapter: permissionAdapter,
+      extraFilters: buildPermissionFilters(),
+      mapExtraFilters: (filters) => mapPermissionFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...permissionAdapter,
     },
     twinClassFieldIdList: {
       type: AutoFormValueType.complexCombobox,

@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useDatalistSelectAdapter } from "@/entities/datalist";
+import {
+  useDatalistFilters,
+  useDatalistSelectAdapterWithFilters,
+} from "@/entities/datalist";
 import {
   DATALIST_OPTION_STATUS_TYPES,
   DataListOptionFilterKeys,
@@ -23,7 +26,12 @@ export function useDatalistOptionFilters({
 }: {
   enabledFilters?: DataListOptionFilterKeys[];
 }): FilterFeature<DataListOptionFilterKeys, DataListOptionFilters> {
-  const dAdapter = useDatalistSelectAdapter();
+  const dAdapter = useDatalistSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildDatalistFilters,
+    mapFiltersToPayload: mapDatalistFilters,
+  } = useDatalistFilters();
 
   const allFilters: Record<DataListOptionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -34,10 +42,14 @@ export function useDatalistOptionFilters({
     },
 
     dataListIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Datalist",
+      adapter: dAdapter,
+      extraFilters: buildDatalistFilters(),
+      mapExtraFilters: (filters) => mapDatalistFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...dAdapter,
     },
 
     optionI18nLikeList: {

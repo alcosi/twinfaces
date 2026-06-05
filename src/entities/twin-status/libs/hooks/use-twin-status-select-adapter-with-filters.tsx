@@ -34,7 +34,10 @@ export function useTwinStatusSelectAdapterWithFilters(): SelectAdapterWithFilter
     setVersion((v) => v + 1);
   };
 
-  async function getItems(search: string) {
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
     try {
       const keyLikeList = [
         ...(search ? [wrapWithPercent(search)] : []),
@@ -42,6 +45,7 @@ export function useTwinStatusSelectAdapterWithFilters(): SelectAdapterWithFilter
       ];
 
       const response = await searchTwinStatuses({
+        pagination,
         filters: {
           ...filtersRef.current,
           keyLikeList,
@@ -53,6 +57,10 @@ export function useTwinStatusSelectAdapterWithFilters(): SelectAdapterWithFilter
       console.error("Error fetching search items:", error);
       return [];
     }
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem(status: TwinStatus) {
@@ -74,6 +82,7 @@ export function useTwinStatusSelectAdapterWithFilters(): SelectAdapterWithFilter
   return {
     getById: fetchTwinStatusById,
     getItems,
+    getItemsPaginated,
     renderItem,
     setFilters,
     invalidate,

@@ -13,7 +13,10 @@ import {
   useTwinStatusSelectAdapterWithFilters,
 } from "@/entities/twin-status";
 import { TwinFilterKeys, TwinFilters } from "@/entities/twin/server";
-import { useUserSelectAdapter } from "@/entities/user";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import {
   type FilterFeature,
   isObject,
@@ -31,7 +34,7 @@ import {
   TWIN_SELF_FIELD_KEY_TO_ID_MAP,
 } from "../constants";
 import { SearchableTwinFieldType } from "../types";
-import { useTwinSelectAdapter } from "./use-select-adapter";
+import { useTwinSelectAdapterWithFilters } from "./use-select-adapter-with-filters";
 
 export function useTwinFilters({
   baseTwinClassId,
@@ -42,8 +45,9 @@ export function useTwinFilters({
   twinClassFields?: TwinClass_DETAILED["fields"];
   enabledColumns?: FaceWT001["columns"];
 }): FilterFeature<TwinFilterKeys, TwinFilters> {
-  const uAdapter = useUserSelectAdapter();
-  const tAdapter = useTwinSelectAdapter();
+  const createdByUserAdapter = useUserSelectAdapterWithFilters();
+  const assignerUserAdapter = useUserSelectAdapterWithFilters();
+  const headTwinAdapter = useTwinSelectAdapterWithFilters();
 
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
   const tsAdapter = useTwinStatusSelectAdapterWithFilters();
@@ -52,6 +56,11 @@ export function useTwinFilters({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
 
   const {
     buildFilterFields: buildStatusFilters,
@@ -111,28 +120,41 @@ export function useTwinFilters({
           "Description",
       },
       headTwinIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label:
           columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["headTwinId"]]?.label ??
           "Head",
         multi: true,
-        ...tAdapter,
+        adapter: headTwinAdapter,
+        // NOTE: extraFilters intentionally left empty — using useTwinFilters here
+        // would recurse (this is the Twin filters hook itself).
+        extraFilters: {},
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
       },
       createdByUserIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label:
           columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["authorUserId"]]?.label ??
           "Author",
         multi: true,
-        ...uAdapter,
+        adapter: createdByUserAdapter,
+        extraFilters: buildUserFilters(),
+        mapExtraFilters: (filters) => mapUserFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
       },
       assignerUserIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label:
           columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["assignerUserId"]]?.label ??
           "Assignee",
         multi: true,
-        ...uAdapter,
+        adapter: assignerUserAdapter,
+        extraFilters: buildUserFilters(),
+        mapExtraFilters: (filters) => mapUserFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
       },
       createdAt: {
         type: AutoFormValueType.string,

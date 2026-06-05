@@ -20,15 +20,22 @@ export function useRecipientSelectAdapter(): SelectAdapter<Recipient_DETAILED> {
     return data?.[0];
   }
 
-  async function getItems(search: string) {
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
     const { data } = await searchRecipient({
-      pagination: { pageIndex: 0, pageSize: 10 },
+      pagination,
       filters: {
         nameLikeList: search ? [wrapWithPercent(search)] : [],
       },
     });
 
     return data ?? [];
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ id, name }: Recipient_DETAILED) {
@@ -38,6 +45,7 @@ export function useRecipientSelectAdapter(): SelectAdapter<Recipient_DETAILED> {
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

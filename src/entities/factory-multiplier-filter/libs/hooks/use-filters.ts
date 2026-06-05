@@ -2,9 +2,18 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
-import { useFactoryMultiplierSelectAdapter } from "@/entities/factory-multiplier/libs";
-import { useFactorySelectAdapter } from "@/entities/factory/libs";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
+import {
+  useFactoryMultiplierFilters,
+  useFactoryMultiplierSelectAdapterWithFilters,
+} from "@/entities/factory-multiplier/libs";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory/libs";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
@@ -32,15 +41,29 @@ export function useFactoryMultiplierFilterFilters({
   FactoryMultiplierFilterFilterKeys,
   FactoryMultiplierFilterFilters
 > {
-  const factoryAdapter = useFactorySelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
-  const factoryMultiplierAdapter = useFactoryMultiplierSelectAdapter();
+  const factoryConditionSetAdapter =
+    useFactoryConditionSetSelectAdapterWithFilters();
+  const factoryMultiplierAdapter =
+    useFactoryMultiplierSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
+  const {
+    buildFilterFields: buildFactoryMultiplierFilters,
+    mapFiltersToPayload: mapFactoryMultiplierFilters,
+  } = useFactoryMultiplierFilters({});
 
   const allFilters: Record<
     FactoryMultiplierFilterFilterKeys,
@@ -53,16 +76,24 @@ export function useFactoryMultiplierFilterFilters({
       placeholder: "Enter UUID",
     },
     factoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Factory",
+      adapter: factoryAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryAdapter,
     },
     factoryMultiplierIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Multiplier",
+      adapter: factoryMultiplierAdapter,
+      extraFilters: buildFactoryMultiplierFilters(),
+      mapExtraFilters: (filters) => mapFactoryMultiplierFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryMultiplierAdapter,
     },
     inputTwinClassIdList: {
       type: AutoFormValueType.complexCombobox,
@@ -75,10 +106,14 @@ export function useFactoryMultiplierFilterFilters({
       multi: true,
     },
     factoryConditionSetIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Condition set",
+      adapter: factoryConditionSetAdapter,
+      extraFilters: buildFactoryConditionSetFilters(),
+      mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryConditionSetAdapter,
     },
     factoryConditionInvert: {
       type: AutoFormValueType.boolean,

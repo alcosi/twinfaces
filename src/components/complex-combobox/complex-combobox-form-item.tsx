@@ -36,6 +36,10 @@ export function ComplexComboboxFormItem({
   const sidebarCtx = useContext(AdvancedFiltersContext);
   const useSidebar = sidebarCtx !== null && filterKey !== undefined;
 
+  const hasExtraFilters = Object.values(info.extraFilters).some(
+    (filter) => filter !== undefined
+  );
+
   const [open, setOpen] = useState(false);
   const [filtersVersion, setFiltersVersion] = useState(0);
 
@@ -131,7 +135,7 @@ export function ComplexComboboxFormItem({
           />
         </div>
 
-        {!info.disabled && useSidebar && (
+        {!info.disabled && useSidebar && hasExtraFilters && (
           <button
             type="button"
             className={cn(
@@ -154,7 +158,7 @@ export function ComplexComboboxFormItem({
         )}
       </div>
 
-      {!info.disabled && !useSidebar && (
+      {!info.disabled && !useSidebar && hasExtraFilters && (
         <button
           type="button"
           className={cn(

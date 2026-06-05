@@ -2,13 +2,19 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
+import {
+  useDatalistOptionFilters,
+  useDatalistOptionSelectAdapterWithFilters,
+} from "@/entities/datalist-option";
 import {
   OptionProjectionFilterKeys,
   OptionProjectionFilters,
 } from "@/entities/option-projection";
 import { useProjectionTypeSelectAdapter } from "@/entities/projection/libs";
-import { useUserSelectAdapter } from "@/entities/user";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -23,8 +29,18 @@ export function useOptionProjectionFilters({
   enabledFilters?: OptionProjectionFilterKeys[];
 }): FilterFeature<OptionProjectionFilterKeys, OptionProjectionFilters> {
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
-  const dataListOptionAdapter = useDatalistOptionSelectAdapter();
-  const savedByUserAdapter = useUserSelectAdapter();
+  const dstDataListOptionAdapter = useDatalistOptionSelectAdapterWithFilters();
+  const srcDataListOptionAdapter = useDatalistOptionSelectAdapterWithFilters();
+  const savedByUserAdapter = useUserSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildDatalistOptionFilters,
+    mapFiltersToPayload: mapDatalistOptionFilters,
+  } = useDatalistOptionFilters({});
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
 
   const allFilters: Record<OptionProjectionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -40,22 +56,34 @@ export function useOptionProjectionFilters({
       ...projectionTypeAdapter,
     },
     dstDataListOptionIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Dst option",
+      adapter: dstDataListOptionAdapter,
+      extraFilters: buildDatalistOptionFilters(),
+      mapExtraFilters: (filters) => mapDatalistOptionFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...dataListOptionAdapter,
     },
     srcDataListOptionIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Src option",
+      adapter: srcDataListOptionAdapter,
+      extraFilters: buildDatalistOptionFilters(),
+      mapExtraFilters: (filters) => mapDatalistOptionFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...dataListOptionAdapter,
     },
     savedByUserIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Saved by user",
+      adapter: savedByUserAdapter,
+      extraFilters: buildUserFilters(),
+      mapExtraFilters: (filters) => mapUserFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...savedByUserAdapter,
     },
     changedAt: {
       type: AutoFormValueType.dateRange,

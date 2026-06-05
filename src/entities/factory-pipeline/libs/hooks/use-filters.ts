@@ -2,8 +2,14 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
 import {
   FactoryPipelineFilterKeys,
   FactoryPipelineFilters,
@@ -12,7 +18,10 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import {
+  useStatusFilters,
+  useTwinStatusSelectAdapterWithFilters,
+} from "@/entities/twin-status";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -28,15 +37,30 @@ export function useFactoryPipelineFilters({
 }: {
   enabledFilters?: FactoryPipelineFilterKeys[];
 }): FilterFeature<FactoryPipelineFilterKeys, FactoryPipelineFilters> {
-  const factorySelectAdapter = useFactorySelectAdapter();
+  const factorySelectAdapter = useFactorySelectAdapterWithFilters();
+  const nextFactorySelectAdapter = useFactorySelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
-  const twinStatusAdapter = useTwinStatusSelectAdapter();
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapterWithFilters();
+  const factoryConditionSetAdapter =
+    useFactoryConditionSetSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildStatusFilters,
+    mapFiltersToPayload: mapStatusFilters,
+  } = useStatusFilters({ enabledFilters: undefined });
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
 
   const allFilters: Record<FactoryPipelineFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -46,10 +70,14 @@ export function useFactoryPipelineFilters({
       placeholder: "Enter UUID",
     },
     factoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Factory",
+      adapter: factorySelectAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factorySelectAdapter,
     },
     inputTwinClassIdList: {
       type: AutoFormValueType.complexCombobox,
@@ -62,10 +90,14 @@ export function useFactoryPipelineFilters({
       multi: true,
     },
     factoryConditionSetIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Factory Condition Set",
+      adapter: factoryConditionSetAdapter,
+      extraFilters: buildFactoryConditionSetFilters(),
+      mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryConditionSetAdapter,
     },
     active: {
       type: AutoFormValueType.boolean,
@@ -74,16 +106,24 @@ export function useFactoryPipelineFilters({
       defaultValue: "indeterminate",
     },
     outputTwinStatusIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Output Twin Status",
+      adapter: twinStatusAdapter,
+      extraFilters: buildStatusFilters(),
+      mapExtraFilters: (filters) => mapStatusFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinStatusAdapter,
     },
     nextFactoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Next Factory",
+      adapter: nextFactorySelectAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factorySelectAdapter,
     },
     descriptionLikeList: {
       type: AutoFormValueType.tag,

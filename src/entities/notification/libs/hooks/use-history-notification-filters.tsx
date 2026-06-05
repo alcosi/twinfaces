@@ -15,7 +15,10 @@ import {
   useTwinClassFieldFilters,
   useTwinClassFieldSelectAdapterWithFilters,
 } from "@/entities/twin-class-field";
-import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
+import {
+  useValidatorSetFilters,
+  useValidatorSetSelectAdapterWithFilters,
+} from "@/entities/validator-set";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -39,13 +42,18 @@ export function useHistoryNotificationFilters({
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const twinClassFieldsAdapter = useTwinClassFieldSelectAdapterWithFilters();
   const recipientAdapter = useRecipientSelectAdapter();
-  const validatorSetAdapter = useValidatorSetSelectAdapter();
+  const validatorSetAdapter = useValidatorSetSelectAdapterWithFilters();
   const notificationSchemaAdapter = useNotificationSchemaSelectAdapter();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildValidatorSetFilters,
+    mapFiltersToPayload: mapValidatorSetFilters,
+  } = useValidatorSetFilters();
 
   const {
     buildFilterFields: buildTwinClassFieldFilters,
@@ -106,10 +114,14 @@ export function useHistoryNotificationFilters({
       placeholder: "Enter UUID",
     },
     twinValidatorSetIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin validator set",
+      adapter: validatorSetAdapter,
+      extraFilters: buildValidatorSetFilters(),
+      mapExtraFilters: (filters) => mapValidatorSetFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...validatorSetAdapter,
     },
     twinValidatorSetInvert: {
       type: AutoFormValueType.boolean,

@@ -15,12 +15,16 @@ export function useFactoryConditionSelectAdapter(): SelectAdapter<FactoryConditi
     return await fetchFactoryConditionById(id);
   }
 
-  async function getItems(search: string, filters?: FactoryConditionFilters) {
+  async function getItems(
+    search: string,
+    filters?: FactoryConditionFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     const response = await searchFactoryCondition({
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
+      pagination,
       filters: {
         ...filters,
       },
@@ -43,6 +47,8 @@ export function useFactoryConditionSelectAdapter(): SelectAdapter<FactoryConditi
     getById,
     getItems: (search, options) =>
       getItems(search, options as FactoryConditionFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

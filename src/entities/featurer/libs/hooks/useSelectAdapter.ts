@@ -22,9 +22,12 @@ export function useFeaturerSelectAdapter(
     return await fetchFeaturerById(numId);
   }
 
-  async function getItems(search: string) {
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
     const { data } = await searchFeaturers({
-      pagination: { pageIndex: 0, pageSize: 10 },
+      pagination,
       filters: {
         typeIdList: [typeId],
         nameLikeList: [search ? wrapWithPercent(search) : "%"],
@@ -34,6 +37,10 @@ export function useFeaturerSelectAdapter(
     return (data as Featurer_DETAILED[]) ?? [];
   }
 
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
+  }
+
   function renderItem({ id, name }: Featurer_DETAILED) {
     return isPopulatedString(name) ? `${name} : ${id}` : `${id}`;
   }
@@ -41,6 +48,7 @@ export function useFeaturerSelectAdapter(
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }
