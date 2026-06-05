@@ -35,8 +35,12 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
     });
   }
 
-  async function getItems(search: string, filters?: TwinClassFilters) {
-    const response = await searchByFilters({ search, filters });
+  async function getItems(
+    search: string,
+    filters?: TwinClassFilters,
+    pagination?: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchByFilters({ search, filters, pagination });
 
     return response.data;
   }
@@ -49,6 +53,8 @@ export function useTwinClassSelectAdapter(): SelectAdapter<TwinClass_DETAILED> {
     getById,
     getItems: (search, options) =>
       getItems(search, options as TwinClassFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }
@@ -193,10 +199,14 @@ export function useTwinClassDynamicMarkerSelectAdapter(): SelectAdapter<TwinClas
 
   async function getItems(
     search: string,
-    filters?: TwinClassDynamicMarkerFilters
+    filters?: TwinClassDynamicMarkerFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
   ) {
     const response = await searchTwinClassDynamicMarker({
-      pagination: { pageIndex: 0, pageSize: 10 },
+      pagination,
       filters: {
         markerDataListOptionIdList: isPopulatedString(search)
           ? [search]
@@ -217,6 +227,8 @@ export function useTwinClassDynamicMarkerSelectAdapter(): SelectAdapter<TwinClas
     getById,
     getItems: (search, options) =>
       getItems(search, options as TwinClassDynamicMarkerFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

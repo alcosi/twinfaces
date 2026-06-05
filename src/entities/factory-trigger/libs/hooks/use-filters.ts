@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
 import {
   FactoryTriggerFilterKeys,
   FactoryTriggerFilters,
@@ -11,7 +14,10 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
+import {
+  useTwinTriggerFilters,
+  useTwinTriggerSelectAdapterWithFilters,
+} from "@/entities/twin-trigger";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -25,14 +31,22 @@ export function useFactoryTriggerFilters({
 }: {
   enabledFilters?: FactoryTriggerFilterKeys[];
 }): FilterFeature<FactoryTriggerFilterKeys, FactoryTriggerFilters> {
-  const factoryAdapter = useFactorySelectAdapter();
-  const triggerAdapter = useTwinTriggerSelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
+  const triggerAdapter = useTwinTriggerSelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildTwinTriggerFilters,
+    mapFiltersToPayload: mapTwinTriggerFilters,
+  } = useTwinTriggerFilters({});
 
   const allFilters: Record<FactoryTriggerFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -42,10 +56,14 @@ export function useFactoryTriggerFilters({
       placeholder: "Enter UUID",
     },
     twinFactoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twinflow factory",
+      adapter: factoryAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryAdapter,
     },
     inputTwinClassIdList: {
       type: AutoFormValueType.complexCombobox,
@@ -58,10 +76,14 @@ export function useFactoryTriggerFilters({
       multi: true,
     },
     twinTriggerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin trigger",
+      adapter: triggerAdapter,
+      extraFilters: buildTwinTriggerFilters(),
+      mapExtraFilters: (filters) => mapTwinTriggerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...triggerAdapter,
     },
     active: {
       type: AutoFormValueType.boolean,

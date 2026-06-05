@@ -2,9 +2,18 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
-import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
+import {
+  useFactoryPipelineFilters,
+  useFactoryPipelineSelectAdapterWithFilters,
+} from "@/entities/factory-pipeline";
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
 import {
   FilterFeature,
@@ -23,10 +32,23 @@ export function usePipelineStepFilters({
 }: {
   enabledFilters?: PipelineStepFilterKeys[];
 }): FilterFeature<PipelineStepFilterKeys, PipelineStepFilters> {
-  const fAdapter = useFactorySelectAdapter();
-  const fpAdapter = useFactoryPipelineSelectAdapter();
+  const fAdapter = useFactorySelectAdapterWithFilters();
+  const fpAdapter = useFactoryPipelineSelectAdapterWithFilters();
   const featurerAdapter = useFeaturerSelectAdapter(23);
-  const fcsAdapter = useFactoryConditionSetSelectAdapter();
+  const fcsAdapter = useFactoryConditionSetSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildFactoryPipelineFilters,
+    mapFiltersToPayload: mapFactoryPipelineFilters,
+  } = useFactoryPipelineFilters({});
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
 
   const allFilters: Record<PipelineStepFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -36,22 +58,34 @@ export function usePipelineStepFilters({
       placeholder: "Enter UUID",
     },
     factoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Factory",
+      adapter: fAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...fAdapter,
     },
     factoryPipelineIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Pipeline",
+      adapter: fpAdapter,
+      extraFilters: buildFactoryPipelineFilters(),
+      mapExtraFilters: (filters) => mapFactoryPipelineFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...fpAdapter,
     },
     factoryConditionSetIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Condition set",
+      adapter: fcsAdapter,
+      extraFilters: buildFactoryConditionSetFilters(),
+      mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...fcsAdapter,
     },
     conditionInvert: {
       type: AutoFormValueType.boolean,

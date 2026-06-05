@@ -1,6 +1,9 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useUserSelectAdapter } from "@/entities/user";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import { useUserGroupSelectAdapter } from "@/entities/user-group";
 import {
   FilterFeature,
@@ -14,7 +17,8 @@ import {
   DomainBusinessAccountUserFilterKeys,
   DomainBusinessAccountUserFilters,
 } from "../../api";
-import { useBusinessAccountSelectAdapter } from "./use-select-adapter";
+import { useBusinessAccountFilters } from "./use-filters";
+import { useBusinessAccountSelectAdapterWithFilters } from "./use-select-adapter-with-filters";
 
 export function useBusinessAccountUserFilters({
   enabledFilters,
@@ -24,25 +28,42 @@ export function useBusinessAccountUserFilters({
   DomainBusinessAccountUserFilterKeys,
   DomainBusinessAccountUserFilters
 > {
-  const userAdapter = useUserSelectAdapter();
+  const userAdapter = useUserSelectAdapterWithFilters();
   const userGroupAdapter = useUserGroupSelectAdapter();
-  const businessAccoutAdapter = useBusinessAccountSelectAdapter();
+  const businessAccoutAdapter = useBusinessAccountSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildBusinessAccountFilters,
+    mapFiltersToPayload: mapBusinessAccountFilters,
+  } = useBusinessAccountFilters();
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
 
   const allFilters: Record<
     DomainBusinessAccountUserFilterKeys,
     AutoFormValueInfo
   > = {
     businessAccountIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Business account",
+      adapter: businessAccoutAdapter,
+      extraFilters: buildBusinessAccountFilters(),
+      mapExtraFilters: (filters) => mapBusinessAccountFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...businessAccoutAdapter,
     },
     userIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "User",
+      adapter: userAdapter,
+      extraFilters: buildUserFilters(),
+      mapExtraFilters: (filters) => mapUserFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...userAdapter,
     },
     userGroupIdList: {
       type: AutoFormValueType.combobox,

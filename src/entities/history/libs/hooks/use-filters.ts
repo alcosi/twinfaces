@@ -1,11 +1,17 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTwinSelectAdapter } from "@/entities/twin";
+import {
+  useTwinFilters,
+  useTwinSelectAdapterWithFilters,
+} from "@/entities/twin";
 import {
   useTwinClassFieldFilters,
   useTwinClassFieldSelectAdapterWithFilters,
 } from "@/entities/twin-class-field";
-import { useUserSelectAdapter } from "@/entities/user";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import {
   type FilterFeature,
   createFixedSelectAdapter,
@@ -22,12 +28,20 @@ export function useHistoryFilters({
 }: {
   enabledFilters?: HistoryFilterKeys[];
 }): FilterFeature<HistoryFilterKeys, HistoryFilters> {
-  const twinAdapter = useTwinSelectAdapter();
-  const userAdapter = useUserSelectAdapter();
+  const twinAdapter = useTwinSelectAdapterWithFilters();
+  const userAdapter = useUserSelectAdapterWithFilters();
   const {
     buildFilterFields: buildTwinClassFieldFilters,
     mapFiltersToPayload: mapTwinClassFieldFilters,
   } = useTwinClassFieldFilters({});
+  const {
+    buildFilterFields: buildTwinFilters,
+    mapFiltersToPayload: mapTwinFilters,
+  } = useTwinFilters({});
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
 
   const allFilters: Record<HistoryFilterKeys, AutoFormValueInfo> = {
@@ -36,10 +50,14 @@ export function useHistoryFilters({
       label: "ID",
     },
     twinIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin",
+      adapter: twinAdapter,
+      extraFilters: buildTwinFilters(),
+      mapExtraFilters: (filters) => mapTwinFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinAdapter,
     },
     twinClassFieldIdList: {
       type: AutoFormValueType.complexCombobox,
@@ -52,10 +70,14 @@ export function useHistoryFilters({
       multi: true,
     },
     actorUserIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Actor User",
+      adapter: userAdapter,
+      extraFilters: buildUserFilters(),
+      mapExtraFilters: (filters) => mapUserFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...userAdapter,
     },
     typeList: {
       type: AutoFormValueType.combobox,

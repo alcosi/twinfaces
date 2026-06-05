@@ -3,7 +3,10 @@ import { z } from "zod";
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
 import { useFeaturerSelectAdapter } from "@/entities/featurer";
-import { usePermissionSelectAdapter } from "@/entities/permission";
+import {
+  usePermissionFilters,
+  usePermissionSelectAdapterWithFilters,
+} from "@/entities/permission";
 import {
   TwinClass_DETAILED,
   useTwinClassFilters,
@@ -27,8 +30,14 @@ export function useTwinClassFieldFilters({
 }: {
   enabledFilters?: TwinClassFieldV2FilterKeys[];
 }): FilterFeature<TwinClassFieldV2FilterKeys, TwinClassFieldV2Filters> {
-  const pAdapter = usePermissionSelectAdapter();
+  const viewPermissionAdapter = usePermissionSelectAdapterWithFilters();
+  const editPermissionAdapter = usePermissionSelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildPermissionFilters,
+    mapFiltersToPayload: mapPermissionFilters,
+  } = usePermissionFilters();
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
@@ -79,16 +88,24 @@ export function useTwinClassFieldFilters({
       ...twinSorterAdapter,
     },
     viewPermissionIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "View permission",
+      adapter: viewPermissionAdapter,
+      extraFilters: buildPermissionFilters(),
+      mapExtraFilters: (filters) => mapPermissionFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...pAdapter,
     },
     editPermissionIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Edit permission",
+      adapter: editPermissionAdapter,
+      extraFilters: buildPermissionFilters(),
+      mapExtraFilters: (filters) => mapPermissionFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...pAdapter,
     },
     required: {
       type: AutoFormValueType.boolean,

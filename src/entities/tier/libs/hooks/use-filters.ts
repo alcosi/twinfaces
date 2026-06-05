@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
+import {
+  usePermissionSchemaFilters,
+  usePermissionSchemaSelectAdapterWithFilters,
+} from "@/entities/permission-schema";
 import { useTwinClassSchemaSelectAdapter } from "@/entities/twin-class-schema";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import {
@@ -16,9 +19,14 @@ import {
 import { TierFilterKeys, TierFilters } from "../../api";
 
 export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
-  const permissionSchemaAdapter = usePermissionSchemaSelectAdapter();
+  const permissionSchemaAdapter = usePermissionSchemaSelectAdapterWithFilters();
   const twinFlowSchemaAdapter = useTwinFlowSchemaSelectAdapter();
   const twinClassSchemaAdapter = useTwinClassSchemaSelectAdapter();
+
+  const {
+    buildFilterFields: buildPermissionSchemaFilters,
+    mapFiltersToPayload: mapPermissionSchemaFilters,
+  } = usePermissionSchemaFilters();
 
   function buildFilterFields(): Record<TierFilterKeys, AutoFormValueInfo> {
     return {
@@ -39,10 +47,14 @@ export function useTierFilters(): FilterFeature<TierFilterKeys, TierFilters> {
         defaultValue: "indeterminate",
       },
       permissionSchemaIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Permission schema",
+        adapter: permissionSchemaAdapter,
+        extraFilters: buildPermissionSchemaFilters(),
+        mapExtraFilters: (filters) => mapPermissionSchemaFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...permissionSchemaAdapter,
       },
       twinflowSchemaIdList: {
         type: AutoFormValueType.combobox,

@@ -9,12 +9,16 @@ export function useUserGroupSelectAdapter(): SelectAdapter<UserGroup_DETAILED> {
     return { id } as UserGroup_DETAILED;
   }
 
-  async function getItems(search: string) {
-    const response = await searchUserGroups({
-      search,
-      pagination: { pageIndex: 0, pageSize: 10 },
-    });
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchUserGroups({ search, pagination });
     return response.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ name }: UserGroup_DETAILED) {
@@ -24,6 +28,7 @@ export function useUserGroupSelectAdapter(): SelectAdapter<UserGroup_DETAILED> {
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

@@ -8,7 +8,10 @@ import {
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { useUserSelectAdapter } from "@/entities/user";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -29,13 +32,17 @@ export function useTwinFlowFilters({
   enabledFilters?: TwinFlowFilterKeys[];
 }): FilterFeature<TwinFlowFilterKeys, TwinFlowFilters> {
   const twinStatusAdapter = useTwinStatusSelectAdapter();
-  const userAdapter = useUserSelectAdapter();
+  const userAdapter = useUserSelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
 
   const allFilters: Record<TwinFlowFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -77,11 +84,14 @@ export function useTwinFlowFilters({
         }),
     },
     createdByUserIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Created by",
+      adapter: userAdapter,
+      extraFilters: buildUserFilters(),
+      mapExtraFilters: (filters) => mapUserFilters(filters),
+      searchPlaceholder: "Search...",
       selectPlaceholder: "Select user...",
       multi: true,
-      ...userAdapter,
     },
   };
 

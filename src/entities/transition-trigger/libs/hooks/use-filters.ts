@@ -2,8 +2,14 @@ import z from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
+import {
+  useTransitionSelectAdapterWithFilters,
+  useTwinFlowTransitionFilters,
+} from "@/entities/twin-flow-transition";
+import {
+  useTwinTriggerFilters,
+  useTwinTriggerSelectAdapterWithFilters,
+} from "@/entities/twin-trigger";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -23,8 +29,17 @@ export function useTransitionTriggerFilters({
 }: {
   enabledFilters?: TransitionTriggerFilterKeys[];
 }): FilterFeature<TransitionTriggerFilterKeys, TransitionTriggerFilters> {
-  const transitionAdapter = useTransitionSelectAdapter();
-  const twinTriggerAdapter = useTwinTriggerSelectAdapter();
+  const transitionAdapter = useTransitionSelectAdapterWithFilters();
+  const twinTriggerAdapter = useTwinTriggerSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTransitionFilters,
+    mapFiltersToPayload: mapTransitionFilters,
+  } = useTwinFlowTransitionFilters({});
+  const {
+    buildFilterFields: buildTwinTriggerFilters,
+    mapFiltersToPayload: mapTwinTriggerFilters,
+  } = useTwinTriggerFilters({});
 
   const allFilters: Record<TransitionTriggerFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -33,14 +48,22 @@ export function useTransitionTriggerFilters({
       schema: z.string().uuid("Please enter a valid UUID"),
     },
     twinflowTransitionIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twinflow transition",
-      ...transitionAdapter,
+      adapter: transitionAdapter,
+      extraFilters: buildTransitionFilters(),
+      mapExtraFilters: (filters) => mapTransitionFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
     },
     twinTriggerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin trigger",
-      ...twinTriggerAdapter,
+      adapter: twinTriggerAdapter,
+      extraFilters: buildTwinTriggerFilters(),
+      mapExtraFilters: (filters) => mapTwinTriggerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
     },
     active: {
       type: AutoFormValueType.boolean,

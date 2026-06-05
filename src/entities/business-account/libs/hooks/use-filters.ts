@@ -2,10 +2,16 @@ import z from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useBusinessAccountSelectAdapter } from "@/entities/business-account";
+import { useBusinessAccountSelectAdapterWithFilters } from "@/entities/business-account";
 import { useNotificationSchemaSelectAdapter } from "@/entities/notification";
-import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
-import { useTierSelectAdapter } from "@/entities/tier";
+import {
+  usePermissionSchemaFilters,
+  usePermissionSchemaSelectAdapterWithFilters,
+} from "@/entities/permission-schema";
+import {
+  useTierFilters,
+  useTierSelectAdapterWithFilters,
+} from "@/entities/tier";
 import { useTwinClassSchemaSelectAdapter } from "@/entities/twin-class-schema";
 import { useTwinFlowSchemaSelectAdapter } from "@/entities/twinFlowSchema";
 import {
@@ -28,12 +34,21 @@ export function useBusinessAccountFilters({
   DomainBusinessAccountFilterKeys,
   DomainBusinessAccountFilters
 > {
-  const permissionSchemaAdapter = usePermissionSchemaSelectAdapter();
+  const permissionSchemaAdapter = usePermissionSchemaSelectAdapterWithFilters();
   const twinflowSchemaAdapter = useTwinFlowSchemaSelectAdapter();
   const twinClassSchemaAdapter = useTwinClassSchemaSelectAdapter();
-  const businessAccountAdapter = useBusinessAccountSelectAdapter();
-  const tierAdapter = useTierSelectAdapter();
+  const businessAccountAdapter = useBusinessAccountSelectAdapterWithFilters();
+  const tierAdapter = useTierSelectAdapterWithFilters();
   const notificationSchemaAdapter = useNotificationSchemaSelectAdapter();
+
+  const {
+    buildFilterFields: buildPermissionSchemaFilters,
+    mapFiltersToPayload: mapPermissionSchemaFilters,
+  } = usePermissionSchemaFilters();
+  const {
+    buildFilterFields: buildTierFilters,
+    mapFiltersToPayload: mapTierFilters,
+  } = useTierFilters();
 
   const allFilters: Record<DomainBusinessAccountFilterKeys, AutoFormValueInfo> =
     {
@@ -44,15 +59,24 @@ export function useBusinessAccountFilters({
         placeholder: "Enter UUID",
       },
       businessAccountIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Business account",
-        ...businessAccountAdapter,
+        adapter: businessAccountAdapter,
+        // NOTE: extraFilters intentionally empty — using useBusinessAccountFilters
+        // here would recurse (this is the Business Account filters hook itself).
+        extraFilters: {},
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
       },
       permissionSchemaIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Permission schema",
-        ...permissionSchemaAdapter,
+        adapter: permissionSchemaAdapter,
+        extraFilters: buildPermissionSchemaFilters(),
+        mapExtraFilters: (filters) => mapPermissionSchemaFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
       },
       twinflowSchemaIdList: {
@@ -74,9 +98,13 @@ export function useBusinessAccountFilters({
         ...notificationSchemaAdapter,
       },
       tierIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Tier",
-        ...tierAdapter,
+        adapter: tierAdapter,
+        extraFilters: buildTierFilters(),
+        mapExtraFilters: (filters) => mapTierFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
       },
       storageUsedCountRange: {

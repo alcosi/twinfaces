@@ -2,16 +2,31 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useBusinessAccountSelectAdapter } from "@/entities/business-account";
+import {
+  useBusinessAccountFilters,
+  useBusinessAccountSelectAdapterWithFilters,
+} from "@/entities/business-account";
 import {
   TRIGGER_TASK_STATUS_TYPES,
   TriggerTaskFilterKeys,
   TriggerTaskFilters,
 } from "@/entities/trigger-task";
-import { useTwinSelectAdapter } from "@/entities/twin";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
-import { useUserSelectAdapter } from "@/entities/user";
+import {
+  useTwinFilters,
+  useTwinSelectAdapterWithFilters,
+} from "@/entities/twin";
+import {
+  useStatusFilters,
+  useTwinStatusSelectAdapterWithFilters,
+} from "@/entities/twin-status";
+import {
+  useTwinTriggerFilters,
+  useTwinTriggerSelectAdapterWithFilters,
+} from "@/entities/twin-trigger";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import {
   FilterFeature,
   createFixedSelectAdapter,
@@ -26,11 +41,32 @@ export function useTriggerTaskFilters({
 }: {
   enabledFilters?: TriggerTaskFilterKeys[];
 }): FilterFeature<TriggerTaskFilterKeys, TriggerTaskFilters> {
-  const twinAdapter = useTwinSelectAdapter();
-  const twinTriggerAdapter = useTwinTriggerSelectAdapter();
-  const userAdapter = useUserSelectAdapter();
-  const businessAccountAdapter = useBusinessAccountSelectAdapter();
-  const twinStatusAdapter = useTwinStatusSelectAdapter();
+  const twinAdapter = useTwinSelectAdapterWithFilters();
+  const twinTriggerAdapter = useTwinTriggerSelectAdapterWithFilters();
+  const userAdapter = useUserSelectAdapterWithFilters();
+  const businessAccountAdapter = useBusinessAccountSelectAdapterWithFilters();
+  const twinStatusAdapter = useTwinStatusSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildTwinFilters,
+    mapFiltersToPayload: mapTwinFilters,
+  } = useTwinFilters({});
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
+  const {
+    buildFilterFields: buildBusinessAccountFilters,
+    mapFiltersToPayload: mapBusinessAccountFilters,
+  } = useBusinessAccountFilters();
+  const {
+    buildFilterFields: buildTwinTriggerFilters,
+    mapFiltersToPayload: mapTwinTriggerFilters,
+  } = useTwinTriggerFilters({});
+  const {
+    buildFilterFields: buildStatusFilters,
+    mapFiltersToPayload: mapStatusFilters,
+  } = useStatusFilters({ enabledFilters: undefined });
 
   const allFilters: Record<TriggerTaskFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -39,33 +75,53 @@ export function useTriggerTaskFilters({
       schema: z.string().uuid("Please enter a valid UUID"),
     },
     twinIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin",
+      adapter: twinAdapter,
+      extraFilters: buildTwinFilters(),
+      mapExtraFilters: (filters) => mapTwinFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinAdapter,
     },
     twinTriggerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin trigger",
+      adapter: twinTriggerAdapter,
+      extraFilters: buildTwinTriggerFilters(),
+      mapExtraFilters: (filters) => mapTwinTriggerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinTriggerAdapter,
     },
     previousTwinStatusIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Previous twin status",
+      adapter: twinStatusAdapter,
+      extraFilters: buildStatusFilters(),
+      mapExtraFilters: (filters) => mapStatusFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinStatusAdapter,
     },
     createdByUserIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Created by user",
+      adapter: userAdapter,
+      extraFilters: buildUserFilters(),
+      mapExtraFilters: (filters) => mapUserFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...userAdapter,
     },
     businessAccountIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Business account",
-      ...businessAccountAdapter,
+      adapter: businessAccountAdapter,
+      extraFilters: buildBusinessAccountFilters(),
+      mapExtraFilters: (filters) => mapBusinessAccountFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
     },
     statusIdList: {

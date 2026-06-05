@@ -3,6 +3,15 @@ import { ReactNode } from "react";
 export type SelectAdapter<Entity> = {
   getById: (id: string) => Promise<Entity | undefined>;
   getItems: (query: string, options?: unknown) => Promise<Entity[]>;
+  /**
+   * Optional page-aware loader. When provided, the Combobox switches to
+   * infinite scroll: it requests pages on demand and appends the results.
+   * A page shorter than `pageSize` signals the end of the list.
+   */
+  getItemsPaginated?: (
+    query: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) => Promise<Entity[]>;
   getItemKey?: (entity: Entity) => string;
   renderItem: (entity: Entity) => ReactNode | string;
 };

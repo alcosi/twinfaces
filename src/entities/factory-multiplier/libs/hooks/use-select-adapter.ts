@@ -19,12 +19,16 @@ export function useFactoryMultiplierSelectAdapter(): SelectAdapter<FactoryMultip
     return await fetchFactoryMultiplierById(id);
   }
 
-  async function getItems(search: string, filters?: FactoryMultiplierFilters) {
+  async function getItems(
+    search: string,
+    filters?: FactoryMultiplierFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     const response = await searchFactoryMultipliers({
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
+      pagination,
       filters: {
         descriptionLikeList: [wrapWithPercent(search)],
         ...filters,
@@ -50,6 +54,8 @@ export function useFactoryMultiplierSelectAdapter(): SelectAdapter<FactoryMultip
     getById,
     getItems: (search, options) =>
       getItems(search, options as FactoryMultiplierFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

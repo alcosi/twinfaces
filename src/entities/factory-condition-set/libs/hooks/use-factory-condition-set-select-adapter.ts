@@ -1,9 +1,10 @@
 import {
-  isPopulatedString,
   SelectAdapter,
+  isPopulatedString,
   shortenUUID,
   wrapWithPercent,
 } from "@/shared/libs";
+
 import {
   FactoryConditionSet,
   FactoryConditionSetFilters,
@@ -21,13 +22,14 @@ export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryCond
 
   async function getItems(
     search: string,
-    filters?: FactoryConditionSetFilters
+    filters?: FactoryConditionSetFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
   ) {
     const response = await searchFactoryConditionSet({
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
+      pagination,
       filters: {
         nameLikeList: [wrapWithPercent(search)],
         ...filters,
@@ -45,6 +47,8 @@ export function useFactoryConditionSetSelectAdapter(): SelectAdapter<FactoryCond
     getById,
     getItems: (search, options) =>
       getItems(search, options as FactoryConditionSetFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

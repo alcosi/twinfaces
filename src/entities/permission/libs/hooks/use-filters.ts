@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { usePermissionGroupSelectAdapter } from "@/entities/permission-group";
+import { usePermissionGroupSelectAdapterWithFilters } from "@/entities/permission-group";
 import {
   type FilterFeature,
   toArray,
@@ -16,7 +16,7 @@ export function usePermissionFilters(): FilterFeature<
   PermissionFilterKeys,
   PermissionFilters
 > {
-  const pgAdapter = usePermissionGroupSelectAdapter();
+  const pgAdapter = usePermissionGroupSelectAdapterWithFilters();
 
   function buildFilterFields(): Record<
     PermissionFilterKeys,
@@ -42,12 +42,19 @@ export function usePermissionFilters(): FilterFeature<
         label: "Description",
       },
       groupIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Permission Groups",
+        adapter: pgAdapter,
+        // NOTE: extraFilters intentionally empty to break the recursive filter
+        // cycle twinClass -> permission -> permission-group -> twinClass.
+        // (usePermissionGroupFilters nests a twin-class complexCombobox, and
+        // twin-class filters nest permission complexComboboxes.)
+        extraFilters: {},
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...pgAdapter,
       },
-    } as const;
+    };
   }
 
   function mapFiltersToPayload(

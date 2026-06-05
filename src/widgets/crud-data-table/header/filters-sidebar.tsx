@@ -113,7 +113,27 @@ export function FiltersSidebar({
     setOpen(value);
   }
 
-  const sidebarWidth = 400 * (1 + levels.length);
+  // Panels are laid out in a horizontal stack. The drawer grows up to
+  // MAX_VISIBLE_LEVELS extra panels (and never past the viewport); deeper
+  // chains scroll horizontally instead of overflowing the screen.
+  const PANEL_WIDTH = 400;
+  const MAX_VISIBLE_LEVELS = 3;
+  const visibleWidth =
+    PANEL_WIDTH * (1 + Math.min(levels.length, MAX_VISIBLE_LEVELS));
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    // Wait for the width transition to settle, then scroll the newest panel
+    // into view — but only when the stack actually overflows the drawer.
+    const t = setTimeout(() => {
+      if (el.scrollWidth > el.clientWidth) {
+        el.scrollTo({ left: el.scrollWidth, behavior: "smooth" });
+      }
+    }, TRANSITION_MS);
+    return () => clearTimeout(t);
+  }, [renderedLevels.length]);
 
   return (
     <>
@@ -127,63 +147,69 @@ export function FiltersSidebar({
 
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
-          className={cn("flex gap-0 overflow-hidden p-0")}
+          className={cn("overflow-hidden p-0")}
           style={{
-            width: `${sidebarWidth}px`,
-            maxWidth: `${sidebarWidth}px`,
+            width: `min(${visibleWidth}px, 95vw)`,
+            maxWidth: `min(${visibleWidth}px, 95vw)`,
             transitionProperty: "width, max-width",
             transitionDuration: "300ms",
           }}
         >
           <Form {...form}>
-            {/* Main filters panel */}
-            <form
-              className="flex h-full w-[400px] shrink-0 flex-col"
-              onSubmit={form.handleSubmit(handleSubmit)}
+            <div
+              ref={scrollRef}
+              className="flex h-full w-full overflow-x-auto"
+              style={{ scrollBehavior: "smooth" }}
             >
-              <SheetHeader className="px-6 py-4">
-                <SheetTitle className="text-base">Filters</SheetTitle>
-              </SheetHeader>
+              {/* Main filters panel */}
+              <form
+                className="flex h-full w-[400px] shrink-0 flex-col"
+                onSubmit={form.handleSubmit(handleSubmit)}
+              >
+                <SheetHeader className="px-6 py-4">
+                  <SheetTitle className="text-base">Filters</SheetTitle>
+                </SheetHeader>
 
-              <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-                <AdvancedFiltersContext.Provider
-                  value={{ openAdvancedFilters }}
-                >
-                  {keys.map((filterKey) => (
-                    <AutoField
-                      key={filterKey}
-                      info={filtersInfo[filterKey]!}
-                      name={filterKey}
-                      control={form.control}
-                    />
-                  ))}
-                </AdvancedFiltersContext.Provider>
-              </div>
+                <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
+                  <AdvancedFiltersContext.Provider
+                    value={{ openAdvancedFilters }}
+                  >
+                    {keys.map((filterKey) => (
+                      <AutoField
+                        key={filterKey}
+                        info={filtersInfo[filterKey]!}
+                        name={filterKey}
+                        control={form.control}
+                      />
+                    ))}
+                  </AdvancedFiltersContext.Provider>
+                </div>
 
-              <div className="flex justify-end gap-2 px-6 py-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleReset}
-                  loading={form.formState.isSubmitting}
-                >
-                  Clear
-                </Button>
-                <Button type="submit" loading={form.formState.isSubmitting}>
-                  Apply
-                </Button>
-              </div>
-            </form>
+                <div className="flex justify-end gap-2 px-6 py-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleReset}
+                    loading={form.formState.isSubmitting}
+                  >
+                    Clear
+                  </Button>
+                  <Button type="submit" loading={form.formState.isSubmitting}>
+                    Apply
+                  </Button>
+                </div>
+              </form>
 
-            {/* Advanced filter panels (stack-based, supports N levels) */}
-            {renderedLevels.map((level, index) => (
-              <AdvancedFilterPanel
-                key={`${level.key}-${index}`}
-                level={level}
-                onOpenNext={openAdvancedFiltersFromLevel(index)}
-                onClose={() => setLevels((prev) => prev.slice(0, index))}
-              />
-            ))}
+              {/* Advanced filter panels (stack-based, supports N levels) */}
+              {renderedLevels.map((level, index) => (
+                <AdvancedFilterPanel
+                  key={`${level.key}-${index}`}
+                  level={level}
+                  onOpenNext={openAdvancedFiltersFromLevel(index)}
+                  onClose={() => setLevels((prev) => prev.slice(0, index))}
+                />
+              ))}
+            </div>
           </Form>
         </SheetContent>
       </Sheet>

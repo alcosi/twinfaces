@@ -2,8 +2,14 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  useTwinFlowFilters,
+  useTwinFlowSelectAdapterWithFilters,
+} from "@/entities/twin-flow";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -19,9 +25,18 @@ export function useTwinFlowFactoryFilters({
 }: {
   enabledFilters?: TwinFlowFactoryFilterKeys[];
 } = {}): FilterFeature<TwinFlowFactoryFilterKeys, TwinFlowFactoryFilters> {
-  const twinflowAdapter = useTwinFlowSelectAdapter();
-  const factoryAdapter = useFactorySelectAdapter();
+  const twinflowAdapter = useTwinFlowSelectAdapterWithFilters();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
   const flSelectAdapter = useFactoryLauncherSelectAdapter();
+
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildTwinFlowFilters,
+    mapFiltersToPayload: mapTwinFlowFilters,
+  } = useTwinFlowFilters({});
 
   const allFilters: Record<TwinFlowFactoryFilterKeys, AutoFormValueInfo> = {
     idSet: {
@@ -31,16 +46,24 @@ export function useTwinFlowFactoryFilters({
       placeholder: "Enter UUID",
     },
     twinflowIdSet: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twinflow",
+      adapter: twinflowAdapter,
+      extraFilters: buildTwinFlowFilters(),
+      mapExtraFilters: (filters) => mapTwinFlowFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinflowAdapter,
     },
     factoryIdSet: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Factory",
+      adapter: factoryAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryAdapter,
     },
     factoryLauncherSet: {
       type: AutoFormValueType.combobox,

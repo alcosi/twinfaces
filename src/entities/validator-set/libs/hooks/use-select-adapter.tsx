@@ -19,15 +19,22 @@ export function useValidatorSetSelectAdapter(): SelectAdapter<ValidatorSet_DETAI
     return data?.[0];
   }
 
-  async function getItems(search: string) {
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
     const { data } = await searchValidatorSets({
-      pagination: { pageIndex: 0, pageSize: 10 },
+      pagination,
       filters: {
         nameLikeList: search ? [wrapWithPercent(search)] : [],
       },
     });
 
     return data ?? [];
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ id, name }: ValidatorSet_DETAILED) {
@@ -37,6 +44,7 @@ export function useValidatorSetSelectAdapter(): SelectAdapter<ValidatorSet_DETAI
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

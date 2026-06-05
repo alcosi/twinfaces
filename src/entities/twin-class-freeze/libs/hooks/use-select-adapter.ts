@@ -16,9 +16,16 @@ export function useTwinClassFreezeSelectAdapter(): SelectAdapter<TwinClassFreeze
     return response.data[0];
   }
 
-  async function getItems(search: string) {
-    const response = await searchTwinClassFreezes({ search });
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchTwinClassFreezes({ search, pagination });
     return response.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ name, key }: TwinClassFreeze) {
@@ -28,6 +35,7 @@ export function useTwinClassFreezeSelectAdapter(): SelectAdapter<TwinClassFreeze
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory/libs";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory/libs";
 import {
   FilterFeature,
   toArray,
@@ -19,7 +22,12 @@ export function useFactoryConditionSetFilters(): FilterFeature<
   FactoryConditionSetFilterKeys,
   FactoryConditionSetFilters
 > {
-  const factoryAdapter = useFactorySelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+
   function buildFilterFields(): Record<
     FactoryConditionSetFilterKeys,
     AutoFormValueInfo
@@ -32,10 +40,14 @@ export function useFactoryConditionSetFilters(): FilterFeature<
         placeholder: "Enter UUID",
       },
       twinFactoryIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Factory",
+        adapter: factoryAdapter,
+        extraFilters: buildFactoryFilters(),
+        mapExtraFilters: (filters) => mapFactoryFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...factoryAdapter,
       },
       nameLikeList: {
         type: AutoFormValueType.tag,

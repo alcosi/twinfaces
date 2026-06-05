@@ -26,13 +26,21 @@ export function useTwinClassFieldSelectAdapterWithFilters(): SelectAdapterWithFi
     setVersion((v) => v + 1);
   }
 
-  async function getItems(search: string) {
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
     const res = await searchByFilters({
       search,
+      pagination,
       filters: filtersRef.current,
     });
 
     return res.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ key = "", name }: TwinClassFieldV1_DETAILED) {
@@ -42,6 +50,7 @@ export function useTwinClassFieldSelectAdapterWithFilters(): SelectAdapterWithFi
   return {
     getById: fetchTwinClassFieldById,
     getItems,
+    getItemsPaginated,
     renderItem,
     setFilters,
     invalidate,

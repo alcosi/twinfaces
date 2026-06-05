@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { usePermissionSelectAdapter } from "@/entities/permission";
+import {
+  usePermissionFilters,
+  usePermissionSelectAdapterWithFilters,
+} from "@/entities/permission";
 import {
   OWNER_TYPES,
   TwinClassFilterKeys,
@@ -18,16 +21,32 @@ import {
   wrapWithPercent,
 } from "@/shared/libs";
 
-import { useDatalistSelectAdapter } from "../../../datalist";
+import {
+  useDatalistFilters,
+  useDatalistSelectAdapterWithFilters,
+} from "../../../datalist";
 
 export function useTwinClassFilters(): FilterFeature<
   TwinClassFilterKeys,
   TwinClassFilters
 > {
   const tcAdapter = useTwinClassSelectAdapter();
-  const pAdapter = usePermissionSelectAdapter();
-  const dlAdapter = useDatalistSelectAdapter();
+  const createPermissionAdapter = usePermissionSelectAdapterWithFilters();
+  const viewPermissionAdapter = usePermissionSelectAdapterWithFilters();
+  const editPermissionAdapter = usePermissionSelectAdapterWithFilters();
+  const deletePermissionAdapter = usePermissionSelectAdapterWithFilters();
+  const markerDatalistAdapter = useDatalistSelectAdapterWithFilters();
+  const tagDatalistAdapter = useDatalistSelectAdapterWithFilters();
   const fAdapter = useTwinClassFreezeSelectAdapter();
+
+  const {
+    buildFilterFields: buildPermissionFilters,
+    mapFiltersToPayload: mapPermissionFilters,
+  } = usePermissionFilters();
+  const {
+    buildFilterFields: buildDatalistFilters,
+    mapFiltersToPayload: mapDatalistFilters,
+  } = useDatalistFilters();
 
   function buildFilterFields(): Partial<
     Record<TwinClassFilterKeys, AutoFormValueInfo>
@@ -117,40 +136,64 @@ export function useTwinClassFilters(): FilterFeature<
         defaultValue: "indeterminate",
       },
       createPermissionIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Create permission",
+        adapter: createPermissionAdapter,
+        extraFilters: buildPermissionFilters(),
+        mapExtraFilters: (filters) => mapPermissionFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...pAdapter,
       },
       viewPermissionIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "View permission",
+        adapter: viewPermissionAdapter,
+        extraFilters: buildPermissionFilters(),
+        mapExtraFilters: (filters) => mapPermissionFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...pAdapter,
       },
       editPermissionIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Edit permission",
+        adapter: editPermissionAdapter,
+        extraFilters: buildPermissionFilters(),
+        mapExtraFilters: (filters) => mapPermissionFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...pAdapter,
       },
       deletePermissionIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Delete permission",
+        adapter: deletePermissionAdapter,
+        extraFilters: buildPermissionFilters(),
+        mapExtraFilters: (filters) => mapPermissionFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...pAdapter,
       },
       markerDatalistIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Markers list",
+        adapter: markerDatalistAdapter,
+        extraFilters: buildDatalistFilters(),
+        mapExtraFilters: (filters) => mapDatalistFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...dlAdapter,
       },
       tagDatalistIdList: {
-        type: AutoFormValueType.combobox,
+        type: AutoFormValueType.complexCombobox,
         label: "Tags list",
+        adapter: tagDatalistAdapter,
+        extraFilters: buildDatalistFilters(),
+        mapExtraFilters: (filters) => mapDatalistFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
         multi: true,
-        ...dlAdapter,
       },
       segment: {
         type: AutoFormValueType.boolean,

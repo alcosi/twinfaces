@@ -1,7 +1,13 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
+import {
+  useStatusFilters,
+  useTwinStatusSelectAdapterWithFilters,
+} from "@/entities/twin-status";
+import {
+  useTwinTriggerFilters,
+  useTwinTriggerSelectAdapterWithFilters,
+} from "@/entities/twin-trigger";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -18,8 +24,17 @@ export function useStatusTriggerFilters({
 }: {
   enabledFilters?: StatusTriggerFilterKeys[];
 }): FilterFeature<StatusTriggerFilterKeys, StatusTriggerFilters> {
-  const twinStatusAdapter = useTwinStatusSelectAdapter();
-  const twinTriggerAdapter = useTwinTriggerSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapterWithFilters();
+  const twinTriggerAdapter = useTwinTriggerSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildStatusFilters,
+    mapFiltersToPayload: mapStatusFilters,
+  } = useStatusFilters({ enabledFilters: undefined });
+  const {
+    buildFilterFields: buildTwinTriggerFilters,
+    mapFiltersToPayload: mapTwinTriggerFilters,
+  } = useTwinTriggerFilters({});
 
   const allFilters: Record<StatusTriggerFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -27,10 +42,14 @@ export function useStatusTriggerFilters({
       label: "ID",
     },
     twinStatusIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin status",
+      adapter: twinStatusAdapter,
+      extraFilters: buildStatusFilters(),
+      mapExtraFilters: (filters) => mapStatusFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinStatusAdapter,
     },
     incomingElseOutgoing: {
       type: AutoFormValueType.boolean,
@@ -39,10 +58,14 @@ export function useStatusTriggerFilters({
       defaultValue: "indeterminate",
     },
     twinTriggerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin trigger",
+      adapter: twinTriggerAdapter,
+      extraFilters: buildTwinTriggerFilters(),
+      mapExtraFilters: (filters) => mapTwinTriggerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinTriggerAdapter,
     },
     active: {
       type: AutoFormValueType.boolean,

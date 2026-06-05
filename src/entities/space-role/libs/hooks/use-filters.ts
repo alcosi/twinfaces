@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useBusinessAccountSelectAdapter } from "@/entities/business-account";
+import {
+  useBusinessAccountFilters,
+  useBusinessAccountSelectAdapterWithFilters,
+} from "@/entities/business-account";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
@@ -23,12 +26,16 @@ export function useSpaceRoleFilters({
   enabledFilters?: SpaceRoleFilterKeys[];
 } = {}): FilterFeature<SpaceRoleFilterKeys, SpaceRoleFilter> {
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
-  const businessAccountAdapter = useBusinessAccountSelectAdapter();
+  const businessAccountAdapter = useBusinessAccountSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildBusinessAccountFilters,
+    mapFiltersToPayload: mapBusinessAccountFilters,
+  } = useBusinessAccountFilters();
 
   const allFilters: Record<SpaceRoleFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -53,9 +60,13 @@ export function useSpaceRoleFilters({
       multi: true,
     },
     businessAccountIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Business account",
-      ...businessAccountAdapter,
+      adapter: businessAccountAdapter,
+      extraFilters: buildBusinessAccountFilters(),
+      mapExtraFilters: (filters) => mapBusinessAccountFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
     },
     nameI18nLikeList: {

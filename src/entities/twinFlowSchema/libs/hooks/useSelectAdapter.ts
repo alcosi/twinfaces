@@ -1,5 +1,6 @@
 import { TwinFlowSchema_DETAILED } from "@/entities/twinFlowSchema";
 import { SelectAdapter } from "@/shared/libs";
+
 import { useTwinFlowSchemaSearchV1 } from "../../api/hooks";
 
 export function useTwinFlowSchemaSelectAdapter(): SelectAdapter<TwinFlowSchema_DETAILED> {
@@ -14,9 +15,16 @@ export function useTwinFlowSchemaSelectAdapter(): SelectAdapter<TwinFlowSchema_D
     return response.data[0];
   }
 
-  async function getItems(search: string) {
-    const response = await searchTwinFlowSchemas({ search });
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchTwinFlowSchemas({ search, pagination });
     return response.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ name }: TwinFlowSchema_DETAILED) {
@@ -26,6 +34,7 @@ export function useTwinFlowSchemaSelectAdapter(): SelectAdapter<TwinFlowSchema_D
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

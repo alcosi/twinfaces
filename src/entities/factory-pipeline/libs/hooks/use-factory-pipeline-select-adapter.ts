@@ -17,12 +17,16 @@ export function useFactoryPipelineSelectAdapter(
     return await fetchFactoryPipelineById(id);
   }
 
-  async function getItems(search: string, filters?: FactoryPipelineFilters) {
+  async function getItems(
+    search: string,
+    filters?: FactoryPipelineFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     const response = await searchFactoryPipelines({
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
+      pagination,
       filters: {
         descriptionLikeList: [wrapWithPercent(search)],
         factoryIdList: factoryId ? [factoryId] : [],
@@ -44,6 +48,8 @@ export function useFactoryPipelineSelectAdapter(
     getById,
     getItems: (search, options) =>
       getItems(search, options as FactoryPipelineFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

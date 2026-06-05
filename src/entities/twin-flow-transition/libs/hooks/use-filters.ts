@@ -2,15 +2,28 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { usePermissionSelectAdapter } from "@/entities/permission";
-import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  usePermissionFilters,
+  usePermissionSelectAdapterWithFilters,
+} from "@/entities/permission";
+import {
+  useTwinFlowFilters,
+  useTwinFlowSelectAdapterWithFilters,
+} from "@/entities/twin-flow";
 import {
   TransitionType,
   useTransitionAliasSelectAdapter,
   useTransitionSelectTypeAdapter,
 } from "@/entities/twin-flow-transition";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
+import {
+  useStatusFilters,
+  useTwinStatusSelectAdapter,
+  useTwinStatusSelectAdapterWithFilters,
+} from "@/entities/twin-status";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -34,11 +47,29 @@ export function useTwinFlowTransitionFilters({
   enabledFilters?: TwinFlowTransitionFilterKeys[];
 }): FilterFeature<TwinFlowTransitionFilterKeys, TwinFlowTransitionFilters> {
   const twinStatusAdapter = useTwinStatusSelectAdapter();
-  const permissionAdapter = usePermissionSelectAdapter();
-  const twinFlowAdapter = useTwinFlowSelectAdapter();
-  const factoryAdapter = useFactorySelectAdapter();
+  const dstStatusAdapter = useTwinStatusSelectAdapterWithFilters();
+  const permissionAdapter = usePermissionSelectAdapterWithFilters();
+  const twinFlowAdapter = useTwinFlowSelectAdapterWithFilters();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
   const transitionAliasAdapter = useTransitionAliasSelectAdapter();
   const typeSelectAdapter = useTransitionSelectTypeAdapter();
+
+  const {
+    buildFilterFields: buildTwinFlowFilters,
+    mapFiltersToPayload: mapTwinFlowFilters,
+  } = useTwinFlowFilters({});
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildStatusFilters,
+    mapFiltersToPayload: mapStatusFilters,
+  } = useStatusFilters({ enabledFilters: undefined });
+  const {
+    buildFilterFields: buildPermissionFilters,
+    mapFiltersToPayload: mapPermissionFilters,
+  } = usePermissionFilters();
 
   const allFilters: Record<TwinFlowTransitionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -49,10 +80,14 @@ export function useTwinFlowTransitionFilters({
     },
 
     twinflowIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twinflow",
+      adapter: twinFlowAdapter,
+      extraFilters: buildTwinFlowFilters(),
+      mapExtraFilters: (filters) => mapTwinFlowFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinFlowAdapter,
     },
 
     aliasLikeList: {
@@ -94,24 +129,36 @@ export function useTwinFlowTransitionFilters({
     },
 
     dstStatusIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Destination status",
+      adapter: dstStatusAdapter,
+      extraFilters: buildStatusFilters(),
+      mapExtraFilters: (filters) => mapStatusFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinStatusAdapter,
     },
 
     permissionIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Permission",
+      adapter: permissionAdapter,
+      extraFilters: buildPermissionFilters(),
+      mapExtraFilters: (filters) => mapPermissionFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...permissionAdapter,
     },
 
     inbuiltTwinFactoryIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Factory",
+      adapter: factoryAdapter,
+      extraFilters: buildFactoryFilters(),
+      mapExtraFilters: (filters) => mapFactoryFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...factoryAdapter,
     },
   };
 

@@ -10,7 +10,10 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapter,
 } from "@/entities/twin-class";
-import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
+import {
+  useValidatorSetFilters,
+  useValidatorSetSelectAdapterWithFilters,
+} from "@/entities/validator-set";
 import {
   type FilterFeature,
   extractEnabledFilters,
@@ -34,7 +37,11 @@ export function useTwinClassDynamicMarkerFilters({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
-  const validatorSetAdapter = useValidatorSetSelectAdapter();
+  const validatorSetAdapter = useValidatorSetSelectAdapterWithFilters();
+  const {
+    buildFilterFields: buildValidatorSetFilters,
+    mapFiltersToPayload: mapValidatorSetFilters,
+  } = useValidatorSetFilters();
 
   const allFilters: Record<
     TwinClassDynamicMarkerFilterKeys,
@@ -57,9 +64,13 @@ export function useTwinClassDynamicMarkerFilters({
       multi: true,
     },
     twinValidatorSetIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Validator Set",
-      ...validatorSetAdapter,
+      adapter: validatorSetAdapter,
+      extraFilters: buildValidatorSetFilters(),
+      mapExtraFilters: (filters) => mapValidatorSetFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
     },
     markerDataListOptionIdList: {

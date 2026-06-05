@@ -23,15 +23,22 @@ export function useBusinessAccountSelectAdapter(): SelectAdapter<BusinessAccount
     return data?.[0]?.businessAccount;
   }
 
-  async function getItems(search: string) {
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
     const { data } = await searchBusinessAccount({
-      pagination: { pageIndex: 0, pageSize: 10 },
+      pagination,
       filters: {
         businessAccountNameLikeList: search ? [wrapWithPercent(search)] : [],
       } as DomainBusinessAccountSearchRq,
     });
 
     return data?.map((item) => item.businessAccount) ?? [];
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ id, name }: BusinessAccount) {
@@ -41,6 +48,7 @@ export function useBusinessAccountSelectAdapter(): SelectAdapter<BusinessAccount
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

@@ -17,9 +17,16 @@ export function useTierSelectAdapter(): SelectAdapter<Tier_DETAILED> {
     return response.data[0];
   }
 
-  async function getItems(search: string) {
-    const response = await searchTiers({ search });
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
+    const response = await searchTiers({ search, pagination });
     return response.data;
+  }
+
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
   }
 
   function renderItem({ name }: Tier_DETAILED) {
@@ -29,6 +36,7 @@ export function useTierSelectAdapter(): SelectAdapter<Tier_DETAILED> {
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
   };
 }

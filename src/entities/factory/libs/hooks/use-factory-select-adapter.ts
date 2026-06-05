@@ -18,12 +18,16 @@ export function useFactorySelectAdapter(): SelectAdapter<Factory> {
     return await fetchFactoryById(id);
   }
 
-  async function getItems(search: string, filters?: FactoryFilters) {
+  async function getItems(
+    search: string,
+    filters?: FactoryFilters,
+    pagination: { pageIndex: number; pageSize: number } = {
+      pageIndex: 0,
+      pageSize: 10,
+    }
+  ) {
     const response = await searchFactories({
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
+      pagination,
       filters: {
         keyLikeList: [wrapWithPercent(search)],
         ...filters,
@@ -39,6 +43,8 @@ export function useFactorySelectAdapter(): SelectAdapter<Factory> {
   return {
     getById,
     getItems: (search, options) => getItems(search, options as FactoryFilters),
+    getItemsPaginated: (search, pagination) =>
+      getItems(search, undefined, pagination),
     renderItem,
   };
 }

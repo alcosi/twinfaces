@@ -32,7 +32,10 @@ export function useTwinClassSelectAdapterWithFilters(
     return await fetchTwinClassById({ id });
   }
 
-  async function getItems(search: string) {
+  async function getItemsPaginated(
+    search: string,
+    pagination: { pageIndex: number; pageSize: number }
+  ) {
     const baseFilters = abstract
       ? {
           abstractt: "ONLY_NOT",
@@ -47,6 +50,7 @@ export function useTwinClassSelectAdapterWithFilters(
 
     const res = await searchByFilters({
       search,
+      pagination,
       filters: {
         ...baseFilters,
         ...filtersRef.current,
@@ -56,6 +60,10 @@ export function useTwinClassSelectAdapterWithFilters(
     return res.data;
   }
 
+  async function getItems(search: string) {
+    return getItemsPaginated(search, { pageIndex: 0, pageSize: 10 });
+  }
+
   function renderItem({ key = "", name }: TwinClass_DETAILED) {
     return isPopulatedString(name) ? `${name} : ${key}` : key;
   }
@@ -63,6 +71,7 @@ export function useTwinClassSelectAdapterWithFilters(
   return {
     getById,
     getItems,
+    getItemsPaginated,
     renderItem,
     setFilters,
     invalidate,
