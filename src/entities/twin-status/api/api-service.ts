@@ -1,12 +1,14 @@
 import { PaginationState } from "@tanstack/react-table";
 
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+import { ApiSettings, SortV1, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  TwinStatusCountGroupField,
   TwinStatusCreateRq,
   TwinStatusDuplicateRq,
   TwinStatusExportSqlRq,
   TwinStatusFilters,
+  TwinStatusSortField,
   TwinStatusUpdateRq,
 } from "./types";
 
@@ -63,11 +65,13 @@ export function createTwinStatusApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sort,
   }: {
     pagination: PaginationState;
     filters?: TwinStatusFilters;
+    sort?: SortV1;
   }) {
-    return settings.client.POST("/private/twin_status/search/v1", {
+    return settings.client.POST("/private/twin_status/search/v2", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
@@ -77,10 +81,37 @@ export function createTwinStatusApi(settings: ApiSettings) {
           showTwinClassMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
-          sortAsc: true,
         },
       },
-      body: { ...filters },
+      body: {
+        search: { ...filters },
+        sortField: sort?.field as TwinStatusSortField | undefined,
+        sortDirection: sort?.direction,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+  }: {
+    filters?: TwinStatusFilters;
+    groupFields: TwinStatusCountGroupField[];
+  }) {
+    return settings.client.POST("/private/twin_status/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showStatusMode: "DETAILED",
+          showTwinStatus2TwinClassMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
+      },
     });
   }
 
@@ -103,7 +134,7 @@ export function createTwinStatusApi(settings: ApiSettings) {
     });
   }
 
-  return { create, update, getById, search, duplicate, exportSql };
+  return { create, update, getById, search, count, duplicate, exportSql };
 }
 
 export type TwinStatusApi = ReturnType<typeof createTwinStatusApi>;

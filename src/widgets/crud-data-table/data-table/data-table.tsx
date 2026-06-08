@@ -151,14 +151,15 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     <SortProvider sort={sort} onSortChange={onSortChange ?? (() => {})}>
       <div
         className={cn(
-          "force-scrollbar-x relative mb-2",
+          // Sizes to its content (so few rows stay compact) but never grows;
+          // `min-h-0` + the default flex-shrink let it cap to the available
+          // height and scroll on its own when rows overflow, keeping the page
+          // from double-scrolling and the pagination footer below pinned.
+          // `isolate` contains the table's sticky header/actions z-index stack
+          // so it can't paint over the page breadcrumb/tabs headers.
+          "force-scrollbar-x relative isolate mb-2 min-h-0 flex-initial overflow-auto",
           layoutMode === "grid" && "border-border rounded-md border"
         )}
-        style={{
-          maxHeight: "calc(100vh - var(--header-height, 64px) - 180px)",
-          overflowY: "auto",
-          overflowX: "auto",
-        }}
       >
         {layoutMode === "grid" ? (
           // Grid keeps its header (and the column-manager control) mounted even
@@ -177,11 +178,13 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
         )}
       </div>
       {!disablePagination && (
-        <DataTablePagination
-          table={table}
-          pageSizes={pageSizes}
-          pageState={pagination.api}
-        />
+        <div className="shrink-0">
+          <DataTablePagination
+            table={table}
+            pageSizes={pageSizes}
+            pageState={pagination.api}
+          />
+        </div>
       )}
     </SortProvider>
   );

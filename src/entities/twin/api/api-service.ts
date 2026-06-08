@@ -7,17 +7,26 @@ import {
   TwinSimpleFilters,
   TwinUpdateRq,
 } from "@/entities/twin/server";
-import { ApiSettings, HttpPostSpec, getApiDomainHeaders } from "@/shared/api";
+import {
+  ApiSettings,
+  HttpPostSpec,
+  SortV1,
+  getApiDomainHeaders,
+} from "@/shared/api";
 
 export function createTwinApi(settings: ApiSettings) {
+  // Multi-field sorting on v4 is expressed via TwinClassFieldId, so the
+  // single active sort (if any) is forwarded as a one-element `sorts` array.
   function search({
     pagination,
     filters,
+    sort,
   }: {
     pagination: PaginationState;
     filters?: TwinFilters;
+    sort?: SortV1;
   }) {
-    return settings.client.POST("/private/twin/search/v3", {
+    return settings.client.POST("/private/twin/search/v4", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
@@ -38,7 +47,6 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2TwinLinkMode: "SHORT",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
-          sortAsc: false,
           showTwinField2DataListOptionMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
           showTwinClassFieldCollectionMode: "SHOW",
@@ -47,7 +55,47 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2AttachmentCollectionMode: "FROM_FIELDS",
         },
       },
-      body: [{ ...filters }],
+      body: {
+        search: { ...filters },
+        sorts: sort?.field
+          ? [
+              {
+                twinClassFieldId: sort.field,
+                direction: sort.direction ?? "ASC",
+              },
+            ]
+          : undefined,
+      },
+    });
+  }
+
+  // Server-side aggregation backing the pie-chart view. `groupFields` are
+  // TwinClassFieldId UUIDs (static or dynamic fields); the response groups
+  // come back with the matching static projection populated.
+  function count({
+    filters,
+    groupFields,
+  }: {
+    filters?: TwinFilters;
+    groupFields: string[];
+  }) {
+    return settings.client.POST("/private/twin/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showTwinMode: "SHORT",
+          showTwinClassMode: "SHORT",
+          showTwin2TwinClassMode: "DETAILED",
+          showTwin2UserMode: "DETAILED",
+          showTwin2StatusMode: "DETAILED",
+          showTwinByHeadMode: "YELLOW",
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
+      },
     });
   }
 
@@ -201,6 +249,7 @@ export function createTwinApi(settings: ApiSettings) {
 
   return {
     search,
+    count,
     searchBySearchId,
     create,
     update,

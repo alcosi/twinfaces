@@ -7,7 +7,7 @@ import {
   Twin_DETAILED,
   hydrateTwinFromMap,
 } from "@/entities/twin/server";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 export const useTwinSearch = () => {
   const api = useContext(PrivateApiContext);
@@ -16,14 +16,17 @@ export const useTwinSearch = () => {
     async ({
       pagination = { pageIndex: 0, pageSize: 10 },
       filters,
+      sort,
     }: {
       pagination?: PaginationState;
       filters?: TwinFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<Twin_DETAILED>> => {
       try {
         const { data, error } = await api.twin.search({
           pagination,
           filters,
+          sort,
         });
 
         if (error) {

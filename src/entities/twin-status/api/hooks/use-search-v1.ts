@@ -1,7 +1,7 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 import { TwinStatusFilters, TwinStatus_DETAILED } from "../../api";
 import { hydrateTwinStatusFromMap } from "../../libs";
@@ -13,13 +13,16 @@ export const useTwinStatusSearchV1 = () => {
     async ({
       pagination = { pageIndex: 0, pageSize: 10 },
       filters,
+      sort,
     }: {
       pagination?: PaginationState;
       filters?: TwinStatusFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<TwinStatus_DETAILED>> => {
       const { data, error } = await api.twinStatus.search({
         pagination,
         filters,
+        sort,
       });
 
       if (error) {
