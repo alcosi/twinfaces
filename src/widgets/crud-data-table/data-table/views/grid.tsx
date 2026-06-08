@@ -30,8 +30,13 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
     if (columnId !== "actions") return undefined;
 
     return cn(
-      "sticky right-0 border-l border-border bg-background",
-      type === "head" ? "z-30" : "z-20"
+      // Fixed-width, right-pinned column. The header is also pinned to the top
+      // (`top-0`) so it stays a sticky top-right corner. The header cell sits
+      // at z-30 (above the z-20 <thead>), while body action cells stay at z-10
+      // — below the header row so table content can't scroll over the
+      // column-manager control, but above the non-sticky body cells.
+      "sticky right-0 w-14 min-w-14 max-w-14 bg-background",
+      type === "head" ? "top-0 z-30" : "z-10"
     );
   }
 
@@ -50,9 +55,14 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
             key={cell.id}
             className={cn(
               getStickyActionsClass(cell.column.id, "cell"),
+              // The sticky actions cell keeps an opaque base so scrolled
+              // content can't show through it. The row-hover tint is layered
+              // via an overlay (instead of a semi-transparent cell bg) so it
+              // doesn't double up over the row's own hover background and the
+              // column stays seamless with the rest of the row.
               cell.column.id === "actions" &&
                 onRowClick &&
-                "group-hover:bg-muted/50"
+                "before:bg-muted/50 before:pointer-events-none before:absolute before:inset-0 before:opacity-0 group-hover:before:opacity-100"
             )}
           >
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -122,7 +132,7 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
 
   return (
     <table className="w-full caption-bottom text-sm">
-      <TableHeader className="[&_tr]:bg-background sticky top-0 z-10">
+      <TableHeader className="[&_tr]:bg-background sticky top-0 z-20">
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => {

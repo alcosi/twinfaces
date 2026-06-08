@@ -44,7 +44,7 @@ export function TabsLayout({ tabs, rightSlot }: Props) {
 
   return (
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
-      <nav className="border-border bg-background sticky top-0 z-10 flex w-full border-b">
+      <nav className="border-border bg-background sticky top-[var(--header-height)] z-20 flex w-full border-b">
         <div className="min-w-0 flex-1 overflow-x-auto">
           <TabsList className="min-w-max">
             {tabs.map((tab) => (
@@ -64,7 +64,9 @@ export function TabsLayout({ tabs, rightSlot }: Props) {
           </TabsList>
         </div>
         {rightSlot ? (
-          <div className="bg-background shrink-0 px-3 py-2">{rightSlot}</div>
+          <div className="bg-background shrink-0 py-2 pr-0 pl-3">
+            {rightSlot}
+          </div>
         ) : null}
       </nav>
       {tabs.map((tab) => (

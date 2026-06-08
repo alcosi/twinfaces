@@ -1,4 +1,6 @@
-import { ReactNode } from "react";
+"use client";
+
+import { ReactNode, useState } from "react";
 
 import { cn } from "@/shared/libs";
 
@@ -26,22 +28,37 @@ export interface PieChartProps {
   className?: string;
 }
 
+/** Converts an HSL (h°, s%, l%) color to a `#rrggbb` hex string. */
+function hslToHex(h: number, s: number, l: number): string {
+  const sNorm = s / 100;
+  const lNorm = l / 100;
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = sNorm * Math.min(lNorm, 1 - lNorm);
+  const channel = (n: number) => {
+    const value =
+      lNorm - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return Math.round(255 * value)
+      .toString(16)
+      .padStart(2, "0");
+  };
+  return `#${channel(0)}${channel(8)}${channel(4)}`;
+}
+
 /**
- * Pleasant, theme-agnostic palette that reads well in both light and dark mode.
- * Slices cycle through it by index when no explicit color is provided.
+ * Theme-agnostic palette of 50 visually distinct colors that read well in both
+ * light and dark mode. Hues are spread by the golden angle so adjacent slices
+ * never look alike, and the band of 50 entries makes any repetition cycle long
+ * enough to be invisible for realistic group counts.
  */
-export const PIE_CHART_PALETTE = [
-  "#6366f1", // indigo
-  "#22c55e", // green
-  "#f59e0b", // amber
-  "#ef4444", // red
-  "#06b6d4", // cyan
-  "#a855f7", // purple
-  "#ec4899", // pink
-  "#84cc16", // lime
-  "#f97316", // orange
-  "#14b8a6", // teal
-] as const;
+export const PIE_CHART_PALETTE: readonly string[] = Array.from(
+  { length: 50 },
+  (_, index) => {
+    const hue = (index * 137.508) % 360;
+    const saturation = 62 + (index % 3) * 9; // 62 / 71 / 80
+    const lightness = 58 - (index % 2) * 10; // 58 / 48
+    return hslToHex(hue, saturation, lightness);
+  }
+);
 
 export function getPieChartColor(index: number): string {
   return PIE_CHART_PALETTE[index % PIE_CHART_PALETTE.length] ?? "#6366f1";
@@ -59,10 +76,14 @@ export function PieChart({
   hideLegend = false,
   className,
 }: PieChartProps) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
   const total = data.reduce((sum, d) => sum + d.value, 0);
   const radius = (size - thickness) / 2;
   const circumference = 2 * Math.PI * radius;
   const center = size / 2;
+  // How far the hovered slice is pulled out of the ring, in user units.
+  const explodeBy = thickness * 0.28;
 
   let accumulated = 0;
 
@@ -74,7 +95,7 @@ export function PieChart({
         viewBox={`0 0 ${size} ${size}`}
         role="img"
         aria-label="Pie chart"
-        className="shrink-0"
+        className="shrink-0 overflow-visible"
       >
         {/* Track behind the segments */}
         <circle
@@ -91,6 +112,17 @@ export function PieChart({
             data.map((datum, index) => {
               const fraction = datum.value / total;
               const dash = fraction * circumference;
+              const isActive = activeIndex === index;
+              const isDimmed = activeIndex !== null && !isActive;
+
+              // Pull the hovered slice outward along its mid-angle. The angle
+              // is measured in the segment's local (pre-rotation) space, where
+              // the stroke starts at 3 o'clock and runs clockwise.
+              const midAngle =
+                ((accumulated + dash / 2) / circumference) * 2 * Math.PI;
+              const dx = isActive ? Math.cos(midAngle) * explodeBy : 0;
+              const dy = isActive ? Math.sin(midAngle) * explodeBy : 0;
+
               const segment = (
                 <circle
                   key={`${datum.label}-${index}`}
@@ -99,9 +131,14 @@ export function PieChart({
                   r={radius}
                   fill="none"
                   stroke={datum.color ?? getPieChartColor(index)}
-                  strokeWidth={thickness}
+                  strokeWidth={isActive ? thickness + 6 : thickness}
                   strokeDasharray={`${dash} ${circumference - dash}`}
                   strokeDashoffset={-accumulated}
+                  opacity={isDimmed ? 0.35 : 1}
+                  className="cursor-pointer transition-all duration-150 ease-out"
+                  style={{ transform: `translate(${dx}px, ${dy}px)` }}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onMouseLeave={() => setActiveIndex(null)}
                 >
                   <title>{`${datum.label}: ${datum.value} (${Math.round(
                     fraction * 100
@@ -133,34 +170,85 @@ export function PieChart({
       </svg>
 
       {!hideLegend && (
-        <ul className="min-w-0 flex-1 space-y-1.5">
-          {data.map((datum, index) => {
-            const percent = total > 0 ? (datum.value / total) * 100 : 0;
-            return (
-              <li
-                key={`${datum.label}-${index}`}
-                className="flex items-center gap-2 text-sm"
-              >
-                <span
-                  className="size-3 shrink-0 rounded-full"
-                  style={{
-                    backgroundColor: datum.color ?? getPieChartColor(index),
-                  }}
-                />
-                <span
-                  className="flex min-w-0 flex-1 truncate"
-                  title={datum.label}
-                >
-                  {datum.legendContent ?? datum.label}
-                </span>
-                <span className="text-muted-foreground tabular-nums">
-                  {datum.value} ({percent.toFixed(1)}%)
-                </span>
-              </li>
-            );
-          })}
-        </ul>
+        <PieChartLegend
+          data={data}
+          activeIndex={activeIndex}
+          onActiveIndexChange={setActiveIndex}
+        />
       )}
     </div>
+  );
+}
+
+/**
+ * Standalone legend for a pie-chart dataset: one row per slice with its color
+ * swatch, label (or rich `legendContent`) and value/percentage. Reused on its
+ * own to present a breakdown as a plain list when there are too many groups to
+ * draw a readable chart.
+ */
+export function PieChartLegend({
+  data,
+  className,
+  activeIndex,
+  onActiveIndexChange,
+  interactive = true,
+}: {
+  data: PieChartDatum[];
+  className?: string;
+  /** Controlled highlighted row; pairs with the chart's hovered slice. */
+  activeIndex?: number | null;
+  /** Notifies the owner (e.g. the chart) which row is being hovered. */
+  onActiveIndexChange?: (index: number | null) => void;
+  /**
+   * Whether rows respond to hover (highlight/dim). Disable when the legend
+   * stands alone with no chart to coordinate with.
+   */
+  interactive?: boolean;
+}) {
+  const [internalActive, setInternalActive] = useState<number | null>(null);
+  const isControlled = activeIndex !== undefined;
+  const active = isControlled ? activeIndex : internalActive;
+
+  function handleHover(index: number | null) {
+    if (!isControlled) setInternalActive(index);
+    onActiveIndexChange?.(index);
+  }
+
+  const total = data.reduce((sum, d) => sum + d.value, 0);
+
+  return (
+    <ul className={cn("min-w-0 flex-1 space-y-1.5", className)}>
+      {data.map((datum, index) => {
+        const percent = total > 0 ? (datum.value / total) * 100 : 0;
+        const isActive = interactive && active === index;
+        const isDimmed = interactive && active != null && !isActive;
+        return (
+          <li
+            key={`${datum.label}-${index}`}
+            className={cn(
+              "flex items-center gap-2 rounded px-1.5 py-0.5 text-sm transition-all duration-150",
+              interactive && "cursor-pointer",
+              isActive && "bg-muted font-medium",
+              isDimmed && "opacity-40"
+            )}
+            onMouseEnter={interactive ? () => handleHover(index) : undefined}
+            onMouseLeave={interactive ? () => handleHover(null) : undefined}
+          >
+            <span
+              className="size-3 shrink-0 rounded-full"
+              style={{
+                backgroundColor: datum.color ?? getPieChartColor(index),
+              }}
+            />
+            <span className="flex min-w-0 flex-1 truncate" title={datum.label}>
+              {datum.legendContent ?? datum.label}
+            </span>
+            <span className="text-muted-foreground tabular-nums">
+              {datum.value} ({percent.toFixed(1)}%)
+            </span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

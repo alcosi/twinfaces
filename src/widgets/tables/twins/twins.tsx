@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -10,9 +10,11 @@ import {
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
   TWIN_SELF_FIELD_KEY_TO_ID_MAP,
+  TwinCountGroup,
   TwinFormValues,
   TwinSelfFieldId,
   useCreateTwin,
+  useTwinCount,
   useTwinFilters,
   useTwinSearch,
 } from "@/entities/twin";
@@ -30,27 +32,97 @@ import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import {
   TwinFieldEditor,
   TwinResourceLink,
   TwinStatusActions,
 } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import {
   formatIntlDate,
   isEmptyString,
   isPopulatedArray,
   isUndefined,
 } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import { GuidWithCopy, PieChartDatum, getPieChartColor } from "@/shared/ui";
 
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
+  SortableHeader,
 } from "../../crud-data-table";
 import { TC001Form } from "../../faces/widgets/views/index.client";
 import { TwinFormFields } from "./form-fields";
+
+const UNSET_GROUP_LABEL = "— Not set —";
+
+// Default header titles for the twin self (static) columns, keyed by field id.
+const STATIC_FIELD_TITLES: Record<string, string> = {
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.id]: "ID",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId]: "Twin class",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.aliases]: "Alias",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.name]: "Name",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId]: "Status",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.description]: "Description",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId]: "Author",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId]: "Assignee",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId]: "Head",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.tags]: "Tags",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.markers]: "Markers",
+  [TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt]: "Created at",
+};
+
+// Static columns the v4 search can sort on. Sorting is expressed via the
+// field's TwinClassFieldId, so the field id doubles as the sort key.
+const SORTABLE_STATIC_FIELD_IDS = new Set<string>([
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP.name,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP.description,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
+  TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt,
+]);
+
+/**
+ * Builds a column header for a static field: a sortable header (sorting by the
+ * field id) when the field supports it, otherwise the plain title. Keeps the
+ * sortable behaviour intact even when a custom column label is supplied.
+ */
+function renderTwinHeader(
+  fieldId: string,
+  title: string
+): ColumnDef<Twin_DETAILED>["header"] {
+  if (SORTABLE_STATIC_FIELD_IDS.has(fieldId)) {
+    return function () {
+      return <SortableHeader title={title} sortField={fieldId} />;
+    };
+  }
+  return title;
+}
+
+/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
+function mapCountToSlices(
+  groups: TwinCountGroup[],
+  getId: (group: TwinCountGroup) => string | undefined,
+  getLabel: (group: TwinCountGroup) => string | undefined,
+  renderLabel?: (group: TwinCountGroup) => ReactNode
+): PieChartDatum[] {
+  return groups
+    .slice()
+    .sort((a, b) => b.count - a.count)
+    .map((group, index) => ({
+      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
+      value: group.count,
+      color: getPieChartColor(index),
+      legendContent: renderLabel?.(group),
+    }));
+}
 
 type Props = {
   title?: string;
@@ -96,6 +168,7 @@ export function TwinsTable({
   });
   const { fetchTwinClassById } = useFetchTwinClassById();
   const { searchTwins, searchTwinBySearchId } = useTwinSearch();
+  const { countTwins } = useTwinCount();
   const { createTwin } = useCreateTwin();
 
   const enabledFilters = isPopulatedArray(enabledColumns)
@@ -119,7 +192,10 @@ export function TwinsTable({
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
       accessorKey: "twinClassId",
-      header: "Twin class",
+      header: renderTwinHeader(
+        TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
+        "Twin class"
+      ),
       cell: ({ row: { original } }) =>
         original.twinClass && (
           <div className="inline-flex max-w-48">
@@ -139,12 +215,15 @@ export function TwinsTable({
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.name]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.name,
       accessorKey: "name",
-      header: "Name",
+      header: renderTwinHeader(TWIN_SELF_FIELD_KEY_TO_ID_MAP.name, "Name"),
     },
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
       accessorKey: "statusId",
-      header: "Status",
+      header: renderTwinHeader(
+        TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
+        "Status"
+      ),
       cell: ({ row: { original } }) => (
         <div className="inline-flex max-w-48 items-center gap-2">
           {original.status && (
@@ -160,7 +239,10 @@ export function TwinsTable({
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.description]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.description,
       accessorKey: "description",
-      header: "Description",
+      header: renderTwinHeader(
+        TWIN_SELF_FIELD_KEY_TO_ID_MAP.description,
+        "Description"
+      ),
       cell: ({ row: { original } }) =>
         original.description && (
           <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -171,7 +253,10 @@ export function TwinsTable({
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
       accessorKey: "authorUserId",
-      header: "Author",
+      header: renderTwinHeader(
+        TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
+        "Author"
+      ),
       cell: ({ row: { original } }) =>
         original.authorUser && (
           <div className="inline-flex max-w-48">
@@ -186,7 +271,10 @@ export function TwinsTable({
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
       accessorKey: "assignerUserId",
-      header: "Assignee",
+      header: renderTwinHeader(
+        TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
+        "Assignee"
+      ),
       cell: ({ row: { original } }) =>
         original.assignerUser && (
           <div className="inline-flex max-w-48">
@@ -201,7 +289,10 @@ export function TwinsTable({
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId,
       accessorKey: "headTwinId",
-      header: "Head",
+      header: renderTwinHeader(
+        TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId,
+        "Head"
+      ),
       cell: ({ row: { original } }) =>
         original.headTwinId && original.headTwin ? (
           <div className="inline-flex max-w-48">
@@ -251,7 +342,10 @@ export function TwinsTable({
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt,
       accessorKey: "createdAt",
-      header: "Created at",
+      header: renderTwinHeader(
+        TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt,
+        "Created at"
+      ),
       cell: ({ row: { original } }) =>
         original.createdAt &&
         formatIntlDate(original.createdAt, "datetime-local"),
@@ -267,7 +361,10 @@ export function TwinsTable({
                 fieldId,
                 {
                   ...colDef,
-                  header: label ?? colDef.header,
+                  header: renderTwinHeader(
+                    fieldId,
+                    label ?? STATIC_FIELD_TITLES[fieldId] ?? fieldId
+                  ),
                 } as ColumnDef<Twin_DETAILED>,
               ]);
             }
@@ -315,47 +412,166 @@ export function TwinsTable({
     });
   }, [baseTwinClassId, enabledColumns, fetchTwinClassById]);
 
+  // Resolves the table filters into a search payload, applying the
+  // component-level scoping overrides (base twin class, head twin, owner
+  // business account). Shared by the data fetch and the chart count.
+  const resolveTwinFilters = useCallback(
+    (rawFilters: Record<string, unknown>) => {
+      const _baseFilters = mapFiltersToPayload(
+        rawFilters as Record<TwinFilterKeys, unknown>
+      );
+
+      return {
+        ..._baseFilters,
+        twinClassExtendsHierarchyContainsIdList: baseTwinClassIdList
+          ? baseTwinClassIdList
+          : baseTwinClassId
+            ? [baseTwinClassId]
+            : _baseFilters.twinClassExtendsHierarchyContainsIdList,
+        headTwinIdList: targetHeadTwinId
+          ? [targetHeadTwinId]
+          : _baseFilters.headTwinIdList,
+        ownerBusinessAccountIdList: businessAccountId
+          ? [businessAccountId]
+          : undefined,
+      };
+    },
+    [
+      mapFiltersToPayload,
+      baseTwinClassId,
+      baseTwinClassIdList,
+      targetHeadTwinId,
+      businessAccountId,
+    ]
+  );
+
   async function fetchTwins({
     pagination,
     filters,
+    sort,
   }: {
     pagination?: PaginationState;
     filters: FiltersState;
-  }) {
-    const _baseFilters = mapFiltersToPayload(filters.filters);
-    const _override = {
-      twinClassExtendsHierarchyContainsIdList: baseTwinClassIdList
-        ? baseTwinClassIdList
-        : baseTwinClassId
-          ? [baseTwinClassId]
-          : _baseFilters.twinClassExtendsHierarchyContainsIdList,
-      headTwinIdList: targetHeadTwinId
-        ? [targetHeadTwinId]
-        : _baseFilters.headTwinIdList,
-      ownerBusinessAccountIdList: businessAccountId
-        ? [businessAccountId]
-        : undefined,
-    };
-
-    const searchData = searchId
-      ? await searchTwinBySearchId({
-          searchId,
-          searchParams,
-          pagination: pagination,
-          filters: { ..._baseFilters, ..._override },
-        })
-      : await searchTwins({
-          pagination: pagination,
-          filters: { ..._baseFilters, ..._override },
-        });
+    sort?: SortV1;
+  }): Promise<PagedResponse<Twin_DETAILED>> {
+    const resolvedFilters = resolveTwinFilters(filters.filters);
 
     try {
-      return searchData;
+      // The search-by-id endpoint does not support sorting by field id.
+      return searchId
+        ? await searchTwinBySearchId({
+            searchId,
+            searchParams,
+            pagination,
+            filters: resolvedFilters,
+          })
+        : await searchTwins({
+            pagination,
+            filters: resolvedFilters,
+            sort,
+          });
     } catch {
       toast.error("Failed to fetch twins");
       return { data: [], pagination: {} };
     }
   }
+
+  // Server-side pie-chart breakdowns backed by /private/twin/count/v1, bound to
+  // the active filters. Only static fields whose grouped value the count
+  // response models are offered; dynamic-field grouping is not yet returned by
+  // the endpoint, though dynamic fields remain sortable.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveTwinFilters(filters);
+
+      return [
+        {
+          key: "status",
+          label: "Status",
+          load: async () =>
+            mapCountToSlices(
+              await countTwins({
+                filters: resolved,
+                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
+              }),
+              (g) => g.twinStatusId,
+              (g) => g.status?.name,
+              (g) =>
+                g.status && (
+                  <TwinClassStatusResourceLink data={g.status} withTooltip />
+                )
+            ),
+        },
+        {
+          key: "twinClass",
+          label: "Twin class",
+          load: async () =>
+            mapCountToSlices(
+              await countTwins({
+                filters: resolved,
+                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
+              }),
+              (g) => g.twinClassId,
+              (g) => g.twinClass?.name,
+              (g) =>
+                g.twinClass && (
+                  <TwinClassResourceLink data={g.twinClass} withTooltip />
+                )
+            ),
+        },
+        {
+          key: "assignee",
+          label: "Assignee",
+          load: async () =>
+            mapCountToSlices(
+              await countTwins({
+                filters: resolved,
+                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
+              }),
+              (g) => g.assignerUserId,
+              (g) => g.assignerUser?.fullName,
+              (g) =>
+                g.assignerUser && (
+                  <UserResourceLink data={g.assignerUser} withTooltip />
+                )
+            ),
+        },
+        {
+          key: "author",
+          label: "Author",
+          load: async () =>
+            mapCountToSlices(
+              await countTwins({
+                filters: resolved,
+                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
+              }),
+              (g) => g.createdByUserId,
+              (g) => g.createdByUser?.fullName,
+              (g) =>
+                g.createdByUser && (
+                  <UserResourceLink data={g.createdByUser} withTooltip />
+                )
+            ),
+        },
+        {
+          key: "head",
+          label: "Head",
+          load: async () =>
+            mapCountToSlices(
+              await countTwins({
+                filters: resolved,
+                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId,
+              }),
+              (g) => g.headTwinId,
+              (g) => g.headTwin?.name,
+              (g) =>
+                g.headTwin && <TwinResourceLink data={g.headTwin} withTooltip />
+            ),
+        },
+      ];
+    },
+    [countTwins, resolveTwinFilters]
+  );
 
   const form = useForm<TwinFormValues>({
     resolver: zodResolver(TWIN_SCHEMA),
@@ -398,7 +614,10 @@ export function TwinsTable({
           : Object.values(columnMap)
       }
       getRowId={(row) => row.id}
-      fetcher={(pagination, filters) => fetchTwins({ pagination, filters })}
+      fetcher={(pagination, filters, sort) =>
+        fetchTwins({ pagination, filters, sort })
+      }
+      chartGroupings={buildChartGroupings}
       filters={{
         filtersInfo: buildFilterFields(enabledFilters),
       }}
@@ -456,7 +675,14 @@ function extractTwinFieldColumnsAndFilters({
         {
           id: field.key,
           accessorFn: (row) => row.fields?.[field.key!] ?? null,
-          header: column.label ?? field.key,
+          // Dynamic fields are sortable on the v4 search via their
+          // TwinClassFieldId (`field.id`).
+          header: () => (
+            <SortableHeader
+              title={column.label ?? field.key!}
+              sortField={field.id!}
+            />
+          ),
           cell: ({ row: { original } }) => {
             const twinField = original.fields?.[field.key!] as TwinFieldUI;
 

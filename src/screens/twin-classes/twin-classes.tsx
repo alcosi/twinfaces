@@ -1128,8 +1128,8 @@ export function TwinClasses({ type }: { type?: string }) {
     tabs.find((tab) => tab.key === activeTab)?.content ?? tabs[0]?.content;
 
   return (
-    <div className="flex flex-col pt-4">
-      <nav className="border-border bg-background sticky top-0 z-10 flex w-full overflow-x-auto border-b">
+    <div className="flex min-h-0 flex-1 flex-col pt-4">
+      <nav className="border-border bg-background flex w-full overflow-x-auto border-b">
         <div className="min-w-max">
           {tabs.map((tab) => (
             <button
@@ -1148,7 +1148,7 @@ export function TwinClasses({ type }: { type?: string }) {
         </div>
       </nav>
 
-      <div>{activeTabContent}</div>
+      <div className="flex min-h-0 flex-1 flex-col">{activeTabContent}</div>
 
       <TwinClassDuplicateDialog
         ref={duplicateDialogRef}

@@ -1,5 +1,8 @@
 "use client";
 
+import { PaginationState } from "@tanstack/react-table";
+import { toast } from "sonner";
+
 import {
   Featurer,
   FeaturerTypes,
@@ -8,8 +11,7 @@ import {
 } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
 import { FiltersState } from "@/widgets/crud-data-table";
-import { PaginationState } from "@tanstack/react-table";
-import { toast } from "sonner";
+
 import { FeaturerTypeTable } from "./tables";
 
 type FeaturerType = {
@@ -48,7 +50,10 @@ export function FeaturersScreen() {
   }
 
   return (
-    <>
+    // Plain block wrapper (not a flex column): each table keeps its natural
+    // content height and the page scrolls, instead of the tables splitting the
+    // viewport height between them and collapsing to a single row each.
+    <div>
       {FEATURER_TYPES.map(({ title, typeIdList }) => (
         <FeaturerTypeTable
           key={typeIdList[0]}
@@ -56,6 +61,6 @@ export function FeaturersScreen() {
           fetcher={createFetcher(typeIdList)}
         />
       ))}
-    </>
+    </div>
   );
 }

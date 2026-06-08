@@ -23,3 +23,13 @@ export type TwinStatusFilterKeys =
 export type TwinStatusFilters = Partial<
   Pick<components["schemas"]["TwinStatusSearchRqV1"], TwinStatusFilterKeys>
 >;
+
+/** Fields the v2 search endpoint can sort by (by name, not id). */
+export type TwinStatusSortField = NonNullable<
+  components["schemas"]["TwinStatusSearchRqV2"]["sortField"]
+>;
+
+/** Fields the count endpoint can group by. */
+export type TwinStatusCountGroupField = NonNullable<
+  components["schemas"]["TwinStatusCountRqV1"]["groupFields"]
+>[number];

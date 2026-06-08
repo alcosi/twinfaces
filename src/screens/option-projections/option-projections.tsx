@@ -229,7 +229,6 @@ export function OptionProjectionsScreen({
   return (
     <CrudDataTable
       title={title ? title : "Option projections"}
-      className="mx-auto mb-10 flex-col p-8 lg:flex lg:justify-center"
       columns={[
         colDefs.id,
         colDefs.projectionType,

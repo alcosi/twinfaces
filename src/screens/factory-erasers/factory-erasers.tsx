@@ -137,7 +137,6 @@ export function FactoryErasers() {
   return (
     <CrudDataTable
       title="Erasers"
-      className="mx-auto mb-10 flex-col p-8 lg:flex lg:justify-center"
       columns={[
         colDefs.id,
         colDefs.factoryId,

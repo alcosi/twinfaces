@@ -157,11 +157,10 @@ export function useTwinFilters({
         selectPlaceholder: "Select...",
       },
       createdAt: {
-        type: AutoFormValueType.string,
+        type: AutoFormValueType.dateRange,
         label:
           columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["createdAt"]]?.label ??
           "Created at",
-        input_props: { type: "date" },
       },
     } as const;
 
@@ -212,6 +211,8 @@ export function useTwinFilters({
           )
         : {};
 
+    const createdAt = filters.createdAt as { from?: string; to?: string };
+
     const result: TwinFilters = {
       twinIdList: toArrayOfString(toArray(filters.twinIdList), "id"),
       twinNameLikeList: toArrayOfString(
@@ -234,8 +235,8 @@ export function useTwinFilters({
       ).map(wrapWithPercent),
       headTwinIdList: toArrayOfString(toArray(filters.headTwinIdList), "id"),
       createdAt: {
-        from: filters.createdAt ? `${filters.createdAt}T00:00:00` : "",
-        to: filters.createdAt ? `${filters.createdAt}T23:59:59` : "",
+        from: createdAt?.from ? `${createdAt.from}T00:00:00` : "",
+        to: createdAt?.to ? `${createdAt.to}T23:59:59` : "",
       },
       fields: fields,
     };

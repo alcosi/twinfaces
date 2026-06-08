@@ -356,30 +356,34 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   }
 
   return (
-    <div className={cn("flex-1 py-4", className)}>
-      <CrudDataTableHeader
-        ref={tableRef}
-        title={props.title}
-        search={props.search}
-        hideRefresh={props.hideRefresh}
-        columns={props.columns}
-        defaultVisibleColumns={props.defaultVisibleColumns}
-        orderedColumns={props.orderedColumns}
-        groupableColumns={props.groupableColumns}
-        filters={props.filters}
-        chartViewEnabled={hasChartView}
-        chartMode={chartMode}
-        onChartModeChange={setChartMode}
-        onChartRefresh={() => setChartRefreshSignal((prev) => prev + 1)}
-        onCreateClick={handleOnCreateClick}
-        onViewSettingsChange={handleHeaderViewSettingsChange}
-      />
+    <div className={cn("flex min-h-0 flex-1 flex-col py-4", className)}>
+      <div className="shrink-0">
+        <CrudDataTableHeader
+          ref={tableRef}
+          title={props.title}
+          search={props.search}
+          hideRefresh={props.hideRefresh}
+          columns={props.columns}
+          defaultVisibleColumns={props.defaultVisibleColumns}
+          orderedColumns={props.orderedColumns}
+          groupableColumns={props.groupableColumns}
+          filters={props.filters}
+          chartViewEnabled={hasChartView}
+          chartMode={chartMode}
+          onChartModeChange={setChartMode}
+          onChartRefresh={() => setChartRefreshSignal((prev) => prev + 1)}
+          onCreateClick={handleOnCreateClick}
+          onViewSettingsChange={handleHeaderViewSettingsChange}
+        />
+      </div>
 
       {chartMode && hasChartView ? (
-        <TableChartView
-          groupings={chartGroupings}
-          refreshSignal={chartRefreshSignal}
-        />
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <TableChartView
+            groupings={chartGroupings}
+            refreshSignal={chartRefreshSignal}
+          />
+        </div>
       ) : (
         <DataTable
           ref={tableRef}

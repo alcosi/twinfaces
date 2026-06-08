@@ -62,7 +62,7 @@ export function StatusScreen({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="text-primary hover:text-foreground hover:bg-transparent"
+                className="text-primary hover:text-foreground pr-0 hover:bg-transparent"
               >
                 <EllipsisVertical className="h-6 w-6" />
               </Button>

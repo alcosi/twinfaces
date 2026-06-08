@@ -20,6 +20,7 @@ import {
   LoadingSpinner,
   PieChart,
   PieChartDatum,
+  PieChartLegend,
   getPieChartColor,
 } from "@/shared/ui";
 
@@ -52,6 +53,12 @@ export type ChartGrouping = {
 };
 
 const NO_VALUE_LABEL = "— Not set —";
+
+/**
+ * Above this many groups a pie chart becomes an unreadable confetti of thin
+ * slices, so the breakdown is shown as a plain list instead.
+ */
+const MAX_CHART_SLICES = 50;
 
 /** Aggregates an in-memory dataset into pie-chart slices for a given field. */
 export function buildChartData<TData>(
@@ -232,6 +239,18 @@ function ChartCard({ grouping, refreshSignal, onLoaded }: ChartCardProps) {
           <p className="text-destructive text-sm">Failed to load chart data.</p>
         ) : !data || data.length === 0 ? (
           <p className="text-muted-foreground text-sm">No data.</p>
+        ) : data.length > MAX_CHART_SLICES ? (
+          <div className="space-y-3">
+            <p className="text-muted-foreground text-sm">
+              This grouping has {data.length} distinct values — too many to
+              render as a readable chart. Showing the full breakdown as a list
+              instead; apply more specific filters to narrow it down and
+              visualize it as a pie chart.
+            </p>
+            <div className="max-h-96 overflow-y-auto pr-1">
+              <PieChartLegend data={data} interactive={false} />
+            </div>
+          </div>
         ) : (
           <PieChart data={data} />
         )}

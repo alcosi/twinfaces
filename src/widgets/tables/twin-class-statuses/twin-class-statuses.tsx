@@ -3,22 +3,26 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { ReactNode, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
+  TwinStatusCountGroup,
   TwinStatusCreateRq,
+  TwinStatusFilterKeys,
   TwinStatus_DETAILED,
   useStatusCreate,
   useStatusFilters,
+  useTwinStatusCount,
   useTwinStatusSearchV1,
 } from "@/entities/twin-status";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import {
@@ -28,14 +32,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  PieChartDatum,
+  getPieChartColor,
 } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
+  SortableHeader,
 } from "../../crud-data-table";
 import { TwinClassStatusFormFields } from "./form-fields";
 import {
@@ -69,6 +78,35 @@ function ThemeIconCell({ data }: { data: TwinStatus_DETAILED }) {
   );
 }
 
+const UNSET_GROUP_LABEL = "— Not set —";
+
+/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
+function mapCountToSlices(
+  groups: TwinStatusCountGroup[],
+  getId: (group: TwinStatusCountGroup) => string | undefined,
+  getLabel: (group: TwinStatusCountGroup) => string | undefined,
+  renderLabel?: (group: TwinStatusCountGroup) => ReactNode
+): PieChartDatum[] {
+  return groups
+    .slice()
+    .sort((a, b) => b.count - a.count)
+    .map((group, index) => ({
+      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
+      value: group.count,
+      color: getPieChartColor(index),
+      legendContent: renderLabel?.(group),
+    }));
+}
+
+/** Renders a tri-state boolean group label, leaving unset groups to fall back. */
+function boolLabel(
+  value: boolean | undefined,
+  yes: string,
+  no: string
+): string | undefined {
+  return value == null ? undefined : value ? yes : no;
+}
+
 const colDefs: Record<
   keyof Pick<
     TwinStatus_DETAILED,
@@ -100,7 +138,7 @@ const colDefs: Record<
   twinClassId: {
     id: "twinClassId",
     accessorKey: "twinClassId",
-    header: "Class",
+    header: () => <SortableHeader title="Class" sortField="twinClassName" />,
     cell: ({ row: { original } }) =>
       original.twinClass && (
         <div className="inline-flex max-w-48">
@@ -112,19 +150,21 @@ const colDefs: Record<
   key: {
     id: "key",
     accessorKey: "key",
-    header: "Key",
+    header: () => <SortableHeader title="Key" sortField="key" />,
   },
 
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
   },
 
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -136,7 +176,9 @@ const colDefs: Record<
   backgroundColor: {
     id: "backgroundColor",
     accessorKey: "backgroundColor",
-    header: "Background Color",
+    header: () => (
+      <SortableHeader title="Background Color" sortField="backgroundColor" />
+    ),
     cell: (data) => {
       return (
         <Tooltip>
@@ -152,7 +194,7 @@ const colDefs: Record<
   fontColor: {
     id: "fontColor",
     accessorKey: "fontColor",
-    header: "Font Color",
+    header: () => <SortableHeader title="Font Color" sortField="fontColor" />,
     cell: (data) => {
       return (
         <Tooltip>
@@ -176,12 +218,90 @@ export function TwinClassStatusesTable({
   const duplicateDialogRef = useRef<TwinClassStatusesDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<TwinClassStatusExportSqlDialogRef>(null);
   const { searchTwinStatuses } = useTwinStatusSearchV1();
+  const { countTwinStatuses } = useTwinStatusCount();
   const { createStatus } = useStatusCreate();
   const { buildFilterFields, mapFiltersToPayload } = useStatusFilters({
     enabledFilters: isTruthy(twinClassId)
       ? ["idList", "keyLikeList", "nameI18nLikeList", "descriptionI18nLikeList"]
       : undefined,
   });
+
+  // Resolves the table filters into a search payload, scoping to the current
+  // twin class when the table is rendered inside a class. Shared by the data
+  // fetch and the chart count.
+  const resolveFilters = useCallback(
+    (rawFilters: Record<string, unknown>) => {
+      const _filters = mapFiltersToPayload(
+        rawFilters as Record<TwinStatusFilterKeys, unknown>
+      );
+
+      return {
+        ..._filters,
+        twinClassIdMap: twinClassId
+          ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
+          : _filters.twinClassIdMap,
+      };
+    },
+    [mapFiltersToPayload, twinClassId]
+  );
+
+  // Server-side pie-chart breakdowns backed by /private/twin_status/count/v1,
+  // bound to the active filters (and the optional scoping twin class).
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveFilters(filters);
+
+      return [
+        {
+          key: "twinClass",
+          label: "Class",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinStatuses({
+                filters: resolved,
+                groupField: "twinClassId",
+              }),
+              (g) => g.twinClassId,
+              (g) => g.twinClass?.name,
+              (g) =>
+                g.twinClass && (
+                  <TwinClassResourceLink
+                    data={g.twinClass as TwinClass_DETAILED}
+                    withTooltip
+                  />
+                )
+            ),
+        },
+        {
+          key: "inheritable",
+          label: "Inheritable",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinStatuses({
+                filters: resolved,
+                groupField: "inheritable",
+              }),
+              (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
+              (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable")
+            ),
+        },
+        {
+          key: "type",
+          label: "Type",
+          load: async () =>
+            mapCountToSlices(
+              await countTwinStatuses({
+                filters: resolved,
+                groupField: "type",
+              }),
+              (g) => g.type,
+              (g) => g.type
+            ),
+        },
+      ];
+    },
+    [countTwinStatuses, resolveFilters]
+  );
 
   const form = useForm<TwinClassStatusFormValues>({
     resolver: zodResolver(TWIN_CLASS_STATUS_SCHEMA),
@@ -198,19 +318,14 @@ export function TwinClassStatusesTable({
 
   async function fetchStatuses(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<TwinStatus_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
     try {
       return await searchTwinStatuses({
         pagination,
-        filters: {
-          ..._filters,
-          twinClassIdMap: twinClassId
-            ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
-            : _filters.twinClassIdMap,
-        },
+        filters: resolveFilters(filters.filters),
+        sort,
       });
     } catch {
       toast.error("Failed to fetch statuses");
@@ -313,6 +428,7 @@ export function TwinClassStatusesTable({
         ]}
         getRowId={(row) => row.id!}
         fetcher={fetchStatuses}
+        chartGroupings={buildChartGroupings}
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/statuses/${row.id}`)
         }
