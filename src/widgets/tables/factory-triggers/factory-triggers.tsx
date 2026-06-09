@@ -208,6 +208,7 @@ export function FactoryTriggersTable({
 
   return (
     <CrudDataTable
+      permissionSegment="factory-triggers"
       title="Factory triggers"
       columns={[
         colDefs.id,

@@ -208,6 +208,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
 
   return (
     <CrudDataTable
+      permissionSegment="datalist-options"
       title="Options"
       ref={tableRef}
       columns={columns}

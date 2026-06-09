@@ -287,6 +287,7 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
 
   return (
     <CrudDataTable
+      permissionSegment="users"
       title="Domain business account users"
       columns={[
         ...(showUserColumn ? [colDefs.user] : []),

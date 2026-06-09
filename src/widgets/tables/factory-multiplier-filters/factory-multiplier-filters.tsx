@@ -168,6 +168,7 @@ export function FactoryMultiplierFiltersTable({
 
   return (
     <CrudDataTable
+      permissionSegment="multiplier-filters"
       columns={[
         colDefs.id,
         colDefs.factory,

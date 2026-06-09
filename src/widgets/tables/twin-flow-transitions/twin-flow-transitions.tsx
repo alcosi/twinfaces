@@ -288,6 +288,7 @@ export function TwinFlowTransitionsTable({
 
   return (
     <CrudDataTable
+      permissionSegment="transitions"
       title={title}
       columns={[
         colDefs.id,

@@ -174,6 +174,7 @@ export function TwinRoleTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="permission-grant-twin-role"
       title="For twin role"
       columns={[
         colDefs.id,

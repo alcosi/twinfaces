@@ -193,6 +193,7 @@ export function TransitionTriggersTable({
 
   return (
     <CrudDataTable
+      permissionSegment="transition-triggers"
       ref={tableRef}
       title="Transition triggers"
       columns={[

@@ -606,6 +606,7 @@ export function TwinsTable({
 
   return (
     <CrudDataTable
+      permissionSegment="twins"
       ref={tableRef}
       title={title}
       columns={

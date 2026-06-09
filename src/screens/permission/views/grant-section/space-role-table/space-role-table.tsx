@@ -136,6 +136,7 @@ export function SpaceRoleTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="permission-grant-space-role"
       title="For space role"
       columns={[
         colDefs.id,

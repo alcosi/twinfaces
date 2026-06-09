@@ -413,6 +413,7 @@ export function TwinClassStatusesTable({
   return (
     <>
       <CrudDataTable
+        permissionSegment="statuses"
         title="Statuses"
         ref={tableRef}
         columns={[

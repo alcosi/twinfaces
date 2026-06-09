@@ -148,6 +148,7 @@ export function RecipientCollectorsTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="recipient-collectors"
       title="Recipient collectors"
       columns={[
         colDefs.id,

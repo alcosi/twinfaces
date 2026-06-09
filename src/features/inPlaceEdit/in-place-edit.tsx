@@ -100,10 +100,14 @@ export function InPlaceEdit<T>({
       <div
         onClick={canUpdate ? handleEdit : undefined}
         className={cn(
-          "border-border rounded-md border border-none",
-          // TODO: remove horizontal padding (e.g. px-3)
-          "flex min-h-10 flex-row items-center rounded-md px-3",
-          canUpdate && "hover:bg-muted/50 cursor-pointer border-dashed",
+          "flex min-h-10 flex-row items-center rounded-md",
+          // The editable-chip chrome (padding, dashed border, hover) is applied
+          // only when the field is editable. Without it, the read-only preview
+          // sits flush with plain cells instead of being offset by px-3 —
+          // otherwise the fields' margins visibly drift when there is no
+          // update permission.
+          canUpdate &&
+            "border-border hover:bg-muted/50 cursor-pointer border border-dashed px-3",
           className
         )}
       >

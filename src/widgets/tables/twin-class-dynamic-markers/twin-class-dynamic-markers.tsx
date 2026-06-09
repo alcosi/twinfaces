@@ -164,6 +164,7 @@ export function TwinClassDynamicMarkersTable({
 
   return (
     <CrudDataTable
+      permissionSegment="dynamic-markers"
       columns={[
         colDefs.id,
         colDefs.twinClass,

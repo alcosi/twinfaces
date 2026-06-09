@@ -145,6 +145,7 @@ export function UserGroupsTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="permission-grant-user-group"
       title="For user group"
       columns={[
         colDefs.id,

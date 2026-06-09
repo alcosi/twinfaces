@@ -171,6 +171,7 @@ export function FactoryConditionsTable({
 
   return (
     <CrudDataTable
+      permissionSegment="conditions"
       columns={[
         colDefs.id,
         ...(isFalsy(factoryConditionSetId)

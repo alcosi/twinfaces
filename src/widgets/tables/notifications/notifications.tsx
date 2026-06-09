@@ -200,6 +200,7 @@ export function NotificationsTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="notifications"
       title="Notifications"
       columns={[
         colDefs.id,
