@@ -183,6 +183,7 @@ export function FactoryMultipliersTable({
 
   return (
     <CrudDataTable
+      permissionSegment="multipliers"
       columns={[
         colDefs.id,
         ...(isFalsy(factoryId) ? [colDefs.factory] : []),

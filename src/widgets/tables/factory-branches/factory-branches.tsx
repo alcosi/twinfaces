@@ -171,6 +171,7 @@ export function FactoryBranchesTable({
 
   return (
     <CrudDataTable
+      permissionSegment="branches"
       columns={[
         colDefs.id,
         ...(isFalsy(factoryId) ? [colDefs.factory] : []),

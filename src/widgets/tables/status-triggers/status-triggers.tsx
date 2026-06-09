@@ -182,6 +182,7 @@ export function StatusTriggersTable({
 
   return (
     <CrudDataTable
+      permissionSegment="status-triggers"
       title="Status triggers"
       columns={[
         colDefs.id,

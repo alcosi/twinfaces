@@ -3,7 +3,10 @@
 import { useContext } from "react";
 
 import { TwinStatusContext } from "@/features/twin-status";
-import { TwinFlowTransitionsTable } from "@/widgets/tables";
+import {
+  FactoryPipelinesTable,
+  TwinFlowTransitionsTable,
+} from "@/widgets/tables";
 
 export function TwinStatusTransitions() {
   const { twinStatusId } = useContext(TwinStatusContext);
@@ -13,6 +16,11 @@ export function TwinStatusTransitions() {
       <TwinFlowTransitionsTable twinStatusId={twinStatusId} title="Incoming" />
 
       <TwinFlowTransitionsTable twinStatusId={twinStatusId} title="Outgoing" />
+
+      <FactoryPipelinesTable
+        outputTwinStatusId={twinStatusId}
+        title="Pipelines"
+      />
     </>
   );
 }

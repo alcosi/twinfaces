@@ -131,6 +131,7 @@ export function TwinFlowFactoriesTable({
 
   return (
     <CrudDataTable
+      permissionSegment="twinflow-factories"
       title={title || "Twinflow Factories"}
       columns={[
         colDefs.id,

@@ -12,13 +12,24 @@ import {
   useUpdateUser,
 } from "@/entities/user";
 import { InPlaceEdit, InPlaceEditProps } from "@/features/inPlaceEdit";
-import { formatIntlDate, isUndefined } from "@/shared/libs";
-import { LoadingOverlay } from "@/shared/ui";
+import {
+  formatIntlDate,
+  isUndefined,
+  usePermissionsAccess,
+} from "@/shared/libs";
+import { Button, LoadingOverlay } from "@/shared/ui";
 
 export function ProfileScreen() {
   const { updateUser } = useUpdateUser();
   const [user, setUser] = useState<DomainUser | undefined>(undefined);
   const { fetchUserByAuthToken, loading } = useFetchUserByAuthToken();
+  const { permissionKeys } = usePermissionsAccess();
+
+  // TODO: debug-only helper — logs the authorized user's permission keys.
+  const handleLogPermissions = () => {
+    const keys = [...permissionKeys].sort();
+    console.log(`[debug] permission keys (${keys.length}):`, keys);
+  };
 
   useEffect(() => {
     fetchUserByAuthToken().then(setUser);
@@ -72,22 +83,35 @@ export function ProfileScreen() {
         Together with us since {formatIntlDate(user?.createdAt!, "date")}
       </div>
 
+      <Button
+        variant="outline"
+        size="sm"
+        className="mt-4"
+        onClick={handleLogPermissions}
+      >
+        Log permissions to console
+      </Button>
+
       <div className="py-6">
         <p className="text-muted-foreground my-4 text-lg text-balance">
-          Welcome to <b>On Shelves</b> – Your Central Hub for Managing Sales on{" "}
-          <b>Amazon</b> and <b>Allegro</b>
+          Welcome to <b>TWINS</b> – Your Digital Business Operating System
         </p>
         <p className="text-muted-foreground w-1/2 text-balance">
-          Take full control of your online sales with our smart platform that
-          brings together the most essential features of Amazon and Allegro in
-          one place.
+          Transform the way your organization manages information, processes,
+          and collaboration. TWINS is a cloud-based platform that enable
+          companies to model their business domain, automate workflows, and
+          organize data in a way that perfectly reflects their real-world
+          operations. Instead of adapting your business to software limitations,
+          TWINS adapts to your business.
         </p>
         <p className="text-muted-foreground my-2 w-2/3 text-balance">
-          Our marketplace aggregator enables intuitive offer management, content
-          optimization tailored to each platform’s requirements, and
-          synchronization of optimization results across sales channels.
-          Everything works smoothly and clearly – just like a well-organized
-          shelf.
+          Create custom entities, define statuses and workflows, manage
+          relationships between objects, and automate routine operations — all
+          from a single platform designed for flexibility and growth. Whether
+          you're building a project management solution, ERP system, marketplace
+          integration, service platform, or an entirely unique business
+          application, TWINS provides the technology foundation to make it
+          happen. One platform. Unlimited business models.
         </p>
       </div>
     </>

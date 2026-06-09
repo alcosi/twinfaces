@@ -91,6 +91,7 @@ export function RulesTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="rules"
       title="Rules"
       columns={[
         colDefs.id,

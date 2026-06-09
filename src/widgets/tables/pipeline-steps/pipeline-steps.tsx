@@ -233,6 +233,7 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
 
   return (
     <CrudDataTable
+      permissionSegment="pipeline-steps"
       columns={[
         colDefs.id,
         ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),

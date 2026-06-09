@@ -161,6 +161,7 @@ export function SpaceRolesTable({ title }: { title?: string }) {
 
   return (
     <CrudDataTable
+      permissionSegment="space-roles"
       title={title ?? "Space roles"}
       columns={[
         colDefs.id,

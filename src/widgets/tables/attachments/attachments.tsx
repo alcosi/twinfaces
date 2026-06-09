@@ -238,6 +238,7 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
 
   return (
     <CrudDataTable
+      permissionSegment="attachments"
       title={title}
       ref={tableRef}
       columns={[

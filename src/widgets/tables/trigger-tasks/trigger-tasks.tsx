@@ -182,6 +182,7 @@ export function TriggerTasksTable({ twinId }: { twinId?: string }) {
 
   return (
     <CrudDataTable
+      permissionSegment="trigger-tasks"
       ref={tableRef}
       title="Twin trigger tasks"
       columns={[

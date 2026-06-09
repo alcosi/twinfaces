@@ -164,6 +164,7 @@ export function HistoryesTable() {
   return (
     <div className="mb-10">
       <CrudDataTable
+        permissionSegment="historyes"
         title="History"
         ref={tableRef}
         columns={[

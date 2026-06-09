@@ -21,6 +21,7 @@ import { UseFormReturn } from "react-hook-form";
 
 import { PagedResponse, SortV1 } from "@/shared/api";
 import {
+  PermissionScopeProvider,
   cn,
   fixedForwardRef,
   isPopulatedArray,
@@ -89,6 +90,14 @@ type CrudDataTableProps<
     getRowId: (row: TData) => string;
     modalTitle?: string;
     submitButtonLabel?: string;
+    /**
+     * Route segment used to resolve permission prefixes (a key from
+     * CORE_ROUTE_PERMISSION_PREFIX_MAP, e.g. "fields"). Pass this when the table
+     * is rendered outside its own route — e.g. embedded as a tab in another
+     * entity's page — so CREATE/UPDATE checks resolve the correct permission
+     * instead of falling back to the parent route's pathname.
+     */
+    permissionSegment?: string;
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -102,6 +111,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     renderFormFields,
     onRowClick,
     pageSizes = DEFAULT_PAGE_SIZES,
+    permissionSegment,
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -109,7 +119,9 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   const router = useRouter();
   const pathname = usePathname();
   const { canForCurrentRoute } = usePermissionsAccess();
-  const canCreate = canForCurrentRoute("CREATE");
+  const canCreate = canForCurrentRoute("CREATE", {
+    segment: permissionSegment,
+  });
 
   const { viewSettings, updateViewSettings } = useViewSettings(
     props.defaultVisibleColumns,
@@ -355,7 +367,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     router.push(`${basePath}/${rowId}`);
   }
 
-  return (
+  const content = (
     <div className={cn("flex min-h-0 flex-1 flex-col py-4", className)}>
       <div className="shrink-0">
         <CrudDataTableHeader
@@ -409,5 +421,15 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         submitButtonLabel={props.submitButtonLabel}
       />
     </div>
+  );
+
+  // Scope descendant permission checks (in-place UPDATE, row actions) to this
+  // table's segment so they resolve the correct prefix when embedded as a tab.
+  return permissionSegment ? (
+    <PermissionScopeProvider segment={permissionSegment}>
+      {content}
+    </PermissionScopeProvider>
+  ) : (
+    content
   );
 }

@@ -29,6 +29,12 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
   "permission-groups": ["PERMISSION_GROUP"],
   "permission-schemas": ["PERMISSION_SCHEMA"],
 
+  //? NOTE Permission grant tables (embedded in the permission "Grant" tab)
+  "permission-grant-user": ["PERMISSION_GRANT_USER"],
+  "permission-grant-user-group": ["PERMISSION_GRANT_USER_GROUP"],
+  "permission-grant-twin-role": ["PERMISSION_GRANT_TWIN_ROLE"],
+  "permission-grant-space-role": ["PERMISSION_GRANT_SPACE_ROLE"],
+
   //? NOTE Factory menu
   factories: ["FACTORY"],
   multipliers: ["FACTORY_MULTIPLIER"],
@@ -93,6 +99,17 @@ export function getPermissionPrefixesByCoreRoute(segment?: string): string[] {
   return normalized ? [normalized] : [];
 }
 
+export function getPermissionKeysForSegmentAction({
+  segment,
+  action,
+}: {
+  segment?: string;
+  action: PermissionAction;
+}): string[] {
+  const prefixes = getPermissionPrefixesByCoreRoute(segment);
+  return prefixes.map((prefix) => `${prefix}_${action}`);
+}
+
 export function getPermissionKeysForCoreRouteAction({
   pathname,
   action,
@@ -100,9 +117,10 @@ export function getPermissionKeysForCoreRouteAction({
   pathname: string;
   action: PermissionAction;
 }): string[] {
-  const segment = getCoreRouteSegment(pathname);
-  const prefixes = getPermissionPrefixesByCoreRoute(segment);
-  return prefixes.map((prefix) => `${prefix}_${action}`);
+  return getPermissionKeysForSegmentAction({
+    segment: getCoreRouteSegment(pathname),
+    action,
+  });
 }
 
 export function hasAnyPermissionKey({

@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import {
+  FactoryPipelineFilterKeys,
   FactoryPipeline_DETAILED,
   useFactoryPipelineCreate,
   useFactoryPipelineFilters,
@@ -158,26 +159,46 @@ const colDefs: Record<
 
 export function FactoryPipelinesTable({
   factoryId,
+  outputTwinStatusId,
   title,
 }: {
   factoryId?: string;
+  outputTwinStatusId?: string;
   title?: string;
 }) {
   const router = useRouter();
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
   const { createFactoryPipeline } = useFactoryPipelineCreate();
-  const { buildFilterFields, mapFiltersToPayload } = useFactoryPipelineFilters({
-    enabledFilters: isTruthy(factoryId)
+
+  // When the table is scoped to an entity, the filter for that entity is
+  // dropped (it is fixed by the scope): a factory scope hides the factory
+  // filter, an output-status scope hides the output-status filter.
+  const enabledFilters: FactoryPipelineFilterKeys[] | undefined = isTruthy(
+    factoryId
+  )
+    ? [
+        "idList",
+        "inputTwinClassIdList",
+        "factoryConditionSetIdList",
+        "active",
+        "outputTwinStatusIdList",
+        "nextFactoryIdList",
+        "descriptionLikeList",
+      ]
+    : isTruthy(outputTwinStatusId)
       ? [
           "idList",
+          "factoryIdList",
           "inputTwinClassIdList",
           "factoryConditionSetIdList",
           "active",
-          "outputTwinStatusIdList",
           "nextFactoryIdList",
           "descriptionLikeList",
         ]
-      : undefined,
+      : undefined;
+
+  const { buildFilterFields, mapFiltersToPayload } = useFactoryPipelineFilters({
+    enabledFilters,
   });
 
   const factoryPipelinesForm = useForm<z.infer<typeof FACTORY_PIPELINE_SCHEMA>>(
@@ -189,7 +210,7 @@ export function FactoryPipelinesTable({
         factoryConditionSetId: "",
         factoryConditionSetInvert: false,
         active: true,
-        outputStatusId: "",
+        outputStatusId: outputTwinStatusId || "",
         nextFactoryId: "",
         description: undefined,
       },
@@ -210,6 +231,9 @@ export function FactoryPipelinesTable({
           factoryIdList: factoryId
             ? toArrayOfString(toArray(factoryId), "id")
             : _filters.factoryIdList,
+          outputTwinStatusIdList: outputTwinStatusId
+            ? toArrayOfString(toArray(outputTwinStatusId), "id")
+            : _filters.outputTwinStatusIdList,
         },
       });
     } catch (error) {
@@ -237,6 +261,7 @@ export function FactoryPipelinesTable({
 
   return (
     <CrudDataTable
+      permissionSegment="pipelines"
       title={title}
       columns={[
         colDefs.id,
@@ -245,7 +270,7 @@ export function FactoryPipelinesTable({
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
         colDefs.active,
-        colDefs.outputTwinStatus,
+        ...(isFalsy(outputTwinStatusId) ? [colDefs.outputTwinStatus] : []),
         colDefs.nextFactory,
         colDefs.description,
       ]}
@@ -261,7 +286,7 @@ export function FactoryPipelinesTable({
         colDefs.factoryConditionSet,
         colDefs.factoryConditionSetInvert,
         colDefs.active,
-        colDefs.outputTwinStatus,
+        ...(isFalsy(outputTwinStatusId) ? [colDefs.outputTwinStatus] : []),
         colDefs.nextFactory,
         colDefs.description,
       ]}

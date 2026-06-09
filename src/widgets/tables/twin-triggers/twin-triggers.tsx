@@ -134,6 +134,7 @@ export function TwinTriggersTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="twin-triggers"
       title="Twin triggers"
       columns={[
         colDefs.id,

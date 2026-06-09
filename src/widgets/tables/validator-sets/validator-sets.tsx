@@ -106,6 +106,7 @@ export function ValidatorSetsTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="validator-sets"
       title="Validator Sets"
       columns={[colDefs.id, colDefs.name, colDefs.description, colDefs.invert]}
       fetcher={fetchValidatorSets}

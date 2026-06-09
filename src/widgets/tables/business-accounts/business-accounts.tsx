@@ -361,6 +361,7 @@ export function BusinessAccountsTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="business-accounts"
       title="Domain business accounts"
       columns={[
         colDefs.id,

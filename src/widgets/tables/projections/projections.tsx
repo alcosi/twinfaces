@@ -198,6 +198,7 @@ export function ProjectionsTable({
 
   return (
     <CrudDataTable
+      permissionSegment="projections"
       columns={[
         colDefs.id,
         colDefs.projectionType,

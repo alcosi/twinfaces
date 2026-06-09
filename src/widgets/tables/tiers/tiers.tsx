@@ -221,6 +221,7 @@ export function TiersTable() {
 
   return (
     <CrudDataTable
+      permissionSegment="tiers"
       title="Tiers"
       ref={tableRef}
       columns={[

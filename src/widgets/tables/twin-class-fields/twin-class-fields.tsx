@@ -690,6 +690,7 @@ export function TwinClassFieldsTable({
   return (
     <>
       <CrudDataTable
+        permissionSegment="fields"
         title="Fields"
         ref={tableRef}
         columns={[

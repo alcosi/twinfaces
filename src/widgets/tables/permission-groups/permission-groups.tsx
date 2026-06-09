@@ -116,6 +116,7 @@ export function PermissionGroupsTable({
 
   return (
     <CrudDataTable
+      permissionSegment="permission-groups"
       columns={[
         colDefs.id!,
         colDefs.key!,

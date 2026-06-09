@@ -200,6 +200,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
 
   return (
     <CrudDataTable
+      permissionSegment="twinflows"
       ref={tableRef}
       columns={[
         columnsMap.id,
