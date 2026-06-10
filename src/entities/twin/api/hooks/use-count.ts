@@ -4,7 +4,7 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinStatus } from "@/entities/twin-status";
 import { TwinFilters, Twin_DETAILED } from "@/entities/twin/server";
 import { User } from "@/entities/user";
-import { PrivateApiContext } from "@/shared/api";
+import { CountResult, PrivateApiContext } from "@/shared/api";
 
 /**
  * The raw grouped-count rows the endpoint returns. Each row carries the count
@@ -40,14 +40,23 @@ export function useTwinCount() {
     async ({
       filters = {},
       groupField,
+      offset,
+      limit,
+      sortAsc = false,
     }: {
       filters?: TwinFilters;
       groupField: string;
-    }): Promise<TwinCountGroup[]> => {
+      offset?: number;
+      limit?: number;
+      sortAsc?: boolean;
+    }): Promise<CountResult<TwinCountGroup>> => {
       try {
         const { data, error } = await api.twin.count({
           filters,
           groupFields: [groupField],
+          offset,
+          limit,
+          sortAsc,
         });
 
         if (error) {
@@ -57,7 +66,7 @@ export function useTwinCount() {
         const related = data.relatedObjects;
         const counts = (data.counts ?? []) as RawTwinCount[];
 
-        return counts.map((group) => ({
+        const items = counts.map((group) => ({
           ...group,
           count: group.count ?? 0,
           twinClass:
@@ -85,6 +94,8 @@ export function useTwinCount() {
               ? (related.twinMap[group.headTwinId] as Twin_DETAILED)
               : undefined,
         }));
+
+        return { items, total: data.pagination?.total ?? items.length };
       } catch {
         throw new Error("An error occured while counting twins");
       }

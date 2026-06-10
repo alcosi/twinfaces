@@ -2,11 +2,10 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { ReactNode, useCallback } from "react";
+import { useCallback } from "react";
 import { toast } from "sonner";
 
 import {
-  DomainBusinessAccountCountGroup,
   DomainBusinessAccountFilterKeys,
   DomainBusinessAccount_DETAILED,
   useBusinessAccountCount,
@@ -24,7 +23,7 @@ import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
 import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config/constants";
 import { formatIntlDate } from "@/shared/libs";
-import { GuidWithCopy, PieChartDatum, getPieChartColor } from "@/shared/ui";
+import { GuidWithCopy } from "@/shared/ui";
 
 import {
   ChartDataContext,
@@ -32,27 +31,8 @@ import {
   CrudDataTable,
   FiltersState,
   SortableHeader,
+  buildCountGroupingLoad,
 } from "../../crud-data-table";
-
-const UNSET_GROUP_LABEL = "— Not set —";
-
-/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
-function mapCountToSlices(
-  groups: DomainBusinessAccountCountGroup[],
-  getId: (group: DomainBusinessAccountCountGroup) => string | undefined,
-  getLabel: (group: DomainBusinessAccountCountGroup) => string | undefined,
-  renderLabel: (group: DomainBusinessAccountCountGroup) => ReactNode
-): PieChartDatum[] {
-  return groups
-    .slice()
-    .sort((a, b) => b.count - a.count)
-    .map((group, index) => ({
-      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
-      value: group.count,
-      color: getPieChartColor(index),
-      legendContent: renderLabel(group),
-    }));
-}
 
 const colDefs: Record<
   | "id"
@@ -263,96 +243,106 @@ export function BusinessAccountsTable() {
         {
           key: "tier",
           label: "Tier",
-          load: async () =>
-            mapCountToSlices(
-              await countBusinessAccount({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countBusinessAccount({
                 filters: resolved,
                 groupField: "tierId",
+                offset,
+                limit,
               }),
-              (g) => g.tierId,
-              (g) => g.tier?.name,
-              (g) => g.tier && <TierResourceLink data={g.tier} withTooltip />
-            ),
+            (g) => g.tierId,
+            (g) => g.tier?.name,
+            (g) => g.tier && <TierResourceLink data={g.tier} withTooltip />
+          ),
         },
         {
           key: "permissionSchema",
           label: "Permission schema",
-          load: async () =>
-            mapCountToSlices(
-              await countBusinessAccount({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countBusinessAccount({
                 filters: resolved,
                 groupField: "permissionSchemaId",
+                offset,
+                limit,
               }),
-              (g) => g.permissionSchemaId,
-              (g) => g.permissionSchema?.name,
-              (g) =>
-                g.permissionSchema && (
-                  <PermissionSchemaResourceLink
-                    data={g.permissionSchema}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) => g.permissionSchemaId,
+            (g) => g.permissionSchema?.name,
+            (g) =>
+              g.permissionSchema && (
+                <PermissionSchemaResourceLink
+                  data={g.permissionSchema}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "twinflowSchema",
           label: "Twinflow schema",
-          load: async () =>
-            mapCountToSlices(
-              await countBusinessAccount({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countBusinessAccount({
                 filters: resolved,
                 groupField: "twinflowSchemaId",
+                offset,
+                limit,
               }),
-              (g) => g.twinflowSchemaId,
-              (g) => g.twinflowSchema?.name,
-              (g) =>
-                g.twinflowSchema && (
-                  <TwinFlowSchemaResourceLink
-                    data={g.twinflowSchema as TwinFlowSchema_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) => g.twinflowSchemaId,
+            (g) => g.twinflowSchema?.name,
+            (g) =>
+              g.twinflowSchema && (
+                <TwinFlowSchemaResourceLink
+                  data={g.twinflowSchema as TwinFlowSchema_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "twinClassSchema",
           label: "Twinclass schema",
-          load: async () =>
-            mapCountToSlices(
-              await countBusinessAccount({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countBusinessAccount({
                 filters: resolved,
                 groupField: "twinClassSchemaId",
+                offset,
+                limit,
               }),
-              (g) => g.twinClassSchemaId,
-              (g) => g.twinClassSchema?.name,
-              (g) =>
-                g.twinClassSchema && (
-                  <TwinClassSchemaResourceLink
-                    data={g.twinClassSchema as TwinClassSchema_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) => g.twinClassSchemaId,
+            (g) => g.twinClassSchema?.name,
+            (g) =>
+              g.twinClassSchema && (
+                <TwinClassSchemaResourceLink
+                  data={g.twinClassSchema as TwinClassSchema_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "notificationSchema",
           label: "Notification schema",
-          load: async () =>
-            mapCountToSlices(
-              await countBusinessAccount({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countBusinessAccount({
                 filters: resolved,
                 groupField: "notificationSchemaId",
+                offset,
+                limit,
               }),
-              (g) => g.notificationSchemaId,
-              (g) => g.notificationSchema?.name,
-              (g) =>
-                g.notificationSchema && (
-                  <NotificationSchemaResourceLink
-                    data={g.notificationSchema}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) => g.notificationSchemaId,
+            (g) => g.notificationSchema?.name,
+            (g) =>
+              g.notificationSchema && (
+                <NotificationSchemaResourceLink
+                  data={g.notificationSchema}
+                  withTooltip
+                />
+              )
+          ),
         },
       ];
     },

@@ -24,6 +24,25 @@ export type PagedResponse<T> = {
   pagination: PaginationV1;
 };
 
+/**
+ * Result of a grouped `/count` request: the (optionally paginated) group rows
+ * plus the total number of distinct groups reported by the endpoint. Used to
+ * drive the pie-chart breakdown view — when `total` exceeds the chart slice
+ * limit the groups are streamed in via infinite scroll.
+ */
+export type CountResult<T> = {
+  items: T[];
+  total: number;
+};
+
+/** Page window forwarded to a grouped `/count` request. */
+export type CountPagination = {
+  offset?: number;
+  limit?: number;
+  /** Sort the grouped counts ascending by count. Defaults to descending. */
+  sortAsc?: boolean;
+};
+
 export type SearchParams<TFilters> = {
   search?: string;
   pagination?: PaginationState;

@@ -75,9 +75,15 @@ export function createTwinApi(settings: ApiSettings) {
   function count({
     filters,
     groupFields,
+    offset,
+    limit,
+    sortAsc,
   }: {
     filters?: TwinFilters;
     groupFields: string[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
   }) {
     return settings.client.POST("/private/twin/count/v1", {
       params: {
@@ -90,6 +96,9 @@ export function createTwinApi(settings: ApiSettings) {
           showTwin2UserMode: "DETAILED",
           showTwin2StatusMode: "DETAILED",
           showTwinByHeadMode: "YELLOW",
+          offset,
+          limit,
+          sortAsc,
         },
       },
       body: {

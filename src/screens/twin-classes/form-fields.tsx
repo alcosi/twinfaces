@@ -175,26 +175,6 @@ export function TwinClassFormFields({
             noItemsText="No view permission found"
             {...pAdapter}
           />
-
-          <ComboboxFormField
-            control={control}
-            name="editPermissionId"
-            label="Edit"
-            selectPlaceholder="Select edit permission"
-            searchPlaceholder="Search edit permission..."
-            noItemsText="No edit permission found"
-            {...pAdapter}
-          />
-
-          <ComboboxFormField
-            control={control}
-            name="deletePermissionId"
-            label=" Delete"
-            selectPlaceholder="Select delete permission"
-            searchPlaceholder="Search delete permission..."
-            noItemsText="No delete permission found"
-            {...pAdapter}
-          />
         </fieldset>
       )}
 

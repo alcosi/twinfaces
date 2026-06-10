@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 
 import { User_DETAILED } from "@/entities/user";
-import { PrivateApiContext } from "@/shared/api";
+import { CountResult, PrivateApiContext } from "@/shared/api";
 
 import {
   BusinessAccount,
@@ -25,15 +25,24 @@ export function useBusinessAccountUserCount() {
     async ({
       filters = {},
       groupField,
+      offset,
+      limit,
+      sortAsc = false,
     }: {
       filters?: DomainBusinessAccountUserFilters;
       groupField: DomainBusinessAccountUserCountGroupField;
-    }): Promise<DomainBusinessAccountUserCountGroup[]> => {
+      offset?: number;
+      limit?: number;
+      sortAsc?: boolean;
+    }): Promise<CountResult<DomainBusinessAccountUserCountGroup>> => {
       try {
         const { data, error } =
           await api.businessAccount.countDomainBusinessAccountUser({
             filters,
             groupFields: [groupField],
+            offset,
+            limit,
+            sortAsc,
           });
 
         if (error) {
@@ -45,7 +54,7 @@ export function useBusinessAccountUserCount() {
         const userMap = data.relatedObjects?.userMap;
         const businessAccountMap = data.relatedObjects?.businessAccountMap;
 
-        return (data.counts ?? []).map((group) => ({
+        const items = (data.counts ?? []).map((group) => ({
           count: group.count ?? 0,
           userId: group.userId,
           businessAccountId: group.businessAccountId,
@@ -58,6 +67,8 @@ export function useBusinessAccountUserCount() {
               ? (businessAccountMap[group.businessAccountId] as BusinessAccount)
               : undefined,
         }));
+
+        return { items, total: data.pagination?.total ?? items.length };
       } catch {
         throw new Error(
           "An error occured while counting business account users"

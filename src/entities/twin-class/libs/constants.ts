@@ -72,8 +72,6 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   tagDataListId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   viewPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   createPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
-  editPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
-  deletePermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
   autoCreateTwinflow: z.boolean().default(false),
   autoCreatePermissions: z.boolean().default(true),
   space: z.boolean().default(false),

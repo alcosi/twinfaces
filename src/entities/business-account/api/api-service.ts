@@ -101,9 +101,15 @@ export function createBusinessAccountApi(settings: ApiSettings) {
   function countDomainBusinessAccountUser({
     filters,
     groupFields,
+    offset,
+    limit,
+    sortAsc,
   }: {
     filters: DomainBusinessAccountUserFilters;
     groupFields: DomainBusinessAccountUserCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
   }) {
     return settings.client.POST(
       `/private/domain/business_account_user/count/v1`,
@@ -117,6 +123,9 @@ export function createBusinessAccountApi(settings: ApiSettings) {
             showDomainBusinessAccountUser2UserMode: "DETAILED",
             showDomainBusinessAccountUserMode: "DETAILED",
             showUser2UserGroupMode: "DETAILED",
+            offset,
+            limit,
+            sortAsc,
           },
         },
         body: {
@@ -132,9 +141,15 @@ export function createBusinessAccountApi(settings: ApiSettings) {
   function countDomainBusinessAccount({
     filters,
     groupFields,
+    offset,
+    limit,
+    sortAsc,
   }: {
     filters: DomainBusinessAccountFilters;
     groupFields: DomainBusinessAccountCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
   }) {
     return settings.client.POST(`/private/domain/business_account/count/v1`, {
       params: {
@@ -148,6 +163,9 @@ export function createBusinessAccountApi(settings: ApiSettings) {
           showDomainBusinessAccount2TwinClassSchemaMode: "DETAILED",
           showDomainBusinessAccount2NotificationSchemaMode: "DETAILED",
           showDomainBusinessAccount2TierMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
         },
       },
       body: {

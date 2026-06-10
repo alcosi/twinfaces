@@ -94,9 +94,15 @@ export function createTwinStatusApi(settings: ApiSettings) {
   function count({
     filters,
     groupFields,
+    offset,
+    limit,
+    sortAsc,
   }: {
     filters?: TwinStatusFilters;
     groupFields: TwinStatusCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
   }) {
     return settings.client.POST("/private/twin_status/count/v1", {
       params: {
@@ -106,6 +112,9 @@ export function createTwinStatusApi(settings: ApiSettings) {
           showStatusMode: "DETAILED",
           showTwinStatus2TwinClassMode: "DETAILED",
           showTwinClassMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
         },
       },
       body: {

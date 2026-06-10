@@ -30,8 +30,6 @@ export type TwinClass_DETAILED = RequireFields<
 > & {
   createPermission: Permission;
   viewPermission: Permission;
-  editPermission: Permission;
-  deletePermission: Permission;
   headClass: TwinClassBaseV1;
   hasSegment: boolean;
   segment: boolean;
@@ -108,8 +106,6 @@ export type TwinClassFilterKeys =
   | "aliasSpace"
   | "viewPermissionIdList"
   | "createPermissionIdList"
-  | "editPermissionIdList"
-  | "deletePermissionIdList"
   | "markerDatalistIdList"
   | "tagDatalistIdList"
   | "headHierarchyChildsForTwinClassSearch"

@@ -193,7 +193,12 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
       return props.groupableFields.map((field) => ({
         key: field.key,
         label: field.label,
-        load: async () => buildChartData(await loadRowsOnce(), field),
+        // Client-side grouping aggregates the whole in-memory dataset, so the
+        // total is known up front; slice it to honour the chart view's paging.
+        load: async ({ offset, limit }) => {
+          const all = buildChartData(await loadRowsOnce(), field);
+          return { data: all.slice(offset, offset + limit), total: all.length };
+        },
       }));
     }
 

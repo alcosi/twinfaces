@@ -3,7 +3,7 @@ import { useCallback, useContext } from "react";
 import { DataList } from "@/entities/datalist";
 import { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
-import { PrivateApiContext } from "@/shared/api";
+import { CountResult, PrivateApiContext } from "@/shared/api";
 
 import {
   TwinClassBaseV1,
@@ -23,8 +23,6 @@ export type TwinClassCountGroup = TwinClassCountV1 & {
   tagDataList?: DataList;
   headHunterFeaturer?: Featurer;
   viewPermission?: Permission;
-  editPermission?: Permission;
-  deletePermission?: Permission;
 };
 
 export function useTwinClassCount() {
@@ -34,14 +32,23 @@ export function useTwinClassCount() {
     async ({
       filters = {},
       groupField,
+      offset,
+      limit,
+      sortAsc = false,
     }: {
       filters?: TwinClassFilters;
       groupField: TwinClassCountGroupField;
-    }): Promise<TwinClassCountGroup[]> => {
+      offset?: number;
+      limit?: number;
+      sortAsc?: boolean;
+    }): Promise<CountResult<TwinClassCountGroup>> => {
       try {
         const { data, error } = await api.twinClass.count({
           filters,
           groupFields: [groupField],
+          offset,
+          limit,
+          sortAsc,
         });
 
         if (error) {
@@ -56,7 +63,7 @@ export function useTwinClassCount() {
         const dataListsMap = related?.dataListsMap;
         const featurerMap = related?.featurerMap;
 
-        return counts.map((group) => ({
+        const items = counts.map((group) => ({
           ...group,
           count: group.count ?? 0,
           headTwinClass:
@@ -87,15 +94,9 @@ export function useTwinClassCount() {
             group.viewPermissionId && permissionMap
               ? (permissionMap[group.viewPermissionId] as Permission)
               : undefined,
-          editPermission:
-            group.editPermissionId && permissionMap
-              ? (permissionMap[group.editPermissionId] as Permission)
-              : undefined,
-          deletePermission:
-            group.deletePermissionId && permissionMap
-              ? (permissionMap[group.deletePermissionId] as Permission)
-              : undefined,
         }));
+
+        return { items, total: data.pagination?.total ?? items.length };
       } catch {
         throw new Error("An error occured while counting twin classes");
       }

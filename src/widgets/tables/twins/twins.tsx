@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -10,7 +10,6 @@ import {
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
   TWIN_SELF_FIELD_KEY_TO_ID_MAP,
-  TwinCountGroup,
   TwinFormValues,
   TwinSelfFieldId,
   useCreateTwin,
@@ -46,7 +45,7 @@ import {
   isPopulatedArray,
   isUndefined,
 } from "@/shared/libs";
-import { GuidWithCopy, PieChartDatum, getPieChartColor } from "@/shared/ui";
+import { GuidWithCopy } from "@/shared/ui";
 
 import {
   ChartDataContext,
@@ -55,11 +54,10 @@ import {
   DataTableHandle,
   FiltersState,
   SortableHeader,
+  buildCountGroupingLoad,
 } from "../../crud-data-table";
 import { TC001Form } from "../../faces/widgets/views/index.client";
 import { TwinFormFields } from "./form-fields";
-
-const UNSET_GROUP_LABEL = "— Not set —";
 
 // Default header titles for the twin self (static) columns, keyed by field id.
 const STATIC_FIELD_TITLES: Record<string, string> = {
@@ -104,24 +102,6 @@ function renderTwinHeader(
     };
   }
   return title;
-}
-
-/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
-function mapCountToSlices(
-  groups: TwinCountGroup[],
-  getId: (group: TwinCountGroup) => string | undefined,
-  getLabel: (group: TwinCountGroup) => string | undefined,
-  renderLabel?: (group: TwinCountGroup) => ReactNode
-): PieChartDatum[] {
-  return groups
-    .slice()
-    .sort((a, b) => b.count - a.count)
-    .map((group, index) => ({
-      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
-      value: group.count,
-      color: getPieChartColor(index),
-      legendContent: renderLabel?.(group),
-    }));
 }
 
 type Props = {
@@ -488,85 +468,95 @@ export function TwinsTable({
         {
           key: "status",
           label: "Status",
-          load: async () =>
-            mapCountToSlices(
-              await countTwins({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwins({
                 filters: resolved,
                 groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
+                offset,
+                limit,
               }),
-              (g) => g.twinStatusId,
-              (g) => g.status?.name,
-              (g) =>
-                g.status && (
-                  <TwinClassStatusResourceLink data={g.status} withTooltip />
-                )
-            ),
+            (g) => g.twinStatusId,
+            (g) => g.status?.name,
+            (g) =>
+              g.status && (
+                <TwinClassStatusResourceLink data={g.status} withTooltip />
+              )
+          ),
         },
         {
           key: "twinClass",
           label: "Twin class",
-          load: async () =>
-            mapCountToSlices(
-              await countTwins({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwins({
                 filters: resolved,
                 groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
+                offset,
+                limit,
               }),
-              (g) => g.twinClassId,
-              (g) => g.twinClass?.name,
-              (g) =>
-                g.twinClass && (
-                  <TwinClassResourceLink data={g.twinClass} withTooltip />
-                )
-            ),
+            (g) => g.twinClassId,
+            (g) => g.twinClass?.name,
+            (g) =>
+              g.twinClass && (
+                <TwinClassResourceLink data={g.twinClass} withTooltip />
+              )
+          ),
         },
         {
           key: "assignee",
           label: "Assignee",
-          load: async () =>
-            mapCountToSlices(
-              await countTwins({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwins({
                 filters: resolved,
                 groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
+                offset,
+                limit,
               }),
-              (g) => g.assignerUserId,
-              (g) => g.assignerUser?.fullName,
-              (g) =>
-                g.assignerUser && (
-                  <UserResourceLink data={g.assignerUser} withTooltip />
-                )
-            ),
+            (g) => g.assignerUserId,
+            (g) => g.assignerUser?.fullName,
+            (g) =>
+              g.assignerUser && (
+                <UserResourceLink data={g.assignerUser} withTooltip />
+              )
+          ),
         },
         {
           key: "author",
           label: "Author",
-          load: async () =>
-            mapCountToSlices(
-              await countTwins({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwins({
                 filters: resolved,
                 groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
+                offset,
+                limit,
               }),
-              (g) => g.createdByUserId,
-              (g) => g.createdByUser?.fullName,
-              (g) =>
-                g.createdByUser && (
-                  <UserResourceLink data={g.createdByUser} withTooltip />
-                )
-            ),
+            (g) => g.createdByUserId,
+            (g) => g.createdByUser?.fullName,
+            (g) =>
+              g.createdByUser && (
+                <UserResourceLink data={g.createdByUser} withTooltip />
+              )
+          ),
         },
         {
           key: "head",
           label: "Head",
-          load: async () =>
-            mapCountToSlices(
-              await countTwins({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwins({
                 filters: resolved,
                 groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId,
+                offset,
+                limit,
               }),
-              (g) => g.headTwinId,
-              (g) => g.headTwin?.name,
-              (g) =>
-                g.headTwin && <TwinResourceLink data={g.headTwin} withTooltip />
-            ),
+            (g) => g.headTwinId,
+            (g) => g.headTwin?.name,
+            (g) =>
+              g.headTwin && <TwinResourceLink data={g.headTwin} withTooltip />
+          ),
         },
       ];
     },
