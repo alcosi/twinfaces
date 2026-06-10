@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Check, Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ReactNode, useCallback, useContext, useRef } from "react";
+import { useCallback, useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -10,7 +10,6 @@ import { Featurer_DETAILED } from "@/entities/featurer";
 import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
-  TwinClassFieldCountGroup,
   TwinClassFieldCreateRq,
   TwinClassFieldV1_DETAILED,
   TwinClassFieldV2FilterKeys,
@@ -30,8 +29,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  PieChartDatum,
-  getPieChartColor,
 } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
@@ -42,6 +39,7 @@ import {
   DataTableHandle,
   FiltersState,
   SortableHeader,
+  buildCountGroupingLoad,
 } from "../../crud-data-table";
 import { TWIN_CLASS_FIELD_SCHEMA } from "./constants";
 import { TwinClassFieldFormFields } from "./form-fields";
@@ -266,26 +264,6 @@ const colDefs: Record<
   },
 };
 
-const UNSET_GROUP_LABEL = "— Not set —";
-
-/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
-function mapCountToSlices(
-  groups: TwinClassFieldCountGroup[],
-  getId: (group: TwinClassFieldCountGroup) => string | undefined,
-  getLabel: (group: TwinClassFieldCountGroup) => string | undefined,
-  renderLabel?: (group: TwinClassFieldCountGroup) => ReactNode
-): PieChartDatum[] {
-  return groups
-    .slice()
-    .sort((a, b) => b.count - a.count)
-    .map((group, index) => ({
-      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
-      value: group.count,
-      color: getPieChartColor(index),
-      legendContent: renderLabel?.(group),
-    }));
-}
-
 /** Renders a tri-state boolean group label, leaving unset groups to fall back. */
 function boolLabel(
   value: boolean | undefined,
@@ -374,222 +352,248 @@ export function TwinClassFieldsTable({
         {
           key: "twinClass",
           label: "Class",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "twinClassId",
+                offset,
+                limit,
               }),
-              (g) => g.twinClassId,
-              (g) => g.twinClass?.name,
-              (g) =>
-                g.twinClass && (
-                  <TwinClassResourceLink
-                    data={g.twinClass as TwinClass_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) => g.twinClassId,
+            (g) => g.twinClass?.name,
+            (g) =>
+              g.twinClass && (
+                <TwinClassResourceLink
+                  data={g.twinClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "fieldTyper",
           label: "Field typer",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "fieldTyperFeaturerId",
+                offset,
+                limit,
               }),
-              (g) =>
-                g.fieldTyperFeaturerId != null
-                  ? String(g.fieldTyperFeaturerId)
-                  : undefined,
-              (g) => g.fieldTyperFeaturer?.name,
-              (g) =>
-                g.fieldTyperFeaturer && (
-                  <FeaturerResourceLink
-                    data={g.fieldTyperFeaturer as Featurer_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) =>
+              g.fieldTyperFeaturerId != null
+                ? String(g.fieldTyperFeaturerId)
+                : undefined,
+            (g) => g.fieldTyperFeaturer?.name,
+            (g) =>
+              g.fieldTyperFeaturer && (
+                <FeaturerResourceLink
+                  data={g.fieldTyperFeaturer as Featurer_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "twinSorter",
           label: "Twin sorter",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "twinSorterFeaturerId",
+                offset,
+                limit,
               }),
-              (g) =>
-                g.twinSorterFeaturerId != null
-                  ? String(g.twinSorterFeaturerId)
-                  : undefined,
-              (g) => g.twinSorterFeaturer?.name,
-              (g) =>
-                g.twinSorterFeaturer && (
-                  <FeaturerResourceLink
-                    data={g.twinSorterFeaturer as Featurer_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) =>
+              g.twinSorterFeaturerId != null
+                ? String(g.twinSorterFeaturerId)
+                : undefined,
+            (g) => g.twinSorterFeaturer?.name,
+            (g) =>
+              g.twinSorterFeaturer && (
+                <FeaturerResourceLink
+                  data={g.twinSorterFeaturer as Featurer_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "fieldInitializer",
           label: "Field initializer",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "fieldInitializerFeaturerId",
+                offset,
+                limit,
               }),
-              (g) =>
-                g.fieldInitializerFeaturerId != null
-                  ? String(g.fieldInitializerFeaturerId)
-                  : undefined,
-              (g) => g.fieldInitializerFeaturer?.name,
-              (g) =>
-                g.fieldInitializerFeaturer && (
-                  <FeaturerResourceLink
-                    data={g.fieldInitializerFeaturer as Featurer_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) =>
+              g.fieldInitializerFeaturerId != null
+                ? String(g.fieldInitializerFeaturerId)
+                : undefined,
+            (g) => g.fieldInitializerFeaturer?.name,
+            (g) =>
+              g.fieldInitializerFeaturer && (
+                <FeaturerResourceLink
+                  data={g.fieldInitializerFeaturer as Featurer_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "viewPermission",
           label: "View permission",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "viewPermissionId",
+                offset,
+                limit,
               }),
-              (g) => g.viewPermissionId,
-              (g) => g.viewPermission?.name,
-              (g) =>
-                g.viewPermission && (
-                  <PermissionResourceLink
-                    data={g.viewPermission as Permission_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) => g.viewPermissionId,
+            (g) => g.viewPermission?.name,
+            (g) =>
+              g.viewPermission && (
+                <PermissionResourceLink
+                  data={g.viewPermission as Permission_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "editPermission",
           label: "Edit permission",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "editPermissionId",
+                offset,
+                limit,
               }),
-              (g) => g.editPermissionId,
-              (g) => g.editPermission?.name,
-              (g) =>
-                g.editPermission && (
-                  <PermissionResourceLink
-                    data={g.editPermission as Permission_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) => g.editPermissionId,
+            (g) => g.editPermission?.name,
+            (g) =>
+              g.editPermission && (
+                <PermissionResourceLink
+                  data={g.editPermission as Permission_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "required",
           label: "Required",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "required",
+                offset,
+                limit,
               }),
-              (g) => boolLabel(g.required, "Required", "Not required"),
-              (g) => boolLabel(g.required, "Required", "Not required")
-            ),
+            (g) => boolLabel(g.required, "Required", "Not required"),
+            (g) => boolLabel(g.required, "Required", "Not required")
+          ),
         },
         {
           key: "system",
           label: "System",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "system",
+                offset,
+                limit,
               }),
-              (g) => boolLabel(g.system, "System", "Not system"),
-              (g) => boolLabel(g.system, "System", "Not system")
-            ),
+            (g) => boolLabel(g.system, "System", "Not system"),
+            (g) => boolLabel(g.system, "System", "Not system")
+          ),
         },
         {
           key: "inheritable",
           label: "Inheritable",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "inheritable",
+                offset,
+                limit,
               }),
-              (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
-              (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable")
-            ),
+            (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
+            (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable")
+          ),
         },
         {
           key: "dependentField",
           label: "Dependent",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "dependentField",
+                offset,
+                limit,
               }),
-              (g) => boolLabel(g.dependentField, "Dependent", "Not dependent"),
-              (g) => boolLabel(g.dependentField, "Dependent", "Not dependent")
-            ),
+            (g) => boolLabel(g.dependentField, "Dependent", "Not dependent"),
+            (g) => boolLabel(g.dependentField, "Dependent", "Not dependent")
+          ),
         },
         {
           key: "hasDependentFields",
           label: "Has dependent fields",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "hasDependentFields",
+                offset,
+                limit,
               }),
-              (g) => boolLabel(g.hasDependentFields, "Yes", "No"),
-              (g) => boolLabel(g.hasDependentFields, "Yes", "No")
-            ),
+            (g) => boolLabel(g.hasDependentFields, "Yes", "No"),
+            (g) => boolLabel(g.hasDependentFields, "Yes", "No")
+          ),
         },
         {
           key: "projectionField",
           label: "Projected",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "projectionField",
+                offset,
+                limit,
               }),
-              (g) => boolLabel(g.projectionField, "Projected", "Not projected"),
-              (g) => boolLabel(g.projectionField, "Projected", "Not projected")
-            ),
+            (g) => boolLabel(g.projectionField, "Projected", "Not projected"),
+            (g) => boolLabel(g.projectionField, "Projected", "Not projected")
+          ),
         },
         {
           key: "hasProjectedFields",
           label: "Has projected fields",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinClassField({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClassField({
                 filters: scopedFilters,
                 groupField: "hasProjectedFields",
+                offset,
+                limit,
               }),
-              (g) => boolLabel(g.hasProjectedFields, "Yes", "No"),
-              (g) => boolLabel(g.hasProjectedFields, "Yes", "No")
-            ),
+            (g) => boolLabel(g.hasProjectedFields, "Yes", "No"),
+            (g) => boolLabel(g.hasProjectedFields, "Yes", "No")
+          ),
         },
       ];
     },

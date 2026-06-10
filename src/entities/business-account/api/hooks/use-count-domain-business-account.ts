@@ -5,7 +5,7 @@ import { PermissionSchema } from "@/entities/permission-schema";
 import { Tier } from "@/entities/tier";
 import { TwinClassSchema } from "@/entities/twin-class-schema";
 import { TwinFlowSchema } from "@/entities/twinFlowSchema";
-import { PrivateApiContext } from "@/shared/api";
+import { CountResult, PrivateApiContext } from "@/shared/api";
 
 import {
   DomainBusinessAccountCountGroupField,
@@ -50,15 +50,24 @@ export function useBusinessAccountCount() {
     async ({
       filters = {},
       groupField,
+      offset,
+      limit,
+      sortAsc = false,
     }: {
       filters?: DomainBusinessAccountFilters;
       groupField: DomainBusinessAccountCountGroupField;
-    }): Promise<DomainBusinessAccountCountGroup[]> => {
+      offset?: number;
+      limit?: number;
+      sortAsc?: boolean;
+    }): Promise<CountResult<DomainBusinessAccountCountGroup>> => {
       try {
         const { data, error } =
           await api.businessAccount.countDomainBusinessAccount({
             filters,
             groupFields: [groupField],
+            offset,
+            limit,
+            sortAsc,
           });
 
         if (error) {
@@ -69,7 +78,7 @@ export function useBusinessAccountCount() {
         const counts =
           (data as unknown as { counts?: RawCount[] }).counts ?? [];
 
-        return counts.map((group) => ({
+        const items = counts.map((group) => ({
           count: group.count ?? 0,
           permissionSchemaId: group.permissionSchemaId,
           twinClassSchemaId: group.twinClassSchemaId,
@@ -105,6 +114,13 @@ export function useBusinessAccountCount() {
               ? (related.tierMap[group.tierId] as Tier)
               : undefined,
         }));
+
+        return {
+          items,
+          total:
+            (data as { pagination?: { total?: number } }).pagination?.total ??
+            items.length,
+        };
       } catch {
         throw new Error("An error occured while counting business accounts");
       }

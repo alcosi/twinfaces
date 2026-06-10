@@ -9307,16 +9307,6 @@ export interface components {
              */
             createPermissionId?: string;
             /**
-             * Format: uuid
-             * @description [optional] this field helps to set extra permission, needed by users to edit twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
-             */
-            editPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description [optional] this field helps to set extra permission, needed by users to delete twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
-             */
-            deletePermissionId?: string;
-            /**
              * @description [optional] owner typ of class
              * @enum {string}
              */
@@ -9438,16 +9428,6 @@ export interface components {
              * @description [optional] this field helps to set extra permission, needed by users to create twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
              */
             createPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description [optional] this field helps to set extra permission, needed by users to edit twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
-             */
-            editPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description [optional] this field helps to set extra permission, needed by users to delete twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
-             */
-            deletePermissionId?: string;
             /**
              * @description [optional] owner typ of class
              * @enum {string}
@@ -14396,6 +14376,8 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
             /** @description count results grouped by requested fields */
             counts?: components["schemas"]["TwinStatusCountV1"][];
         };
@@ -14990,6 +14972,8 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
             /** @description count results grouped by requested fields */
             counts?: components["schemas"]["TwinClassFieldCountV1"][];
         };
@@ -15836,16 +15820,6 @@ export interface components {
              */
             createPermissionId?: string;
             /**
-             * Format: uuid
-             * @description [optional] this field helps to set extra permission, needed by users to edit twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
-             */
-            editPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description [optional] this field helps to set extra permission, needed by users to delete twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
-             */
-            deletePermissionId?: string;
-            /**
              * @description [optional] owner typ of class
              * @enum {string}
              */
@@ -15979,16 +15953,6 @@ export interface components {
              * @description [optional] this field helps to set extra permission, needed by users to create twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
              */
             createPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description [optional] this field helps to set extra permission, needed by users to edit twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
-             */
-            editPermissionId?: string;
-            /**
-             * Format: uuid
-             * @description [optional] this field helps to set extra permission, needed by users to delete twins of given class. Use ffffffff-ffff-ffff-ffff-ffffffffffff for nullify value
-             */
-            deletePermissionId?: string;
             /**
              * @description [optional] owner typ of class
              * @enum {string}
@@ -16170,14 +16134,6 @@ export interface components {
             createPermissionIdList?: string[];
             /** @description create permission id exclude list */
             createPermissionIdExcludeList?: string[];
-            /** @description edit permission id list */
-            editPermissionIdList?: string[];
-            /** @description edit permission id exclude list */
-            editPermissionIdExcludeList?: string[];
-            /** @description delete permission id list */
-            deletePermissionIdList?: string[];
-            /** @description delete permission id exclude list */
-            deletePermissionIdExcludeList?: string[];
             /** @description external id like list */
             externalIdLikeList?: string[];
             /** @description external id not like list */
@@ -16232,7 +16188,7 @@ export interface components {
              * @description Sort field. Default: key
              * @enum {string}
              */
-            sortField?: "key" | "name" | "description" | "createdAt" | "externalId" | "ownerType" | "twinCounter" | "abstractt" | "segment" | "uniqueName" | "headTwinClassName" | "headhunterFeaturerName" | "extendsTwinClassName" | "markerDataListName" | "tagDataListName" | "twinflowSchemaSpace" | "twinClassSchemaSpace" | "aliasSpace" | "viewPermissionName" | "editPermissionName" | "deletePermissionName" | "assigneeRequired" | "hasDynamicMarkers" | "breadCrumbsFaceName" | "pageFaceName";
+            sortField?: "key" | "name" | "description" | "createdAt" | "externalId" | "ownerType" | "twinCounter" | "abstractt" | "segment" | "uniqueName" | "headTwinClassName" | "headhunterFeaturerName" | "extendsTwinClassName" | "markerDataListName" | "tagDataListName" | "twinflowSchemaSpace" | "twinClassSchemaSpace" | "aliasSpace" | "viewPermissionName" | "assigneeRequired" | "hasDynamicMarkers" | "breadCrumbsFaceName" | "pageFaceName" | "createdByUserName";
             /**
              * @description Sort direction: ASC or DESC. Default: ASC
              * @enum {string}
@@ -16318,14 +16274,6 @@ export interface components {
             createPermissionIdList?: string[];
             /** @description create permission id exclude list */
             createPermissionIdExcludeList?: string[];
-            /** @description edit permission id list */
-            editPermissionIdList?: string[];
-            /** @description edit permission id exclude list */
-            editPermissionIdExcludeList?: string[];
-            /** @description delete permission id list */
-            deletePermissionIdList?: string[];
-            /** @description delete permission id exclude list */
-            deletePermissionIdExcludeList?: string[];
             /** @description external id like list */
             externalIdLikeList?: string[];
             /** @description external id not like list */
@@ -16387,7 +16335,7 @@ export interface components {
             /** @description search params */
             search?: components["schemas"]["TwinClassSearchV1"];
             /** @description Group by fields */
-            groupFields?: ("ownerType" | "abstractt" | "segment" | "twinClassFreezeId" | "headTwinClassId" | "extendsTwinClassId" | "markerDataListId" | "tagDataListId" | "twinflowSchemaSpace" | "twinClassSchemaSpace" | "aliasSpace" | "viewPermissionId" | "headHunterFeaturerId" | "editPermissionId" | "deletePermissionId" | "assigneeRequired" | "uniqueName" | "hasDynamicMarkers" | "breadCrumbsFaceId" | "pageFaceId")[];
+            groupFields?: ("ownerType" | "abstractt" | "segment" | "twinClassFreezeId" | "headTwinClassId" | "extendsTwinClassId" | "markerDataListId" | "tagDataListId" | "twinflowSchemaSpace" | "twinClassSchemaSpace" | "aliasSpace" | "createPermissionId" | "viewPermissionId" | "headHunterFeaturerId" | "assigneeRequired" | "uniqueName" | "hasDynamicMarkers" | "breadCrumbsFaceId" | "pageFaceId" | "createdByUserId")[];
         };
         TwinClassCountRsV1: {
             /**
@@ -16408,6 +16356,8 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
             /** @description count results grouped by requested fields */
             counts?: components["schemas"]["TwinClassCountV1"][];
         };
@@ -17410,6 +17360,8 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
             /** @description Count results grouped by requested fields */
             counts?: components["schemas"]["TwinCountV1"][];
         };
@@ -20814,6 +20766,8 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
             /** @description count results grouped by requested fields */
             counts?: components["schemas"]["DomainBusinessAccountUserCountV1"][];
         };
@@ -35992,6 +35946,9 @@ export interface operations {
                 showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -36926,6 +36883,9 @@ export interface operations {
                 showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -39133,6 +39093,9 @@ export interface operations {
                 showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -41151,6 +41114,9 @@ export interface operations {
                 showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -47888,6 +47854,9 @@ export interface operations {
                 showDomainBusinessAccountUser2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainBusinessAccountUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */

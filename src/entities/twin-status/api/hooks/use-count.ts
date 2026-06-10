@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { PrivateApiContext } from "@/shared/api";
+import { CountResult, PrivateApiContext } from "@/shared/api";
 import { components } from "@/shared/api/generated/schema";
 
 import { TwinStatusCountGroupField, TwinStatusFilters } from "../types";
@@ -21,13 +21,22 @@ export function useTwinStatusCount() {
     async ({
       filters = {},
       groupField,
+      offset,
+      limit,
+      sortAsc = false,
     }: {
       filters?: TwinStatusFilters;
       groupField: TwinStatusCountGroupField;
-    }): Promise<TwinStatusCountGroup[]> => {
+      offset?: number;
+      limit?: number;
+      sortAsc?: boolean;
+    }): Promise<CountResult<TwinStatusCountGroup>> => {
       const { data, error } = await api.twinStatus.count({
         filters,
         groupFields: [groupField],
+        offset,
+        limit,
+        sortAsc,
       });
 
       if (error) {
@@ -37,7 +46,7 @@ export function useTwinStatusCount() {
       const related = data.relatedObjects;
       const counts = data.counts ?? [];
 
-      return counts.map((group) => ({
+      const items = counts.map((group) => ({
         ...group,
         count: group.count ?? 0,
         twinClass:
@@ -45,6 +54,8 @@ export function useTwinStatusCount() {
             ? (related.twinClassMap[group.twinClassId] as TwinClass_DETAILED)
             : undefined,
       }));
+
+      return { items, total: data.pagination?.total ?? items.length };
     },
     [api]
   );

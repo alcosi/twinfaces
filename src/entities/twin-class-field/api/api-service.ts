@@ -48,9 +48,15 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
   function count({
     filters,
     groupFields,
+    offset,
+    limit,
+    sortAsc,
   }: {
     filters: TwinClassFieldSearchFilters;
     groupFields: TwinClassFieldCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
   }) {
     return settings.client.POST("/private/twin_class_fields/count/v1", {
       params: {
@@ -61,6 +67,9 @@ export function createTwinClassFieldApi(settings: ApiSettings) {
           showTwinClassField2TwinClassMode: "DETAILED",
           showTwinClassField2PermissionMode: "DETAILED",
           showTwinClassField2FeaturerMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
         },
       },
       body: {

@@ -3,7 +3,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { ReactNode, useCallback, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -11,7 +11,6 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
-  TwinStatusCountGroup,
   TwinStatusCreateRq,
   TwinStatusFilterKeys,
   TwinStatus_DETAILED,
@@ -32,8 +31,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  PieChartDatum,
-  getPieChartColor,
 } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
@@ -45,6 +42,7 @@ import {
   DataTableHandle,
   FiltersState,
   SortableHeader,
+  buildCountGroupingLoad,
 } from "../../crud-data-table";
 import { TwinClassStatusFormFields } from "./form-fields";
 import {
@@ -76,26 +74,6 @@ function ThemeIconCell({ data }: { data: TwinStatus_DETAILED }) {
       className="text-[0]"
     />
   );
-}
-
-const UNSET_GROUP_LABEL = "— Not set —";
-
-/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
-function mapCountToSlices(
-  groups: TwinStatusCountGroup[],
-  getId: (group: TwinStatusCountGroup) => string | undefined,
-  getLabel: (group: TwinStatusCountGroup) => string | undefined,
-  renderLabel?: (group: TwinStatusCountGroup) => ReactNode
-): PieChartDatum[] {
-  return groups
-    .slice()
-    .sort((a, b) => b.count - a.count)
-    .map((group, index) => ({
-      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
-      value: group.count,
-      color: getPieChartColor(index),
-      legendContent: renderLabel?.(group),
-    }));
 }
 
 /** Renders a tri-state boolean group label, leaving unset groups to fall back. */
@@ -255,48 +233,54 @@ export function TwinClassStatusesTable({
         {
           key: "twinClass",
           label: "Class",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinStatuses({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinStatuses({
                 filters: resolved,
                 groupField: "twinClassId",
+                offset,
+                limit,
               }),
-              (g) => g.twinClassId,
-              (g) => g.twinClass?.name,
-              (g) =>
-                g.twinClass && (
-                  <TwinClassResourceLink
-                    data={g.twinClass as TwinClass_DETAILED}
-                    withTooltip
-                  />
-                )
-            ),
+            (g) => g.twinClassId,
+            (g) => g.twinClass?.name,
+            (g) =>
+              g.twinClass && (
+                <TwinClassResourceLink
+                  data={g.twinClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
         },
         {
           key: "inheritable",
           label: "Inheritable",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinStatuses({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinStatuses({
                 filters: resolved,
                 groupField: "inheritable",
+                offset,
+                limit,
               }),
-              (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
-              (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable")
-            ),
+            (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
+            (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable")
+          ),
         },
         {
           key: "type",
           label: "Type",
-          load: async () =>
-            mapCountToSlices(
-              await countTwinStatuses({
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinStatuses({
                 filters: resolved,
                 groupField: "type",
+                offset,
+                limit,
               }),
-              (g) => g.type,
-              (g) => g.type
-            ),
+            (g) => g.type,
+            (g) => g.type
+          ),
         },
       ];
     },

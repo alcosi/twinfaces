@@ -3,7 +3,7 @@ import { useCallback, useContext } from "react";
 import { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
 import { TwinClass } from "@/entities/twin-class";
-import { PrivateApiContext } from "@/shared/api";
+import { CountResult, PrivateApiContext } from "@/shared/api";
 
 import {
   TwinClassFieldCountGroupField,
@@ -29,14 +29,23 @@ export function useTwinClassFieldCount() {
     async ({
       filters = {},
       groupField,
+      offset,
+      limit,
+      sortAsc = false,
     }: {
       filters?: TwinClassFieldSearchFilters;
       groupField: TwinClassFieldCountGroupField;
-    }): Promise<TwinClassFieldCountGroup[]> => {
+      offset?: number;
+      limit?: number;
+      sortAsc?: boolean;
+    }): Promise<CountResult<TwinClassFieldCountGroup>> => {
       try {
         const { data, error } = await api.twinClassField.count({
           filters,
           groupFields: [groupField],
+          offset,
+          limit,
+          sortAsc,
         });
 
         if (error) {
@@ -47,7 +56,7 @@ export function useTwinClassFieldCount() {
         const counts = data.counts ?? [];
         const featurerMap = related?.featurerMap;
 
-        return counts.map((group) => ({
+        const items = counts.map((group) => ({
           ...group,
           count: group.count ?? 0,
           twinClass:
@@ -77,6 +86,8 @@ export function useTwinClassFieldCount() {
               ? (related.permissionMap[group.editPermissionId] as Permission)
               : undefined,
         }));
+
+        return { items, total: data.pagination?.total ?? items.length };
       } catch {
         throw new Error("An error occured while counting twin class fields");
       }

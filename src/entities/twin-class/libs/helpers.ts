@@ -65,18 +65,6 @@ export const hydrateTwinClassFromMap = (
     ] as Permission;
   }
 
-  if (dto.editPermissionId && relatedObjects.permissionMap) {
-    hydrated.editPermission = relatedObjects.permissionMap[
-      dto.editPermissionId
-    ] as Permission;
-  }
-
-  if (dto.deletePermissionId && relatedObjects.permissionMap) {
-    hydrated.deletePermission = relatedObjects.permissionMap[
-      dto.deletePermissionId
-    ] as Permission;
-  }
-
   if (dto.fieldIds && relatedObjects.twinClassFieldMap) {
     hydrated.fields = dto.fieldIds.reduce<TwinClassField[]>((acc, id) => {
       const field = relatedObjects.twinClassFieldMap?.[id];

@@ -33,8 +33,6 @@ export function useTwinClassFilters(): FilterFeature<
   const tcAdapter = useTwinClassSelectAdapter();
   const createPermissionAdapter = usePermissionSelectAdapterWithFilters();
   const viewPermissionAdapter = usePermissionSelectAdapterWithFilters();
-  const editPermissionAdapter = usePermissionSelectAdapterWithFilters();
-  const deletePermissionAdapter = usePermissionSelectAdapterWithFilters();
   const markerDatalistAdapter = useDatalistSelectAdapterWithFilters();
   const tagDatalistAdapter = useDatalistSelectAdapterWithFilters();
   const fAdapter = useTwinClassFreezeSelectAdapter();
@@ -155,26 +153,6 @@ export function useTwinClassFilters(): FilterFeature<
         selectPlaceholder: "Select...",
         multi: true,
       },
-      editPermissionIdList: {
-        type: AutoFormValueType.complexCombobox,
-        label: "Edit permission",
-        adapter: editPermissionAdapter,
-        extraFilters: buildPermissionFilters(),
-        mapExtraFilters: (filters) => mapPermissionFilters(filters),
-        searchPlaceholder: "Search...",
-        selectPlaceholder: "Select...",
-        multi: true,
-      },
-      deletePermissionIdList: {
-        type: AutoFormValueType.complexCombobox,
-        label: "Delete permission",
-        adapter: deletePermissionAdapter,
-        extraFilters: buildPermissionFilters(),
-        mapExtraFilters: (filters) => mapPermissionFilters(filters),
-        searchPlaceholder: "Search...",
-        selectPlaceholder: "Select...",
-        multi: true,
-      },
       markerDatalistIdList: {
         type: AutoFormValueType.complexCombobox,
         label: "Markers list",
@@ -273,14 +251,6 @@ export function useTwinClassFilters(): FilterFeature<
       ),
       createPermissionIdList: toArrayOfString(
         toArray(filters.createPermissionIdList),
-        "id"
-      ),
-      editPermissionIdList: toArrayOfString(
-        toArray(filters.editPermissionIdList),
-        "id"
-      ),
-      deletePermissionIdList: toArrayOfString(
-        toArray(filters.deletePermissionIdList),
         "id"
       ),
       markerDatalistIdList: toArrayOfString(

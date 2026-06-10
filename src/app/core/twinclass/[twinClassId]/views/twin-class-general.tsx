@@ -161,44 +161,6 @@ export function TwinClassGeneral() {
     },
   };
 
-  const editPermissionSettings: InPlaceEditProps<
-    typeof twinClass.editPermissionId
-  > = {
-    id: "editPermissionId",
-    value: twinClass.editPermissionId,
-    valueInfo: {
-      type: AutoFormValueType.combobox,
-      selectPlaceholder: "Select permission...",
-      ...pAdapter,
-    },
-    renderPreview: twinClass.editPermission
-      ? () => <PermissionResourceLink data={twinClass.editPermission!} />
-      : undefined,
-    onSubmit: async (value) => {
-      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return update({ editPermissionId: id });
-    },
-  };
-
-  const deletePermissionSettings: InPlaceEditProps<
-    typeof twinClass.deletePermissionId
-  > = {
-    id: "deletePermissionId",
-    value: twinClass.deletePermissionId,
-    valueInfo: {
-      type: AutoFormValueType.combobox,
-      selectPlaceholder: "Select permission...",
-      ...pAdapter,
-    },
-    renderPreview: twinClass.deletePermission
-      ? () => <PermissionResourceLink data={twinClass.deletePermission!} />
-      : undefined,
-    onSubmit: async (value) => {
-      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-      return update({ deletePermissionId: id });
-    },
-  };
-
   const externalIdSettings: InPlaceEditProps = {
     id: "externalId",
     value: twinClass.externalId,
@@ -467,20 +429,6 @@ export function TwinClassGeneral() {
             <TableCell>View Permission</TableCell>
             <TableCell>
               <InPlaceEdit {...viewPermissionSettings} />
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell>Edit Permission</TableCell>
-            <TableCell>
-              <InPlaceEdit {...editPermissionSettings} />
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell>Delete Permission</TableCell>
-            <TableCell>
-              <InPlaceEdit {...deletePermissionSettings} />
             </TableCell>
           </TableRow>
 

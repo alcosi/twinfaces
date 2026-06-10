@@ -1,10 +1,9 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { ReactNode, useCallback, useContext } from "react";
+import { useCallback, useContext } from "react";
 import { toast } from "sonner";
 
 import {
   BusinessAccount,
-  DomainBusinessAccountUserCountGroup,
   DomainBusinessAccountUserFilterKeys,
   DomainBusinessAccountUserFilters,
   DomainBusinessAccountUser_DETAILED,
@@ -24,7 +23,7 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs";
-import { PieChartDatum, getPieChartColor } from "@/shared/ui";
+import { getPieChartColor } from "@/shared/ui";
 
 import {
   CHART_FETCH_LIMIT,
@@ -33,27 +32,10 @@ import {
   CrudDataTable,
   FiltersState,
   SortableHeader,
+  buildCountGroupingLoad,
 } from "../../crud-data-table";
 
 const UNSET_GROUP_LABEL = "— Not set —";
-
-/** Maps server-aggregated count groups into sorted, colored pie-chart slices. */
-function mapCountToSlices(
-  groups: DomainBusinessAccountUserCountGroup[],
-  getId: (group: DomainBusinessAccountUserCountGroup) => string | undefined,
-  getLabel: (group: DomainBusinessAccountUserCountGroup) => string | undefined,
-  renderLabel: (group: DomainBusinessAccountUserCountGroup) => ReactNode
-): PieChartDatum[] {
-  return groups
-    .slice()
-    .sort((a, b) => b.count - a.count)
-    .map((group, index) => ({
-      label: getLabel(group) ?? getId(group) ?? UNSET_GROUP_LABEL,
-      value: group.count,
-      color: getPieChartColor(index),
-      legendContent: renderLabel(group),
-    }));
-}
 
 const colDefs: Record<
   keyof Pick<
@@ -213,18 +195,18 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
         groupings.push({
           key: "user",
           label: "User",
-          load: async () => {
-            const groups = await countBusinessAccountUser({
-              filters: resolved,
-              groupField: "userId",
-            });
-            return mapCountToSlices(
-              groups,
-              (g) => g.userId,
-              (g) => g.user?.fullName,
-              (g) => g.user && <UserResourceLink data={g.user} withTooltip />
-            );
-          },
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countBusinessAccountUser({
+                filters: resolved,
+                groupField: "userId",
+                offset,
+                limit,
+              }),
+            (g) => g.userId,
+            (g) => g.user?.fullName,
+            (g) => g.user && <UserResourceLink data={g.user} withTooltip />
+          ),
         });
       }
 
@@ -235,7 +217,10 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
           // link needs domainBusinessAccountId (as in the table column). So we
           // aggregate the search results, which carry both ids.
           label: "Domain business account",
-          load: async () => {
+          // Aggregated client-side from the search results (which carry both
+          // ids), so the whole set is known up front; slice it to honour the
+          // chart view's paging.
+          load: async ({ offset, limit }) => {
             const { data } = await searchBusinessAccountUser({
               pagination: { pageIndex: 0, pageSize: CHART_FETCH_LIMIT },
               filters: resolved,
@@ -252,7 +237,7 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
               else groups.set(id, { count: 1, row });
             }
 
-            return Array.from(groups.values())
+            const all = Array.from(groups.values())
               .sort((a, b) => b.count - a.count)
               .map(({ count, row }, index) => ({
                 label:
@@ -270,6 +255,11 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
                     />
                   ) : undefined,
               }));
+
+            return {
+              data: all.slice(offset, offset + limit),
+              total: all.length,
+            };
           },
         });
       }
