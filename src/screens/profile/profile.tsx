@@ -1,6 +1,16 @@
 "use client";
 
-import { CalendarDays, Mail, User } from "lucide-react";
+import {
+  Boxes,
+  Building2,
+  CalendarDays,
+  type LucideIcon,
+  Mail,
+  Rocket,
+  Sparkles,
+  Terminal,
+  User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
@@ -17,7 +27,37 @@ import {
   isUndefined,
   usePermissionsAccess,
 } from "@/shared/libs";
-import { Button, LoadingOverlay } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  LoadingOverlay,
+} from "@/shared/ui";
+
+/** Marketing highlights rendered as feature cards below the identity hero. */
+const FEATURES: { icon: LucideIcon; title: string; description: string }[] = [
+  {
+    icon: Boxes,
+    title: "Flexible by Design",
+    description:
+      "Create custom entities, define statuses and workflows, manage relationships between objects, and automate routine operations — all from a single platform designed for flexibility and growth.",
+  },
+  {
+    icon: Building2,
+    title: "Built Around Your Business",
+    description:
+      "Whether you're managing projects, products, assets, customers, employees, or entirely unique business concepts, TWINS provides the tools to build a system that matches your organization rather than forcing you into predefined structures.",
+  },
+  {
+    icon: Rocket,
+    title: "One Platform, Endless Possibilities",
+    description:
+      "From internal management systems and ERP solutions to marketplaces, service platforms, and industry-specific applications, TWINS provides the technological foundation to support your growth and evolving business needs.",
+  },
+];
 
 export function ProfileScreen() {
   const { updateUser } = useUpdateUser();
@@ -61,59 +101,96 @@ export function ProfileScreen() {
   if (isUndefined(user) || loading) return <LoadingOverlay />;
 
   return (
-    <>
-      <div className="my-[15px] flex items-center">
-        <div className="bg-muted mr-8 flex h-30 w-30 shrink-0 items-center justify-center rounded-full">
-          <User className="text-brand-500 h-20 w-20" />
+    <div className="mx-auto w-full max-w-5xl space-y-8 py-6">
+      {/* Identity hero */}
+      <Card className="overflow-hidden">
+        <div className="from-brand-500/10 via-brand-500/5 to-card bg-gradient-to-br">
+          <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center">
+            <div className="bg-card ring-brand-500/20 flex h-28 w-28 shrink-0 items-center justify-center rounded-full shadow-sm ring-4">
+              <User className="text-brand-500 h-16 w-16" />
+            </div>
+
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span className="text-2xl font-semibold">Hello,</span>
+                <InPlaceEdit {...nameSettings} className="break-all" />
+              </div>
+
+              <div className="text-muted-foreground flex items-center gap-2 text-base font-medium">
+                <Mail className="h-4 w-4 shrink-0" />
+                <span className="truncate">{user?.user?.email}</span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <Badge variant="secondary" className="gap-1.5 font-medium">
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  Together with us since{" "}
+                  {formatIntlDate(user?.createdAt!, "date")}
+                </Badge>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground h-7 gap-1.5 px-2 text-xs"
+                  onClick={handleLogPermissions}
+                >
+                  <Terminal className="h-3.5 w-3.5" />
+                  Log permissions to console
+                </Button>
+              </div>
+            </div>
+          </CardContent>
         </div>
-        <div className="w-full flex-1">
-          <div className="flex items-center">
-            <span className="mr-4 text-2xl font-semibold">Hello,</span>
-            <InPlaceEdit {...nameSettings} className="w-full break-all" />
-          </div>
-          <div className="text-muted-foreground flex items-center gap-1 text-lg font-semibold">
-            <Mail className="h-5 w-5" />
-            {user?.user?.email}
-          </div>
-        </div>
-      </div>
+      </Card>
 
-      <div className="flex items-center gap-2 text-sm">
-        <CalendarDays className="h-4 w-4" />
-        Together with us since {formatIntlDate(user?.createdAt!, "date")}
-      </div>
-
-      <Button
-        variant="outline"
-        size="sm"
-        className="mt-4"
-        onClick={handleLogPermissions}
-      >
-        Log permissions to console
-      </Button>
-
-      <div className="py-6">
-        <p className="text-muted-foreground my-4 text-lg text-balance">
-          Welcome to <b>TWINS</b> – Your Digital Business Operating System
-        </p>
-        <p className="text-muted-foreground w-1/2 text-balance">
+      {/* Welcome intro */}
+      <section className="space-y-4 text-center">
+        <Badge variant="secondary" className="gap-1.5">
+          <Sparkles className="h-3.5 w-3.5" />
+          Your Digital Business Operating System
+        </Badge>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          Welcome to <span className="text-brand-500">TWINS</span>
+        </h1>
+        <p className="text-muted-foreground mx-auto max-w-3xl leading-relaxed text-balance">
           Transform the way your organization manages information, processes,
-          and collaboration. TWINS is a cloud-based platform that enable
+          and collaboration. TWINS is a cloud-based platform that enables
           companies to model their business domain, automate workflows, and
           organize data in a way that perfectly reflects their real-world
           operations. Instead of adapting your business to software limitations,
           TWINS adapts to your business.
         </p>
-        <p className="text-muted-foreground my-2 w-2/3 text-balance">
-          Create custom entities, define statuses and workflows, manage
-          relationships between objects, and automate routine operations — all
-          from a single platform designed for flexibility and growth. Whether
-          you're building a project management solution, ERP system, marketplace
-          integration, service platform, or an entirely unique business
-          application, TWINS provides the technology foundation to make it
-          happen. One platform. Unlimited business models.
+      </section>
+
+      {/* Feature cards */}
+      <div className="grid gap-4 md:grid-cols-3">
+        {FEATURES.map(({ icon: Icon, title, description }) => (
+          <Card
+            key={title}
+            className="h-full transition-shadow duration-200 hover:shadow-md"
+          >
+            <CardHeader className="space-y-3 p-5">
+              <div className="bg-brand-500/10 text-brand-500 flex h-11 w-11 items-center justify-center rounded-lg">
+                <Icon className="h-6 w-6" />
+              </div>
+              <CardTitle className="text-base">{title}</CardTitle>
+            </CardHeader>
+            <CardContent className="p-5 pt-0">
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {description}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Tagline */}
+      <div className="from-brand-500/5 to-brand-600/5 border-brand-500/10 rounded-xl border bg-gradient-to-r p-8 text-center">
+        <p className="text-xl font-semibold sm:text-2xl">
+          One platform.{" "}
+          <span className="text-brand-500">Unlimited business models.</span>
         </p>
       </div>
-    </>
+    </div>
   );
 }
