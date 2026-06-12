@@ -181,8 +181,8 @@ export function TableChartView({ groupings, refreshSignal }: ChartViewProps) {
 
   return (
     <div className="mb-2 space-y-4">
-      <div className="border-border flex flex-wrap items-center justify-between gap-3 rounded-md border p-3">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="border-brand-500/10 bg-brand-500/5 flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3">
+        <div className="flex flex-wrap items-center gap-1.5">
           {groupings.map((grouping) => {
             const active = selectedKeys.includes(grouping.key);
             return (
@@ -190,8 +190,13 @@ export function TableChartView({ groupings, refreshSignal }: ChartViewProps) {
                 key={grouping.key}
                 type="button"
                 size="sm"
-                variant={active ? "secondary" : "ghost"}
-                className={cn(active && "border-border border")}
+                variant="ghost"
+                className={cn(
+                  "rounded-lg transition-colors duration-200",
+                  active
+                    ? "bg-brand-500/10 text-brand-600 hover:bg-brand-500/15"
+                    : "hover:bg-background/60"
+                )}
                 onClick={() => toggle(grouping.key)}
               >
                 {grouping.label}

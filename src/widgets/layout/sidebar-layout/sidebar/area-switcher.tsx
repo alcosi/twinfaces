@@ -30,11 +30,11 @@ export function SidebarAreaSwitcher({
   }
 
   return (
-    <TabsList className="w-full rounded-none">
+    <TabsList className="w-full rounded-lg">
       {open ? (
         <>
           <TabsTrigger
-            className="flex-1 gap-1.5"
+            className="data-[state=active]:bg-brand-500/10 data-[state=active]:text-brand-600 flex-1 gap-1.5 rounded-md data-[state=active]:shadow-none"
             value={PlatformArea.workspace}
             onClick={() => setArea("workspace")}
           >
@@ -42,7 +42,7 @@ export function SidebarAreaSwitcher({
             <span>{userLabel}</span>
           </TabsTrigger>
           <TabsTrigger
-            className="flex-1 gap-1.5"
+            className="data-[state=active]:bg-brand-500/10 data-[state=active]:text-brand-600 flex-1 gap-1.5 rounded-md data-[state=active]:shadow-none"
             value={PlatformArea.core}
             onClick={() => setArea("core")}
           >
@@ -52,7 +52,7 @@ export function SidebarAreaSwitcher({
         </>
       ) : (
         <SlideView
-          className="w-10 h-7"
+          className="h-7 w-10"
           activeIndex={area === PlatformArea.workspace ? 0 : 1}
         >
           <TabsTrigger

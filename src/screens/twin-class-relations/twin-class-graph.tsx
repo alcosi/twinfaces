@@ -3,16 +3,22 @@
 import {
   Background,
   BackgroundVariant,
+  BaseEdge,
   Controls,
   type Edge,
+  EdgeLabelRenderer,
+  type EdgeProps,
   Handle,
   MarkerType,
   type Node,
   type NodeProps,
+  Panel,
   Position,
   ReactFlow,
+  getBezierPath,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { Tag } from "lucide-react";
 import {
   useCallback,
   useContext,
@@ -35,6 +41,7 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PrivateApiContext } from "@/shared/api";
 import { cn } from "@/shared/libs";
+import { Button } from "@/shared/ui";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 type GraphRole = "center" | "head" | "child" | "backward" | "forward";
@@ -59,8 +66,63 @@ const EDGE_ARROW_WIDTH = 22;
 const EDGE_ARROW_HEIGHT = 22;
 const EDGE_STROKE_WIDTH = 1.8;
 
+type LabeledEdgeData = { label?: string };
+
+function LabeledEdge({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  style,
+  markerEnd,
+  data,
+}: EdgeProps) {
+  const [edgePath, labelX, labelY] = getBezierPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+
+  const label = (data as LabeledEdgeData | undefined)?.label;
+
+  const rawAngle =
+    Math.atan2(targetY - sourceY, targetX - sourceX) * (180 / Math.PI);
+  // Keep text upright — flip if the edge goes right-to-left
+  const rotation = rawAngle > 90 || rawAngle < -90 ? rawAngle + 180 : rawAngle;
+
+  return (
+    <>
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style} />
+      {label && (
+        <EdgeLabelRenderer>
+          <div
+            className="nodrag nopan border-border/60 bg-background/95 text-foreground rounded-md border px-2 py-0.5 text-[10px] font-semibold shadow-sm"
+            style={{
+              position: "absolute",
+              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px) rotate(${rotation}deg)`,
+              pointerEvents: "none",
+            }}
+          >
+            {label}
+          </div>
+        </EdgeLabelRenderer>
+      )}
+    </>
+  );
+}
+
 const nodeTypes = {
   classNode: ClassGraphNode,
+};
+
+const edgeTypes = {
+  labeled: LabeledEdge,
 };
 
 const HANDLE_IDS = {
@@ -102,11 +164,18 @@ export function TwinClassRelationsGraph() {
   const [childs, setChilds] = useState<TwinClass_DETAILED[]>([]);
   const [forwards, setForwards] = useState<TwinClass_DETAILED[]>([]);
   const [backwards, setBackwards] = useState<TwinClass_DETAILED[]>([]);
+  const [forwardLinkNames, setForwardLinkNames] = useState<
+    (string | undefined)[]
+  >([]);
+  const [backwardLinkNames, setBackwardLinkNames] = useState<
+    (string | undefined)[]
+  >([]);
   const [centerClass, setCenterClass] = useState<TwinClass_DETAILED | null>(
     null
   );
   const [nodeHeights, setNodeHeights] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [showLinkLabels, setShowLinkLabels] = useState(false);
 
   const handleNodeHeightChange = useCallback(
     (nodeId: string, height: number) => {
@@ -242,6 +311,8 @@ export function TwinClassRelationsGraph() {
         setChilds(withDetails(childsResponse.data));
         setForwards(withDetails(initialForwardClasses));
         setBackwards(withDetails(initialBackwardClasses));
+        setForwardLinkNames(rawForward.map((link) => link.name));
+        setBackwardLinkNames(rawBackward.map((link) => link.name));
       } catch (error) {
         console.error(error);
         toast.error("Failed to load twin class graph");
@@ -417,7 +488,8 @@ export function TwinClassRelationsGraph() {
         target: centerClass.id,
         sourceHandle: HANDLE_IDS.sourceRight,
         targetHandle: HANDLE_IDS.targetLeft,
-        type: "default",
+        type: "labeled",
+        data: { label: showLinkLabels ? backwardLinkNames[index] : undefined },
         style: { strokeWidth: EDGE_STROKE_WIDTH },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -436,7 +508,8 @@ export function TwinClassRelationsGraph() {
         target: item.nodeId,
         sourceHandle: HANDLE_IDS.sourceRight,
         targetHandle: HANDLE_IDS.targetLeft,
-        type: "default",
+        type: "labeled",
+        data: { label: showLinkLabels ? forwardLinkNames[index] : undefined },
         style: { strokeWidth: EDGE_STROKE_WIDTH },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -448,13 +521,16 @@ export function TwinClassRelationsGraph() {
 
     return { nodes, edges };
   }, [
+    backwardLinkNames,
     backwards,
     centerClass,
     childs,
+    forwardLinkNames,
     forwards,
     handleNodeHeightChange,
     heads,
     nodeHeights,
+    showLinkLabels,
   ]);
 
   if (loading) return <LoadingOverlay />;
@@ -480,6 +556,7 @@ export function TwinClassRelationsGraph() {
         nodes={graph.nodes}
         edges={graph.edges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
         fitViewOptions={{ padding: 0.35, minZoom: 0.2, maxZoom: 1.2 }}
         nodesDraggable={false}
@@ -492,6 +569,23 @@ export function TwinClassRelationsGraph() {
       >
         <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
         <Controls />
+        <Panel position="top-right">
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            className={cn(
+              "gap-1.5 rounded-lg border shadow-sm backdrop-blur-sm",
+              showLinkLabels
+                ? "border-brand-500/30 bg-brand-500/10 text-brand-600 hover:bg-brand-500/15"
+                : "border-border/60 bg-background/80 hover:bg-muted"
+            )}
+            onClick={() => setShowLinkLabels((v) => !v)}
+          >
+            <Tag className="h-3.5 w-3.5" />
+            Link labels
+          </Button>
+        </Panel>
       </ReactFlow>
     </div>
   );

@@ -97,7 +97,7 @@ export function ColumnManagerPopover({
         className="p-0"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="max-h-[60vh] space-y-4 overflow-y-auto p-4 pb-0">
+        <div className="max-h-[60vh] overflow-y-auto px-2 pt-2">
           <DndContext onDragEnd={handleDragEnd}>
             <SortableContext
               items={columns}
@@ -147,9 +147,9 @@ function DraggableCheckbox({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex flex-row items-center justify-between"
+      className="hover:bg-muted flex flex-row items-center gap-2 rounded-lg px-2 py-1.5 transition-colors"
     >
-      <Label className="grow">{column.name}</Label>
+      <Label className="grow cursor-default text-sm">{column.name}</Label>
 
       <CheckboxFormItem
         key={column.id}
@@ -157,8 +157,12 @@ function DraggableCheckbox({
         onChange={onChange}
       />
 
-      <div {...listeners} {...attributes}>
-        <GripVertical />
+      <div
+        {...listeners}
+        {...attributes}
+        className="text-muted-foreground cursor-grab active:cursor-grabbing"
+      >
+        <GripVertical className="h-4 w-4" />
       </div>
     </div>
   );

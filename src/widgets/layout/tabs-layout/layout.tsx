@@ -46,15 +46,15 @@ export function TabsLayout({ tabs, rightSlot }: Props) {
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
       <nav className="border-border bg-background sticky top-[var(--header-height)] z-20 flex w-full border-b">
         <div className="min-w-0 flex-1 overflow-x-auto">
-          <TabsList className="min-w-max">
+          <TabsList className="flex min-w-max items-center gap-1 p-2">
             {tabs.map((tab) => (
               <Link href={`#${tab.key}`} key={tab.key}>
                 <TabsTrigger
                   value={tab.key}
                   className={cn(
-                    "border-b-2 border-transparent px-3 py-4 transition-colors duration-200",
-                    "hover:border-b-primary hover:bg-secondary",
-                    "data-[state=active]:border-b-link-enabled"
+                    "text-muted-foreground rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200",
+                    "hover:bg-muted hover:text-foreground",
+                    "data-[state=active]:bg-brand-500/10 data-[state=active]:text-brand-600"
                   )}
                 >
                   {tab.label}
