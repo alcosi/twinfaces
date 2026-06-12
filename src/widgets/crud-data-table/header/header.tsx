@@ -184,7 +184,7 @@ function CrudDataTableHeaderComponent<
         {onCreateClick && (
           <>
             <Separator orientation="vertical" />
-            <Button variant="ghost" onClick={onCreateClick}>
+            <Button variant="default" onClick={onCreateClick}>
               <Plus />
             </Button>
           </>

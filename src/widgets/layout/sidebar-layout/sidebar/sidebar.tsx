@@ -115,9 +115,9 @@ export function AppSidebar({
   return (
     <nav className="relative">
       <Sidebar collapsible="icon">
-        <SidebarTrigger className="border-border bg-sidebar absolute top-12 -right-4 z-20 border shadow-sm" />
+        <SidebarTrigger className="border-border/50 bg-sidebar absolute top-12 -right-4 z-20 border shadow-sm" />
 
-        <SidebarHeader className="border-border h-16 items-center justify-center border-b">
+        <SidebarHeader className="border-border/50 h-16 items-center justify-center border-b">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
@@ -191,7 +191,7 @@ export function AppSidebar({
 
         <SidebarContent>{renderSidebarContent()}</SidebarContent>
 
-        <SidebarFooter className="border-border border-t">
+        <SidebarFooter className="border-border/50 border-t">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>

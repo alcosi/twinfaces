@@ -12,18 +12,23 @@
     /* Shared design variables used across themes */
     --header-height: 4rem; /* Equivalent to Tailwind's h-16 (64px) */
 
+    /* Global corner rounding — single source of truth. Bump this one value to
+       make the whole UI softer/sharper; the rounded-* utilities derive from it
+       (see the radius mapping in tailwind-config.css). */
+    --radius: 0.75rem;
+
     /* Brand Colors */
-    --brand-50: hsl(215 90% 98%);
-    --brand-100: hsl(215 90% 95%);
-    --brand-200: hsl(215 90% 85%);
-    --brand-300: hsl(215 90% 75%);
-    --brand-400: hsl(215 90% 65%);
-    --brand-500: hsl(215 90% 50%);
-    --brand-600: hsl(215 90% 40%);
-    --brand-700: hsl(215 90% 30%);
-    --brand-800: hsl(215 90% 20%);
-    --brand-900: hsl(215 90% 15%);
-    --brand-950: hsl(215 90% 10%);
+    --brand-50: hsl(215 60% 98%);
+    --brand-100: hsl(215 60% 95%);
+    --brand-200: hsl(215 60% 85%);
+    --brand-300: hsl(215 60% 75%);
+    --brand-400: hsl(215 60% 65%);
+    --brand-500: hsl(215 60% 50%);
+    --brand-600: hsl(215 60% 40%);
+    --brand-700: hsl(215 60% 30%);
+    --brand-800: hsl(215 60% 20%);
+    --brand-900: hsl(215 60% 15%);
+    --brand-950: hsl(215 60% 10%);
 
     /* Supporting Colors */
     --success: hsl(125 55% 50%);
@@ -64,7 +69,8 @@
 
     --border: hsl(240 5.9% 90%);
     --input: hsl(240 5.9% 90%);
-    --ring: hsl(240 10% 3.9%);
+    /* Brand-tinted focus ring for a cohesive palette across the app. */
+    --ring: var(--brand-500);
 
     /* Sidebar Colors */
     --sidebar-background: hsl(0 0% 98%);
@@ -79,15 +85,15 @@
 
   .dark {
     /* Brand Colors - Dark */
-    --brand-50: hsl(40 100% 98%);
-    --brand-100: hsl(40 100% 95%);
-    --brand-200: hsl(40 100% 85%);
-    --brand-500: hsl(40 100% 60%);
-    --brand-600: hsl(40 100% 50%);
-    --brand-700: hsl(40 100% 40%);
-    --brand-800: hsl(40 100% 30%);
-    --brand-900: hsl(40 100% 20%);
-    --brand-950: hsl(40 100% 10%);
+    --brand-50: hsl(40 88% 98%);
+    --brand-100: hsl(40 88% 95%);
+    --brand-200: hsl(40 88% 85%);
+    --brand-500: hsl(40 88% 60%);
+    --brand-600: hsl(40 88% 50%);
+    --brand-700: hsl(40 88% 40%);
+    --brand-800: hsl(40 88% 30%);
+    --brand-900: hsl(40 88% 20%);
+    --brand-950: hsl(40 88% 10%);
 
     /* Supporting Colors - Dark */
     --success: hsl(125 45% 50%);
@@ -128,7 +134,8 @@
 
     --border: hsl(240 3.7% 15.9%);
     --input: hsl(240 3.7% 15.9%);
-    --ring: hsl(240 4.9% 83.9%);
+    /* Brand-tinted focus ring (warm amber in dark mode). */
+    --ring: var(--brand-500);
 
     /* Sidebar Colors - Dark */
     --sidebar-background: hsl(240 5.9% 10%);

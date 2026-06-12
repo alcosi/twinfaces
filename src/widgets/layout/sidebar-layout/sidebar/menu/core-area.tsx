@@ -148,10 +148,12 @@ function AccordionGroup({ title, items }: Group) {
 
   return (
     <AccordionItem value={title.toLowerCase()} className="border-b-0 px-0">
-      <AccordionTrigger className="py-0 text-sm hover:no-underline">
-        <SidebarGroupLabel>{title}</SidebarGroupLabel>
+      <AccordionTrigger className="hover:bg-muted/50 rounded-lg px-2 py-0 hover:no-underline">
+        <SidebarGroupLabel className="h-7 text-[11px] font-semibold tracking-wide uppercase">
+          {title}
+        </SidebarGroupLabel>
       </AccordionTrigger>
-      <AccordionContent className="border-border ml-2 list-none border-l py-0 pl-2">
+      <AccordionContent className="border-brand-500/20 ml-2 list-none border-l py-0 pl-2">
         {items.map((item) =>
           item.children ? (
             <NestedItem key={item.url} item={item} pathname={pathname} />
@@ -185,7 +187,7 @@ function NestedItem({ item, pathname }: { item: GroupItem; pathname: string }) {
         <AccordionTrigger className="py-0 text-sm hover:no-underline">
           <MenuItem label={item.title} url={item.url} Icon={item.icon} />
         </AccordionTrigger>
-        <AccordionContent className="border-border ml-2 list-none border-l py-0 pl-2">
+        <AccordionContent className="border-brand-500/20 ml-2 list-none border-l py-0 pl-2">
           {item.children!.map((child) => (
             <MenuItem
               key={child.url}
