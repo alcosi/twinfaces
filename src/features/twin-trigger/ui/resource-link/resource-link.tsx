@@ -1,3 +1,5 @@
+"use client";
+
 import { Wand } from "lucide-react";
 
 import { TwinTrigger } from "@/entities/twin-trigger/index";

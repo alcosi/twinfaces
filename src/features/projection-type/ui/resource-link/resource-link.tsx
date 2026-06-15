@@ -1,3 +1,5 @@
+"use client";
+
 import { Shuffle } from "lucide-react";
 
 import { ProjectionType } from "@/entities/projection";

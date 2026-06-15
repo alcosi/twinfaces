@@ -147,10 +147,11 @@ function CrudDataTableHeaderComponent<
           </form>
         )}
       </div>
-      <div className="flex space-x-4">
+      <div className="flex space-x-1">
         {!hideRefresh && (
           <Button
             variant="ghost"
+            size="icon"
             onClick={() =>
               chartMode ? onChartRefresh?.() : safeRefresh(tableRef)
             }

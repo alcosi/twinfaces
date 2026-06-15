@@ -1,3 +1,5 @@
+"use client";
+
 import { Permission } from "@/entities/permission";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";

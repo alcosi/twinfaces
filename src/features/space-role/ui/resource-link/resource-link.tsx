@@ -1,3 +1,5 @@
+"use client";
+
 import { VenetianMask } from "lucide-react";
 
 import { SpaceRole } from "@/entities/space-role";

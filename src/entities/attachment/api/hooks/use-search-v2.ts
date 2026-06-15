@@ -1,30 +1,34 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 import {
   AttachmentFilters,
+  AttachmentSortField,
   Attachment_DETAILED,
   hydrateAttachmentFromMap,
 } from "../../libs";
 
-export const useAttachmentSearchV1 = () => {
+export const useAttachmentSearchV2 = () => {
   const api = useContext(PrivateApiContext);
 
   const searchAttachments = useCallback(
     async ({
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
+      sort,
     }: {
-      search?: string;
       pagination?: PaginationState;
       filters?: AttachmentFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<Attachment_DETAILED>> => {
       try {
         const { data, error } = await api.attachment.search({
           pagination,
-          filters: filters,
+          filters,
+          sortField: sort?.field as AttachmentSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

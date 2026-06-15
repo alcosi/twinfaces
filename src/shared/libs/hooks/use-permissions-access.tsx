@@ -7,7 +7,6 @@ import {
   PermissionAction,
   getCoreRouteSegment,
   getPermissionKeysForSegmentAction,
-  hasAnyPermissionKey,
 } from "../utils";
 
 type PermissionsAccessContextValue = {
@@ -74,6 +73,18 @@ export function usePermissionsAccess() {
   const scopeSegment = useContext(PermissionScopeContext);
   const context = useContext(PermissionsAccessContext);
 
+  const canForSegment = (
+    segment: string | undefined,
+    action: PermissionAction
+  ): boolean => {
+    const actionKeys = getPermissionKeysForSegmentAction({ segment, action });
+    // No mapped permission for this segment → unrestricted.
+    if (actionKeys.length === 0) return true;
+    // `hasPermissionKey` is permissive by default (no provider), so links stay
+    // enabled outside an authenticated context (e.g. the design-system page).
+    return actionKeys.some((key) => context.hasPermissionKey(key));
+  };
+
   const canForCurrentRoute = (
     action: PermissionAction,
     options?: { segment?: string }
@@ -81,16 +92,19 @@ export function usePermissionsAccess() {
     // Resolve order: explicit segment → scope from context → current pathname.
     const segment =
       options?.segment ?? scopeSegment ?? getCoreRouteSegment(pathname);
-    const actionKeys = getPermissionKeysForSegmentAction({ segment, action });
-    if (actionKeys.length === 0) return true;
-    return hasAnyPermissionKey({
-      permissionKeys: context.permissionKeys,
-      keysToCheck: actionKeys,
-    });
+    return canForSegment(segment, action);
+  };
+
+  // Resolves the permission segment from an arbitrary route (e.g. a resource
+  // link target) instead of the current pathname. Used to guard links that
+  // point to a different core route than the one currently rendered.
+  const canForRoute = (route: string, action: PermissionAction): boolean => {
+    return canForSegment(getCoreRouteSegment(route), action);
   };
 
   return {
     ...context,
     canForCurrentRoute,
+    canForRoute,
   };
 }

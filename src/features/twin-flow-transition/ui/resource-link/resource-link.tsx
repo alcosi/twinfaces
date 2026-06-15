@@ -1,3 +1,5 @@
+"use client";
+
 import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";

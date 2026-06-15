@@ -29,13 +29,14 @@ import {
 } from "react";
 import { toast } from "sonner";
 
-import { hydrateLinkFromMap } from "@/entities/link";
+import { Link_MANAGED, hydrateLinkFromMap } from "@/entities/link";
 import {
   TwinClassContext,
   TwinClass_DETAILED,
   useTwinClassSearch,
 } from "@/entities/twin-class";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
+import { LinkResourceLink } from "@/features/link/ui";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
@@ -66,7 +67,17 @@ const EDGE_ARROW_WIDTH = 22;
 const EDGE_ARROW_HEIGHT = 22;
 const EDGE_STROKE_WIDTH = 1.8;
 
-type LabeledEdgeData = { label?: string };
+type LabeledEdgeData = {
+  link?: Link_MANAGED;
+  /** Index/size of the group of edges sharing this target, for vertical stagger. */
+  stackIndex?: number;
+  stackCount?: number;
+};
+
+// How far to the left of the arrowhead the label sits.
+const ARROW_LABEL_OFFSET = 90;
+// Vertical spacing between labels of edges that converge on the same target.
+const ARROW_LABEL_STACK_GAP = 34;
 
 function LabeledEdge({
   id,
@@ -80,7 +91,7 @@ function LabeledEdge({
   markerEnd,
   data,
 }: EdgeProps) {
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -89,27 +100,34 @@ function LabeledEdge({
     targetPosition,
   });
 
-  const label = (data as LabeledEdgeData | undefined)?.label;
+  const {
+    link,
+    stackIndex = 0,
+    stackCount = 1,
+  } = (data as LabeledEdgeData | undefined) ?? {};
 
-  const rawAngle =
-    Math.atan2(targetY - sourceY, targetX - sourceX) * (180 / Math.PI);
-  // Keep text upright — flip if the edge goes right-to-left
-  const rotation = rawAngle > 90 || rawAngle < -90 ? rawAngle + 180 : rawAngle;
+  // Labeled edges always arrive at the target's Left handle, so the label sits
+  // just to the left of the arrowhead at the arrow's height. When several edges
+  // converge on one target (backward links all point at the center class) the
+  // labels are stacked vertically around the arrowhead so they don't overlap.
+  const labelX = targetX - ARROW_LABEL_OFFSET;
+  const labelY =
+    targetY + (stackIndex - (stackCount - 1) / 2) * ARROW_LABEL_STACK_GAP;
 
   return (
     <>
       <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style} />
-      {label && (
+      {link && (
         <EdgeLabelRenderer>
           <div
-            className="nodrag nopan border-border/60 bg-background/95 text-foreground rounded-md border px-2 py-0.5 text-[10px] font-semibold shadow-sm"
+            className="nodrag nopan"
             style={{
               position: "absolute",
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px) rotate(${rotation}deg)`,
-              pointerEvents: "none",
+              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+              pointerEvents: "all",
             }}
           >
-            {label}
+            <LinkResourceLink data={link} withTooltip />
           </div>
         </EdgeLabelRenderer>
       )}
@@ -164,12 +182,8 @@ export function TwinClassRelationsGraph() {
   const [childs, setChilds] = useState<TwinClass_DETAILED[]>([]);
   const [forwards, setForwards] = useState<TwinClass_DETAILED[]>([]);
   const [backwards, setBackwards] = useState<TwinClass_DETAILED[]>([]);
-  const [forwardLinkNames, setForwardLinkNames] = useState<
-    (string | undefined)[]
-  >([]);
-  const [backwardLinkNames, setBackwardLinkNames] = useState<
-    (string | undefined)[]
-  >([]);
+  const [forwardLinks, setForwardLinks] = useState<Link_MANAGED[]>([]);
+  const [backwardLinks, setBackwardLinks] = useState<Link_MANAGED[]>([]);
   const [centerClass, setCenterClass] = useState<TwinClass_DETAILED | null>(
     null
   );
@@ -311,8 +325,8 @@ export function TwinClassRelationsGraph() {
         setChilds(withDetails(childsResponse.data));
         setForwards(withDetails(initialForwardClasses));
         setBackwards(withDetails(initialBackwardClasses));
-        setForwardLinkNames(rawForward.map((link) => link.name));
-        setBackwardLinkNames(rawBackward.map((link) => link.name));
+        setForwardLinks(rawForward);
+        setBackwardLinks(rawBackward);
       } catch (error) {
         console.error(error);
         toast.error("Failed to load twin class graph");
@@ -489,7 +503,11 @@ export function TwinClassRelationsGraph() {
         sourceHandle: HANDLE_IDS.sourceRight,
         targetHandle: HANDLE_IDS.targetLeft,
         type: "labeled",
-        data: { label: showLinkLabels ? backwardLinkNames[index] : undefined },
+        data: {
+          link: showLinkLabels ? backwardLinks[index] : undefined,
+          stackIndex: index,
+          stackCount: backwardItems.length,
+        },
         style: { strokeWidth: EDGE_STROKE_WIDTH },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -509,7 +527,7 @@ export function TwinClassRelationsGraph() {
         sourceHandle: HANDLE_IDS.sourceRight,
         targetHandle: HANDLE_IDS.targetLeft,
         type: "labeled",
-        data: { label: showLinkLabels ? forwardLinkNames[index] : undefined },
+        data: { link: showLinkLabels ? forwardLinks[index] : undefined },
         style: { strokeWidth: EDGE_STROKE_WIDTH },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -521,11 +539,11 @@ export function TwinClassRelationsGraph() {
 
     return { nodes, edges };
   }, [
-    backwardLinkNames,
+    backwardLinks,
     backwards,
     centerClass,
     childs,
-    forwardLinkNames,
+    forwardLinks,
     forwards,
     handleNodeHeightChange,
     heads,

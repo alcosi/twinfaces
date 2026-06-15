@@ -1,3 +1,5 @@
+"use client";
+
 import { Option } from "lucide-react";
 
 import { DataListOptionV1 } from "@/entities/datalist-option";

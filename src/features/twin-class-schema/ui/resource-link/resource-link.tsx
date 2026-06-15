@@ -1,3 +1,5 @@
+"use client";
+
 import { TwinClassSchema_DETAILED } from "@/entities/twin-class-schema";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLink } from "@/shared/ui";

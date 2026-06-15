@@ -21,6 +21,21 @@ export type Attachment_DETAILED = Required<
 export type AttachmentSearchRqV1 =
   components["schemas"]["AttachmentSearchRqV1"];
 
+export type AttachmentSearchRqV2 =
+  components["schemas"]["AttachmentSearchRqV2"];
+
+export type AttachmentSortField = NonNullable<
+  AttachmentSearchRqV2["sortField"]
+>;
+
+export type AttachmentCountRqV1 = components["schemas"]["AttachmentCountRqV1"];
+
+export type AttachmentCountGroupField = NonNullable<
+  AttachmentCountRqV1["groupFields"]
+>[number];
+
+export type AttachmentCount = components["schemas"]["AttachmentCountV1"];
+
 export type AttachmentRqQuery =
   operations["attachmentViewV1"]["parameters"]["query"];
 

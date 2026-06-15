@@ -1,3 +1,5 @@
+"use client";
+
 import { Megaphone } from "lucide-react";
 
 import { Recipient } from "@/entities/notification";

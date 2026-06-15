@@ -149,7 +149,7 @@ function AccordionGroup({ title, items }: Group) {
   return (
     <AccordionItem value={title.toLowerCase()} className="border-b-0 px-0">
       <AccordionTrigger className="hover:bg-muted/50 rounded-lg px-2 py-0 hover:no-underline">
-        <SidebarGroupLabel className="h-7 text-[11px] font-semibold tracking-wide uppercase">
+        <SidebarGroupLabel className="h-7 text-[11px] font-semibold tracking-wide">
           {title}
         </SidebarGroupLabel>
       </AccordionTrigger>

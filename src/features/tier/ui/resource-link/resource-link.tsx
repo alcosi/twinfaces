@@ -1,3 +1,5 @@
+"use client";
+
 import { Tier } from "@/entities/tier";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";

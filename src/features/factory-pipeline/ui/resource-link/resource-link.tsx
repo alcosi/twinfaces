@@ -1,3 +1,5 @@
+"use client";
+
 import { FactoryPipeline } from "@/entities/factory-pipeline";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString, shortenUUID } from "@/shared/libs";

@@ -1056,16 +1056,17 @@ export function TwinClasses({ type }: { type?: string }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col pt-4">
       <nav className="border-border bg-background flex w-full overflow-x-auto border-b">
-        <div className="min-w-max">
+        <div className="flex min-w-max items-center gap-1 p-2">
           {tabs.map((tab) => (
             <button
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key)}
               className={cn(
-                "border-b-2 border-transparent px-3 py-4 transition-colors duration-200",
-                "hover:border-b-primary hover:bg-secondary",
-                activeTab === tab.key && "border-b-link-enabled"
+                "text-muted-foreground rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200",
+                "hover:bg-muted hover:text-foreground",
+                activeTab === tab.key &&
+                  "bg-brand-500/10 text-brand-600 hover:bg-brand-500/10 hover:text-brand-600"
               )}
             >
               {tab.label}
