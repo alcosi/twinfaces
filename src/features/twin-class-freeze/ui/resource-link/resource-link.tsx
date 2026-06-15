@@ -1,3 +1,5 @@
+"use client";
+
 import { SnowflakeIcon } from "lucide-react";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";

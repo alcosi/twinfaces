@@ -1,3 +1,5 @@
+"use client";
+
 import { UsersRound } from "lucide-react";
 
 import { UserGroup } from "@/entities/user-group";

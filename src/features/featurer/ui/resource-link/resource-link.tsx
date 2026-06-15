@@ -1,3 +1,5 @@
+"use client";
+
 import { Play } from "lucide-react";
 
 import { Featurer_DETAILED } from "@/entities/featurer";

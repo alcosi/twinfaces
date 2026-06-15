@@ -1,3 +1,5 @@
+"use client";
+
 import { User as UserIcon } from "lucide-react";
 
 import { User } from "@/entities/user";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Rss } from "lucide-react";
 
 import { ChannelEvent } from "@/entities/notification";

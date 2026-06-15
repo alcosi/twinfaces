@@ -1,3 +1,5 @@
+"use client";
+
 import { SquareActivity } from "lucide-react";
 
 import { TwinFlowSchema_DETAILED } from "@/entities/twinFlowSchema";

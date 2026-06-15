@@ -1,9 +1,11 @@
+"use client";
+
 import { css } from "@emotion/css";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import Link from "next/link";
 import { ElementType, ReactNode } from "react";
 
-import { cn, isFalsy } from "@/shared/libs";
+import { cn, isFalsy, usePermissionsAccess } from "@/shared/libs";
 import {
   TooltipContent,
   TooltipProvider,
@@ -102,13 +104,18 @@ export function ResourceLink<T>({
   fontColor,
   hideIcon,
 }: ResourceLinkProps<T>) {
+  const { canForRoute } = usePermissionsAccess();
   const displayName = getDisplayName(data);
 
-  const ResourceLinkWrapper = disabled ? (
+  // Disable the link when the user lacks the *_MANAGE permission for the route
+  // it points to. An explicit `disabled` prop still wins.
+  const isDisabled = disabled || !canForRoute(link, "MANAGE");
+
+  const ResourceLinkWrapper = isDisabled ? (
     <ResourceLinkContent
       IconComponent={IconComponent}
       displayName={displayName}
-      disabled={disabled}
+      disabled={isDisabled}
       backgroundColor={backgroundColor}
       fontColor={fontColor}
       hideIcon={hideIcon}

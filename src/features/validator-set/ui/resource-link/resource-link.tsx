@@ -1,3 +1,5 @@
+"use client";
+
 import { TicketCheck } from "lucide-react";
 
 import { ValidatorSet_DETAILED } from "@/entities/validator-set";

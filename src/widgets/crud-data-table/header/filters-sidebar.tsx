@@ -137,11 +137,7 @@ export function FiltersSidebar({
 
   return (
     <>
-      <Button
-        className={cn("block")}
-        variant="ghost"
-        onClick={() => setOpen(true)}
-      >
+      <Button variant="ghost" size="icon" onClick={() => setOpen(true)}>
         <FilterIcon />
       </Button>
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { Link2 } from "lucide-react";
 
 import { TwinClass } from "@/entities/twin-class";

@@ -1,12 +1,16 @@
+"use client";
+
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { toast } from "sonner";
 
 import {
+  AttachmentFilterKeys,
   Attachment_DETAILED,
+  useAttachmentCount,
   useAttachmentFilters,
-  useAttachmentSearchV1,
+  useAttachmentSearchV2,
 } from "@/entities/attachment";
 import { Comment_DETAILED } from "@/entities/comment";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
@@ -17,7 +21,7 @@ import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
 import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import {
   formatIntlDate,
@@ -30,9 +34,13 @@ import { AnchorWithCopy } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
 } from "../../crud-data-table";
 
 const colDefs: Record<
@@ -61,7 +69,7 @@ const colDefs: Record<
   twinId: {
     id: "twinId",
     accessorKey: "twinId",
-    header: "Twin",
+    header: () => <SortableHeader title="Twin" sortField="twinName" />,
     cell: ({ row: { original } }) =>
       original.twin && (
         <div className="inline-flex max-w-48">
@@ -73,7 +81,7 @@ const colDefs: Record<
   externalId: {
     id: "externalId",
     accessorKey: "externalId",
-    header: "External Id",
+    header: () => <SortableHeader title="External Id" sortField="externalId" />,
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
 
@@ -107,7 +115,9 @@ const colDefs: Record<
   twinClassFieldId: {
     id: "twinClassFieldId",
     accessorKey: "twinClassFieldId",
-    header: "Field",
+    header: () => (
+      <SortableHeader title="Field" sortField="twinClassFieldName" />
+    ),
     cell: ({ row: { original } }) =>
       original.twinClassField && (
         <div className="inline-flex max-w-48">
@@ -122,7 +132,9 @@ const colDefs: Record<
   twinflowTransitionId: {
     id: "twinflowTransitionId",
     accessorKey: "twinflowTransitionId",
-    header: "Transition",
+    header: () => (
+      <SortableHeader title="Transition" sortField="twinflowTransitionName" />
+    ),
     cell: ({ row: { original } }) =>
       original.twinflowTransition && (
         <div className="inline-flex max-w-48">
@@ -152,7 +164,9 @@ const colDefs: Record<
   viewPermissionId: {
     id: "viewPermissionId",
     accessorKey: "viewPermissionId",
-    header: "View Permission",
+    header: () => (
+      <SortableHeader title="View Permission" sortField="viewPermissionName" />
+    ),
     cell: ({ row: { original } }) =>
       original.viewPermission && (
         <div className="column-flex max-w-48 space-y-2">
@@ -164,7 +178,7 @@ const colDefs: Record<
   authorUserId: {
     id: "authorUserId",
     accessorKey: "authorUserId",
-    header: "Author",
+    header: () => <SortableHeader title="Author" sortField="authorUserName" />,
     cell: ({ row: { original } }) =>
       original.authorUser && (
         <div className="inline-flex max-w-48">
@@ -176,7 +190,7 @@ const colDefs: Record<
   createdAt: {
     id: "createdAt",
     accessorKey: "createdAt",
-    header: "Created at",
+    header: () => <SortableHeader title="Created at" sortField="createdAt" />,
     cell: ({ row: { original } }) =>
       original.createdAt &&
       formatIntlDate(original.createdAt, "datetime-local"),
@@ -207,16 +221,18 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
         ]
       : undefined,
   });
-  const { searchAttachments } = useAttachmentSearchV1();
+  const { searchAttachments } = useAttachmentSearchV2();
+  const { countAttachment } = useAttachmentCount();
 
   async function fetchAttachments(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<Attachment_DETAILED>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
     try {
-      const response = await searchAttachments({
+      return await searchAttachments({
         pagination,
         filters: {
           ..._filters,
@@ -224,17 +240,157 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
             ? toArrayOfString(toArray(baseTwinId), "id")
             : _filters.twinIdList,
         },
+        sort,
       });
-
-      return {
-        data: response.data ?? [],
-        pagination: response.pagination ?? {},
-      };
     } catch {
       toast.error("Failed to fetch attachments");
       return { data: [], pagination: {} };
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/attachment/count/v1), bound to the active filters. When the table
+  // is scoped to a single twin (embedded in a twin page) the twin itself is
+  // excluded — grouping by a constant value carries no information.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(
+        filters as Record<AttachmentFilterKeys, unknown>
+      );
+      const scopedFilters = {
+        ...resolved,
+        twinIdList: baseTwinId
+          ? toArrayOfString(toArray(baseTwinId), "id")
+          : resolved.twinIdList,
+      };
+
+      return [
+        ...(isFalsy(baseTwinId)
+          ? [
+              {
+                key: "twin",
+                label: "Twin",
+                load: buildCountGroupingLoad(
+                  ({ offset, limit }) =>
+                    countAttachment({
+                      filters: scopedFilters,
+                      groupField: "twinId",
+                      offset,
+                      limit,
+                    }),
+                  (g) => g.twinId,
+                  (g) => g.twin?.name,
+                  (g) =>
+                    g.twin && <TwinResourceLink data={g.twin} withTooltip />
+                ),
+              },
+            ]
+          : []),
+        {
+          key: "transition",
+          label: "Transition",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countAttachment({
+                filters: scopedFilters,
+                groupField: "twinflowTransitionId",
+                offset,
+                limit,
+              }),
+            (g) => g.twinflowTransitionId,
+            (g) => g.twinflowTransition?.name,
+            (g) =>
+              g.twinflowTransition && (
+                <TwinFlowTransitionResourceLink
+                  data={g.twinflowTransition as TwinFlowTransition_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
+        },
+        {
+          key: "viewPermission",
+          label: "View permission",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countAttachment({
+                filters: scopedFilters,
+                groupField: "viewPermissionId",
+                offset,
+                limit,
+              }),
+            (g) => g.viewPermissionId,
+            (g) => g.viewPermission?.name,
+            (g) =>
+              g.viewPermission && (
+                <PermissionResourceLink data={g.viewPermission} withTooltip />
+              )
+          ),
+        },
+        {
+          key: "author",
+          label: "Author",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countAttachment({
+                filters: scopedFilters,
+                groupField: "createdByUserId",
+                offset,
+                limit,
+              }),
+            (g) => g.createdByUserId,
+            (g) => g.author?.fullName,
+            (g) => g.author && <UserResourceLink data={g.author} withTooltip />
+          ),
+        },
+        {
+          key: "field",
+          label: "Field",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countAttachment({
+                filters: scopedFilters,
+                groupField: "twinClassFieldId",
+                offset,
+                limit,
+              }),
+            (g) => g.twinClassFieldId,
+            (g) => g.twinClassField?.name,
+            (g) =>
+              g.twinClassField && (
+                <TwinClassFieldResourceLink
+                  data={g.twinClassField as TwinClassField_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
+        },
+        {
+          key: "comment",
+          label: "Comment",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countAttachment({
+                filters: scopedFilters,
+                groupField: "twinCommentId",
+                offset,
+                limit,
+              }),
+            (g) => g.twinCommentId,
+            (g) => g.comment?.text,
+            (g) =>
+              g.comment && (
+                <CommentResourceLink
+                  data={g.comment as Comment_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
+        },
+      ];
+    },
+    [countAttachment, mapFiltersToPayload, baseTwinId]
+  );
 
   return (
     <CrudDataTable
@@ -256,6 +412,7 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchAttachments}
+      chartGroupings={buildChartGroupings}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/attachments/${row.id}`)
       }

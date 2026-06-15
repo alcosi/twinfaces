@@ -1,3 +1,5 @@
+"use client";
+
 import { DataList } from "@/entities/datalist";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";

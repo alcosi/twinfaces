@@ -1,3 +1,5 @@
+"use client";
+
 import { AsteriskIcon } from "lucide-react";
 
 import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";

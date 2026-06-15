@@ -1,3 +1,5 @@
+"use client";
+
 import { BriefcaseBusinessIcon } from "lucide-react";
 
 import { BusinessAccount } from "@/entities/business-account";

@@ -1,3 +1,5 @@
+"use client";
+
 import { FaceNB001 } from "@/entities/face";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";

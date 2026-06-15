@@ -1,3 +1,5 @@
+"use client";
+
 import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { PlatformArea } from "@/shared/config";
 import { isPopulatedString } from "@/shared/libs";

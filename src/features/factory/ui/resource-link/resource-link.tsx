@@ -1,3 +1,5 @@
+"use client";
+
 import { Factory as FactoryIcon } from "lucide-react";
 
 import { Factory } from "@/entities/factory";
