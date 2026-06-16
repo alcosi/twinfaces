@@ -45,11 +45,6 @@ export const Avatar: React.FC<Props> = ({
       alt={alt}
       width={800}
       height={500}
-      // Avatars come from the access-controlled backend filehandler. Routing
-      // them through Next's server-side image optimizer makes an unauthenticated
-      // fetch that the filehandler rejects with 403, so load them directly in
-      // the browser (which carries the user's session) instead.
-      unoptimized
     />
   );
 };
