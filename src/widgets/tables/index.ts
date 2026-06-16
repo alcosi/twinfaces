@@ -1,5 +1,6 @@
 export * from "./attachments";
 export * from "./business-account-users";
+export * from "./comments";
 export * from "./datalist-options";
 export * from "./factory-branches";
 export * from "./factory-conditions";

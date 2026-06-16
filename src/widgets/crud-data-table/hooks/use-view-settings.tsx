@@ -48,7 +48,8 @@ function getInitialState<TData extends DataTableRow<TData>, TValue>(
   savedState: TableViewState | null,
   hasNavigatedToNewPage: boolean,
   defaultVisibleColumns: DataTableProps<TData, TValue>["columns"],
-  orderedColumns: DataTableProps<TData, TValue>["columns"]
+  orderedColumns: DataTableProps<TData, TValue>["columns"],
+  defaultLayoutMode: "grid" | "list"
 ): TableViewState {
   const defaultVisibleKeys = defaultVisibleColumns?.map(getColumnKey) ?? [];
   const defaultOrderKeys = orderedColumns?.map(getColumnKey) ?? [];
@@ -64,8 +65,8 @@ function getInitialState<TData extends DataTableRow<TData>, TValue>(
       : (savedState?.orderKeys ?? defaultOrderKeys),
     groupByKey: hasNavigatedToNewPage ? undefined : savedState?.groupByKey,
     layoutMode: hasNavigatedToNewPage
-      ? "grid"
-      : (savedState?.layoutMode ?? "grid"),
+      ? defaultLayoutMode
+      : (savedState?.layoutMode ?? defaultLayoutMode),
     sort: hasNavigatedToNewPage ? undefined : savedState?.sort,
   };
 }
@@ -73,7 +74,8 @@ function getInitialState<TData extends DataTableRow<TData>, TValue>(
 export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
   defaultVisibleColumns: DataTableProps<TData, TValue>["columns"] = [],
   orderedColumns: DataTableProps<TData, TValue>["columns"] = [],
-  columns: DataTableProps<TData, TValue>["columns"] = []
+  columns: DataTableProps<TData, TValue>["columns"] = [],
+  defaultLayoutMode: "grid" | "list" = "grid"
 ) {
   const store = useCrudDataTableStore();
   const pathname = usePathname();
@@ -105,7 +107,8 @@ export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
       savedState,
       hasNavigatedToNewPage,
       defaultVisibleColumns,
-      orderedColumns
+      orderedColumns,
+      defaultLayoutMode
     )
   );
 

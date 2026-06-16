@@ -12,5 +12,9 @@ export const hydrateCommentFromMap = (
     hydrated.authorUser = relatedObjects.userMap[dto.authorUserId]!;
   }
 
+  if (dto.twinId && relatedObjects?.twinMap) {
+    hydrated.twin = relatedObjects.twinMap[dto.twinId]!;
+  }
+
   return hydrated;
 };

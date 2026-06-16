@@ -1,33 +1,33 @@
-import { PaginationState } from "@tanstack/table-core";
+import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
 import {
   CommentFilters,
+  CommentSortField,
   Comment_DETAILED,
   hydrateCommentFromMap,
 } from "@/entities/comment";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
-export const useFetchComments = () => {
+export const useCommentSearchV2 = () => {
   const api = useContext(PrivateApiContext);
 
-  const fetchCommentsByTwinId = useCallback(
+  const searchComments = useCallback(
     async ({
-      twinId,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
+      sort,
     }: {
-      twinId: string;
       pagination?: PaginationState;
       filters?: CommentFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<Comment_DETAILED>> => {
       try {
         const { data, error } = await api.comment.search({
           pagination,
-          filters: {
-            ...filters,
-            ...(twinId ? { twinIdList: [twinId] } : {}),
-          },
+          filters,
+          sortField: sort?.field as CommentSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {
@@ -35,20 +35,20 @@ export const useFetchComments = () => {
         }
 
         const comments =
-          data.comments?.map((comment) =>
-            hydrateCommentFromMap(comment, data.relatedObjects)
+          data.comments?.map((dto) =>
+            hydrateCommentFromMap(dto, data.relatedObjects)
           ) ?? [];
 
         return {
           data: comments,
           pagination: data.pagination ?? {},
         };
-      } catch {
-        throw new Error("Failed to fetch comments due to API error");
+      } catch (error) {
+        throw new Error("An error occurred while fetching comments: " + error);
       }
     },
     [api]
   );
 
-  return { fetchCommentsByTwinId };
+  return { searchComments };
 };
