@@ -2,32 +2,83 @@ import { PaginationState } from "@tanstack/table-core";
 
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
-import { CommentFilters } from "./types";
+import {
+  CommentCountGroupField,
+  CommentFilters,
+  CommentSortField,
+} from "./types";
+
+// Show-modes shared by the search and count endpoints so that the related
+// objects (author user, twin) come back hydrated for both the comment cards
+// and the grouped-count breakdown.
+const COMMENT_RELATION_MODES = {
+  lazyRelation: false,
+  showCommentMode: "DETAILED",
+  showComment2UserMode: "DETAILED",
+  showComment2TwinMode: "DETAILED",
+  showCommentActionMode: "SHOW",
+  showTwin2UserMode: "DETAILED",
+} as const;
 
 export function createCommentApi(settings: ApiSettings) {
   function search({
     pagination,
-    filters = {},
+    filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
-    filters?: CommentFilters;
+    filters: CommentFilters;
+    sortField?: CommentSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
-    return settings.client.POST("/private/comment/search/v1", {
+    return settings.client.POST("/private/comment/search/v2", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
-          lazyRelation: false,
-          showStatusMode: "DETAILED",
-          showCommentMode: "DETAILED",
-          showComment2UserMode: "DETAILED",
-          showTwinCommentActionMode: "SHOW",
-          showTwinAttachmentActionMode: "SHOW",
-          limit: pagination.pageSize,
+          ...COMMENT_RELATION_MODES,
           offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
         },
       },
       body: {
-        ...filters,
+        search: {
+          ...filters,
+        },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: CommentFilters;
+    groupFields: CommentCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/comment/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          ...COMMENT_RELATION_MODES,
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: {
+          ...filters,
+        },
+        groupFields,
       },
     });
   }
@@ -67,6 +118,7 @@ export function createCommentApi(settings: ApiSettings) {
 
   return {
     search,
+    count,
     getById,
     create,
     update,

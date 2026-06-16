@@ -33,4 +33,12 @@ export type DataTableProps<TData extends DataTableRow<TData>, TValue> = {
    * back to its normal label.
    */
   columnManager?: ReactNode;
+  /**
+   * Custom renderer for a single row in the card ("list") layout. When
+   * provided, the list view renders this instead of the generic
+   * column-derived card — letting a consumer show a rich, bespoke card (e.g.
+   * a comment bubble) while keeping the shared toolbar, sorting, paging and
+   * pie-chart view. Ignored in the grid (table) layout.
+   */
+  renderListItem?: (row: TData) => ReactNode;
 };

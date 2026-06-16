@@ -13,4 +13,5 @@ export type {
   DataTableRow,
 } from "./data-table";
 export { SortableHeader } from "./data-table";
+export type { SortableFieldOption } from "./header";
 export * from "./types";

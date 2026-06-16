@@ -3217,6 +3217,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/factory_trigger/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports factory triggers as SQL INSERT statements */
+        post: operations["factoryTriggerExportSqlV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/factory_pipeline_step/search/v1": {
         parameters: {
             query?: never;
@@ -3234,6 +3251,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/factory_pipeline_step/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports factory pipeline steps as SQL INSERT statements */
+        post: operations["factoryPipelineStepExportSqlV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/factory_pipeline/search/v1": {
         parameters: {
             query?: never;
@@ -3245,6 +3279,23 @@ export interface paths {
         put?: never;
         /** Factory pipeline search */
         post: operations["factoryPipelineSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/factory_pipeline/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports factory pipelines as SQL INSERT statements */
+        post: operations["factoryPipelineExportSqlV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3285,6 +3336,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/factory_multiplier/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports factory multipliers as SQL INSERT statements */
+        post: operations["factoryMultiplierExportSqlV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/factory_eraser/search/v1": {
         parameters: {
             query?: never;
@@ -3296,6 +3364,23 @@ export interface paths {
         put?: never;
         /** Factory eraser search */
         post: operations["factoryEraserSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/factory_eraser/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports factory erasers as SQL INSERT statements */
+        post: operations["factoryEraserExportSqlV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3347,6 +3432,23 @@ export interface paths {
         put?: never;
         /** Factory branch search */
         post: operations["factoryBranchSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/factory_branch/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports factory branches as SQL INSERT statements */
+        post: operations["factoryBranchExportSqlV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3469,6 +3571,23 @@ export interface paths {
         post: operations[" factoryPipelineStepCreateV1"];
         /** Delete factory pipeline step by id */
         delete: operations["factoryPipelineStepDeleteV1"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/factory/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports twin factory as SQL INSERT statements */
+        post: operations["twinFactoryExportSqlV1"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -3765,6 +3884,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/comment/search/v2": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns comment search result in current domain with sorting support */
+        post: operations["commentSearchV2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/comment/search/v1": {
         parameters: {
             query?: never;
@@ -3774,8 +3910,28 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Returns comment search result in current domain */
+        /**
+         * Returns comment search result in current domain
+         * @deprecated
+         */
         post: operations["commentSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/comment/count/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns comment count grouped by specified fields */
+        post: operations["commentCountV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -7948,6 +8104,11 @@ export interface components {
             ownerUserId?: string;
             /**
              * Format: uuid
+             * @description flavor data list option id
+             */
+            flavorDataListOptionId?: string;
+            /**
+             * Format: uuid
              * @description page id
              */
             pageFaceId?: string;
@@ -9741,6 +9902,11 @@ export interface components {
              * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             assignerUserId?: string;
+            /**
+             * Format: uuid
+             * @description flavor data list option id
+             */
+            flavorDataListOptionId?: string;
             /** @description external id */
             externalId?: string;
             /**
@@ -13544,6 +13710,10 @@ export interface components {
             markerDataListOptionIdList?: string[];
             /** @description Twin marker exclude list(data list options ids) */
             markerDataListOptionIdExcludeList?: string[];
+            /** @description Twin flavor data list option id list */
+            flavorDataListOptionIdList?: string[];
+            /** @description Twin flavor data list option id exclude list */
+            flavorDataListOptionIdExcludeList?: string[];
             /** @description Twin extends by twin class list ids */
             twinClassExtendsHierarchyContainsIdList?: string[];
             /** @description Head twin class list ids */
@@ -16779,6 +16949,11 @@ export interface components {
              */
             assignerUserId?: string;
             /**
+             * Format: uuid
+             * @description flavor data list option id
+             */
+            flavorDataListOptionId?: string;
+            /**
              * @description description
              * @example The biggest tree
              */
@@ -16897,6 +17072,11 @@ export interface components {
              */
             assignerUserId?: string;
             /**
+             * Format: uuid
+             * @description flavor data list option id
+             */
+            flavorDataListOptionId?: string;
+            /**
              * @description description
              * @example The biggest tree
              */
@@ -16999,6 +17179,10 @@ export interface components {
             markerDataListOptionIdList?: string[];
             /** @description Twin marker exclude list(data list options ids) */
             markerDataListOptionIdExcludeList?: string[];
+            /** @description Twin flavor data list option id list */
+            flavorDataListOptionIdList?: string[];
+            /** @description Twin flavor data list option id exclude list */
+            flavorDataListOptionIdExcludeList?: string[];
             /** @description Twin extends by twin class list ids */
             twinClassExtendsHierarchyContainsIdList?: string[];
             /** @description Head twin class list ids */
@@ -17140,6 +17324,10 @@ export interface components {
             markerDataListOptionIdList?: string[];
             /** @description Twin marker exclude list(data list options ids) */
             markerDataListOptionIdExcludeList?: string[];
+            /** @description Twin flavor data list option id list */
+            flavorDataListOptionIdList?: string[];
+            /** @description Twin flavor data list option id exclude list */
+            flavorDataListOptionIdExcludeList?: string[];
             /** @description Twin extends by twin class list ids */
             twinClassExtendsHierarchyContainsIdList?: string[];
             /** @description Head twin class list ids */
@@ -17245,6 +17433,10 @@ export interface components {
             markerDataListOptionIdList?: string[];
             /** @description Twin marker exclude list(data list options ids) */
             markerDataListOptionIdExcludeList?: string[];
+            /** @description Twin flavor data list option id list */
+            flavorDataListOptionIdList?: string[];
+            /** @description Twin flavor data list option id exclude list */
+            flavorDataListOptionIdExcludeList?: string[];
             /** @description Twin extends by twin class list ids */
             twinClassExtendsHierarchyContainsIdList?: string[];
             /** @description Head twin class list ids */
@@ -19660,6 +19852,10 @@ export interface components {
             /** @description featurer list */
             featurerList?: components["schemas"]["FeaturerV1"][];
         };
+        FactoryTriggerExportSqlRqV1: {
+            /** @description twin factory trigger ids to export SQL for */
+            twinFactoryTriggerIds?: string[];
+        };
         FactoryPipelineStepSearchRqV1: {
             /** @description id list */
             idList?: string[];
@@ -19728,6 +19924,10 @@ export interface components {
             /** @description results - factory pipeline step list */
             steps?: components["schemas"]["FactoryPipelineStepV1"][];
         };
+        FactoryPipelineStepExportSqlRqV1: {
+            /** @description twin factory pipeline step ids to export SQL for */
+            twinFactoryPipelineStepIds?: string[];
+        };
         FactoryPipelineSearchRqV1: {
             /** @description id list */
             idList?: string[];
@@ -19793,6 +19993,12 @@ export interface components {
             pagination?: components["schemas"]["PaginationV1"];
             /** @description results - factory pipeline list */
             pipelines?: components["schemas"]["FactoryPipelineV1"][];
+        };
+        FactoryPipelineExportSqlRqV1: {
+            /** @description twin factory pipeline ids to export SQL for */
+            twinFactoryPipelineIds?: string[];
+            /** @description include pipeline steps with condition sets and conditions */
+            includePipelineSteps?: boolean;
         };
         FactoryMultiplierFilterSearchRqV1: {
             /** @description id list */
@@ -19949,6 +20155,10 @@ export interface components {
             /** @description results - factory multiplier list */
             multipliers?: components["schemas"]["FactoryMultiplierV1"][];
         };
+        FactoryMultiplierExportSqlRqV1: {
+            /** @description twin factory multiplier ids to export SQL for */
+            twinFactoryMultiplierIds?: string[];
+        };
         FactoryEraserSearchRqV1: {
             /** @description id list */
             idList?: string[];
@@ -20010,6 +20220,10 @@ export interface components {
             pagination?: components["schemas"]["PaginationV1"];
             /** @description results - eraser list */
             erasers?: components["schemas"]["FactoryEraserV1"][];
+        };
+        FactoryEraserExportSqlRqV1: {
+            /** @description twin factory eraser ids to export SQL for */
+            twinFactoryEraserIds?: string[];
         };
         FactoryConditionSetCreateRqV1: {
             /** @description condition set list */
@@ -20231,6 +20445,10 @@ export interface components {
             pagination?: components["schemas"]["PaginationV1"];
             /** @description results - condition list */
             branches?: components["schemas"]["FactoryBranchV1"][];
+        };
+        FactoryBranchExportSqlRqV1: {
+            /** @description twin factory branch ids to export SQL for */
+            twinFactoryBranchIds?: string[];
         };
         FactoryPipelineCreateRqV1: {
             /** @description factory pipeline create */
@@ -20499,6 +20717,22 @@ export interface components {
              * @example true
              */
             optional?: boolean;
+        };
+        TwinFactoryExportSqlRqV1: {
+            /** @description twin factory ids to export SQL for */
+            twinFactoryIds?: string[];
+            /** @description include branches with condition sets and conditions */
+            includeBranches?: boolean;
+            /** @description include multipliers with filters, condition sets and conditions */
+            includeMultipliers?: boolean;
+            /** @description include pipelines with condition sets and conditions */
+            includePipelines?: boolean;
+            /** @description include pipeline steps with condition sets and conditions (only works if includePipelines is true) */
+            includePipelineSteps?: boolean;
+            /** @description include erasers with condition sets and conditions */
+            includeErasers?: boolean;
+            /** @description include triggers with condition sets, conditions */
+            includeTriggers?: boolean;
         };
         DomainUserAddV1: {
             /**
@@ -21225,7 +21459,21 @@ export interface components {
             /** @description attachment list id */
             attachmentListId?: string[];
         };
-        CommentSearchRqDTOv1: {
+        CommentSearchRqV2: {
+            /** @description search params */
+            search?: components["schemas"]["CommentSearchV1"];
+            /**
+             * @description Sort field. Default: createdAt
+             * @enum {string}
+             */
+            sortField?: "createdAt" | "changedAt" | "twinName" | "authorUserName";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
+        };
+        CommentSearchV1: {
             /** @description List of ids to select */
             idList?: string[];
             /** @description List of ids to exclude */
@@ -21270,6 +21518,78 @@ export interface components {
             comments?: components["schemas"]["CommentV1"][];
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
+        };
+        /** @deprecated */
+        CommentSearchRqDTOv1: {
+            /** @description List of ids to select */
+            idList?: string[];
+            /** @description List of ids to exclude */
+            idExcludeList?: string[];
+            /** @description List of twin ids to select */
+            twinIdList?: string[];
+            /** @description List of twin ids to exclude */
+            twinIdExcludeList?: string[];
+            /** @description List of created by user Id's to select */
+            createdByUserIdList?: string[];
+            /** @description List of created by user Id's to exclude */
+            createdByUserIdExcludeList?: string[];
+            /** @description Full text search list to select */
+            textLikeList?: string[];
+            /** @description Full text search list to exclude */
+            textNotLikeList?: string[];
+            /** @description created at */
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
+            /** @description updated at */
+            updatedAt?: components["schemas"]["DataTimeRangeV1"];
+        };
+        CommentCountRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["CommentSearchV1"];
+            /** @description Group by fields */
+            groupFields?: ("twinId" | "createdByUserId")[];
+        };
+        CommentCountRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description count results grouped by requested fields */
+            counts?: components["schemas"]["CommentCountV1"][];
+        };
+        CommentCountV1: {
+            /**
+             * Format: int64
+             * @description count of records in this group
+             */
+            count?: number;
+            /**
+             * Format: uuid
+             * @description twin id
+             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+             */
+            twinId?: string;
+            /**
+             * Format: uuid
+             * @description author user id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            createdByUserId?: string;
         };
         BusinessAccountUserAddRqV1: {
             /**
@@ -46113,6 +46433,46 @@ export interface operations {
             };
         };
     };
+    factoryTriggerExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FactoryTriggerExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+        };
+    };
     factoryPipelineStepSearchV1: {
         parameters: {
             query?: {
@@ -46258,6 +46618,46 @@ export interface operations {
             };
         };
     };
+    factoryPipelineStepExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FactoryPipelineStepExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+        };
+    };
     factoryPipelineSearchV1: {
         parameters: {
             query?: {
@@ -46396,6 +46796,46 @@ export interface operations {
                 };
                 content: {
                     "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    factoryPipelineExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FactoryPipelineExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
                 };
             };
         };
@@ -46678,6 +47118,46 @@ export interface operations {
             };
         };
     };
+    factoryMultiplierExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FactoryMultiplierExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+        };
+    };
     factoryEraserSearchV1: {
         parameters: {
             query?: {
@@ -46814,6 +47294,46 @@ export interface operations {
                 };
                 content: {
                     "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    factoryEraserExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FactoryEraserExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
                 };
             };
         };
@@ -46999,6 +47519,46 @@ export interface operations {
                 };
                 content: {
                     "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    factoryBranchExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FactoryBranchExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
                 };
             };
         };
@@ -47803,6 +48363,46 @@ export interface operations {
                 };
                 content: {
                     "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinFactoryExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinFactoryExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
                 };
             };
         };
@@ -48771,6 +49371,132 @@ export interface operations {
             };
         };
     };
+    commentSearchV2: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentSearchRqV2"];
+            };
+        };
+        responses: {
+            /** @description Comment search result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentSearchRsDTOv1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     commentSearchV1: {
         parameters: {
             query?: {
@@ -48884,6 +49610,132 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CommentSearchRsDTOv1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    commentCountV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showStatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentCountRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentCountRsV1"];
                 };
             };
             /** @description Access is denied */

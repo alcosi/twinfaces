@@ -47,6 +47,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     sort,
     onSortChange,
     columnManager,
+    renderListItem,
   }: DataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
@@ -174,7 +175,11 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
             No results.
           </div>
         ) : (
-          <DataTableList table={table} onRowClick={onRowClick} />
+          <DataTableList
+            table={table}
+            onRowClick={onRowClick}
+            renderItem={renderListItem}
+          />
         )}
       </div>
       {!disablePagination && (

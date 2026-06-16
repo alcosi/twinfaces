@@ -14,6 +14,7 @@ import { safeRefresh, safeResetPage } from "../helpers";
 import { useViewSettings } from "../hooks";
 import { FiltersSidebar } from "./filters-sidebar";
 import { GroupByButton } from "./group-by-button";
+import { SortControl, SortableFieldOption } from "./sort-control";
 import { ViewMode, ViewModeOption, ViewModeToggle } from "./view-mode-toggle";
 
 export type TableViewState = {
@@ -49,6 +50,16 @@ export type CrudDataTableHeaderProps = {
   onChartRefresh?: () => void;
   onCreateClick?: () => void;
   onViewSettingsChange?: (data: TableViewState) => void;
+  /**
+   * When provided, a toolbar sort dropdown is rendered. Use this for layouts
+   * without clickable column headers (the card view) so the dataset can still
+   * be sorted. Drives the same sort state as {@link SortableHeader}.
+   */
+  sortableFields?: SortableFieldOption[];
+  /** Initial layout when nothing is persisted yet. Defaults to "grid". */
+  defaultLayoutMode?: "grid" | "list";
+  /** Hide the table (grid) view option — e.g. for a card-only dataset. */
+  disableGridView?: boolean;
 };
 
 type Props<
@@ -80,13 +91,17 @@ function CrudDataTableHeaderComponent<
     onChartRefresh,
     onCreateClick,
     onViewSettingsChange,
+    sortableFields,
+    defaultLayoutMode,
+    disableGridView,
   }: Props<TData, TValue>,
   tableRef: ForwardedRef<DataTableHandle>
 ) {
   const { viewSettings, updateViewSettings } = useViewSettings(
     defaultVisibleColumns,
     orderedColumns,
-    columns
+    columns,
+    defaultLayoutMode
   );
 
   const debouncedUpdate = useCallback(
@@ -109,7 +124,9 @@ function CrudDataTableHeaderComponent<
   // Table / card / pie-chart switcher. The chart segment only appears when a
   // chart breakdown is configured for this table.
   const viewModeOptions: ViewModeOption[] = [
-    { value: "grid", label: "Table view", icon: GridIcon },
+    ...(disableGridView
+      ? []
+      : [{ value: "grid" as const, label: "Table view", icon: GridIcon }]),
     { value: "list", label: "Card view", icon: RowsIcon },
     ...(chartViewEnabled
       ? [{ value: "chart" as const, label: "Pie charts", icon: ChartPie }]
@@ -165,6 +182,16 @@ function CrudDataTableHeaderComponent<
             filtersInfo={filters.filtersInfo}
             filters={viewSettings.filters}
             onChange={async (values) => debouncedUpdate({ filters: values })}
+          />
+        )}
+
+        {/* Sort dropdown for header-less layouts; hidden in chart mode where
+            sorting carries no meaning. */}
+        {!chartMode && isPopulatedArray(sortableFields) && (
+          <SortControl
+            fields={sortableFields}
+            sort={viewSettings.sort}
+            onSortChange={(sort) => updateViewSettings({ sort })}
           />
         )}
 

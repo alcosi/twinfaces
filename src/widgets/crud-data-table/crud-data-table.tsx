@@ -126,7 +126,8 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   const { viewSettings, updateViewSettings } = useViewSettings(
     props.defaultVisibleColumns,
     props.orderedColumns,
-    props.columns
+    props.columns,
+    props.defaultLayoutMode
   );
 
   // Stable identity: the header pushes its state through this on every change,
@@ -391,6 +392,9 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
           onChartRefresh={() => setChartRefreshSignal((prev) => prev + 1)}
           onCreateClick={handleOnCreateClick}
           onViewSettingsChange={handleHeaderViewSettingsChange}
+          sortableFields={props.sortableFields}
+          defaultLayoutMode={props.defaultLayoutMode}
+          disableGridView={props.disableGridView}
         />
       </div>
 

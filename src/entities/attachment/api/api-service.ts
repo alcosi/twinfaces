@@ -75,6 +75,7 @@ export function createAttachmentApi(settings: ApiSettings) {
         header: getApiDomainHeaders(settings),
         query: {
           ...ATTACHMENT_RELATION_MODES,
+          showAttachment2TwinClassFieldMode: "DETAILED",
           offset,
           limit,
           sortAsc,
