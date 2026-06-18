@@ -1,6 +1,6 @@
 "use client";
 
-import { PaginationState } from "@tanstack/table-core";
+import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useCallback } from "react";
 import { toast } from "sonner";
 
@@ -15,7 +15,13 @@ import { CommentCard } from "@/features/comment/ui";
 import { TwinResourceLink } from "@/features/twin/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse, SortV1 } from "@/shared/api";
-import { isFalsy, toArray, toArrayOfString } from "@/shared/libs";
+import {
+  formatIntlDate,
+  isFalsy,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs";
+import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
   ChartDataContext,
@@ -23,8 +29,77 @@ import {
   CrudDataTable,
   FiltersState,
   SortableFieldOption,
+  SortableHeader,
   buildCountGroupingLoad,
 } from "../../crud-data-table";
+
+const colDefs: Record<
+  keyof Pick<
+    Comment_DETAILED,
+    "id" | "text" | "twinId" | "authorUserId" | "createdAt" | "changedAt"
+  >,
+  ColumnDef<Comment_DETAILED>
+> = {
+  id: {
+    id: "id",
+    accessorKey: "id",
+    header: "ID",
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+  },
+
+  text: {
+    id: "text",
+    accessorKey: "text",
+    header: "Comment",
+    cell: ({ row: { original } }) => (
+      <div className="text-foreground/90 line-clamp-2 max-w-md break-words whitespace-pre-wrap">
+        {original.text}
+      </div>
+    ),
+  },
+
+  twinId: {
+    id: "twinId",
+    accessorKey: "twinId",
+    header: () => <SortableHeader title="Twin" sortField="twinName" />,
+    cell: ({ row: { original } }) =>
+      original.twin && (
+        <div className="inline-flex max-w-48">
+          <TwinResourceLink data={original.twin} withTooltip />
+        </div>
+      ),
+  },
+
+  authorUserId: {
+    id: "authorUserId",
+    accessorKey: "authorUserId",
+    header: () => <SortableHeader title="Author" sortField="authorUserName" />,
+    cell: ({ row: { original } }) =>
+      original.authorUser && (
+        <div className="inline-flex max-w-48">
+          <UserResourceLink data={original.authorUser} withTooltip />
+        </div>
+      ),
+  },
+
+  createdAt: {
+    id: "createdAt",
+    accessorKey: "createdAt",
+    header: () => <SortableHeader title="Created at" sortField="createdAt" />,
+    cell: ({ row: { original } }) =>
+      original.createdAt &&
+      formatIntlDate(original.createdAt, "datetime-local"),
+  },
+
+  changedAt: {
+    id: "changedAt",
+    accessorKey: "changedAt",
+    header: () => <SortableHeader title="Changed at" sortField="changedAt" />,
+    cell: ({ row: { original } }) =>
+      original.changedAt &&
+      formatIntlDate(original.changedAt, "datetime-local"),
+  },
+};
 
 type Props = {
   title?: string;
@@ -40,8 +115,20 @@ export function CommentsTable({ title = "Comments", baseTwinId }: Props) {
       : undefined,
   });
 
-  // Sortable fields exposed by /private/comment/search/v2. When the list is
-  // scoped to a single twin, sorting by twin name carries no information.
+  // When the list is scoped to a single twin, the twin column carries no
+  // information, so it is dropped from both the table and the card-view sort.
+  const columns = [
+    colDefs.id,
+    colDefs.text,
+    ...(isFalsy(baseTwinId) ? [colDefs.twinId] : []),
+    colDefs.authorUserId,
+    colDefs.createdAt,
+    colDefs.changedAt,
+  ];
+
+  // The card view has no clickable column headers, so the toolbar sort
+  // dropdown is what keeps it sortable. It mirrors the same sort state the
+  // table view's sortable headers drive.
   const sortableFields: SortableFieldOption[] = [
     { field: "createdAt", label: "Created date" },
     { field: "changedAt", label: "Changed date" },
@@ -138,7 +225,8 @@ export function CommentsTable({ title = "Comments", baseTwinId }: Props) {
     <CrudDataTable
       permissionSegment="comments"
       title={title}
-      columns={[]}
+      columns={columns}
+      defaultVisibleColumns={columns}
       getRowId={(row) => row.id}
       fetcher={fetchComments}
       renderListItem={(row) => (
@@ -151,8 +239,6 @@ export function CommentsTable({ title = "Comments", baseTwinId }: Props) {
           }
         />
       )}
-      defaultLayoutMode="list"
-      disableGridView
       sortableFields={sortableFields}
       chartGroupings={buildChartGroupings}
       filters={{ filtersInfo: buildFilterFields() }}

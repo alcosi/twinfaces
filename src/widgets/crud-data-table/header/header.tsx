@@ -185,9 +185,10 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {/* Sort dropdown for header-less layouts; hidden in chart mode where
-            sorting carries no meaning. */}
-        {!chartMode && isPopulatedArray(sortableFields) && (
+        {/* Sort dropdown for the card view only: it has no clickable column
+            headers, while the table view sorts via its headers and the chart
+            view has no meaningful sort. */}
+        {currentViewMode === "list" && isPopulatedArray(sortableFields) && (
           <SortControl
             fields={sortableFields}
             sort={viewSettings.sort}

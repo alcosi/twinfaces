@@ -2,6 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { EllipsisVertical, FolderUp } from "lucide-react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -17,9 +19,24 @@ import {
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatIntlDate } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
-import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
+import {
+  CrudDataTable,
+  DataTableHandle,
+  FiltersState,
+} from "@/widgets/crud-data-table";
 
+import {
+  FactoryExportSqlDialog,
+  FactoryExportSqlDialogRef,
+} from "./factory-export-sql-dialog";
 import { FactoryFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -98,9 +115,47 @@ const colDefs: Record<
 };
 
 export function Factories() {
+  const tableRef = useRef<DataTableHandle>(null);
+  const exportSqlDialogRef = useRef<FactoryExportSqlDialogRef>(null);
   const { searchFactories } = useFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
   const { createFactory } = useCreateFactory();
+
+  const actionsCol: ColumnDef<Factory> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                exportSqlDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <FolderUp className="mr-2 h-4 w-4" />
+              Export sql
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
 
   const factoryForm = useForm<z.infer<typeof FACTORY_SCHEMA>>({
     resolver: zodResolver(FACTORY_SCHEMA),
@@ -150,26 +205,34 @@ export function Factories() {
   };
 
   return (
-    <CrudDataTable
-      columns={Object.values(colDefs) as ColumnDef<Factory>[]}
-      fetcher={fetchFactories}
-      getRowId={(row) => row.id!}
-      defaultVisibleColumns={[
-        colDefs.id,
-        colDefs.key,
-        colDefs.name,
-        colDefs.description,
-        colDefs.createdByUser,
-        colDefs.factoryUsagesCount,
-      ]}
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
-      dialogForm={factoryForm}
-      onCreateSubmit={handleOnCreateSubmit}
-      renderFormFields={() => (
-        <FactoryFormFields control={factoryForm.control} />
-      )}
-    />
+    <>
+      <CrudDataTable
+        ref={tableRef}
+        columns={
+          [...Object.values(colDefs), actionsCol] as ColumnDef<Factory>[]
+        }
+        fetcher={fetchFactories}
+        getRowId={(row) => row.id!}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.key,
+          colDefs.name,
+          colDefs.description,
+          colDefs.createdByUser,
+          colDefs.factoryUsagesCount,
+          actionsCol,
+        ]}
+        filters={{
+          filtersInfo: buildFilterFields(),
+        }}
+        dialogForm={factoryForm}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <FactoryFormFields control={factoryForm.control} />
+        )}
+      />
+
+      <FactoryExportSqlDialog ref={exportSqlDialogRef} />
+    </>
   );
 }

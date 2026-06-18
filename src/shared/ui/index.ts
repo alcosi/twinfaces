@@ -14,6 +14,7 @@ export * from "./command";
 export * from "./copy-button";
 export * from "./dialog";
 export * from "./dropdown-menu";
+export * from "./export-sql-dialog";
 export * from "./forms";
 export * from "./guid";
 export * from "./icons";

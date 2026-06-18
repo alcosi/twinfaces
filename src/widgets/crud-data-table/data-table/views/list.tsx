@@ -27,7 +27,7 @@ export function DataTableList<TData extends DataTableRow<TData>>({
 }) {
   if (renderItem) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 pr-3">
         {table.getRowModel().rows.map((row) => (
           <div key={row.id}>{renderItem(row.original)}</div>
         ))}
@@ -44,7 +44,7 @@ export function DataTableList<TData extends DataTableRow<TData>>({
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 pr-3">
       {table.getRowModel().rows.map((row) => (
         <Card
           key={row.id}
