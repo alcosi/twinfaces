@@ -4,6 +4,7 @@ import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRef } from "react";
 
 import { TwinStatus_DETAILED } from "@/entities/twin-status";
+import { usePermissionsAccess } from "@/shared/libs";
 import {
   Button,
   DropdownMenu,
@@ -32,6 +33,8 @@ export function StatusScreen({
 }) {
   const duplicateDialogRef = useRef<TwinClassStatusesDuplicateDialogRef>(null);
   const exportDialogRef = useRef<TwinClassStatusExportSqlDialogRef>(null);
+  const { canForCurrentRoute } = usePermissionsAccess();
+  const canCreate = canForCurrentRoute("CREATE");
 
   const tabs: Tab[] = [
     {
@@ -56,35 +59,37 @@ export function StatusScreen({
       <TabsLayout
         tabs={tabs}
         rightSlot={
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-primary hover:text-foreground pr-0 hover:bg-transparent"
-              >
-                <EllipsisVertical className="h-6 w-6" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => duplicateDialogRef.current?.open(twinStatus)}
-                className="cursor-pointer"
-              >
-                <Copy className="mr-2 h-5 w-5" />
-                Duplicate
-              </DropdownMenuItem>
+          canCreate ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-foreground pr-0 hover:bg-transparent"
+                >
+                  <EllipsisVertical className="h-6 w-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => duplicateDialogRef.current?.open(twinStatus)}
+                  className="cursor-pointer"
+                >
+                  <Copy className="mr-2 h-5 w-5" />
+                  Duplicate
+                </DropdownMenuItem>
 
-              <DropdownMenuItem
-                onClick={() => exportDialogRef.current?.open(twinStatus)}
-                className="cursor-pointer"
-              >
-                <FolderUp className="mr-2 h-5 w-5" />
-                Export sql
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem
+                  onClick={() => exportDialogRef.current?.open(twinStatus)}
+                  className="cursor-pointer"
+                >
+                  <FolderUp className="mr-2 h-5 w-5" />
+                  Export sql
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null
         }
       />
 

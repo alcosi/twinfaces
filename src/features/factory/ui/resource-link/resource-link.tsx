@@ -14,7 +14,7 @@ import {
   FactoryExportSqlDialogRef,
 } from "@/screens/factories";
 import { PlatformArea } from "@/shared/config";
-import { isPopulatedString } from "@/shared/libs";
+import { isPopulatedString, usePermissionsAccess } from "@/shared/libs";
 import {
   Button,
   DropdownMenu,
@@ -40,6 +40,8 @@ export function FactoryResourceLink({ data, disabled, withTooltip }: Props) {
   else if (isPopulatedString(data.key)) title = data.key;
 
   const link = `/${PlatformArea.core}/factories/${data.id}`;
+  const { canForRoute } = usePermissionsAccess();
+  const canCreate = canForRoute(link, "CREATE");
 
   return (
     <>
@@ -56,31 +58,33 @@ export function FactoryResourceLink({ data, disabled, withTooltip }: Props) {
                   data={data}
                   link={link}
                   actions={
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="xs"
-                          className="hover:bg-secondary h-7 w-7 shrink-0 p-0.5"
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          <EllipsisVertical className="h-3.5 w-3.5" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" portalled={false}>
-                        <DropdownMenuItem
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            exportSqlDialogRef.current?.open(data);
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <FolderUp className="mr-2 h-4 w-4" />
-                          Export sql
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    canCreate ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="xs"
+                            className="hover:bg-secondary h-7 w-7 shrink-0 p-0.5"
+                            onClick={(event) => event.stopPropagation()}
+                          >
+                            <EllipsisVertical className="h-3.5 w-3.5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" portalled={false}>
+                          <DropdownMenuItem
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              exportSqlDialogRef.current?.open(data);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <FolderUp className="mr-2 h-4 w-4" />
+                            Export sql
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : undefined
                   }
                 />
               )

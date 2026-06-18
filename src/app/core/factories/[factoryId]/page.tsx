@@ -9,6 +9,7 @@ import {
   FactoryExportSqlDialogRef,
 } from "@/screens/factories";
 import { FactoryScreen } from "@/screens/factory";
+import { usePermissionsAccess } from "@/shared/libs";
 import {
   Button,
   DropdownMenu,
@@ -20,32 +21,36 @@ import {
 export default function Page() {
   const { factory } = useContext(FactoryContext);
   const exportSqlDialogRef = useRef<FactoryExportSqlDialogRef>(null);
+  const { canForCurrentRoute } = usePermissionsAccess();
+  const canCreate = canForCurrentRoute("CREATE");
 
   return (
     <>
       <FactoryScreen
         rightSlot={
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-primary hover:text-foreground pr-0 hover:bg-transparent"
-              >
-                <EllipsisVertical className="h-6 w-6" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => exportSqlDialogRef.current?.open(factory)}
-                className="cursor-pointer"
-              >
-                <FolderUp className="mr-2 h-5 w-5" />
-                Export sql
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          canCreate ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-foreground pr-0 hover:bg-transparent"
+                >
+                  <EllipsisVertical className="h-6 w-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => exportSqlDialogRef.current?.open(factory)}
+                  className="cursor-pointer"
+                >
+                  <FolderUp className="mr-2 h-5 w-5" />
+                  Export sql
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null
         }
       />
 

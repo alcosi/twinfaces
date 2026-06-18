@@ -4,6 +4,7 @@ import { Copy, EllipsisVertical } from "lucide-react";
 import { useRef } from "react";
 
 import { TwinClassFieldV1_DETAILED } from "@/entities/twin-class-field";
+import { usePermissionsAccess } from "@/shared/libs";
 import {
   Button,
   DropdownMenu,
@@ -28,6 +29,8 @@ export function TwinClassFieldScreen({
   twinField: TwinClassFieldV1_DETAILED;
 }) {
   const duplicateDialogRef = useRef<TwinClassFieldDuplicateDialogRef>(null);
+  const { canForCurrentRoute } = usePermissionsAccess();
+  const canCreate = canForCurrentRoute("CREATE");
 
   const tabs: Tab[] = [
     {
@@ -49,27 +52,29 @@ export function TwinClassFieldScreen({
       <TabsLayout
         tabs={tabs}
         rightSlot={
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-primary hover:text-foreground pr-0 hover:bg-transparent"
-              >
-                <EllipsisVertical className="h-6 w-6" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => duplicateDialogRef.current?.open(twinField)}
-                className="cursor-pointer"
-              >
-                <Copy className="mr-2 h-5 w-5" />
-                Duplicate
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          canCreate ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-foreground pr-0 hover:bg-transparent"
+                >
+                  <EllipsisVertical className="h-6 w-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => duplicateDialogRef.current?.open(twinField)}
+                  className="cursor-pointer"
+                >
+                  <Copy className="mr-2 h-5 w-5" />
+                  Duplicate
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null
         }
       />
 
