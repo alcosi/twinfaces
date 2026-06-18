@@ -1,5 +1,7 @@
 "use client";
 
+import { ReactNode } from "react";
+
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { FactoryFlow, FactoryGeneral } from "./views";
@@ -17,6 +19,6 @@ const tabs: Tab[] = [
   },
 ];
 
-export function FactoryScreen() {
-  return <TabsLayout tabs={tabs} />;
+export function FactoryScreen({ rightSlot }: { rightSlot?: ReactNode }) {
+  return <TabsLayout tabs={tabs} rightSlot={rightSlot} />;
 }

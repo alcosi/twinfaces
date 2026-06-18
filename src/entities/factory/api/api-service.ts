@@ -2,6 +2,7 @@ import { PaginationState } from "@tanstack/react-table";
 
 import {
   FactoryCreateRq,
+  FactoryExportSqlRq,
   FactoryFilters,
   FactoryUpdateRq,
   FactoryViewhQuery,
@@ -73,7 +74,17 @@ export function createFactoryApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update, create };
+  function exportSql({ body }: { body: FactoryExportSqlRq }) {
+    return settings.client.POST("/private/factory/export/sql/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+      parseAs: "text",
+    });
+  }
+
+  return { search, getById, update, create, exportSql };
 }
 
 export type FactoryApi = ReturnType<typeof createFactoryApi>;
