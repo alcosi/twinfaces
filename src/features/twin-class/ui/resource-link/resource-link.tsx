@@ -16,7 +16,7 @@ import {
   TwinClassExportSqlDialogRef,
 } from "@/screens/twin-classes/twin-class-export-sql-dialog";
 import { PlatformArea } from "@/shared/config";
-import { isPopulatedString } from "@/shared/libs";
+import { isPopulatedString, usePermissionsAccess } from "@/shared/libs";
 import {
   Avatar,
   Button,
@@ -41,6 +41,8 @@ export function TwinClassResourceLink({ data, disabled, withTooltip }: Props) {
   const { resolvedTheme } = useTheme();
   const duplicateDialogRef = useRef<TwinClassDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<TwinClassExportSqlDialogRef>(null);
+  const { canForRoute } = usePermissionsAccess();
+  const canCreate = canForRoute(link, "CREATE");
 
   const themeIcon =
     resolvedTheme === "light"
@@ -64,42 +66,44 @@ export function TwinClassResourceLink({ data, disabled, withTooltip }: Props) {
                   data={data}
                   link={link}
                   actions={
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="xs"
-                          className="hover:bg-secondary h-7 w-7 shrink-0 p-0.5"
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          <EllipsisVertical className="h-3.5 w-3.5" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" portalled={false}>
-                        <DropdownMenuItem
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            duplicateDialogRef.current?.open(data);
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <Copy className="mr-2 h-4 w-4" />
-                          Duplicate
-                        </DropdownMenuItem>
+                    canCreate ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="xs"
+                            className="hover:bg-secondary h-7 w-7 shrink-0 p-0.5"
+                            onClick={(event) => event.stopPropagation()}
+                          >
+                            <EllipsisVertical className="h-3.5 w-3.5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" portalled={false}>
+                          <DropdownMenuItem
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              duplicateDialogRef.current?.open(data);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Copy className="mr-2 h-4 w-4" />
+                            Duplicate
+                          </DropdownMenuItem>
 
-                        <DropdownMenuItem
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            exportSqlDialogRef.current?.open(data);
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <FolderUp className="mr-2 h-4 w-4" />
-                          Export sql
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                          <DropdownMenuItem
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              exportSqlDialogRef.current?.open(data);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <FolderUp className="mr-2 h-4 w-4" />
+                            Export sql
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : undefined
                   }
                 />
               )
