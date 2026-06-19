@@ -1,10 +1,12 @@
 "use client";
 
+import { ReactNode } from "react";
+
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { FactoryTriggerGeneral } from "./views";
 
-export function FactoryTriggerScreen() {
+export function FactoryTriggerScreen({ rightSlot }: { rightSlot?: ReactNode }) {
   const tabs: Tab[] = [
     {
       key: "general",
@@ -13,5 +15,5 @@ export function FactoryTriggerScreen() {
     },
   ];
 
-  return <TabsLayout tabs={tabs} />;
+  return <TabsLayout tabs={tabs} rightSlot={rightSlot} />;
 }

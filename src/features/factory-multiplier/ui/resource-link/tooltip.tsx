@@ -1,4 +1,5 @@
 import { AsteriskIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";
 import { isPopulatedString } from "@/shared/libs";
@@ -7,9 +8,14 @@ import { ResourceLinkTooltip } from "@/shared/ui";
 type Props = {
   data: FactoryMultiplier_DETAILED;
   link: string;
+  actions?: ReactNode;
 };
 
-export function FactoryMultiplierResourceTooltip({ data, link }: Props) {
+export function FactoryMultiplierResourceTooltip({
+  data,
+  link,
+  actions,
+}: Props) {
   const title =
     isPopulatedString(data.description) &&
     isPopulatedString(data.inputTwinClass?.name)
@@ -19,7 +25,7 @@ export function FactoryMultiplierResourceTooltip({ data, link }: Props) {
         : "N/A";
 
   return (
-    <ResourceLinkTooltip uuid={data.id!} link={link}>
+    <ResourceLinkTooltip uuid={data.id!} link={link} actions={actions}>
       <ResourceLinkTooltip.Header
         title={title}
         subTitle={data.description}

@@ -33,3 +33,5 @@ export type FactoryTriggerFilters = Partial<
 
 export type FactoryTriggerCreateRq =
   components["schemas"]["TwinFactoryTriggerCreateRqV1"];
+export type FactoryTriggerExportSqlRq =
+  components["schemas"]["FactoryTriggerExportSqlRqV1"];
