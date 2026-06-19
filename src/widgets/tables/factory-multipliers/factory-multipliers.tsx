@@ -2,8 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
+import { Check, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -22,9 +23,20 @@ import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryMultiplierExportSqlDialog,
+  FactoryMultiplierExportSqlDialogRef,
+} from "./factory-multiplier-export-sql-dialog";
 import { FactoryMultiplierFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -132,6 +144,45 @@ export function FactoryMultipliersTable({
         : undefined,
     });
   const { createFactoryMultiplier } = useFactoryMultiplierCreate();
+  const exportSqlDialogRef = useRef<FactoryMultiplierExportSqlDialogRef>(null);
+
+  const actionsCol: ColumnDef<FactoryMultiplier_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                exportSqlDialogRef.current?.open(
+                  original as FactoryMultiplier_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <FolderUp className="mr-2 h-4 w-4" />
+              Export sql
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
 
   const factoryMultiplierForm = useForm<
     z.infer<typeof FACTORY_MULTIPLIER_SCHEMA>
@@ -182,38 +233,46 @@ export function FactoryMultipliersTable({
   };
 
   return (
-    <CrudDataTable
-      permissionSegment="multipliers"
-      columns={[
-        colDefs.id,
-        ...(isFalsy(factoryId) ? [colDefs.factory] : []),
-        colDefs.inputTwinClass,
-        colDefs.multiplierFeaturer,
-        colDefs.active,
-        colDefs.factoryMultiplierFiltersCount,
-        colDefs.description,
-      ]}
-      fetcher={fetchFactoryMultipliers}
-      getRowId={(row) => row.id}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/multipliers/${row.id}`)
-      }
-      defaultVisibleColumns={[
-        colDefs.id,
-        ...(isFalsy(factoryId) ? [colDefs.factory] : []),
-        colDefs.inputTwinClass,
-        colDefs.multiplierFeaturer,
-        colDefs.active,
-        colDefs.factoryMultiplierFiltersCount,
-        colDefs.description,
-      ]}
-      filters={{ filtersInfo: buildFilterFields() }}
-      dialogForm={factoryMultiplierForm}
-      onCreateSubmit={handleOnCreateSubmit}
-      renderFormFields={() => (
-        <FactoryMultiplierFormFields control={factoryMultiplierForm.control} />
-      )}
-      title={title}
-    />
+    <>
+      <CrudDataTable
+        permissionSegment="multipliers"
+        columns={[
+          colDefs.id,
+          ...(isFalsy(factoryId) ? [colDefs.factory] : []),
+          colDefs.inputTwinClass,
+          colDefs.multiplierFeaturer,
+          colDefs.active,
+          colDefs.factoryMultiplierFiltersCount,
+          colDefs.description,
+          actionsCol,
+        ]}
+        fetcher={fetchFactoryMultipliers}
+        getRowId={(row) => row.id}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/multipliers/${row.id}`)
+        }
+        defaultVisibleColumns={[
+          colDefs.id,
+          ...(isFalsy(factoryId) ? [colDefs.factory] : []),
+          colDefs.inputTwinClass,
+          colDefs.multiplierFeaturer,
+          colDefs.active,
+          colDefs.factoryMultiplierFiltersCount,
+          colDefs.description,
+          actionsCol,
+        ]}
+        filters={{ filtersInfo: buildFilterFields() }}
+        dialogForm={factoryMultiplierForm}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <FactoryMultiplierFormFields
+            control={factoryMultiplierForm.control}
+          />
+        )}
+        title={title}
+      />
+
+      <FactoryMultiplierExportSqlDialog ref={exportSqlDialogRef} />
+    </>
   );
 }

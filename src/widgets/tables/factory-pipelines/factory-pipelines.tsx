@@ -3,8 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { Check } from "lucide-react";
+import { Check, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -24,9 +25,20 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryPipelineExportSqlDialog,
+  FactoryPipelineExportSqlDialogRef,
+} from "./factory-pipeline-export-sql-dialog";
 import { FactoryPipelineFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -169,6 +181,45 @@ export function FactoryPipelinesTable({
   const router = useRouter();
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
   const { createFactoryPipeline } = useFactoryPipelineCreate();
+  const exportSqlDialogRef = useRef<FactoryPipelineExportSqlDialogRef>(null);
+
+  const actionsCol: ColumnDef<FactoryPipeline_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                exportSqlDialogRef.current?.open(
+                  original as FactoryPipeline_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <FolderUp className="mr-2 h-4 w-4" />
+              Export sql
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
 
   // When the table is scoped to an entity, the filter for that entity is
   // dropped (it is fixed by the scope): a factory scope hides the factory
@@ -260,42 +311,48 @@ export function FactoryPipelinesTable({
   };
 
   return (
-    <CrudDataTable
-      permissionSegment="pipelines"
-      title={title}
-      columns={[
-        colDefs.id,
-        ...(isFalsy(factoryId) ? [colDefs.factory] : []),
-        colDefs.inputTwinClassId,
-        colDefs.factoryConditionSet,
-        colDefs.factoryConditionSetInvert,
-        colDefs.active,
-        ...(isFalsy(outputTwinStatusId) ? [colDefs.outputTwinStatus] : []),
-        colDefs.nextFactory,
-        colDefs.description,
-      ]}
-      fetcher={fetchFactoryPipelines}
-      getRowId={(row) => row.id!}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/pipelines/${row.id}`)
-      }
-      defaultVisibleColumns={[
-        colDefs.id,
-        ...(isFalsy(factoryId) ? [colDefs.factory] : []),
-        colDefs.inputTwinClassId,
-        colDefs.factoryConditionSet,
-        colDefs.factoryConditionSetInvert,
-        colDefs.active,
-        ...(isFalsy(outputTwinStatusId) ? [colDefs.outputTwinStatus] : []),
-        colDefs.nextFactory,
-        colDefs.description,
-      ]}
-      filters={{ filtersInfo: buildFilterFields() }}
-      dialogForm={factoryPipelinesForm}
-      onCreateSubmit={handleOnCreateSubmit}
-      renderFormFields={() => (
-        <FactoryPipelineFormFields control={factoryPipelinesForm.control} />
-      )}
-    />
+    <>
+      <CrudDataTable
+        permissionSegment="pipelines"
+        title={title}
+        columns={[
+          colDefs.id,
+          ...(isFalsy(factoryId) ? [colDefs.factory] : []),
+          colDefs.inputTwinClassId,
+          colDefs.factoryConditionSet,
+          colDefs.factoryConditionSetInvert,
+          colDefs.active,
+          ...(isFalsy(outputTwinStatusId) ? [colDefs.outputTwinStatus] : []),
+          colDefs.nextFactory,
+          colDefs.description,
+          actionsCol,
+        ]}
+        fetcher={fetchFactoryPipelines}
+        getRowId={(row) => row.id!}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/pipelines/${row.id}`)
+        }
+        defaultVisibleColumns={[
+          colDefs.id,
+          ...(isFalsy(factoryId) ? [colDefs.factory] : []),
+          colDefs.inputTwinClassId,
+          colDefs.factoryConditionSet,
+          colDefs.factoryConditionSetInvert,
+          colDefs.active,
+          ...(isFalsy(outputTwinStatusId) ? [colDefs.outputTwinStatus] : []),
+          colDefs.nextFactory,
+          colDefs.description,
+          actionsCol,
+        ]}
+        filters={{ filtersInfo: buildFilterFields() }}
+        dialogForm={factoryPipelinesForm}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <FactoryPipelineFormFields control={factoryPipelinesForm.control} />
+        )}
+      />
+
+      <FactoryPipelineExportSqlDialog ref={exportSqlDialogRef} />
+    </>
   );
 }

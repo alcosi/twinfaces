@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
+import { Check, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -21,9 +22,20 @@ import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryTriggerExportSqlDialog,
+  FactoryTriggerExportSqlDialogRef,
+} from "./factory-trigger-export-sql-dialog";
 import { TriggersFormFields } from "./form-fields";
 
 type TriggersFormValues = z.infer<typeof FACTORY_TRIGGER_SCHEMA>;
@@ -147,6 +159,46 @@ export function FactoryTriggersTable({
       : undefined,
   });
   const { createFactoryTrigger } = useFactoryTriggerCreate();
+  const exportSqlDialogRef = useRef<FactoryTriggerExportSqlDialogRef>(null);
+
+  const actionsCol: ColumnDef<FactoryTrigger_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                exportSqlDialogRef.current?.open(
+                  original as FactoryTrigger_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <FolderUp className="mr-2 h-4 w-4" />
+              Export sql
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
+
   async function fetchFactoryTriggers(
     pagination: PaginationState,
     filters: FiltersState
@@ -207,42 +259,48 @@ export function FactoryTriggersTable({
   };
 
   return (
-    <CrudDataTable
-      permissionSegment="factory-triggers"
-      title="Factory triggers"
-      columns={[
-        colDefs.id,
-        colDefs.factory,
-        colDefs.inputTwinClass,
-        colDefs.factoryConditionSet,
-        colDefs.twinFactoryConditionInvert,
-        colDefs.active,
-        colDefs.description,
-        ...(twinTriggerId ? [] : [colDefs.twinTrigger]),
-        colDefs.async,
-      ]}
-      fetcher={fetchFactoryTriggers}
-      defaultVisibleColumns={[
-        colDefs.id,
-        colDefs.factory,
-        colDefs.inputTwinClass,
-        colDefs.factoryConditionSet,
-        colDefs.twinFactoryConditionInvert,
-        colDefs.active,
-        colDefs.description,
-        ...(twinTriggerId ? [] : [colDefs.twinTrigger]),
-        colDefs.async,
-      ]}
-      filters={{ filtersInfo: buildFilterFields() }}
-      getRowId={(row) => row.id!}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/factory-triggers/${row.id}`)
-      }
-      dialogForm={triggersForm}
-      onCreateSubmit={handleOnCreateSubmit}
-      renderFormFields={() => (
-        <TriggersFormFields control={triggersForm.control} />
-      )}
-    />
+    <>
+      <CrudDataTable
+        permissionSegment="factory-triggers"
+        title="Factory triggers"
+        columns={[
+          colDefs.id,
+          colDefs.factory,
+          colDefs.inputTwinClass,
+          colDefs.factoryConditionSet,
+          colDefs.twinFactoryConditionInvert,
+          colDefs.active,
+          colDefs.description,
+          ...(twinTriggerId ? [] : [colDefs.twinTrigger]),
+          colDefs.async,
+          actionsCol,
+        ]}
+        fetcher={fetchFactoryTriggers}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.factory,
+          colDefs.inputTwinClass,
+          colDefs.factoryConditionSet,
+          colDefs.twinFactoryConditionInvert,
+          colDefs.active,
+          colDefs.description,
+          ...(twinTriggerId ? [] : [colDefs.twinTrigger]),
+          colDefs.async,
+          actionsCol,
+        ]}
+        filters={{ filtersInfo: buildFilterFields() }}
+        getRowId={(row) => row.id!}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/factory-triggers/${row.id}`)
+        }
+        dialogForm={triggersForm}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <TriggersFormFields control={triggersForm.control} />
+        )}
+      />
+
+      <FactoryTriggerExportSqlDialog ref={exportSqlDialogRef} />
+    </>
   );
 }

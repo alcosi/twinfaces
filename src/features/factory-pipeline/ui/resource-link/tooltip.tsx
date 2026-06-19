@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import { FactoryPipeline } from "@/entities/factory-pipeline";
 import { isPopulatedString, shortenUUID } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
@@ -7,13 +9,14 @@ import { FactoryPipelineIcon } from "../factory-pipeline-icon";
 type Props = {
   data: FactoryPipeline;
   link: string;
+  actions?: ReactNode;
 };
 
-export function FactoryPipelineResourceTooltip({ data, link }: Props) {
+export function FactoryPipelineResourceTooltip({ data, link, actions }: Props) {
   const title = isPopulatedString(data.id) ? shortenUUID(data.id) : "N/A";
 
   return (
-    <ResourceLinkTooltip uuid={data.id!} link={link}>
+    <ResourceLinkTooltip uuid={data.id!} link={link} actions={actions}>
       <ResourceLinkTooltip.Header
         title={title}
         subTitle={data.description}
