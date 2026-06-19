@@ -60,10 +60,7 @@ const colDefs: Record<
     id: "businessAccountId",
     accessorKey: "businessAccountId",
     header: "Busines account ID",
-    cell: (data) => {
-      console.log("🚀 ~ data:", data);
-      return <GuidWithCopy value={data.getValue<string>()} />;
-    },
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   businessAccount: {
     id: "businessAccount",
