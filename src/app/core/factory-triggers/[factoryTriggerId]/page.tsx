@@ -1,4 +1,4 @@
-"use-client";
+"use client";
 
 import { EllipsisVertical, FolderUp } from "lucide-react";
 import { useContext, useRef } from "react";
