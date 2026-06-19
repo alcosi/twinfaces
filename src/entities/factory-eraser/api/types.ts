@@ -19,6 +19,9 @@ export type FactoryEraserRqQuery =
 export type FactoryEraserUpdate =
   components["schemas"]["FactoryEraserUpdateRqV1"];
 
+export type FactoryEraserExportSqlRq =
+  components["schemas"]["FactoryEraserExportSqlRqV1"];
+
 export type FactoryEraserFilterKeys =
   | "idList"
   | "factoryIdList"

@@ -29,6 +29,8 @@ export type FactoryBranchViewQuery =
   operations["factoryBranchViewV1"]["parameters"]["query"];
 export type FactoryBranchUpdateRq =
   components["schemas"]["FactoryBranchUpdateRqv1"];
+export type FactoryBranchExportSqlRq =
+  components["schemas"]["FactoryBranchExportSqlRqV1"];
 
 export type FactoryBranchFilterKeys =
   | "idList"

@@ -22,6 +22,7 @@ import {
 } from "@/shared/libs";
 
 import {
+  DomainBusinessAccountFilterFormKeys,
   DomainBusinessAccountFilterKeys,
   DomainBusinessAccountFilters,
 } from "../../api/types";
@@ -31,7 +32,7 @@ export function useBusinessAccountFilters({
 }: {
   enabledFilters?: DomainBusinessAccountFilterKeys[];
 } = {}): FilterFeature<
-  DomainBusinessAccountFilterKeys,
+  DomainBusinessAccountFilterFormKeys,
   DomainBusinessAccountFilters
 > {
   const permissionSchemaAdapter = usePermissionSchemaSelectAdapterWithFilters();
@@ -50,96 +51,147 @@ export function useBusinessAccountFilters({
     mapFiltersToPayload: mapTierFilters,
   } = useTierFilters();
 
-  const allFilters: Record<DomainBusinessAccountFilterKeys, AutoFormValueInfo> =
-    {
-      idList: {
-        type: AutoFormValueType.tag,
-        label: "Id",
-        schema: z.string().uuid("Please enter a valid UUID"),
-        placeholder: "Enter UUID",
-      },
-      businessAccountIdList: {
-        type: AutoFormValueType.complexCombobox,
-        label: "Business account",
-        adapter: businessAccountAdapter,
-        // NOTE: extraFilters intentionally empty — using useBusinessAccountFilters
-        // here would recurse (this is the Business Account filters hook itself).
-        extraFilters: {},
-        searchPlaceholder: "Search...",
-        selectPlaceholder: "Select...",
-        multi: true,
-      },
-      permissionSchemaIdList: {
-        type: AutoFormValueType.complexCombobox,
-        label: "Permission schema",
-        adapter: permissionSchemaAdapter,
-        extraFilters: buildPermissionSchemaFilters(),
-        mapExtraFilters: (filters) => mapPermissionSchemaFilters(filters),
-        searchPlaceholder: "Search...",
-        selectPlaceholder: "Select...",
-        multi: true,
-      },
-      twinflowSchemaIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Twinflow schema",
-        ...twinflowSchemaAdapter,
-        multi: true,
-      },
-      twinClassSchemaIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Class schema",
-        ...twinClassSchemaAdapter,
-        multi: true,
-      },
-      notificationSchemaIdList: {
-        type: AutoFormValueType.combobox,
-        label: "Notification schema",
-        multi: true,
-        ...notificationSchemaAdapter,
-      },
-      tierIdList: {
-        type: AutoFormValueType.complexCombobox,
-        label: "Tier",
-        adapter: tierAdapter,
-        extraFilters: buildTierFilters(),
-        mapExtraFilters: (filters) => mapTierFilters(filters),
-        searchPlaceholder: "Search...",
-        selectPlaceholder: "Select...",
-        multi: true,
-      },
-      storageUsedCountRange: {
-        type: AutoFormValueType.numberRange,
-        label: "Attachments storage used count",
-      },
-      storageUsedSizeRange: {
-        type: AutoFormValueType.numberRange,
-        label: "Attachments storage used size",
-      },
-      createdAt: {
-        type: AutoFormValueType.dateRange,
-        label: "Created",
-      },
-    };
+  function expandEnabledFilters(
+    enabledFilters?: DomainBusinessAccountFilterKeys[]
+  ): DomainBusinessAccountFilterFormKeys[] | undefined {
+    return enabledFilters?.flatMap((filterKey) => {
+      if (filterKey === "businessAccountIdList") {
+        return ["businessAccountIdTagList", "businessAccountIdComboboxList"];
+      }
+
+      return [filterKey as DomainBusinessAccountFilterFormKeys];
+    });
+  }
+
+  const allFilters: Record<
+    DomainBusinessAccountFilterFormKeys,
+    AutoFormValueInfo
+  > = {
+    idList: {
+      type: AutoFormValueType.tag,
+      label: "Id",
+      schema: z.string().uuid("Please enter a valid UUID"),
+      placeholder: "Enter UUID",
+    },
+    // businessAccountIdList: {
+    //   type: AutoFormValueType.tag,
+    //   label: "Business account ID",
+    //   schema: z.string().uuid("Please enter a valid UUID"),
+    //   placeholder: "Enter UUID",
+    // },
+    // businessAccountIdList: {
+    //   type: AutoFormValueType.complexCombobox,
+    //   label: "Business account",
+    //   adapter: businessAccountAdapter,
+    //   // NOTE: extraFilters intentionally empty — using useBusinessAccountFilters
+    //   // here would recurse (this is the Business Account filters hook itself).
+    //   extraFilters: {},
+    //   searchPlaceholder: "Search...",
+    //   selectPlaceholder: "Select...",
+    //   multi: true,
+    // },
+    businessAccountIdTagList: {
+      type: AutoFormValueType.tag,
+      label: "Business account ID",
+      schema: z.string().uuid("Please enter a valid UUID"),
+      placeholder: "Enter UUID",
+    },
+
+    businessAccountIdComboboxList: {
+      type: AutoFormValueType.complexCombobox,
+      label: "Business account",
+      adapter: businessAccountAdapter,
+      extraFilters: {},
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
+      multi: true,
+    },
+    permissionSchemaIdList: {
+      type: AutoFormValueType.complexCombobox,
+      label: "Permission schema",
+      adapter: permissionSchemaAdapter,
+      extraFilters: buildPermissionSchemaFilters(),
+      mapExtraFilters: (filters) => mapPermissionSchemaFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
+      multi: true,
+    },
+    twinflowSchemaIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Twinflow schema",
+      ...twinflowSchemaAdapter,
+      multi: true,
+    },
+    twinClassSchemaIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Class schema",
+      ...twinClassSchemaAdapter,
+      multi: true,
+    },
+    notificationSchemaIdList: {
+      type: AutoFormValueType.combobox,
+      label: "Notification schema",
+      multi: true,
+      ...notificationSchemaAdapter,
+    },
+    tierIdList: {
+      type: AutoFormValueType.complexCombobox,
+      label: "Tier",
+      adapter: tierAdapter,
+      extraFilters: buildTierFilters(),
+      mapExtraFilters: (filters) => mapTierFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
+      multi: true,
+    },
+    storageUsedCountRange: {
+      type: AutoFormValueType.numberRange,
+      label: "Attachments storage used count",
+    },
+    storageUsedSizeRange: {
+      type: AutoFormValueType.numberRange,
+      label: "Attachments storage used size",
+    },
+    createdAt: {
+      type: AutoFormValueType.dateRange,
+      label: "Created",
+    },
+  };
 
   function buildFilterFields(): Record<
-    DomainBusinessAccountFilterKeys,
+    DomainBusinessAccountFilterFormKeys,
     AutoFormValueInfo
   > {
-    return isPopulatedArray(enabledFilters)
-      ? extractEnabledFilters(enabledFilters, allFilters)
+    const expandedEnabledFilters = expandEnabledFilters(enabledFilters);
+
+    return isPopulatedArray(expandedEnabledFilters)
+      ? extractEnabledFilters(expandedEnabledFilters, allFilters)
       : allFilters;
   }
 
+  function uniqueStrings(values: string[]) {
+    return Array.from(new Set(values.filter(Boolean)));
+  }
+
   function mapFiltersToPayload(
-    filters: Record<DomainBusinessAccountFilterKeys, unknown>
+    filters: Record<DomainBusinessAccountFilterFormKeys, unknown>
   ): DomainBusinessAccountFilters {
     const createdAt = filters.createdAt as { from?: string; to?: string };
+
+    const businessAccountIdListFromTag = toArrayOfString(
+      filters.businessAccountIdTagList
+    );
+
+    const businessAccountIdListFromCombobox = toArrayOfString(
+      filters.businessAccountIdComboboxList,
+      "id"
+    );
     const result: DomainBusinessAccountFilters = {
       idList: toArrayOfString(filters.idList),
-      businessAccountIdList: toArrayOfString(
-        filters.businessAccountIdList,
-        "id"
-      ),
+      businessAccountIdList: uniqueStrings([
+        ...businessAccountIdListFromTag,
+        ...businessAccountIdListFromCombobox,
+      ]),
       permissionSchemaIdList: toArrayOfString(
         filters.permissionSchemaIdList,
         "id"

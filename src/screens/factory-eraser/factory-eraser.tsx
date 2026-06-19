@@ -1,5 +1,7 @@
 "use client";
 
+import { ReactNode } from "react";
+
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { FactoryEraserGeneral } from "./views";
@@ -12,6 +14,6 @@ const tabs: Tab[] = [
   },
 ];
 
-export function FactoryEraserScreen() {
-  return <TabsLayout tabs={tabs} />;
+export function FactoryEraserScreen({ rightSlot }: { rightSlot?: ReactNode }) {
+  return <TabsLayout tabs={tabs} rightSlot={rightSlot} />;
 }
