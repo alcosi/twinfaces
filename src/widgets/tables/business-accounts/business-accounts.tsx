@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { toast } from "sonner";
 
 import {
-  DomainBusinessAccountFilterKeys,
+  DomainBusinessAccountFilterFormKeys,
   DomainBusinessAccount_DETAILED,
   useBusinessAccountCount,
   useBusinessAccountSearch,
@@ -38,6 +38,7 @@ const colDefs: Record<
   | "id"
   | "permissionSchema"
   | "businessAccount"
+  | "businessAccountId"
   | "twinflowSchema"
   | "twinClassSchema"
   | "notificationSchema"
@@ -53,6 +54,12 @@ const colDefs: Record<
     id: "id",
     accessorKey: "id",
     header: "ID",
+    cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+  },
+  businessAccountId: {
+    id: "businessAccountId",
+    accessorKey: "businessAccountId",
+    header: "Busines account ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
   businessAccount: {
@@ -212,7 +219,7 @@ export function BusinessAccountsTable() {
     sort?: SortV1
   ): Promise<PagedResponse<DomainBusinessAccount_DETAILED>> {
     const _filters = mapFiltersToPayload(
-      filters.filters as Record<DomainBusinessAccountFilterKeys, unknown>
+      filters.filters as Record<DomainBusinessAccountFilterFormKeys, unknown>
     );
 
     try {
@@ -236,7 +243,7 @@ export function BusinessAccountsTable() {
   const buildChartGroupings = useCallback(
     ({ filters }: ChartDataContext): ChartGrouping[] => {
       const resolved = mapFiltersToPayload(
-        filters as Record<DomainBusinessAccountFilterKeys, unknown>
+        filters as Record<DomainBusinessAccountFilterFormKeys, unknown>
       );
 
       return [
@@ -355,6 +362,7 @@ export function BusinessAccountsTable() {
       title="Domain business accounts"
       columns={[
         colDefs.id,
+        colDefs.businessAccountId,
         colDefs.businessAccount,
         colDefs.permissionSchema,
         colDefs.twinflowSchema,
@@ -370,6 +378,7 @@ export function BusinessAccountsTable() {
       fetcher={fetchBusinessAccounts}
       defaultVisibleColumns={[
         colDefs.id,
+        colDefs.businessAccountId,
         colDefs.businessAccount,
         colDefs.permissionSchema,
         colDefs.twinflowSchema,

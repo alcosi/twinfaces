@@ -1,7 +1,8 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check } from "lucide-react";
+import { Check, EllipsisVertical, FolderUp } from "lucide-react";
+import { useRef } from "react";
 import { toast } from "sonner";
 
 import {
@@ -14,8 +15,20 @@ import { FactoryConditionSetResourceLink } from "@/features/factory-condition-se
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+
+import {
+  FactoryEraserExportSqlDialog,
+  FactoryEraserExportSqlDialogRef,
+} from "./factory-erasers-export-sql-dialog";
 
 const colDefs: Record<
   keyof Pick<
@@ -116,6 +129,45 @@ const colDefs: Record<
 export function FactoryErasers() {
   const { searchFactoryErasers } = useFactoryEraserSearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryEraserFilters();
+  const exportSqlDialogRef = useRef<FactoryEraserExportSqlDialogRef>(null);
+
+  const actionsCol: ColumnDef<FactoryEraser_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                exportSqlDialogRef.current?.open(
+                  original as FactoryEraser_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <FolderUp className="mr-2 h-4 w-4" />
+              Export sql
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
 
   async function fetchErasers(
     pagination: PaginationState,
@@ -135,33 +187,39 @@ export function FactoryErasers() {
   }
 
   return (
-    <CrudDataTable
-      title="Erasers"
-      columns={[
-        colDefs.id,
-        colDefs.factoryId,
-        colDefs.inputTwinClassId,
-        colDefs.factoryConditionSetId,
-        colDefs.factoryConditionSetInvert,
-        colDefs.active,
-        colDefs.action,
-        colDefs.description,
-      ]}
-      fetcher={fetchErasers}
-      getRowId={(row) => row.id!}
-      defaultVisibleColumns={[
-        colDefs.id,
-        colDefs.factoryId,
-        colDefs.inputTwinClassId,
-        colDefs.factoryConditionSetId,
-        colDefs.factoryConditionSetInvert,
-        colDefs.active,
-        colDefs.action,
-        colDefs.description,
-      ]}
-      filters={{
-        filtersInfo: buildFilterFields(),
-      }}
-    />
+    <>
+      <CrudDataTable
+        title="Erasers"
+        columns={[
+          colDefs.id,
+          colDefs.factoryId,
+          colDefs.inputTwinClassId,
+          colDefs.factoryConditionSetId,
+          colDefs.factoryConditionSetInvert,
+          colDefs.active,
+          colDefs.action,
+          colDefs.description,
+          actionsCol,
+        ]}
+        fetcher={fetchErasers}
+        getRowId={(row) => row.id!}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.factoryId,
+          colDefs.inputTwinClassId,
+          colDefs.factoryConditionSetId,
+          colDefs.factoryConditionSetInvert,
+          colDefs.active,
+          colDefs.action,
+          colDefs.description,
+          actionsCol,
+        ]}
+        filters={{
+          filtersInfo: buildFilterFields(),
+        }}
+      />
+
+      <FactoryEraserExportSqlDialog ref={exportSqlDialogRef} />
+    </>
   );
 }

@@ -40,6 +40,11 @@ export type DomainBusinessAccountFilters = Partial<
   Pick<DomainBusinessAccountSearchRq, DomainBusinessAccountFilterKeys>
 >;
 
+export type DomainBusinessAccountFilterFormKeys =
+  | Exclude<DomainBusinessAccountFilterKeys, "businessAccountIdList">
+  | "businessAccountIdTagList"
+  | "businessAccountIdComboboxList";
+
 export type DomainBusinessAccountCountRq =
   components["schemas"]["DomainBusinessAccountCountRqV1"];
 

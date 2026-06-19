@@ -1,6 +1,7 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import {
+  FactoryEraserExportSqlRq,
   FactoryEraserRqQuery,
   FactoryEraserSearchRq,
   FactoryEraserUpdate,
@@ -69,7 +70,17 @@ export function createFactoryEraserApi(settings: ApiSettings) {
     );
   }
 
-  return { search, getById, update };
+  function exportSql({ body }: { body: FactoryEraserExportSqlRq }) {
+    return settings.client.POST("/private/factory_eraser/export/sql/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+      parseAs: "text",
+    });
+  }
+
+  return { search, getById, update, exportSql };
 }
 
 export type FactoryEraserApi = ReturnType<typeof createFactoryEraserApi>;

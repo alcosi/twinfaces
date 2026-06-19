@@ -1,5 +1,7 @@
 "use client";
 
+import { ReactNode } from "react";
+
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { FactoryBranchGeneral } from "./views";
@@ -12,6 +14,6 @@ const tabs: Tab[] = [
   },
 ];
 
-export function FactoryBranchScreen() {
-  return <TabsLayout tabs={tabs} />;
+export function FactoryBranchScreen({ rightSlot }: { rightSlot?: ReactNode }) {
+  return <TabsLayout tabs={tabs} rightSlot={rightSlot} />;
 }

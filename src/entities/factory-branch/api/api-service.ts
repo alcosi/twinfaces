@@ -1,7 +1,10 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import {
   FactoryBranchCreateRq,
+  FactoryBranchExportSqlRq,
   FactoryBranchFilters,
   FactoryBranchUpdateRq,
   FactoryBranchViewQuery,
@@ -72,7 +75,17 @@ export function createFactoryBranchApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, create, update };
+  function exportSql({ body }: { body: FactoryBranchExportSqlRq }) {
+    return settings.client.POST("/private/factory_branch/export/sql/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+      parseAs: "text",
+    });
+  }
+
+  return { search, getById, create, update, exportSql };
 }
 
 export type FactoryBranchApi = ReturnType<typeof createFactoryBranchApi>;
